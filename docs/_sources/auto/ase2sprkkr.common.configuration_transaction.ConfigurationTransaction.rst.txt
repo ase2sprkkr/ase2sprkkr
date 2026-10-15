@@ -1,0 +1,36 @@
+ConfigurationTransaction
+========================
+
+
+.. currentmodule:: ase2sprkkr.common.configuration_transaction
+
+.. autoclass:: ConfigurationTransaction
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.common.configuration_transaction.ConfigurationTransaction
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

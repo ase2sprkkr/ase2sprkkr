@@ -1,0 +1,58 @@
+module\_registry
+================
+
+Full name: **ase2sprkkr.common.module\_registry**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.common.module_registry.ModuleRegistry 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.common.module_registry
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      ModuleRegistry
+   
+   
+
+
+   
+   
+   .. rubric:: Exceptions
+
+   .. autosummary::
+      :toctree:
+   
+      RegistryDefinitionError
+      RegistryEntryNotFound
+   
+   
+
+
+  
+  
+  

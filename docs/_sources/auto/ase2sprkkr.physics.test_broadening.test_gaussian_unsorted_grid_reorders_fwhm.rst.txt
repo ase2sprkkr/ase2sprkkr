@@ -1,0 +1,8 @@
+test\_gaussian\_unsorted\_grid\_reorders\_fwhm
+==============================================
+
+Full name: **ase2sprkkr.physics.test\_broadening.test\_gaussian\_unsorted\_grid\_reorders\_fwhm**
+
+.. currentmodule:: ase2sprkkr.physics.test_broadening
+
+.. autofunction:: test_gaussian_unsorted_grid_reorders_fwhm

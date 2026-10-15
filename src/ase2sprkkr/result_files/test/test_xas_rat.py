@@ -1,4 +1,4 @@
-"""Test that RATOutputFile.generate_data() reproduces the reference Fortran
+"""Test that RATResultFile.generate_data() reproduces the reference Fortran
 XAS output for the Cu L2,3 example.
 """
 
@@ -55,9 +55,9 @@ def parse_agr(path):
 
 @pytest.fixture(scope="module")
 def generated_data():
-    from ase2sprkkr.result_files.definitions.rat import RATOutputFile
+    from ase2sprkkr.result_files.definitions.rat import RATResultFile
 
-    of = RATOutputFile.from_file(RAT_FILE)
+    of = RATResultFile.from_file(RAT_FILE)
     # Fortran default: WGAUSS = 0.0 (no Gaussian broadening)
     # Fortran uses Fuggle-Inglesfield core-hole widths — request by name
     return of.generate_data(gauss_width=0.0, core_hole_width="fuggle-inglesfield")
@@ -87,9 +87,9 @@ def ref_sumrule():
 
 class TestPlotCaptions:
     def test_subject_is_derived_from_header_tables(self):
-        from ase2sprkkr.result_files.definitions.rat import RATOutputFile
+        from ase2sprkkr.result_files.definitions.rat import RATResultFile
 
-        of = RATOutputFile.from_file(RAT_FILE)
+        of = RATResultFile.from_file(RAT_FILE)
         assert of.absorbing_element == "Cu"
         assert of.system_formula == "Cu"
         assert of.spectrum_subject == "of Cu in Cu"
@@ -208,9 +208,9 @@ class TestDifferenceSpectrum:
 
     def test_three_input_polarizations_default_to_mcd(self):
         """Like XBand, RXAS must use + and - unless MLD is requested."""
-        from ase2sprkkr.result_files.definitions.rat import RATOutputFile
+        from ase2sprkkr.result_files.definitions.rat import RATResultFile
 
-        of = RATOutputFile.from_file(RAT_FILE)
+        of = RATResultFile.from_file(RAT_FILE)
         common = dict(gauss_width=0.0, core_hole_width="fuggle-inglesfield")
         mcd = of.compute_data(**common)
         mld = of.compute_data(**common, mld=True)

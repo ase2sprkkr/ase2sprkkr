@@ -1,0 +1,36 @@
+RunState
+========
+
+
+.. currentmodule:: ase2sprkkr.execution.base
+
+.. autoclass:: RunState
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.execution.base.RunState
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

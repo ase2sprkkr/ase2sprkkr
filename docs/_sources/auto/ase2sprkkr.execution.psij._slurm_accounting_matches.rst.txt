@@ -1,0 +1,8 @@
+\_slurm\_accounting\_matches
+============================
+
+Full name: **ase2sprkkr.execution.psij.\_slurm\_accounting\_matches**
+
+.. currentmodule:: ase2sprkkr.execution.psij
+
+.. autofunction:: _slurm_accounting_matches

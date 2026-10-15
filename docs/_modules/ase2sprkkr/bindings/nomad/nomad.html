@@ -16,8 +16,8 @@
       <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
-      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
@@ -81,6 +81,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../../ase2sprkkr.html">ase2sprkkr</a></li>
       <li class="breadcrumb-item active">ase2sprkkr.bindings.nomad.nomad</li>
       <li class="wy-breadcrumbs-aside">
       </li>
@@ -91,9 +92,9 @@
            <div itemprop="articleBody">
              
   <h1>Source code for ase2sprkkr.bindings.nomad.nomad</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span></span><span class="sd">"""</span>
 <span class="sd">This module handles archive creating and uploading to NOMAD</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">zipfile</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">tempfile</span>
@@ -110,7 +111,7 @@
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.bindings.nomad.nomad.map_io_to_nomad.html#ase2sprkkr.bindings.nomad.nomad.map_io_to_nomad">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">map_io_to_nomad</span><span class="p">(</span><span class="n">items</span><span class="p">):</span>
 
-    <span class="k">return</span> <span class="p">[{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">i</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">&quot;section&quot;</span><span class="p">:</span> <span class="n">i</span><span class="p">[</span><span class="mi">1</span><span class="p">]}</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)</span> <span class="k">else</span> <span class="p">{</span><span class="s2">&quot;section&quot;</span><span class="p">:</span> <span class="n">i</span><span class="p">}</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">items</span><span class="p">]</span></div>
+    <span class="k">return</span> <span class="p">[{</span><span class="s2">"name"</span><span class="p">:</span> <span class="n">i</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">"section"</span><span class="p">:</span> <span class="n">i</span><span class="p">[</span><span class="mi">1</span><span class="p">]}</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)</span> <span class="k">else</span> <span class="p">{</span><span class="s2">"section"</span><span class="p">:</span> <span class="n">i</span><span class="p">}</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">items</span><span class="p">]</span></div>
 
 
 
@@ -122,9 +123,9 @@
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">outputs</span><span class="p">):</span>
 
         <span class="k">def</span><span class="w"> </span><span class="nf">make_full</span><span class="p">(</span><span class="n">v</span><span class="p">):</span>
-            <span class="k">if</span> <span class="s2">&quot;#&quot;</span> <span class="ow">in</span> <span class="n">v</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s2">"#"</span> <span class="ow">in</span> <span class="n">v</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">v</span>
-            <span class="k">return</span> <span class="n">v</span> <span class="o">+</span> <span class="s2">&quot;#/data/outputs[0]&quot;</span>
+            <span class="k">return</span> <span class="n">v</span> <span class="o">+</span> <span class="s2">"#/data/outputs[0]"</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">outputs</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">outputs</span> <span class="o">=</span> <span class="p">[</span><span class="n">make_full</span><span class="p">(</span><span class="n">outputs</span><span class="p">)]</span>
@@ -143,11 +144,11 @@
 <div class="viewcode-block" id="NomadEntry">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.bindings.nomad.nomad.NomadEntry.html#ase2sprkkr.bindings.nomad.nomad.NomadEntry">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">NomadEntry</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Description of a entry in a :class:`NomadArchive`&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Description of a entry in a :class:`NomadArchive`"""</span>
 
 <div class="viewcode-block" id="NomadEntry.__init__">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.bindings.nomad.nomad.NomadEntry.html#ase2sprkkr.bindings.nomad.nomad.NomadEntry.__init__">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">archive</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">output</span><span class="p">:</span> <span class="n">TaskResult</span><span class="p">,</span> <span class="n">depends_on</span><span class="p">:</span> <span class="s2">&quot;Union[str, bool, NomadEntry]&quot;</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">archive</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">output</span><span class="p">:</span> <span class="n">TaskResult</span><span class="p">,</span> <span class="n">depends_on</span><span class="p">:</span> <span class="s2">"Union[str, bool, NomadEntry]"</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">archive</span> <span class="o">=</span> <span class="n">archive</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">output</span> <span class="o">=</span> <span class="n">output</span>
@@ -161,13 +162,13 @@
     <span class="nd">@depends_on</span><span class="o">.</span><span class="n">setter</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">depends_on</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">NomadEntry</span><span class="p">):</span>
-            <span class="n">p1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">path_to</span><span class="p">(</span><span class="s2">&quot;potential&quot;</span><span class="p">)</span>
-            <span class="n">p2</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">path_to</span><span class="p">(</span><span class="s2">&quot;converged&quot;</span><span class="p">)</span>
+            <span class="n">p1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">path_to</span><span class="p">(</span><span class="s2">"potential"</span><span class="p">)</span>
+            <span class="n">p2</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">path_to</span><span class="p">(</span><span class="s2">"converged"</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">p1</span> <span class="o">!=</span> <span class="n">p2</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">filecmp</span><span class="o">.</span><span class="n">cmp</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">):</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">&quot;The task </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">files</span><span class="p">[</span><span class="s1">&#39;output&#39;</span><span class="p">]()</span><span class="si">}</span><span class="s2"> does not use potential from </span><span class="si">{</span><span class="n">value</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">files</span><span class="p">[</span><span class="s1">&#39;output&#39;</span><span class="p">]()</span><span class="si">}</span><span class="s2">&quot;</span>
+                    <span class="sa">f</span><span class="s2">"The task </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">files</span><span class="p">[</span><span class="s1">'output'</span><span class="p">]()</span><span class="si">}</span><span class="s2"> does not use potential from </span><span class="si">{</span><span class="n">value</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">files</span><span class="p">[</span><span class="s1">'output'</span><span class="p">]()</span><span class="si">}</span><span class="s2">"</span>
                 <span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">archive</span><span class="o">.</span><span class="n">add_symlink</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;..&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">.</span><span class="n">file</span><span class="p">(</span><span class="s2">&quot;converged&quot;</span><span class="p">)),</span> <span class="bp">self</span><span class="o">.</span><span class="n">file</span><span class="p">(</span><span class="s2">&quot;potential&quot;</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">archive</span><span class="o">.</span><span class="n">add_symlink</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">".."</span><span class="p">,</span> <span class="n">value</span><span class="o">.</span><span class="n">file</span><span class="p">(</span><span class="s2">"converged"</span><span class="p">)),</span> <span class="bp">self</span><span class="o">.</span><span class="n">file</span><span class="p">(</span><span class="s2">"potential"</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_depends_on</span> <span class="o">=</span> <span class="n">value</span>
 
 <div class="viewcode-block" id="NomadEntry.file">
@@ -176,37 +177,31 @@
         <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">),</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">files</span><span class="p">[</span><span class="n">name</span><span class="p">]()))</span></div>
 
 
-<div class="viewcode-block" id="NomadEntry.task_name">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.bindings.nomad.nomad.NomadEntry.html#ase2sprkkr.bindings.nomad.nomad.NomadEntry.task_name">[docs]</a>
     <span class="nd">@cached_property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">task_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">task_name</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">task_name</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
 
-
-<div class="viewcode-block" id="NomadEntry.symbols">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.bindings.nomad.nomad.NomadEntry.html#ase2sprkkr.bindings.nomad.nomad.NomadEntry.symbols">[docs]</a>
     <span class="nd">@cached_property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">symbols</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">potential</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">symbols</span><span class="p">)</span></div>
-
+        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">potential</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">symbols</span><span class="p">)</span>
 
 <div class="viewcode-block" id="NomadEntry._resource">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.bindings.nomad.nomad.NomadEntry.html#ase2sprkkr.bindings.nomad.nomad.NomadEntry._resource">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">_resource</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resource</span><span class="p">):</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;../upload/archive/mainfile/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">#/</span><span class="si">{</span><span class="n">resource</span><span class="si">}</span><span class="s2">/&quot;</span></div>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">"../upload/archive/mainfile/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">#/</span><span class="si">{</span><span class="n">resource</span><span class="si">}</span><span class="s2">/"</span></div>
 
 
 <div class="viewcode-block" id="NomadEntry.outputs">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.bindings.nomad.nomad.NomadEntry.html#ase2sprkkr.bindings.nomad.nomad.NomadEntry.outputs">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">outputs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">yield</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">task_name</span><span class="si">}</span><span class="s2"> of </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">symbols</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_resource</span><span class="p">(</span><span class="s2">&quot;data/outputs[0]&quot;</span><span class="p">)</span></div>
+        <span class="k">yield</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">task_name</span><span class="si">}</span><span class="s2"> of </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">symbols</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_resource</span><span class="p">(</span><span class="s2">"data/outputs[0]"</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="NomadEntry.inputs">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.bindings.nomad.nomad.NomadEntry.html#ase2sprkkr.bindings.nomad.nomad.NomadEntry.inputs">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">inputs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">yield</span> <span class="bp">self</span><span class="o">.</span><span class="n">symbols</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_resource</span><span class="p">(</span><span class="s2">&quot;data/model_system[0]&quot;</span><span class="p">)</span>
-        <span class="k">yield</span> <span class="bp">self</span><span class="o">.</span><span class="n">task_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_resource</span><span class="p">(</span><span class="s2">&quot;data/model_method[0]&quot;</span><span class="p">)</span>
+        <span class="k">yield</span> <span class="bp">self</span><span class="o">.</span><span class="n">symbols</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_resource</span><span class="p">(</span><span class="s2">"data/model_system[0]"</span><span class="p">)</span>
+        <span class="k">yield</span> <span class="bp">self</span><span class="o">.</span><span class="n">task_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_resource</span><span class="p">(</span><span class="s2">"data/model_method[0]"</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">depends_on</span><span class="p">:</span>
             <span class="k">yield from</span> <span class="bp">self</span><span class="o">.</span><span class="n">depends_on</span><span class="o">.</span><span class="n">outputs</span><span class="p">()</span></div>
 
@@ -215,10 +210,10 @@
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.bindings.nomad.nomad.NomadEntry.html#ase2sprkkr.bindings.nomad.nomad.NomadEntry.task">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">{</span>
-            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">task_name</span><span class="si">}</span><span class="s2"> for </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">symbols</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;m_def&quot;</span><span class="p">:</span> <span class="s2">&quot;nomad.datamodel.metainfo.workflow.TaskReference&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;inputs&quot;</span><span class="p">:</span> <span class="n">map_io_to_nomad</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="p">()),</span>
-            <span class="s2">&quot;outputs&quot;</span><span class="p">:</span> <span class="n">map_io_to_nomad</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">outputs</span><span class="p">()),</span>
+            <span class="s2">"name"</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">task_name</span><span class="si">}</span><span class="s2"> for </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">symbols</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
+            <span class="s2">"m_def"</span><span class="p">:</span> <span class="s2">"nomad.datamodel.metainfo.workflow.TaskReference"</span><span class="p">,</span>
+            <span class="s2">"inputs"</span><span class="p">:</span> <span class="n">map_io_to_nomad</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="p">()),</span>
+            <span class="s2">"outputs"</span><span class="p">:</span> <span class="n">map_io_to_nomad</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">outputs</span><span class="p">()),</span>
         <span class="p">}</span></div>
 </div>
 
@@ -227,12 +222,12 @@
 <div class="viewcode-block" id="NomadArchive">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.bindings.nomad.nomad.NomadArchive.html#ase2sprkkr.bindings.nomad.nomad.NomadArchive">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">NomadArchive</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;This class handles Nomad uploads&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""This class handles Nomad uploads"""</span>
 
 <div class="viewcode-block" id="NomadArchive.__init__">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.bindings.nomad.nomad.NomadArchive.html#ase2sprkkr.bindings.nomad.nomad.NomadArchive.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">depends</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        filename</span>
@@ -245,12 +240,12 @@
 
 <span class="sd">        name</span>
 <span class="sd">          Name of the whole workflow</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="n">filename</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">file</span> <span class="o">=</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">TemporaryFile</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;w+b&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">file</span> <span class="o">=</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">TemporaryFile</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">"w+b"</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;w+b&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">zip</span> <span class="o">=</span> <span class="n">zipfile</span><span class="o">.</span><span class="n">ZipFile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">file</span><span class="p">,</span> <span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="n">zipfile</span><span class="o">.</span><span class="n">ZIP_BZIP2</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">"w+b"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">zip</span> <span class="o">=</span> <span class="n">zipfile</span><span class="o">.</span><span class="n">ZipFile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">file</span><span class="p">,</span> <span class="s2">"x"</span><span class="p">,</span> <span class="n">zipfile</span><span class="o">.</span><span class="n">ZIP_BZIP2</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">entries</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">scf</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">depends</span> <span class="o">=</span> <span class="n">ExternalEntry</span><span class="p">(</span><span class="n">depends</span><span class="p">)</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">depends</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">else</span> <span class="n">depends</span>
@@ -270,17 +265,17 @@
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.bindings.nomad.nomad.NomadArchive.html#ase2sprkkr.bindings.nomad.nomad.NomadArchive._add_entry">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">_add_entry</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output</span><span class="p">,</span> <span class="n">depends</span><span class="p">):</span>
 
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">output</span><span class="o">.</span><span class="n">files</span><span class="p">[</span><span class="s2">&quot;output&quot;</span><span class="p">]():</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Output file name has to be specified&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">output</span><span class="o">.</span><span class="n">files</span><span class="p">[</span><span class="s2">"output"</span><span class="p">]():</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Output file name has to be specified"</span><span class="p">)</span>
 
-        <span class="n">file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">output</span><span class="o">.</span><span class="n">files</span><span class="p">[</span><span class="s2">&quot;output&quot;</span><span class="p">]())</span>
+        <span class="n">file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">output</span><span class="o">.</span><span class="n">files</span><span class="p">[</span><span class="s2">"output"</span><span class="p">]())</span>
         <span class="n">folder</span> <span class="o">=</span> <span class="n">folder_base</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">file</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">counter</span> <span class="o">=</span> <span class="mi">1</span>
         <span class="k">while</span> <span class="n">folder</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">entries</span><span class="p">:</span>
-            <span class="n">folder</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">folder_base</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">counter</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="n">folder</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">folder_base</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">counter</span><span class="si">}</span><span class="s2">"</span>
             <span class="n">counter</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">zip</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">folder</span><span class="p">)</span>
-        <span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">folder</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">file</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">folder</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">file</span><span class="si">}</span><span class="s2">"</span>
 
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">depends</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
             <span class="n">depends</span> <span class="o">=</span> <span class="n">ExternalEntry</span><span class="p">(</span><span class="n">depends</span><span class="p">)</span>
@@ -292,7 +287,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">zip</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">output</span><span class="o">.</span><span class="n">path_to</span><span class="p">(</span><span class="n">kind</span><span class="p">),</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">folder</span><span class="p">,</span> <span class="n">file</span><span class="p">))</span>
 
         <span class="k">for</span> <span class="n">kind</span> <span class="ow">in</span> <span class="n">output</span><span class="o">.</span><span class="n">files</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">kind</span> <span class="o">==</span> <span class="s2">&quot;potential&quot;</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">depends</span><span class="p">,</span> <span class="n">ExternalEntry</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">output</span><span class="o">.</span><span class="n">task_name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;scf&quot;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">kind</span> <span class="o">==</span> <span class="s2">"potential"</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">depends</span><span class="p">,</span> <span class="n">ExternalEntry</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">output</span><span class="o">.</span><span class="n">task_name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">"scf"</span><span class="p">:</span>
                 <span class="k">continue</span>
             <span class="n">add_file</span><span class="p">(</span><span class="n">output</span><span class="o">.</span><span class="n">path_to</span><span class="p">(</span><span class="n">kind</span><span class="p">))</span>
 
@@ -303,7 +298,7 @@
 <div class="viewcode-block" id="NomadArchive.add_entry">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.bindings.nomad.nomad.NomadArchive.html#ase2sprkkr.bindings.nomad.nomad.NomadArchive.add_entry">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">add_entry</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">TaskResult</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="n">depends</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">NomadEntry</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Add entry</span>
 
 <span class="sd">        Parameters</span>
@@ -312,22 +307,22 @@
 <span class="sd">          Output file to add</span>
 
 <span class="sd">        depends</span>
-<span class="sd">          ``str``:  &quot;foreign entry point&quot;</span>
+<span class="sd">          ``str``:  "foreign entry point"</span>
 <span class="sd">          NomadEntry: Already added package</span>
 <span class="sd">          ``True``:  Automatic detection</span>
 <span class="sd">          ``False``: No dependency</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">TaskResult</span><span class="p">):</span>
             <span class="n">output</span> <span class="o">=</span> <span class="n">TaskResult</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">depends</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">output</span><span class="o">.</span><span class="n">task_name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;scf&quot;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">output</span><span class="o">.</span><span class="n">task_name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">"scf"</span><span class="p">:</span>
                 <span class="n">depends</span> <span class="o">=</span> <span class="kc">False</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">depends</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">depends</span>
 
-        <span class="k">if</span> <span class="n">depends</span> <span class="ow">is</span> <span class="kc">False</span> <span class="ow">and</span> <span class="n">output</span><span class="o">.</span><span class="n">task_name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">!=</span> <span class="s2">&quot;scf&quot;</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Non-SCF-task have to depend on some SCF task&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">depends</span> <span class="ow">is</span> <span class="kc">False</span> <span class="ow">and</span> <span class="n">output</span><span class="o">.</span><span class="n">task_name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">!=</span> <span class="s2">"scf"</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Non-SCF-task have to depend on some SCF task"</span><span class="p">)</span>
         <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_add_entry</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">depends</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">out</span></div>
 
@@ -336,7 +331,7 @@
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.bindings.nomad.nomad.NomadArchive.html#ase2sprkkr.bindings.nomad.nomad.NomadArchive.finalize">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">finalize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">resolve_auto_dependencies</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">zip</span><span class="o">.</span><span class="n">writestr</span><span class="p">(</span><span class="s2">&quot;workflow.archive.yaml&quot;</span><span class="p">,</span> <span class="n">yaml</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">workflow</span><span class="p">(),</span> <span class="n">Dumper</span><span class="o">=</span><span class="n">IndentDumper</span><span class="p">,</span> <span class="n">sort_keys</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">zip</span><span class="o">.</span><span class="n">writestr</span><span class="p">(</span><span class="s2">"workflow.archive.yaml"</span><span class="p">,</span> <span class="n">yaml</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">workflow</span><span class="p">(),</span> <span class="n">Dumper</span><span class="o">=</span><span class="n">IndentDumper</span><span class="p">,</span> <span class="n">sort_keys</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">zip</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">file</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span></div>
 
@@ -344,14 +339,14 @@
 <div class="viewcode-block" id="NomadArchive.resolve_auto_dependencies">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.bindings.nomad.nomad.NomadArchive.html#ase2sprkkr.bindings.nomad.nomad.NomadArchive.resolve_auto_dependencies">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">resolve_auto_dependencies</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;If there is any entry with &#39;auto&#39; dependency,</span>
+<span class="w">        </span><span class="sd">"""If there is any entry with 'auto' dependency,</span>
 <span class="sd">        make it dependent to a SCF task, which have to be uniqe</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">auto</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">entries</span><span class="o">.</span><span class="n">values</span><span class="p">()</span> <span class="k">if</span> <span class="n">i</span><span class="o">.</span><span class="n">depends_on</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">auto</span><span class="p">:</span>
-            <span class="n">scf</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">entries</span><span class="o">.</span><span class="n">values</span><span class="p">()</span> <span class="k">if</span> <span class="n">i</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">task_name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;scf&quot;</span><span class="p">]</span>
+            <span class="n">scf</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">entries</span><span class="o">.</span><span class="n">values</span><span class="p">()</span> <span class="k">if</span> <span class="n">i</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">task_name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">"scf"</span><span class="p">]</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">scf</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;If an automatic dependency is used, just one SCF task have to be submited.&quot;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"If an automatic dependency is used, just one SCF task have to be submited."</span><span class="p">)</span>
             <span class="n">scf</span> <span class="o">=</span> <span class="n">scf</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">auto</span><span class="p">:</span>
                 <span class="n">i</span><span class="o">.</span><span class="n">depends_on</span> <span class="o">=</span> <span class="n">scf</span></div>
@@ -360,13 +355,13 @@
 <div class="viewcode-block" id="NomadArchive.workflow">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.bindings.nomad.nomad.NomadArchive.html#ase2sprkkr.bindings.nomad.nomad.NomadArchive.workflow">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">workflow</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 
 <span class="sd">        workflow</span>
 <span class="sd">          Dictionary describing YAML for NOMAD workflow</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
 
         <span class="k">def</span><span class="w"> </span><span class="nf">gather</span><span class="p">(</span><span class="n">what</span><span class="p">):</span>
             <span class="n">out</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
@@ -378,15 +373,15 @@
             <span class="k">return</span> <span class="p">[</span><span class="n">i</span><span class="o">.</span><span class="n">task</span><span class="p">()</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">entries</span><span class="o">.</span><span class="n">values</span><span class="p">()]</span>
 
         <span class="n">workflow</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;m_def&quot;</span><span class="p">:</span> <span class="s2">&quot;nomad.datamodel.metainfo.workflow.TaskReference&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;inputs&quot;</span><span class="p">:</span> <span class="n">map_io_to_nomad</span><span class="p">(</span><span class="n">gather</span><span class="p">(</span><span class="s2">&quot;inputs&quot;</span><span class="p">)),</span>
-            <span class="s2">&quot;outputs&quot;</span><span class="p">:</span> <span class="n">map_io_to_nomad</span><span class="p">(</span><span class="n">gather</span><span class="p">(</span><span class="s2">&quot;outputs&quot;</span><span class="p">)),</span>
-            <span class="s2">&quot;tasks&quot;</span><span class="p">:</span> <span class="n">tasks</span><span class="p">(),</span>
+            <span class="s2">"m_def"</span><span class="p">:</span> <span class="s2">"nomad.datamodel.metainfo.workflow.TaskReference"</span><span class="p">,</span>
+            <span class="s2">"inputs"</span><span class="p">:</span> <span class="n">map_io_to_nomad</span><span class="p">(</span><span class="n">gather</span><span class="p">(</span><span class="s2">"inputs"</span><span class="p">)),</span>
+            <span class="s2">"outputs"</span><span class="p">:</span> <span class="n">map_io_to_nomad</span><span class="p">(</span><span class="n">gather</span><span class="p">(</span><span class="s2">"outputs"</span><span class="p">)),</span>
+            <span class="s2">"tasks"</span><span class="p">:</span> <span class="n">tasks</span><span class="p">(),</span>
         <span class="p">}</span>
 
-        <span class="n">out</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;workflow2&quot;</span><span class="p">:</span> <span class="n">workflow</span><span class="p">}</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"workflow2"</span><span class="p">:</span> <span class="n">workflow</span><span class="p">}</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">:</span>
-            <span class="n">out</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span>
+            <span class="n">out</span><span class="p">[</span><span class="s2">"name"</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span>
         <span class="k">return</span> <span class="n">out</span></div>
 </div>
 

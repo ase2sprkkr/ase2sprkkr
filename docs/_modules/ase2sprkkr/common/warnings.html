@@ -16,8 +16,8 @@
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
-      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -81,6 +81,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../ase2sprkkr.html">ase2sprkkr</a></li>
       <li class="breadcrumb-item active">ase2sprkkr.common.warnings</li>
       <li class="wy-breadcrumbs-aside">
       </li>
@@ -91,27 +92,160 @@
            <div itemprop="articleBody">
              
   <h1>Source code for ase2sprkkr.common.warnings</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span></span><span class="sd">"""</span>
 <span class="sd">This module implement simple class that encapsulates the</span>
 <span class="sd">warning about non-critical errors (or just suspicious data)</span>
 <span class="sd">in configuration/data files.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Iterable</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">contextlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">contextmanager</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Generator</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Literal</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">,</span> <span class="n">Type</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.backward_compatibility</span><span class="w"> </span><span class="kn">import</span> <span class="n">ExceptionGroup</span>
+
+
+<span class="n">ValidationReason</span> <span class="o">=</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"set"</span><span class="p">,</span> <span class="s2">"parse"</span><span class="p">,</span> <span class="s2">"save"</span><span class="p">]</span>
+<span class="n">RetainInvalidPolicy</span> <span class="o">=</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"none"</span><span class="p">,</span> <span class="s2">"typed"</span><span class="p">,</span> <span class="s2">"all"</span><span class="p">]</span>
+<span class="n">ReportInvalidPolicy</span> <span class="o">=</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"raise"</span><span class="p">,</span> <span class="s2">"warn"</span><span class="p">,</span> <span class="s2">"ignore"</span><span class="p">]</span>
+
+
+<div class="viewcode-block" id="catch_warnings_of">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.warnings.catch_warnings_of.html#ase2sprkkr.common.warnings.catch_warnings_of">[docs]</a>
+<span class="nd">@contextmanager</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">catch_warnings_of</span><span class="p">(</span>
+    <span class="n">category</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="ne">Warning</span><span class="p">],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Generator</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="ne">Warning</span><span class="p">],</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">"""Record warnings of ``category`` without swallowing other warnings.</span>
+
+<span class="sd">    The standard :func:`warnings.catch_warnings` records every warning which</span>
+<span class="sd">    passes the active filters; its ``category`` argument only installs another</span>
+<span class="sd">    filter.  This wrapper separates the requested category and re-emits all</span>
+<span class="sd">    other recorded warnings after restoring the surrounding warning context.</span>
+
+<span class="sd">    The yielded list is populated when the context is left.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    category</span>
+<span class="sd">      Warning base class to collect; warnings outside this class are re-emitted.</span>
+<span class="sd">    """</span>
+    <span class="n">recorded</span> <span class="o">=</span> <span class="p">()</span>
+    <span class="n">selected</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">with</span> <span class="n">warnings</span><span class="o">.</span><span class="n">catch_warnings</span><span class="p">(</span><span class="n">record</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">as</span> <span class="n">recorded</span><span class="p">:</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s2">"always"</span><span class="p">,</span> <span class="n">category</span><span class="p">)</span>
+            <span class="k">yield</span> <span class="n">selected</span>
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">warning</span> <span class="ow">in</span> <span class="n">recorded</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">warning</span><span class="o">.</span><span class="n">category</span><span class="p">,</span> <span class="n">category</span><span class="p">):</span>
+                <span class="n">selected</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">warning</span><span class="o">.</span><span class="n">message</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">warnings</span><span class="o">.</span><span class="n">warn_explicit</span><span class="p">(</span>
+                    <span class="n">warning</span><span class="o">.</span><span class="n">message</span><span class="p">,</span>
+                    <span class="n">warning</span><span class="o">.</span><span class="n">category</span><span class="p">,</span>
+                    <span class="n">warning</span><span class="o">.</span><span class="n">filename</span><span class="p">,</span>
+                    <span class="n">warning</span><span class="o">.</span><span class="n">lineno</span><span class="p">,</span>
+                    <span class="n">source</span><span class="o">=</span><span class="n">warning</span><span class="o">.</span><span class="n">source</span><span class="p">,</span>
+                <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="ValidationResult">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.warnings.ValidationResult.html#ase2sprkkr.common.warnings.ValidationResult">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ValidationResult</span><span class="p">(</span><span class="ne">UserWarning</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Base class for issues returned by semantic validators."""</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">emit</span><span class="p">(</span><span class="n">result</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Emit one result, or a flat iterable of validation results.</span>
+
+<span class="sd">        ``result`` may be ``None``, one :class:`ValidationResult`, or an</span>
+<span class="sd">        iterable of them.</span>
+<span class="sd">        """</span>
+        <span class="k">if</span> <span class="n">result</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="n">invalid_result</span> <span class="o">=</span> <span class="ne">TypeError</span><span class="p">(</span>
+            <span class="s2">"A validator must return None, a ValidationResult, "</span>
+            <span class="s2">"or an iterable of ValidationResult instances"</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">ValidationResult</span><span class="p">):</span>
+            <span class="n">results</span> <span class="o">=</span> <span class="p">(</span><span class="n">result</span><span class="p">,)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">)):</span>
+            <span class="n">results</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">invalid_result</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">issue</span><span class="p">,</span> <span class="n">ValidationResult</span><span class="p">)</span> <span class="k">for</span> <span class="n">issue</span> <span class="ow">in</span> <span class="n">results</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">invalid_result</span>
+        <span class="k">for</span> <span class="n">issue</span> <span class="ow">in</span> <span class="n">results</span><span class="p">:</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="n">issue</span><span class="p">,</span> <span class="n">stacklevel</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">collect</span><span class="p">(</span>
+        <span class="n">callback</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="s2">"ValidationResult"</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">"""Run ``callback(*args, **kwargs)`` and return its emitted results."""</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">with</span> <span class="n">catch_warnings_of</span><span class="p">(</span><span class="n">ValidationResult</span><span class="p">)</span> <span class="k">as</span> <span class="n">results</span><span class="p">:</span>
+                <span class="n">callback</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">ValidationResult</span> <span class="k">as</span> <span class="n">issue</span><span class="p">:</span>
+            <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">issue</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">results</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">report</span><span class="p">(</span>
+        <span class="n">results</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="s2">"ValidationResult"</span><span class="p">],</span>
+        <span class="n">invalid</span><span class="p">:</span> <span class="n">ReportInvalidPolicy</span> <span class="o">=</span> <span class="s2">"raise"</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Report every warning, then handle collected errors as requested.</span>
+
+<span class="sd">        With ``invalid='raise'``, reporting is deliberately not interrupted by</span>
+<span class="sd">        the first :class:`DataValidityError`: all ordinary validation warnings</span>
+<span class="sd">        are emitted first and the collected errors are raised afterwards.</span>
+<span class="sd">        For  ``'warn'`` respective ``'ignore'``, both the errors and warnings</span>
+<span class="sd">        are emitted as warnings, or ignored, respectively.</span>
+
+<span class="sd">        ``results`` is the collected validation output and ``invalid`` selects</span>
+<span class="sd">        the ``"raise"``, ``"warn"`` or ``"ignore"`` reporting policy.</span>
+<span class="sd">        """</span>
+        <span class="k">if</span> <span class="n">invalid</span> <span class="o">==</span> <span class="s1">'ignore'</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="k">if</span> <span class="n">invalid</span> <span class="o">==</span> <span class="s1">'warn'</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">results</span><span class="p">:</span>
+                <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">stacklevel</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">invalid</span> <span class="o">==</span> <span class="s1">'raise'</span><span class="p">:</span>
+            <span class="n">errors</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">results</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">DataValidityError</span><span class="p">):</span>
+                    <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">stacklevel</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">errors</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">errors</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="n">errors</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">message</span> <span class="o">=</span> <span class="s2">"Validation failed: "</span> <span class="o">+</span> <span class="s2">"; "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                    <span class="nb">str</span><span class="p">(</span><span class="n">error</span><span class="p">)</span> <span class="k">for</span> <span class="n">error</span> <span class="ow">in</span> <span class="n">errors</span>
+                <span class="p">)</span>
+                <span class="k">raise</span> <span class="n">DataValidityErrors</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">errors</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Unknown invalid-value reporting policy: </span><span class="si">{</span><span class="n">invalid</span><span class="si">!r}</span><span class="s2">"</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="DataValidityWarning">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.common.warnings.DataValidityWarning.html#ase2sprkkr.common.warnings.DataValidityWarning">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">DataValidityWarning</span><span class="p">(</span><span class="ne">UserWarning</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">DataValidityWarning</span><span class="p">(</span><span class="n">ValidationResult</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    This Warning should be issued, if there are some invalid data</span>
-<span class="sd">    or format problems, that should not yield a &quot;hard error&quot; which</span>
+<span class="sd">    or format problems, that should not yield a "hard error" which</span>
 <span class="sd">    would prevent parsing the data.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="nd">@classmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">warn</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">out</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Yield the warning&quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">warn</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">out</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Emit a warning whose message is built from ``out``."""</span>
         <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="bp">cls</span><span class="p">(</span><span class="n">out</span><span class="p">),</span> <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span></div>
 
 
@@ -119,10 +253,114 @@
 <div class="viewcode-block" id="DataValidityError">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.common.warnings.DataValidityError.html#ase2sprkkr.common.warnings.DataValidityError">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">DataValidityError</span><span class="p">(</span><span class="n">DataValidityWarning</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Errors of this class will be considered to be &#39;Errors&#39;.</span>
-<span class="sd">    The current action will be interrupted.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Errors of this class will be considered to be 'Errors'.</span>
+<span class="sd">    The current action will be interrupted."""</span>
 
     <span class="k">pass</span></div>
+
+
+
+<div class="viewcode-block" id="DataValidityErrors">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.warnings.DataValidityErrors.html#ase2sprkkr.common.warnings.DataValidityErrors">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">DataValidityErrors</span><span class="p">(</span><span class="n">DataValidityError</span><span class="p">,</span> <span class="n">ExceptionGroup</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""An exception group containing at least one validity error."""</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">exceptions</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="ne">Exception</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Initialize the exception-group base explicitly for Python 3.8."""</span>
+        <span class="n">ExceptionGroup</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">,</span> <span class="n">exceptions</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">derive</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exceptions</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="ne">Exception</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">ExceptionGroup</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Preserve this type while the derived group has a validity error."""</span>
+        <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">error</span><span class="p">,</span> <span class="n">DataValidityError</span><span class="p">)</span> <span class="k">for</span> <span class="n">error</span> <span class="ow">in</span> <span class="n">exceptions</span><span class="p">):</span>
+            <span class="k">return</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)(</span><span class="bp">self</span><span class="o">.</span><span class="n">message</span><span class="p">,</span> <span class="n">exceptions</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">ExceptionGroup</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">message</span><span class="p">,</span> <span class="n">exceptions</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="InvalidValuePolicy">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.warnings.InvalidValuePolicy.html#ase2sprkkr.common.warnings.InvalidValuePolicy">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">InvalidValuePolicy</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Retention and reporting policy for invalid proposed values."""</span>
+
+<div class="viewcode-block" id="InvalidValuePolicy.__init__">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.warnings.InvalidValuePolicy.html#ase2sprkkr.common.warnings.InvalidValuePolicy.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">why</span><span class="p">:</span> <span class="n">ValidationReason</span><span class="p">,</span>
+        <span class="n">retain_invalid</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">RetainInvalidPolicy</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">report_invalid</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ReportInvalidPolicy</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Create policies for validation phase ``why``.</span>
+
+<span class="sd">        ``retain_invalid`` is ``"none"``, ``"typed"`` or ``"all"``;</span>
+<span class="sd">        ``report_invalid`` is ``"raise"``, ``"warn"`` or ``"ignore"``.</span>
+<span class="sd">        Phase-dependent defaults are used when either argument is ``None``.</span>
+<span class="sd">        """</span>
+        <span class="k">if</span> <span class="n">why</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"set"</span><span class="p">,</span> <span class="s2">"parse"</span><span class="p">,</span> <span class="s2">"save"</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Unknown validation reason: </span><span class="si">{</span><span class="n">why</span><span class="si">!r}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">retain_invalid</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">retain_invalid</span> <span class="o">=</span> <span class="s2">"typed"</span> <span class="k">if</span> <span class="n">why</span> <span class="o">==</span> <span class="s2">"parse"</span> <span class="k">else</span> <span class="s2">"none"</span>
+        <span class="k">if</span> <span class="n">report_invalid</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">report_invalid</span> <span class="o">=</span> <span class="s2">"warn"</span> <span class="k">if</span> <span class="n">why</span> <span class="o">==</span> <span class="s2">"parse"</span> <span class="k">else</span> <span class="s2">"raise"</span>
+        <span class="k">if</span> <span class="n">retain_invalid</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"none"</span><span class="p">,</span> <span class="s2">"typed"</span><span class="p">,</span> <span class="s2">"all"</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"Unknown invalid-value retention policy: </span><span class="si">{</span><span class="n">retain_invalid</span><span class="si">!r}</span><span class="s2">"</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="n">report_invalid</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"raise"</span><span class="p">,</span> <span class="s2">"warn"</span><span class="p">,</span> <span class="s2">"ignore"</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"Unknown invalid-value reporting policy: </span><span class="si">{</span><span class="n">report_invalid</span><span class="si">!r}</span><span class="s2">"</span>
+            <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">why</span> <span class="o">=</span> <span class="n">why</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">retain_invalid</span> <span class="o">=</span> <span class="n">retain_invalid</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">report_invalid</span> <span class="o">=</span> <span class="n">report_invalid</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rollback</span> <span class="o">=</span> <span class="kc">False</span></div>
+
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">retain_typed</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">retain_invalid</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"typed"</span><span class="p">,</span> <span class="s2">"all"</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">retain_all</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">retain_invalid</span> <span class="o">==</span> <span class="s2">"all"</span>
+
+<div class="viewcode-block" id="InvalidValuePolicy.add">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.warnings.InvalidValuePolicy.html#ase2sprkkr.common.warnings.InvalidValuePolicy.add">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="n">ValidationResult</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Record a retained validation ``result``."""</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">result</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="InvalidValuePolicy.discard">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.warnings.InvalidValuePolicy.html#ase2sprkkr.common.warnings.InvalidValuePolicy.discard">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">discard</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="n">ValidationResult</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Record an unstaged invalid value and preserve raising atomicity."""</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="nb">isinstance</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">DataValidityError</span><span class="p">)</span>
+            <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">report_invalid</span> <span class="o">==</span> <span class="s2">"raise"</span>
+        <span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">rollback</span> <span class="o">=</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="InvalidValuePolicy.add_semantic">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.warnings.InvalidValuePolicy.html#ase2sprkkr.common.warnings.InvalidValuePolicy.add_semantic">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_semantic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">results</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">ValidationResult</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Record semantic ``results`` and request rollback when required."""</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">results</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">retain_typed</span> <span class="ow">and</span> <span class="nb">any</span><span class="p">(</span>
+            <span class="nb">isinstance</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">DataValidityError</span><span class="p">)</span> <span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">results</span>
+        <span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">rollback</span> <span class="o">=</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="InvalidValuePolicy.report">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.warnings.InvalidValuePolicy.html#ase2sprkkr.common.warnings.InvalidValuePolicy.report">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">report</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Apply the configured reporting policy to all recorded results."""</span>
+        <span class="n">ValidationResult</span><span class="o">.</span><span class="n">report</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">results</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">report_invalid</span><span class="p">)</span></div>
+</div>
 
 </pre></div>
 

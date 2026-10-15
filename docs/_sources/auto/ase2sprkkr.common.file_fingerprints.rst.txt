@@ -1,0 +1,58 @@
+file\_fingerprints
+==================
+
+Full name: **ase2sprkkr.common.file\_fingerprints**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.common.file_fingerprints.FileFingerprint 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.common.file_fingerprints
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      file_fingerprint
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      FileFingerprint
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

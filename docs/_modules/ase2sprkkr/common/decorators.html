@@ -16,8 +16,8 @@
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
-      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -81,6 +81,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../ase2sprkkr.html">ase2sprkkr</a></li>
       <li class="breadcrumb-item active">ase2sprkkr.common.decorators</li>
       <li class="wy-breadcrumbs-aside">
       </li>
@@ -91,7 +92,7 @@
            <div itemprop="articleBody">
              
   <h1>Source code for ase2sprkkr.common.decorators</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Various decorators, mainly for class methods&quot;&quot;&quot;</span>
+<span></span><span class="sd">"""Various decorators, mainly for class methods"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">functools</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">inspect</span>
@@ -104,9 +105,9 @@
 
 
 <div class="viewcode-block" id="cached_class_property">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.decorators.cached_class_property.html#ase2sprkkr.common.decorators.cached_class_property">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.decorators.cached_class_property.html#ase2sprkkr.bindings.nomad.nomad.cached_class_property">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">cached_class_property</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Decorator that converts a method with a single cls argument into a property</span>
 <span class="sd">    that can be accessed directly from the class. The value is computed only</span>
 <span class="sd">    once.</span>
@@ -126,10 +127,10 @@
 <span class="sd">              return another_cached_value</span>
 
 <span class="sd">          x = Cls.cls_property</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="cached_class_property.__init__">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.decorators.cached_class_property.html#ase2sprkkr.common.decorators.cached_class_property.__init__">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.decorators.cached_class_property.html#ase2sprkkr.bindings.nomad.nomad.cached_class_property.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fget</span> <span class="o">=</span> <span class="n">method</span>
         <span class="n">functools</span><span class="o">.</span><span class="n">update_wrapper</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method</span><span class="p">)</span></div>
@@ -150,24 +151,24 @@
 
 
 
-<span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">functools</span><span class="p">,</span> <span class="s2">&quot;cached_property&quot;</span><span class="p">):</span>
+<span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">functools</span><span class="p">,</span> <span class="s2">"cached_property"</span><span class="p">):</span>
     <span class="n">std_cached_property</span> <span class="o">=</span> <span class="n">functools</span><span class="o">.</span><span class="n">cached_property</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; Functools.cached_property decorator - the value is computed only once and then stored as an (same-name) instance attribute.</span>
+<span class="w">    </span><span class="sd">""" Functools.cached_property decorator - the value is computed only once and then stored as an (same-name) instance attribute.</span>
 <span class="sd">    You can delete the attribute to invalidate the cache.</span>
 
 <span class="sd">    Earlier versions of python do not have this decorator, so for these versions is implemented below, otherwise it is taken from functools.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 <span class="k">else</span><span class="p">:</span>
     <span class="c1"># https://github.com/pydanny/cached-property/blob/master/cached_property.py</span>
     <span class="k">class</span><span class="w"> </span><span class="nc">std_cached_property</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        A property that is only computed once per instance and then replaces itself</span>
 <span class="sd">        with an ordinary attribute. Deleting the attribute resets the property.</span>
 <span class="sd">        Source: `https://github.com/bottlepy/bottle/commit/fa7733e075da0d790d809aa3d2f53071897e6f76`</span>
-<span class="sd">        &quot;&quot;&quot;</span>  <span class="c1"># noqa</span>
+<span class="sd">        """</span>  <span class="c1"># noqa</span>
 
         <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="vm">__doc__</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="s2">&quot;__doc__&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="vm">__doc__</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="s2">"__doc__"</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">func</span> <span class="o">=</span> <span class="n">func</span>
 
         <span class="k">def</span><span class="w"> </span><span class="fm">__get__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="bp">cls</span><span class="p">):</span>
@@ -198,12 +199,12 @@
 
 
 <div class="viewcode-block" id="cached_property">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.decorators.cached_property.html#ase2sprkkr.common.decorators.cached_property">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.decorators.cached_property.html#ase2sprkkr.bindings.nomad.nomad.cached_property">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">cached_property</span><span class="p">(</span><span class="n">std_cached_property</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Cached property, that allows setter and deleter&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Cached property, that allows setter and deleter"""</span>
 
 <div class="viewcode-block" id="cached_property.__init__">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.decorators.cached_property.html#ase2sprkkr.common.decorators.cached_property.__init__">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.decorators.cached_property.html#ase2sprkkr.bindings.nomad.nomad.cached_property.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="n">fset</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fdel</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fset</span> <span class="o">=</span> <span class="n">fset</span>
@@ -223,13 +224,13 @@
             <span class="k">del</span> <span class="n">obj</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">attrname</span><span class="p">]</span>
 
 <div class="viewcode-block" id="cached_property.setter">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.decorators.cached_property.html#ase2sprkkr.common.decorators.cached_property.setter">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.decorators.cached_property.html#ase2sprkkr.bindings.nomad.nomad.cached_property.setter">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">setter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fset</span><span class="p">):</span>
         <span class="k">return</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)(</span><span class="bp">self</span><span class="o">.</span><span class="n">func</span><span class="p">,</span> <span class="n">fset</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">fdel</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="cached_property.deleter">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.decorators.cached_property.html#ase2sprkkr.common.decorators.cached_property.deleter">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.decorators.cached_property.html#ase2sprkkr.bindings.nomad.nomad.cached_property.deleter">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">deleter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fdel</span><span class="p">):</span>
         <span class="k">return</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)(</span><span class="bp">self</span><span class="o">.</span><span class="n">func</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">fset</span><span class="p">,</span> <span class="n">fdel</span><span class="p">)</span></div>
 
@@ -246,9 +247,9 @@
 
 
 <div class="viewcode-block" id="class_property">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.decorators.class_property.html#ase2sprkkr.common.decorators.class_property">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.decorators.class_property.html#ase2sprkkr.bindings.nomad.nomad.class_property">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">class_property</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Decorator that converts a method with a single cls argument into a property</span>
 <span class="sd">    that can be accessed directly from the class. The value is not cached, see</span>
 <span class="sd">    :func:`cached_class_property`, if caching is desirable.</span>
@@ -264,10 +265,10 @@
 <span class="sd">              return some_value</span>
 
 <span class="sd">          x = Cls.cls_property</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="class_property.__init__">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.decorators.class_property.html#ase2sprkkr.common.decorators.class_property.__init__">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.decorators.class_property.html#ase2sprkkr.bindings.nomad.nomad.class_property.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fget</span> <span class="o">=</span> <span class="n">method</span></div>
 
@@ -278,9 +279,9 @@
 
 
 <div class="viewcode-block" id="add_to_signature">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.decorators.add_to_signature.html#ase2sprkkr.common.decorators.add_to_signature">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.decorators.add_to_signature.html#ase2sprkkr.bindings.nomad.nomad.add_to_signature">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">add_to_signature</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">prepend</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">excluding</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Add the arguments in the ``func`` function to the list of arguments</span>
 <span class="sd">    of the resulting function (as keyword_only arguments)</span>
 <span class="sd">    The modified function has to have its arguments defined as</span>
@@ -293,7 +294,7 @@
 
 <span class="sd">        @add_to_signature(parent)</span>
 <span class="sd">        def child(new_param, *args, **kwargs):</span>
-<span class="sd">            print(f&#39;New param is {new_param})</span>
+<span class="sd">            print(f'New param is {new_param})</span>
 <span class="sd">            parent(*args, **kwargs)</span>
 
 
@@ -307,7 +308,7 @@
 <span class="sd">      If False, they will be after the parents positional arguments.</span>
 
 <span class="sd">      The same-named arguments can be given as keyword-only - then</span>
-<span class="sd">      they just alter the properties of the &quot;old&quot; arguments, retaining their position.</span>
+<span class="sd">      they just alter the properties of the "old" arguments, retaining their position.</span>
 <span class="sd">      If they are given as regular ones, they takes their new position, too.</span>
 
 <span class="sd">    excluding</span>
@@ -315,7 +316,7 @@
 
 <span class="sd">    kwargs</span>
 <span class="sd">      The resulting function will have kwargs argument</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">excluding</span><span class="p">:</span>
         <span class="n">excluding</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">excluding</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
@@ -359,7 +360,7 @@
 
             <span class="k">def</span><span class="w"> </span><span class="nf">add_pars</span><span class="p">():</span>
                 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">pars</span><span class="p">:</span>
-                    <span class="k">if</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">excluding</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">i</span><span class="o">.</span><span class="n">name</span> <span class="ow">in</span> <span class="n">excluding</span><span class="p">:</span>
                         <span class="k">continue</span>
                     <span class="k">if</span> <span class="n">i</span><span class="o">.</span><span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">new_pars</span><span class="p">:</span>
                         <span class="k">yield</span> <span class="n">i</span>
@@ -368,8 +369,7 @@
                         <span class="k">if</span> <span class="n">n</span><span class="o">.</span><span class="n">kind</span> <span class="o">!=</span> <span class="n">P</span><span class="o">.</span><span class="n">KEYWORD_ONLY</span><span class="p">:</span>
                             <span class="k">continue</span>
                         <span class="c1"># keyword only parameters retain the old position, taken new default and annotation</span>
-                        <span class="n">P</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">i</span><span class="o">.</span><span class="n">kind</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">n</span><span class="o">.</span><span class="n">default</span><span class="p">,</span> <span class="n">annotation</span><span class="o">=</span><span class="n">n</span><span class="o">.</span><span class="n">annotation</span><span class="p">)</span>
-                        <span class="k">yield</span> <span class="n">n</span>
+                        <span class="k">yield</span> <span class="n">i</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="n">n</span><span class="o">.</span><span class="n">default</span><span class="p">,</span> <span class="n">annotation</span><span class="o">=</span><span class="n">n</span><span class="o">.</span><span class="n">annotation</span><span class="p">)</span>
 
             <span class="n">add_pars</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">add_pars</span><span class="p">()]</span>
         <span class="k">else</span><span class="p">:</span>
@@ -416,9 +416,9 @@
 
 
 <div class="viewcode-block" id="add_called_class_as_argument">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.decorators.add_called_class_as_argument.html#ase2sprkkr.common.decorators.add_called_class_as_argument">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.decorators.add_called_class_as_argument.html#ase2sprkkr.bindings.nomad.nomad.add_called_class_as_argument">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">add_called_class_as_argument</span><span class="p">(</span><span class="n">decorator</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;If a decorator is used on a method, the information about the defining class is lost.</span>
+<span class="w">    </span><span class="sd">"""If a decorator is used on a method, the information about the defining class is lost.</span>
 <span class="sd">    As a consequence, the execution of ``super()....`` failed.</span>
 
 <span class="sd">    This decorator can be applied to another decorator: it will add the defining class as a first</span>
@@ -426,7 +426,7 @@
 
 <span class="sd">    The implementation is very tricky - function-style decorator is not able to handle this situation,</span>
 <span class="sd">    the __set_name__ special method (in class-style decorator) has to be utilized. Moreover, class</span>
-<span class="sd">    style decorator lose &#39;self&#39; from decorated method, thus, the self has to be recovered using</span>
+<span class="sd">    style decorator lose 'self' from decorated method, thus, the self has to be recovered using</span>
 <span class="sd">    descriptor protocol.</span>
 <span class="sd">    To speed up the whole thing, the first access replaces the class-style decorator class with</span>
 <span class="sd">    generated method (that can already know - and knows - everything needed)</span>
@@ -443,21 +443,21 @@
 <span class="sd">    ...     return wrapped</span>
 <span class="sd">    &gt;&gt;&gt; class A:</span>
 <span class="sd">    ...     def call(self):</span>
-<span class="sd">    ...         print(&quot;A&quot;, end=&quot;&quot;)</span>
+<span class="sd">    ...         print("A", end="")</span>
 <span class="sd">    &gt;&gt;&gt; class B(A):</span>
 <span class="sd">    ...     @decorator</span>
 <span class="sd">    ...     def call(self):</span>
-<span class="sd">    ...         print(&quot;B&quot;, end=&quot;&quot;)</span>
+<span class="sd">    ...         print("B", end="")</span>
 <span class="sd">    &gt;&gt;&gt; B().call()</span>
 <span class="sd">    AB</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">class</span><span class="w"> </span><span class="nc">AddCalledClassAsArgument</span><span class="p">:</span>
         <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">function</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">func</span> <span class="o">=</span> <span class="n">function</span>
 
         <span class="k">def</span><span class="w"> </span><span class="nf">__set_name__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">owner</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
-<span class="w">            </span><span class="sd">&quot;&quot;&quot;Catch the defining class&quot;&quot;&quot;</span>
+<span class="w">            </span><span class="sd">"""Catch the defining class"""</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">cls</span> <span class="o">=</span> <span class="n">owner</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
 
@@ -473,8 +473,8 @@
             <span class="k">return</span> <span class="n">wrapped</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
         <span class="k">def</span><span class="w"> </span><span class="fm">__get__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">instancetype</span><span class="p">):</span>
-<span class="w">            </span><span class="sd">&quot;&quot;&quot;Descriptor method - via this method the actual calling instance</span>
-<span class="sd">            (self of the very resulting method) is obtained.&quot;&quot;&quot;</span>
+<span class="w">            </span><span class="sd">"""Descriptor method - via this method the actual calling instance</span>
+<span class="sd">            (self of the very resulting method) is obtained."""</span>
             <span class="n">out</span> <span class="o">=</span> <span class="n">functools</span><span class="o">.</span><span class="n">partial</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="fm">__call__</span><span class="p">,</span> <span class="n">instance</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">functools</span><span class="o">.</span><span class="n">update_wrapper</span><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">func</span><span class="p">)</span>
 
@@ -487,7 +487,7 @@
 
 
 <div class="viewcode-block" id="warnings_from_here">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.decorators.warnings_from_here.html#ase2sprkkr.common.decorators.warnings_from_here">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.decorators.warnings_from_here.html#ase2sprkkr.bindings.nomad.nomad.warnings_from_here">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">warnings_from_here</span><span class="p">(</span><span class="n">stacklevel</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
     <span class="n">stacklevel</span> <span class="o">+=</span> <span class="mi">1</span>
 
@@ -508,14 +508,14 @@
 
 
 <div class="viewcode-block" id="maybeclassmethod">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.decorators.maybeclassmethod.html#ase2sprkkr.common.decorators.maybeclassmethod">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.decorators.maybeclassmethod.html#ase2sprkkr.bindings.nomad.nomad.maybeclassmethod">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">maybeclassmethod</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;This decorator creates a method, that can behawes both as</span>
+<span class="w">    </span><span class="sd">"""This decorator creates a method, that can behawes both as</span>
 <span class="sd">    classmethod and normal method - it provides both self and cls,</span>
-<span class="sd">    when self can be None&quot;&quot;&quot;</span>
+<span class="sd">    when self can be None"""</span>
 
 <div class="viewcode-block" id="maybeclassmethod.__init__">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.decorators.maybeclassmethod.html#ase2sprkkr.common.decorators.maybeclassmethod.__init__">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.decorators.maybeclassmethod.html#ase2sprkkr.bindings.nomad.nomad.maybeclassmethod.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">method</span> <span class="o">=</span> <span class="n">method</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">wrapper</span> <span class="o">=</span> <span class="n">functools</span><span class="o">.</span><span class="n">wraps</span><span class="p">(</span><span class="n">method</span><span class="p">)</span></div>

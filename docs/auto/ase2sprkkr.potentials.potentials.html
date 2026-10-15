@@ -17,8 +17,8 @@
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../_static/documentation_options.js?v=5929fcd5"></script>
-      <script src="../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -68,14 +68,18 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.promote_ase_atoms.html">promote_ase_atoms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.__getattr__.html">__getattr__</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.common.html">common</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration.html">configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration_migration.html">configuration_migration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration_yaml.html">configuration_yaml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.conftest.html">conftest</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.examples.html">examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.execution.html">execution</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.gui.html">gui</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.input_parameters.html">input_parameters</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.output_files.html">output_files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.outputs.html">outputs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.physics.html">physics</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="ase2sprkkr.potentials.html">potentials</a><ul class="current">
@@ -85,10 +89,13 @@
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.potentials.potential_sections.html">potential_sections</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">potentials</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.potentials.potentials.Potential.html">Potential</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.potentials.potentials.PotentialFileChanged.html">ase2sprkkr.potentials.potentials.PotentialFileChanged</a></li>
 </ul>
 </li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.profiles.html">profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.result_files.html">result_files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.sprkkr.html">sprkkr</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.tools.html">tools</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.version.html">version</a></li>
@@ -126,16 +133,29 @@
 <h1>potentials<a class="headerlink" href="#potentials" title="Link to this heading"></a></h1>
 <p>Full name: <strong>ase2sprkkr.potentials.potentials</strong></p>
 <p class="rubric">Module class hierarchy</p>
-<div class="graphviz"><img src="../_images/inheritance-4aa975475cff1840eac92d418fc8ce1e3377e18c.png" alt="Inheritance diagram of ase2sprkkr.potentials.potentials.Potential" usemap="#inheritancef06c53c2da" class="inheritance graphviz" /></div>
-<map id="inheritancef06c53c2da" name="inheritancef06c53c2da">
-<area shape="rect" id="node1" href="ase2sprkkr.common.configuration_containers.BaseConfigurationContainer.html#ase2sprkkr.common.configuration_containers.BaseConfigurationContainer" target="_top" title="Configuration container, that holds members, either in classical way" alt="" coords="130,52,316,78"/>
-<area shape="rect" id="node3" href="ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.configuration_containers.ConfigurationContainer" target="_top" title="A container for configuration (problem&#45;definition) options and/or sections." alt="" coords="343,52,499,78"/>
-<area shape="rect" id="node2" href="ase2sprkkr.common.configuration.Configuration.html#ase2sprkkr.common.configuration.Configuration" target="_top" title="The common base class for all configurations values and containers. I.e." alt="" coords="5,52,104,78"/>
-<area shape="rect" id="node5" href="ase2sprkkr.common.configuration_containers.RootConfigurationContainer.html#ase2sprkkr.common.configuration_containers.RootConfigurationContainer" target="_top" title="Base class for data of configuration/problem&#45;definition files" alt="" coords="526,52,709,78"/>
-<area shape="rect" id="node4" href="ase2sprkkr.sprkkr.configuration.ConfigurationFile.html#ase2sprkkr.sprkkr.configuration.ConfigurationFile" target="_top" title="&#39;Root&#39; configuration container for SPRKKR configuration file" alt="" coords="736,29,856,54"/>
-<area shape="rect" id="node7" href="ase2sprkkr.potentials.potentials.Potential.html#ase2sprkkr.potentials.potentials.Potential" target="_top" title="It holds data form SPR&#45;KKR potential file" alt="" coords="883,29,955,54"/>
-<area shape="rect" id="node6" href="ase2sprkkr.sprkkr.configuration.ConfigurationSectionTrait.html#ase2sprkkr.sprkkr.configuration.ConfigurationSectionTrait" target="_top" title="ConfigurationSectionTrait" alt="" coords="534,5,702,30"/>
-</map><div class="line-block">
+digraph inheritancef06c53c2da {
+bgcolor=transparent;
+fontsize=14;
+rankdir=LR;
+ranksep=0.3;
+size=&quot;10.0, 10.0&quot;;
+  &quot;ABC&quot; [fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,tooltip=&quot;Helper class that provides a standard way to create an ABC using&quot;];
+  &quot;BaseConfigurationContainer&quot; [URL=&quot;ase2sprkkr.common.configuration_containers.BaseConfigurationContainer.html#ase2sprkkr.common.configuration_containers.BaseConfigurationContainer&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;Configuration container, that holds members, either in classical way&quot;];
+  &quot;Configuration&quot; -&gt; &quot;BaseConfigurationContainer&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;ABC&quot; -&gt; &quot;BaseConfigurationContainer&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;Configuration&quot; [URL=&quot;ase2sprkkr.common.configuration.Configuration.html#ase2sprkkr.common.configuration.Configuration&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;The common base class for all configurations values and containers. I.e.&quot;];
+  &quot;ConfigurationContainer&quot; [URL=&quot;ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.configuration_containers.ConfigurationContainer&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;A container for configuration (problem-definition) options and/or sections.&quot;];
+  &quot;BaseConfigurationContainer&quot; -&gt; &quot;ConfigurationContainer&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;ConfigurationFile&quot; [URL=&quot;ase2sprkkr.sprkkr.configuration.ConfigurationFile.html#ase2sprkkr.sprkkr.configuration.ConfigurationFile&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;'Root' configuration container for SPRKKR configuration file&quot;];
+  &quot;RootConfigurationContainer&quot; -&gt; &quot;ConfigurationFile&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;ConfigurationSectionTrait&quot; -&gt; &quot;ConfigurationFile&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;ConfigurationSectionTrait&quot; [URL=&quot;ase2sprkkr.sprkkr.configuration.ConfigurationSectionTrait.html#ase2sprkkr.sprkkr.configuration.ConfigurationSectionTrait&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;];
+  &quot;Potential&quot; [URL=&quot;ase2sprkkr.potentials.potentials.Potential.html#ase2sprkkr.potentials.potentials.Potential&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;It holds data form SPR-KKR potential file&quot;];
+  &quot;ConfigurationFile&quot; -&gt; &quot;Potential&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;RootConfigurationContainer&quot; [URL=&quot;ase2sprkkr.common.configuration_containers.RootConfigurationContainer.html#ase2sprkkr.common.configuration_containers.RootConfigurationContainer&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;Base class for data of configuration/problem-definition files&quot;];
+  &quot;ConfigurationContainer&quot; -&gt; &quot;RootConfigurationContainer&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+}
+<div class="line-block">
 <div class="line"><br /></div>
 </div>
 <p class="rubric">Description</p>
@@ -145,6 +165,14 @@
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.potentials.potentials.Potential.html#ase2sprkkr.potentials.potentials.Potential" title="ase2sprkkr.potentials.potentials.Potential"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Potential</span></code></a>([atoms, definition, set_from_atoms])</p></td>
 <td><p>It holds data form SPR-KKR potential file</p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Exceptions</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.potentials.potentials.PotentialFileChanged.html#ase2sprkkr.potentials.potentials.PotentialFileChanged" title="ase2sprkkr.potentials.potentials.PotentialFileChanged"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PotentialFileChanged</span></code></a></p></td>
+<td><p>A potential file changed while it was being parsed.</p></td>
 </tr>
 </tbody>
 </table>

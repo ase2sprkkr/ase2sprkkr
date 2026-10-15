@@ -1,0 +1,328 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ase2sprkkr.configuration_migration &mdash; ASE2SPRKKR  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/mods.css?v=26f6988d" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            ASE2SPRKKR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../usage.html">How to use the package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../how-to-install.html">More about the package installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../philosophy.html">Philosophy of the package (for developers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../authors.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples.html">Examples</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../auto/ase2sprkkr.html">ase2sprkkr</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">ASE2SPRKKR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../ase2sprkkr.html">ase2sprkkr</a></li>
+      <li class="breadcrumb-item active">ase2sprkkr.configuration_migration</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for ase2sprkkr.configuration_migration</h1><div class="highlight"><pre>
+<span></span><span class="sd">"""Migration helpers for the deprecated executable-Python user configuration."""</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">ast</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">importlib.machinery</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">shutil</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">types</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+
+<div class="viewcode-block" id="load_legacy_configuration">
+<a class="viewcode-back" href="../../auto/ase2sprkkr.configuration_migration.load_legacy_configuration.html#ase2sprkkr.configuration_migration.load_legacy_configuration">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">load_legacy_configuration</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">definition</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Execute one legacy config file against a fresh configuration object."""</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">.</span><span class="w"> </span><span class="kn">import</span> <span class="n">configuration</span>
+
+    <span class="n">migrated</span> <span class="o">=</span> <span class="n">definition</span><span class="o">.</span><span class="n">create_object</span><span class="p">()</span>
+    <span class="c1"># The user is already explicitly migrating the deprecated configuration;</span>
+    <span class="c1"># do not warn about the legacy writes performed while reading it.</span>
+    <span class="n">migrated</span><span class="o">.</span><span class="n">profiles</span><span class="o">.</span><span class="n">_legacy_write_warning_emitted</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">original</span> <span class="o">=</span> <span class="n">configuration</span><span class="o">.</span><span class="n">config</span>
+    <span class="n">configuration</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">migrated</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">loader</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">machinery</span><span class="o">.</span><span class="n">SourceFileLoader</span><span class="p">(</span>
+            <span class="s2">"ase2sprkkr.personal_migration"</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">fspath</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">module</span> <span class="o">=</span> <span class="n">types</span><span class="o">.</span><span class="n">ModuleType</span><span class="p">(</span><span class="n">loader</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">loader</span><span class="o">.</span><span class="n">exec_module</span><span class="p">(</span><span class="n">module</span><span class="p">)</span>
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="n">configuration</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">original</span>
+    <span class="k">return</span> <span class="n">migrated</span></div>
+
+
+
+<div class="viewcode-block" id="_migrated_profile_name">
+<a class="viewcode-back" href="../../auto/ase2sprkkr.configuration_migration._migrated_profile_name.html#ase2sprkkr.configuration_migration._migrated_profile_name">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_migrated_profile_name</span><span class="p">(</span><span class="n">profiles</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Return a free conventional name for migrated execution settings."""</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">"local"</span>
+    <span class="n">index</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="k">while</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">profiles</span><span class="p">:</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"local-</span><span class="si">{</span><span class="n">index</span><span class="si">}</span><span class="s2">"</span>
+        <span class="n">index</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="n">name</span></div>
+
+
+
+<div class="viewcode-block" id="_convert_legacy_execution_profile">
+<a class="viewcode-back" href="../../auto/ase2sprkkr.configuration_migration._convert_legacy_execution_profile.html#ase2sprkkr.configuration_migration._convert_legacy_execution_profile">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_convert_legacy_execution_profile</span><span class="p">(</span><span class="n">config</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Move non-default deprecated execution settings to a normal profile."""</span>
+    <span class="n">profiles</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">profiles</span>
+    <span class="n">legacy</span> <span class="o">=</span> <span class="n">profiles</span><span class="o">.</span><span class="n">_legacy_profile</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">legacy</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">profiles</span><span class="o">.</span><span class="n">_legacy_available</span><span class="p">():</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="n">active_profile</span> <span class="o">=</span> <span class="n">profiles</span><span class="o">.</span><span class="n">resolve_name</span><span class="p">()</span>
+    <span class="n">changed</span> <span class="o">=</span> <span class="n">legacy</span><span class="o">.</span><span class="n">as_dict</span><span class="p">(</span><span class="n">only_changed</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">generated</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="ow">or</span> <span class="p">{}</span>
+    <span class="n">values</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="n">name</span><span class="p">:</span> <span class="n">changed</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">profiles</span><span class="o">.</span><span class="n">legacy_fields</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">changed</span>
+    <span class="p">}</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">_migrated_profile_name</span><span class="p">(</span><span class="n">profiles</span><span class="p">)</span>
+
+    <span class="n">profiles</span><span class="o">.</span><span class="n">_values</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">"legacy"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="n">profile</span> <span class="o">=</span> <span class="n">profiles</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+    <span class="n">profile</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">unknown</span><span class="o">=</span><span class="s2">"fail"</span><span class="p">)</span>
+
+    <span class="c1"># Preserve profile precedence.  Without ASE the legacy profile was the</span>
+    <span class="c1"># fallback and must become explicit.  If ASE is available it already won</span>
+    <span class="c1"># over legacy, so leave default_profile unset and keep ASE active.</span>
+    <span class="k">if</span> <span class="n">active_profile</span> <span class="o">==</span> <span class="s2">"legacy"</span><span class="p">:</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">default_profile</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">name</span></div>
+
+
+
+<div class="viewcode-block" id="migrate_legacy_configuration">
+<a class="viewcode-back" href="../../auto/ase2sprkkr.configuration_migration.migrate_legacy_configuration.html#ase2sprkkr.configuration_migration.migrate_legacy_configuration">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">migrate_legacy_configuration</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">destination</span><span class="p">,</span> <span class="n">definition</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Convert a legacy Python config file to YAML and back up the source."""</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">.configuration_yaml</span><span class="w"> </span><span class="kn">import</span> <span class="n">save_configuration_yaml</span>
+
+    <span class="n">source</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
+    <span class="n">backup</span> <span class="o">=</span> <span class="n">source</span><span class="o">.</span><span class="n">with_name</span><span class="p">(</span><span class="n">source</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">".bak"</span><span class="p">)</span>
+    <span class="n">shutil</span><span class="o">.</span><span class="n">copy2</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">backup</span><span class="p">)</span>
+    <span class="n">migrated</span> <span class="o">=</span> <span class="n">load_legacy_configuration</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">definition</span><span class="p">)</span>
+    <span class="n">_convert_legacy_execution_profile</span><span class="p">(</span><span class="n">migrated</span><span class="p">)</span>
+    <span class="n">save_configuration_yaml</span><span class="p">(</span><span class="n">migrated</span><span class="p">,</span> <span class="n">destination</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">migrated</span></div>
+
+
+
+<div class="viewcode-block" id="clean_legacy_configuration">
+<a class="viewcode-back" href="../../auto/ase2sprkkr.configuration_migration.clean_legacy_configuration.html#ase2sprkkr.configuration_migration.clean_legacy_configuration">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">clean_legacy_configuration</span><span class="p">(</span><span class="n">file</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Remove migrated top-level ``config.* = ...`` statements from a script.</span>
+
+<span class="sd">    Only plain top-level assignments are removed. Conditional or otherwise</span>
+<span class="sd">    dynamic uses of ``config`` are deliberately retained. A directly preceding</span>
+<span class="sd">    contiguous comment block is removed together with an assignment. The</span>
+<span class="sd">    ``from ase2sprkkr.configuration import config`` import is removed only when</span>
+<span class="sd">    no remaining code refers to ``config``. Runs of blank lines left by removed</span>
+<span class="sd">    blocks are collapsed to a single blank line.</span>
+<span class="sd">    """</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+    <span class="n">source</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">read_text</span><span class="p">(</span><span class="n">encoding</span><span class="o">=</span><span class="s2">"utf8"</span><span class="p">)</span>
+    <span class="n">tree</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">fspath</span><span class="p">(</span><span class="n">path</span><span class="p">))</span>
+    <span class="n">lines</span> <span class="o">=</span> <span class="n">source</span><span class="o">.</span><span class="n">splitlines</span><span class="p">(</span><span class="n">keepends</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">assignments</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">node</span> <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">tree</span><span class="o">.</span><span class="n">body</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="p">(</span><span class="n">ast</span><span class="o">.</span><span class="n">Assign</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">AnnAssign</span><span class="p">))</span>
+        <span class="ow">and</span> <span class="n">_is_config_assignment</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+    <span class="p">]</span>
+    <span class="n">remove</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">assignments</span><span class="p">:</span>
+        <span class="n">start</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">lineno</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="n">end</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">end_lineno</span> <span class="ow">or</span> <span class="n">node</span><span class="o">.</span><span class="n">lineno</span>
+        <span class="k">while</span> <span class="n">start</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">previous</span> <span class="o">=</span> <span class="n">lines</span><span class="p">[</span><span class="n">start</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">previous</span><span class="o">.</span><span class="n">lstrip</span><span class="p">()</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"#"</span><span class="p">):</span>
+                <span class="n">start</span> <span class="o">-=</span> <span class="mi">1</span>
+                <span class="k">continue</span>
+            <span class="k">break</span>
+        <span class="n">remove</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">))</span>
+
+    <span class="n">remaining_source</span> <span class="o">=</span> <span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+        <span class="n">line</span> <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">line</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span> <span class="k">if</span> <span class="n">index</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">remove</span>
+    <span class="p">)</span>
+    <span class="n">remaining_tree</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">remaining_source</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">fspath</span><span class="p">(</span><span class="n">path</span><span class="p">))</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span>
+        <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">Name</span><span class="p">)</span> <span class="ow">and</span> <span class="n">node</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="s2">"config"</span>
+        <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">ast</span><span class="o">.</span><span class="n">walk</span><span class="p">(</span><span class="n">remaining_tree</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">_is_config_import</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+    <span class="p">):</span>
+        <span class="n">remove</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">_config_import_lines</span><span class="p">(</span><span class="n">tree</span><span class="p">))</span>
+
+    <span class="n">cleaned</span> <span class="o">=</span> <span class="n">_collapse_blank_lines</span><span class="p">(</span>
+        <span class="n">line</span> <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">line</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span> <span class="k">if</span> <span class="n">index</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">remove</span>
+    <span class="p">)</span>
+    <span class="n">path</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="n">cleaned</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">"utf8"</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">assignments</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="_collapse_blank_lines">
+<a class="viewcode-back" href="../../auto/ase2sprkkr.configuration_migration._collapse_blank_lines.html#ase2sprkkr.configuration_migration._collapse_blank_lines">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_collapse_blank_lines</span><span class="p">(</span><span class="n">lines</span><span class="p">):</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">previous_blank</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
+        <span class="n">blank</span> <span class="o">=</span> <span class="ow">not</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">blank</span> <span class="ow">and</span> <span class="n">previous_blank</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+        <span class="n">previous_blank</span> <span class="o">=</span> <span class="n">blank</span>
+    <span class="k">return</span> <span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">result</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="_is_config_assignment">
+<a class="viewcode-back" href="../../auto/ase2sprkkr.configuration_migration._is_config_assignment.html#ase2sprkkr.configuration_migration._is_config_assignment">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_is_config_assignment</span><span class="p">(</span><span class="n">node</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">Assign</span><span class="p">):</span>
+        <span class="n">targets</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">targets</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">targets</span> <span class="o">=</span> <span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">target</span><span class="p">,)</span>
+    <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="n">targets</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">all</span><span class="p">(</span><span class="n">_config_attribute</span><span class="p">(</span><span class="n">target</span><span class="p">)</span> <span class="k">for</span> <span class="n">target</span> <span class="ow">in</span> <span class="n">targets</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="_config_attribute">
+<a class="viewcode-back" href="../../auto/ase2sprkkr.configuration_migration._config_attribute.html#ase2sprkkr.configuration_migration._config_attribute">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_config_attribute</span><span class="p">(</span><span class="n">node</span><span class="p">):</span>
+    <span class="k">while</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">Attribute</span><span class="p">):</span>
+        <span class="n">node</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">value</span>
+    <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">Name</span><span class="p">)</span> <span class="ow">and</span> <span class="n">node</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="s2">"config"</span></div>
+
+
+
+<div class="viewcode-block" id="_is_config_import">
+<a class="viewcode-back" href="../../auto/ase2sprkkr.configuration_migration._is_config_import.html#ase2sprkkr.configuration_migration._is_config_import">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_is_config_import</span><span class="p">(</span><span class="n">node</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">(</span>
+        <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">ImportFrom</span><span class="p">)</span>
+        <span class="ow">and</span> <span class="n">node</span><span class="o">.</span><span class="n">module</span> <span class="o">==</span> <span class="s2">"ase2sprkkr.configuration"</span>
+        <span class="ow">and</span> <span class="nb">any</span><span class="p">(</span><span class="n">alias</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">"config"</span> <span class="k">for</span> <span class="n">alias</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">names</span><span class="p">)</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="_config_import_lines">
+<a class="viewcode-back" href="../../auto/ase2sprkkr.configuration_migration._config_import_lines.html#ase2sprkkr.configuration_migration._config_import_lines">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_config_import_lines</span><span class="p">(</span><span class="n">tree</span><span class="p">):</span>
+    <span class="n">lines</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">tree</span><span class="o">.</span><span class="n">body</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">_is_config_import</span><span class="p">(</span><span class="n">node</span><span class="p">):</span>
+            <span class="n">lines</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">lineno</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">node</span><span class="o">.</span><span class="n">end_lineno</span> <span class="ow">or</span> <span class="n">node</span><span class="o">.</span><span class="n">lineno</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">lines</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Matyáš Novák &amp; Jano Minár.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -10,7 +10,7 @@ import numpy as np
 import pytest
 
 from .. import ResultFile
-from ..definitions.jxc import JXCOutputFile, Coordinates, Selector
+from ..definitions.jxc import JXCResultFile, Coordinates, Selector
 from ...common.configuration_containers import DisabledAttributeError
 from ...common.configuration_containers import RootConfigurationContainer
 
@@ -76,7 +76,7 @@ class TestOutput:
                     assert len(output.K2()) == output.NK2()
 
             if hasattr(output, "plot"):
-                if isinstance(output, JXCOutputFile):
+                if isinstance(output, JXCResultFile):
                     continue
                 with tempfile.NamedTemporaryFile() as target:
                     kwargs = {"filename": target}
@@ -177,7 +177,7 @@ class TestOutput:
             ]
         )
 
-        output = JXCOutputFile.from_atoms(atoms)
+        output = JXCResultFile.from_atoms(atoms)
         assert output.it_labels == {1: "Fe_1", 2: "Ni", 3: "Fe_2"}
 
     def test_dij_plot_accepts_axis_argument(self):
@@ -193,7 +193,7 @@ class TestOutput:
             output.plot(filename=target, exclude_vc=False, axis="y")
 
     def test_write_uppasd_file_dispatches_to_current_binding_writer(self):
-        class DummyJxc(JXCOutputFile):
+        class DummyJxc(JXCResultFile):
             def is_Jij(self):
                 return True
 
@@ -223,7 +223,7 @@ class TestOutput:
         )
 
     def test_write_uppasd_file_uses_dm_writer_for_dij_output(self):
-        class DummyDij(JXCOutputFile):
+        class DummyDij(JXCResultFile):
             def is_Jij(self):
                 return False
 

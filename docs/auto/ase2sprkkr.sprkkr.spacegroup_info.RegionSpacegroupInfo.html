@@ -17,8 +17,8 @@
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../_static/documentation_options.js?v=5929fcd5"></script>
-      <script src="../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -68,17 +68,23 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.promote_ase_atoms.html">promote_ase_atoms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.__getattr__.html">__getattr__</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.common.html">common</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration.html">configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration_migration.html">configuration_migration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration_yaml.html">configuration_yaml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.conftest.html">conftest</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.examples.html">examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.execution.html">execution</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.gui.html">gui</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.input_parameters.html">input_parameters</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.output_files.html">output_files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.outputs.html">outputs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.physics.html">physics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.potentials.html">potentials</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.profiles.html">profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.result_files.html">result_files</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="ase2sprkkr.sprkkr.html">sprkkr</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.atomic_types.html">atomic_types</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.atoms_region.html">atoms_region</a></li>
@@ -88,6 +94,7 @@
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.io_data.html">io_data</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.moments.html">moments</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.occupations.html">occupations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.profile.html">profile</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.radial.html">radial</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.radial_meshes.html">radial_meshes</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.reference_systems.html">reference_systems</a></li>
@@ -144,13 +151,19 @@
 <h1>RegionSpacegroupInfo<a class="headerlink" href="#regionspacegroupinfo" title="Link to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="ase2sprkkr.sprkkr.spacegroup_info.RegionSpacegroupInfo">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.sprkkr.spacegroup_info.</span></span><span class="sig-name descname"><span class="pre">RegionSpacegroupInfo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spacegroup_info</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">region</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/spacegroup_info.html#RegionSpacegroupInfo"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.spacegroup_info.RegionSpacegroupInfo" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.sprkkr.spacegroup_info.</span></span><span class="sig-name descname"><span class="pre">RegionSpacegroupInfo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spacegroup_info</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">region</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/spacegroup_info.html#RegionSpacegroupInfo"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.spacegroup_info.RegionSpacegroupInfo" title="Link to this definition"></a></dt>
 <dd><p class="rubric">Class hierarchy</p>
-<div class="graphviz"><img src="../_images/inheritance-5fc977d39c5b6bb584f7c0b263db9e3ada862cbd.png" alt="Inheritance diagram of ase2sprkkr.sprkkr.spacegroup_info.RegionSpacegroupInfo" usemap="#inheritance9f228623ce" class="inheritance graphviz" /></div>
-<map id="inheritance9f228623ce" name="inheritance9f228623ce">
-<area shape="rect" id="node1" href="ase2sprkkr.sprkkr.spacegroup_info.BaseSpacegroupInfo.html#ase2sprkkr.sprkkr.spacegroup_info.BaseSpacegroupInfo" target="_top" title="spacegroup_info.BaseSpacegroupInfo" alt="" coords="5,5,271,33"/>
-<area shape="rect" id="node2" href="#ase2sprkkr.sprkkr.spacegroup_info.RegionSpacegroupInfo" target="_top" title="spacegroup_info.RegionSpacegroupInfo" alt="" coords="300,5,578,33"/>
-</map><div class="line-block">
+digraph inheritance9f228623ce {
+bgcolor=transparent;
+fontsize=14;
+rankdir=LR;
+ranksep=0.3;
+size=&quot;10.0, 10.0&quot;;
+  &quot;spacegroup_info.BaseSpacegroupInfo&quot; [URL=&quot;ase2sprkkr.sprkkr.spacegroup_info.BaseSpacegroupInfo.html#ase2sprkkr.sprkkr.spacegroup_info.BaseSpacegroupInfo&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;];
+  &quot;spacegroup_info.RegionSpacegroupInfo&quot; [URL=&quot;#ase2sprkkr.sprkkr.spacegroup_info.RegionSpacegroupInfo&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;];
+  &quot;spacegroup_info.BaseSpacegroupInfo&quot; -&gt; &quot;spacegroup_info.RegionSpacegroupInfo&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+}
+<div class="line-block">
 <div class="line"><br /></div>
 </div>
 <p class="rubric">Constructor</p>

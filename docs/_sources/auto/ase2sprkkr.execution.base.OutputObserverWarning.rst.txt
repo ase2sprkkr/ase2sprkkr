@@ -1,0 +1,6 @@
+ase2sprkkr.execution.base.OutputObserverWarning
+===============================================
+
+.. currentmodule:: ase2sprkkr.execution.base
+
+.. autoexception:: OutputObserverWarning

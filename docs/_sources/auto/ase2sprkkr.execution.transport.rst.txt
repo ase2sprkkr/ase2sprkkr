@@ -1,0 +1,75 @@
+transport
+=========
+
+Full name: **ase2sprkkr.execution.transport**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.execution.transport.AtomicLocalFile  ase2sprkkr.execution.transport.LocalTransport  ase2sprkkr.execution.transport.RunningCommand  ase2sprkkr.execution.transport.SshTransport  ase2sprkkr.execution.transport.Transport 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.execution.transport
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      _completed_process
+      _literal_prefix
+      _local_pattern
+      _local_temporary_path
+      _match_component
+      _match_relative_path
+      _parse_remote_file_signature
+      _posix_relative_pattern
+      _sha256_file
+      _sources
+      expand_local_files
+      has_file_magic
+      local_file_digest
+      local_file_signature
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      AtomicLocalFile
+      LocalTransport
+      RunningCommand
+      SshTransport
+      Transport
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

@@ -1,0 +1,8 @@
+\_single\_cpu\_available
+========================
+
+Full name: **ase2sprkkr.execution.mpi.\_single\_cpu\_available**
+
+.. currentmodule:: ase2sprkkr.execution.mpi
+
+.. autofunction:: _single_cpu_available

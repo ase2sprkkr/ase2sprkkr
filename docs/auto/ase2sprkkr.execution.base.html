@@ -1,0 +1,281 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>base &mdash; ASE2SPRKKR  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/mods.css?v=26f6988d" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="_pathlike" href="ase2sprkkr.execution.base._pathlike.html" />
+    <link rel="prev" title="execution" href="ase2sprkkr.execution.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            ASE2SPRKKR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">How to use the package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../how-to-install.html">More about the package installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../philosophy.html">Philosophy of the package (for developers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.promote_ase_atoms.html">promote_ase_atoms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.__getattr__.html">__getattr__</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.common.html">common</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration.html">configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration_migration.html">configuration_migration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration_yaml.html">configuration_yaml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.conftest.html">conftest</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.examples.html">examples</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="ase2sprkkr.execution.html">execution</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">base</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.base._pathlike.html">_pathlike</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.base.ExecutionResources.html">ExecutionResources</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.base.ExecutionSpec.html">ExecutionSpec</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.base.Executor.html">Executor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.base.LaunchSpec.html">LaunchSpec</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.base.MpiSpec.html">MpiSpec</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.base.OutputObservers.html">OutputObservers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.base.ResourceOwnedRunner.html">ResourceOwnedRunner</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.base.RunReference.html">RunReference</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.base.RunState.html">RunState</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.base.RunStatus.html">RunStatus</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.base.Runner.html">Runner</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.base.MpiNotFoundWarning.html">ase2sprkkr.execution.base.MpiNotFoundWarning</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.base.OutputObserverWarning.html">ase2sprkkr.execution.base.OutputObserverWarning</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.base.SubmissionNotStarted.html">ase2sprkkr.execution.base.SubmissionNotStarted</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.execution.detached.html">detached</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.execution.endpoint.html">endpoint</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.execution.local.html">local</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.execution.local_persistent.html">local_persistent</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.execution.manager.html">manager</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.execution.mpi.html">mpi</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.execution.persistence.html">persistence</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.execution.pool.html">pool</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.execution.psij.html">psij</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.execution.remote.html">remote</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.execution.remote_endpoint.html">remote_endpoint</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.execution.remote_psij.html">remote_psij</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.execution.remote_worker.html">remote_worker</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.execution.transport.html">transport</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.gui.html">gui</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.input_parameters.html">input_parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.outputs.html">outputs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.physics.html">physics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.potentials.html">potentials</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.profiles.html">profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.result_files.html">result_files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.sprkkr.html">sprkkr</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.tools.html">tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.version.html">version</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">ASE2SPRKKR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="ase2sprkkr.html">ase2sprkkr</a></li>
+          <li class="breadcrumb-item"><a href="ase2sprkkr.execution.html">execution</a></li>
+      <li class="breadcrumb-item active">base</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/auto/ase2sprkkr.execution.base.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="base">
+<h1>base<a class="headerlink" href="#base" title="Link to this heading"></a></h1>
+<p>Full name: <strong>ase2sprkkr.execution.base</strong></p>
+<p class="rubric">Module class hierarchy</p>
+digraph inheritance9d21b84d18 {
+bgcolor=transparent;
+fontsize=14;
+rankdir=LR;
+ranksep=0.3;
+size=&quot;10.0, 10.0&quot;;
+  &quot;Enum&quot; [fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,tooltip=&quot;Create a collection of name/value pairs.&quot;];
+  &quot;ExecutionResources&quot; [URL=&quot;ase2sprkkr.execution.base.ExecutionResources.html#ase2sprkkr.execution.base.ExecutionResources&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;Closable resources whose ownership is transferred to a calculation run.&quot;];
+  &quot;ExecutionSpec&quot; [URL=&quot;ase2sprkkr.execution.base.ExecutionSpec.html#ase2sprkkr.execution.base.ExecutionSpec&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;A command and launch intent ready to be handed to an execution backend.&quot;];
+  &quot;Executor&quot; [URL=&quot;ase2sprkkr.execution.base.Executor.html#ase2sprkkr.execution.base.Executor&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;Factory/backend for calculation runners.&quot;];
+  &quot;Generic&quot; [fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,tooltip=&quot;Abstract base class for generic types.&quot;];
+  &quot;LaunchSpec&quot; [URL=&quot;ase2sprkkr.execution.base.LaunchSpec.html#ase2sprkkr.execution.base.LaunchSpec&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;Portable launch and staging parameters for one concrete run.&quot;];
+  &quot;MpiSpec&quot; [URL=&quot;ase2sprkkr.execution.base.MpiSpec.html#ase2sprkkr.execution.base.MpiSpec&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;Portable MPI launch semantics independent of the execution host.&quot;];
+  &quot;OutputObservers&quot; [URL=&quot;ase2sprkkr.execution.base.OutputObservers.html#ase2sprkkr.execution.base.OutputObservers&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;Deliver output without allowing observers to control execution outcome.&quot;];
+  &quot;Protocol&quot; [fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,tooltip=&quot;Base class for protocol classes.&quot;];
+  &quot;Generic&quot; -&gt; &quot;Protocol&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;ResourceOwnedRunner&quot; [URL=&quot;ase2sprkkr.execution.base.ResourceOwnedRunner.html#ase2sprkkr.execution.base.ResourceOwnedRunner&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;Runner proxy owning resources and the public submit/cancel boundary.&quot;];
+  &quot;RunReference&quot; [URL=&quot;ase2sprkkr.execution.base.RunReference.html#ase2sprkkr.execution.base.RunReference&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;Serializable information needed to reconnect to a persistent run.&quot;];
+  &quot;RunState&quot; [URL=&quot;ase2sprkkr.execution.base.RunState.html#ase2sprkkr.execution.base.RunState&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;Backend-independent state of a calculation run.&quot;];
+  &quot;Enum&quot; -&gt; &quot;RunState&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;RunStatus&quot; [URL=&quot;ase2sprkkr.execution.base.RunStatus.html#ase2sprkkr.execution.base.RunStatus&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;One backend status snapshot for a persistent run reference.&quot;];
+  &quot;Runner&quot; [URL=&quot;ase2sprkkr.execution.base.Runner.html#ase2sprkkr.execution.base.Runner&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;One concrete calculation execution.&quot;];
+  &quot;Protocol&quot; -&gt; &quot;Runner&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+}
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p class="rubric">Description</p>
+<p id="module-ase2sprkkr.execution.base">Backend-independent calculation execution contracts.</p>
+<p class="rubric">Functions</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.execution.base._pathlike.html#ase2sprkkr.execution.base._pathlike" title="ase2sprkkr.execution.base._pathlike"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_pathlike</span></code></a>(value)</p></td>
+<td><p>Normalize path-like values without touching open file objects.</p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Classes</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.execution.base.ExecutionResources.html#ase2sprkkr.execution.base.ExecutionResources" title="ase2sprkkr.execution.base.ExecutionResources"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ExecutionResources</span></code></a>(*resources)</p></td>
+<td><p>Closable resources whose ownership is transferred to a calculation run.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.execution.base.ExecutionSpec.html#ase2sprkkr.execution.base.ExecutionSpec" title="ase2sprkkr.execution.base.ExecutionSpec"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ExecutionSpec</span></code></a>(argv, input_file, output_file, ...)</p></td>
+<td><p>A command and launch intent ready to be handed to an execution backend.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.execution.base.Executor.html#ase2sprkkr.execution.base.Executor" title="ase2sprkkr.execution.base.Executor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Executor</span></code></a>()</p></td>
+<td><p>Factory/backend for calculation runners.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.execution.base.LaunchSpec.html#ase2sprkkr.execution.base.LaunchSpec" title="ase2sprkkr.execution.base.LaunchSpec"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LaunchSpec</span></code></a>([mpi, local_root, remote_root, ...])</p></td>
+<td><p>Portable launch and staging parameters for one concrete run.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.execution.base.MpiSpec.html#ase2sprkkr.execution.base.MpiSpec" title="ase2sprkkr.execution.base.MpiSpec"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MpiSpec</span></code></a>([required, autodetect, launcher, ...])</p></td>
+<td><p>Portable MPI launch semantics independent of the execution host.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.execution.base.OutputObservers.html#ase2sprkkr.execution.base.OutputObservers" title="ase2sprkkr.execution.base.OutputObservers"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OutputObservers</span></code></a>([listener])</p></td>
+<td><p>Deliver output without allowing observers to control execution outcome.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.execution.base.ResourceOwnedRunner.html#ase2sprkkr.execution.base.ResourceOwnedRunner" title="ase2sprkkr.execution.base.ResourceOwnedRunner"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ResourceOwnedRunner</span></code></a>(runner, resources)</p></td>
+<td><p>Runner proxy owning resources and the public submit/cancel boundary.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.execution.base.RunReference.html#ase2sprkkr.execution.base.RunReference" title="ase2sprkkr.execution.base.RunReference"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RunReference</span></code></a>(executor, native_id[, ...])</p></td>
+<td><p>Serializable information needed to reconnect to a persistent run.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.execution.base.RunState.html#ase2sprkkr.execution.base.RunState" title="ase2sprkkr.execution.base.RunState"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RunState</span></code></a>(*values)</p></td>
+<td><p>Backend-independent state of a calculation run.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.execution.base.RunStatus.html#ase2sprkkr.execution.base.RunStatus" title="ase2sprkkr.execution.base.RunStatus"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RunStatus</span></code></a>(reference, state[, return_code, ...])</p></td>
+<td><p>One backend status snapshot for a persistent run reference.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.execution.base.Runner.html#ase2sprkkr.execution.base.Runner" title="ase2sprkkr.execution.base.Runner"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Runner</span></code></a>(*args, **kwargs)</p></td>
+<td><p>One concrete calculation execution.</p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Exceptions</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.execution.base.MpiNotFoundWarning.html#ase2sprkkr.execution.base.MpiNotFoundWarning" title="ase2sprkkr.execution.base.MpiNotFoundWarning"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MpiNotFoundWarning</span></code></a></p></td>
+<td><p>MPI autodetection was requested, but no MPI launcher was found.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.execution.base.OutputObserverWarning.html#ase2sprkkr.execution.base.OutputObserverWarning" title="ase2sprkkr.execution.base.OutputObserverWarning"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OutputObserverWarning</span></code></a></p></td>
+<td><p>An output observer failed while the calculation itself keeps running.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.execution.base.SubmissionNotStarted.html#ase2sprkkr.execution.base.SubmissionNotStarted" title="ase2sprkkr.execution.base.SubmissionNotStarted"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SubmissionNotStarted</span></code></a></p></td>
+<td><p>Submission failed before the backend could possibly accept the run.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="ase2sprkkr.execution.html" class="btn btn-neutral float-left" title="execution" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="ase2sprkkr.execution.base._pathlike.html" class="btn btn-neutral float-right" title="_pathlike" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Matyáš Novák &amp; Jano Minár.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

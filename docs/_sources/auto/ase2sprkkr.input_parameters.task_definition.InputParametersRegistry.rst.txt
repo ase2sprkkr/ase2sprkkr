@@ -1,0 +1,36 @@
+InputParametersRegistry
+=======================
+
+
+.. currentmodule:: ase2sprkkr.input_parameters.task_definition
+
+.. autoclass:: InputParametersRegistry
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.input_parameters.task_definition.InputParametersRegistry
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

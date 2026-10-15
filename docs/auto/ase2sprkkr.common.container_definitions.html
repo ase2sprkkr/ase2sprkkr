@@ -17,13 +17,13 @@
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../_static/documentation_options.js?v=5929fcd5"></script>
-      <script src="../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="ConfigurationRootDefinition" href="ase2sprkkr.common.container_definitions.ConfigurationRootDefinition.html" />
-    <link rel="prev" title="VirtualDefinition" href="ase2sprkkr.common.configuration_definitions.VirtualDefinition.html" /> 
+    <link rel="prev" title="ase2sprkkr.common.configuration_transaction.PostChangeHookError" href="ase2sprkkr.common.configuration_transaction.PostChangeHookError.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -68,6 +68,7 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.promote_ase_atoms.html">promote_ase_atoms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.__getattr__.html">__getattr__</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="ase2sprkkr.common.html">common</a><ul class="current">
@@ -76,29 +77,34 @@
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.configuration.html">configuration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.configuration_containers.html">configuration_containers</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.configuration_definitions.html">configuration_definitions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.configuration_transaction.html">configuration_transaction</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">container_definitions</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.container_definitions.ConfigurationRootDefinition.html">ConfigurationRootDefinition</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.container_definitions.ContainerDefinition.html">ContainerDefinition</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.container_definitions.SectionDefinition.html">SectionDefinition</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.dangerous_values.html">dangerous_values</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.debug.html">debug</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.decorators.html">decorators</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.dependencies.html">dependencies</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.doc.html">doc</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.file_fingerprints.html">file_fingerprints</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.file_locks.html">file_locks</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.file_utils.html">file_utils</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.formats.html">formats</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.generated_configuration_definitions.html">generated_configuration_definitions</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.grammar.html">grammar</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.grammar_types.html">grammar_types</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.init_tests.html">init_tests</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.lazy_string.html">lazy_string</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.misc.html">misc</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.module_registry.html">module_registry</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.no_output.html">no_output</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.options.html">options</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.parsing_results.html">parsing_results</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.process_output_reader.html">process_output_reader</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.repeated_configuration_containers.html">repeated_configuration_containers</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.section_adaptors.html">section_adaptors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.repetition.html">repetition</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.subprocess.html">subprocess</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.tools.html">tools</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.unique_values.html">unique_values</a></li>
@@ -108,13 +114,18 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration.html">configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration_migration.html">configuration_migration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration_yaml.html">configuration_yaml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.conftest.html">conftest</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.examples.html">examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.execution.html">execution</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.gui.html">gui</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.input_parameters.html">input_parameters</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.output_files.html">output_files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.outputs.html">outputs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.physics.html">physics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.potentials.html">potentials</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.profiles.html">profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.result_files.html">result_files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.sprkkr.html">sprkkr</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.tools.html">tools</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.version.html">version</a></li>
@@ -152,21 +163,30 @@
 <h1>container_definitions<a class="headerlink" href="#container-definitions" title="Link to this heading"></a></h1>
 <p>Full name: <strong>ase2sprkkr.common.container_definitions</strong></p>
 <p class="rubric">Module class hierarchy</p>
-<div class="graphviz"><img src="../_images/inheritance-e7dbe2aeab08dfd4c5d91d4ca5ff71551ac40a67.png" alt="Inheritance diagram of ase2sprkkr.common.container_definitions.ConfigurationRootDefinition, ase2sprkkr.common.container_definitions.ContainerDefinition, ase2sprkkr.common.container_definitions.SectionDefinition" usemap="#inheritance3c2ff8e6f4" class="inheritance graphviz" /></div>
-<map id="inheritance3c2ff8e6f4" name="inheritance3c2ff8e6f4">
-<area shape="rect" id="node1" href="ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.common.configuration_definitions.BaseDefinition" target="_top" title="This class is a member of definition of configuration, that can be both" alt="" coords="5,32,122,60"/>
-<area shape="rect" id="node4" href="ase2sprkkr.common.configuration_definitions.RealItemDefinition.html#ase2sprkkr.common.configuration_definitions.RealItemDefinition" target="_top" title="A base class for a configuration definition, either of an option, or of a container." alt="" coords="151,32,294,60"/>
-<area shape="rect" id="node2" href="ase2sprkkr.common.container_definitions.ConfigurationRootDefinition.html#ase2sprkkr.common.container_definitions.ConfigurationRootDefinition" target="_top" title="From this class, the definition of the format of a whole configuration file should be derived." alt="" coords="500,5,702,33"/>
-<area shape="rect" id="node3" href="ase2sprkkr.common.container_definitions.ContainerDefinition.html#ase2sprkkr.common.container_definitions.ContainerDefinition" target="_top" title="Base class for a definition (of contained data, format, etc)" alt="" coords="324,32,471,60"/>
-<area shape="rect" id="node5" href="ase2sprkkr.common.container_definitions.SectionDefinition.html#ase2sprkkr.common.container_definitions.SectionDefinition" target="_top" title="Base class for definition of the sections in Pot or InputParameters files." alt="" coords="535,57,667,85"/>
-</map><div class="line-block">
+digraph inheritance3c2ff8e6f4 {
+bgcolor=transparent;
+fontsize=14;
+rankdir=LR;
+ranksep=0.3;
+size=&quot;10.0, 10.0&quot;;
+  &quot;BaseDefinition&quot; [URL=&quot;ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.common.configuration_definitions.BaseDefinition&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;This class is a member of definition of configuration, that can be both&quot;];
+  &quot;ConfigurationRootDefinition&quot; [URL=&quot;ase2sprkkr.common.container_definitions.ConfigurationRootDefinition.html#ase2sprkkr.common.container_definitions.ConfigurationRootDefinition&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;From this class, the definition of the format of a whole configuration file should be derived.&quot;];
+  &quot;ContainerDefinition&quot; -&gt; &quot;ConfigurationRootDefinition&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;ContainerDefinition&quot; [URL=&quot;ase2sprkkr.common.container_definitions.ContainerDefinition.html#ase2sprkkr.common.container_definitions.ContainerDefinition&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;Base class for a definition (of contained data, format, etc)&quot;];
+  &quot;RealItemDefinition&quot; -&gt; &quot;ContainerDefinition&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;RealItemDefinition&quot; [URL=&quot;ase2sprkkr.common.configuration_definitions.RealItemDefinition.html#ase2sprkkr.common.configuration_definitions.RealItemDefinition&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;A base class for a configuration definition, either of an option, or of a container.&quot;];
+  &quot;BaseDefinition&quot; -&gt; &quot;RealItemDefinition&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;SectionDefinition&quot; [URL=&quot;ase2sprkkr.common.container_definitions.SectionDefinition.html#ase2sprkkr.common.container_definitions.SectionDefinition&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;Base class for definition of the sections in Pot or InputParameters files.&quot;];
+  &quot;ContainerDefinition&quot; -&gt; &quot;SectionDefinition&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+}
+<div class="line-block">
 <div class="line"><br /></div>
 </div>
 <p class="rubric">Description</p>
 <p class="rubric" id="module-ase2sprkkr.common.container_definitions">Classes</p>
 <table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.container_definitions.ConfigurationRootDefinition.html#ase2sprkkr.common.container_definitions.ConfigurationRootDefinition" title="ase2sprkkr.common.container_definitions.ConfigurationRootDefinition"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ConfigurationRootDefinition</span></code></a>(name[, members])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.container_definitions.ConfigurationRootDefinition.html#ase2sprkkr.common.container_definitions.ConfigurationRootDefinition" title="ase2sprkkr.common.container_definitions.ConfigurationRootDefinition"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ConfigurationRootDefinition</span></code></a>(name[, members, ...])</p></td>
 <td><p>From this class, the definition of the format of a whole configuration file should be derived.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.container_definitions.ContainerDefinition.html#ase2sprkkr.common.container_definitions.ContainerDefinition" title="ase2sprkkr.common.container_definitions.ContainerDefinition"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ContainerDefinition</span></code></a>(name[, members, ...])</p></td>
@@ -183,7 +203,7 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="ase2sprkkr.common.configuration_definitions.VirtualDefinition.html" class="btn btn-neutral float-left" title="VirtualDefinition" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="ase2sprkkr.common.configuration_transaction.PostChangeHookError.html" class="btn btn-neutral float-left" title="ase2sprkkr.common.configuration_transaction.PostChangeHookError" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="ase2sprkkr.common.container_definitions.ConfigurationRootDefinition.html" class="btn btn-neutral float-right" title="ConfigurationRootDefinition" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

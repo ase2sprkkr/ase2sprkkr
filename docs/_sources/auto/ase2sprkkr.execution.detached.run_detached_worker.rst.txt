@@ -1,0 +1,8 @@
+run\_detached\_worker
+=====================
+
+Full name: **ase2sprkkr.execution.detached.run\_detached\_worker**
+
+.. currentmodule:: ase2sprkkr.execution.detached
+
+.. autofunction:: run_detached_worker

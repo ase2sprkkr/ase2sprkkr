@@ -1,0 +1,36 @@
+PhagenTaskDefinition
+====================
+
+
+.. currentmodule:: ase2sprkkr.input_parameters.definitions.phagen
+
+.. autoclass:: PhagenTaskDefinition
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.input_parameters.definitions.phagen.PhagenTaskDefinition
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

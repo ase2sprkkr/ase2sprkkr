@@ -3,7 +3,7 @@ import argparse
 import pytest
 
 from ..commands import plot
-from ...result_files.definitions.sfn import SFNOutputFile
+from ...result_files.definitions.sfn import SFNResultFile
 from ...result_files import ResultFile
 
 
@@ -65,7 +65,7 @@ def test_sfn_mode_cannot_be_set_through_generic_option():
 
 
 def test_sfn_mode_flag_is_passed_as_what(monkeypatch):
-    class FakeSFN(SFNOutputFile):
+    class FakeSFN(SFNResultFile):
         def __init__(self):
             object.__setattr__(self, "plot_kwargs", None)
 

@@ -1,0 +1,286 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>transport &mdash; ASE2SPRKKR  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/mods.css?v=26f6988d" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="_completed_process" href="ase2sprkkr.execution.transport._completed_process.html" />
+    <link rel="prev" title="main" href="ase2sprkkr.execution.remote_worker.main.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            ASE2SPRKKR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">How to use the package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../how-to-install.html">More about the package installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../philosophy.html">Philosophy of the package (for developers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.promote_ase_atoms.html">promote_ase_atoms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.__getattr__.html">__getattr__</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.common.html">common</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration.html">configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration_migration.html">configuration_migration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration_yaml.html">configuration_yaml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.conftest.html">conftest</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.examples.html">examples</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="ase2sprkkr.execution.html">execution</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.execution.base.html">base</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.execution.detached.html">detached</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.execution.endpoint.html">endpoint</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.execution.local.html">local</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.execution.local_persistent.html">local_persistent</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.execution.manager.html">manager</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.execution.mpi.html">mpi</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.execution.persistence.html">persistence</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.execution.pool.html">pool</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.execution.psij.html">psij</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.execution.remote.html">remote</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.execution.remote_endpoint.html">remote_endpoint</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.execution.remote_psij.html">remote_psij</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.execution.remote_worker.html">remote_worker</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">transport</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.transport._completed_process.html">_completed_process</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.transport._literal_prefix.html">_literal_prefix</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.transport._local_pattern.html">_local_pattern</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.transport._local_temporary_path.html">_local_temporary_path</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.transport._match_component.html">_match_component</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.transport._match_relative_path.html">_match_relative_path</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.transport._parse_remote_file_signature.html">_parse_remote_file_signature</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.transport._posix_relative_pattern.html">_posix_relative_pattern</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.transport._sha256_file.html">_sha256_file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.transport._sources.html">_sources</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.transport.expand_local_files.html">expand_local_files</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.transport.has_file_magic.html">has_file_magic</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.transport.local_file_digest.html">local_file_digest</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.transport.local_file_signature.html">local_file_signature</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.transport.AtomicLocalFile.html">AtomicLocalFile</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.transport.LocalTransport.html">LocalTransport</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.transport.RunningCommand.html">RunningCommand</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.transport.SshTransport.html">SshTransport</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.transport.Transport.html">Transport</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.gui.html">gui</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.input_parameters.html">input_parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.outputs.html">outputs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.physics.html">physics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.potentials.html">potentials</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.profiles.html">profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.result_files.html">result_files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.sprkkr.html">sprkkr</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.tools.html">tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.version.html">version</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">ASE2SPRKKR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="ase2sprkkr.html">ase2sprkkr</a></li>
+          <li class="breadcrumb-item"><a href="ase2sprkkr.execution.html">execution</a></li>
+      <li class="breadcrumb-item active">transport</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/auto/ase2sprkkr.execution.transport.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="transport">
+<h1>transport<a class="headerlink" href="#transport" title="Link to this heading"></a></h1>
+<p>Full name: <strong>ase2sprkkr.execution.transport</strong></p>
+<p class="rubric">Module class hierarchy</p>
+digraph inheritance8c223c873f {
+bgcolor=transparent;
+fontsize=14;
+rankdir=LR;
+ranksep=0.3;
+size=&quot;10.0, 10.0&quot;;
+  &quot;AtomicLocalFile&quot; [URL=&quot;ase2sprkkr.execution.transport.AtomicLocalFile.html#ase2sprkkr.execution.transport.AtomicLocalFile&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;File-like sink that replaces its destination only on explicit commit.&quot;];
+  &quot;Generic&quot; [fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,tooltip=&quot;Abstract base class for generic types.&quot;];
+  &quot;LocalTransport&quot; [URL=&quot;ase2sprkkr.execution.transport.LocalTransport.html#ase2sprkkr.execution.transport.LocalTransport&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;Transport backed by asyncio subprocesses and the local filesystem.&quot;];
+  &quot;Transport&quot; -&gt; &quot;LocalTransport&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;Protocol&quot; [fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,tooltip=&quot;Base class for protocol classes.&quot;];
+  &quot;Generic&quot; -&gt; &quot;Protocol&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;RunningCommand&quot; [URL=&quot;ase2sprkkr.execution.transport.RunningCommand.html#ase2sprkkr.execution.transport.RunningCommand&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;A running command with independently readable output streams.&quot;];
+  &quot;Protocol&quot; -&gt; &quot;RunningCommand&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;SshTransport&quot; [URL=&quot;ase2sprkkr.execution.transport.SshTransport.html#ase2sprkkr.execution.transport.SshTransport&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;Transport using the system ``ssh`` client.&quot;];
+  &quot;Transport&quot; -&gt; &quot;SshTransport&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;Transport&quot; [URL=&quot;ase2sprkkr.execution.transport.Transport.html#ase2sprkkr.execution.transport.Transport&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;Run commands and move files on one target machine.&quot;];
+}
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p class="rubric">Description</p>
+<p id="module-ase2sprkkr.execution.transport">Low-level asynchronous command and file transports.</p>
+<p class="rubric">Functions</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.execution.transport._completed_process.html#ase2sprkkr.execution.transport._completed_process" title="ase2sprkkr.execution.transport._completed_process"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_completed_process</span></code></a>(process, argv[, input, check])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.execution.transport._literal_prefix.html#ase2sprkkr.execution.transport._literal_prefix" title="ase2sprkkr.execution.transport._literal_prefix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_literal_prefix</span></code></a>(pattern)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.execution.transport._local_pattern.html#ase2sprkkr.execution.transport._local_pattern" title="ase2sprkkr.execution.transport._local_pattern"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_local_pattern</span></code></a>(source, root)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.execution.transport._local_temporary_path.html#ase2sprkkr.execution.transport._local_temporary_path" title="ase2sprkkr.execution.transport._local_temporary_path"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_local_temporary_path</span></code></a>(destination)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.execution.transport._match_component.html#ase2sprkkr.execution.transport._match_component" title="ase2sprkkr.execution.transport._match_component"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_match_component</span></code></a>(name, pattern)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.execution.transport._match_relative_path.html#ase2sprkkr.execution.transport._match_relative_path" title="ase2sprkkr.execution.transport._match_relative_path"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_match_relative_path</span></code></a>(path, pattern)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.execution.transport._parse_remote_file_signature.html#ase2sprkkr.execution.transport._parse_remote_file_signature" title="ase2sprkkr.execution.transport._parse_remote_file_signature"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_parse_remote_file_signature</span></code></a>(raw)</p></td>
+<td><p>Parse GNU <code class="docutils literal notranslate"><span class="pre">stat</span></code> output into <code class="docutils literal notranslate"><span class="pre">(size,</span> <span class="pre">mtime_ns)</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.execution.transport._posix_relative_pattern.html#ase2sprkkr.execution.transport._posix_relative_pattern" title="ase2sprkkr.execution.transport._posix_relative_pattern"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_posix_relative_pattern</span></code></a>(source, root)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.execution.transport._sha256_file.html#ase2sprkkr.execution.transport._sha256_file" title="ase2sprkkr.execution.transport._sha256_file"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_sha256_file</span></code></a>(path)</p></td>
+<td><p>Return the SHA-256 digest of a local file, or <code class="docutils literal notranslate"><span class="pre">None</span></code> if absent.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.execution.transport._sources.html#ase2sprkkr.execution.transport._sources" title="ase2sprkkr.execution.transport._sources"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_sources</span></code></a>(sources)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.execution.transport.expand_local_files.html#ase2sprkkr.execution.transport.expand_local_files" title="ase2sprkkr.execution.transport.expand_local_files"><code class="xref py py-obj docutils literal notranslate"><span class="pre">expand_local_files</span></code></a>(sources, root)</p></td>
+<td><p>Expand local source paths/patterns below <em>root</em> into concrete files.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.execution.transport.has_file_magic.html#ase2sprkkr.execution.transport.has_file_magic" title="ase2sprkkr.execution.transport.has_file_magic"><code class="xref py py-obj docutils literal notranslate"><span class="pre">has_file_magic</span></code></a>(path)</p></td>
+<td><p>Return whether <em>path</em> contains shell-style wildcard characters.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.execution.transport.local_file_digest.html#ase2sprkkr.execution.transport.local_file_digest" title="ase2sprkkr.execution.transport.local_file_digest"><code class="xref py py-obj docutils literal notranslate"><span class="pre">local_file_digest</span></code></a>(path)</p></td>
+<td><p>Return the SHA-256 digest of a local file, or <code class="docutils literal notranslate"><span class="pre">None</span></code> if absent.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.execution.transport.local_file_signature.html#ase2sprkkr.execution.transport.local_file_signature" title="ase2sprkkr.execution.transport.local_file_signature"><code class="xref py py-obj docutils literal notranslate"><span class="pre">local_file_signature</span></code></a>(path)</p></td>
+<td><p>Return <code class="docutils literal notranslate"><span class="pre">(size,</span> <span class="pre">mtime_ns)</span></code> for a local file, or <code class="docutils literal notranslate"><span class="pre">None</span></code> if absent.</p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Classes</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.execution.transport.AtomicLocalFile.html#ase2sprkkr.execution.transport.AtomicLocalFile" title="ase2sprkkr.execution.transport.AtomicLocalFile"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AtomicLocalFile</span></code></a>(destination)</p></td>
+<td><p>File-like sink that replaces its destination only on explicit commit.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.execution.transport.LocalTransport.html#ase2sprkkr.execution.transport.LocalTransport" title="ase2sprkkr.execution.transport.LocalTransport"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LocalTransport</span></code></a>()</p></td>
+<td><p>Transport backed by asyncio subprocesses and the local filesystem.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.execution.transport.RunningCommand.html#ase2sprkkr.execution.transport.RunningCommand" title="ase2sprkkr.execution.transport.RunningCommand"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RunningCommand</span></code></a>(*args, **kwargs)</p></td>
+<td><p>A running command with independently readable output streams.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.execution.transport.SshTransport.html#ase2sprkkr.execution.transport.SshTransport" title="ase2sprkkr.execution.transport.SshTransport"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SshTransport</span></code></a>(host, *[, ssh, options])</p></td>
+<td><p>Transport using the system <code class="docutils literal notranslate"><span class="pre">ssh</span></code> client.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.execution.transport.Transport.html#ase2sprkkr.execution.transport.Transport" title="ase2sprkkr.execution.transport.Transport"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Transport</span></code></a>()</p></td>
+<td><p>Run commands and move files on one target machine.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="ase2sprkkr.execution.remote_worker.main.html" class="btn btn-neutral float-left" title="main" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="ase2sprkkr.execution.transport._completed_process.html" class="btn btn-neutral float-right" title="_completed_process" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Matyáš Novák &amp; Jano Minár.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

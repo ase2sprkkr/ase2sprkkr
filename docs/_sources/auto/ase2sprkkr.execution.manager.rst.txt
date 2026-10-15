@@ -1,0 +1,78 @@
+manager
+=======
+
+Full name: **ase2sprkkr.execution.manager**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.execution.manager.ExecutionManager  ase2sprkkr.execution.manager.FileFingerprint  ase2sprkkr.execution.manager.FileRetrievalState  ase2sprkkr.execution.manager.PersistentRunner  ase2sprkkr.execution.manager.ResultFilesRecord  ase2sprkkr.execution.manager.ResultFilesState  ase2sprkkr.execution.manager.RunRecord  ase2sprkkr.execution.manager.RunStore  ase2sprkkr.execution.manager.SubmissionKey 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.execution.manager
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      _now
+      _processing_state
+      _result_file_path
+      _timestamp
+      _unique
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      ExecutionManager
+      FileFingerprint
+      FileRetrievalState
+      PersistentRunner
+      ResultFilesRecord
+      ResultFilesState
+      RunRecord
+      RunStore
+      SubmissionKey
+   
+   
+
+
+   
+   
+   .. rubric:: Exceptions
+
+   .. autosummary::
+      :toctree:
+   
+      CorruptRunRecord
+      DuplicateSubmissionError
+   
+   
+
+
+  
+  
+  

@@ -1,0 +1,60 @@
+definitions
+===========
+
+Full name: **ase2sprkkr.result\_files.definitions**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.result_files.definitions
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  .. rubric:: Modules
+
+  .. autosummary::
+     :toctree:
+     :template: custom-module-template.rst
+     :recursive:
+  
+  
+     bsf
+  
+  
+     dos
+  
+  
+     jxc
+  
+  
+     rat
+  
+  
+     sfn
+  
+  
+     spc
+  
+  
+  

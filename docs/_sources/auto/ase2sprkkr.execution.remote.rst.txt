@@ -1,0 +1,59 @@
+remote
+======
+
+Full name: **ase2sprkkr.execution.remote**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.execution.remote.FileSyncPolicy  ase2sprkkr.execution.remote.RemoteRunner 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.execution.remote
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      _run_sync
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      FileSyncPolicy
+      RemoteRunner
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

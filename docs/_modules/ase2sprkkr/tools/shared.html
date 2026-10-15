@@ -16,8 +16,8 @@
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
-      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -81,6 +81,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../ase2sprkkr.html">ase2sprkkr</a></li>
       <li class="breadcrumb-item active">ase2sprkkr.tools.shared</li>
       <li class="wy-breadcrumbs-aside">
       </li>
@@ -91,10 +92,10 @@
            <div itemprop="articleBody">
              
   <h1>Source code for ase2sprkkr.tools.shared</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span></span><span class="sd">"""</span>
 <span class="sd">Cli subcommands can be runned on its own.</span>
 <span class="sd">This method handles it.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">argparse</span>
 
@@ -103,11 +104,11 @@
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.tools.shared.main.html#ase2sprkkr.tools.shared.main">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">local</span><span class="p">):</span>
     <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span>
-        <span class="n">description</span><span class="o">=</span><span class="n">local</span><span class="p">[</span><span class="s2">&quot;description&quot;</span><span class="p">],</span> <span class="n">formatter_class</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">RawDescriptionHelpFormatter</span>
+        <span class="n">description</span><span class="o">=</span><span class="n">local</span><span class="p">[</span><span class="s2">"description"</span><span class="p">],</span> <span class="n">formatter_class</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">RawDescriptionHelpFormatter</span>
     <span class="p">)</span>
-    <span class="n">local</span><span class="p">[</span><span class="s2">&quot;parser&quot;</span><span class="p">](</span><span class="n">parser</span><span class="p">)</span>
+    <span class="n">local</span><span class="p">[</span><span class="s2">"parser"</span><span class="p">](</span><span class="n">parser</span><span class="p">)</span>
     <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
-    <span class="n">local</span><span class="p">[</span><span class="s2">&quot;run&quot;</span><span class="p">](</span><span class="n">args</span><span class="p">)</span></div>
+    <span class="n">local</span><span class="p">[</span><span class="s2">"run"</span><span class="p">](</span><span class="n">args</span><span class="p">)</span></div>
 
 </pre></div>
 

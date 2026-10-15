@@ -1,0 +1,63 @@
+local\_persistent
+=================
+
+Full name: **ase2sprkkr.execution.local\_persistent**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.execution.local_persistent.LocalPersistentRunner 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.execution.local_persistent
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      _file_path
+      _reference
+      _reference_from_request
+      attach_local
+      detached_local_status
+      recover_local_submission
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      LocalPersistentRunner
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

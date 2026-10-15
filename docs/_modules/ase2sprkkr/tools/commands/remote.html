@@ -1,0 +1,290 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ase2sprkkr.tools.commands.remote &mdash; ASE2SPRKKR  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/plot_directive.css" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/mods.css?v=26f6988d" />
+
+  
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            ASE2SPRKKR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../usage.html">How to use the package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../how-to-install.html">More about the package installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../philosophy.html">Philosophy of the package (for developers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../authors.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../examples.html">Examples</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../auto/ase2sprkkr.html">ase2sprkkr</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">ASE2SPRKKR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../../ase2sprkkr.html">ase2sprkkr</a></li>
+      <li class="breadcrumb-item active">ase2sprkkr.tools.commands.remote</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for ase2sprkkr.tools.commands.remote</h1><div class="highlight"><pre>
+<span></span><span class="sd">"""Control remote ASE2SPRKKR execution and workspace metadata."""</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+
+
+<span class="n">help</span> <span class="o">=</span> <span class="s2">"Control ASE2SPRKKR execution on this machine."</span>
+<span class="n">description</span> <span class="o">=</span> <span class="s2">"Submit, inspect, follow, cancel and clean remote ASE2SPRKKR runs."</span>
+
+
+<div class="viewcode-block" id="_duration">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.tools.commands.remote._duration.html#ase2sprkkr.tools.commands.remote._duration">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_duration</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+    <span class="n">match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">fullmatch</span><span class="p">(</span><span class="sa">r</span><span class="s2">"(\d+(?:\.\d+)?)([smhdw])"</span><span class="p">,</span> <span class="n">value</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">match</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Duration must use s, m, h, d or w, for example 30d"</span><span class="p">)</span>
+    <span class="n">amount</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+    <span class="n">factor</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">"s"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="s2">"m"</span><span class="p">:</span> <span class="mi">60</span><span class="p">,</span>
+        <span class="s2">"h"</span><span class="p">:</span> <span class="mi">3600</span><span class="p">,</span>
+        <span class="s2">"d"</span><span class="p">:</span> <span class="mi">86400</span><span class="p">,</span>
+        <span class="s2">"w"</span><span class="p">:</span> <span class="mi">604800</span><span class="p">,</span>
+    <span class="p">}[</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">2</span><span class="p">)]</span>
+    <span class="k">return</span> <span class="n">amount</span> <span class="o">*</span> <span class="n">factor</span></div>
+
+
+
+<div class="viewcode-block" id="parser">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.tools.commands.remote.parser.html#ase2sprkkr.tools.commands.remote.parser">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">parser</span><span class="p">(</span><span class="n">parser</span><span class="p">):</span>
+    <span class="n">actions</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_subparsers</span><span class="p">(</span><span class="n">dest</span><span class="o">=</span><span class="s2">"remote_action"</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">submit</span> <span class="o">=</span> <span class="n">actions</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span><span class="s2">"submit"</span><span class="p">)</span>
+    <span class="n">submit</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"directory"</span><span class="p">)</span>
+
+    <span class="n">status</span> <span class="o">=</span> <span class="n">actions</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span><span class="s2">"status"</span><span class="p">)</span>
+    <span class="n">status</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"directory"</span><span class="p">)</span>
+    <span class="n">status</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"run_id"</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s2">"+"</span><span class="p">)</span>
+
+    <span class="n">cancel</span> <span class="o">=</span> <span class="n">actions</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span><span class="s2">"cancel"</span><span class="p">)</span>
+    <span class="n">cancel</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"directory"</span><span class="p">)</span>
+    <span class="n">cancel</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"run_id"</span><span class="p">)</span>
+
+    <span class="n">follow</span> <span class="o">=</span> <span class="n">actions</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span><span class="s2">"follow"</span><span class="p">)</span>
+    <span class="n">follow</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"directory"</span><span class="p">)</span>
+    <span class="n">follow</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"run_id"</span><span class="p">)</span>
+    <span class="n">follow</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"--stdout-offset"</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">follow</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"--stderr-offset"</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="n">runs</span> <span class="o">=</span> <span class="n">actions</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span><span class="s2">"runs"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"List runs recorded in a workspace"</span><span class="p">)</span>
+    <span class="n">runs</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"directory"</span><span class="p">)</span>
+
+    <span class="n">clean</span> <span class="o">=</span> <span class="n">actions</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span>
+        <span class="s2">"clean"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Remove metadata for completed runs in a workspace"</span>
+    <span class="p">)</span>
+    <span class="n">clean</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"directory"</span><span class="p">)</span>
+    <span class="n">clean</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">"--older-than"</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="n">_duration</span><span class="p">,</span>
+        <span class="n">metavar</span><span class="o">=</span><span class="s2">"AGE"</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">"Only remove completed runs older than AGE, e.g. 30d or 12h"</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Used both as a diagnostic command and by remote clients that want to</span>
+    <span class="c1"># report an unavailable ``mpi='auto'`` launcher before submission.</span>
+    <span class="n">actions</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span><span class="s2">"resolve-mpi"</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="_print_json">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.tools.commands.remote._print_json.html#ase2sprkkr.tools.commands.remote._print_json">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_print_json</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">value</span><span class="p">),</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="_finalize_failed_worker_start">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.tools.commands.remote._finalize_failed_worker_start.html#ase2sprkkr.tools.commands.remote._finalize_failed_worker_start">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_finalize_failed_worker_start</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">exc</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Turn a failed detached-worker start into an explicit terminal record.</span>
+
+<span class="sd">    ``submit_remote`` persists QUEUED metadata before starting the detached</span>
+<span class="sd">    worker. If process creation itself fails, leaving that record queued would</span>
+<span class="sd">    make recovery believe a computation exists and ``follow`` could wait</span>
+<span class="sd">    forever. Only rewrite the exact pre-start state; failures after a worker has</span>
+<span class="sd">    published a pid/state are left to the normal lifecycle machinery.</span>
+<span class="sd">    """</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">...execution.remote</span><span class="w"> </span><span class="kn">import</span> <span class="n">_timestamp</span><span class="p">,</span> <span class="n">_write_state</span><span class="p">,</span> <span class="n">status_remote</span>
+
+    <span class="n">run_id</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"id"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">run_id</span><span class="p">:</span>
+        <span class="k">return</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">state</span> <span class="o">=</span> <span class="n">status_remote</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">run_id</span><span class="p">)</span>
+    <span class="k">except</span> <span class="p">(</span><span class="ne">FileNotFoundError</span><span class="p">,</span> <span class="ne">KeyError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">,</span> <span class="n">json</span><span class="o">.</span><span class="n">JSONDecodeError</span><span class="p">):</span>
+        <span class="k">return</span>
+    <span class="k">if</span> <span class="n">state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"state"</span><span class="p">)</span> <span class="o">!=</span> <span class="s2">"queued"</span> <span class="ow">or</span> <span class="n">state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"pid"</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span>
+    <span class="n">_write_state</span><span class="p">(</span>
+        <span class="n">directory</span><span class="p">,</span>
+        <span class="n">run_id</span><span class="p">,</span>
+        <span class="n">state</span><span class="o">=</span><span class="s2">"failed"</span><span class="p">,</span>
+        <span class="n">error</span><span class="o">=</span><span class="nb">repr</span><span class="p">(</span><span class="n">exc</span><span class="p">),</span>
+        <span class="n">return_code</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">finished_at</span><span class="o">=</span><span class="n">_timestamp</span><span class="p">(),</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="run">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.tools.commands.remote.run.html#ase2sprkkr.tools.commands.remote.run">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">global_args</span><span class="p">):</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">...execution.remote</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+        <span class="n">cancel_remote</span><span class="p">,</span>
+        <span class="n">clean_remote_runs</span><span class="p">,</span>
+        <span class="n">follow_remote</span><span class="p">,</span>
+        <span class="n">list_remote_runs</span><span class="p">,</span>
+        <span class="n">status_remote</span><span class="p">,</span>
+        <span class="n">submit_remote</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">remote_action</span> <span class="o">==</span> <span class="s2">"submit"</span><span class="p">:</span>
+        <span class="n">request</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">stdin</span><span class="p">)</span>
+        <span class="n">request</span><span class="p">[</span><span class="s2">"directory"</span><span class="p">]</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">directory</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">submit_remote</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+            <span class="n">_finalize_failed_worker_start</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">directory</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">exc</span><span class="p">)</span>
+            <span class="k">raise</span>
+        <span class="n">_print_json</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">args</span><span class="o">.</span><span class="n">remote_action</span> <span class="o">==</span> <span class="s2">"status"</span><span class="p">:</span>
+        <span class="c1"># A status query is also the recovery point for a target-side PSI/J</span>
+        <span class="c1"># agent killed by logout/reboot. The persisted native scheduler ids are</span>
+        <span class="c1"># sufficient for the replacement agent to attach instead of resubmit.</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">...execution.remote_psij</span><span class="w"> </span><span class="kn">import</span> <span class="n">ensure_remote_psij_agent</span>
+
+        <span class="n">ensure_remote_psij_agent</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">directory</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">run_id</span><span class="p">)</span>
+        <span class="n">states</span> <span class="o">=</span> <span class="p">[</span><span class="n">status_remote</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">directory</span><span class="p">,</span> <span class="n">run_id</span><span class="p">)</span> <span class="k">for</span> <span class="n">run_id</span> <span class="ow">in</span> <span class="n">args</span><span class="o">.</span><span class="n">run_id</span><span class="p">]</span>
+        <span class="n">_print_json</span><span class="p">(</span><span class="n">states</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">states</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">else</span> <span class="n">states</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">args</span><span class="o">.</span><span class="n">remote_action</span> <span class="o">==</span> <span class="s2">"cancel"</span><span class="p">:</span>
+        <span class="n">_print_json</span><span class="p">(</span><span class="n">cancel_remote</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">directory</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">run_id</span><span class="p">))</span>
+    <span class="k">elif</span> <span class="n">args</span><span class="o">.</span><span class="n">remote_action</span> <span class="o">==</span> <span class="s2">"follow"</span><span class="p">:</span>
+        <span class="n">follow_remote</span><span class="p">(</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">directory</span><span class="p">,</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">run_id</span><span class="p">,</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">buffer</span><span class="p">,</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">buffer</span><span class="p">,</span>
+            <span class="n">stdout_offset</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">stdout_offset</span><span class="p">,</span>
+            <span class="n">stderr_offset</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">stderr_offset</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="k">elif</span> <span class="n">args</span><span class="o">.</span><span class="n">remote_action</span> <span class="o">==</span> <span class="s2">"runs"</span><span class="p">:</span>
+        <span class="n">_print_json</span><span class="p">(</span><span class="n">list_remote_runs</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">directory</span><span class="p">))</span>
+    <span class="k">elif</span> <span class="n">args</span><span class="o">.</span><span class="n">remote_action</span> <span class="o">==</span> <span class="s2">"clean"</span><span class="p">:</span>
+        <span class="n">_print_json</span><span class="p">(</span><span class="n">clean_remote_runs</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">directory</span><span class="p">,</span> <span class="n">older_than</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">older_than</span><span class="p">))</span>
+    <span class="k">elif</span> <span class="n">args</span><span class="o">.</span><span class="n">remote_action</span> <span class="o">==</span> <span class="s2">"resolve-mpi"</span><span class="p">:</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">...execution.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">LaunchSpec</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">...execution.mpi</span><span class="w"> </span><span class="kn">import</span> <span class="n">resolve_mpi_command</span>
+
+        <span class="n">request</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">stdin</span><span class="p">)</span>
+        <span class="n">launch</span> <span class="o">=</span> <span class="n">LaunchSpec</span><span class="o">.</span><span class="n">from_mpi</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"mpi"</span><span class="p">))</span>
+        <span class="n">_print_json</span><span class="p">({</span><span class="s2">"mpi"</span><span class="p">:</span> <span class="n">resolve_mpi_command</span><span class="p">(</span><span class="n">launch</span><span class="o">.</span><span class="n">mpi</span><span class="p">)})</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Unknown remote action: </span><span class="si">{}</span><span class="s2">"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">remote_action</span><span class="p">))</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Matyáš Novák &amp; Jano Minár.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

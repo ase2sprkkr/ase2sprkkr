@@ -16,8 +16,8 @@
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
-      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -81,6 +81,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../ase2sprkkr.html">ase2sprkkr</a></li>
       <li class="breadcrumb-item active">ase2sprkkr.common.file_utils</li>
       <li class="wy-breadcrumbs-aside">
       </li>
@@ -98,16 +99,66 @@
 
 <span class="n">_RAISE</span> <span class="o">=</span> <span class="nb">object</span><span class="p">()</span>
 
+
+<div class="viewcode-block" id="FilePath">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.file_utils.FilePath.html#ase2sprkkr.common.file_utils.FilePath">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">FilePath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">PathLike</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""A path displayed relative to its base directory but resolved absolutely.</span>
+
+<span class="sd">    ``str(path)`` is intended for concise user-facing output, while filesystem</span>
+<span class="sd">    consumers such as ``open(path)``, ``Path(path)`` and ``os.path`` receive the</span>
+<span class="sd">    absolute path through :meth:`__fspath__`.</span>
+<span class="sd">    """</span>
+
+<div class="viewcode-block" id="FilePath.__init__">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.file_utils.FilePath.html#ase2sprkkr.common.file_utils.FilePath.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">base_directory</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">absolute</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">fsdecode</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">fspath</span><span class="p">(</span><span class="n">path</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">base_directory</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">FilePath</span><span class="p">):</span>
+                <span class="n">base_directory</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">base_directory</span>
+            <span class="k">elif</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isabs</span><span class="p">(</span><span class="n">absolute</span><span class="p">):</span>
+                <span class="n">base_directory</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">absolute</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">base_directory</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">base_directory</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">fsdecode</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">fspath</span><span class="p">(</span><span class="n">base_directory</span><span class="p">)))</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isabs</span><span class="p">(</span><span class="n">absolute</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">relative_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">absolute</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_directory</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">relative_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">absolute</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">absolute_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base_directory</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">relative_path</span><span class="p">))</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">relative_path</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">"FilePath(</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">relative_path</span><span class="si">!r}</span><span class="s2">, base_directory=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">base_directory</span><span class="si">!r}</span><span class="s2">)"</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">__fspath__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">absolute_path</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">FilePath</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">NotImplemented</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">absolute_path</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">absolute_path</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">hash</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">absolute_path</span><span class="p">)</span></div>
+
+
+
 <div class="viewcode-block" id="filename_from_file">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.common.file_utils.filename_from_file.html#ase2sprkkr.common.file_utils.filename_from_file">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">filename_from_file</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">_RAISE</span><span class="p">,</span> <span class="n">realpath</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a filesystem name for a path or a file backed by one.</span>
+<span class="w">    </span><span class="sd">"""Return a filesystem name for a path or a file backed by one.</span>
 
 <span class="sd">    If the object has no filename, return ``default`` or raise ``TypeError``</span>
 <span class="sd">    when no default was supplied.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">BufferedIOBase</span><span class="p">):</span>
-        <span class="n">file</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="n">file</span><span class="p">)</span>
+        <span class="n">file</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="s2">"name"</span><span class="p">,</span> <span class="n">file</span><span class="p">)</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">out</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">fspath</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
@@ -127,7 +178,7 @@
 <div class="viewcode-block" id="Directory.new">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.common.file_utils.Directory.html#ase2sprkkr.common.file_utils.Directory.new">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">new</span><span class="p">(</span><span class="nb">dir</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;.&quot;</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">new</span><span class="p">(</span><span class="nb">dir</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">"."</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="nb">dir</span><span class="p">,</span> <span class="n">Directory</span><span class="p">):</span>
             <span class="k">return</span> <span class="nb">dir</span>
         <span class="k">return</span> <span class="n">Directory</span><span class="p">(</span><span class="nb">dir</span><span class="p">,</span> <span class="n">default</span><span class="p">)</span></div>
@@ -135,16 +186,16 @@
 
 <div class="viewcode-block" id="Directory.__init__">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.common.file_utils.Directory.html#ase2sprkkr.common.file_utils.Directory.__init__">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">dir</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;.&quot;</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">dir</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">"."</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">dir</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="nb">dir</span> <span class="o">=</span> <span class="n">default</span>
         <span class="k">if</span> <span class="nb">dir</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;No directory has been specified&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"No directory has been specified"</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">enters</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">dir</span> <span class="o">=</span> <span class="nb">dir</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="nb">dir</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dir</span> <span class="o">==</span> <span class="s2">&quot;.&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dir</span> <span class="o">==</span> <span class="s2">"."</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">chdir</span> <span class="o">=</span> <span class="n">contextlib</span><span class="o">.</span><span class="n">suppress</span></div>
 
 
@@ -152,10 +203,10 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">path</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">False</span> <span class="k">else</span> <span class="s2">&quot;&lt;tempdir&gt;&quot;</span>
+        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">False</span> <span class="k">else</span> <span class="s2">"&lt;tempdir&gt;"</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&lt;Directory </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="si">}</span><span class="s2">&gt;&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">"&lt;Directory </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="si">}</span><span class="s2">&gt;"</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">enters</span> <span class="o">+=</span> <span class="mi">1</span>

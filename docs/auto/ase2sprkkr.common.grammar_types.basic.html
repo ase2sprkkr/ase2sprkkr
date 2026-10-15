@@ -17,8 +17,8 @@
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../_static/documentation_options.js?v=5929fcd5"></script>
-      <script src="../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -68,6 +68,7 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.promote_ase_atoms.html">promote_ase_atoms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.__getattr__.html">__getattr__</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="ase2sprkkr.common.html">common</a><ul class="current">
@@ -76,10 +77,15 @@
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.configuration.html">configuration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.configuration_containers.html">configuration_containers</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.configuration_definitions.html">configuration_definitions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.configuration_transaction.html">configuration_transaction</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.container_definitions.html">container_definitions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.dangerous_values.html">dangerous_values</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.debug.html">debug</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.decorators.html">decorators</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.dependencies.html">dependencies</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.doc.html">doc</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.file_fingerprints.html">file_fingerprints</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.file_locks.html">file_locks</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.file_utils.html">file_utils</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.formats.html">formats</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.generated_configuration_definitions.html">generated_configuration_definitions</a></li>
@@ -96,15 +102,15 @@
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.warnings.html">warnings</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.init_tests.html">init_tests</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.lazy_string.html">lazy_string</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.misc.html">misc</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.module_registry.html">module_registry</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.no_output.html">no_output</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.options.html">options</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.parsing_results.html">parsing_results</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.process_output_reader.html">process_output_reader</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.repeated_configuration_containers.html">repeated_configuration_containers</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.section_adaptors.html">section_adaptors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.repetition.html">repetition</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.subprocess.html">subprocess</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.tools.html">tools</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.unique_values.html">unique_values</a></li>
@@ -114,13 +120,18 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration.html">configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration_migration.html">configuration_migration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration_yaml.html">configuration_yaml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.conftest.html">conftest</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.examples.html">examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.execution.html">execution</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.gui.html">gui</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.input_parameters.html">input_parameters</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.output_files.html">output_files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.outputs.html">outputs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.physics.html">physics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.potentials.html">potentials</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.profiles.html">profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.result_files.html">result_files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.sprkkr.html">sprkkr</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.tools.html">tools</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.version.html">version</a></li>
@@ -159,37 +170,69 @@
 <h1>basic<a class="headerlink" href="#basic" title="Link to this heading"></a></h1>
 <p>Full name: <strong>ase2sprkkr.common.grammar_types.basic</strong></p>
 <p class="rubric">Module class hierarchy</p>
-<div class="graphviz"><img src="../_images/inheritance-bb0c738727092313812ebad6cca0508e5493f5a3.png" alt="Inheritance diagram of ase2sprkkr.common.grammar_types.basic.AlwaysQString, ase2sprkkr.common.grammar_types.basic.BaseBool, ase2sprkkr.common.grammar_types.basic.BaseRealWithUnits, ase2sprkkr.common.grammar_types.basic.BaseString, ase2sprkkr.common.grammar_types.basic.BasicSeparator, ase2sprkkr.common.grammar_types.basic.BlankSeparator, ase2sprkkr.common.grammar_types.basic.Bool, ase2sprkkr.common.grammar_types.basic.Boolean, ase2sprkkr.common.grammar_types.basic.Char, ase2sprkkr.common.grammar_types.basic.Date, ase2sprkkr.common.grammar_types.basic.Energy, ase2sprkkr.common.grammar_types.basic.FixedPointNumber, ase2sprkkr.common.grammar_types.basic.Flag, ase2sprkkr.common.grammar_types.basic.IntBool, ase2sprkkr.common.grammar_types.basic.Integer, ase2sprkkr.common.grammar_types.basic.Keyword, ase2sprkkr.common.grammar_types.basic.KeywordSeparator, ase2sprkkr.common.grammar_types.basic.LineString, ase2sprkkr.common.grammar_types.basic.Number, ase2sprkkr.common.grammar_types.basic.ObjectNumber, ase2sprkkr.common.grammar_types.basic.QString, ase2sprkkr.common.grammar_types.basic.Real, ase2sprkkr.common.grammar_types.basic.RealWithUnits, ase2sprkkr.common.grammar_types.basic.Separator, ase2sprkkr.common.grammar_types.basic.String, ase2sprkkr.common.grammar_types.basic.Unsigned" usemap="#inheritance0e3b6e4516" class="inheritance graphviz" /></div>
-<map id="inheritance0e3b6e4516" name="inheritance0e3b6e4516">
-<area shape="rect" id="node1" href="ase2sprkkr.common.grammar_types.basic.AlwaysQString.html#ase2sprkkr.common.grammar_types.basic.AlwaysQString" target="_top" title="Either a quoted string, or just a word (without whitespaces or special chars). Always printed with quotes." alt="" coords="508,5,624,33"/>
-<area shape="rect" id="node25" href="ase2sprkkr.common.grammar_types.basic.QString.html#ase2sprkkr.common.grammar_types.basic.QString" target="_top" title="Either a quoted string, or just a word (without whitespaces or special chars)" alt="" coords="702,5,774,33"/>
-<area shape="rect" id="node2" href="ase2sprkkr.common.grammar_types.basic.BaseString.html#ase2sprkkr.common.grammar_types.basic.BaseString" target="_top" title="Base type for string grammar types" alt="" coords="352,84,443,111"/>
-<area shape="rect" id="node22" href="ase2sprkkr.common.grammar_types.basic.LineString.html#ase2sprkkr.common.grammar_types.basic.LineString" target="_top" title="A string, that takes all up to the end of the line" alt="" coords="523,57,609,85"/>
-<area shape="rect" id="node28" href="ase2sprkkr.common.grammar_types.basic.String.html#ase2sprkkr.common.grammar_types.basic.String" target="_top" title="Just a string (without whitespaces and few special chars)" alt="" coords="530,109,602,136"/>
-<area shape="rect" id="node3" href="ase2sprkkr.common.grammar_types.basic.BaseBool.html#ase2sprkkr.common.grammar_types.basic.BaseBool" target="_top" title="A base type for all kind of boolean values." alt="" coords="356,264,438,292"/>
-<area shape="rect" id="node10" href="ase2sprkkr.common.grammar_types.basic.Bool.html#ase2sprkkr.common.grammar_types.basic.Bool" target="_top" title="A bool type, whose value is represented by a letter (T or F)" alt="" coords="530,161,602,188"/>
-<area shape="rect" id="node11" href="ase2sprkkr.common.grammar_types.basic.Boolean.html#ase2sprkkr.common.grammar_types.basic.Boolean" target="_top" title="A bool type, whose value is represented by a letter (T or F)" alt="" coords="529,212,603,240"/>
-<area shape="rect" id="node17" href="ase2sprkkr.common.grammar_types.basic.Flag.html#ase2sprkkr.common.grammar_types.basic.Flag" target="_top" title="A boolean value, which is True, if a name of the value appears in the input file." alt="" coords="530,264,602,292"/>
-<area shape="rect" id="node18" href="ase2sprkkr.common.grammar_types.basic.IntBool.html#ase2sprkkr.common.grammar_types.basic.IntBool" target="_top" title="A bool type, whose value is represented by a letter (1 or 0)" alt="" coords="530,316,602,343"/>
-<area shape="rect" id="node4" href="ase2sprkkr.common.grammar_types.grammar_type.TypedGrammarType.html#ase2sprkkr.common.grammar_types.grammar_type.TypedGrammarType" target="_top" title="TypedGrammarType" alt="" coords="147,316,298,343"/>
-<area shape="rect" id="node12" href="ase2sprkkr.common.grammar_types.basic.Char.html#ase2sprkkr.common.grammar_types.basic.Char" target="_top" title="Char" alt="" coords="361,316,433,343"/>
-<area shape="rect" id="node14" href="ase2sprkkr.common.grammar_types.basic.Number.html#ase2sprkkr.common.grammar_types.basic.Number" target="_top" title="Base class for a number &#45; descendants of this class can have minimal and/or maximal possible value." alt="" coords="361,368,434,395"/>
-<area shape="rect" id="node5" href="ase2sprkkr.common.grammar_types.basic.BaseRealWithUnits.html#ase2sprkkr.common.grammar_types.basic.BaseRealWithUnits" target="_top" title="The base class for float value, which can have units append." alt="" coords="665,368,811,395"/>
-<area shape="rect" id="node15" href="ase2sprkkr.common.grammar_types.basic.Energy.html#ase2sprkkr.common.grammar_types.basic.Energy" target="_top" title="The grammar type for energy. The default units are Rydberg, one can specify eV." alt="" coords="861,342,933,370"/>
-<area shape="rect" id="node26" href="ase2sprkkr.common.grammar_types.basic.RealWithUnits.html#ase2sprkkr.common.grammar_types.basic.RealWithUnits" target="_top" title="A float value with user&#45;defined units" alt="" coords="840,394,954,422"/>
-<area shape="rect" id="node6" href="ase2sprkkr.common.grammar_types.basic.Real.html#ase2sprkkr.common.grammar_types.basic.Real" target="_top" title="A real value" alt="" coords="530,368,602,395"/>
-<area shape="rect" id="node7" href="ase2sprkkr.common.grammar_types.basic.BasicSeparator.html#ase2sprkkr.common.grammar_types.basic.BasicSeparator" target="_top" title="Basic type for separators &#45; fake items in" alt="" coords="163,446,282,474"/>
-<area shape="rect" id="node9" href="ase2sprkkr.common.grammar_types.basic.BlankSeparator.html#ase2sprkkr.common.grammar_types.basic.BlankSeparator" target="_top" title="Special class for a blank separator. In fact (with a delimiter) it is a blank line." alt="" coords="337,419,457,447"/>
-<area shape="rect" id="node21" href="ase2sprkkr.common.grammar_types.basic.KeywordSeparator.html#ase2sprkkr.common.grammar_types.basic.KeywordSeparator" target="_top" title="Separator with an exact string" alt="" coords="327,471,467,499"/>
-<area shape="rect" id="node27" href="ase2sprkkr.common.grammar_types.basic.Separator.html#ase2sprkkr.common.grammar_types.basic.Separator" target="_top" title="Special class for a separator inside a section." alt="" coords="355,523,439,551"/>
-<area shape="rect" id="node8" href="ase2sprkkr.common.grammar_types.grammar_type.GrammarType.html#ase2sprkkr.common.grammar_types.grammar_type.GrammarType" target="_top" title="Base class for definition of configuration option types" alt="" coords="5,446,118,474"/>
-<area shape="rect" id="node20" href="ase2sprkkr.common.grammar_types.basic.Keyword.html#ase2sprkkr.common.grammar_types.basic.Keyword" target="_top" title="A value, that can take values from the predefined set of strings." alt="" coords="184,498,261,525"/>
-<area shape="rect" id="node13" href="ase2sprkkr.common.grammar_types.basic.Date.html#ase2sprkkr.common.grammar_types.basic.Date" target="_top" title="A date value of the form &#39;DD.MM.YYYY&#39;" alt="" coords="530,419,602,447"/>
-<area shape="rect" id="node16" href="ase2sprkkr.common.grammar_types.basic.FixedPointNumber.html#ase2sprkkr.common.grammar_types.basic.FixedPointNumber" target="_top" title="FixedPointNumber" alt="" coords="496,471,636,499"/>
-<area shape="rect" id="node19" href="ase2sprkkr.common.grammar_types.basic.Integer.html#ase2sprkkr.common.grammar_types.basic.Integer" target="_top" title="Signed integer" alt="" coords="702,419,774,447"/>
-<area shape="rect" id="node24" href="ase2sprkkr.common.grammar_types.basic.Unsigned.html#ase2sprkkr.common.grammar_types.basic.Unsigned" target="_top" title="Unsigned integer (zero is possible)" alt="" coords="697,471,779,499"/>
-<area shape="rect" id="node23" href="ase2sprkkr.common.grammar_types.basic.ObjectNumber.html#ase2sprkkr.common.grammar_types.basic.ObjectNumber" target="_top" title="An abstract class, that describe an unsigned integer, that reffers to an object." alt="" coords="840,471,955,499"/>
-</map><div class="line-block">
+digraph inheritance0e3b6e4516 {
+bgcolor=transparent;
+fontsize=14;
+rankdir=LR;
+ranksep=0.3;
+size=&quot;10.0, 10.0&quot;;
+  &quot;AlwaysQString&quot; [URL=&quot;ase2sprkkr.common.grammar_types.basic.AlwaysQString.html#ase2sprkkr.common.grammar_types.basic.AlwaysQString&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;Either a quoted string, or just a word (without whitespaces or special chars). Always printed with quotes.&quot;];
+  &quot;BaseString&quot; -&gt; &quot;AlwaysQString&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;BaseBool&quot; [URL=&quot;ase2sprkkr.common.grammar_types.basic.BaseBool.html#ase2sprkkr.common.grammar_types.basic.BaseBool&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;A base type for all kind of boolean values.&quot;];
+  &quot;TypedGrammarType&quot; -&gt; &quot;BaseBool&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;BaseRealWithUnits&quot; [URL=&quot;ase2sprkkr.common.grammar_types.basic.BaseRealWithUnits.html#ase2sprkkr.common.grammar_types.basic.BaseRealWithUnits&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;The base class for float value, which can have units append.&quot;];
+  &quot;Real&quot; -&gt; &quot;BaseRealWithUnits&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;BaseString&quot; [URL=&quot;ase2sprkkr.common.grammar_types.basic.BaseString.html#ase2sprkkr.common.grammar_types.basic.BaseString&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;Base type for string grammar types&quot;];
+  &quot;TypedGrammarType&quot; -&gt; &quot;BaseString&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;BasicSeparator&quot; [URL=&quot;ase2sprkkr.common.grammar_types.basic.BasicSeparator.html#ase2sprkkr.common.grammar_types.basic.BasicSeparator&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;Basic type for separators - fake items in&quot;];
+  &quot;GrammarType&quot; -&gt; &quot;BasicSeparator&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;BlankSeparator&quot; [URL=&quot;ase2sprkkr.common.grammar_types.basic.BlankSeparator.html#ase2sprkkr.common.grammar_types.basic.BlankSeparator&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;Special class for a blank separator. In fact (with a delimiter) it is a blank line.&quot;];
+  &quot;BasicSeparator&quot; -&gt; &quot;BlankSeparator&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;Bool&quot; [URL=&quot;ase2sprkkr.common.grammar_types.basic.Bool.html#ase2sprkkr.common.grammar_types.basic.Bool&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;A bool type, whose value is represented by a letter (T or F)&quot;];
+  &quot;BaseBool&quot; -&gt; &quot;Bool&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;Boolean&quot; [URL=&quot;ase2sprkkr.common.grammar_types.basic.Boolean.html#ase2sprkkr.common.grammar_types.basic.Boolean&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;A bool type, whose value is represented by a letter (T or F)&quot;];
+  &quot;BaseBool&quot; -&gt; &quot;Boolean&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;Char&quot; [URL=&quot;ase2sprkkr.common.grammar_types.basic.Char.html#ase2sprkkr.common.grammar_types.basic.Char&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;];
+  &quot;TypedGrammarType&quot; -&gt; &quot;Char&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;Date&quot; [URL=&quot;ase2sprkkr.common.grammar_types.basic.Date.html#ase2sprkkr.common.grammar_types.basic.Date&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;A date value of the form 'DD.MM.YYYY'&quot;];
+  &quot;Number&quot; -&gt; &quot;Date&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;Energy&quot; [URL=&quot;ase2sprkkr.common.grammar_types.basic.Energy.html#ase2sprkkr.common.grammar_types.basic.Energy&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;The grammar type for energy. The default units are Rydberg, one can specify eV.&quot;];
+  &quot;BaseRealWithUnits&quot; -&gt; &quot;Energy&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;FixedPointNumber&quot; [URL=&quot;ase2sprkkr.common.grammar_types.basic.FixedPointNumber.html#ase2sprkkr.common.grammar_types.basic.FixedPointNumber&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;];
+  &quot;Number&quot; -&gt; &quot;FixedPointNumber&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;Flag&quot; [URL=&quot;ase2sprkkr.common.grammar_types.basic.Flag.html#ase2sprkkr.common.grammar_types.basic.Flag&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;A boolean value, which is True, if a name of the value appears in the input file.&quot;];
+  &quot;BaseBool&quot; -&gt; &quot;Flag&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;GrammarType&quot; [URL=&quot;ase2sprkkr.common.grammar_types.grammar_type.GrammarType.html#ase2sprkkr.common.grammar_types.grammar_type.GrammarType&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;Base class for definition of configuration option types&quot;];
+  &quot;IntBool&quot; [URL=&quot;ase2sprkkr.common.grammar_types.basic.IntBool.html#ase2sprkkr.common.grammar_types.basic.IntBool&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;A bool type, whose value is represented by a letter (1 or 0)&quot;];
+  &quot;BaseBool&quot; -&gt; &quot;IntBool&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;Integer&quot; [URL=&quot;ase2sprkkr.common.grammar_types.basic.Integer.html#ase2sprkkr.common.grammar_types.basic.Integer&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;Signed integer&quot;];
+  &quot;FixedPointNumber&quot; -&gt; &quot;Integer&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;Keyword&quot; [URL=&quot;ase2sprkkr.common.grammar_types.basic.Keyword.html#ase2sprkkr.common.grammar_types.basic.Keyword&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;A value, that can take values from the predefined set of strings.&quot;];
+  &quot;GrammarType&quot; -&gt; &quot;Keyword&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;KeywordSeparator&quot; [URL=&quot;ase2sprkkr.common.grammar_types.basic.KeywordSeparator.html#ase2sprkkr.common.grammar_types.basic.KeywordSeparator&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;Separator with an exact string&quot;];
+  &quot;BasicSeparator&quot; -&gt; &quot;KeywordSeparator&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;LineString&quot; [URL=&quot;ase2sprkkr.common.grammar_types.basic.LineString.html#ase2sprkkr.common.grammar_types.basic.LineString&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;A string, that takes all up to the end of the line&quot;];
+  &quot;BaseString&quot; -&gt; &quot;LineString&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;Number&quot; [URL=&quot;ase2sprkkr.common.grammar_types.basic.Number.html#ase2sprkkr.common.grammar_types.basic.Number&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;Base class for a number - descendants of this class can have minimal and/or maximal possible value.&quot;];
+  &quot;TypedGrammarType&quot; -&gt; &quot;Number&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;ObjectNumber&quot; [URL=&quot;ase2sprkkr.common.grammar_types.basic.ObjectNumber.html#ase2sprkkr.common.grammar_types.basic.ObjectNumber&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;An abstract class, that describe an unsigned integer, that reffers to an object.&quot;];
+  &quot;Unsigned&quot; -&gt; &quot;ObjectNumber&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;QString&quot; [URL=&quot;ase2sprkkr.common.grammar_types.basic.QString.html#ase2sprkkr.common.grammar_types.basic.QString&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;Either a quoted string, or just a word (without whitespaces or special chars)&quot;];
+  &quot;AlwaysQString&quot; -&gt; &quot;QString&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;Real&quot; [URL=&quot;ase2sprkkr.common.grammar_types.basic.Real.html#ase2sprkkr.common.grammar_types.basic.Real&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;A real value&quot;];
+  &quot;Number&quot; -&gt; &quot;Real&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;RealWithUnits&quot; [URL=&quot;ase2sprkkr.common.grammar_types.basic.RealWithUnits.html#ase2sprkkr.common.grammar_types.basic.RealWithUnits&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;A float value with user-defined units&quot;];
+  &quot;BaseRealWithUnits&quot; -&gt; &quot;RealWithUnits&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;Separator&quot; [URL=&quot;ase2sprkkr.common.grammar_types.basic.Separator.html#ase2sprkkr.common.grammar_types.basic.Separator&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;Special class for a separator inside a section.&quot;];
+  &quot;BasicSeparator&quot; -&gt; &quot;Separator&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;String&quot; [URL=&quot;ase2sprkkr.common.grammar_types.basic.String.html#ase2sprkkr.common.grammar_types.basic.String&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;Just a string (without whitespaces and few special chars)&quot;];
+  &quot;BaseString&quot; -&gt; &quot;String&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;TypedGrammarType&quot; [URL=&quot;ase2sprkkr.common.grammar_types.grammar_type.TypedGrammarType.html#ase2sprkkr.common.grammar_types.grammar_type.TypedGrammarType&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;];
+  &quot;GrammarType&quot; -&gt; &quot;TypedGrammarType&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;Unsigned&quot; [URL=&quot;ase2sprkkr.common.grammar_types.basic.Unsigned.html#ase2sprkkr.common.grammar_types.basic.Unsigned&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;Unsigned integer (zero is possible)&quot;];
+  &quot;FixedPointNumber&quot; -&gt; &quot;Unsigned&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+}
+<div class="line-block">
 <div class="line"><br /></div>
 </div>
 <p class="rubric">Description</p>

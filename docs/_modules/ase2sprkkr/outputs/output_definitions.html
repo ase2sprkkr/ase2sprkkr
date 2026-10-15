@@ -16,8 +16,8 @@
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
-      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -81,6 +81,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../ase2sprkkr.html">ase2sprkkr</a></li>
       <li class="breadcrumb-item active">ase2sprkkr.outputs.output_definitions</li>
       <li class="wy-breadcrumbs-aside">
       </li>
@@ -91,35 +92,36 @@
            <div itemprop="articleBody">
              
   <h1>Source code for ase2sprkkr.outputs.output_definitions</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span></span><span class="sd">"""</span>
 <span class="sd">This file contains the classes for definitions of parts of output</span>
 <span class="sd">files, from that the result data are obtained.</span>
 
 <span class="sd">Although the files are used only for reading, the same</span>
 <span class="sd">grammar definition approach as for potential and input parameters</span>
 <span class="sd">files is used</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">pyparsing</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pp</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">..common.grammar</span><span class="w"> </span><span class="kn">import</span> <span class="n">line_end</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..common.grammar</span><span class="w"> </span><span class="kn">import</span> <span class="n">generate_grammar</span><span class="p">,</span> <span class="n">line_end</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">..common.container_definitions</span><span class="w"> </span><span class="kn">import</span> <span class="n">SectionDefinition</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">..common.value_definitions</span><span class="w"> </span><span class="kn">import</span> <span class="n">ValueDefinition</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">..common.decorators</span><span class="w"> </span><span class="kn">import</span> <span class="n">cached_class_property</span>
 
 
 <div class="viewcode-block" id="OutputValueDefinition">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.output_definitions.OutputValueDefinition.html#ase2sprkkr.outputs.readers.scf.OutputValueDefinition">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.output_definitions.OutputValueDefinition.html#ase2sprkkr.outputs.output_definitions.OutputValueDefinition">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">OutputValueDefinition</span><span class="p">(</span><span class="n">ValueDefinition</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Value in an output file, of a form &#39;NAME   VALUE&#39;&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Value in an output file, of a form 'NAME   VALUE'"""</span>
 
     <span class="nd">@cached_class_property</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">grammar_of_delimiter</span><span class="p">():</span>
-        <span class="k">return</span> <span class="n">pp</span><span class="o">.</span><span class="n">WordStart</span><span class="p">()</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">delimiter</span><span class="p">():</span>
+        <span class="k">with</span> <span class="n">generate_grammar</span><span class="p">():</span>
+            <span class="k">return</span> <span class="n">pp</span><span class="o">.</span><span class="n">WordStart</span><span class="p">()</span><span class="o">.</span><span class="n">set_name</span><span class="p">(</span><span class="s2">" "</span><span class="p">)</span>
 
-    <span class="n">prefix</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="n">prefix</span> <span class="o">=</span> <span class="s2">""</span>
 
 <div class="viewcode-block" id="OutputValueDefinition.__init__">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.output_definitions.OutputValueDefinition.html#ase2sprkkr.outputs.readers.scf.OutputValueDefinition.__init__">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.output_definitions.OutputValueDefinition.html#ase2sprkkr.outputs.output_definitions.OutputValueDefinition.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">is_required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">is_required</span><span class="o">=</span><span class="n">is_required</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 </div>
@@ -127,29 +129,28 @@
 
 
 <div class="viewcode-block" id="OutputValueEqualDefinition">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.output_definitions.OutputValueEqualDefinition.html#ase2sprkkr.outputs.readers.scf.OutputValueEqualDefinition">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.output_definitions.OutputValueEqualDefinition.html#ase2sprkkr.outputs.output_definitions.OutputValueEqualDefinition">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">OutputValueEqualDefinition</span><span class="p">(</span><span class="n">OutputValueDefinition</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Value in an output file, of a form &#39;NAME=VALUE&#39; (spaces possible)&quot;&quot;&quot;</span>
-
-    <span class="n">name_value_delimiter</span> <span class="o">=</span> <span class="s2">&quot;=&quot;</span>
+<span class="w">    </span><span class="sd">"""Value in an output file, of a form 'NAME=VALUE' (spaces possible)"""</span>
 
     <span class="nd">@cached_class_property</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">grammar_of_delimiter</span><span class="p">():</span>
-        <span class="k">return</span> <span class="n">pp</span><span class="o">.</span><span class="n">Suppress</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">set_name</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="p">)</span></div>
+    <span class="k">def</span><span class="w"> </span><span class="nf">delimiter</span><span class="p">():</span>
+        <span class="k">with</span> <span class="n">generate_grammar</span><span class="p">():</span>
+            <span class="k">return</span> <span class="n">pp</span><span class="o">.</span><span class="n">Suppress</span><span class="p">(</span><span class="s2">"="</span><span class="p">)</span><span class="o">.</span><span class="n">set_name</span><span class="p">(</span><span class="s2">"="</span><span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="OutputNonameValueDefinition">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.output_definitions.OutputNonameValueDefinition.html#ase2sprkkr.outputs.readers.scf.OutputNonameValueDefinition">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.output_definitions.OutputNonameValueDefinition.html#ase2sprkkr.outputs.output_definitions.OutputNonameValueDefinition">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">OutputNonameValueDefinition</span><span class="p">(</span><span class="n">OutputValueDefinition</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Value in an output file, that has no name, there is just the value</span>
+<span class="w">    </span><span class="sd">"""Value in an output file, that has no name, there is just the value</span>
 <span class="sd">    (identified by its position after some other known stuff)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="n">name_in_grammar</span> <span class="o">=</span> <span class="kc">False</span>
 
 <div class="viewcode-block" id="OutputNonameValueDefinition.__init__">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.output_definitions.OutputNonameValueDefinition.html#ase2sprkkr.outputs.readers.scf.OutputNonameValueDefinition.__init__">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.output_definitions.OutputNonameValueDefinition.html#ase2sprkkr.outputs.output_definitions.OutputNonameValueDefinition.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">is_required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">is_required</span><span class="o">=</span><span class="n">is_required</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 </div>
@@ -157,30 +158,28 @@
 
 
 <div class="viewcode-block" id="OutputSectionDefinition">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.output_definitions.OutputSectionDefinition.html#ase2sprkkr.outputs.readers.scf.OutputSectionDefinition">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.output_definitions.OutputSectionDefinition.html#ase2sprkkr.outputs.output_definitions.OutputSectionDefinition">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">OutputSectionDefinition</span><span class="p">(</span><span class="n">SectionDefinition</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;This class describes the format of one</span>
-<span class="sd">    value of a standard potential section&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""This class describes the format of one</span>
+<span class="sd">    value of a standard potential section"""</span>
 
     <span class="n">force_order</span> <span class="o">=</span> <span class="kc">True</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; The order of items in output file is fixed &quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">""" The order of items in output file is fixed """</span>
 
     <span class="n">name_in_grammar</span> <span class="o">=</span> <span class="kc">False</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; Parsed parts of the output have no names, they are identified by its positions &quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">""" Parsed parts of the output have no names, they are identified by its positions """</span>
 
     <span class="n">child_class</span> <span class="o">=</span> <span class="n">OutputValueDefinition</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; standard child class &quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">""" standard child class """</span>
 
     <span class="n">custom_class</span> <span class="o">=</span> <span class="kc">None</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; There is no custom class in the output, only known parts of the file are parsed &quot;&quot;&quot;</span>
-
-    <span class="n">delimiter</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; options are delimited by newline in ouptut. &quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">""" There is no custom class in the output, only known parts of the file are parsed """</span>
 
     <span class="nd">@cached_class_property</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">grammar_of_delimiter</span><span class="p">():</span>
-        <span class="n">out</span> <span class="o">=</span> <span class="p">(</span><span class="n">pp</span><span class="o">.</span><span class="n">Optional</span><span class="p">(</span><span class="n">line_end</span><span class="p">)</span> <span class="o">+</span> <span class="n">pp</span><span class="o">.</span><span class="n">WordStart</span><span class="p">())</span><span class="o">.</span><span class="n">suppress</span><span class="p">()</span>
-        <span class="k">return</span> <span class="n">out</span></div>
+    <span class="k">def</span><span class="w"> </span><span class="nf">delimiter</span><span class="p">():</span>
+        <span class="k">with</span> <span class="n">generate_grammar</span><span class="p">():</span>
+            <span class="n">out</span> <span class="o">=</span> <span class="p">(</span><span class="n">pp</span><span class="o">.</span><span class="n">Optional</span><span class="p">(</span><span class="n">line_end</span><span class="p">)</span> <span class="o">+</span> <span class="n">pp</span><span class="o">.</span><span class="n">WordStart</span><span class="p">())</span><span class="o">.</span><span class="n">suppress</span><span class="p">()</span>
+            <span class="k">return</span> <span class="n">out</span><span class="o">.</span><span class="n">set_name</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span></div>
 
 </pre></div>
 

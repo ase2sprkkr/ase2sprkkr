@@ -1,0 +1,36 @@
+Executor
+========
+
+
+.. currentmodule:: ase2sprkkr.execution.base
+
+.. autoclass:: Executor
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.execution.base.Executor
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

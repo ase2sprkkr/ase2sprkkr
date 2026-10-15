@@ -17,8 +17,8 @@
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../_static/documentation_options.js?v=5929fcd5"></script>
-      <script src="../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -68,17 +68,23 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.promote_ase_atoms.html">promote_ase_atoms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.__getattr__.html">__getattr__</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.common.html">common</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration.html">configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration_migration.html">configuration_migration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration_yaml.html">configuration_yaml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.conftest.html">conftest</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.examples.html">examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.execution.html">execution</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.gui.html">gui</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.input_parameters.html">input_parameters</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.output_files.html">output_files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.outputs.html">outputs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.physics.html">physics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.potentials.html">potentials</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.profiles.html">profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.result_files.html">result_files</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="ase2sprkkr.sprkkr.html">sprkkr</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.atomic_types.html">atomic_types</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.atoms_region.html">atoms_region</a></li>
@@ -88,6 +94,7 @@
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.io_data.html">io_data</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.moments.html">moments</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.occupations.html">occupations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.profile.html">profile</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.radial.html">radial</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.radial_meshes.html">radial_meshes</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.reference_systems.html">reference_systems</a></li>
@@ -140,18 +147,29 @@
 <h1>Site<a class="headerlink" href="#site" title="Link to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="ase2sprkkr.sprkkr.sprkkr_grammar_types.Site">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.sprkkr.sprkkr_grammar_types.</span></span><span class="sig-name descname"><span class="pre">Site</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">postfix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">after_format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">after_convert</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/sprkkr_grammar_types.html#Site"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.sprkkr_grammar_types.Site" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.sprkkr.sprkkr_grammar_types.</span></span><span class="sig-name descname"><span class="pre">Site</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">postfix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">after_format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">after_convert</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/sprkkr_grammar_types.html#Site"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.sprkkr_grammar_types.Site" title="Link to this definition"></a></dt>
 <dd><p class="rubric">Class hierarchy</p>
-<div class="graphviz"><img src="../_images/inheritance-f74e615b53acec989ca3145b8ec3b2bb02bd038f.png" alt="Inheritance diagram of ase2sprkkr.sprkkr.sprkkr_grammar_types.Site" usemap="#inheritancec5b61978aa" class="inheritance graphviz" /></div>
-<map id="inheritancec5b61978aa" name="inheritancec5b61978aa">
-<area shape="rect" id="node1" href="ase2sprkkr.common.grammar_types.basic.FixedPointNumber.html#ase2sprkkr.common.grammar_types.basic.FixedPointNumber" target="_top" title="basic.FixedPointNumber" alt="" coords="454,4,575,22"/>
-<area shape="rect" id="node5" href="ase2sprkkr.common.grammar_types.basic.Unsigned.html#ase2sprkkr.common.grammar_types.basic.Unsigned" target="_top" title="Unsigned integer (zero is possible)" alt="" coords="595,4,676,22"/>
-<area shape="rect" id="node2" href="ase2sprkkr.common.grammar_types.basic.Number.html#ase2sprkkr.common.grammar_types.basic.Number" target="_top" title="Base class for a number &#45; descendants of this class can have minimal and/or maximal possible value." alt="" coords="358,4,434,22"/>
-<area shape="rect" id="node3" href="ase2sprkkr.common.grammar_types.grammar_type.TypedGrammarType.html#ase2sprkkr.common.grammar_types.grammar_type.TypedGrammarType" target="_top" title="grammar_type.TypedGrammarType" alt="" coords="168,4,339,22"/>
-<area shape="rect" id="node4" href="ase2sprkkr.common.grammar_types.basic.ObjectNumber.html#ase2sprkkr.common.grammar_types.basic.ObjectNumber" target="_top" title="An abstract class, that describe an unsigned integer, that reffers to an object." alt="" coords="696,4,800,22"/>
-<area shape="rect" id="node7" href="#ase2sprkkr.sprkkr.sprkkr_grammar_types.Site" target="_top" title="sprkkr_grammar_types.Site" alt="" coords="820,4,956,22"/>
-<area shape="rect" id="node6" href="ase2sprkkr.common.grammar_types.grammar_type.GrammarType.html#ase2sprkkr.common.grammar_types.grammar_type.GrammarType" target="_top" title="Base class for definition of configuration option types" alt="" coords="4,4,148,22"/>
-</map><div class="line-block">
+digraph inheritancec5b61978aa {
+bgcolor=transparent;
+fontsize=14;
+rankdir=LR;
+ranksep=0.3;
+size=&quot;10.0, 10.0&quot;;
+  &quot;basic.FixedPointNumber&quot; [URL=&quot;ase2sprkkr.common.grammar_types.basic.FixedPointNumber.html#ase2sprkkr.common.grammar_types.basic.FixedPointNumber&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;];
+  &quot;basic.Number&quot; -&gt; &quot;basic.FixedPointNumber&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;basic.Number&quot; [URL=&quot;ase2sprkkr.common.grammar_types.basic.Number.html#ase2sprkkr.common.grammar_types.basic.Number&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;Base class for a number - descendants of this class can have minimal and/or maximal possible value.&quot;];
+  &quot;grammar_type.TypedGrammarType&quot; -&gt; &quot;basic.Number&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;basic.ObjectNumber&quot; [URL=&quot;ase2sprkkr.common.grammar_types.basic.ObjectNumber.html#ase2sprkkr.common.grammar_types.basic.ObjectNumber&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;An abstract class, that describe an unsigned integer, that reffers to an object.&quot;];
+  &quot;basic.Unsigned&quot; -&gt; &quot;basic.ObjectNumber&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;basic.Unsigned&quot; [URL=&quot;ase2sprkkr.common.grammar_types.basic.Unsigned.html#ase2sprkkr.common.grammar_types.basic.Unsigned&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;Unsigned integer (zero is possible)&quot;];
+  &quot;basic.FixedPointNumber&quot; -&gt; &quot;basic.Unsigned&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;grammar_type.GrammarType&quot; [URL=&quot;ase2sprkkr.common.grammar_types.grammar_type.GrammarType.html#ase2sprkkr.common.grammar_types.grammar_type.GrammarType&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;Base class for definition of configuration option types&quot;];
+  &quot;grammar_type.TypedGrammarType&quot; [URL=&quot;ase2sprkkr.common.grammar_types.grammar_type.TypedGrammarType.html#ase2sprkkr.common.grammar_types.grammar_type.TypedGrammarType&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;];
+  &quot;grammar_type.GrammarType&quot; -&gt; &quot;grammar_type.TypedGrammarType&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;sprkkr_grammar_types.Site&quot; [URL=&quot;#ase2sprkkr.sprkkr.sprkkr_grammar_types.Site&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;];
+  &quot;basic.ObjectNumber&quot; -&gt; &quot;sprkkr_grammar_types.Site&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+}
+<div class="line-block">
 <div class="line"><br /></div>
 </div>
 <p class="rubric">Constructor</p>
@@ -203,12 +221,12 @@
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ase2sprkkr.sprkkr.sprkkr_grammar_types.Site.I">
-<span class="sig-name descname"><span class="pre">I</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;Site&gt;</span></em><a class="headerlink" href="#ase2sprkkr.sprkkr.sprkkr_grammar_types.Site.I" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">I</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;Site&gt;</span></span><a class="headerlink" href="#ase2sprkkr.sprkkr.sprkkr_grammar_types.Site.I" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ase2sprkkr.sprkkr.sprkkr_grammar_types.Site.allowed_types">
-<span class="sig-name descname"><span class="pre">allowed_types</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(&lt;class</span> <span class="pre">'numpy.int64'&gt;,</span> <span class="pre">&lt;class</span> <span class="pre">'numpy.int32'&gt;,</span> <span class="pre">&lt;class</span> <span class="pre">'int'&gt;)</span></em><a class="headerlink" href="#ase2sprkkr.sprkkr.sprkkr_grammar_types.Site.allowed_types" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">allowed_types</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(&lt;class</span> <span class="pre">'numpy.int64'&gt;,</span> <span class="pre">&lt;class</span> <span class="pre">'numpy.int32'&gt;,</span> <span class="pre">&lt;class</span> <span class="pre">'int'&gt;)</span></span><a class="headerlink" href="#ase2sprkkr.sprkkr.sprkkr_grammar_types.Site.allowed_types" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">

@@ -16,8 +16,8 @@
       <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
-      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
@@ -81,6 +81,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../../ase2sprkkr.html">ase2sprkkr</a></li>
       <li class="breadcrumb-item active">ase2sprkkr.tools.commands.config</li>
       <li class="wy-breadcrumbs-aside">
       </li>
@@ -92,89 +93,291 @@
              
   <h1>Source code for ase2sprkkr.tools.commands.config</h1><div class="highlight"><pre>
 <span></span><span class="ch">#!/usr/bin/env python</span>
-<span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Tool to configuration of ASE2SPRKKR</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""Tool for ASE2SPRKKR user configuration."""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Mapping</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
 
 <span class="k">if</span> <span class="ow">not</span> <span class="n">__package__</span><span class="p">:</span>
-    <span class="n">__package__</span> <span class="o">=</span> <span class="s2">&quot;ase2sprkkr.tools.commands&quot;</span>
+    <span class="n">__package__</span> <span class="o">=</span> <span class="s2">"ase2sprkkr.tools.commands"</span>
 
 <span class="n">root_path</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span><span class="o">.</span><span class="n">parents</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
 <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">root_path</span><span class="p">)</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">...common.tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">main</span>  <span class="c1"># NOQA</span>
 
-<span class="n">help</span> <span class="o">=</span> <span class="s2">&quot;Show the (current) user configuration.&quot;</span>
-<span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;On the most modern unix/linux systems, it is in the file ~/.config/ase2sprkkr/__init__.py&quot;</span>
+<span class="n">help</span> <span class="o">=</span> <span class="s2">"Show or edit the current user configuration."</span>
+<span class="n">description</span> <span class="o">=</span> <span class="s2">"The user configuration is stored in ~/.config/ase2sprkkr/config.yaml on typical Unix/Linux systems."</span>
 
 
 <div class="viewcode-block" id="parser">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.tools.commands.config.parser.html#ase2sprkkr.tools.commands.config.parser">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">parser</span><span class="p">(</span><span class="n">parser</span><span class="p">):</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-p&quot;</span><span class="p">,</span> <span class="s2">&quot;--path&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Just print the path to the configuration file.&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-P&quot;</span><span class="p">,</span> <span class="s2">&quot;--print&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Just print the path configuration file.&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-s&quot;</span><span class="p">,</span> <span class="s2">&quot;--show&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Print the configuration.&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-i&quot;</span><span class="p">,</span> <span class="s2">&quot;--info&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Show the description of the configuration options.&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"-p"</span><span class="p">,</span> <span class="s2">"--path"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Print the path to config.yaml."</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">"store_true"</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"-P"</span><span class="p">,</span> <span class="s2">"--print"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Print config.yaml."</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">"store_true"</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"-s"</span><span class="p">,</span> <span class="s2">"--show"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Print the resolved configuration."</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">"store_true"</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"-i"</span><span class="p">,</span> <span class="s2">"--info"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Show the description of the configuration options."</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">"store_true"</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s2">&quot;-S&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;--set&quot;</span><span class="p">,</span>
+        <span class="s2">"-S"</span><span class="p">,</span>
+        <span class="s2">"--set"</span><span class="p">,</span>
         <span class="n">nargs</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Set the given configuration to the given value. Example: &quot;ase2sprkkr config -S executables.suffix 8.6&quot;.&#39;</span><span class="p">,</span>
-        <span class="n">metavar</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;NAME&quot;</span><span class="p">,</span> <span class="s2">&quot;VALUE&quot;</span><span class="p">),</span>
+        <span class="n">help</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">"Set a configuration value and persist it to YAML. "</span>
+            <span class="s2">"Examples: '-S default_profile local', "</span>
+            <span class="s2">"'-S profiles.cluster.mpi 8', or "</span>
+            <span class="s2">"'-S profiles.cluster </span><span class="se">\"</span><span class="s2">{mpi: 8, executable_dir: /opt/sprkkr}</span><span class="se">\"</span><span class="s2">'."</span>
+        <span class="p">),</span>
+        <span class="n">metavar</span><span class="o">=</span><span class="p">(</span><span class="s2">"NAME"</span><span class="p">,</span> <span class="s2">"VALUE"</span><span class="p">),</span>
     <span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s2">&quot;-e&quot;</span><span class="p">,</span> <span class="s2">&quot;--edit&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Edit the file using the editor in the $EDITOR environment variable.&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span>
+        <span class="s2">"-U"</span><span class="p">,</span>
+        <span class="s2">"--unset"</span><span class="p">,</span>
+        <span class="n">metavar</span><span class="o">=</span><span class="s2">"NAME"</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">"Unset a configuration value and persist the change. "</span>
+            <span class="s2">"For a whole named execution profile use, for example, "</span>
+            <span class="s2">"'--unset profiles.cluster'."</span>
+        <span class="p">),</span>
     <span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s2">&quot;-d&quot;</span><span class="p">,</span> <span class="s2">&quot;--default&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Put the default values into the file, if it not exists.&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span>
+        <span class="s2">"--list-profiles"</span><span class="p">,</span>
+        <span class="n">action</span><span class="o">=</span><span class="s2">"store_true"</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">"List available execution profiles and mark the explicit default."</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s2">&quot;-D&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;--overwrite-by-default&quot;</span><span class="p">,</span>
-        <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;default&quot;</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Put the default values into the file. Owerwrite it if it exists.&quot;</span><span class="p">,</span>
-        <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_const&quot;</span><span class="p">,</span>
-        <span class="n">const</span><span class="o">=</span><span class="s2">&quot;overwrite&quot;</span><span class="p">,</span>
+        <span class="s2">"-e"</span><span class="p">,</span> <span class="s2">"--edit"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Edit config.yaml using the editor in $EDITOR."</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">"store_true"</span>
     <span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-o&quot;</span><span class="p">,</span> <span class="s2">&quot;--show-default&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Show the default values.&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">)</span></div>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">"-d"</span><span class="p">,</span> <span class="s2">"--default"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Create a commented example config.yaml if it does not exist."</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">"store_true"</span>
+    <span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">"-D"</span><span class="p">,</span>
+        <span class="s2">"--overwrite-by-default"</span><span class="p">,</span>
+        <span class="n">dest</span><span class="o">=</span><span class="s2">"default"</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">"Write the commented example config.yaml, overwriting an existing file."</span><span class="p">,</span>
+        <span class="n">action</span><span class="o">=</span><span class="s2">"store_const"</span><span class="p">,</span>
+        <span class="n">const</span><span class="o">=</span><span class="s2">"overwrite"</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"-o"</span><span class="p">,</span> <span class="s2">"--show-default"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Show the commented example YAML configuration."</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">"store_true"</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">"-m"</span><span class="p">,</span>
+        <span class="s2">"--migrate"</span><span class="p">,</span>
+        <span class="n">action</span><span class="o">=</span><span class="s2">"store_true"</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">"Migrate declarative settings from the Python configuration hook to "</span>
+            <span class="s2">"config.yaml, convert legacy execution settings to a named profile, "</span>
+            <span class="s2">"and remove migrated top-level assignments from the hook."</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">cleanup</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_mutually_exclusive_group</span><span class="p">()</span>
+    <span class="n">cleanup</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">"--keep-init"</span><span class="p">,</span>
+        <span class="n">action</span><span class="o">=</span><span class="s2">"store_true"</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">"After migration, keep the Python hook unchanged instead of removing "</span>
+            <span class="s2">"migrated assignments."</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">cleanup</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">"--clean-init"</span><span class="p">,</span>
+        <span class="n">action</span><span class="o">=</span><span class="s2">"store_true"</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">"Remove migrated top-level ASE2SPRKKR assignments from the Python hook "</span>
+            <span class="s2">"after migration (the default)."</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">cleanup</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">"--delete-init"</span><span class="p">,</span>
+        <span class="n">action</span><span class="o">=</span><span class="s2">"store_true"</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">"After migration, delete the Python configuration hook completely."</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">"--init-script"</span><span class="p">,</span>
+        <span class="n">action</span><span class="o">=</span><span class="s2">"store_true"</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">"Print the path to the Python user-configuration hook."</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">"--print-init-script"</span><span class="p">,</span>
+        <span class="n">action</span><span class="o">=</span><span class="s2">"store_true"</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">"Print the Python user-configuration hook."</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">"--edit-init-script"</span><span class="p">,</span>
+        <span class="n">action</span><span class="o">=</span><span class="s2">"store_true"</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">"Edit the Python user-configuration hook using $EDITOR."</span><span class="p">,</span>
+    <span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="default_content">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.tools.commands.config.default_content.html#ase2sprkkr.tools.commands.config.default_content">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">default_content</span><span class="p">(</span><span class="n">file</span><span class="p">):</span>
-    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;# ASE2SRPKKR configuration file</span>
-<span class="s2"># -------------------------------</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">"""# ASE2SPRKKR configuration file</span>
+<span class="s2"># -----------------------------</span>
+<span class="s2"># Location: </span><span class="si">{</span><span class="n">file</span><span class="si">}</span>
+<span class="s2">#</span>
+<span class="s2"># Only values you want to override need to be present. The examples below are</span>
+<span class="s2"># commented out and therefore do not change the defaults.</span>
 
-<span class="s2"># Please, DO NOT comment the following line.</span>
-<span class="s2">from ase2sprkkr.configuration import config</span>
+<span class="s2"># Explicitly select one of the named profiles below.</span>
+<span class="s2"># default_profile: local</span>
 
-<span class="s2"># This file is pure python and it is executed when ase2sprkkr is imported.</span>
-<span class="s2"># Place it into the following path:</span>
-<span class="s2"># </span><span class="si">{</span><span class="n">file</span><span class="si">}</span>
+<span class="s2"># profiles:</span>
+<span class="s2">#   local:</span>
+<span class="s2">#     executable_dir: /opt/sprkkr/bin</span>
+<span class="s2">#     executable_suffix: ""</span>
+<span class="s2">#     # MPI can be false, true, an integer process count, "auto", or argv.</span>
+<span class="s2">#     # If omitted, mpi defaults to "auto".</span>
+<span class="s2">#     mpi: auto</span>
+<span class="s2">#     mpi_warning: true</span>
+<span class="s2">#</span>
+<span class="s2"># The reserved profile "ase" is read from ASE configuration and is not stored</span>
+<span class="s2"># here. The reserved "legacy" profile exists only for deprecated options;</span>
+<span class="s2"># --migrate converts those execution settings to a normal named profile.</span>
 
-<span class="s2"># This string is appended to the runned executables</span>
-<span class="s2"># config.executables.suffix = &#39;&#39;</span>
+<span class="s2"># running:</span>
+<span class="s2">#   empty_spheres: auto</span>
+<span class="s2">#   print_output: info</span>
 
-<span class="s2"># Do you want to run the executables from a specific directory?</span>
-<span class="s2"># config.executables.dir = &#39;&#39;</span>
+<span class="s2"># nomad:</span>
+<span class="s2">#   token: your-token</span>
+<span class="s2">"""</span></div>
 
-<span class="s2"># Uncomment, if you don&#39;t want to run empty-spheres finding by default</span>
-<span class="s2"># config.running.empty_spheres = False</span>
 
-<span class="s2"># Set to False if MPI should not be used. Or set to the number of processor,</span>
-<span class="s2"># or just command line to run mpi programm, e.g.: [ &#39;/usr/bin/mpiexec&#39;, &#39;-n&#39;, &#39;4&#39; ]</span>
-<span class="s2"># config.running.mpi = []</span>
 
-<span class="s2"># You can change the verbosity of the output by setting the following to False or True</span>
-<span class="s2"># config.running.print_output = &#39;info&#39;</span>
+<div class="viewcode-block" id="_edit">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.tools.commands.config._edit.html#ase2sprkkr.tools.commands.config._edit">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_edit</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">create</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">subprocess</span>
 
-<span class="s2"># Authentication token to Nomad. You can set it using ase2sprkkr nomad authenticate &lt;username&gt;</span>
-<span class="s2"># config.nomad.token = None</span>
-<span class="s2">&quot;&quot;&quot;</span></div>
+    <span class="n">editor</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"EDITOR"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">editor</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">"Please set the EDITOR environment variable."</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">SystemExit</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">create</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">Path</span><span class="p">(</span><span class="n">file</span><span class="p">)</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
+        <span class="n">Path</span><span class="p">(</span><span class="n">file</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">Path</span><span class="p">(</span><span class="n">file</span><span class="p">)</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="n">create</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">"utf8"</span><span class="p">)</span>
+    <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="n">editor</span><span class="p">,</span> <span class="n">file</span><span class="p">])</span></div>
+
+
+
+<div class="viewcode-block" id="_requested_cleanup">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.tools.commands.config._requested_cleanup.html#ase2sprkkr.tools.commands.config._requested_cleanup">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_requested_cleanup</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">keep_init</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">"keep"</span>
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">clean_init</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">"clean"</span>
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">delete_init</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">"delete"</span>
+    <span class="k">return</span> <span class="kc">None</span></div>
+
+
+
+<div class="viewcode-block" id="_migrate">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.tools.commands.config._migrate.html#ase2sprkkr.tools.commands.config._migrate">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_migrate</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">legacy_file</span><span class="p">,</span> <span class="n">file</span><span class="p">):</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">...configuration</span><span class="w"> </span><span class="kn">import</span> <span class="n">definition</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">...configuration_migration</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+        <span class="n">clean_legacy_configuration</span><span class="p">,</span>
+        <span class="n">migrate_legacy_configuration</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">Path</span><span class="p">(</span><span class="n">file</span><span class="p">)</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"YAML configuration already exists: '</span><span class="si">{</span><span class="n">file</span><span class="si">}</span><span class="s2">'. Nothing was migrated."</span><span class="p">)</span>
+        <span class="k">return</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">Path</span><span class="p">(</span><span class="n">legacy_file</span><span class="p">)</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"No Python configuration hook found at '</span><span class="si">{</span><span class="n">legacy_file</span><span class="si">}</span><span class="s2">'."</span><span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="n">migrate_legacy_configuration</span><span class="p">(</span><span class="n">legacy_file</span><span class="p">,</span> <span class="n">file</span><span class="p">,</span> <span class="n">definition</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Migrated '</span><span class="si">{</span><span class="n">legacy_file</span><span class="si">}</span><span class="s2">' to '</span><span class="si">{</span><span class="n">file</span><span class="si">}</span><span class="s2">'."</span><span class="p">)</span>
+
+    <span class="n">action</span> <span class="o">=</span> <span class="n">_requested_cleanup</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">"clean"</span>
+    <span class="k">if</span> <span class="n">action</span> <span class="o">==</span> <span class="s2">"keep"</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Kept Python configuration hook unchanged: '</span><span class="si">{</span><span class="n">legacy_file</span><span class="si">}</span><span class="s2">'."</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">action</span> <span class="o">==</span> <span class="s2">"clean"</span><span class="p">:</span>
+        <span class="n">count</span> <span class="o">=</span> <span class="n">clean_legacy_configuration</span><span class="p">(</span><span class="n">legacy_file</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Removed </span><span class="si">{</span><span class="n">count</span><span class="si">}</span><span class="s2"> migrated configuration assignment(s) from '</span><span class="si">{</span><span class="n">legacy_file</span><span class="si">}</span><span class="s2">'."</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">Path</span><span class="p">(</span><span class="n">legacy_file</span><span class="p">)</span><span class="o">.</span><span class="n">unlink</span><span class="p">()</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Deleted Python configuration hook: '</span><span class="si">{</span><span class="n">legacy_file</span><span class="si">}</span><span class="s2">'."</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="_parse_set_value">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.tools.commands.config._parse_set_value.html#ase2sprkkr.tools.commands.config._parse_set_value">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_parse_set_value</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Parse a command-line value using YAML scalar/flow syntax."""</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">ruamel.yaml</span><span class="w"> </span><span class="kn">import</span> <span class="n">YAML</span>
+
+    <span class="k">return</span> <span class="n">YAML</span><span class="p">(</span><span class="n">typ</span><span class="o">=</span><span class="s2">"safe"</span><span class="p">)</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">text</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="_set_configuration_value">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.tools.commands.config._set_configuration_value.html#ase2sprkkr.tools.commands.config._set_configuration_value">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_set_configuration_value</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Set one CLI value, creating a named profile when necessary."""</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"."</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">path</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">"profiles"</span><span class="p">:</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">save_user_preferences</span><span class="p">()</span>
+        <span class="k">return</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">path</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+        <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+
+    <span class="n">profile_name</span> <span class="o">=</span> <span class="n">path</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">profile_name</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">profiles</span><span class="o">.</span><span class="n">reserved_names</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">profile_name</span><span class="si">!r}</span><span class="s2"> is a reserved profile name"</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">Mapping</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"Profile </span><span class="si">{</span><span class="n">profile_name</span><span class="si">!r}</span><span class="s2"> must be set from a mapping"</span>
+            <span class="p">)</span>
+        <span class="n">profile_values</span> <span class="o">=</span> <span class="n">value</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">profile_values</span> <span class="o">=</span> <span class="p">{</span><span class="n">path</span><span class="p">[</span><span class="mi">2</span><span class="p">]:</span> <span class="n">value</span><span class="p">}</span>
+
+    <span class="c1"># Repeated-container staging validates the complete proposed profile and is</span>
+    <span class="c1"># atomic, so a bad field/value does not leave a half-created profile behind.</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">profiles</span><span class="o">.</span><span class="n">set</span><span class="p">(</span>
+            <span class="p">{</span><span class="n">profile_name</span><span class="p">:</span> <span class="n">profile_values</span><span class="p">},</span>
+            <span class="n">unknown</span><span class="o">=</span><span class="s2">"fail"</span><span class="p">,</span>
+            <span class="n">merge</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="k">except</span> <span class="ne">KeyError</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Invalid profile option: </span><span class="si">{</span><span class="n">error</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">error</span>
+    <span class="n">config</span><span class="o">.</span><span class="n">save_user_preferences</span><span class="p">()</span></div>
+
+
+
+<div class="viewcode-block" id="_unset_configuration_value">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.tools.commands.config._unset_configuration_value.html#ase2sprkkr.tools.commands.config._unset_configuration_value">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_unset_configuration_value</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Unset one CLI value, or remove one complete named profile."""</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"."</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">and</span> <span class="n">path</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"profiles"</span> <span class="ow">and</span> <span class="n">path</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">profiles</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">path</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+    <span class="n">config</span><span class="o">.</span><span class="n">save_user_preferences</span><span class="p">()</span></div>
+
+
+
+<div class="viewcode-block" id="_print_profiles">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.tools.commands.config._print_profiles.html#ase2sprkkr.tools.commands.config._print_profiles">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_print_profiles</span><span class="p">(</span><span class="n">config</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Print public execution profiles, marking an explicitly selected default."""</span>
+    <span class="n">default</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">default_profile</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">profiles</span><span class="p">:</span>
+        <span class="n">suffix</span> <span class="o">=</span> <span class="s2">" (default)"</span> <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="n">default</span> <span class="k">else</span> <span class="s2">""</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">name</span><span class="si">}{</span><span class="n">suffix</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span></div>
 
 
 
@@ -183,53 +386,80 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">global_args</span><span class="p">):</span>
     <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
     <span class="kn">import</span><span class="w"> </span><span class="nn">pyparsing</span>
-    <span class="kn">from</span><span class="w"> </span><span class="nn">...configuration</span><span class="w"> </span><span class="kn">import</span> <span class="n">user_preferences_file</span><span class="p">,</span> <span class="n">config</span>
-    <span class="kn">import</span><span class="w"> </span><span class="nn">subprocess</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">...configuration</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+        <span class="n">config</span><span class="p">,</span>
+        <span class="n">legacy_user_preferences_file</span><span class="p">,</span>
+        <span class="n">user_preferences_file</span><span class="p">,</span>
+    <span class="p">)</span>
 
     <span class="n">file</span> <span class="o">=</span> <span class="n">user_preferences_file</span><span class="p">()</span>
-
+    <span class="n">legacy_file</span> <span class="o">=</span> <span class="n">legacy_user_preferences_file</span><span class="p">()</span>
     <span class="n">run</span> <span class="o">=</span> <span class="kc">True</span>
 
+    <span class="n">cleanup</span> <span class="o">=</span> <span class="n">_requested_cleanup</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">cleanup</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">args</span><span class="o">.</span><span class="n">migrate</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">SystemExit</span><span class="p">(</span><span class="s2">"--keep-init, --clean-init and --delete-init can only be used with --migrate"</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">migrate</span><span class="p">:</span>
+        <span class="n">_migrate</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">legacy_file</span><span class="p">,</span> <span class="n">file</span><span class="p">)</span>
+        <span class="n">run</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">default</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">default</span> <span class="o">==</span> <span class="s2">&quot;overwrite&quot;</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">file</span><span class="p">):</span>
-            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">default_content</span><span class="p">(</span><span class="n">file</span><span class="p">))</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Configuration defaults have been written to file &#39;</span><span class="si">{</span><span class="n">file</span><span class="si">}</span><span class="s2">&#39;.&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">default</span> <span class="o">==</span> <span class="s2">"overwrite"</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">file</span><span class="p">):</span>
+            <span class="n">Path</span><span class="p">(</span><span class="n">file</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">Path</span><span class="p">(</span><span class="n">file</span><span class="p">)</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="n">default_content</span><span class="p">(</span><span class="n">file</span><span class="p">),</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">"utf8"</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Example configuration has been written to '</span><span class="si">{</span><span class="n">file</span><span class="si">}</span><span class="s2">'."</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Configuration file have already existed, so it have not been overwritten.&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">"Configuration file already exists, so it has not been overwritten."</span><span class="p">)</span>
         <span class="n">run</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">path</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
         <span class="n">run</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">print</span><span class="p">:</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">file</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">file</span><span class="p">)</span><span class="o">.</span><span class="n">read_text</span><span class="p">(</span><span class="n">encoding</span><span class="o">=</span><span class="s2">"utf8"</span><span class="p">),</span> <span class="n">end</span><span class="o">=</span><span class="s2">""</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"No YAML configuration found at '</span><span class="si">{</span><span class="n">file</span><span class="si">}</span><span class="s2">'."</span><span class="p">)</span>
         <span class="n">run</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">show_default</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">default_content</span><span class="p">(</span><span class="n">file</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">default_content</span><span class="p">(</span><span class="n">file</span><span class="p">),</span> <span class="n">end</span><span class="o">=</span><span class="s2">""</span><span class="p">)</span>
         <span class="n">run</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">info</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">description</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="s2">&quot;all&quot;</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">description</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="s2">"all"</span><span class="p">))</span>
         <span class="n">run</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">set</span><span class="p">:</span>
-        <span class="kn">from</span><span class="w"> </span><span class="nn">...common.grammar_types</span><span class="w"> </span><span class="kn">import</span> <span class="n">Variant</span>
         <span class="kn">from</span><span class="w"> </span><span class="nn">...common.warnings</span><span class="w"> </span><span class="kn">import</span> <span class="n">DataValidityError</span>
 
         <span class="k">try</span><span class="p">:</span>
-            <span class="k">try</span><span class="p">:</span>
-                <span class="n">val</span> <span class="o">=</span> <span class="n">Variant</span><span class="p">()</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">set</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-                <span class="n">config</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">set</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">set_permanent</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
-            <span class="k">except</span> <span class="n">DataValidityError</span><span class="p">:</span>
-                <span class="c1"># if parsing using mixed failed, just try store string</span>
-                <span class="n">config</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">set</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">set_permanent</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">set</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Configuration &#39;</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">set</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">&#39; have been set to &#39;</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">set</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">&#39;.&quot;</span><span class="p">)</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">_parse_set_value</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">set</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="n">_set_configuration_value</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">set</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">value</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Configuration '</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">set</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">' has been set to '</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">set</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">'."</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown configuration name &#39;</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">set</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">&#39;.&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Unknown configuration name '</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">set</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">'."</span><span class="p">)</span>
+        <span class="k">except</span> <span class="p">(</span><span class="n">DataValidityError</span><span class="p">,</span> <span class="ne">TypeError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">)</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"Invalid configuration value for '</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">set</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">': "</span>
+                <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">error</span><span class="si">}</span><span class="s2">"</span>
+            <span class="p">)</span>
         <span class="k">except</span> <span class="n">pyparsing</span><span class="o">.</span><span class="n">ParseBaseException</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;Suspicious configuration value &#39;</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">set</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">&#39;. If you are sure,&quot;</span>
-                <span class="s2">&quot;please edit the configuration file manually&quot;</span>
+                <span class="sa">f</span><span class="s2">"Suspicious configuration value '</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">set</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">'. If you are sure, "</span>
+                <span class="s2">"please edit the configuration file manually."</span>
             <span class="p">)</span>
+        <span class="n">run</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">unset</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="s2">"unset"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">unset</span><span class="p">:</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">...common.warnings</span><span class="w"> </span><span class="kn">import</span> <span class="n">DataValidityError</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">_unset_configuration_value</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">unset</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Configuration '</span><span class="si">{</span><span class="n">unset</span><span class="si">}</span><span class="s2">' has been unset."</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Unknown configuration name '</span><span class="si">{</span><span class="n">unset</span><span class="si">}</span><span class="s2">'."</span><span class="p">)</span>
+        <span class="k">except</span> <span class="p">(</span><span class="n">DataValidityError</span><span class="p">,</span> <span class="ne">TypeError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">)</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Cannot unset configuration '</span><span class="si">{</span><span class="n">unset</span><span class="si">}</span><span class="s2">': </span><span class="si">{</span><span class="n">error</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="n">run</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="s2">"list_profiles"</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
+        <span class="n">_print_profiles</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
         <span class="n">run</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">show</span><span class="p">:</span>
         <span class="kn">import</span><span class="w"> </span><span class="nn">pprint</span>
@@ -237,25 +467,42 @@
         <span class="n">pprint</span><span class="o">.</span><span class="n">pp</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">to_dict</span><span class="p">())</span>
         <span class="n">run</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">edit</span><span class="p">:</span>
-        <span class="k">if</span> <span class="s2">&quot;EDITOR&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Please set the EDITOR environment variable.&quot;</span><span class="p">)</span>
-            <span class="n">exit</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
-        <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;EDITOR&quot;</span><span class="p">],</span> <span class="n">file</span><span class="p">])</span>
+        <span class="n">_edit</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">create</span><span class="o">=</span><span class="n">default_content</span><span class="p">(</span><span class="n">file</span><span class="p">))</span>
+        <span class="n">run</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">init_script</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">legacy_file</span><span class="p">)</span>
+        <span class="n">run</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">print_init_script</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">legacy_file</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">legacy_file</span><span class="p">)</span><span class="o">.</span><span class="n">read_text</span><span class="p">(</span><span class="n">encoding</span><span class="o">=</span><span class="s2">"utf8"</span><span class="p">),</span> <span class="n">end</span><span class="o">=</span><span class="s2">""</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"No Python configuration hook found at '</span><span class="si">{</span><span class="n">legacy_file</span><span class="si">}</span><span class="s2">'."</span><span class="p">)</span>
+        <span class="n">run</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">edit_init_script</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">legacy_file</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"No Python configuration hook found at '</span><span class="si">{</span><span class="n">legacy_file</span><span class="si">}</span><span class="s2">'."</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">_edit</span><span class="p">(</span><span class="n">legacy_file</span><span class="p">)</span>
         <span class="n">run</span> <span class="o">=</span> <span class="kc">False</span>
 
     <span class="k">if</span> <span class="n">run</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">file</span><span class="p">):</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;# Content of the ASE2SPRKKR user configuration file&quot;</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;#--------------------------------------------------&quot;</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
-            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">"# Content of the ASE2SPRKKR YAML configuration"</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">"#---------------------------------------------"</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">()</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">file</span><span class="p">)</span><span class="o">.</span><span class="n">read_text</span><span class="p">(</span><span class="n">encoding</span><span class="o">=</span><span class="s2">"utf8"</span><span class="p">),</span> <span class="n">end</span><span class="o">=</span><span class="s2">""</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">legacy_file</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">"No YAML configuration exists."</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">()</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Python configuration hook found at:</span><span class="se">\n</span><span class="s2">    </span><span class="si">{</span><span class="n">legacy_file</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">()</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">"Run 'ase2sprkkr config --migrate' to migrate declarative settings to config.yaml."</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;# No custom user configuration found&quot;</span><span class="p">)</span></div>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">"# No custom user configuration found"</span><span class="p">)</span></div>
 
 
 
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
     <span class="n">main</span><span class="p">(</span><span class="nb">globals</span><span class="p">())</span>
 </pre></div>
 

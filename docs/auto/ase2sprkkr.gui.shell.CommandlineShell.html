@@ -17,8 +17,8 @@
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../_static/documentation_options.js?v=5929fcd5"></script>
-      <script src="../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -68,11 +68,16 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.promote_ase_atoms.html">promote_ase_atoms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.__getattr__.html">__getattr__</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.common.html">common</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration.html">configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration_migration.html">configuration_migration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration_yaml.html">configuration_yaml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.conftest.html">conftest</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.examples.html">examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.execution.html">execution</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="ase2sprkkr.gui.html">gui</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.gui.examples.html">examples</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.gui.k_path.html">k_path</a></li>
@@ -93,10 +98,11 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.input_parameters.html">input_parameters</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.output_files.html">output_files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.outputs.html">outputs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.physics.html">physics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.potentials.html">potentials</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.profiles.html">profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.result_files.html">result_files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.sprkkr.html">sprkkr</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.tools.html">tools</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.version.html">version</a></li>
@@ -135,14 +141,20 @@
 <h1>CommandlineShell<a class="headerlink" href="#commandlineshell" title="Link to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="ase2sprkkr.gui.shell.CommandlineShell">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.gui.shell.</span></span><span class="sig-name descname"><span class="pre">CommandlineShell</span></span><a class="reference internal" href="../_modules/ase2sprkkr/gui/shell.html#CommandlineShell"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.gui.shell.CommandlineShell" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.gui.shell.</span></span><span class="sig-name descname"><span class="pre">CommandlineShell</span></span><a class="reference internal" href="../_modules/ase2sprkkr/gui/shell.html#CommandlineShell"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.gui.shell.CommandlineShell" title="Link to this definition"></a></dt>
 <dd><p>Run the given code in a commandline shell</p>
 <p class="rubric">Class hierarchy</p>
-<div class="graphviz"><img src="../_images/inheritance-1b97f5a5934f86634333aa1171fdce1c3a0faf3e.png" alt="Inheritance diagram of ase2sprkkr.gui.shell.CommandlineShell" usemap="#inheritancea435adf18a" class="inheritance graphviz" /></div>
-<map id="inheritancea435adf18a" name="inheritancea435adf18a">
-<area shape="rect" id="node1" href="#ase2sprkkr.gui.shell.CommandlineShell" target="_top" title="Run the given code in a commandline shell" alt="" coords="123,5,302,33"/>
-<area shape="rect" id="node2" href="ase2sprkkr.gui.shell.Shell.html#ase2sprkkr.gui.shell.Shell" target="_top" title="A base class for ASE2SPRKKR interactive computation using ase2sprkkr tool" alt="" coords="5,5,94,33"/>
-</map><div class="line-block">
+digraph inheritancea435adf18a {
+bgcolor=transparent;
+fontsize=14;
+rankdir=LR;
+ranksep=0.3;
+size=&quot;10.0, 10.0&quot;;
+  &quot;shell.CommandlineShell&quot; [URL=&quot;#ase2sprkkr.gui.shell.CommandlineShell&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;Run the given code in a commandline shell&quot;];
+  &quot;shell.Shell&quot; -&gt; &quot;shell.CommandlineShell&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;shell.Shell&quot; [URL=&quot;ase2sprkkr.gui.shell.Shell.html#ase2sprkkr.gui.shell.Shell&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;A base class for ASE2SPRKKR interactive computation using ase2sprkkr tool&quot;];
+}
+<div class="line-block">
 <div class="line"><br /></div>
 </div>
 <p class="rubric">Constructor</p>

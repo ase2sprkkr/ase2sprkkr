@@ -1,0 +1,445 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ase2sprkkr.input_parameters.task_definition &mdash; ASE2SPRKKR  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/mods.css?v=26f6988d" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            ASE2SPRKKR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage.html">How to use the package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../how-to-install.html">More about the package installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../philosophy.html">Philosophy of the package (for developers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../authors.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Examples</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../auto/ase2sprkkr.html">ase2sprkkr</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">ASE2SPRKKR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../ase2sprkkr.html">ase2sprkkr</a></li>
+      <li class="breadcrumb-item active">ase2sprkkr.input_parameters.task_definition</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for ase2sprkkr.input_parameters.task_definition</h1><div class="highlight"><pre>
+<span></span><span class="sd">"""Task-level metadata and registries for SPR-KKR calculations."""</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">cached_property</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">..common.doc</span><span class="w"> </span><span class="kn">import</span> <span class="n">process_input_parameters_definition</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..common.module_registry</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">ModuleRegistry</span><span class="p">,</span>
+    <span class="n">RegistryDefinitionError</span><span class="p">,</span>
+    <span class="n">RegistryEntryNotFound</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<div class="viewcode-block" id="TaskDefinition">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.input_parameters.task_definition.TaskDefinition.html#ase2sprkkr.input_parameters.definitions.phagen.TaskDefinition">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">TaskDefinition</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Definition of one SPR-KKR task."""</span>
+
+<div class="viewcode-block" id="TaskDefinition.__init__">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.input_parameters.task_definition.TaskDefinition.html#ase2sprkkr.input_parameters.definitions.phagen.TaskDefinition.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">input_parameters_definition_name</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">executable</span><span class="o">=</span><span class="s2">"kkrscf"</span><span class="p">,</span>
+        <span class="n">mpi</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">result_reader</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">input_file_templates</span><span class="o">=</span><span class="p">(),</span>
+        <span class="n">output_file_templates</span><span class="o">=</span><span class="p">(),</span>
+        <span class="n">cache_file_templates</span><span class="o">=</span><span class="p">(),</span>
+        <span class="n">prepare_from_result</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">input_parameters_definition_name</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">"input_parameters_definition_name must be a string"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_parameters_definition_name</span> <span class="o">=</span> <span class="n">input_parameters_definition_name</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">name</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_parameters_definition_name</span><span class="p">)</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">executable</span> <span class="o">=</span> <span class="n">executable</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mpi</span> <span class="o">=</span> <span class="n">mpi</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">result_reader</span> <span class="o">=</span> <span class="n">result_reader</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_file_templates</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">input_file_templates</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_file_templates</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">output_file_templates</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cache_file_templates</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">cache_file_templates</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_prepare_from_result</span> <span class="o">=</span> <span class="n">prepare_from_result</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_input_parameters_registry</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="TaskDefinition._bind_input_parameters_registry">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.input_parameters.task_definition.TaskDefinition.html#ase2sprkkr.input_parameters.definitions.phagen.TaskDefinition._bind_input_parameters_registry">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_bind_input_parameters_registry</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">registry</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Bind the registry used to resolve the task's input schema."""</span>
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_input_parameters_registry</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_input_parameters_registry</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">registry</span>
+        <span class="p">):</span>
+            <span class="k">raise</span> <span class="n">RegistryDefinitionError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"Task </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> is already bound to another input-parameter registry"</span>
+            <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_input_parameters_registry</span> <span class="o">=</span> <span class="n">registry</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+
+    <span class="nd">@cached_property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">input_parameters_definition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Return the input-file schema referenced by this task."""</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_input_parameters_registry</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"Task </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> is not bound to an input-parameter registry"</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_input_parameters_registry</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">input_parameters_definition_name</span><span class="p">]</span>
+
+<div class="viewcode-block" id="TaskDefinition.create_input_parameters">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.input_parameters.task_definition.TaskDefinition.html#ase2sprkkr.input_parameters.definitions.phagen.TaskDefinition.create_input_parameters">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_input_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">inputfile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">outputfile</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">.input_parameters</span><span class="w"> </span><span class="kn">import</span> <span class="n">InputParameters</span>
+
+        <span class="n">definition</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_parameters_definition</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="n">InputParameters</span><span class="p">(</span>
+            <span class="n">definition</span><span class="o">=</span><span class="n">definition</span><span class="p">,</span>
+            <span class="n">task_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+            <span class="n">inputfile</span><span class="o">=</span><span class="n">inputfile</span><span class="p">,</span>
+            <span class="n">outputfile</span><span class="o">=</span><span class="n">outputfile</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">definition</span><span class="o">.</span><span class="n">initialize_for_task</span><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">out</span></div>
+
+
+<div class="viewcode-block" id="TaskDefinition.read_input_parameters">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.input_parameters.task_definition.TaskDefinition.html#ase2sprkkr.input_parameters.definitions.phagen.TaskDefinition.read_input_parameters">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">read_input_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">allow_dangerous</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_input_parameters</span><span class="p">(</span><span class="n">inputfile</span><span class="o">=</span><span class="n">file</span><span class="p">)</span>
+        <span class="n">out</span><span class="o">.</span><span class="n">read_from_file</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">allow_dangerous</span><span class="o">=</span><span class="n">allow_dangerous</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">out</span></div>
+
+
+<div class="viewcode-block" id="TaskDefinition._resolve_file_templates">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.input_parameters.task_definition.TaskDefinition.html#ase2sprkkr.input_parameters.definitions.phagen.TaskDefinition._resolve_file_templates">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_resolve_file_templates</span><span class="p">(</span><span class="n">parameters</span><span class="p">,</span> <span class="n">directory</span><span class="p">,</span> <span class="n">templates</span><span class="p">):</span>
+        <span class="n">dataset</span> <span class="o">=</span> <span class="n">parameters</span><span class="o">.</span><span class="n">CONTROL</span><span class="o">.</span><span class="n">DATASET</span><span class="p">()</span>
+        <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span>
+            <span class="n">path</span> <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isabs</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="k">else</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="p">(</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">fspath</span><span class="p">(</span><span class="n">template</span><span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dataset</span><span class="o">=</span><span class="n">dataset</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">template</span> <span class="ow">in</span> <span class="n">templates</span>
+            <span class="p">)</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TaskDefinition.input_files">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.input_parameters.task_definition.TaskDefinition.html#ase2sprkkr.input_parameters.definitions.phagen.TaskDefinition.input_files">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">input_files</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parameters</span><span class="p">,</span> <span class="n">directory</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_resolve_file_templates</span><span class="p">(</span>
+            <span class="n">parameters</span><span class="p">,</span> <span class="n">directory</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_file_templates</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TaskDefinition.output_files">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.input_parameters.task_definition.TaskDefinition.html#ase2sprkkr.input_parameters.definitions.phagen.TaskDefinition.output_files">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">output_files</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parameters</span><span class="p">,</span> <span class="n">directory</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_resolve_file_templates</span><span class="p">(</span>
+            <span class="n">parameters</span><span class="p">,</span> <span class="n">directory</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_file_templates</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TaskDefinition.cache_files">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.input_parameters.task_definition.TaskDefinition.html#ase2sprkkr.input_parameters.definitions.phagen.TaskDefinition.cache_files">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">cache_files</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parameters</span><span class="p">,</span> <span class="n">directory</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_resolve_file_templates</span><span class="p">(</span>
+            <span class="n">parameters</span><span class="p">,</span> <span class="n">directory</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">cache_file_templates</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TaskDefinition.execution_task_name">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.input_parameters.task_definition.TaskDefinition.html#ase2sprkkr.input_parameters.definitions.phagen.TaskDefinition.execution_task_name">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">execution_task_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parameters</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">parameters</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">value</span> <span class="o">=</span> <span class="n">parameters</span><span class="p">[</span><span class="s2">"TASK"</span><span class="p">][</span><span class="s2">"TASK"</span><span class="p">]()</span>
+            <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                <span class="n">value</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">if</span> <span class="n">value</span><span class="p">:</span>
+                <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span></div>
+
+
+<div class="viewcode-block" id="TaskDefinition.output_reader_class">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.input_parameters.task_definition.TaskDefinition.html#ase2sprkkr.input_parameters.definitions.phagen.TaskDefinition.output_reader_class">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">output_reader_class</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parameters</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">result_reader</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">result_reader</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">..outputs.reader_registry</span><span class="w"> </span><span class="kn">import</span> <span class="n">reader_registry</span>
+
+        <span class="k">return</span> <span class="n">reader_registry</span><span class="o">.</span><span class="n">class_for_task</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">execution_task_name</span><span class="p">(</span><span class="n">parameters</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="TaskDefinition.prepare_from_result">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.input_parameters.task_definition.TaskDefinition.html#ase2sprkkr.input_parameters.definitions.phagen.TaskDefinition.prepare_from_result">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">prepare_from_result</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parameters</span><span class="p">,</span> <span class="n">result</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prepare_from_result</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_prepare_from_result</span><span class="p">(</span><span class="n">parameters</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="InputParametersRegistry">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.input_parameters.task_definition.InputParametersRegistry.html#ase2sprkkr.input_parameters.definitions.phagen.InputParametersRegistry">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">InputParametersRegistry</span><span class="p">(</span><span class="n">ModuleRegistry</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Registry of input-file schemas, independent of task identity."""</span>
+
+<div class="viewcode-block" id="InputParametersRegistry.__init__">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.input_parameters.task_definition.InputParametersRegistry.html#ase2sprkkr.input_parameters.definitions.phagen.InputParametersRegistry.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">package</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">package</span><span class="p">,</span>
+            <span class="s2">"input_parameters_definition"</span><span class="p">,</span>
+            <span class="n">factory</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">include</span><span class="o">=</span><span class="k">lambda</span> <span class="n">name</span><span class="p">:</span> <span class="ow">not</span> <span class="n">name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"_"</span><span class="p">)</span> <span class="ow">and</span> <span class="n">name</span> <span class="o">!=</span> <span class="s2">"sections"</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="InputParametersRegistry.prepare_value">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.input_parameters.task_definition.InputParametersRegistry.html#ase2sprkkr.input_parameters.definitions.phagen.InputParametersRegistry.prepare_value">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">prepare_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">module</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">.input_parameters_definitions</span><span class="w"> </span><span class="kn">import</span> <span class="n">InputParametersDefinition</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">InputParametersDefinition</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">RegistryDefinitionError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">module</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">.input_parameters_definition must produce "</span>
+                <span class="sa">f</span><span class="s2">"InputParametersDefinition, got </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">"</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">!=</span> <span class="n">name</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">RegistryDefinitionError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"Input-parameter definition in </span><span class="si">{</span><span class="n">module</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> is named "</span>
+                <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">value</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">, but the module defines </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">"</span>
+            <span class="p">)</span>
+
+        <span class="n">task</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">_task_definition</span>
+        <span class="k">if</span> <span class="n">task</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">task</span><span class="p">,</span> <span class="n">TaskDefinition</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="n">RegistryDefinitionError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">module</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">._task_definition must be TaskDefinition, "</span>
+                    <span class="sa">f</span><span class="s2">"got </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">task</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">"</span>
+                <span class="p">)</span>
+            <span class="k">if</span> <span class="n">task</span><span class="o">.</span><span class="n">name</span> <span class="o">!=</span> <span class="n">name</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">RegistryDefinitionError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">"Canonical task </span><span class="si">{</span><span class="n">task</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> does not match input schema </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">"</span>
+                <span class="p">)</span>
+            <span class="k">if</span> <span class="n">task</span><span class="o">.</span><span class="n">input_parameters_definition_name</span> <span class="o">!=</span> <span class="n">name</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">RegistryDefinitionError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">"Canonical task </span><span class="si">{</span><span class="n">task</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> references input schema "</span>
+                    <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">task</span><span class="o">.</span><span class="n">input_parameters_definition_name</span><span class="si">}</span><span class="s2"> instead of </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">"</span>
+                <span class="p">)</span>
+            <span class="n">task</span><span class="o">.</span><span class="n">_bind_input_parameters_registry</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+        <span class="n">process_input_parameters_definition</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">value</span></div>
+
+
+<div class="viewcode-block" id="InputParametersRegistry.task_definitions">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.input_parameters.task_definition.InputParametersRegistry.html#ase2sprkkr.input_parameters.definitions.phagen.InputParametersRegistry.task_definitions">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">task_definitions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Return canonical tasks declared by standard input schemas."""</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="n">name</span><span class="p">:</span> <span class="n">definition</span><span class="o">.</span><span class="n">_task_definition</span>
+            <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">names</span><span class="p">()</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">definition</span> <span class="o">:=</span> <span class="bp">self</span><span class="p">[</span><span class="n">name</span><span class="p">])</span><span class="o">.</span><span class="n">_task_definition</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="p">}</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="TaskRegistry">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.input_parameters.task_definition.TaskRegistry.html#ase2sprkkr.input_parameters.definitions.phagen.TaskRegistry">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">TaskRegistry</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Registry combining colocated 1:1 tasks and explicit shared-schema tasks."""</span>
+
+    <span class="n">normalize_name</span> <span class="o">=</span> <span class="nb">staticmethod</span><span class="p">(</span><span class="n">ModuleRegistry</span><span class="o">.</span><span class="n">normalize_name</span><span class="p">)</span>
+
+<div class="viewcode-block" id="TaskRegistry.__init__">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.input_parameters.task_definition.TaskRegistry.html#ase2sprkkr.input_parameters.definitions.phagen.TaskRegistry.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_parameters_registry</span><span class="p">,</span> <span class="n">extra_tasks_package</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_parameters_registry</span> <span class="o">=</span> <span class="n">input_parameters_registry</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">extra_tasks</span> <span class="o">=</span> <span class="n">ModuleRegistry</span><span class="p">(</span>
+            <span class="n">extra_tasks_package</span><span class="p">,</span>
+            <span class="s2">"task_definition"</span><span class="p">,</span>
+            <span class="n">factory</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TaskRegistry._input_task">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.input_parameters.task_definition.TaskRegistry.html#ase2sprkkr.input_parameters.definitions.phagen.TaskRegistry._input_task">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_input_task</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">definition</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_parameters_registry</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+        <span class="k">except</span> <span class="n">RegistryEntryNotFound</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="n">definition</span><span class="o">.</span><span class="n">_task_definition</span></div>
+
+
+<div class="viewcode-block" id="TaskRegistry._extra_task">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.input_parameters.task_definition.TaskRegistry.html#ase2sprkkr.input_parameters.definitions.phagen.TaskRegistry._extra_task">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_extra_task</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">task</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">extra_tasks</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+        <span class="k">except</span> <span class="n">RegistryEntryNotFound</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">task</span><span class="p">,</span> <span class="n">TaskDefinition</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">RegistryDefinitionError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"Extra task </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> must be TaskDefinition, got </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">task</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">"</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="n">task</span><span class="o">.</span><span class="n">name</span> <span class="o">!=</span> <span class="n">name</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">RegistryDefinitionError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"Extra task </span><span class="si">{</span><span class="n">task</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> is registered as </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">"</span>
+            <span class="p">)</span>
+        <span class="n">task</span><span class="o">.</span><span class="n">_bind_input_parameters_registry</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input_parameters_registry</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">task</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">normalize_name</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">input_task</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_input_task</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">extra_task</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_extra_task</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">input_task</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">extra_task</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">RegistryDefinitionError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"Task </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> is defined both by an input schema and explicitly"</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="n">extra_task</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">extra_task</span>
+        <span class="k">if</span> <span class="n">input_task</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">input_task</span>
+        <span class="k">raise</span> <span class="n">RegistryEntryNotFound</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__contains__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+        <span class="k">except</span> <span class="n">RegistryEntryNotFound</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">return</span> <span class="kc">True</span>
+
+<div class="viewcode-block" id="TaskRegistry.names">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.input_parameters.task_definition.TaskRegistry.html#ase2sprkkr.input_parameters.definitions.phagen.TaskRegistry.names">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">names</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">names</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">extra_tasks</span><span class="o">.</span><span class="n">names</span><span class="p">())</span>
+        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_parameters_registry</span><span class="o">.</span><span class="n">task_definitions</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">names</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">RegistryDefinitionError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">"Task </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> is defined both by an input schema and explicitly"</span>
+                <span class="p">)</span>
+            <span class="n">names</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">names</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="TaskRegistry.values">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.input_parameters.task_definition.TaskRegistry.html#ase2sprkkr.input_parameters.definitions.phagen.TaskRegistry.values">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">names</span><span class="p">())</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Matyáš Novák &amp; Jano Minár.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

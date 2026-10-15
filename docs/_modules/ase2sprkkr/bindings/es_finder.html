@@ -16,8 +16,8 @@
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
-      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -81,6 +81,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../ase2sprkkr.html">ase2sprkkr</a></li>
       <li class="breadcrumb-item active">ase2sprkkr.bindings.es_finder</li>
       <li class="wy-breadcrumbs-aside">
       </li>
@@ -91,10 +92,10 @@
            <div itemprop="articleBody">
              
   <h1>Source code for ase2sprkkr.bindings.es_finder</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span></span><span class="sd">"""</span>
 <span class="sd">Binding for the es_finder package, that can determine the ideal positions</span>
 <span class="sd">of empty spheres to fill the gaps in the primitive cell.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
@@ -117,8 +118,20 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">ase</span><span class="w"> </span><span class="kn">import</span> <span class="n">Atoms</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">..sprkkr.sprkkr_atoms</span><span class="w"> </span><span class="kn">import</span> <span class="n">SPRKKRAtoms</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">..physics.winger_seitz_radii</span><span class="w"> </span><span class="kn">import</span> <span class="n">winger_seitz_radii</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Mapping</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.empty_spheres</span><span class="w"> </span><span class="kn">import</span> <span class="n">EmptySpheresResult</span>
+
+
+<div class="viewcode-block" id="_prepare_radii_ratios_map">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.bindings.es_finder._prepare_radii_ratios_map.html#ase2sprkkr.bindings.es_finder._prepare_radii_ratios_map">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_prepare_radii_ratios_map</span><span class="p">(</span>
+    <span class="n">radii_ratios_map</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+    <span class="n">radii</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">winger_seitz_radii</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">radii_ratios_map</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">radii</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">radii_ratios_map</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">radii</span></div>
+
 
 
 <div class="viewcode-block" id="empty_spheres">
@@ -127,7 +140,7 @@
     <span class="n">atoms</span><span class="p">:</span> <span class="n">Atoms</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
     <span class="n">overlap_matrix</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.18</span><span class="p">,</span>
-    <span class="n">radii_ratios_map</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">radii_ratios_map</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">max_es_overlap</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.24</span><span class="p">,</span>  <span class="c1"># Maximum overlap of ES</span>
     <span class="n">adjust_overlap</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.28</span><span class="p">,</span>  <span class="c1"># Overlap that will be adjusted to max. overlap</span>
     <span class="n">min_es_radius</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.2</span><span class="p">,</span>  <span class="c1"># Min. accepted sphere radius</span>
@@ -137,12 +150,12 @@
     <span class="n">grid</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">48</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">48</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">48</span><span class="p">]]),</span>
     <span class="n">verbosity</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>  <span class="c1"># Verbosity of output</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Compute the best coverage of the primitive cell with spheres.</span>
 
 <span class="sd">    The function computes:</span>
 <span class="sd">     - the best radii of atomic-sites spheres</span>
-<span class="sd">     - the positions of &#39;vacuum pseudoatom&#39; spheres and their radii to be added to the structure</span>
+<span class="sd">     - the positions of 'vacuum pseudoatom' spheres and their radii to be added to the structure</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -156,10 +169,10 @@
 <span class="sd">      #TODO</span>
 
 <span class="sd">    radii_ratios_map</span>
-<span class="sd">      Dict, that defines the ratios of radii of used chemical elements.</span>
+<span class="sd">      Mapping that defines the ratios of radii of used chemical elements.</span>
 <span class="sd">      It is dimensionless value (it is not the sizes, only</span>
 <span class="sd">      the ratios of the given values, that matter).</span>
-<span class="sd">      The default walues are :mod:`Winger-Seitz radii&lt;ase2sprkkr.physics.winger_seitz_radii&gt;`.</span>
+<span class="sd">      The default values are :mod:`Wigner-Seitz radii&lt;ase2sprkkr.physics.winger_seitz_radii&gt;`.</span>
 <span class="sd">      If only some of the elements are provided, they are supplemented with the default values.</span>
 
 <span class="sd">    max_es_overlap</span>
@@ -187,37 +200,34 @@
 <span class="sd">    verbosity</span>
 <span class="sd">      Verbosity of the output of the algorithm</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="n">run_finder</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span>
-            <span class="s2">&quot;Cannot import es_finder or pymatgen. Please install it, or set empty_spheres parameter to False&quot;</span>
+            <span class="s2">"Cannot import es_finder or pymatgen. Please install it, or set empty_spheres parameter to False"</span>
         <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">import_error</span>
 
     <span class="n">params</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">locals</span><span class="p">())</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;atoms&quot;</span><span class="p">,</span> <span class="s2">&quot;overlap_matrix&quot;</span><span class="p">,</span> <span class="s2">&quot;radii_ratios_map&quot;</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"atoms"</span><span class="p">,</span> <span class="s2">"overlap_matrix"</span><span class="p">,</span> <span class="s2">"radii_ratios_map"</span><span class="p">):</span>
         <span class="k">del</span> <span class="n">params</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
 
-    <span class="k">if</span> <span class="n">radii_ratios_map</span><span class="p">:</span>
-        <span class="n">radii_ratios_map</span> <span class="o">=</span> <span class="p">{</span><span class="o">**</span><span class="n">winger_seitz_radii</span><span class="p">,</span> <span class="o">**</span><span class="n">radii_ratios_map</span><span class="p">}</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">radii_ratios_map</span> <span class="o">=</span> <span class="n">winger_seitz_radii</span>
+    <span class="n">radii_ratios_map</span> <span class="o">=</span> <span class="n">_prepare_radii_ratios_map</span><span class="p">(</span><span class="n">radii_ratios_map</span><span class="p">)</span>
 
     <span class="n">atoms</span> <span class="o">=</span> <span class="n">SPRKKRAtoms</span><span class="o">.</span><span class="n">promote_ase_atoms</span><span class="p">(</span><span class="n">atoms</span><span class="p">)</span>
     <span class="n">sym_dataset</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">spacegroup_info</span><span class="o">.</span><span class="n">dataset</span>
     <span class="k">if</span> <span class="n">sym_dataset</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">sym_dataset</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;translations&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">)),</span>
-            <span class="s2">&quot;rotations&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">)),</span>
-            <span class="s2">&quot;number&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-            <span class="s2">&quot;hall_number&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-            <span class="s2">&quot;hall&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+            <span class="s2">"translations"</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">)),</span>
+            <span class="s2">"rotations"</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">)),</span>
+            <span class="s2">"number"</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="s2">"hall_number"</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="s2">"hall"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
         <span class="p">}</span>
     <span class="n">symmetry</span> <span class="o">=</span> <span class="n">Symmetry</span><span class="p">(</span>
-        <span class="n">sym_dataset</span><span class="p">[</span><span class="s2">&quot;rotations&quot;</span><span class="p">],</span>
-        <span class="n">sym_dataset</span><span class="p">[</span><span class="s2">&quot;translations&quot;</span><span class="p">],</span>
-        <span class="n">sym_dataset</span><span class="p">[</span><span class="s2">&quot;number&quot;</span><span class="p">],</span>
-        <span class="n">sym_dataset</span><span class="p">[</span><span class="s2">&quot;hall_number&quot;</span><span class="p">],</span>
-        <span class="n">sym_dataset</span><span class="p">[</span><span class="s2">&quot;hall&quot;</span><span class="p">],</span>
+        <span class="n">sym_dataset</span><span class="p">[</span><span class="s2">"rotations"</span><span class="p">],</span>
+        <span class="n">sym_dataset</span><span class="p">[</span><span class="s2">"translations"</span><span class="p">],</span>
+        <span class="n">sym_dataset</span><span class="p">[</span><span class="s2">"number"</span><span class="p">],</span>
+        <span class="n">sym_dataset</span><span class="p">[</span><span class="s2">"hall_number"</span><span class="p">],</span>
+        <span class="n">sym_dataset</span><span class="p">[</span><span class="s2">"hall"</span><span class="p">],</span>
     <span class="p">)</span>
 
     <span class="n">pmg_structure</span> <span class="o">=</span> <span class="n">AseAtomsAdaptor</span><span class="o">.</span><span class="n">get_structure</span><span class="p">(</span><span class="n">atoms</span><span class="p">)</span>

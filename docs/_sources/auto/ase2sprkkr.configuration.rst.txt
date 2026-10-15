@@ -7,7 +7,7 @@ Full name: **ase2sprkkr.configuration**
 
 .. rubric:: Module class hierarchy
 
-.. inheritance-diagram::  ase2sprkkr.configuration.ConfigFileDefinition  ase2sprkkr.configuration.ConfigValueDefinition  ase2sprkkr.configuration.Configuration  ase2sprkkr.configuration.ConfigurationOption  ase2sprkkr.configuration.Section  ase2sprkkr.configuration.V 
+.. inheritance-diagram::  ase2sprkkr.configuration.ConfigFileDefinition  ase2sprkkr.configuration.ConfigValueDefinition  ase2sprkkr.configuration.Configuration  ase2sprkkr.configuration.ConfigurationOption  ase2sprkkr.configuration.ExecutionProfile  ase2sprkkr.configuration.G  ase2sprkkr.configuration.GeneratedConfigValueDefinition  ase2sprkkr.configuration.GeneratedConfigurationOption  ase2sprkkr.configuration.ProfilesSection  ase2sprkkr.configuration.Section  ase2sprkkr.configuration.V 
       :parts: 1
 
 |
@@ -25,7 +25,7 @@ Full name: **ase2sprkkr.configuration**
       :toctree:
       :template: custom-base-template.rst
    
-      V
+      EXECUTOR
    
    
 
@@ -39,10 +39,21 @@ Full name: **ase2sprkkr.configuration**
       :template: custom-base-template.rst
    
       _get_suffix
-      find_default_mpi_runner
-      get_default_mpi_runner
+      _legacy_executable_dir
+      _legacy_executable_suffix
+      _legacy_mpi
+      _legacy_mpi_warning
+      _legacy_value
+      _load_legacy_user_preferences
+      _profile_overlay_values
+      _set_legacy_executable_dir
+      _set_legacy_executable_suffix
+      _set_legacy_mpi
+      _set_legacy_mpi_warning
+      _set_legacy_value
+      legacy_user_preferences_file
       load_user_preferences
-      mpi_runner
+      user_preferences_directory
       user_preferences_file
    
    
@@ -60,6 +71,11 @@ Full name: **ase2sprkkr.configuration**
       ConfigValueDefinition
       Configuration
       ConfigurationOption
+      ExecutionProfile
+      G
+      GeneratedConfigValueDefinition
+      GeneratedConfigurationOption
+      ProfilesSection
       Section
       V
    

@@ -16,8 +16,8 @@
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
-      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -81,6 +81,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../ase2sprkkr.html">ase2sprkkr</a></li>
       <li class="breadcrumb-item active">ase2sprkkr.common.debug</li>
       <li class="wy-breadcrumbs-aside">
       </li>
@@ -97,15 +98,15 @@
 <div class="viewcode-block" id="add_debug_hook">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.common.debug.add_debug_hook.html#ase2sprkkr.common.debug.add_debug_hook">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">add_debug_hook</span><span class="p">(</span><span class="n">only_original</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Breaks when an unhandled exception occurs, if</span>
 <span class="sd">    the terminal is present</span>
 
 <span class="sd">    https://stackoverflow.com/questions/1237379/how-do-i-set-sys-excepthook-to-invoke-pdb-globally-in-python</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">info</span><span class="p">(</span><span class="nb">type</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">tb</span><span class="p">):</span>
-        <span class="k">if</span> <span class="p">(</span>  <span class="c1"># hasattr(sys, &quot;ps1&quot;) or</span>
+        <span class="k">if</span> <span class="p">(</span>  <span class="c1"># hasattr(sys, "ps1") or</span>
             <span class="ow">not</span> <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">isatty</span><span class="p">()</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdin</span><span class="o">.</span><span class="n">isatty</span><span class="p">()</span>
         <span class="p">):</span>
             <span class="c1"># stdin or stderr is redirected, just do the normal thing</span>
@@ -116,7 +117,6 @@
             <span class="kn">import</span><span class="w"> </span><span class="nn">pdb</span>
 
             <span class="n">traceback</span><span class="o">.</span><span class="n">print_exception</span><span class="p">(</span><span class="nb">type</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">tb</span><span class="p">)</span>
-            <span class="nb">print</span>
             <span class="n">pdb</span><span class="o">.</span><span class="n">pm</span><span class="p">()</span>
 
     <span class="n">original_hook</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">excepthook</span>
@@ -126,15 +126,69 @@
 
 
 
+<div class="viewcode-block" id="backtrace_pyparsing">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.debug.backtrace_pyparsing.html#ase2sprkkr.common.debug.backtrace_pyparsing">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">backtrace_pyparsing</span><span class="p">(</span><span class="n">term</span><span class="p">,</span> <span class="n">fn</span><span class="p">,</span> <span class="n">_visited</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">_visited</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">_visited</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+
+    <span class="n">identity</span> <span class="o">=</span> <span class="nb">id</span><span class="p">(</span><span class="n">term</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">identity</span> <span class="ow">in</span> <span class="n">_visited</span><span class="p">:</span>
+        <span class="k">return</span>
+    <span class="n">_visited</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">identity</span><span class="p">)</span>
+
+    <span class="n">fn</span><span class="p">(</span><span class="n">term</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">term</span><span class="p">,</span> <span class="s2">"exprs"</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">term</span><span class="o">.</span><span class="n">exprs</span><span class="p">:</span>
+            <span class="n">backtrace_pyparsing</span><span class="p">(</span><span class="n">child</span><span class="p">,</span> <span class="n">fn</span><span class="p">,</span> <span class="n">_visited</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">term</span><span class="p">,</span> <span class="s2">"expr"</span><span class="p">)</span> <span class="ow">and</span> <span class="n">term</span><span class="o">.</span><span class="n">expr</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">backtrace_pyparsing</span><span class="p">(</span><span class="n">term</span><span class="o">.</span><span class="n">expr</span><span class="p">,</span> <span class="n">fn</span><span class="p">,</span> <span class="n">_visited</span><span class="p">)</span></div>
+
+
+
 <div class="viewcode-block" id="debug_pyparsing">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.common.debug.debug_pyparsing.html#ase2sprkkr.common.debug.debug_pyparsing">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">debug_pyparsing</span><span class="p">(</span><span class="n">term</span><span class="p">):</span>
-    <span class="n">term</span><span class="o">.</span><span class="n">set_debug</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
-    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">term</span><span class="p">,</span> <span class="s2">&quot;exprs&quot;</span><span class="p">):</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">term</span><span class="o">.</span><span class="n">exprs</span><span class="p">:</span>
-            <span class="n">debug_pyparsing</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">term</span><span class="p">,</span> <span class="s2">&quot;expr&quot;</span><span class="p">):</span>
-        <span class="n">debug_pyparsing</span><span class="p">(</span><span class="n">term</span><span class="o">.</span><span class="n">expr</span><span class="p">)</span></div>
+    <span class="n">backtrace_pyparsing</span><span class="p">(</span><span class="n">term</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">term</span><span class="p">:</span> <span class="n">term</span><span class="o">.</span><span class="n">set_debug</span><span class="p">(</span><span class="kc">True</span><span class="p">))</span></div>
+
+
+
+<div class="viewcode-block" id="check_whitespaces">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.debug.check_whitespaces.html#ase2sprkkr.common.debug.check_whitespaces">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">check_whitespaces</span><span class="p">(</span><span class="n">term</span><span class="p">,</span> <span class="n">chars</span><span class="o">=</span><span class="nb">frozenset</span><span class="p">({</span><span class="s2">"</span><span class="se">\t</span><span class="s2">"</span><span class="p">,</span> <span class="s2">" "</span><span class="p">,</span> <span class="s2">"</span><span class="se">\r</span><span class="s2">"</span><span class="p">})):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">check</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">item</span><span class="o">.</span><span class="n">whiteChars</span> <span class="o">!=</span> <span class="n">chars</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Bad white chars"</span><span class="p">)</span>
+
+    <span class="n">backtrace_pyparsing</span><span class="p">(</span><span class="n">term</span><span class="p">,</span> <span class="n">check</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="print_grammar">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.debug.print_grammar.html#ase2sprkkr.common.debug.print_grammar">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">print_grammar</span><span class="p">(</span><span class="n">expr</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">stack</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">stack</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">stack</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+
+    <span class="n">prefix</span> <span class="o">=</span> <span class="s2">"  "</span> <span class="o">*</span> <span class="n">indent</span>
+
+    <span class="k">if</span> <span class="nb">id</span><span class="p">(</span><span class="n">expr</span><span class="p">)</span> <span class="ow">in</span> <span class="n">stack</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">prefix</span><span class="si">}{</span><span class="nb">type</span><span class="p">(</span><span class="n">expr</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">expr</span><span class="si">}</span><span class="s2">  &lt;recursive&gt;"</span><span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">prefix</span><span class="si">}{</span><span class="nb">type</span><span class="p">(</span><span class="n">expr</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">expr</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+    <span class="n">stack</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="nb">id</span><span class="p">(</span><span class="n">expr</span><span class="p">))</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">expr</span><span class="p">,</span> <span class="s2">"exprs"</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">expr</span><span class="o">.</span><span class="n">exprs</span><span class="p">:</span>
+                <span class="n">print_grammar</span><span class="p">(</span><span class="n">child</span><span class="p">,</span> <span class="n">indent</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">stack</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">expr</span><span class="p">,</span> <span class="s2">"expr"</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">expr</span><span class="o">.</span><span class="n">expr</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">print_grammar</span><span class="p">(</span><span class="n">expr</span><span class="o">.</span><span class="n">expr</span><span class="p">,</span> <span class="n">indent</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">stack</span><span class="p">)</span>
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="n">stack</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="nb">id</span><span class="p">(</span><span class="n">expr</span><span class="p">))</span></div>
 
 </pre></div>
 

@@ -1,0 +1,36 @@
+AnyRepeatedItemGrammar
+======================
+
+
+.. currentmodule:: ase2sprkkr.common.repetition
+
+.. autoclass:: AnyRepeatedItemGrammar
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.common.repetition.AnyRepeatedItemGrammar
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

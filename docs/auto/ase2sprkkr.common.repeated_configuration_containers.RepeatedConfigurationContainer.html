@@ -17,12 +17,12 @@
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../_static/documentation_options.js?v=5929fcd5"></script>
-      <script src="../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="section_adaptors" href="ase2sprkkr.common.section_adaptors.html" />
+    <link rel="next" title="repetition" href="ase2sprkkr.common.repetition.html" />
     <link rel="prev" title="repeated_configuration_containers" href="ase2sprkkr.common.repeated_configuration_containers.html" /> 
 </head>
 
@@ -68,6 +68,7 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.promote_ase_atoms.html">promote_ase_atoms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.__getattr__.html">__getattr__</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="ase2sprkkr.common.html">common</a><ul class="current">
@@ -76,18 +77,23 @@
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.configuration.html">configuration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.configuration_containers.html">configuration_containers</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.configuration_definitions.html">configuration_definitions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.configuration_transaction.html">configuration_transaction</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.container_definitions.html">container_definitions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.dangerous_values.html">dangerous_values</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.debug.html">debug</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.decorators.html">decorators</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.dependencies.html">dependencies</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.doc.html">doc</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.file_fingerprints.html">file_fingerprints</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.file_locks.html">file_locks</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.file_utils.html">file_utils</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.formats.html">formats</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.generated_configuration_definitions.html">generated_configuration_definitions</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.grammar.html">grammar</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.grammar_types.html">grammar_types</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.init_tests.html">init_tests</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.lazy_string.html">lazy_string</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.misc.html">misc</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.module_registry.html">module_registry</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.no_output.html">no_output</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.options.html">options</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.parsing_results.html">parsing_results</a></li>
@@ -96,7 +102,7 @@
 <li class="toctree-l4 current"><a class="current reference internal" href="#">RepeatedConfigurationContainer</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.section_adaptors.html">section_adaptors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.repetition.html">repetition</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.subprocess.html">subprocess</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.tools.html">tools</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.unique_values.html">unique_values</a></li>
@@ -106,13 +112,18 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration.html">configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration_migration.html">configuration_migration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration_yaml.html">configuration_yaml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.conftest.html">conftest</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.examples.html">examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.execution.html">execution</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.gui.html">gui</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.input_parameters.html">input_parameters</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.output_files.html">output_files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.outputs.html">outputs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.physics.html">physics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.potentials.html">potentials</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.profiles.html">profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.result_files.html">result_files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.sprkkr.html">sprkkr</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.tools.html">tools</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.version.html">version</a></li>
@@ -151,18 +162,27 @@
 <h1>RepeatedConfigurationContainer<a class="headerlink" href="#repeatedconfigurationcontainer" title="Link to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="ase2sprkkr.common.repeated_configuration_containers.RepeatedConfigurationContainer">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.common.repeated_configuration_containers.</span></span><span class="sig-name descname"><span class="pre">RepeatedConfigurationContainer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">definition</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">container</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/repeated_configuration_containers.html#RepeatedConfigurationContainer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.repeated_configuration_containers.RepeatedConfigurationContainer" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.common.repeated_configuration_containers.</span></span><span class="sig-name descname"><span class="pre">RepeatedConfigurationContainer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">definition</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">container</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/repeated_configuration_containers.html#RepeatedConfigurationContainer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.repeated_configuration_containers.RepeatedConfigurationContainer" title="Link to this definition"></a></dt>
 <dd><p>A container for configuration (problem-definition) options and/or sections.</p>
 <p>Options in the configuration (problem-definition) files are grouped to
 sections, sections are then grouped in a configuration file object.
 This is a base class for these containers.</p>
 <p class="rubric">Class hierarchy</p>
-<div class="graphviz"><img src="../_images/inheritance-c52f426ed74d7d4d1a88d7d93fb4ce7933468f79.png" alt="Inheritance diagram of ase2sprkkr.common.repeated_configuration_containers.RepeatedConfigurationContainer" usemap="#inheritancec79ecdd391" class="inheritance graphviz" /></div>
-<map id="inheritancec79ecdd391" name="inheritancec79ecdd391">
-<area shape="rect" id="node1" href="ase2sprkkr.common.configuration.Configuration.html#ase2sprkkr.common.configuration.Configuration" target="_top" title="The common base class for all configurations values and containers. I.e." alt="" coords="5,5,177,29"/>
-<area shape="rect" id="node2" href="ase2sprkkr.common.configuration_containers.BaseConfigurationContainer.html#ase2sprkkr.common.configuration_containers.BaseConfigurationContainer" target="_top" title="Configuration container, that holds members, either in classical way" alt="" coords="203,5,525,29"/>
-<area shape="rect" id="node3" href="#ase2sprkkr.common.repeated_configuration_containers.RepeatedConfigurationContainer" target="_top" title="A container for configuration (problem&#45;definition) options and/or sections." alt="" coords="550,5,955,29"/>
-</map><div class="line-block">
+digraph inheritancec79ecdd391 {
+bgcolor=transparent;
+fontsize=14;
+rankdir=LR;
+ranksep=0.3;
+size=&quot;10.0, 10.0&quot;;
+  &quot;abc.ABC&quot; [fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,tooltip=&quot;Helper class that provides a standard way to create an ABC using&quot;];
+  &quot;configuration.Configuration&quot; [URL=&quot;ase2sprkkr.common.configuration.Configuration.html#ase2sprkkr.common.configuration.Configuration&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;The common base class for all configurations values and containers. I.e.&quot;];
+  &quot;configuration_containers.BaseConfigurationContainer&quot; [URL=&quot;ase2sprkkr.common.configuration_containers.BaseConfigurationContainer.html#ase2sprkkr.common.configuration_containers.BaseConfigurationContainer&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;Configuration container, that holds members, either in classical way&quot;];
+  &quot;configuration.Configuration&quot; -&gt; &quot;configuration_containers.BaseConfigurationContainer&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;abc.ABC&quot; -&gt; &quot;configuration_containers.BaseConfigurationContainer&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;repeated_configuration_containers.RepeatedConfigurationContainer&quot; [URL=&quot;#ase2sprkkr.common.repeated_configuration_containers.RepeatedConfigurationContainer&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;A container for configuration (problem-definition) options and/or sections.&quot;];
+  &quot;configuration_containers.BaseConfigurationContainer&quot; -&gt; &quot;repeated_configuration_containers.RepeatedConfigurationContainer&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+}
+<div class="line-block">
 <div class="line"><br /></div>
 </div>
 <p class="rubric">Constructor</p>
@@ -172,26 +192,103 @@ This is a base class for these containers.</p>
 <dd><p>Create the container and its members, according to the definition</p>
 </dd></dl>
 
+<dl class="py class">
+<dt class="sig sig-object py" id="ase2sprkkr.common.repeated_configuration_containers.RepeatedConfigurationContainer.ContentsChange">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">ContentsChange</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">section</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">proposed</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/repeated_configuration_containers.html#RepeatedConfigurationContainer.ContentsChange"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.repeated_configuration_containers.RepeatedConfigurationContainer.ContentsChange" title="Link to this definition"></a></dt>
+<dd><p>Original structure of a staged repeated section.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>section</strong> (<a class="reference internal" href="#ase2sprkkr.common.repeated_configuration_containers.RepeatedConfigurationContainer" title="ase2sprkkr.common.repeated_configuration_containers.RepeatedConfigurationContainer"><em>RepeatedConfigurationContainer</em></a>)</p></li>
+<li><p><strong>proposed</strong> (<a class="reference internal" href="#ase2sprkkr.common.repeated_configuration_containers.RepeatedConfigurationContainer" title="ase2sprkkr.common.repeated_configuration_containers.RepeatedConfigurationContainer"><em>RepeatedConfigurationContainer</em></a>)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.common.repeated_configuration_containers.RepeatedConfigurationContainer.ContentsChange.commit">
+<span class="sig-name descname"><span class="pre">commit</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/repeated_configuration_containers.html#RepeatedConfigurationContainer.ContentsChange.commit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.repeated_configuration_containers.RepeatedConfigurationContainer.ContentsChange.commit" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.common.repeated_configuration_containers.RepeatedConfigurationContainer.ContentsChange.rollback">
+<span class="sig-name descname"><span class="pre">rollback</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/repeated_configuration_containers.html#RepeatedConfigurationContainer.ContentsChange.rollback"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.repeated_configuration_containers.RepeatedConfigurationContainer.ContentsChange.rollback" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.common.repeated_configuration_containers.RepeatedConfigurationContainer._add">
+<span class="sig-name descname"><span class="pre">_add</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/repeated_configuration_containers.html#RepeatedConfigurationContainer._add"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.repeated_configuration_containers.RepeatedConfigurationContainer._add" title="Link to this definition"></a></dt>
+<dd><p>Create one repeated item without applying public API restrictions.</p>
+</dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.common.repeated_configuration_containers.RepeatedConfigurationContainer.add">
 <span class="sig-name descname"><span class="pre">add</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/repeated_configuration_containers.html#RepeatedConfigurationContainer.add"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.repeated_configuration_containers.RepeatedConfigurationContainer.add" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.common.repeated_configuration_containers.RepeatedConfigurationContainer.clear">
-<span class="sig-name descname"><span class="pre">clear</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">do_not_check_required</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">call_hooks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">generated</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/repeated_configuration_containers.html#RepeatedConfigurationContainer.clear"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.repeated_configuration_containers.RepeatedConfigurationContainer.clear" title="Link to this definition"></a></dt>
-<dd><p>Erase all values (or reset to default) from all options in the container
-(ad subcontainers)</p>
+<dt class="sig sig-object py" id="ase2sprkkr.common.repeated_configuration_containers.RepeatedConfigurationContainer._raw_items">
+<span class="sig-name descname"><span class="pre">_raw_items</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/repeated_configuration_containers.html#RepeatedConfigurationContainer._raw_items"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.repeated_configuration_containers.RepeatedConfigurationContainer._raw_items" title="Link to this definition"></a></dt>
+<dd><p>Return physically stored items, independent of public collection views.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.common.repeated_configuration_containers.RepeatedConfigurationContainer._raw_values">
+<span class="sig-name descname"><span class="pre">_raw_values</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/repeated_configuration_containers.html#RepeatedConfigurationContainer._raw_values"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.repeated_configuration_containers.RepeatedConfigurationContainer._raw_values" title="Link to this definition"></a></dt>
+<dd><p>Return physically stored values, independent of public collection views.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.common.repeated_configuration_containers.RepeatedConfigurationContainer._member_key">
+<span class="sig-name descname"><span class="pre">_member_key</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/repeated_configuration_containers.html#RepeatedConfigurationContainer._member_key"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.repeated_configuration_containers.RepeatedConfigurationContainer._member_key" title="Link to this definition"></a></dt>
+<dd><p>Convert a path component to an index or stored dictionary key.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.common.repeated_configuration_containers.RepeatedConfigurationContainer._get_members">
+<span class="sig-name descname"><span class="pre">_get_members</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unknown</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_option</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lower_case</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">accept</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/repeated_configuration_containers.html#RepeatedConfigurationContainer._get_members"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.repeated_configuration_containers.RepeatedConfigurationContainer._get_members" title="Link to this definition"></a></dt>
+<dd><p>Return the repeated item selected by its index or key.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>do_not_check_required</strong> (<em>bool</em>) – Do not check validity of the values after clearing. If <code class="docutils literal notranslate"><span class="pre">False</span></code> (default)
-is passed as this argument, the required option without a default value
-(or a section containing such value) throw an exception, which prevents the
-clearing (neverthenless, previous values in the section will be cleared anyway).</p></li>
-<li><p><strong>call_hooks</strong> (<em>bool</em>) – If False, the cleared values do not raise theirs hooks</p></li>
-<li><p><strong>generated</strong> (<em>bool</em>) – If True</p></li>
+<li><p><strong>name</strong> (<em>Any</em>)</p></li>
+<li><p><strong>unknown</strong> (<em>Literal</em><em>[</em><em>'find'</em><em>, </em><em>'add'</em><em>, </em><em>'ignore'</em><em>, </em><em>'fail'</em><em>] </em><em>| </em><em>None</em>)</p></li>
+<li><p><strong>is_option</strong> (<em>bool</em><em> | </em><em>None</em>)</p></li>
+<li><p><strong>lower_case</strong> (<em>bool</em>)</p></li>
+<li><p><strong>accept</strong> (<em>Callable</em><em>[</em><em>[</em><a class="reference internal" href="ase2sprkkr.common.configuration.Configuration.html#ase2sprkkr.common.configuration.Configuration" title="ase2sprkkr.common.configuration.Configuration"><em>Configuration</em></a><em>]</em><em>, </em><em>bool</em><em>] </em><em>| </em><em>None</em>)</p></li>
 </ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>Iterator</em>[<a class="reference internal" href="ase2sprkkr.common.configuration.Configuration.html#ase2sprkkr.common.configuration.Configuration" title="ase2sprkkr.common.configuration.Configuration"><em>Configuration</em></a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.common.repeated_configuration_containers.RepeatedConfigurationContainer.stage_clear">
+<span class="sig-name descname"><span class="pre">stage_clear</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transaction</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">check_required</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/repeated_configuration_containers.html#RepeatedConfigurationContainer.stage_clear"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.repeated_configuration_containers.RepeatedConfigurationContainer.stage_clear" title="Link to this definition"></a></dt>
+<dd><p>Stage an empty collection in <code class="docutils literal notranslate"><span class="pre">transaction</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">check_required</span></code> is accepted for the common staged-clear protocol.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>transaction</strong> (<a class="reference internal" href="ase2sprkkr.common.configuration_transaction.ConfigurationTransaction.html#ase2sprkkr.common.configuration_transaction.ConfigurationTransaction" title="ase2sprkkr.common.configuration_transaction.ConfigurationTransaction"><em>ConfigurationTransaction</em></a>)</p></li>
+<li><p><strong>check_required</strong> (<em>bool</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
 </dd>
 </dl>
 </dd></dl>
@@ -204,7 +301,7 @@ clearing (neverthenless, previous values in the section will be cleared anyway).
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>name</strong> (<em>None</em><em> or </em><em>str</em>) – If None, return contained values as a dictionary.
-Otherwise, return the value of the member with the given name.</p></li>
+Otherwise, return the value of the member with a given name.</p></li>
 <li><p><strong>unknown</strong> (<em>str</em><em> or </em><em>None</em>) – If unknown == ‘find’ and there is no member with a given name,
 try to find the first such in descendant conainers.</p></li>
 </ul>
@@ -220,33 +317,56 @@ try to find the first such in descendant conainers.</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.common.repeated_configuration_containers.RepeatedConfigurationContainer.set">
-<span class="sig-name descname"><span class="pre">set</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">unknown</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'find'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">error</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/repeated_configuration_containers.html#RepeatedConfigurationContainer.set"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.repeated_configuration_containers.RepeatedConfigurationContainer.set" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<span class="sig-name descname"><span class="pre">set</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">unknown</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'find'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">validation_reason</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'set'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">retain_invalid</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">report_invalid</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">merge</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/repeated_configuration_containers.html#RepeatedConfigurationContainer.set"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.repeated_configuration_containers.RepeatedConfigurationContainer.set" title="Link to this definition"></a></dt>
+<dd><p>Set repeated values and validate the complete proposal.</p>
+<p>By default, replace the complete collection. With <code class="docutils literal notranslate"><span class="pre">merge=True</span></code>,
+append values to a list-like collection or update a dictionary-like
+collection by key.</p>
+<p>Invalid-value retention and reporting are controlled independently by
+<code class="docutils literal notranslate"><span class="pre">retain_invalid</span></code> (<code class="docutils literal notranslate"><span class="pre">&quot;none&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;typed&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">&quot;all&quot;</span></code>) and
+<code class="docutils literal notranslate"><span class="pre">report_invalid</span></code> (<code class="docutils literal notranslate"><span class="pre">&quot;raise&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;warn&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">&quot;ignore&quot;</span></code>).
+<code class="docutils literal notranslate"><span class="pre">values</span></code> supplies the children, or one child name paired with
+<code class="docutils literal notranslate"><span class="pre">value</span></code>. <code class="docutils literal notranslate"><span class="pre">unknown</span></code> controls child assignment lookup and
+<code class="docutils literal notranslate"><span class="pre">validation_reason</span></code> selects <code class="docutils literal notranslate"><span class="pre">&quot;set&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">&quot;parse&quot;</span></code> validation.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>values</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>] </em><em>| </em><em>str</em><em> | </em><em>None</em>)</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>values</strong> (<em>Mapping</em><em>[</em><em>Any</em><em>, </em><em>Any</em><em>] </em><em>| </em><em>Iterable</em><em>[</em><em>Any</em><em>] </em><em>| </em><em>str</em><em> | </em><em>None</em>)</p></li>
+<li><p><strong>value</strong> (<em>Any</em>)</p></li>
+<li><p><strong>unknown</strong> (<em>Literal</em><em>[</em><em>'find'</em><em>, </em><em>'add'</em><em>, </em><em>'ignore'</em><em>, </em><em>'fail'</em><em>] </em><em>| </em><em>None</em>)</p></li>
+<li><p><strong>validation_reason</strong> (<em>Literal</em><em>[</em><em>'set'</em><em>, </em><em>'parse'</em><em>, </em><em>'save'</em><em>]</em>)</p></li>
+<li><p><strong>retain_invalid</strong> (<em>Literal</em><em>[</em><em>'none'</em><em>, </em><em>'typed'</em><em>, </em><em>'all'</em><em>] </em><em>| </em><em>None</em>)</p></li>
+<li><p><strong>report_invalid</strong> (<em>Literal</em><em>[</em><em>'raise'</em><em>, </em><em>'warn'</em><em>, </em><em>'ignore'</em><em>] </em><em>| </em><em>None</em>)</p></li>
+<li><p><strong>merge</strong> (<em>bool</em>)</p></li>
+<li><p><strong>kwargs</strong> (<em>Any</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.common.repeated_configuration_containers.RepeatedConfigurationContainer._set">
-<span class="sig-name descname"><span class="pre">_set</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">unknown</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'find'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">error</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/repeated_configuration_containers.html#RepeatedConfigurationContainer._set"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.repeated_configuration_containers.RepeatedConfigurationContainer._set" title="Link to this definition"></a></dt>
-<dd><p>Set the value(s) of parameter(s). Usage:</p>
-<p>&gt; input_parameters.set({‘NITER’: 5, ‘NE’: [10]})
-or
-&gt; input_parameters.set(NITER=5, NE=[10])</p>
+<dt class="sig sig-object py" id="ase2sprkkr.common.repeated_configuration_containers.RepeatedConfigurationContainer.stage">
+<span class="sig-name descname"><span class="pre">stage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transaction</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">values</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">unknown</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'find'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">merge</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/repeated_configuration_containers.html#RepeatedConfigurationContainer.stage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.repeated_configuration_containers.RepeatedConfigurationContainer.stage" title="Link to this definition"></a></dt>
+<dd><p>Stage repeated <code class="docutils literal notranslate"><span class="pre">values</span></code> in <code class="docutils literal notranslate"><span class="pre">transaction</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">unknown</span></code> controls descendant assignment. <code class="docutils literal notranslate"><span class="pre">merge</span></code>
+updates the current collection instead of replacing it; <code class="docutils literal notranslate"><span class="pre">kwargs</span></code> are
+forwarded to descendant staging.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>values</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>] </em><em>| </em><em>str</em><em> | </em><em>None</em>) – Dictionary of values to be set, or the name of the value, if the value is given.</p></li>
-<li><p><strong>value</strong> – Value to be set. Setting this argument require to pass string name to the values argument.</p></li>
-<li><p><strong>unkwnown</strong> (<em>'add'</em><em>, </em><em>'find'</em><em> or </em><em>None</em>) – How to handle unknown (not known by the definition) parameters.
-If ‘find’, try to find the values in descendant containers.
-If ‘add’, add unknown values as custom values.
-If None, throw an exception.
-Keyword only argument.</p></li>
-<li><p><strong>**kwargs</strong> (<em>dict</em>) – The values to be set (an alternative syntax as syntactical sugar)</p></li>
+<li><p><strong>transaction</strong> (<a class="reference internal" href="ase2sprkkr.common.configuration_transaction.ConfigurationTransaction.html#ase2sprkkr.common.configuration_transaction.ConfigurationTransaction" title="ase2sprkkr.common.configuration_transaction.ConfigurationTransaction"><em>ConfigurationTransaction</em></a>)</p></li>
+<li><p><strong>values</strong> (<em>Mapping</em><em>[</em><em>Any</em><em>, </em><em>Any</em><em>] </em><em>| </em><em>Iterable</em><em>[</em><em>Any</em><em>] </em><em>| </em><em>str</em><em> | </em><em>None</em>)</p></li>
+<li><p><strong>value</strong> (<em>Any</em>)</p></li>
+<li><p><strong>unknown</strong> (<em>Literal</em><em>[</em><em>'find'</em><em>, </em><em>'add'</em><em>, </em><em>'ignore'</em><em>, </em><em>'fail'</em><em>] </em><em>| </em><em>None</em>)</p></li>
+<li><p><strong>merge</strong> (<em>bool</em>)</p></li>
+<li><p><strong>kwargs</strong> (<em>Any</em>)</p></li>
 </ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
 </dd>
 </dl>
 </dd></dl>
@@ -259,7 +379,8 @@ Keyword only argument.</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.common.repeated_configuration_containers.RepeatedConfigurationContainer.values">
 <span class="sig-name descname"><span class="pre">values</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/repeated_configuration_containers.html#RepeatedConfigurationContainer.values"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.repeated_configuration_containers.RepeatedConfigurationContainer.values" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Return the configuration objects contained by this container.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.common.repeated_configuration_containers.RepeatedConfigurationContainer._as_dict">
@@ -269,12 +390,8 @@ Nested containers will be transformed to dictionaries as well.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>only_changed</strong> (<em>bool</em><em> | </em><em>str</em>) – Return only changed values, or all of them?
-If True, return only the values, that differ from the defaults.
-If False, return all the values.
-The default value ‘basic’ means, return all non-expert values
-and all changed expert values.</p></li>
-<li><p><strong>generated</strong> (<em>bool</em>) – Add generated values</p></li>
+<li><p><strong>only_changed</strong> (<em>bool</em><em> | </em><em>str</em>)</p></li>
+<li><p><strong>generated</strong> (<em>bool</em>)</p></li>
 </ul>
 </dd>
 </dl>
@@ -288,33 +405,35 @@ and all changed expert values.</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.common.repeated_configuration_containers.RepeatedConfigurationContainer._save_to_file">
 <span class="sig-name descname"><span class="pre">_save_to_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">always</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name_in_grammar</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delimiter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/repeated_configuration_containers.html#RepeatedConfigurationContainer._save_to_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.repeated_configuration_containers.RepeatedConfigurationContainer._save_to_file" title="Link to this definition"></a></dt>
-<dd><p>Save the content of the container to the file (according to the definition)</p>
+<dd><p>Save the content of the container to the file (according to the definition).</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>file</strong> (<em>file</em>) – File object (open for writing), where the data should be written</p></li>
-<li><p><strong>always</strong> – Do not consider conditions</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>If any value have been written return True, otherwise return False.</p>
-</dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>something_have_been_written</p>
+<dd class="field-odd"><p>bool</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.common.repeated_configuration_containers.RepeatedConfigurationContainer._validate">
-<span class="sig-name descname"><span class="pre">_validate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">why</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'save'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/repeated_configuration_containers.html#RepeatedConfigurationContainer._validate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.repeated_configuration_containers.RepeatedConfigurationContainer._validate" title="Link to this definition"></a></dt>
-<dd><p>Validate the configuration data. Raise an exception, if the validation fail.</p>
+<span class="sig-name descname"><span class="pre">_validate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">why</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/repeated_configuration_containers.html#RepeatedConfigurationContainer._validate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.repeated_configuration_containers.RepeatedConfigurationContainer._validate" title="Link to this definition"></a></dt>
+<dd><p>Validate the configuration data.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>why</strong> (<em>str</em>) – Type of the validation. Possible values
-<code class="docutils literal notranslate"><span class="pre">save</span></code> - Full validation, during save.
-<code class="docutils literal notranslate"><span class="pre">set</span></code> - Validation on user input. Allow required values not to be set.
-<code class="docutils literal notranslate"><span class="pre">parse</span></code> - Validation during parsing - some check, that are enforced by the parser, can be skipped.</p>
+<dd class="field-odd"><p><strong>why</strong> (<em>str</em>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.common.repeated_configuration_containers.RepeatedConfigurationContainer.has_any_value">
+<span class="sig-name descname"><span class="pre">has_any_value</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/repeated_configuration_containers.html#RepeatedConfigurationContainer.has_any_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.repeated_configuration_containers.RepeatedConfigurationContainer.has_any_value" title="Link to this definition"></a></dt>
+<dd><p>Return True if any member of the section has value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>has_any_value</strong> – True, if no value in the container is set, False otherwise</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
 </dd>
 </dl>
 </dd></dl>
@@ -322,6 +441,11 @@ and all changed expert values.</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.common.repeated_configuration_containers.RepeatedConfigurationContainer.values_of">
 <span class="sig-name descname"><span class="pre">values_of</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/repeated_configuration_containers.html#RepeatedConfigurationContainer.values_of"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.repeated_configuration_containers.RepeatedConfigurationContainer.values_of" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ase2sprkkr.common.repeated_configuration_containers.RepeatedConfigurationContainer._abc_impl">
+<span class="sig-name descname"><span class="pre">_abc_impl</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;_abc._abc_data</span> <span class="pre">object&gt;</span></span><a class="headerlink" href="#ase2sprkkr.common.repeated_configuration_containers.RepeatedConfigurationContainer._abc_impl" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -333,7 +457,7 @@ and all changed expert values.</p></li>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="ase2sprkkr.common.repeated_configuration_containers.html" class="btn btn-neutral float-left" title="repeated_configuration_containers" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="ase2sprkkr.common.section_adaptors.html" class="btn btn-neutral float-right" title="section_adaptors" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="ase2sprkkr.common.repetition.html" class="btn btn-neutral float-right" title="repetition" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

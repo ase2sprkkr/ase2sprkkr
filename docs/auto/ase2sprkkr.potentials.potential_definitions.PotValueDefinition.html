@@ -17,8 +17,8 @@
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../_static/documentation_options.js?v=5929fcd5"></script>
-      <script src="../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -68,14 +68,18 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.promote_ase_atoms.html">promote_ase_atoms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.__getattr__.html">__getattr__</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.common.html">common</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration.html">configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration_migration.html">configuration_migration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration_yaml.html">configuration_yaml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.conftest.html">conftest</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.examples.html">examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.execution.html">execution</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.gui.html">gui</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.input_parameters.html">input_parameters</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.output_files.html">output_files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.outputs.html">outputs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.physics.html">physics</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="ase2sprkkr.potentials.html">potentials</a><ul class="current">
@@ -93,6 +97,8 @@
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.potentials.potentials.html">potentials</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.profiles.html">profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.result_files.html">result_files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.sprkkr.html">sprkkr</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.tools.html">tools</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.version.html">version</a></li>
@@ -131,17 +137,26 @@
 <h1>PotValueDefinition<a class="headerlink" href="#potvaluedefinition" title="Link to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="ase2sprkkr.potentials.potential_definitions.PotValueDefinition">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.potentials.potential_definitions.</span></span><span class="sig-name descname"><span class="pre">PotValueDefinition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_required</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/potentials/potential_definitions.html#PotValueDefinition"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.potentials.potential_definitions.PotValueDefinition" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.potentials.potential_definitions.</span></span><span class="sig-name descname"><span class="pre">PotValueDefinition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_required</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/potentials/potential_definitions.html#PotValueDefinition"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.potentials.potential_definitions.PotValueDefinition" title="Link to this definition"></a></dt>
 <dd><p>Definition of a configuration option in a potential</p>
 <p class="rubric">Class hierarchy</p>
-<div class="graphviz"><img src="../_images/inheritance-f3d2abac765a4f66fa32952ae4cdd32751d739e0.png" alt="Inheritance diagram of ase2sprkkr.potentials.potential_definitions.PotValueDefinition" usemap="#inheritancea7b675580f" class="inheritance graphviz" /></div>
-<map id="inheritancea7b675580f" name="inheritancea7b675580f">
-<area shape="rect" id="node1" href="ase2sprkkr.sprkkr.configuration.ConfigurationValueDefinition.html#ase2sprkkr.sprkkr.configuration.ConfigurationValueDefinition" target="_top" title="Definition o a configuration value, used in SPRKKR configuration file." alt="" coords="577,3,763,21"/>
-<area shape="rect" id="node5" href="#ase2sprkkr.potentials.potential_definitions.PotValueDefinition" target="_top" title="Definition of a configuration option in a potential" alt="" coords="782,3,957,21"/>
-<area shape="rect" id="node2" href="ase2sprkkr.common.value_definitions.ValueDefinition.html#ase2sprkkr.common.value_definitions.ValueDefinition" target="_top" title="value_definitions.ValueDefinition" alt="" coords="410,3,558,21"/>
-<area shape="rect" id="node3" href="ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.common.configuration_definitions.BaseDefinition" target="_top" title="This class is a member of definition of configuration, that can be both" alt="" coords="3,3,180,21"/>
-<area shape="rect" id="node4" href="ase2sprkkr.common.configuration_definitions.RealItemDefinition.html#ase2sprkkr.common.configuration_definitions.RealItemDefinition" target="_top" title="A base class for a configuration definition, either of an option, or of a container." alt="" coords="198,3,392,21"/>
-</map><div class="line-block">
+digraph inheritancea7b675580f {
+bgcolor=transparent;
+fontsize=14;
+rankdir=LR;
+ranksep=0.3;
+size=&quot;10.0, 10.0&quot;;
+  &quot;configuration.ConfigurationValueDefinition&quot; [URL=&quot;ase2sprkkr.sprkkr.configuration.ConfigurationValueDefinition.html#ase2sprkkr.sprkkr.configuration.ConfigurationValueDefinition&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;Definition o a configuration value, used in SPRKKR configuration file.&quot;];
+  &quot;value_definitions.ValueDefinition&quot; -&gt; &quot;configuration.ConfigurationValueDefinition&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;configuration_definitions.BaseDefinition&quot; [URL=&quot;ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.common.configuration_definitions.BaseDefinition&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;This class is a member of definition of configuration, that can be both&quot;];
+  &quot;configuration_definitions.RealItemDefinition&quot; [URL=&quot;ase2sprkkr.common.configuration_definitions.RealItemDefinition.html#ase2sprkkr.common.configuration_definitions.RealItemDefinition&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;A base class for a configuration definition, either of an option, or of a container.&quot;];
+  &quot;configuration_definitions.BaseDefinition&quot; -&gt; &quot;configuration_definitions.RealItemDefinition&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;potential_definitions.PotValueDefinition&quot; [URL=&quot;#ase2sprkkr.potentials.potential_definitions.PotValueDefinition&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;Definition of a configuration option in a potential&quot;];
+  &quot;configuration.ConfigurationValueDefinition&quot; -&gt; &quot;potential_definitions.PotValueDefinition&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;value_definitions.ValueDefinition&quot; [URL=&quot;ase2sprkkr.common.value_definitions.ValueDefinition.html#ase2sprkkr.common.value_definitions.ValueDefinition&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;];
+  &quot;configuration_definitions.RealItemDefinition&quot; -&gt; &quot;value_definitions.ValueDefinition&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+}
+<div class="line-block">
 <div class="line"><br /></div>
 </div>
 <p class="rubric">Constructor</p>
@@ -177,8 +192,10 @@ If None, set to False if the value is Generated.</p></li>
 <li><p><strong>is_optional</strong> (<em>bool</em><em> or </em><em>None</em>) – If True, the value can be omited, if fixed order in the section is required
 None means True just if required is False (or it is determined to be False),
 see the <code class="docutils literal notranslate"><span class="pre">required</span></code> parameter.</p></li>
-<li><p><strong>is_required</strong> (<em>bool</em><em> or </em><em>callable</em><em> or </em><em>str</em>) – <p>Required option can not be set to None (however, a required one
-can be still be optional, if it has a default values).
+<li><p><strong>is_required</strong> (<em>bool</em><em> or </em><em>callable</em><em> or </em><em>str</em>) – <p>Required options must have a value when parsing or saving (however,
+a required option can still be optional in the grammar if it has a
+default value). Callable requiredness is also checked while setting,
+so changing a selector cannot leave its dependent option invalid.
 If required = None, it is set to True if both the conditions are met:</p>
 <blockquote>
 <div><ul>
@@ -188,8 +205,8 @@ If required = None, it is set to True if both the conditions are met:</p>
 </div></blockquote>
 <p>If required is str, it means the same as True, the string will be
 used as error message.</p>
-<p>If it is callable, it is evaluated on demand, with the Option as the
-argument of the function.</p>
+<p>If it is callable, it is evaluated on demand with the Option as its
+argument. The runtime section is available as <code class="docutils literal notranslate"><span class="pre">option._container</span></code>.</p>
 </p></li>
 <li><p><strong>is_hidden</strong> (<em>bool</em>) – The value is hidden from the user (no container.name access to the value).</p></li>
 <li><p><strong>is_expert</strong> (<em>Union</em><em>[</em><em>bool</em><em>,</em><em>mixed</em><em>]</em>) – Expert values are somewhat hidden (e.g. listed at end) from the user.
@@ -198,17 +215,34 @@ default value.</p></li>
 <li><p><strong>is_repeated</strong> – Whether the value can apper more than once in the output. The result
 can be then (dense) array or (sparse) dict,
 see <code class="xref py py-class docutils literal notranslate"><span class="pre">ValueDefinition.Repeated</span></code>.</p></li>
-<li><p><strong>is_always_added</strong> – If False, add the value, only if its value is not the default value.
-Default None means False for expert values, True for the others.</p></li>
-<li><p><strong>name_in_grammar</strong> (<em>bool</em><em> or </em><em>None</em>) – The value in the conf file is prefixed by &lt;name&gt;&lt;name_value_delimiter&gt;
-If None, the default type value (type.name_in_grammar) is used</p></li>
-<li><p><strong>name_format</strong> (<em>str</em><em> or </em><em>None</em>) – The way how the name is written</p></li>
-<li><p><strong>expert</strong> (<em>Optional</em><em>[</em><em>mixed</em><em>]</em>) – If not None, set <code class="docutils literal notranslate"><span class="pre">is_expert</span></code> to True, <code class="docutils literal notranslate"><span class="pre">default_value</span></code> to the given value and
+<li><p><strong>repeated_delimiter</strong> (<a class="reference internal" href="ase2sprkkr.common.grammar_types.basic.string-instance.html#ase2sprkkr.common.grammar_types.basic.string" title="ase2sprkkr.common.grammar_types.basic.string"><em>string</em></a>) – The delimiter used between repeated instances of self, if not repeated_with_name</p></li>
+<li><p><strong>repeated_count</strong> (<a class="reference internal" href="ase2sprkkr.common.grammar_types.basic.string-instance.html#ase2sprkkr.common.grammar_types.basic.string" title="ase2sprkkr.common.grammar_types.basic.string"><em>string</em></a><em> or </em><em>int</em><em> or </em><em>callable</em>) – The number of repetitions. If string, the repetition is given from the parsed value at that exact
+path; <code class="docutils literal notranslate"><span class="pre">..</span></code> selects the parent section (for example <code class="docutils literal notranslate"><span class="pre">..NPAN</span></code>). If callable, the function is called
+on the values of the local options named by its parameters.</p></li>
+<li><p><strong>repeated_with_name</strong> (<em>bool</em>) – If True, the whole value-name pair is repeated</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="simple">
+<dt>is_always_added</dt><dd><p>If False, add the value, only if its value is not the default value.
+Default None means False for expert values, True for the others.</p>
+</dd>
+<dt>validators: callable or iterable of callables</dt><dd><p>Semantic validators receiving the option, its runtime section and
+validation reason.</p>
+</dd>
+<dt>name_in_grammar: bool or None</dt><dd><p>The value in the conf file is prefixed by &lt;name&gt;&lt;name_value_delimiter&gt;
+If None, the default type value (type.name_in_grammar) is used</p>
+</dd>
+<dt>name_format: str or None</dt><dd><p>The way how the name is written</p>
+</dd>
+<dt>expert: Optional[mixed]</dt><dd><p>If not None, set <code class="docutils literal notranslate"><span class="pre">is_expert</span></code> to True, <code class="docutils literal notranslate"><span class="pre">default_value</span></code> to the given value and
 <code class="docutils literal notranslate"><span class="pre">required</span></code> to False. Note, that also <code class="docutils literal notranslate"><span class="pre">type</span></code> can be determined from such given
-<code class="docutils literal notranslate"><span class="pre">default_value</span></code>.</p></li>
-<li><p><strong>write_condition</strong> – If defined, write the value, only if write_condition(the option) is True.</p></li>
-<li><p><strong>condition</strong> – <dl class="simple">
-<dt>If defined, the condition</dt><dd><ul>
+<code class="docutils literal notranslate"><span class="pre">default_value</span></code>.</p>
+</dd>
+<dt>write_condition</dt><dd><p>If defined, write the value, only if write_condition(the option) is True.</p>
+</dd>
+<dt>condition</dt><dd><dl class="simple">
+<dt>If defined, the condition</dt><dd><ul class="simple">
 <li><p>the condition.parse_condition() is invoked, when given grammar element
 should be parsed. If it is False, the element is skipped</p></li>
 <li><p>the condition() is invoked, when the elements of the container is listed
@@ -216,17 +250,17 @@ to hide the inactive members</p></li>
 </ul>
 </dd>
 </dl>
-</p></li>
-<li><p><strong>result_class</strong> – Redefine the class that holds data for this option/section</p></li>
-<li><p><strong>delimiter</strong> – If not None, use the specified name_value_delimiter instead of common one</p></li>
-</ul>
+</dd>
+<dt>result_class</dt><dd><p>Redefine the class that holds data for this option/section</p>
+</dd>
+<dt>delimiter</dt><dd><p>If not None, use the specified name_value_delimiter instead of common one</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="ase2sprkkr.potentials.potential_definitions.PotValueDefinition.grammar_of_delimiter">
-<span class="sig-name descname"><span class="pre">grammar_of_delimiter</span></span><a class="headerlink" href="#ase2sprkkr.potentials.potential_definitions.PotValueDefinition.grammar_of_delimiter" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="ase2sprkkr.potentials.potential_definitions.PotValueDefinition.delimiter">
+<span class="sig-name descname"><span class="pre">delimiter</span></span><a class="headerlink" href="#ase2sprkkr.potentials.potential_definitions.PotValueDefinition.delimiter" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>name</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em>)</p>
@@ -239,17 +273,12 @@ to hide the inactive members</p></li>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ase2sprkkr.potentials.potential_definitions.PotValueDefinition.prefix">
-<span class="sig-name descname"><span class="pre">prefix</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">''</span></em><a class="headerlink" href="#ase2sprkkr.potentials.potential_definitions.PotValueDefinition.prefix" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ase2sprkkr.potentials.potential_definitions.PotValueDefinition.name_value_delimiter">
-<span class="sig-name descname"><span class="pre">name_value_delimiter</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'\t'</span></em><a class="headerlink" href="#ase2sprkkr.potentials.potential_definitions.PotValueDefinition.name_value_delimiter" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">prefix</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">''</span></span><a class="headerlink" href="#ase2sprkkr.potentials.potential_definitions.PotValueDefinition.prefix" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ase2sprkkr.potentials.potential_definitions.PotValueDefinition.type_of_dangerous">
-<span class="sig-name descname"><span class="pre">type_of_dangerous</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;PotMixed&gt;</span></em><a class="headerlink" href="#ase2sprkkr.potentials.potential_definitions.PotValueDefinition.type_of_dangerous" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">type_of_dangerous</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;PotMixed&gt;</span></span><a class="headerlink" href="#ase2sprkkr.potentials.potential_definitions.PotValueDefinition.type_of_dangerous" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>

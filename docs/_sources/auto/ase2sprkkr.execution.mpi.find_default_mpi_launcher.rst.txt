@@ -1,0 +1,8 @@
+find\_default\_mpi\_launcher
+============================
+
+Full name: **ase2sprkkr.execution.mpi.find\_default\_mpi\_launcher**
+
+.. currentmodule:: ase2sprkkr.execution.mpi
+
+.. autofunction:: find_default_mpi_launcher

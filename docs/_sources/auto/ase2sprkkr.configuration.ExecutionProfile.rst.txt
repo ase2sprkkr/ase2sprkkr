@@ -1,0 +1,36 @@
+ExecutionProfile
+================
+
+
+.. currentmodule:: ase2sprkkr.configuration
+
+.. autoclass:: ExecutionProfile
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.configuration.ExecutionProfile
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

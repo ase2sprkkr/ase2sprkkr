@@ -16,8 +16,8 @@
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
-      <script src="../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
@@ -81,6 +81,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../ase2sprkkr.html">ase2sprkkr</a></li>
       <li class="breadcrumb-item active">ase2sprkkr.configuration</li>
       <li class="wy-breadcrumbs-aside">
       </li>
@@ -91,20 +92,17 @@
            <div itemprop="articleBody">
              
   <h1>Source code for ase2sprkkr.configuration</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;This module contains configuration, that could be changed, preferrably</span>
-<span class="sd">by .config/ase2sprkkr/__init__.py file&quot;&quot;&quot;</span>
+<span></span><span class="sd">"""ASE2SPRKKR user configuration."""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Union</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">.common.decorators</span><span class="w"> </span><span class="kn">import</span> <span class="n">cache</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Mapping</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.common.grammar_types</span><span class="w"> </span><span class="kn">import</span> <span class="n">CustomMixed</span><span class="p">,</span> <span class="n">AlwaysQString</span><span class="p">,</span> <span class="n">Array</span><span class="p">,</span> <span class="n">Bool</span><span class="p">,</span> <span class="n">Keyword</span><span class="p">,</span> <span class="n">Integer</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.common.container_definitions</span><span class="w"> </span><span class="kn">import</span> <span class="n">SectionDefinition</span><span class="p">,</span> <span class="n">ConfigurationRootDefinition</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">.common.configuration_containers</span><span class="w"> </span><span class="kn">import</span> <span class="n">RootConfigurationContainer</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.common.configuration_containers</span><span class="w"> </span><span class="kn">import</span> <span class="n">RootConfigurationContainer</span><span class="p">,</span> <span class="n">Section</span> <span class="k">as</span> <span class="n">ConfigurationSection</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.common.value_definitions</span><span class="w"> </span><span class="kn">import</span> <span class="n">ValueDefinition</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.common.generated_configuration_definitions</span><span class="w"> </span><span class="kn">import</span> <span class="n">GeneratedValueDefinition</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.common.options</span><span class="w"> </span><span class="kn">import</span> <span class="n">Option</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">shutil</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.profiles</span><span class="w"> </span><span class="kn">import</span> <span class="n">ProfilesConfigurationContainer</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">platformdirs</span>
 
 
@@ -116,118 +114,200 @@
 
 
 
+<div class="viewcode-block" id="ExecutionProfile">
+<a class="viewcode-back" href="../../auto/ase2sprkkr.configuration.ExecutionProfile.html#ase2sprkkr.configuration.ExecutionProfile">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ExecutionProfile</span><span class="p">(</span><span class="n">ConfigurationSection</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Mutable named execution profile stored in ASE2SPRKKR configuration."""</span>
+
+    <span class="n">read_only</span> <span class="o">=</span> <span class="kc">False</span></div>
+
+
+
+<div class="viewcode-block" id="ProfilesSection">
+<a class="viewcode-back" href="../../auto/ase2sprkkr.configuration.ProfilesSection.html#ase2sprkkr.configuration.ProfilesSection">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ProfilesSection</span><span class="p">(</span><span class="n">Section</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Definition of the dict-like named execution-profile section."""</span>
+
+    <span class="n">result_class</span> <span class="o">=</span> <span class="n">ExecutionProfile</span>
+    <span class="n">repeated_class</span> <span class="o">=</span> <span class="n">ProfilesConfigurationContainer</span></div>
+
+
+
 <div class="viewcode-block" id="_get_suffix">
 <a class="viewcode-back" href="../../auto/ase2sprkkr.configuration._get_suffix.html#ase2sprkkr.configuration._get_suffix">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">_get_suffix</span><span class="p">(</span><span class="o">*</span><span class="n">_</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;SPRKKR_EXECUTABLE_SUFFIX&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"SPRKKR_EXECUTABLE_SUFFIX"</span><span class="p">,</span> <span class="s2">""</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="_legacy_value">
+<a class="viewcode-back" href="../../auto/ase2sprkkr.configuration._legacy_value.html#ase2sprkkr.configuration._legacy_value">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_legacy_value</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">section</span><span class="o">.</span><span class="n">_container</span><span class="o">.</span><span class="n">profiles</span><span class="o">.</span><span class="n">legacy_value</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">default</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="_set_legacy_value">
+<a class="viewcode-back" href="../../auto/ase2sprkkr.configuration._set_legacy_value.html#ase2sprkkr.configuration._set_legacy_value">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_set_legacy_value</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+    <span class="n">section</span><span class="o">.</span><span class="n">_container</span><span class="o">.</span><span class="n">profiles</span><span class="o">.</span><span class="n">_set_legacy_value</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="_legacy_mpi">
+<a class="viewcode-back" href="../../auto/ase2sprkkr.configuration._legacy_mpi.html#ase2sprkkr.configuration._legacy_mpi">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_legacy_mpi</span><span class="p">(</span><span class="n">section</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">_legacy_value</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s2">"mpi"</span><span class="p">,</span> <span class="s2">"auto"</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="_set_legacy_mpi">
+<a class="viewcode-back" href="../../auto/ase2sprkkr.configuration._set_legacy_mpi.html#ase2sprkkr.configuration._set_legacy_mpi">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_set_legacy_mpi</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+    <span class="n">_set_legacy_value</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="s2">"mpi"</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="_legacy_mpi_warning">
+<a class="viewcode-back" href="../../auto/ase2sprkkr.configuration._legacy_mpi_warning.html#ase2sprkkr.configuration._legacy_mpi_warning">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_legacy_mpi_warning</span><span class="p">(</span><span class="n">section</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">_legacy_value</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s2">"mpi_warning"</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="_set_legacy_mpi_warning">
+<a class="viewcode-back" href="../../auto/ase2sprkkr.configuration._set_legacy_mpi_warning.html#ase2sprkkr.configuration._set_legacy_mpi_warning">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_set_legacy_mpi_warning</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+    <span class="n">_set_legacy_value</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="s2">"mpi_warning"</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="_legacy_executable_dir">
+<a class="viewcode-back" href="../../auto/ase2sprkkr.configuration._legacy_executable_dir.html#ase2sprkkr.configuration._legacy_executable_dir">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_legacy_executable_dir</span><span class="p">(</span><span class="n">section</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">_legacy_value</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s2">"executable_dir"</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="_set_legacy_executable_dir">
+<a class="viewcode-back" href="../../auto/ase2sprkkr.configuration._set_legacy_executable_dir.html#ase2sprkkr.configuration._set_legacy_executable_dir">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_set_legacy_executable_dir</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+    <span class="n">_set_legacy_value</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="s2">"executable_dir"</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="_legacy_executable_suffix">
+<a class="viewcode-back" href="../../auto/ase2sprkkr.configuration._legacy_executable_suffix.html#ase2sprkkr.configuration._legacy_executable_suffix">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_legacy_executable_suffix</span><span class="p">(</span><span class="n">section</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">_legacy_value</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s2">"executable_suffix"</span><span class="p">,</span> <span class="n">_get_suffix</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="_set_legacy_executable_suffix">
+<a class="viewcode-back" href="../../auto/ase2sprkkr.configuration._set_legacy_executable_suffix.html#ase2sprkkr.configuration._set_legacy_executable_suffix">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_set_legacy_executable_suffix</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+    <span class="n">_set_legacy_value</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="s2">"executable_suffix"</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="user_preferences_directory">
+<a class="viewcode-back" href="../../auto/ase2sprkkr.configuration.user_preferences_directory.html#ase2sprkkr.configuration.user_preferences_directory">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">user_preferences_directory</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">"""Return the ASE2SPRKKR user configuration directory."""</span>
+    <span class="k">return</span> <span class="n">platformdirs</span><span class="o">.</span><span class="n">user_config_dir</span><span class="p">(</span><span class="s2">"ase2sprkkr"</span><span class="p">,</span> <span class="s2">"ase2sprkkr"</span><span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="user_preferences_file">
 <a class="viewcode-back" href="../../auto/ase2sprkkr.configuration.user_preferences_file.html#ase2sprkkr.configuration.user_preferences_file">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">user_preferences_file</span><span class="p">():</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return filename with user preferences&quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">platformdirs</span><span class="o">.</span><span class="n">user_config_dir</span><span class="p">(</span><span class="s2">&quot;ase2sprkkr&quot;</span><span class="p">,</span> <span class="s2">&quot;ase2sprkkr&quot;</span><span class="p">),</span> <span class="s2">&quot;__init__.py&quot;</span><span class="p">)</span></div>
+<span class="w">    </span><span class="sd">"""Return the preferred YAML user configuration filename."""</span>
+    <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">user_preferences_directory</span><span class="p">(),</span> <span class="s2">"config.yaml"</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="legacy_user_preferences_file">
+<a class="viewcode-back" href="../../auto/ase2sprkkr.configuration.legacy_user_preferences_file.html#ase2sprkkr.configuration.legacy_user_preferences_file">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">legacy_user_preferences_file</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">"""Return the optional Python user-configuration hook filename."""</span>
+    <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">user_preferences_directory</span><span class="p">(),</span> <span class="s2">"__init__.py"</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="_load_legacy_user_preferences">
+<a class="viewcode-back" href="../../auto/ase2sprkkr.configuration._load_legacy_user_preferences.html#ase2sprkkr.configuration._load_legacy_user_preferences">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_load_legacy_user_preferences</span><span class="p">(</span><span class="n">file</span><span class="p">):</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">types</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">importlib.machinery</span>
+
+    <span class="n">loader</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">machinery</span><span class="o">.</span><span class="n">SourceFileLoader</span><span class="p">(</span><span class="s2">"ase2sprkkr.personal"</span><span class="p">,</span> <span class="n">file</span><span class="p">)</span>
+    <span class="n">mod</span> <span class="o">=</span> <span class="n">types</span><span class="o">.</span><span class="n">ModuleType</span><span class="p">(</span><span class="n">loader</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+    <span class="n">mod</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">config</span>
+    <span class="n">loader</span><span class="o">.</span><span class="n">exec_module</span><span class="p">(</span><span class="n">mod</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="_profile_overlay_values">
+<a class="viewcode-back" href="../../auto/ase2sprkkr.configuration._profile_overlay_values.html#ase2sprkkr.configuration._profile_overlay_values">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_profile_overlay_values</span><span class="p">(</span><span class="n">yaml_file</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Return profile values from the Python hook not overridden by YAML."""</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">.configuration_yaml</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_yaml_document</span>
+
+    <span class="n">python_profiles</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="n">name</span><span class="p">:</span> <span class="n">profile</span><span class="o">.</span><span class="n">as_dict</span><span class="p">(</span><span class="n">only_changed</span><span class="o">=</span><span class="s2">"explicit"</span><span class="p">,</span> <span class="n">generated</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="ow">or</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">profile</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">profiles</span><span class="o">.</span><span class="n">_raw_items</span><span class="p">()</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">python_profiles</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{}</span>
+
+    <span class="n">document</span> <span class="o">=</span> <span class="n">load_yaml_document</span><span class="p">(</span><span class="n">yaml_file</span><span class="p">)</span>
+    <span class="n">yaml_profiles</span> <span class="o">=</span> <span class="n">document</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"profiles"</span><span class="p">,</span> <span class="p">{})</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">yaml_profiles</span><span class="p">,</span> <span class="n">Mapping</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">{}</span>
+
+    <span class="n">overlay</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">values</span> <span class="ow">in</span> <span class="n">python_profiles</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">yaml_profiles</span><span class="p">:</span>
+            <span class="n">overlay</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">values</span>
+            <span class="k">continue</span>
+        <span class="n">yaml_values</span> <span class="o">=</span> <span class="n">yaml_profiles</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">yaml_values</span><span class="p">,</span> <span class="n">Mapping</span><span class="p">):</span>
+            <span class="k">continue</span>
+        <span class="n">missing</span> <span class="o">=</span> <span class="p">{</span><span class="n">key</span><span class="p">:</span> <span class="n">value</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">values</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">yaml_values</span><span class="p">}</span>
+        <span class="k">if</span> <span class="n">missing</span><span class="p">:</span>
+            <span class="n">overlay</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">missing</span>
+    <span class="k">return</span> <span class="n">overlay</span></div>
 
 
 
 <div class="viewcode-block" id="load_user_preferences">
 <a class="viewcode-back" href="../../auto/ase2sprkkr.configuration.load_user_preferences.html#ase2sprkkr.configuration.load_user_preferences">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">load_user_preferences</span><span class="p">():</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Load user defined preferences from</span>
-<span class="sd">    ``$HOME/.config/ase2sprkkr/__init__.py``</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">file</span> <span class="o">=</span> <span class="n">user_preferences_file</span><span class="p">()</span>
+<span class="w">    </span><span class="sd">"""Load the Python hook and then overlay ``config.yaml`` if present.</span>
 
-    <span class="k">try</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">file</span><span class="p">):</span>
-            <span class="kn">import</span><span class="w"> </span><span class="nn">types</span>
-            <span class="kn">import</span><span class="w"> </span><span class="nn">importlib.machinery</span>
+<span class="sd">    Expected invalid YAML values are handled by ``load_configuration_yaml`` at</span>
+<span class="sd">    the narrow boundary where they can be recovered safely. Unexpected loader</span>
+<span class="sd">    and Python-hook exceptions deliberately propagate instead of silently</span>
+<span class="sd">    falling back to a partially/default configured process.</span>
+<span class="sd">    """</span>
+    <span class="n">yaml_file</span> <span class="o">=</span> <span class="n">user_preferences_file</span><span class="p">()</span>
+    <span class="n">legacy_file</span> <span class="o">=</span> <span class="n">legacy_user_preferences_file</span><span class="p">()</span>
 
-            <span class="n">loader</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">machinery</span><span class="o">.</span><span class="n">SourceFileLoader</span><span class="p">(</span><span class="s2">&quot;ase2sprkkr.personal&quot;</span><span class="p">,</span> <span class="n">file</span><span class="p">)</span>
-            <span class="n">mod</span> <span class="o">=</span> <span class="n">types</span><span class="o">.</span><span class="n">ModuleType</span><span class="p">(</span><span class="n">loader</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
-            <span class="n">loader</span><span class="o">.</span><span class="n">exec_module</span><span class="p">(</span><span class="n">mod</span><span class="p">)</span>
-    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-        <span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">legacy_file</span><span class="p">):</span>
+        <span class="n">_load_legacy_user_preferences</span><span class="p">(</span><span class="n">legacy_file</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">yaml_file</span><span class="p">):</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">.configuration_yaml</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_configuration_yaml</span>
 
-        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Can not import </span><span class="si">{</span><span class="n">file</span><span class="si">}</span><span class="s2"> file with the user preferences: </span><span class="se">\n</span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
-
-
-
-<div class="viewcode-block" id="find_default_mpi_runner">
-<a class="viewcode-back" href="../../auto/ase2sprkkr.configuration.find_default_mpi_runner.html#ase2sprkkr.configuration.find_default_mpi_runner">[docs]</a>
-<span class="nd">@cache</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">find_default_mpi_runner</span><span class="p">():</span>
-    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;SLURM_NODELIST&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">shutil</span><span class="o">.</span><span class="n">which</span><span class="p">(</span><span class="s2">&quot;srun&quot;</span><span class="p">):</span>
-        <span class="k">return</span> <span class="p">[</span><span class="s2">&quot;srun&quot;</span><span class="p">]</span>
-    <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;mpirun&quot;</span><span class="p">,</span> <span class="s2">&quot;mpirun.opmpirun&quot;</span><span class="p">,</span> <span class="s2">&quot;mpirun.mpich&quot;</span><span class="p">,</span> <span class="s2">&quot;mpiexec&quot;</span><span class="p">]:</span>
-        <span class="k">if</span> <span class="n">shutil</span><span class="o">.</span><span class="n">which</span><span class="p">(</span><span class="n">r</span><span class="p">):</span>
-            <span class="k">return</span> <span class="p">[</span><span class="n">r</span><span class="p">]</span>
-    <span class="k">return</span> <span class="kc">False</span></div>
-
-
-
-<div class="viewcode-block" id="get_default_mpi_runner">
-<a class="viewcode-back" href="../../auto/ase2sprkkr.configuration.get_default_mpi_runner.html#ase2sprkkr.configuration.get_default_mpi_runner">[docs]</a>
-<span class="nd">@cache</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">get_default_mpi_runner</span><span class="p">():</span>
-
-    <span class="n">out</span> <span class="o">=</span> <span class="n">find_default_mpi_runner</span><span class="p">()</span>
-    <span class="k">if</span> <span class="n">out</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">out</span>
-    <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">mpi_warning</span><span class="p">():</span>
-        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;No MPI runner found. Disabling MPI!!!&quot;</span><span class="p">)</span></div>
-
-
-
-<div class="viewcode-block" id="mpi_runner">
-<a class="viewcode-back" href="../../auto/ase2sprkkr.configuration.mpi_runner.html#ase2sprkkr.configuration.mpi_runner">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">mpi_runner</span><span class="p">(</span><span class="n">mpi</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a shell command to execute a mpi task.</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    mpi_runner: Union[bool,str,list,int]</span>
-
-
-<span class="sd">      - If True is given, return the default mpi-runner</span>
-<span class="sd">      - If False is given, no mpi-runner is returned.</span>
-<span class="sd">      - If &#39;auto&#39; is given, it is the same as True, however</span>
-<span class="sd">           * no warning is given if no mpi is found</span>
-<span class="sd">           * MPI is not used, if only one CPU is available</span>
-<span class="sd">      - If a string is given, it is interpreted as a list of one item</span>
-<span class="sd">      - If a list (of strings) is given, the user specified its own runner, use it as is</span>
-<span class="sd">        as the parameters for subprocess.run.</span>
-<span class="sd">      - If an integer is given, it is interpreted as the number of</span>
-<span class="sd">        processes: the default mpi-runner is used, and the parameters</span>
-<span class="sd">        to specify the number of processes.</span>
-
-<span class="sd">    Return</span>
-<span class="sd">    ------</span>
-<span class="sd">    mpi_runner: list</span>
-<span class="sd">      List of strings with the executable and its parameters, e.g.</span>
-
-<span class="sd">      ::</span>
-
-<span class="sd">          [&quot;mpirun&quot;, &quot;-np&quot;, &quot;4&quot;]</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">mpi</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">mpi</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">running</span><span class="o">.</span><span class="n">mpi</span><span class="p">()</span>
-    <span class="k">if</span> <span class="n">mpi</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
-        <span class="k">return</span> <span class="kc">None</span>
-    <span class="k">if</span> <span class="n">mpi</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
-        <span class="n">mpi</span> <span class="o">=</span> <span class="n">find_default_mpi_runner</span><span class="p">()</span>
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">mpi</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">mpi</span>
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">mpi</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">mpi</span> <span class="o">==</span> <span class="s2">&quot;auto&quot;</span><span class="p">:</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">os</span><span class="p">,</span> <span class="s2">&quot;sched_getaffinity&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">sched_getaffinity</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-                <span class="k">return</span> <span class="kc">None</span>
-            <span class="k">return</span> <span class="n">find_default_mpi_runner</span><span class="p">()</span>
-        <span class="k">return</span> <span class="p">[</span><span class="n">mpi</span><span class="p">]</span>
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">mpi</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">find_default_mpi_runner</span><span class="p">()</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;-np&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">mpi</span><span class="p">)]</span>
-    <span class="k">return</span> <span class="n">mpi</span></div>
+        <span class="n">overlay</span> <span class="o">=</span> <span class="n">_profile_overlay_values</span><span class="p">(</span><span class="n">yaml_file</span><span class="p">)</span>
+        <span class="n">load_configuration_yaml</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">yaml_file</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">overlay</span><span class="p">:</span>
+            <span class="k">with</span> <span class="n">config</span><span class="o">.</span><span class="n">profiles</span><span class="o">.</span><span class="n">_mutation</span><span class="p">(</span><span class="s2">"set"</span><span class="p">)</span> <span class="k">as</span> <span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">_policy</span><span class="p">):</span>
+                <span class="n">config</span><span class="o">.</span><span class="n">profiles</span><span class="o">.</span><span class="n">_stage_persisted</span><span class="p">(</span>
+                    <span class="n">transaction</span><span class="p">,</span>
+                    <span class="n">overlay</span><span class="p">,</span>
+                    <span class="n">unknown</span><span class="o">=</span><span class="s2">"fail"</span><span class="p">,</span>
+                    <span class="n">merge</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="p">)</span></div>
 
 
 
@@ -237,80 +317,18 @@
 <div class="viewcode-block" id="Configuration._generic_info">
 <a class="viewcode-back" href="../../auto/ase2sprkkr.configuration.Configuration.html#ase2sprkkr.configuration.Configuration._generic_info">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">_generic_info</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s2">&quot;ASE2SPRKKR Configuration&quot;</span></div>
+        <span class="k">return</span> <span class="s2">"ASE2SPRKKR Configuration"</span></div>
 
 
-<div class="viewcode-block" id="Configuration.store_value_permanent">
-<a class="viewcode-back" href="../../auto/ase2sprkkr.configuration.Configuration.html#ase2sprkkr.configuration.Configuration.store_value_permanent">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">store_value_permanent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">doc</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">doc_regex</span><span class="p">:</span> <span class="nb">bool</span> <span class="ow">or</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Set/remove permanently the value with given name in the config file.</span>
-<span class="sd">        No name/value checking. If the value is present, it is</span>
-<span class="sd">        changed, otherwise, new line with setting the value is added to the file.</span>
-<span class="sd">        If the value is to be removed, all the lines value = .... will be removed</span>
-<span class="sd">        from the config file.</span>
+<div class="viewcode-block" id="Configuration.save_user_preferences">
+<a class="viewcode-back" href="../../auto/ase2sprkkr.configuration.Configuration.html#ase2sprkkr.configuration.Configuration.save_user_preferences">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">save_user_preferences</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Persist explicit configuration values to the YAML user config."""</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">.configuration_yaml</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_yaml_document</span><span class="p">,</span> <span class="n">save_configuration_yaml</span>
 
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        name</span>
-<span class="sd">          Name of the value</span>
-
-<span class="sd">        value</span>
-<span class="sd">          Value to be set</span>
-
-<span class="sd">        doc</span>
-<span class="sd">          If it is not None:</span>
-<span class="sd">           - if the value is to be removed and it is preceeded by the line containing the given</span>
-<span class="sd">             docstring, prefixed by &#39; # &#39;, the preceding line with docstring is removed as well.</span>
-<span class="sd">           - if the value is to be added, the docstring is added before the value as well.</span>
-
-<span class="sd">        doc_regex</span>
-<span class="sd">          If True, the doc parameter can be given as regular expression.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">global</span> <span class="n">user_preference_file</span>
         <span class="n">file</span> <span class="o">=</span> <span class="n">user_preferences_file</span><span class="p">()</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">file</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Please, generate the user prefernce file using &#39;ase2sprkkr config -d&#39; first.&quot;</span><span class="p">)</span>
-
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="s2">&quot;r+&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-            <span class="n">content</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
-            <span class="n">pattern</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;(#?</span><span class="se">\\</span><span class="s2">s*)*config.</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="se">\\</span><span class="s2">s+=&quot;</span>
-            <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">line</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-                <span class="n">cnt</span> <span class="o">=</span> <span class="mi">0</span>
-                <span class="n">last</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-                <span class="k">if</span> <span class="n">doc</span><span class="p">:</span>
-                    <span class="k">if</span> <span class="ow">not</span> <span class="n">doc_regex</span><span class="p">:</span>
-                        <span class="n">pre</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="n">doc</span><span class="p">)</span>
-                    <span class="k">else</span><span class="p">:</span>
-                        <span class="n">pre</span> <span class="o">=</span> <span class="n">doc</span>
-                    <span class="n">pre</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;(?:(?:^|</span><span class="se">\n</span><span class="s2">)# </span><span class="si">{</span><span class="n">pre</span><span class="si">}</span><span class="s2"> *)?&quot;</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="n">pre</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">line</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;config.</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> = </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
-                <span class="n">cnt</span> <span class="o">=</span> <span class="mi">1</span>
-                <span class="n">pre</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-                <span class="n">last</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;(?!(.*</span><span class="se">\n</span><span class="s2">)*</span><span class="si">{</span><span class="n">pattern</span><span class="si">}</span><span class="s2">)&quot;</span>
-            <span class="n">content</span><span class="p">,</span> <span class="n">replaced</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">subn</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">pre</span><span class="si">}</span><span class="s2">(^|</span><span class="se">\n</span><span class="s2">)</span><span class="si">{</span><span class="n">pattern</span><span class="si">}</span><span class="s2">[^</span><span class="se">\n</span><span class="s2">]*(</span><span class="se">\n</span><span class="s2">|$)</span><span class="si">{</span><span class="n">last</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;\1&quot;</span> <span class="o">+</span> <span class="n">line</span><span class="p">,</span> <span class="n">content</span><span class="p">,</span> <span class="n">cnt</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">replaced</span><span class="p">:</span>
-                <span class="n">f</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
-            <span class="k">elif</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="k">return</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">i</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">content</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
-                <span class="k">while</span> <span class="n">i</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
-                    <span class="k">if</span> <span class="n">content</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;</span><span class="se">\r</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">):</span>
-                        <span class="k">break</span>
-                    <span class="n">i</span> <span class="o">-=</span> <span class="mi">1</span>
-                <span class="n">f</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
-                <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">)</span>
-                <span class="k">if</span> <span class="n">doc</span><span class="p">:</span>
-                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;# </span><span class="si">{</span><span class="n">doc</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
-                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
-            <span class="n">f</span><span class="o">.</span><span class="n">truncate</span><span class="p">()</span></div>
+        <span class="n">document</span> <span class="o">=</span> <span class="n">load_yaml_document</span><span class="p">(</span><span class="n">file</span><span class="p">)</span> <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">file</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="n">save_configuration_yaml</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">,</span> <span class="n">document</span><span class="p">)</span></div>
 </div>
 
 
@@ -320,28 +338,25 @@
 <span class="k">class</span><span class="w"> </span><span class="nc">ConfigurationOption</span><span class="p">(</span><span class="n">Option</span><span class="p">):</span>
 <div class="viewcode-block" id="ConfigurationOption.set_permanent">
 <a class="viewcode-back" href="../../auto/ase2sprkkr.configuration.ConfigurationOption.html#ase2sprkkr.configuration.ConfigurationOption.set_permanent">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">set_permanent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">doc</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">doc_regex</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the value and store it in the config file</span>
-
-<span class="sd">        See :meth:`Configuration.store_value_permament` for the meaning of the parameters</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_permanent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">doc</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">doc_regex</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Set the value and persist the complete user configuration."""</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">store_permanent</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="ConfigurationOption.store_permanent">
 <a class="viewcode-back" href="../../auto/ase2sprkkr.configuration.ConfigurationOption.html#ase2sprkkr.configuration.ConfigurationOption.store_permanent">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">store_permanent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">doc</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">doc_regex</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Store the actual value in the config file</span>
-
-<span class="sd">        See :meth:`Configuration.store_value_permament` for the meaning of the parameters</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">val</span> <span class="o">=</span> <span class="bp">self</span><span class="p">()</span>
-        <span class="k">if</span> <span class="n">val</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">string</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
-        <span class="n">config</span><span class="o">.</span><span class="n">store_value_permanent</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_path</span><span class="p">(),</span> <span class="n">val</span><span class="p">)</span></div>
+    <span class="k">def</span><span class="w"> </span><span class="nf">store_permanent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">doc</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">doc_regex</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Persist the current configuration to the YAML user config."""</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_get_root_container</span><span class="p">()</span><span class="o">.</span><span class="n">save_user_preferences</span><span class="p">()</span></div>
 </div>
+
+
+
+<div class="viewcode-block" id="GeneratedConfigurationOption">
+<a class="viewcode-back" href="../../auto/ase2sprkkr.configuration.GeneratedConfigurationOption.html#ase2sprkkr.configuration.GeneratedConfigurationOption">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">GeneratedConfigurationOption</span><span class="p">(</span><span class="n">ConfigurationOption</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Configuration option whose value is backed by another config object."""</span></div>
 
 
 
@@ -349,6 +364,13 @@
 <a class="viewcode-back" href="../../auto/ase2sprkkr.configuration.ConfigValueDefinition.html#ase2sprkkr.configuration.ConfigValueDefinition">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">ConfigValueDefinition</span><span class="p">(</span><span class="n">ValueDefinition</span><span class="p">):</span>
     <span class="n">result_class</span> <span class="o">=</span> <span class="n">ConfigurationOption</span></div>
+
+
+
+<div class="viewcode-block" id="GeneratedConfigValueDefinition">
+<a class="viewcode-back" href="../../auto/ase2sprkkr.configuration.GeneratedConfigValueDefinition.html#ase2sprkkr.configuration.GeneratedConfigValueDefinition">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">GeneratedConfigValueDefinition</span><span class="p">(</span><span class="n">GeneratedValueDefinition</span><span class="p">):</span>
+    <span class="n">result_class</span> <span class="o">=</span> <span class="n">GeneratedConfigurationOption</span></div>
 
 
 
@@ -361,72 +383,200 @@
 
 
 <span class="n">V</span> <span class="o">=</span> <span class="n">ConfigValueDefinition</span>
+<span class="n">G</span> <span class="o">=</span> <span class="n">GeneratedConfigValueDefinition</span>
+<span class="n">MPI</span> <span class="o">=</span> <span class="n">CustomMixed</span><span class="p">(</span>
+    <span class="p">(</span><span class="n">Bool</span><span class="o">.</span><span class="n">I</span><span class="p">,</span> <span class="n">Integer</span><span class="o">.</span><span class="n">I</span><span class="p">,</span> <span class="n">Array</span><span class="p">(</span><span class="n">AlwaysQString</span><span class="o">.</span><span class="n">I</span><span class="p">),</span> <span class="n">AlwaysQString</span><span class="o">.</span><span class="n">I</span><span class="p">),</span>
+    <span class="n">string_type</span><span class="o">=</span><span class="n">AlwaysQString</span><span class="o">.</span><span class="n">I</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">SYNC_POLICY</span> <span class="o">=</span> <span class="n">Keyword</span><span class="p">(</span>
+    <span class="p">{</span>
+        <span class="s2">"changed"</span><span class="p">:</span> <span class="s2">"Transfer files only when their content differs."</span><span class="p">,</span>
+        <span class="s2">"always"</span><span class="p">:</span> <span class="s2">"Always transfer files."</span><span class="p">,</span>
+        <span class="s2">"missing"</span><span class="p">:</span> <span class="s2">"Transfer files only when the destination is missing."</span><span class="p">,</span>
+        <span class="s2">"never"</span><span class="p">:</span> <span class="s2">"Never transfer files."</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="n">transform</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">EXECUTOR</span> <span class="o">=</span> <span class="n">Keyword</span><span class="p">(</span>
+    <span class="p">{</span>
+        <span class="s2">"local"</span><span class="p">:</span> <span class="s2">"Run directly on this machine."</span><span class="p">,</span>
+        <span class="s2">"ssh"</span><span class="p">:</span> <span class="s2">"Run through ASE2SPRKKR on a machine reached by SSH."</span><span class="p">,</span>
+        <span class="s2">"psij"</span><span class="p">:</span> <span class="s2">"Submit through a PSI/J scheduler backend."</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="n">transform</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span>
 
-<span class="sd">&quot;&quot;&quot; The definition of ASE2SPRKKR configuration &quot;&quot;&quot;</span>
+<span class="sd">""" The definition of ASE2SPRKKR configuration """</span>
 <span class="n">definition</span> <span class="o">=</span> <span class="n">ConfigFileDefinition</span><span class="p">(</span>
-    <span class="s2">&quot;config&quot;</span><span class="p">,</span>
+    <span class="s2">"config"</span><span class="p">,</span>
     <span class="p">[</span>
-        <span class="n">Section</span><span class="p">(</span>
-            <span class="s2">&quot;running&quot;</span><span class="p">,</span>
+        <span class="n">V</span><span class="p">(</span>
+            <span class="s2">"default_profile"</span><span class="p">,</span>
+            <span class="n">AlwaysQString</span><span class="o">.</span><span class="n">I</span><span class="p">,</span>
+            <span class="n">is_optional</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">info</span><span class="o">=</span><span class="s2">"Explicit default execution profile. If unset, ASE and legacy profiles may be used as fallbacks."</span><span class="p">,</span>
+        <span class="p">),</span>
+        <span class="n">ProfilesSection</span><span class="p">(</span>
+            <span class="s2">"profiles"</span><span class="p">,</span>
             <span class="p">[</span>
                 <span class="n">V</span><span class="p">(</span>
-                    <span class="s2">&quot;empty_spheres&quot;</span><span class="p">,</span>
-                    <span class="n">Keyword</span><span class="p">(</span>
-                        <span class="p">{</span>
-                            <span class="kc">True</span><span class="p">:</span> <span class="s2">&quot;Always do empty spheres finding.&quot;</span><span class="p">,</span>
-                            <span class="kc">False</span><span class="p">:</span> <span class="s2">&quot;Newer do empty spheres finding.&quot;</span><span class="p">,</span>
-                            <span class="s2">&quot;auto&quot;</span><span class="p">:</span> <span class="s2">&quot;Do empty spheres finding for unconverged potential not containing any vaccuum atom.&quot;</span><span class="p">,</span>
-                        <span class="p">},</span>
-                        <span class="n">transform</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                        <span class="n">quote</span><span class="o">=</span><span class="s1">&#39;&quot;&#39;</span><span class="p">,</span>
-                    <span class="p">),</span>
-                    <span class="n">default_value</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span>
-                    <span class="n">info</span><span class="o">=</span><span class="s2">&quot;Run empty spheres finding before calculation? Default value ``auto`` means only for SCF calculations not containing any vacuum atom.&quot;</span><span class="p">,</span>
-                <span class="p">),</span>
-                <span class="n">V</span><span class="p">(</span>
-                    <span class="s2">&quot;print_output&quot;</span><span class="p">,</span>
-                    <span class="n">Keyword</span><span class="p">(</span>
-                        <span class="p">{</span>
-                            <span class="kc">True</span><span class="p">:</span> <span class="s2">&quot;Print all output of SPRKKR executables to screen.&quot;</span><span class="p">,</span>
-                            <span class="kc">False</span><span class="p">:</span> <span class="s2">&quot;Do not print any output of SPRKKR executables.&quot;</span><span class="p">,</span>
-                            <span class="s2">&quot;info&quot;</span><span class="p">:</span> <span class="s2">&quot;Print only brief information about iterations of SCF cycle.&quot;</span><span class="p">,</span>
-                        <span class="p">},</span>
-                        <span class="n">transform</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                        <span class="n">quote</span><span class="o">=</span><span class="s1">&#39;&quot;&#39;</span><span class="p">,</span>
-                    <span class="p">),</span>
-                    <span class="n">default_value</span><span class="o">=</span><span class="s2">&quot;info&quot;</span><span class="p">,</span>
-                    <span class="n">info</span><span class="o">=</span><span class="s2">&quot;Print output of SPRKKR calculation. Default value ``info`` prints only short info each iteration.&quot;</span><span class="p">,</span>
-                <span class="p">),</span>
-                <span class="n">V</span><span class="p">(</span>
-                    <span class="s2">&quot;mpi&quot;</span><span class="p">,</span>
-                    <span class="n">CustomMixed</span><span class="p">(</span><span class="n">Bool</span><span class="p">,</span> <span class="n">Array</span><span class="p">(</span><span class="n">AlwaysQString</span><span class="o">.</span><span class="n">I</span><span class="p">),</span> <span class="n">Integer</span><span class="o">.</span><span class="n">I</span><span class="p">),</span>
+                    <span class="s2">"mpi"</span><span class="p">,</span>
+                    <span class="n">MPI</span><span class="p">,</span>
+                    <span class="n">default_value</span><span class="o">=</span><span class="s2">"auto"</span><span class="p">,</span>
                     <span class="n">is_optional</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                    <span class="n">default_value</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                    <span class="n">info</span><span class="o">=</span><span class="s1">&#39;Use mpi for calculation? List of strings means yes, use the given strings as mpi runner and its params (e.g. [ &quot;mpirun&quot;, &quot;-n&quot;, &quot;4&quot; ]). Default None means try to autodetect. Integer number means use the standard runner with a given number of processes.&#39;</span><span class="p">,</span>
+                    <span class="n">info</span><span class="o">=</span><span class="s1">'MPI runner for this profile. Defaults to "auto" and accepts the same values as the legacy running.mpi option.'</span><span class="p">,</span>
                 <span class="p">),</span>
-                <span class="n">V</span><span class="p">(</span><span class="s2">&quot;mpi_warning&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s2">&quot;Warn, if no MPI is found.&quot;</span><span class="p">),</span>
+                <span class="n">V</span><span class="p">(</span>
+                    <span class="s2">"mpi_warning"</span><span class="p">,</span>
+                    <span class="kc">True</span><span class="p">,</span>
+                    <span class="n">info</span><span class="o">=</span><span class="s2">"Whether missing MPI support should be reported for this profile."</span><span class="p">,</span>
+                <span class="p">),</span>
+                <span class="n">V</span><span class="p">(</span>
+                    <span class="s2">"executable_dir"</span><span class="p">,</span>
+                    <span class="n">AlwaysQString</span><span class="o">.</span><span class="n">I</span><span class="p">,</span>
+                    <span class="n">is_optional</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                    <span class="n">info</span><span class="o">=</span><span class="s2">"Directory containing SPR-KKR executables for this profile."</span><span class="p">,</span>
+                <span class="p">),</span>
+                <span class="n">V</span><span class="p">(</span>
+                    <span class="s2">"executable_suffix"</span><span class="p">,</span>
+                    <span class="n">AlwaysQString</span><span class="o">.</span><span class="n">I</span><span class="p">,</span>
+                    <span class="n">is_optional</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                    <span class="n">info</span><span class="o">=</span><span class="s2">"Suffix appended to SPR-KKR executable names for this profile."</span><span class="p">,</span>
+                <span class="p">),</span>
+                <span class="n">V</span><span class="p">(</span>
+                    <span class="s2">"executor"</span><span class="p">,</span>
+                    <span class="n">EXECUTOR</span><span class="p">,</span>
+                    <span class="n">is_optional</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                    <span class="n">info</span><span class="o">=</span><span class="s2">"Execution backend for this profile. If unset, local execution is used."</span><span class="p">,</span>
+                <span class="p">),</span>
+                <span class="n">V</span><span class="p">(</span>
+                    <span class="s2">"host"</span><span class="p">,</span>
+                    <span class="n">AlwaysQString</span><span class="o">.</span><span class="n">I</span><span class="p">,</span>
+                    <span class="n">is_optional</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                    <span class="n">info</span><span class="o">=</span><span class="s2">"SSH destination for an ssh executor, for example user@cluster."</span><span class="p">,</span>
+                <span class="p">),</span>
+                <span class="n">V</span><span class="p">(</span>
+                    <span class="s2">"local_root"</span><span class="p">,</span>
+                    <span class="n">AlwaysQString</span><span class="o">.</span><span class="n">I</span><span class="p">,</span>
+                    <span class="n">is_optional</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                    <span class="n">info</span><span class="o">=</span><span class="s2">"Local root mapped into the remote workspace by an ssh executor."</span><span class="p">,</span>
+                <span class="p">),</span>
+                <span class="n">V</span><span class="p">(</span>
+                    <span class="s2">"remote_root"</span><span class="p">,</span>
+                    <span class="n">AlwaysQString</span><span class="o">.</span><span class="n">I</span><span class="p">,</span>
+                    <span class="n">is_optional</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                    <span class="n">info</span><span class="o">=</span><span class="s2">"Remote root used for persistent workspaces by an ssh executor."</span><span class="p">,</span>
+                <span class="p">),</span>
+                <span class="n">V</span><span class="p">(</span>
+                    <span class="s2">"ssh_options"</span><span class="p">,</span>
+                    <span class="n">Array</span><span class="p">(</span><span class="n">AlwaysQString</span><span class="o">.</span><span class="n">I</span><span class="p">),</span>
+                    <span class="n">is_optional</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                    <span class="n">info</span><span class="o">=</span><span class="s2">"Additional arguments passed to ssh, such as ['-p', '2222']."</span><span class="p">,</span>
+                <span class="p">),</span>
+                <span class="n">V</span><span class="p">(</span>
+                    <span class="s2">"remote_command"</span><span class="p">,</span>
+                    <span class="n">Array</span><span class="p">(</span><span class="n">AlwaysQString</span><span class="o">.</span><span class="n">I</span><span class="p">),</span>
+                    <span class="n">is_optional</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                    <span class="n">info</span><span class="o">=</span><span class="s2">"Command prefix used to invoke the ASE2SPRKKR remote helper."</span><span class="p">,</span>
+                <span class="p">),</span>
+                <span class="n">V</span><span class="p">(</span>
+                    <span class="s2">"input_sync"</span><span class="p">,</span>
+                    <span class="n">SYNC_POLICY</span><span class="p">,</span>
+                    <span class="n">is_optional</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                    <span class="n">info</span><span class="o">=</span><span class="s2">"Input-file synchronization policy for an ssh executor."</span><span class="p">,</span>
+                <span class="p">),</span>
+                <span class="n">V</span><span class="p">(</span>
+                    <span class="s2">"output_sync"</span><span class="p">,</span>
+                    <span class="n">SYNC_POLICY</span><span class="p">,</span>
+                    <span class="n">is_optional</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                    <span class="n">info</span><span class="o">=</span><span class="s2">"Output-file synchronization policy for an ssh executor."</span><span class="p">,</span>
+                <span class="p">),</span>
+                <span class="n">V</span><span class="p">(</span>
+                    <span class="s2">"psij_backend"</span><span class="p">,</span>
+                    <span class="n">AlwaysQString</span><span class="o">.</span><span class="n">I</span><span class="p">,</span>
+                    <span class="n">is_optional</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                    <span class="n">info</span><span class="o">=</span><span class="s2">"PSI/J executor backend, for example slurm or pbs."</span><span class="p">,</span>
+                <span class="p">),</span>
+                <span class="n">V</span><span class="p">(</span>
+                    <span class="s2">"psij_url"</span><span class="p">,</span>
+                    <span class="n">AlwaysQString</span><span class="o">.</span><span class="n">I</span><span class="p">,</span>
+                    <span class="n">is_optional</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                    <span class="n">info</span><span class="o">=</span><span class="s2">"Optional PSI/J executor URL."</span><span class="p">,</span>
+                <span class="p">),</span>
             <span class="p">],</span>
-            <span class="n">info</span><span class="o">=</span><span class="s2">&quot;Default values for SPRKKR calculator parameters.&quot;</span><span class="p">,</span>
+            <span class="n">is_repeated</span><span class="o">=</span><span class="s2">"DICT_SECTION"</span><span class="p">,</span>
+            <span class="n">is_optional</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">info</span><span class="o">=</span><span class="s2">"Named SPR-KKR execution profiles. The reserved 'ase' profile is virtual; 'legacy' is persisted but read-only through the profiles API."</span><span class="p">,</span>
         <span class="p">),</span>
         <span class="n">Section</span><span class="p">(</span>
-            <span class="s2">&quot;executables&quot;</span><span class="p">,</span>
+            <span class="s2">"running"</span><span class="p">,</span>
             <span class="p">[</span>
                 <span class="n">V</span><span class="p">(</span>
-                    <span class="s2">&quot;suffix&quot;</span><span class="p">,</span>
-                    <span class="n">AlwaysQString</span><span class="o">.</span><span class="n">I</span><span class="p">,</span>
-                    <span class="n">default_value</span><span class="o">=</span><span class="n">_get_suffix</span><span class="p">,</span>
-                    <span class="n">info</span><span class="o">=</span><span class="s2">&quot;This suffix is appended (if not stated otherwise) to the SPRKKR executable names.&quot;</span><span class="p">,</span>
+                    <span class="s2">"empty_spheres"</span><span class="p">,</span>
+                    <span class="n">Keyword</span><span class="p">(</span>
+                        <span class="p">{</span>
+                            <span class="kc">True</span><span class="p">:</span> <span class="s2">"Always do empty spheres finding."</span><span class="p">,</span>
+                            <span class="kc">False</span><span class="p">:</span> <span class="s2">"Newer do empty spheres finding."</span><span class="p">,</span>
+                            <span class="s2">"auto"</span><span class="p">:</span> <span class="s2">"Do empty spheres finding for unconverged potential not containing any vaccuum atom."</span><span class="p">,</span>
+                        <span class="p">},</span>
+                        <span class="n">transform</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                        <span class="n">quote</span><span class="o">=</span><span class="s1">'"'</span><span class="p">,</span>
+                    <span class="p">),</span>
+                    <span class="n">default_value</span><span class="o">=</span><span class="s2">"auto"</span><span class="p">,</span>
+                    <span class="n">info</span><span class="o">=</span><span class="s2">"Run empty spheres finding before calculation? Default value ``auto`` means only for SCF calculations not containing any vacuum atom."</span><span class="p">,</span>
                 <span class="p">),</span>
                 <span class="n">V</span><span class="p">(</span>
-                    <span class="s2">&quot;dir&quot;</span><span class="p">,</span>
-                    <span class="n">AlwaysQString</span><span class="o">.</span><span class="n">I</span><span class="p">,</span>
+                    <span class="s2">"print_output"</span><span class="p">,</span>
+                    <span class="n">Keyword</span><span class="p">(</span>
+                        <span class="p">{</span>
+                            <span class="kc">True</span><span class="p">:</span> <span class="s2">"Print all output of SPRKKR executables to screen."</span><span class="p">,</span>
+                            <span class="kc">False</span><span class="p">:</span> <span class="s2">"Do not print any output of SPRKKR executables."</span><span class="p">,</span>
+                            <span class="s2">"info"</span><span class="p">:</span> <span class="s2">"Print only brief information about iterations of SCF cycle."</span><span class="p">,</span>
+                        <span class="p">},</span>
+                        <span class="n">transform</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                        <span class="n">quote</span><span class="o">=</span><span class="s1">'"'</span><span class="p">,</span>
+                    <span class="p">),</span>
+                    <span class="n">default_value</span><span class="o">=</span><span class="s2">"info"</span><span class="p">,</span>
+                    <span class="n">info</span><span class="o">=</span><span class="s2">"Print output of SPRKKR calculation. Default value ``info`` prints only short info each iteration."</span><span class="p">,</span>
+                <span class="p">),</span>
+                <span class="n">G</span><span class="p">(</span>
+                    <span class="s2">"mpi"</span><span class="p">,</span>
+                    <span class="n">_legacy_mpi</span><span class="p">,</span>
+                    <span class="n">_set_legacy_mpi</span><span class="p">,</span>
                     <span class="n">is_optional</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                    <span class="n">info</span><span class="o">=</span><span class="s2">&quot;Directory, from which the executables will be runned. None mean use the default PATH-environment-variable mechanism.&quot;</span><span class="p">,</span>
+                    <span class="n">info</span><span class="o">=</span><span class="s1">'Deprecated compatibility option backed by profiles["legacy"].'</span><span class="p">,</span>
+                <span class="p">),</span>
+                <span class="n">G</span><span class="p">(</span>
+                    <span class="s2">"mpi_warning"</span><span class="p">,</span>
+                    <span class="n">_legacy_mpi_warning</span><span class="p">,</span>
+                    <span class="n">_set_legacy_mpi_warning</span><span class="p">,</span>
+                    <span class="n">is_optional</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                    <span class="n">info</span><span class="o">=</span><span class="s1">'Deprecated compatibility option backed by profiles["legacy"].'</span><span class="p">,</span>
                 <span class="p">),</span>
             <span class="p">],</span>
-            <span class="n">info</span><span class="o">=</span><span class="s2">&quot;Configuration, that affects how the execubables are runned&quot;</span><span class="p">,</span>
+            <span class="n">info</span><span class="o">=</span><span class="s2">"Default values for SPRKKR calculator parameters."</span><span class="p">,</span>
         <span class="p">),</span>
-        <span class="n">Section</span><span class="p">(</span><span class="s2">&quot;nomad&quot;</span><span class="p">,</span> <span class="p">[</span><span class="n">V</span><span class="p">(</span><span class="s2">&quot;token&quot;</span><span class="p">,</span> <span class="n">AlwaysQString</span><span class="o">.</span><span class="n">I</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s2">&quot;Token for NOMAD upload&quot;</span><span class="p">,</span> <span class="n">is_optional</span><span class="o">=</span><span class="kc">True</span><span class="p">)]),</span>
+        <span class="n">Section</span><span class="p">(</span>
+            <span class="s2">"executables"</span><span class="p">,</span>
+            <span class="p">[</span>
+                <span class="n">G</span><span class="p">(</span>
+                    <span class="s2">"suffix"</span><span class="p">,</span>
+                    <span class="n">_legacy_executable_suffix</span><span class="p">,</span>
+                    <span class="n">_set_legacy_executable_suffix</span><span class="p">,</span>
+                    <span class="n">is_optional</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                    <span class="n">info</span><span class="o">=</span><span class="s1">'Deprecated compatibility option backed by profiles["legacy"].'</span><span class="p">,</span>
+                <span class="p">),</span>
+                <span class="n">G</span><span class="p">(</span>
+                    <span class="s2">"dir"</span><span class="p">,</span>
+                    <span class="n">_legacy_executable_dir</span><span class="p">,</span>
+                    <span class="n">_set_legacy_executable_dir</span><span class="p">,</span>
+                    <span class="n">is_optional</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                    <span class="n">info</span><span class="o">=</span><span class="s1">'Deprecated compatibility option backed by profiles["legacy"].'</span><span class="p">,</span>
+                <span class="p">),</span>
+            <span class="p">],</span>
+            <span class="n">info</span><span class="o">=</span><span class="s2">"Deprecated compatibility view of the legacy execution profile."</span><span class="p">,</span>
+        <span class="p">),</span>
+        <span class="n">Section</span><span class="p">(</span><span class="s2">"nomad"</span><span class="p">,</span> <span class="p">[</span><span class="n">V</span><span class="p">(</span><span class="s2">"token"</span><span class="p">,</span> <span class="n">AlwaysQString</span><span class="o">.</span><span class="n">I</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s2">"Token for NOMAD upload"</span><span class="p">,</span> <span class="n">is_optional</span><span class="o">=</span><span class="kc">True</span><span class="p">)]),</span>
     <span class="p">],</span>
 <span class="p">)</span>
 

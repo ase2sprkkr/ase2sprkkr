@@ -24,6 +24,17 @@ Full name: **ase2sprkkr.common.value\_definitions**
 
    
    
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      _rebuild_modified_definition
+      _reduce_modified_definition
+      _validate_numbering
+      _validate_required
+   
    
 
 

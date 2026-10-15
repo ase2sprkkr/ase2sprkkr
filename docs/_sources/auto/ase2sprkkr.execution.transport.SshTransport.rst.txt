@@ -1,0 +1,36 @@
+SshTransport
+============
+
+
+.. currentmodule:: ase2sprkkr.execution.transport
+
+.. autoclass:: SshTransport
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.execution.transport.SshTransport
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

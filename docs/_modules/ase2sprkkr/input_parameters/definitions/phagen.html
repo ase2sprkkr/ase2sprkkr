@@ -16,8 +16,8 @@
       <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
-      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
@@ -81,6 +81,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../../ase2sprkkr.html">ase2sprkkr</a></li>
       <li class="breadcrumb-item active">ase2sprkkr.input_parameters.definitions.phagen</li>
       <li class="wy-breadcrumbs-aside">
       </li>
@@ -91,29 +92,51 @@
            <div itemprop="articleBody">
              
   <h1>Source code for ase2sprkkr.input_parameters.definitions.phagen</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;PHAGEN task input parameters definition&quot;&quot;&quot;</span>
+<span></span><span class="sd">"""PHAGEN input-parameter definition."""</span>
 
-<span class="c1"># from ...common.grammar_types import</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">._file_manifests</span><span class="w"> </span><span class="kn">import</span> <span class="n">resolve_file</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.sections</span><span class="w"> </span><span class="kn">import</span> <span class="n">CONTROL</span><span class="p">,</span> <span class="n">TASK</span><span class="p">,</span> <span class="n">TAU</span><span class="p">,</span> <span class="n">ENERGY</span><span class="p">,</span> <span class="n">SCF</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">..input_parameters_definitions</span><span class="w"> </span><span class="kn">import</span> <span class="n">InputParametersDefinition</span> <span class="k">as</span> <span class="n">InputParameters</span>
-<span class="c1"># ,InputValueDefinition as V</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..input_parameters_definitions</span><span class="w"> </span><span class="kn">import</span> <span class="n">InputParametersDefinition</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..task_definition</span><span class="w"> </span><span class="kn">import</span> <span class="n">TaskDefinition</span>
 
 
-<div class="viewcode-block" id="input_parameters">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.definitions.phagen.input_parameters.html#ase2sprkkr.input_parameters.definitions.phagen.input_parameters">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">input_parameters</span><span class="p">():</span>
-    <span class="k">return</span> <span class="n">InputParameters</span><span class="p">(</span>
-        <span class="s2">&quot;phagen&quot;</span><span class="p">,</span>
-        <span class="p">[</span><span class="n">CONTROL</span><span class="p">(</span><span class="s2">&quot;PHAGEN&quot;</span><span class="p">),</span> <span class="n">TASK</span><span class="p">(</span><span class="s2">&quot;PHAGEN&quot;</span><span class="p">),</span> <span class="n">TAU</span><span class="p">,</span> <span class="n">ENERGY</span><span class="p">(),</span> <span class="n">SCF</span><span class="p">],</span>
-        <span class="n">info</span><span class="o">=</span><span class="s2">&quot;PHAGEN&quot;</span><span class="p">,</span>
-        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;&lt;TODO: change to something meaningfull&gt;&quot;</span><span class="p">,</span>
-        <span class="n">executable</span><span class="o">=</span><span class="s2">&quot;kkrscf&quot;</span><span class="p">,</span>
+<div class="viewcode-block" id="PhagenTaskDefinition">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.definitions.phagen.PhagenTaskDefinition.html#ase2sprkkr.input_parameters.definitions.phagen.PhagenTaskDefinition">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">PhagenTaskDefinition</span><span class="p">(</span><span class="n">TaskDefinition</span><span class="p">):</span>
+<div class="viewcode-block" id="PhagenTaskDefinition.output_files">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.definitions.phagen.PhagenTaskDefinition.html#ase2sprkkr.input_parameters.definitions.phagen.PhagenTaskDefinition.output_files">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">output_files</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parameters</span><span class="p">,</span> <span class="n">directory</span><span class="p">):</span>
+        <span class="n">files</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">output_files</span><span class="p">(</span><span class="n">parameters</span><span class="p">,</span> <span class="n">directory</span><span class="p">))</span>
+        <span class="n">potfil</span> <span class="o">=</span> <span class="n">parameters</span><span class="o">.</span><span class="n">CONTROL</span><span class="o">.</span><span class="n">POTFIL</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">potfil</span><span class="p">:</span>
+            <span class="n">files</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span>
+                <span class="p">(</span>
+                    <span class="n">resolve_file</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">potfil</span><span class="si">}</span><span class="s2">_ex_sprkkr"</span><span class="p">),</span>
+                    <span class="n">resolve_file</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">potfil</span><span class="si">}</span><span class="s2">.only_coulomb"</span><span class="p">),</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">files</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="input_parameters_definition">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.definitions.phagen.input_parameters_definition.html#ase2sprkkr.input_parameters.definitions.phagen.input_parameters_definition">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">input_parameters_definition</span><span class="p">():</span>
+    <span class="n">schema</span> <span class="o">=</span> <span class="n">InputParametersDefinition</span><span class="p">(</span>
+        <span class="s2">"phagen"</span><span class="p">,</span>
+        <span class="p">[</span><span class="n">CONTROL</span><span class="p">(</span><span class="s2">"PHAGEN"</span><span class="p">),</span> <span class="n">TASK</span><span class="p">(</span><span class="s2">"PHAGEN"</span><span class="p">),</span> <span class="n">TAU</span><span class="p">,</span> <span class="n">ENERGY</span><span class="p">(),</span> <span class="n">SCF</span><span class="p">],</span>
+        <span class="n">info</span><span class="o">=</span><span class="s2">"PHAGEN"</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">"&lt;TODO: change to something meaningfull&gt;"</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">schema</span><span class="o">.</span><span class="n">_task_definition</span> <span class="o">=</span> <span class="n">PhagenTaskDefinition</span><span class="p">(</span>
+        <span class="s2">"PHAGEN"</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">"PHAGEN"</span><span class="p">,</span>
+        <span class="n">executable</span><span class="o">=</span><span class="s2">"kkrscf"</span><span class="p">,</span>
         <span class="n">mpi</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-    <span class="p">)</span></div>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">schema</span></div>
 
-
-
-<span class="sd">&quot;&quot;&quot; PHAGEN - PHAGEN task input parameters definition&quot;&quot;&quot;</span>
 </pre></div>
 
            </div>

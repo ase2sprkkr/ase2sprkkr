@@ -16,8 +16,8 @@
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
-      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -81,6 +81,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../ase2sprkkr.html">ase2sprkkr</a></li>
       <li class="breadcrumb-item active">ase2sprkkr.physics.lattice_data</li>
       <li class="wy-breadcrumbs-aside">
       </li>
@@ -91,10 +92,10 @@
            <div itemprop="articleBody">
              
   <h1>Source code for ase2sprkkr.physics.lattice_data</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span></span><span class="sd">"""</span>
 <span class="sd">This module contains various crystalographics classifications,</span>
 <span class="sd">and the LatticeData object, that provides various informations about a lattice.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">namedtuple</span>
 
@@ -104,6 +105,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">ase.units</span><span class="w"> </span><span class="kn">import</span> <span class="n">Bohr</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">scipy.optimize</span><span class="w"> </span><span class="kn">import</span> <span class="n">linear_sum_assignment</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Union</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">numbers</span><span class="w"> </span><span class="kn">import</span> <span class="n">Integral</span>
 
 
 <div class="viewcode-block" id="reorder_matrix">
@@ -136,24 +138,24 @@
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.physics.lattice_data.Pearson.html#ase2sprkkr.physics.lattice_data.Pearson">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Pearson</span><span class="p">(</span>
     <span class="n">namedtuple</span><span class="p">(</span>
-        <span class="s2">&quot;Pearson&quot;</span><span class="p">,</span>
+        <span class="s2">"Pearson"</span><span class="p">,</span>
         <span class="p">[</span>
-            <span class="s2">&quot;pearson_symbol&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;bravais_number&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;family&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;centering_type&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;herman_mauguin&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;shoenflies&quot;</span><span class="p">,</span>  <span class="c1"># Shoenflies</span>
+            <span class="s2">"pearson_symbol"</span><span class="p">,</span>
+            <span class="s2">"bravais_number"</span><span class="p">,</span>
+            <span class="s2">"family"</span><span class="p">,</span>
+            <span class="s2">"centering_type"</span><span class="p">,</span>
+            <span class="s2">"herman_mauguin"</span><span class="p">,</span>
+            <span class="s2">"shoenflies"</span><span class="p">,</span>  <span class="c1"># Shoenflies</span>
         <span class="p">],</span>
     <span class="p">)</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;This class holds informations about translation symmetry of a lattice with a given</span>
-<span class="sd">    Pearson symbol.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""This class holds informations about translation symmetry of a lattice with a given</span>
+<span class="sd">    Pearson symbol."""</span>
 
 <div class="viewcode-block" id="Pearson.xband_data">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.physics.lattice_data.Pearson.html#ase2sprkkr.physics.lattice_data.Pearson.xband_data">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">xband_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Data used by Xband sysfile and SPRKKR to describe translation symmetry.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Data used by Xband sysfile and SPRKKR to describe translation symmetry."""</span>
         <span class="k">return</span> <span class="bp">self</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span></div>
 
 
@@ -161,8 +163,8 @@
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.physics.lattice_data.Pearson.html#ase2sprkkr.physics.lattice_data.Pearson.from_symbol">[docs]</a>
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">from_symbol</span><span class="p">(</span><span class="n">pearson_symbol</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the Pearson symbol (describing the translation symmetry) that corresponds to the</span>
-<span class="sd">        given Pearson symbol&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Return the Pearson symbol (describing the translation symmetry) that corresponds to the</span>
+<span class="sd">        given Pearson symbol"""</span>
         <span class="k">return</span> <span class="n">Pearson</span><span class="o">.</span><span class="n">pearsons</span><span class="p">[</span><span class="n">Pearson</span><span class="o">.</span><span class="n">normalize_symbol</span><span class="p">(</span><span class="n">pearson_symbol</span><span class="p">)]</span></div>
 
 
@@ -170,34 +172,34 @@
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.physics.lattice_data.Pearson.html#ase2sprkkr.physics.lattice_data.Pearson.normalize_symbol">[docs]</a>
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">normalize_symbol</span><span class="p">(</span><span class="n">pearson_symbol</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Normalize a Pearson symbol to its cannonical shape&quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">pearson_symbol</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;B&quot;</span><span class="p">,</span> <span class="s2">&quot;C&quot;</span><span class="p">):</span>
-            <span class="n">pearson_symbol</span> <span class="o">=</span> <span class="n">pearson_symbol</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;S&quot;</span>
+<span class="w">        </span><span class="sd">"""Normalize a Pearson symbol to its cannonical shape"""</span>
+        <span class="k">if</span> <span class="n">pearson_symbol</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"A"</span><span class="p">,</span> <span class="s2">"B"</span><span class="p">,</span> <span class="s2">"C"</span><span class="p">):</span>
+            <span class="n">pearson_symbol</span> <span class="o">=</span> <span class="n">pearson_symbol</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s2">"S"</span>
         <span class="k">return</span> <span class="n">pearson_symbol</span></div>
 
 
     <span class="n">pearson</span> <span class="o">=</span> <span class="kc">None</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; Mapping of all possible Pearson symbols to Pearson objects&quot;&quot;&quot;</span></div>
+<span class="w">    </span><span class="sd">""" Mapping of all possible Pearson symbols to Pearson objects"""</span></div>
 
 
 
 <span class="n">Pearson</span><span class="o">.</span><span class="n">pearsons</span> <span class="o">=</span> <span class="p">{</span>
     <span class="n">i</span><span class="o">.</span><span class="n">pearson_symbol</span><span class="p">:</span> <span class="n">i</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="p">[</span>
-        <span class="n">Pearson</span><span class="p">(</span><span class="s2">&quot;aP&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;triclinic&quot;</span><span class="p">,</span> <span class="s2">&quot;primitive&quot;</span><span class="p">,</span> <span class="s2">&quot;-1&quot;</span><span class="p">,</span> <span class="s2">&quot;C_i&quot;</span><span class="p">),</span>
-        <span class="n">Pearson</span><span class="p">(</span><span class="s2">&quot;mP&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;monoclinic&quot;</span><span class="p">,</span> <span class="s2">&quot;primitive&quot;</span><span class="p">,</span> <span class="s2">&quot;2/m&quot;</span><span class="p">,</span> <span class="s2">&quot;C_2h&quot;</span><span class="p">),</span>
-        <span class="n">Pearson</span><span class="p">(</span><span class="s2">&quot;mS&quot;</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;monoclinic&quot;</span><span class="p">,</span> <span class="s2">&quot;primitive&quot;</span><span class="p">,</span> <span class="s2">&quot;2/m&quot;</span><span class="p">,</span> <span class="s2">&quot;C_2h&quot;</span><span class="p">),</span>
-        <span class="n">Pearson</span><span class="p">(</span><span class="s2">&quot;oP&quot;</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="s2">&quot;orthorombic&quot;</span><span class="p">,</span> <span class="s2">&quot;primitive&quot;</span><span class="p">,</span> <span class="s2">&quot;mmm&quot;</span><span class="p">,</span> <span class="s2">&quot;D_2h&quot;</span><span class="p">),</span>
-        <span class="n">Pearson</span><span class="p">(</span><span class="s2">&quot;oS&quot;</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="s2">&quot;orthorombic&quot;</span><span class="p">,</span> <span class="s2">&quot;base-centered&quot;</span><span class="p">,</span> <span class="s2">&quot;mmm&quot;</span><span class="p">,</span> <span class="s2">&quot;D_2h&quot;</span><span class="p">),</span>
-        <span class="n">Pearson</span><span class="p">(</span><span class="s2">&quot;oI&quot;</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="s2">&quot;orthorombic&quot;</span><span class="p">,</span> <span class="s2">&quot;body-centered&quot;</span><span class="p">,</span> <span class="s2">&quot;mmm&quot;</span><span class="p">,</span> <span class="s2">&quot;D_2h&quot;</span><span class="p">),</span>
-        <span class="n">Pearson</span><span class="p">(</span><span class="s2">&quot;oF&quot;</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="s2">&quot;orthorombic&quot;</span><span class="p">,</span> <span class="s2">&quot;face-centered&quot;</span><span class="p">,</span> <span class="s2">&quot;mmm&quot;</span><span class="p">,</span> <span class="s2">&quot;D_2h&quot;</span><span class="p">),</span>
-        <span class="n">Pearson</span><span class="p">(</span><span class="s2">&quot;tP&quot;</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="s2">&quot;tetragonal&quot;</span><span class="p">,</span> <span class="s2">&quot;primitive&quot;</span><span class="p">,</span> <span class="s2">&quot;4/mmm&quot;</span><span class="p">,</span> <span class="s2">&quot;D_4h&quot;</span><span class="p">),</span>
-        <span class="n">Pearson</span><span class="p">(</span><span class="s2">&quot;tI&quot;</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="s2">&quot;tetragonal&quot;</span><span class="p">,</span> <span class="s2">&quot;body-centered&quot;</span><span class="p">,</span> <span class="s2">&quot;4/mmm&quot;</span><span class="p">,</span> <span class="s2">&quot;D_4h&quot;</span><span class="p">),</span>
-        <span class="n">Pearson</span><span class="p">(</span><span class="s2">&quot;hR&quot;</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="s2">&quot;trigonal&quot;</span><span class="p">,</span> <span class="s2">&quot;primitive&quot;</span><span class="p">,</span> <span class="s2">&quot;-3m&quot;</span><span class="p">,</span> <span class="s2">&quot;D_3d&quot;</span><span class="p">),</span>
-        <span class="n">Pearson</span><span class="p">(</span><span class="s2">&quot;hP&quot;</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="s2">&quot;hexagonal&quot;</span><span class="p">,</span> <span class="s2">&quot;primitive&quot;</span><span class="p">,</span> <span class="s2">&quot;6/mmm&quot;</span><span class="p">,</span> <span class="s2">&quot;D_6h&quot;</span><span class="p">),</span>
-        <span class="n">Pearson</span><span class="p">(</span><span class="s2">&quot;cP&quot;</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="s2">&quot;cubic&quot;</span><span class="p">,</span> <span class="s2">&quot;primitive&quot;</span><span class="p">,</span> <span class="s2">&quot;m3m&quot;</span><span class="p">,</span> <span class="s2">&quot;O_h&quot;</span><span class="p">),</span>
-        <span class="n">Pearson</span><span class="p">(</span><span class="s2">&quot;cF&quot;</span><span class="p">,</span> <span class="mi">13</span><span class="p">,</span> <span class="s2">&quot;cubic&quot;</span><span class="p">,</span> <span class="s2">&quot;face-centered&quot;</span><span class="p">,</span> <span class="s2">&quot;m3m&quot;</span><span class="p">,</span> <span class="s2">&quot;O_h&quot;</span><span class="p">),</span>
-        <span class="n">Pearson</span><span class="p">(</span><span class="s2">&quot;cI&quot;</span><span class="p">,</span> <span class="mi">14</span><span class="p">,</span> <span class="s2">&quot;cubic&quot;</span><span class="p">,</span> <span class="s2">&quot;body-centered&quot;</span><span class="p">,</span> <span class="s2">&quot;m3m&quot;</span><span class="p">,</span> <span class="s2">&quot;O_h&quot;</span><span class="p">),</span>
+        <span class="n">Pearson</span><span class="p">(</span><span class="s2">"aP"</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">"triclinic"</span><span class="p">,</span> <span class="s2">"primitive"</span><span class="p">,</span> <span class="s2">"-1"</span><span class="p">,</span> <span class="s2">"C_i"</span><span class="p">),</span>
+        <span class="n">Pearson</span><span class="p">(</span><span class="s2">"mP"</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">"monoclinic"</span><span class="p">,</span> <span class="s2">"primitive"</span><span class="p">,</span> <span class="s2">"2/m"</span><span class="p">,</span> <span class="s2">"C_2h"</span><span class="p">),</span>
+        <span class="n">Pearson</span><span class="p">(</span><span class="s2">"mS"</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="s2">"monoclinic"</span><span class="p">,</span> <span class="s2">"primitive"</span><span class="p">,</span> <span class="s2">"2/m"</span><span class="p">,</span> <span class="s2">"C_2h"</span><span class="p">),</span>
+        <span class="n">Pearson</span><span class="p">(</span><span class="s2">"oP"</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="s2">"orthorombic"</span><span class="p">,</span> <span class="s2">"primitive"</span><span class="p">,</span> <span class="s2">"mmm"</span><span class="p">,</span> <span class="s2">"D_2h"</span><span class="p">),</span>
+        <span class="n">Pearson</span><span class="p">(</span><span class="s2">"oS"</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="s2">"orthorombic"</span><span class="p">,</span> <span class="s2">"base-centered"</span><span class="p">,</span> <span class="s2">"mmm"</span><span class="p">,</span> <span class="s2">"D_2h"</span><span class="p">),</span>
+        <span class="n">Pearson</span><span class="p">(</span><span class="s2">"oI"</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="s2">"orthorombic"</span><span class="p">,</span> <span class="s2">"body-centered"</span><span class="p">,</span> <span class="s2">"mmm"</span><span class="p">,</span> <span class="s2">"D_2h"</span><span class="p">),</span>
+        <span class="n">Pearson</span><span class="p">(</span><span class="s2">"oF"</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="s2">"orthorombic"</span><span class="p">,</span> <span class="s2">"face-centered"</span><span class="p">,</span> <span class="s2">"mmm"</span><span class="p">,</span> <span class="s2">"D_2h"</span><span class="p">),</span>
+        <span class="n">Pearson</span><span class="p">(</span><span class="s2">"tP"</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="s2">"tetragonal"</span><span class="p">,</span> <span class="s2">"primitive"</span><span class="p">,</span> <span class="s2">"4/mmm"</span><span class="p">,</span> <span class="s2">"D_4h"</span><span class="p">),</span>
+        <span class="n">Pearson</span><span class="p">(</span><span class="s2">"tI"</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="s2">"tetragonal"</span><span class="p">,</span> <span class="s2">"body-centered"</span><span class="p">,</span> <span class="s2">"4/mmm"</span><span class="p">,</span> <span class="s2">"D_4h"</span><span class="p">),</span>
+        <span class="n">Pearson</span><span class="p">(</span><span class="s2">"hR"</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="s2">"trigonal"</span><span class="p">,</span> <span class="s2">"primitive"</span><span class="p">,</span> <span class="s2">"-3m"</span><span class="p">,</span> <span class="s2">"D_3d"</span><span class="p">),</span>
+        <span class="n">Pearson</span><span class="p">(</span><span class="s2">"hP"</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="s2">"hexagonal"</span><span class="p">,</span> <span class="s2">"primitive"</span><span class="p">,</span> <span class="s2">"6/mmm"</span><span class="p">,</span> <span class="s2">"D_6h"</span><span class="p">),</span>
+        <span class="n">Pearson</span><span class="p">(</span><span class="s2">"cP"</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="s2">"cubic"</span><span class="p">,</span> <span class="s2">"primitive"</span><span class="p">,</span> <span class="s2">"m3m"</span><span class="p">,</span> <span class="s2">"O_h"</span><span class="p">),</span>
+        <span class="n">Pearson</span><span class="p">(</span><span class="s2">"cF"</span><span class="p">,</span> <span class="mi">13</span><span class="p">,</span> <span class="s2">"cubic"</span><span class="p">,</span> <span class="s2">"face-centered"</span><span class="p">,</span> <span class="s2">"m3m"</span><span class="p">,</span> <span class="s2">"O_h"</span><span class="p">),</span>
+        <span class="n">Pearson</span><span class="p">(</span><span class="s2">"cI"</span><span class="p">,</span> <span class="mi">14</span><span class="p">,</span> <span class="s2">"cubic"</span><span class="p">,</span> <span class="s2">"body-centered"</span><span class="p">,</span> <span class="s2">"m3m"</span><span class="p">,</span> <span class="s2">"O_h"</span><span class="p">),</span>
     <span class="p">]</span>
 <span class="p">}</span>
 
@@ -437,10 +439,10 @@
 
 
 <span class="n">_CELL_SHAPE_AP_OVERRIDES</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="mi">143</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;hP&quot;</span><span class="p">:</span> <span class="mi">395</span><span class="p">,</span> <span class="s2">&quot;hR&quot;</span><span class="p">:</span> <span class="mi">396</span><span class="p">},</span>
-    <span class="mi">144</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;hP&quot;</span><span class="p">:</span> <span class="mi">397</span><span class="p">,</span> <span class="s2">&quot;hR&quot;</span><span class="p">:</span> <span class="mi">398</span><span class="p">},</span>
-    <span class="mi">145</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;hP&quot;</span><span class="p">:</span> <span class="mi">399</span><span class="p">,</span> <span class="s2">&quot;hR&quot;</span><span class="p">:</span> <span class="mi">400</span><span class="p">},</span>
-    <span class="mi">147</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;hP&quot;</span><span class="p">:</span> <span class="mi">403</span><span class="p">,</span> <span class="s2">&quot;hR&quot;</span><span class="p">:</span> <span class="mi">404</span><span class="p">},</span>
+    <span class="mi">143</span><span class="p">:</span> <span class="p">{</span><span class="s2">"hP"</span><span class="p">:</span> <span class="mi">395</span><span class="p">,</span> <span class="s2">"hR"</span><span class="p">:</span> <span class="mi">396</span><span class="p">},</span>
+    <span class="mi">144</span><span class="p">:</span> <span class="p">{</span><span class="s2">"hP"</span><span class="p">:</span> <span class="mi">397</span><span class="p">,</span> <span class="s2">"hR"</span><span class="p">:</span> <span class="mi">398</span><span class="p">},</span>
+    <span class="mi">145</span><span class="p">:</span> <span class="p">{</span><span class="s2">"hP"</span><span class="p">:</span> <span class="mi">399</span><span class="p">,</span> <span class="s2">"hR"</span><span class="p">:</span> <span class="mi">400</span><span class="p">},</span>
+    <span class="mi">147</span><span class="p">:</span> <span class="p">{</span><span class="s2">"hP"</span><span class="p">:</span> <span class="mi">403</span><span class="p">,</span> <span class="s2">"hR"</span><span class="p">:</span> <span class="mi">404</span><span class="p">},</span>
 <span class="p">}</span>
 
 
@@ -984,12 +986,12 @@
 <div class="viewcode-block" id="ap_number_from_spacegroup">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.physics.lattice_data.ap_number_from_spacegroup.html#ase2sprkkr.physics.lattice_data.ap_number_from_spacegroup">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">ap_number_from_spacegroup</span><span class="p">(</span><span class="n">spacegroup_number</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">hall_number</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">cell</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the Xband A. Perlov number for a space-group setting.</span>
+<span class="w">    </span><span class="sd">"""Return the Xband A. Perlov number for a space-group setting.</span>
 
 <span class="sd">    The trigonal space groups 143, 144, 145, and 147 need the cell shape to</span>
 <span class="sd">    distinguish hP and hR settings. Other ambiguous groups are resolved by Hall</span>
 <span class="sd">    number when it is available, otherwise the international-number fallback is used.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="n">cell</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">overrides</span> <span class="o">=</span> <span class="n">_CELL_SHAPE_AP_OVERRIDES</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">spacegroup_number</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">overrides</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -1000,6 +1002,20 @@
     <span class="k">if</span> <span class="n">hall_number</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">hall_number</span> <span class="ow">in</span> <span class="n">hall_numbers_to_AP</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">hall_numbers_to_AP</span><span class="p">[</span><span class="n">hall_number</span><span class="p">]</span>
     <span class="k">return</span> <span class="n">international_numbers_to_AP</span><span class="p">[</span><span class="n">spacegroup_number</span><span class="p">]</span></div>
+
+
+
+<div class="viewcode-block" id="bravais_number">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.physics.lattice_data.bravais_number.html#ase2sprkkr.physics.lattice_data.bravais_number">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">bravais_number</span><span class="p">(</span><span class="n">atoms_or_bravais</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Return the Bravais-lattice number."""</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">atoms_or_bravais</span><span class="p">,</span> <span class="n">Integral</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">atoms_or_bravais</span><span class="p">)</span>
+
+    <span class="n">lattice</span> <span class="o">=</span> <span class="n">atoms_or_bravais</span><span class="o">.</span><span class="n">cell</span><span class="o">.</span><span class="n">get_bravais_lattice</span><span class="p">()</span>
+    <span class="n">pearson</span> <span class="o">=</span> <span class="n">Pearson</span><span class="o">.</span><span class="n">from_symbol</span><span class="p">(</span><span class="n">lattice</span><span class="o">.</span><span class="n">pearson_symbol</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">pearson</span><span class="o">.</span><span class="n">bravais_number</span></div>
 
 
 
@@ -1035,15 +1051,12 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">cell</span> <span class="o">=</span> <span class="n">cell</span></div>
 
 
-<div class="viewcode-block" id="LatticeData.rbas">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.physics.lattice_data.LatticeData.html#ase2sprkkr.physics.lattice_data.LatticeData.rbas">[docs]</a>
     <span class="nd">@cached_property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">rbas</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># self.rbas = sg.scaled_primitive_cell</span>
         <span class="n">sg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sg</span>
         <span class="n">out</span> <span class="o">=</span> <span class="n">sg</span><span class="o">.</span><span class="n">primitive_lattice</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">sg</span><span class="o">.</span><span class="n">std_lattice</span><span class="p">))</span>
-        <span class="k">return</span> <span class="n">reorder_matrix</span><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">cell</span><span class="p">)</span></div>
-
+        <span class="k">return</span> <span class="n">reorder_matrix</span><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">cell</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">bravais_number</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>

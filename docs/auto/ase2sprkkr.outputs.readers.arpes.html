@@ -17,8 +17,8 @@
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../_static/documentation_options.js?v=5929fcd5"></script>
-      <script src="../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -68,16 +68,22 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.promote_ase_atoms.html">promote_ase_atoms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.__getattr__.html">__getattr__</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.common.html">common</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration.html">configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration_migration.html">configuration_migration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration_yaml.html">configuration_yaml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.conftest.html">conftest</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.examples.html">examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.execution.html">execution</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.gui.html">gui</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.input_parameters.html">input_parameters</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.output_files.html">output_files</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="ase2sprkkr.outputs.html">outputs</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.outputs.output_definitions.html">output_definitions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.outputs.persistent.html">persistent</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.outputs.reader_registry.html">reader_registry</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="ase2sprkkr.outputs.readers.html">readers</a><ul class="current">
 <li class="toctree-l4 current"><a class="current reference internal" href="#">arpes</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.outputs.readers.bsf.html">bsf</a></li>
@@ -95,6 +101,8 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.physics.html">physics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.potentials.html">potentials</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.profiles.html">profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.result_files.html">result_files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.sprkkr.html">sprkkr</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.tools.html">tools</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.version.html">version</a></li>
@@ -133,13 +141,20 @@
 <h1>arpes<a class="headerlink" href="#arpes" title="Link to this heading"></a></h1>
 <p>Full name: <strong>ase2sprkkr.outputs.readers.arpes</strong></p>
 <p class="rubric">Module class hierarchy</p>
-<div class="graphviz"><img src="../_images/inheritance-afbd139a117193c6d9fa7f6f21680b733c38c338.png" alt="Inheritance diagram of ase2sprkkr.outputs.readers.arpes.ArpesOutputReader, ase2sprkkr.outputs.readers.arpes.ArpesResult" usemap="#inheritance2c693d2732" class="inheritance graphviz" /></div>
-<map id="inheritance2c693d2732" name="inheritance2c693d2732">
-<area shape="rect" id="node1" href="ase2sprkkr.outputs.readers.arpes.ArpesOutputReader.html#ase2sprkkr.outputs.readers.arpes.ArpesOutputReader" target="_top" title="ARPES task has no special parser, it just has a special" alt="" coords="168,57,316,85"/>
-<area shape="rect" id="node2" href="ase2sprkkr.outputs.task_result.KkrOutputReader.html#ase2sprkkr.outputs.task_result.KkrOutputReader" target="_top" title="Class, that runs a process and reads its output using the underlying" alt="" coords="5,57,139,85"/>
-<area shape="rect" id="node3" href="ase2sprkkr.outputs.readers.arpes.ArpesResult.html#ase2sprkkr.outputs.readers.arpes.ArpesResult" target="_top" title="ARPES result provides acces to the generated SPC output file" alt="" coords="192,5,292,33"/>
-<area shape="rect" id="node4" href="ase2sprkkr.outputs.task_result.TaskResult.html#ase2sprkkr.outputs.task_result.TaskResult" target="_top" title="A base class for a result of a runned task (kkrscf executable)" alt="" coords="26,5,118,33"/>
-</map><div class="line-block">
+digraph inheritance2c693d2732 {
+bgcolor=transparent;
+fontsize=14;
+rankdir=LR;
+ranksep=0.3;
+size=&quot;10.0, 10.0&quot;;
+  &quot;ArpesOutputReader&quot; [URL=&quot;ase2sprkkr.outputs.readers.arpes.ArpesOutputReader.html#ase2sprkkr.outputs.readers.arpes.ArpesOutputReader&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;ARPES task has no special parser, it just has a special&quot;];
+  &quot;KkrOutputReader&quot; -&gt; &quot;ArpesOutputReader&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;ArpesResult&quot; [URL=&quot;ase2sprkkr.outputs.readers.arpes.ArpesResult.html#ase2sprkkr.outputs.readers.arpes.ArpesResult&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;ARPES result provides acces to the generated SPC output file&quot;];
+  &quot;TaskResult&quot; -&gt; &quot;ArpesResult&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;KkrOutputReader&quot; [URL=&quot;ase2sprkkr.outputs.task_result.KkrOutputReader.html#ase2sprkkr.outputs.task_result.KkrOutputReader&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;Parse SPR-KKR output streams into a TaskResult.&quot;];
+  &quot;TaskResult&quot; [URL=&quot;ase2sprkkr.outputs.task_result.TaskResult.html#ase2sprkkr.outputs.task_result.TaskResult&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;A base class for a result of a runned task (kkrscf executable)&quot;];
+}
+<div class="line-block">
 <div class="line"><br /></div>
 </div>
 <p class="rubric">Description</p>

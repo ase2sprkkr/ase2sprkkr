@@ -24,7 +24,7 @@ def make_ni2fega():
 
 def main():
     from glob import glob
-    from ase2sprkkr import OutputFile, SPRKKR
+    from ase2sprkkr import ResultFile, SPRKKR
 
     # XAS is a post-SCF task, so first obtain a converged potential.  Keeping
     # this step here makes the example independent of every other example.
@@ -53,7 +53,7 @@ def main():
     rat_files = glob("Ni2FeGa_XAS_*.rat")
     if len(rat_files) != 1:
         raise RuntimeError(f"Expected one XAS RAT file, found {rat_files}")
-    OutputFile.from_file(rat_files[0]).plot()
+    ResultFile.from_file(rat_files[0]).plot()
 
 
 if __name__ == "__main__":

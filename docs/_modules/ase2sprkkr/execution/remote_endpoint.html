@@ -1,0 +1,724 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ase2sprkkr.execution.remote_endpoint &mdash; ASE2SPRKKR  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/mods.css?v=26f6988d" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            ASE2SPRKKR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage.html">How to use the package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../how-to-install.html">More about the package installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../philosophy.html">Philosophy of the package (for developers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../authors.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Examples</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../auto/ase2sprkkr.html">ase2sprkkr</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">ASE2SPRKKR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../ase2sprkkr.html">ase2sprkkr</a></li>
+      <li class="breadcrumb-item active">ase2sprkkr.execution.remote_endpoint</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for ase2sprkkr.execution.remote_endpoint</h1><div class="highlight"><pre>
+<span></span><span class="sd">"""Reusable remote endpoint with per-run staging configuration."""</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">glob</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">posixpath</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span><span class="p">,</span> <span class="n">PurePosixPath</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">uuid</span><span class="w"> </span><span class="kn">import</span> <span class="n">uuid4</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.base</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">Executor</span><span class="p">,</span>
+    <span class="n">LaunchSpec</span><span class="p">,</span>
+    <span class="n">MpiNotFoundWarning</span><span class="p">,</span>
+    <span class="n">RunReference</span><span class="p">,</span>
+    <span class="n">RunState</span><span class="p">,</span>
+    <span class="n">RunStatus</span><span class="p">,</span>
+    <span class="n">SubmissionNotStarted</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.remote</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">FileSyncPolicy</span><span class="p">,</span>
+    <span class="n">RemoteRunner</span><span class="p">,</span>
+    <span class="n">_METADATA_DIR</span><span class="p">,</span>
+    <span class="n">_REQUEST_FILE</span><span class="p">,</span>
+    <span class="n">_REMOTE_EXECUTORS</span><span class="p">,</span>
+    <span class="n">_RUNS_DIR</span><span class="p">,</span>
+    <span class="n">_STATE_FILE</span><span class="p">,</span>
+    <span class="n">_run_sync</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.transport</span><span class="w"> </span><span class="kn">import</span> <span class="n">AtomicLocalFile</span>
+
+
+<div class="viewcode-block" id="_RemoteRun">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.remote_endpoint._RemoteRun.html#ase2sprkkr.execution.remote_endpoint._RemoteRun">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">_RemoteRun</span><span class="p">(</span><span class="n">RemoteRunner</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Remote runner that can reuse an identity chosen before submission."""</span>
+
+<div class="viewcode-block" id="_RemoteRun.__init__">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.remote_endpoint._RemoteRun.html#ase2sprkkr.execution.remote_endpoint._RemoteRun.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">run_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_run_id</span> <span class="o">=</span> <span class="n">run_id</span></div>
+
+
+<div class="viewcode-block" id="_RemoteRun._monitor">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.remote_endpoint._RemoteRun.html#ase2sprkkr.execution.remote_endpoint._RemoteRun._monitor">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_monitor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Resolve the local path while the stream target is still open. The base</span>
+        <span class="c1"># monitor commits/closes it before returning.</span>
+        <span class="n">local_output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_local_path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">output_file</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">_monitor</span><span class="p">()</span>
+        <span class="n">remote_output</span> <span class="o">=</span> <span class="kc">None</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">reference</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">reference</span><span class="o">.</span><span class="n">output_file</span>
+        <span class="k">if</span> <span class="n">local_output</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">remote_output</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">signature</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">executor</span><span class="o">.</span><span class="n">transport</span><span class="o">.</span><span class="n">file_signature</span><span class="p">(</span><span class="n">remote_output</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">signature</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">stat</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">stat</span><span class="p">(</span><span class="n">local_output</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">stat</span><span class="o">.</span><span class="n">st_size</span> <span class="o">!=</span> <span class="n">signature</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+                    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+                        <span class="s2">"Streamed local output size does not match the authoritative "</span>
+                        <span class="sa">f</span><span class="s2">"remote output: </span><span class="si">{</span><span class="n">local_output</span><span class="si">}</span><span class="s2">"</span>
+                    <span class="p">)</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">utime</span><span class="p">(</span><span class="n">local_output</span><span class="p">,</span> <span class="n">ns</span><span class="o">=</span><span class="p">(</span><span class="n">stat</span><span class="o">.</span><span class="n">st_atime_ns</span><span class="p">,</span> <span class="n">signature</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+        <span class="k">return</span> <span class="n">result</span></div>
+
+
+<div class="viewcode-block" id="_RemoteRun._submit_async">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.remote_endpoint._RemoteRun.html#ase2sprkkr.execution.remote_endpoint._RemoteRun._submit_async">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_submit_async</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">run_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_run_id</span> <span class="ow">or</span> <span class="n">uuid4</span><span class="p">()</span><span class="o">.</span><span class="n">hex</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">remote_directory</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">executor</span><span class="o">.</span><span class="n">map_directory</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">directory</span><span class="p">)</span>
+            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">executor</span><span class="o">.</span><span class="n">transport</span><span class="o">.</span><span class="n">run</span><span class="p">((</span><span class="s2">"mkdir"</span><span class="p">,</span> <span class="s2">"-p"</span><span class="p">,</span> <span class="s2">"--"</span><span class="p">,</span> <span class="n">remote_directory</span><span class="p">))</span>
+            <span class="n">request</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prepare_request</span><span class="p">(</span><span class="n">run_id</span><span class="p">,</span> <span class="n">remote_directory</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">SubmissionNotStarted</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">exc</span><span class="p">))</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span>
+        <span class="n">status</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">executor</span><span class="o">.</span><span class="n">_submit</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">run_id</span><span class="p">,</span> <span class="n">status</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="_RemoteRunContext">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.remote_endpoint._RemoteRunContext.html#ase2sprkkr.execution.remote_endpoint._RemoteRunContext">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">_RemoteRunContext</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Per-run filesystem/staging policy for one reusable remote endpoint."""</span>
+
+<div class="viewcode-block" id="_RemoteRunContext.__init__">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.remote_endpoint._RemoteRunContext.html#ase2sprkkr.execution.remote_endpoint._RemoteRunContext.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">endpoint</span><span class="p">,</span> <span class="n">launch</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">endpoint</span> <span class="o">=</span> <span class="n">endpoint</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">transport</span> <span class="o">=</span> <span class="n">endpoint</span><span class="o">.</span><span class="n">transport</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">backend</span> <span class="o">=</span> <span class="n">endpoint</span><span class="o">.</span><span class="n">backend</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">backend_options</span> <span class="o">=</span> <span class="n">endpoint</span><span class="o">.</span><span class="n">backend_options</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">command</span> <span class="o">=</span> <span class="n">endpoint</span><span class="o">.</span><span class="n">command</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">computer</span> <span class="o">=</span> <span class="n">endpoint</span><span class="o">.</span><span class="n">computer</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">local_root</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">launch</span><span class="o">.</span><span class="n">local_root</span> <span class="ow">or</span> <span class="n">Path</span><span class="o">.</span><span class="n">home</span><span class="p">())</span><span class="o">.</span><span class="n">expanduser</span><span class="p">()</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">remote_root</span> <span class="o">=</span> <span class="kc">None</span> <span class="k">if</span> <span class="n">launch</span><span class="o">.</span><span class="n">remote_root</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">os</span><span class="o">.</span><span class="n">fspath</span><span class="p">(</span><span class="n">launch</span><span class="o">.</span><span class="n">remote_root</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_files</span> <span class="o">=</span> <span class="n">FileSyncPolicy</span><span class="p">(</span><span class="n">launch</span><span class="o">.</span><span class="n">input_sync</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_files</span> <span class="o">=</span> <span class="n">FileSyncPolicy</span><span class="p">(</span><span class="n">launch</span><span class="o">.</span><span class="n">output_sync</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="_RemoteRunContext._remote_home">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.remote_endpoint._RemoteRunContext.html#ase2sprkkr.execution.remote_endpoint._RemoteRunContext._remote_home">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_remote_home</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">endpoint</span><span class="o">.</span><span class="n">_remote_home</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="_RemoteRunContext._resolved_remote_root">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.remote_endpoint._RemoteRunContext.html#ase2sprkkr.execution.remote_endpoint._RemoteRunContext._resolved_remote_root">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_resolved_remote_root</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">home</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_remote_home</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">remote_root</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">remote_root</span> <span class="o">==</span> <span class="s2">"~"</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">home</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">remote_root</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"~/"</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">posixpath</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">home</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">remote_root</span><span class="p">[</span><span class="mi">2</span><span class="p">:])</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">posixpath</span><span class="o">.</span><span class="n">isabs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">remote_root</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">posixpath</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">home</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">remote_root</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">posixpath</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">remote_root</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="_RemoteRunContext.map_path">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.remote_endpoint._RemoteRunContext.html#ase2sprkkr.execution.remote_endpoint._RemoteRunContext.map_path">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">map_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">path</span><span class="p">)</span><span class="o">.</span><span class="n">expanduser</span><span class="p">()</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">relative</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">relative_to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">local_root</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"Local path </span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2"> is outside mapped root </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">local_root</span><span class="si">}</span><span class="s2">; "</span>
+                <span class="s2">"specify local_root/remote_root explicitly"</span>
+            <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span>
+        <span class="n">remote_root</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_resolved_remote_root</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">relative</span><span class="o">.</span><span class="n">parts</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">remote_root</span>
+        <span class="k">return</span> <span class="n">posixpath</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">remote_root</span><span class="p">,</span> <span class="o">*</span><span class="n">relative</span><span class="o">.</span><span class="n">parts</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="_RemoteRunContext.unmap_path">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.remote_endpoint._RemoteRunContext.html#ase2sprkkr.execution.remote_endpoint._RemoteRunContext.unmap_path">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">unmap_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+        <span class="n">remote_root</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_resolved_remote_root</span><span class="p">()</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">posixpath</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">fspath</span><span class="p">(</span><span class="n">path</span><span class="p">))</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">posixpath</span><span class="o">.</span><span class="n">isabs</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Remote path must be absolute: </span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">common</span> <span class="o">=</span> <span class="n">posixpath</span><span class="o">.</span><span class="n">commonpath</span><span class="p">((</span><span class="n">remote_root</span><span class="p">,</span> <span class="n">path</span><span class="p">))</span>
+        <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Remote path </span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2"> is outside mapped root </span><span class="si">{</span><span class="n">remote_root</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span>
+        <span class="k">if</span> <span class="n">common</span> <span class="o">!=</span> <span class="n">remote_root</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Remote path </span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2"> is outside mapped root </span><span class="si">{</span><span class="n">remote_root</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="n">relative</span> <span class="o">=</span> <span class="n">posixpath</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">remote_root</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">relative</span> <span class="o">==</span> <span class="s2">"."</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">local_root</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">local_root</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="o">*</span><span class="n">PurePosixPath</span><span class="p">(</span><span class="n">relative</span><span class="p">)</span><span class="o">.</span><span class="n">parts</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="_RemoteRunContext.map_directory">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.remote_endpoint._RemoteRunContext.html#ase2sprkkr.execution.remote_endpoint._RemoteRunContext.map_directory">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">map_directory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">directory</span><span class="p">):</span>
+        <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">map_path</span><span class="p">(</span><span class="n">directory</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="_RemoteRunContext._submit">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.remote_endpoint._RemoteRunContext.html#ase2sprkkr.execution.remote_endpoint._RemoteRunContext._submit">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_submit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span>
+        <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">endpoint</span><span class="o">.</span><span class="n">_submit</span><span class="p">(</span><span class="n">request</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="_RemoteRunContext._status">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.remote_endpoint._RemoteRunContext.html#ase2sprkkr.execution.remote_endpoint._RemoteRunContext._status">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_status</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">directory</span><span class="p">,</span> <span class="n">run_id</span><span class="p">):</span>
+        <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">endpoint</span><span class="o">.</span><span class="n">_status</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">run_id</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="_RemoteRunContext._cancel">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.remote_endpoint._RemoteRunContext.html#ase2sprkkr.execution.remote_endpoint._RemoteRunContext._cancel">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_cancel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">directory</span><span class="p">,</span> <span class="n">run_id</span><span class="p">):</span>
+        <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">endpoint</span><span class="o">.</span><span class="n">_cancel</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">run_id</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="_RemoteRunContext._follow">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.remote_endpoint._RemoteRunContext.html#ase2sprkkr.execution.remote_endpoint._RemoteRunContext._follow">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_follow</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">directory</span><span class="p">,</span> <span class="n">run_id</span><span class="p">):</span>
+        <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">endpoint</span><span class="o">.</span><span class="n">_follow</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">run_id</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="_RemoteRunContext._saved_request">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.remote_endpoint._RemoteRunContext.html#ase2sprkkr.execution.remote_endpoint._RemoteRunContext._saved_request">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_saved_request</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">directory</span><span class="p">,</span> <span class="n">run_id</span><span class="p">):</span>
+        <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">endpoint</span><span class="o">.</span><span class="n">_saved_request</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">run_id</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="_RemoteRunContext.create_run">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.remote_endpoint._RemoteRunContext.html#ase2sprkkr.execution.remote_endpoint._RemoteRunContext.create_run">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reader</span><span class="p">,</span> <span class="n">spec</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">run_id</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">_RemoteRun</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reader</span><span class="p">,</span> <span class="n">spec</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="n">callback</span><span class="p">,</span> <span class="n">run_id</span><span class="o">=</span><span class="n">run_id</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="_RemoteRunContext.attach">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.remote_endpoint._RemoteRunContext.html#ase2sprkkr.execution.remote_endpoint._RemoteRunContext.attach">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">attach</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">reference</span><span class="p">,</span> <span class="n">reader</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">output_listener</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">request</span><span class="o">=</span><span class="kc">None</span>
+    <span class="p">):</span>
+        <span class="n">expected</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"remote:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">backend</span><span class="si">}</span><span class="s2">"</span>
+        <span class="k">if</span> <span class="n">reference</span><span class="o">.</span><span class="n">executor</span> <span class="o">!=</span> <span class="n">expected</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"Run reference belongs to </span><span class="si">{</span><span class="n">reference</span><span class="o">.</span><span class="n">executor</span><span class="si">!r}</span><span class="s2">, not </span><span class="si">{</span><span class="n">expected</span><span class="si">!r}</span><span class="s2">"</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">reference</span><span class="o">.</span><span class="n">native_id</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">reference</span><span class="o">.</span><span class="n">directory</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Remote run reference lacks run id or directory"</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">request</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">status</span><span class="p">,</span> <span class="n">request</span> <span class="o">=</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_status</span><span class="p">(</span><span class="n">reference</span><span class="o">.</span><span class="n">directory</span><span class="p">,</span> <span class="n">reference</span><span class="o">.</span><span class="n">native_id</span><span class="p">),</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_saved_request</span><span class="p">(</span><span class="n">reference</span><span class="o">.</span><span class="n">directory</span><span class="p">,</span> <span class="n">reference</span><span class="o">.</span><span class="n">native_id</span><span class="p">),</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">status</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_status</span><span class="p">(</span><span class="n">reference</span><span class="o">.</span><span class="n">directory</span><span class="p">,</span> <span class="n">reference</span><span class="o">.</span><span class="n">native_id</span><span class="p">)</span>
+        <span class="n">remote_backend</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"executor"</span><span class="p">,</span> <span class="s2">"local"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">remote_backend</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">backend</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"Remote run uses backend </span><span class="si">{</span><span class="n">remote_backend</span><span class="si">!r}</span><span class="s2">, not </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">backend</span><span class="si">!r}</span><span class="s2">"</span>
+            <span class="p">)</span>
+
+        <span class="n">local_directory</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">unmap_path</span><span class="p">(</span><span class="n">reference</span><span class="o">.</span><span class="n">directory</span><span class="p">)</span>
+        <span class="n">local_directory</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">input_remote</span> <span class="o">=</span> <span class="n">status</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"input_file"</span><span class="p">)</span> <span class="ow">or</span> <span class="n">reference</span><span class="o">.</span><span class="n">input_file</span>
+        <span class="n">input_local</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">unmap_path</span><span class="p">(</span><span class="n">input_remote</span><span class="p">)</span> <span class="k">if</span> <span class="n">input_remote</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
+
+        <span class="n">sync</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"client_sync"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">sync</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">sync</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">"output_file"</span><span class="p">:</span> <span class="n">status</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"output_file"</span><span class="p">)</span> <span class="ow">or</span> <span class="n">reference</span><span class="o">.</span><span class="n">output_file</span><span class="p">,</span>
+                <span class="s2">"error_file"</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                <span class="s2">"output_files"</span><span class="p">:</span> <span class="p">(),</span>
+                <span class="s2">"cache_files"</span><span class="p">:</span> <span class="p">(),</span>
+            <span class="p">}</span>
+
+        <span class="n">output_remote</span> <span class="o">=</span> <span class="n">sync</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"output_file"</span><span class="p">)</span>
+        <span class="n">error_remote</span> <span class="o">=</span> <span class="n">sync</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"error_file"</span><span class="p">)</span>
+        <span class="n">output_local</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">unmap_path</span><span class="p">(</span><span class="n">output_remote</span><span class="p">)</span> <span class="k">if</span> <span class="n">output_remote</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="n">error_local</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">unmap_path</span><span class="p">(</span><span class="n">error_remote</span><span class="p">)</span> <span class="k">if</span> <span class="n">error_remote</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
+
+        <span class="n">output_targets</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">remote</span> <span class="ow">in</span> <span class="n">sync</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"output_files"</span><span class="p">,</span> <span class="p">()):</span>
+            <span class="n">local</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">unmap_path</span><span class="p">(</span><span class="n">remote</span><span class="p">)</span>
+            <span class="n">output_targets</span><span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">fspath</span><span class="p">(</span><span class="n">local</span><span class="p">)]</span> <span class="o">=</span> <span class="n">remote</span>
+
+        <span class="n">cache_targets</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">sync</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"cache_files"</span><span class="p">,</span> <span class="p">()):</span>
+            <span class="n">remote</span> <span class="o">=</span> <span class="n">item</span><span class="p">[</span><span class="s2">"path"</span><span class="p">]</span>
+            <span class="n">before</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"before"</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">before</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                <span class="n">before</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">before</span><span class="p">)</span>
+            <span class="n">local</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">unmap_path</span><span class="p">(</span><span class="n">remote</span><span class="p">)</span>
+            <span class="n">cache_targets</span><span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">fspath</span><span class="p">(</span><span class="n">local</span><span class="p">)]</span> <span class="o">=</span> <span class="p">(</span><span class="n">remote</span><span class="p">,</span> <span class="n">before</span><span class="p">)</span>
+
+        <span class="n">output_patterns</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">sync</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"output_patterns"</span><span class="p">,</span> <span class="p">()))</span>
+        <span class="n">cache_patterns</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">sync</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"cache_patterns"</span><span class="p">,</span> <span class="p">()))</span>
+        <span class="n">cache_before</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">sync</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"cache_before"</span><span class="p">,</span> <span class="p">()):</span>
+            <span class="n">before</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"signature"</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">before</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                <span class="n">before</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">before</span><span class="p">)</span>
+            <span class="n">cache_before</span><span class="p">[</span><span class="n">item</span><span class="p">[</span><span class="s2">"path"</span><span class="p">]]</span> <span class="o">=</span> <span class="n">before</span>
+
+        <span class="n">opened</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">output_file</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">if</span> <span class="n">output_local</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">output_file</span> <span class="o">=</span> <span class="n">AtomicLocalFile</span><span class="p">(</span><span class="n">output_local</span><span class="p">)</span>
+                <span class="n">opened</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">output_file</span><span class="p">)</span>
+
+            <span class="n">error_file</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">if</span> <span class="n">error_local</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">output_local</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">error_local</span> <span class="o">==</span> <span class="n">output_local</span><span class="p">:</span>
+                    <span class="n">error_file</span> <span class="o">=</span> <span class="n">output_file</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">error_file</span> <span class="o">=</span> <span class="n">AtomicLocalFile</span><span class="p">(</span><span class="n">error_local</span><span class="p">)</span>
+                    <span class="n">opened</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">error_file</span><span class="p">)</span>
+
+            <span class="kn">from</span><span class="w"> </span><span class="nn">.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">ExecutionSpec</span>
+
+            <span class="n">spec</span> <span class="o">=</span> <span class="n">ExecutionSpec</span><span class="p">(</span>
+                <span class="n">argv</span><span class="o">=</span><span class="p">(),</span>
+                <span class="n">input_file</span><span class="o">=</span><span class="kc">None</span> <span class="k">if</span> <span class="n">input_local</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">os</span><span class="o">.</span><span class="n">fspath</span><span class="p">(</span><span class="n">input_local</span><span class="p">),</span>
+                <span class="n">output_file</span><span class="o">=</span><span class="n">output_file</span><span class="p">,</span>
+                <span class="n">error_file</span><span class="o">=</span><span class="n">error_file</span><span class="p">,</span>
+                <span class="n">directory</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">fspath</span><span class="p">(</span><span class="n">local_directory</span><span class="p">),</span>
+                <span class="n">launch</span><span class="o">=</span><span class="n">LaunchSpec</span><span class="p">(</span>
+                    <span class="n">local_root</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">fspath</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">local_root</span><span class="p">),</span>
+                    <span class="n">remote_root</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">remote_root</span><span class="p">,</span>
+                    <span class="n">input_sync</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">input_files</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+                    <span class="n">output_sync</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">output_files</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+                <span class="p">),</span>
+            <span class="p">)</span>
+            <span class="k">return</span> <span class="n">_RemoteRun</span><span class="p">(</span>
+                <span class="bp">self</span><span class="p">,</span>
+                <span class="n">reader</span><span class="p">,</span>
+                <span class="n">spec</span><span class="p">,</span>
+                <span class="n">callback</span><span class="o">=</span><span class="n">callback</span><span class="p">,</span>
+                <span class="n">output_listener</span><span class="o">=</span><span class="n">output_listener</span><span class="p">,</span>
+                <span class="n">start</span><span class="o">=</span><span class="n">start</span><span class="p">,</span>
+                <span class="n">reference</span><span class="o">=</span><span class="n">reference</span><span class="p">,</span>
+                <span class="n">state</span><span class="o">=</span><span class="n">RunState</span><span class="p">(</span><span class="n">status</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"state"</span><span class="p">,</span> <span class="s2">"unknown"</span><span class="p">)),</span>
+                <span class="n">output_targets</span><span class="o">=</span><span class="n">output_targets</span><span class="p">,</span>
+                <span class="n">cache_targets</span><span class="o">=</span><span class="n">cache_targets</span><span class="p">,</span>
+                <span class="n">output_patterns</span><span class="o">=</span><span class="n">output_patterns</span><span class="p">,</span>
+                <span class="n">cache_patterns</span><span class="o">=</span><span class="n">cache_patterns</span><span class="p">,</span>
+                <span class="n">cache_before</span><span class="o">=</span><span class="n">cache_before</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">except</span> <span class="ne">BaseException</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">opened</span><span class="p">:</span>
+                <span class="n">file</span><span class="o">.</span><span class="n">discard</span><span class="p">()</span>
+            <span class="k">raise</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="RemoteEndpointExecutor">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.remote_endpoint.RemoteEndpointExecutor.html#ase2sprkkr.execution.remote_endpoint.RemoteEndpointExecutor">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">RemoteEndpointExecutor</span><span class="p">(</span><span class="n">Executor</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Reusable remote execution endpoint independent of staging policy."""</span>
+
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">"remote"</span>
+
+<div class="viewcode-block" id="RemoteEndpointExecutor.__init__">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.remote_endpoint.RemoteEndpointExecutor.html#ase2sprkkr.execution.remote_endpoint.RemoteEndpointExecutor.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transport</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="s2">"local"</span><span class="p">,</span> <span class="n">backend_options</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">command</span><span class="o">=</span><span class="p">(</span><span class="s2">"ase2sprkkr"</span><span class="p">,</span> <span class="s2">"remote"</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="n">backend</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">_REMOTE_EXECUTORS</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Unsupported remote executor: </span><span class="si">{</span><span class="n">backend</span><span class="si">!r}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">transport</span> <span class="o">=</span> <span class="n">transport</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">backend</span> <span class="o">=</span> <span class="n">backend</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">backend_options</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">backend_options</span> <span class="ow">or</span> <span class="p">{})</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">command</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">computer</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">transport</span><span class="p">,</span> <span class="s2">"host"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_remote_home_cache</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="RemoteEndpointExecutor._remote_home">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.remote_endpoint.RemoteEndpointExecutor.html#ase2sprkkr.execution.remote_endpoint.RemoteEndpointExecutor._remote_home">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_remote_home</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_remote_home_cache</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">transport</span><span class="o">.</span><span class="n">run</span><span class="p">((</span><span class="s2">"sh"</span><span class="p">,</span> <span class="s2">"-c"</span><span class="p">,</span> <span class="s1">'printf "</span><span class="si">%s</span><span class="s1">" "$HOME"'</span><span class="p">))</span>
+            <span class="n">home</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">"utf8"</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">home</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">"Could not determine remote home directory"</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_remote_home_cache</span> <span class="o">=</span> <span class="n">posixpath</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">home</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_remote_home_cache</span></div>
+
+
+<div class="viewcode-block" id="RemoteEndpointExecutor._json_request">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.remote_endpoint.RemoteEndpointExecutor.html#ase2sprkkr.execution.remote_endpoint.RemoteEndpointExecutor._json_request">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_json_request</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">payload</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="kc">None</span> <span class="k">if</span> <span class="n">payload</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">"utf8"</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">transport</span><span class="o">.</span><span class="n">run</span><span class="p">((</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">command</span><span class="p">,</span> <span class="n">action</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">),</span> <span class="nb">input</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">"utf8"</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="RemoteEndpointExecutor._submit">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.remote_endpoint.RemoteEndpointExecutor.html#ase2sprkkr.execution.remote_endpoint.RemoteEndpointExecutor._submit">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_submit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span>
+        <span class="n">launch</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"launch"</span><span class="p">)</span> <span class="ow">or</span> <span class="p">{}</span>
+        <span class="n">mpi</span> <span class="o">=</span> <span class="n">launch</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"mpi"</span><span class="p">)</span> <span class="ow">or</span> <span class="p">{}</span>
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">backend</span> <span class="o">==</span> <span class="s2">"local"</span>
+            <span class="ow">and</span> <span class="n">mpi</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"autodetect"</span><span class="p">)</span>
+            <span class="ow">and</span> <span class="ow">not</span> <span class="n">mpi</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"required"</span><span class="p">)</span>
+            <span class="ow">and</span> <span class="n">mpi</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"warning"</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="p">):</span>
+            <span class="n">resolved</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_json_request</span><span class="p">(</span><span class="s2">"resolve-mpi"</span><span class="p">,</span> <span class="n">payload</span><span class="o">=</span><span class="p">{</span><span class="s2">"mpi"</span><span class="p">:</span> <span class="s2">"auto"</span><span class="p">})</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">resolved</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"mpi"</span><span class="p">):</span>
+                <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                    <span class="s2">"MPI autodetection did not find an MPI launcher on the remote host; "</span>
+                    <span class="s2">"the calculation will run without MPI."</span><span class="p">,</span>
+                    <span class="n">MpiNotFoundWarning</span><span class="p">,</span>
+                    <span class="n">stacklevel</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+                <span class="p">)</span>
+        <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_json_request</span><span class="p">(</span><span class="s2">"submit"</span><span class="p">,</span> <span class="n">request</span><span class="p">[</span><span class="s2">"directory"</span><span class="p">],</span> <span class="n">payload</span><span class="o">=</span><span class="n">request</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="RemoteEndpointExecutor._status">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.remote_endpoint.RemoteEndpointExecutor.html#ase2sprkkr.execution.remote_endpoint.RemoteEndpointExecutor._status">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_status</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">directory</span><span class="p">,</span> <span class="n">run_id</span><span class="p">):</span>
+        <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_json_request</span><span class="p">(</span><span class="s2">"status"</span><span class="p">,</span> <span class="n">directory</span><span class="p">,</span> <span class="n">run_id</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="RemoteEndpointExecutor._cancel">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.remote_endpoint.RemoteEndpointExecutor.html#ase2sprkkr.execution.remote_endpoint.RemoteEndpointExecutor._cancel">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_cancel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">directory</span><span class="p">,</span> <span class="n">run_id</span><span class="p">):</span>
+        <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_json_request</span><span class="p">(</span><span class="s2">"cancel"</span><span class="p">,</span> <span class="n">directory</span><span class="p">,</span> <span class="n">run_id</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="RemoteEndpointExecutor._follow">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.remote_endpoint.RemoteEndpointExecutor.html#ase2sprkkr.execution.remote_endpoint.RemoteEndpointExecutor._follow">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_follow</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">directory</span><span class="p">,</span> <span class="n">run_id</span><span class="p">):</span>
+        <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">transport</span><span class="o">.</span><span class="n">start</span><span class="p">((</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">command</span><span class="p">,</span> <span class="s2">"follow"</span><span class="p">,</span> <span class="n">directory</span><span class="p">,</span> <span class="n">run_id</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="RemoteEndpointExecutor._saved_request">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.remote_endpoint.RemoteEndpointExecutor.html#ase2sprkkr.execution.remote_endpoint.RemoteEndpointExecutor._saved_request">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_saved_request</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">directory</span><span class="p">,</span> <span class="n">run_id</span><span class="p">):</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">posixpath</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">_METADATA_DIR</span><span class="p">,</span> <span class="n">_RUNS_DIR</span><span class="p">,</span> <span class="n">run_id</span><span class="p">,</span> <span class="n">_REQUEST_FILE</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">((</span><span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">transport</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="n">path</span><span class="p">))</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">"utf8"</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="RemoteEndpointExecutor._context">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.remote_endpoint.RemoteEndpointExecutor.html#ase2sprkkr.execution.remote_endpoint.RemoteEndpointExecutor._context">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_context</span><span class="p">(</span><span class="n">endpoint</span><span class="p">,</span> <span class="n">launch</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">launch</span><span class="p">,</span> <span class="n">LaunchSpec</span><span class="p">):</span>
+            <span class="n">launch</span> <span class="o">=</span> <span class="n">LaunchSpec</span><span class="p">(</span><span class="o">**</span><span class="nb">dict</span><span class="p">(</span><span class="n">launch</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">_RemoteRunContext</span><span class="p">(</span><span class="n">endpoint</span><span class="p">,</span> <span class="n">launch</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="RemoteEndpointExecutor._validate_reference">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.remote_endpoint.RemoteEndpointExecutor.html#ase2sprkkr.execution.remote_endpoint.RemoteEndpointExecutor._validate_reference">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_validate_reference</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reference</span><span class="p">):</span>
+        <span class="n">expected</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"remote:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">backend</span><span class="si">}</span><span class="s2">"</span>
+        <span class="k">if</span> <span class="n">reference</span><span class="o">.</span><span class="n">executor</span> <span class="o">!=</span> <span class="n">expected</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"Run reference belongs to </span><span class="si">{</span><span class="n">reference</span><span class="o">.</span><span class="n">executor</span><span class="si">!r}</span><span class="s2">, not </span><span class="si">{</span><span class="n">expected</span><span class="si">!r}</span><span class="s2">"</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">reference</span><span class="o">.</span><span class="n">native_id</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">reference</span><span class="o">.</span><span class="n">directory</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Remote run reference lacks run id or directory"</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="RemoteEndpointExecutor._resolve_submission_directory">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.remote_endpoint.RemoteEndpointExecutor.html#ase2sprkkr.execution.remote_endpoint.RemoteEndpointExecutor._resolve_submission_directory">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_resolve_submission_directory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">directory</span><span class="p">):</span>
+        <span class="n">directory</span> <span class="o">=</span> <span class="n">posixpath</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">fspath</span><span class="p">(</span><span class="n">directory</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">directory</span> <span class="o">==</span> <span class="s2">"~"</span><span class="p">:</span>
+            <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_remote_home</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">directory</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"~/"</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">posixpath</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_remote_home</span><span class="p">(),</span> <span class="n">directory</span><span class="p">[</span><span class="mi">2</span><span class="p">:])</span>
+        <span class="k">return</span> <span class="n">directory</span></div>
+
+
+<div class="viewcode-block" id="RemoteEndpointExecutor.submission_directory">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.remote_endpoint.RemoteEndpointExecutor.html#ase2sprkkr.execution.remote_endpoint.RemoteEndpointExecutor.submission_directory">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">submission_directory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">spec</span><span class="p">):</span>
+        <span class="n">launch</span> <span class="o">=</span> <span class="n">spec</span><span class="o">.</span><span class="n">launch</span>
+        <span class="n">local_root</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">launch</span><span class="o">.</span><span class="n">local_root</span> <span class="ow">or</span> <span class="n">Path</span><span class="o">.</span><span class="n">home</span><span class="p">())</span><span class="o">.</span><span class="n">expanduser</span><span class="p">()</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+        <span class="n">directory</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">spec</span><span class="o">.</span><span class="n">directory</span><span class="p">)</span><span class="o">.</span><span class="n">expanduser</span><span class="p">()</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">relative</span> <span class="o">=</span> <span class="n">directory</span><span class="o">.</span><span class="n">relative_to</span><span class="p">(</span><span class="n">local_root</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"Local path </span><span class="si">{</span><span class="n">directory</span><span class="si">}</span><span class="s2"> is outside mapped root </span><span class="si">{</span><span class="n">local_root</span><span class="si">}</span><span class="s2">; "</span>
+                <span class="s2">"specify local_root/remote_root explicitly"</span>
+            <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span>
+        <span class="n">root</span> <span class="o">=</span> <span class="n">launch</span><span class="o">.</span><span class="n">remote_root</span>
+        <span class="k">if</span> <span class="n">root</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">root</span> <span class="o">==</span> <span class="s2">"~"</span><span class="p">:</span>
+            <span class="n">remote_root</span> <span class="o">=</span> <span class="s2">"~"</span>
+        <span class="k">elif</span> <span class="n">root</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"~/"</span><span class="p">):</span>
+            <span class="n">remote_root</span> <span class="o">=</span> <span class="n">posixpath</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">posixpath</span><span class="o">.</span><span class="n">isabs</span><span class="p">(</span><span class="n">root</span><span class="p">):</span>
+            <span class="n">remote_root</span> <span class="o">=</span> <span class="n">posixpath</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">remote_root</span> <span class="o">=</span> <span class="n">posixpath</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">posixpath</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">"~"</span><span class="p">,</span> <span class="n">root</span><span class="p">))</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">relative</span><span class="o">.</span><span class="n">parts</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">remote_root</span>
+        <span class="k">return</span> <span class="n">posixpath</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">remote_root</span><span class="p">,</span> <span class="o">*</span><span class="n">PurePosixPath</span><span class="p">(</span><span class="o">*</span><span class="n">relative</span><span class="o">.</span><span class="n">parts</span><span class="p">)</span><span class="o">.</span><span class="n">parts</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="RemoteEndpointExecutor.status">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.remote_endpoint.RemoteEndpointExecutor.html#ase2sprkkr.execution.remote_endpoint.RemoteEndpointExecutor.status">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">status</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">references</span><span class="p">:</span> <span class="n">RunReference</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">reference</span> <span class="ow">in</span> <span class="n">references</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_validate_reference</span><span class="p">(</span><span class="n">reference</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">references</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">()</span>
+        <span class="n">by_directory</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">reference</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">references</span><span class="p">):</span>
+            <span class="n">by_directory</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">reference</span><span class="o">.</span><span class="n">directory</span><span class="p">,</span> <span class="p">[])</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">index</span><span class="p">,</span> <span class="n">reference</span><span class="p">))</span>
+
+        <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">query</span><span class="p">():</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">references</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">directory</span><span class="p">,</span> <span class="n">items</span> <span class="ow">in</span> <span class="n">by_directory</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">ids</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">reference</span><span class="o">.</span><span class="n">native_id</span> <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">reference</span> <span class="ow">in</span> <span class="n">items</span><span class="p">)</span>
+                <span class="n">states</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_json_request</span><span class="p">(</span><span class="s2">"status"</span><span class="p">,</span> <span class="n">directory</span><span class="p">,</span> <span class="o">*</span><span class="n">ids</span><span class="p">)</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">ids</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="n">states</span> <span class="o">=</span> <span class="p">(</span><span class="n">states</span><span class="p">,)</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">states</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">items</span><span class="p">):</span>
+                    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">"Remote endpoint returned wrong number of run statuses"</span><span class="p">)</span>
+                <span class="k">for</span> <span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">reference</span><span class="p">),</span> <span class="n">state</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">items</span><span class="p">,</span> <span class="n">states</span><span class="p">):</span>
+                    <span class="n">result</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">=</span> <span class="n">RunStatus</span><span class="p">(</span>
+                        <span class="n">reference</span><span class="p">,</span>
+                        <span class="n">RunState</span><span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"state"</span><span class="p">,</span> <span class="s2">"unknown"</span><span class="p">)),</span>
+                        <span class="n">return_code</span><span class="o">=</span><span class="n">state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"return_code"</span><span class="p">),</span>
+                        <span class="n">message</span><span class="o">=</span><span class="n">state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"error"</span><span class="p">),</span>
+                    <span class="p">)</span>
+            <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">_run_sync</span><span class="p">(</span><span class="n">query</span><span class="p">())</span></div>
+
+
+<div class="viewcode-block" id="RemoteEndpointExecutor._recover_submission">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.remote_endpoint.RemoteEndpointExecutor.html#ase2sprkkr.execution.remote_endpoint.RemoteEndpointExecutor._recover_submission">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_recover_submission</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">run_id</span><span class="p">,</span> <span class="n">submission</span><span class="p">):</span>
+        <span class="n">directory</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_resolve_submission_directory</span><span class="p">(</span><span class="n">submission</span><span class="o">.</span><span class="n">directory</span><span class="p">)</span>
+        <span class="n">state_path</span> <span class="o">=</span> <span class="n">posixpath</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">_METADATA_DIR</span><span class="p">,</span> <span class="n">_RUNS_DIR</span><span class="p">,</span> <span class="n">run_id</span><span class="p">,</span> <span class="n">_STATE_FILE</span><span class="p">)</span>
+        <span class="k">if</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">transport</span><span class="o">.</span><span class="n">file_signature</span><span class="p">(</span><span class="n">state_path</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="n">state</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_status</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">run_id</span><span class="p">)</span>
+        <span class="n">reference</span> <span class="o">=</span> <span class="n">RunReference</span><span class="p">(</span>
+            <span class="n">executor</span><span class="o">=</span><span class="sa">f</span><span class="s2">"remote:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">backend</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="n">native_id</span><span class="o">=</span><span class="n">run_id</span><span class="p">,</span>
+            <span class="n">computer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">computer</span><span class="p">,</span> <span class="n">directory</span><span class="o">=</span><span class="n">directory</span><span class="p">,</span>
+            <span class="n">input_file</span><span class="o">=</span><span class="n">state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"input_file"</span><span class="p">),</span> <span class="n">output_file</span><span class="o">=</span><span class="n">state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"output_file"</span><span class="p">),</span>
+            <span class="n">error_file</span><span class="o">=</span><span class="n">state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"error_file"</span><span class="p">),</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">RunStatus</span><span class="p">(</span>
+            <span class="n">reference</span><span class="o">=</span><span class="n">reference</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="n">RunState</span><span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"state"</span><span class="p">,</span> <span class="s2">"unknown"</span><span class="p">)),</span>
+            <span class="n">return_code</span><span class="o">=</span><span class="n">state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"return_code"</span><span class="p">),</span> <span class="n">message</span><span class="o">=</span><span class="n">state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"error"</span><span class="p">),</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="RemoteEndpointExecutor.recover_submission">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.remote_endpoint.RemoteEndpointExecutor.html#ase2sprkkr.execution.remote_endpoint.RemoteEndpointExecutor.recover_submission">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">recover_submission</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">run_id</span><span class="p">,</span> <span class="n">submission</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">submitted_at</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">_run_sync</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_recover_submission</span><span class="p">(</span><span class="n">run_id</span><span class="p">,</span> <span class="n">submission</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="RemoteEndpointExecutor.create_run">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.remote_endpoint.RemoteEndpointExecutor.html#ase2sprkkr.execution.remote_endpoint.RemoteEndpointExecutor.create_run">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reader</span><span class="p">,</span> <span class="n">spec</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_context</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">spec</span><span class="o">.</span><span class="n">launch</span><span class="p">)</span><span class="o">.</span><span class="n">create_run</span><span class="p">(</span><span class="n">reader</span><span class="p">,</span> <span class="n">spec</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="n">callback</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="RemoteEndpointExecutor.create_persistent_run">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.remote_endpoint.RemoteEndpointExecutor.html#ase2sprkkr.execution.remote_endpoint.RemoteEndpointExecutor.create_persistent_run">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_persistent_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reader</span><span class="p">,</span> <span class="n">spec</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">run_id</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_context</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">spec</span><span class="o">.</span><span class="n">launch</span><span class="p">)</span><span class="o">.</span><span class="n">create_run</span><span class="p">(</span>
+            <span class="n">reader</span><span class="p">,</span> <span class="n">spec</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="n">callback</span><span class="p">,</span> <span class="n">run_id</span><span class="o">=</span><span class="n">run_id</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="RemoteEndpointExecutor._fetch_result_files">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.remote_endpoint.RemoteEndpointExecutor.html#ase2sprkkr.execution.remote_endpoint.RemoteEndpointExecutor._fetch_result_files">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_fetch_result_files</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reference</span><span class="p">,</span> <span class="n">files</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_validate_reference</span><span class="p">(</span><span class="n">reference</span><span class="p">)</span>
+        <span class="n">request</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_saved_request</span><span class="p">(</span><span class="n">reference</span><span class="o">.</span><span class="n">directory</span><span class="p">,</span> <span class="n">reference</span><span class="o">.</span><span class="n">native_id</span><span class="p">)</span>
+        <span class="n">launch</span> <span class="o">=</span> <span class="n">LaunchSpec</span><span class="p">(</span><span class="o">**</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"launch"</span><span class="p">)</span> <span class="ow">or</span> <span class="p">{}))</span>
+        <span class="n">context</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_context</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">launch</span><span class="p">)</span>
+        <span class="n">remote_root</span> <span class="o">=</span> <span class="k">await</span> <span class="n">context</span><span class="o">.</span><span class="n">_resolved_remote_root</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
+            <span class="n">local</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">fspath</span><span class="p">(</span><span class="n">value</span><span class="p">))</span>
+            <span class="n">remote</span> <span class="o">=</span> <span class="k">await</span> <span class="n">context</span><span class="o">.</span><span class="n">map_path</span><span class="p">(</span><span class="n">local</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">glob</span><span class="o">.</span><span class="n">has_magic</span><span class="p">(</span><span class="n">local</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">matched_remote</span> <span class="ow">in</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">transport</span><span class="o">.</span><span class="n">expand_files</span><span class="p">(</span>
+                    <span class="n">remote</span><span class="p">,</span> <span class="n">remote_root</span>
+                <span class="p">):</span>
+                    <span class="n">matched_local</span> <span class="o">=</span> <span class="k">await</span> <span class="n">context</span><span class="o">.</span><span class="n">unmap_path</span><span class="p">(</span><span class="n">matched_remote</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">matched_local</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
+                        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">transport</span><span class="o">.</span><span class="n">get_file</span><span class="p">(</span><span class="n">matched_remote</span><span class="p">,</span> <span class="n">matched_local</span><span class="p">)</span>
+                <span class="k">continue</span>
+            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">local</span><span class="p">):</span>
+                <span class="k">continue</span>
+            <span class="k">if</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">transport</span><span class="o">.</span><span class="n">file_signature</span><span class="p">(</span><span class="n">remote</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">transport</span><span class="o">.</span><span class="n">get_file</span><span class="p">(</span><span class="n">remote</span><span class="p">,</span> <span class="n">local</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="RemoteEndpointExecutor.fetch_result_files">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.remote_endpoint.RemoteEndpointExecutor.html#ase2sprkkr.execution.remote_endpoint.RemoteEndpointExecutor.fetch_result_files">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">fetch_result_files</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reference</span><span class="p">,</span> <span class="n">files</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">_run_sync</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_fetch_result_files</span><span class="p">(</span><span class="n">reference</span><span class="p">,</span> <span class="n">files</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="RemoteEndpointExecutor._attach_with_saved_launch">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.remote_endpoint.RemoteEndpointExecutor.html#ase2sprkkr.execution.remote_endpoint.RemoteEndpointExecutor._attach_with_saved_launch">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_attach_with_saved_launch</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">reference</span><span class="p">,</span> <span class="n">reader</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">output_listener</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_validate_reference</span><span class="p">(</span><span class="n">reference</span><span class="p">)</span>
+        <span class="n">request</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_saved_request</span><span class="p">(</span><span class="n">reference</span><span class="o">.</span><span class="n">directory</span><span class="p">,</span> <span class="n">reference</span><span class="o">.</span><span class="n">native_id</span><span class="p">)</span>
+        <span class="n">launch</span> <span class="o">=</span> <span class="n">LaunchSpec</span><span class="p">(</span><span class="o">**</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"launch"</span><span class="p">)</span> <span class="ow">or</span> <span class="p">{}))</span>
+        <span class="n">context</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_context</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">launch</span><span class="p">)</span>
+        <span class="k">return</span> <span class="k">await</span> <span class="n">context</span><span class="o">.</span><span class="n">attach</span><span class="p">(</span>
+            <span class="n">reference</span><span class="p">,</span> <span class="n">reader</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="n">callback</span><span class="p">,</span> <span class="n">output_listener</span><span class="o">=</span><span class="n">output_listener</span><span class="p">,</span>
+            <span class="n">start</span><span class="o">=</span><span class="n">start</span><span class="p">,</span> <span class="n">request</span><span class="o">=</span><span class="n">request</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="RemoteEndpointExecutor.attach">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.remote_endpoint.RemoteEndpointExecutor.html#ase2sprkkr.execution.remote_endpoint.RemoteEndpointExecutor.attach">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">attach</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">reference</span><span class="p">:</span> <span class="n">RunReference</span><span class="p">,</span> <span class="n">reader</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">output_listener</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="k">return</span> <span class="n">_run_sync</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_attach_with_saved_launch</span><span class="p">(</span>
+            <span class="n">reference</span><span class="p">,</span> <span class="n">reader</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="n">callback</span><span class="p">,</span>
+            <span class="n">output_listener</span><span class="o">=</span><span class="n">output_listener</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="n">start</span><span class="p">,</span>
+        <span class="p">))</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Matyáš Novák &amp; Jano Minár.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

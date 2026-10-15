@@ -16,8 +16,8 @@
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
-      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -81,6 +81,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../ase2sprkkr.html">ase2sprkkr</a></li>
       <li class="breadcrumb-item active">ase2sprkkr.common.configuration_containers</li>
       <li class="wy-breadcrumbs-aside">
       </li>
@@ -91,120 +92,299 @@
            <div itemprop="articleBody">
              
   <h1>Source code for ase2sprkkr.common.configuration_containers</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;In this file the common containers of configuration values are,</span>
+<span></span><span class="sd">"""In this file the common containers of configuration values are,</span>
 <span class="sd">either for task or potential.</span>
 
 <span class="sd">Configuration containers are classes, that holds configuration values</span>
 <span class="sd">and other containers, and are able to write them to a configuration file,</span>
 <span class="sd">and that are results of parsing of a configuration file.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">.configuration</span><span class="w"> </span><span class="kn">import</span> <span class="n">Configuration</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.configuration</span><span class="w"> </span><span class="kn">import</span> <span class="n">Configuration</span><span class="p">,</span> <span class="n">UnknownMemberPolicy</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.file_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">filename_from_file</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">copy</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">itertools</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">.warnings</span><span class="w"> </span><span class="kn">import</span> <span class="n">warnings</span><span class="p">,</span> <span class="n">DataValidityError</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">.section_adaptors</span><span class="w"> </span><span class="kn">import</span> <span class="n">SectionAdaptor</span><span class="p">,</span> <span class="n">MergeSectionAdaptor</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Iterator</span><span class="p">,</span> <span class="n">Mapping</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Any</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.configuration_transaction</span><span class="w"> </span><span class="kn">import</span> <span class="n">ConfigurationTransaction</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.warnings</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">DataValidityError</span><span class="p">,</span>
+    <span class="n">ReportInvalidPolicy</span><span class="p">,</span>
+    <span class="n">RetainInvalidPolicy</span><span class="p">,</span>
+    <span class="n">ValidationReason</span><span class="p">,</span>
+<span class="p">)</span>
 
 
 <div class="viewcode-block" id="DisabledAttributeError">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.DisabledAttributeError.html#ase2sprkkr.common.configuration_containers.DisabledAttributeError">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.DisabledAttributeError.html#ase2sprkkr.common.container_definitions.DisabledAttributeError">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">DisabledAttributeError</span><span class="p">(</span><span class="ne">AttributeError</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;This exception is raised, if the attribute of a container exists,</span>
+<span class="w">    </span><span class="sd">"""This exception is raised, if the attribute of a container exists,</span>
 <span class="sd">    but it is disabled. E.g. because it has no sense for the current data.</span>
-<span class="sd">    &quot;&quot;&quot;</span></div>
+<span class="sd">    """</span></div>
 
 
 
 <div class="viewcode-block" id="BaseConfigurationContainer">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.BaseConfigurationContainer.html#ase2sprkkr.common.configuration_containers.BaseConfigurationContainer">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">BaseConfigurationContainer</span><span class="p">(</span><span class="n">Configuration</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Configuration container, that holds members, either in classical way</span>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.BaseConfigurationContainer.html#ase2sprkkr.common.container_definitions.BaseConfigurationContainer">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">BaseConfigurationContainer</span><span class="p">(</span><span class="n">Configuration</span><span class="p">,</span> <span class="n">ABC</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Configuration container, that holds members, either in classical way</span>
 <span class="sd">    (see :class:ConfigurationContainer) or treat them in a special way</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="BaseConfigurationContainer.copy">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.BaseConfigurationContainer.html#ase2sprkkr.common.configuration_containers.BaseConfigurationContainer.copy">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.BaseConfigurationContainer.html#ase2sprkkr.common.container_definitions.BaseConfigurationContainer.copy">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">copy_values</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a copy of the container</span>
+<span class="w">        </span><span class="sd">"""Create a copy of the container</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        copy_values</span>
 <span class="sd">          If true, the copy of values is done, so their modifications do not affects the container.</span>
 <span class="sd">          (e.g. for numpy arrays)</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">d</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span>
-        <span class="n">vals</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">as_dict</span><span class="p">(</span><span class="n">copy</span><span class="o">=</span><span class="n">copy_values</span><span class="p">,</span> <span class="n">only_changed</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">values</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">as_dict</span><span class="p">(</span><span class="n">copy</span><span class="o">=</span><span class="n">copy_values</span><span class="p">,</span> <span class="n">only_changed</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="n">out</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">result_class</span><span class="p">(</span><span class="n">definition</span><span class="o">=</span><span class="n">d</span><span class="p">)</span>
-        <span class="n">out</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">vals</span><span class="p">,</span> <span class="n">unknown</span><span class="o">=</span><span class="s2">&quot;add&quot;</span><span class="p">)</span>
+        <span class="n">out</span><span class="o">.</span><span class="n">set</span><span class="p">(</span>
+            <span class="n">values</span><span class="p">,</span>
+            <span class="n">unknown</span><span class="o">=</span><span class="s2">"add"</span><span class="p">,</span>
+            <span class="n">retain_invalid</span><span class="o">=</span><span class="s2">"all"</span><span class="p">,</span>
+            <span class="n">report_invalid</span><span class="o">=</span><span class="s2">"ignore"</span><span class="p">,</span>
+        <span class="p">)</span>
         <span class="k">return</span> <span class="n">out</span></div>
 
 
+<div class="viewcode-block" id="BaseConfigurationContainer.values">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.BaseConfigurationContainer.html#ase2sprkkr.common.container_definitions.BaseConfigurationContainer.values">[docs]</a>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Return the configuration objects contained by this container."""</span></div>
+
+
 <div class="viewcode-block" id="BaseConfigurationContainer.has_any_value">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.BaseConfigurationContainer.html#ase2sprkkr.common.configuration_containers.BaseConfigurationContainer.has_any_value">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.BaseConfigurationContainer.html#ase2sprkkr.common.container_definitions.BaseConfigurationContainer.has_any_value">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">has_any_value</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Return True if any member of the section has value.</span>
 
 <span class="sd">        Return</span>
 <span class="sd">        ------</span>
 <span class="sd">          has_any_value: bool</span>
 <span class="sd">              True, if no value in the container is set, False otherwise</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">():</span>
+<span class="sd">        """</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
             <span class="k">if</span> <span class="n">i</span><span class="o">.</span><span class="n">has_any_value</span><span class="p">():</span>
                 <span class="k">return</span> <span class="kc">True</span>
         <span class="k">return</span> <span class="kc">False</span></div>
 
 
+<div class="viewcode-block" id="BaseConfigurationContainer.get_members">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.BaseConfigurationContainer.html#ase2sprkkr.common.container_definitions.BaseConfigurationContainer.get_members">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_members</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">name</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">unknown</span><span class="p">:</span> <span class="n">UnknownMemberPolicy</span> <span class="o">=</span> <span class="s2">"find"</span><span class="p">,</span>
+        <span class="n">is_option</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">lower_case</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">accept</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Callable</span><span class="p">[[</span><span class="n">Configuration</span><span class="p">],</span> <span class="nb">bool</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">"""Return members selected by a path.</span>
+
+<span class="sd">        ``None`` and leading parent operators are common to all containers;</span>
+<span class="sd">        each concrete container implements lookup of its own members in</span>
+<span class="sd">        :meth:`_get_members`.</span>
+<span class="sd">        """</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">yield</span> <span class="bp">self</span>
+            <span class="k">return</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">".."</span><span class="p">):</span>
+            <span class="n">parent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_container</span>
+            <span class="c1"># A concrete item of a repeated section is held in a technical</span>
+            <span class="c1"># collection carrying the same definition.  It must not add a</span>
+            <span class="c1"># level to explicit paths, because no such level exists in the</span>
+            <span class="c1"># definition tree.</span>
+            <span class="k">if</span> <span class="p">(</span>
+                <span class="n">parent</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+                <span class="ow">and</span> <span class="n">parent</span><span class="o">.</span><span class="n">_definition</span> <span class="ow">is</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span>
+            <span class="p">):</span>
+                <span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span><span class="o">.</span><span class="n">_container</span>
+            <span class="k">if</span> <span class="n">parent</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">yield from</span> <span class="n">parent</span><span class="o">.</span><span class="n">get_members</span><span class="p">(</span>
+                    <span class="n">name</span><span class="p">[</span><span class="mi">2</span><span class="p">:],</span>
+                    <span class="n">unknown</span><span class="p">,</span>
+                    <span class="n">is_option</span><span class="p">,</span>
+                    <span class="n">lower_case</span><span class="p">,</span>
+                    <span class="n">accept</span><span class="o">=</span><span class="n">accept</span><span class="p">,</span>
+                <span class="p">)</span>
+            <span class="k">return</span>
+        <span class="k">yield from</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_members</span><span class="p">(</span>
+            <span class="n">name</span><span class="p">,</span>
+            <span class="n">unknown</span><span class="p">,</span>
+            <span class="n">is_option</span><span class="p">,</span>
+            <span class="n">lower_case</span><span class="p">,</span>
+            <span class="n">accept</span><span class="o">=</span><span class="n">accept</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="BaseConfigurationContainer._get_members">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.BaseConfigurationContainer.html#ase2sprkkr.common.container_definitions.BaseConfigurationContainer._get_members">[docs]</a>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_members</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">name</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+        <span class="n">unknown</span><span class="p">:</span> <span class="n">UnknownMemberPolicy</span><span class="p">,</span>
+        <span class="n">is_option</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">],</span>
+        <span class="n">lower_case</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">accept</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Callable</span><span class="p">[[</span><span class="n">Configuration</span><span class="p">],</span> <span class="nb">bool</span><span class="p">]],</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">"""Return members owned directly or indirectly by this container."""</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+
+<div class="viewcode-block" id="BaseConfigurationContainer.get_member">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.BaseConfigurationContainer.html#ase2sprkkr.common.container_definitions.BaseConfigurationContainer.get_member">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_member</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">name</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">unknown</span><span class="p">:</span> <span class="n">UnknownMemberPolicy</span> <span class="o">=</span> <span class="s2">"find"</span><span class="p">,</span>
+        <span class="n">is_option</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">lower_case</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">accept</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Callable</span><span class="p">[[</span><span class="n">Configuration</span><span class="p">],</span> <span class="nb">bool</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Configuration</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Return the first matching member, raising ``KeyError`` if absent.</span>
+
+<span class="sd">        ``unknown``, ``is_option``, ``lower_case`` and ``accept`` have the same</span>
+<span class="sd">        meaning as in :meth:`get_members`.</span>
+<span class="sd">        """</span>
+        <span class="n">members</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_members</span><span class="p">(</span>
+            <span class="n">name</span><span class="p">,</span>
+            <span class="n">unknown</span><span class="p">,</span>
+            <span class="n">is_option</span><span class="p">,</span>
+            <span class="n">lower_case</span><span class="p">,</span>
+            <span class="n">accept</span><span class="o">=</span><span class="n">accept</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">next</span><span class="p">(</span><span class="n">members</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">StopIteration</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"No member with name </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> in </span><span class="si">{</span><span class="bp">self</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="kc">None</span></div>
+
+
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">definition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;The definition of the section.</span>
+<span class="w">        </span><span class="sd">"""The definition of the section.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        ase2sprkkr.common.configuration_definitions.ContainerDefinition</span>
 <span class="sd">        The definition of the section. I.e. the object that defines, which configuration values</span>
 <span class="sd">        are in the section, their default values etc.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span></div>
 
 
 
 <div class="viewcode-block" id="ConfigurationContainer">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.configuration_containers.ConfigurationContainer">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.container_definitions.ConfigurationContainer">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">ConfigurationContainer</span><span class="p">(</span><span class="n">BaseConfigurationContainer</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;A container for configuration (problem-definition) options and/or sections.</span>
+<span class="w">    </span><span class="sd">"""A container for configuration (problem-definition) options and/or sections.</span>
 
 <span class="sd">    Options in the configuration (problem-definition) files are grouped to</span>
 <span class="sd">    sections, sections are then grouped in a configuration file object.</span>
 <span class="sd">    This is a base class for these containers.</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
+
+<div class="viewcode-block" id="ConfigurationContainer.MemberChange">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.container_definitions.ConfigurationContainer.MemberChange">[docs]</a>
+    <span class="k">class</span><span class="w"> </span><span class="nc">MemberChange</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Attachment of a custom member staged on a container."""</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">container</span><span class="p">:</span> <span class="s2">"ConfigurationContainer"</span><span class="p">,</span> <span class="n">member</span><span class="p">:</span> <span class="n">Configuration</span>
+        <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">            </span><span class="sd">"""Record the custom ``member`` attached to ``container``."""</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">container</span> <span class="o">=</span> <span class="n">container</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">member</span> <span class="o">=</span> <span class="n">member</span>
+
+<div class="viewcode-block" id="ConfigurationContainer.MemberChange.commit">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.container_definitions.ConfigurationContainer.MemberChange.commit">[docs]</a>
+        <span class="k">def</span><span class="w"> </span><span class="nf">commit</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="ConfigurationContainer.MemberChange.rollback">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.container_definitions.ConfigurationContainer.MemberChange.rollback">[docs]</a>
+        <span class="k">def</span><span class="w"> </span><span class="nf">rollback</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">remove_member</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">member</span><span class="o">.</span><span class="n">name</span><span class="p">)</span></div>
+</div>
+
+
+<div class="viewcode-block" id="ConfigurationContainer.ParsedValuesChange">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.container_definitions.ConfigurationContainer.ParsedValuesChange">[docs]</a>
+    <span class="k">class</span><span class="w"> </span><span class="nc">ParsedValuesChange</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Temporary record of the values explicitly present in parsed input."""</span>
+
+        <span class="n">_MISSING</span> <span class="o">=</span> <span class="nb">object</span><span class="p">()</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">container</span><span class="p">:</span> <span class="s2">"ConfigurationContainer"</span><span class="p">,</span> <span class="n">values</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
+        <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">            </span><span class="sd">"""Expose parsed ``values`` temporarily on ``container``."""</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">container</span> <span class="o">=</span> <span class="n">container</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">old_values</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span>
+                <span class="n">container</span><span class="p">,</span> <span class="s2">"_parsed_values"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_MISSING</span>
+            <span class="p">)</span>
+            <span class="n">container</span><span class="o">.</span><span class="n">_parsed_values</span> <span class="o">=</span> <span class="n">values</span>
+
+<div class="viewcode-block" id="ConfigurationContainer.ParsedValuesChange.commit">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.container_definitions.ConfigurationContainer.ParsedValuesChange.commit">[docs]</a>
+        <span class="k">def</span><span class="w"> </span><span class="nf">commit</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_restore</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="ConfigurationContainer.ParsedValuesChange.rollback">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.container_definitions.ConfigurationContainer.ParsedValuesChange.rollback">[docs]</a>
+        <span class="k">def</span><span class="w"> </span><span class="nf">rollback</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_restore</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="ConfigurationContainer.ParsedValuesChange._restore">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.container_definitions.ConfigurationContainer.ParsedValuesChange._restore">[docs]</a>
+        <span class="k">def</span><span class="w"> </span><span class="nf">_restore</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">old_values</span> <span class="ow">is</span> <span class="bp">self</span><span class="o">.</span><span class="n">_MISSING</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">"_parsed_values"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">_parsed_values</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">old_values</span></div>
+</div>
+
 
 <div class="viewcode-block" id="ConfigurationContainer.__init__">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.configuration_containers.ConfigurationContainer.__init__">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.container_definitions.ConfigurationContainer.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">definition</span><span class="p">,</span> <span class="n">container</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create the container and its members, according to the definition&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Create the container and its members, according to the definition"""</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">definition</span><span class="p">,</span> <span class="n">container</span><span class="p">)</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">      The members of the container, in a form of ``{obj.name : obj}``</span>
-<span class="sd">      &quot;&quot;&quot;</span>
+<span class="sd">      """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_init_members_from_the_definition</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="ConfigurationContainer._init_members_from_the_definition">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.configuration_containers.ConfigurationContainer._init_members_from_the_definition">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.container_definitions.ConfigurationContainer._init_members_from_the_definition">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">_init_members_from_the_definition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_members</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_lowercase_members</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">      Non-hidden members of the containers, accesible via sanitized names.</span>
 <span class="sd">      I.e. via names with whitespaces and other special characters replaced by underscore.</span>
-<span class="sd">      These sanitized names are then used as names for &quot;attributes&quot; of this container, to</span>
+<span class="sd">      These sanitized names are then used as names for "attributes" of this container, to</span>
 <span class="sd">      make the members accesible via ``&lt;container&gt;.&lt;member&gt;`` notation.</span>
-<span class="sd">      &quot;&quot;&quot;</span>
+<span class="sd">      """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_interactive_members</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">members</span><span class="p">():</span>
             <span class="k">if</span> <span class="n">v</span><span class="o">.</span><span class="n">create_object</span><span class="p">:</span>
@@ -212,9 +392,9 @@
 
 
 <div class="viewcode-block" id="ConfigurationContainer.items">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.configuration_containers.ConfigurationContainer.items">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.container_definitions.ConfigurationContainer.items">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">items</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Members of the container. I.e. the options of the section, or sections</span>
+<span class="w">        </span><span class="sd">"""Members of the container. I.e. the options of the section, or sections</span>
 <span class="sd">        of the configuration file e.t.c.</span>
 
 <span class="sd">        Returns</span>
@@ -222,18 +402,20 @@
 <span class="sd">        members: dict</span>
 <span class="sd">        A dictionary of the shape ``{ name : member }``</span>
 
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_members</span></div>
 
 
-<div class="viewcode-block" id="ConfigurationContainer._get_member">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.configuration_containers.ConfigurationContainer._get_member">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_get_member</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Return the member of the container of a given name.</span>
-<span class="sd">        It search either the members and interactive_members containers</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">members</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;_members&quot;</span><span class="p">)</span>
+<div class="viewcode-block" id="ConfigurationContainer._get_attribute_member">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.container_definitions.ConfigurationContainer._get_attribute_member">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_attribute_member</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Configuration</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Return a directly accessible member for attribute access.</span>
+
+<span class="sd">        Search both the original and sanitized interactive names, and reject</span>
+<span class="sd">        members which are hidden or disabled by their condition.</span>
+<span class="sd">        """</span>
+        <span class="n">members</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"_members"</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">members</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">members</span><span class="p">:</span>
@@ -241,29 +423,29 @@
         <span class="k">elif</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_interactive_members</span><span class="p">:</span>
             <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_interactive_members</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> member of </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"No </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> member of </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
         <span class="n">d</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">_definition</span>
         <span class="k">if</span> <span class="n">d</span><span class="o">.</span><span class="n">is_hidden</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">DisabledAttributeError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;member </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> of </span><span class="si">{</span><span class="bp">self</span><span class="si">}</span><span class="s2"> is not directly accessible. &quot;</span>
-                <span class="s2">&quot;Probably it&quot;</span>
-                <span class="s2">&quot;s a hidden attribute used for some kind of logic, &quot;</span>
-                <span class="s2">&quot;for which a direct access has no sense. If you really need &quot;</span>
-                <span class="s1">&#39;an access to the attribute, you can use the &quot;container[&#39;</span>
-                <span class="s2">&quot;name&quot;</span>
-                <span class="s1">&#39;]&quot; notation.&#39;</span>
+                <span class="sa">f</span><span class="s2">"member </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> of </span><span class="si">{</span><span class="bp">self</span><span class="si">}</span><span class="s2"> is not directly accessible. "</span>
+                <span class="s2">"Probably it"</span>
+                <span class="s2">"s a hidden attribute used for some kind of logic, "</span>
+                <span class="s2">"for which a direct access has no sense. If you really need "</span>
+                <span class="s1">'an access to the attribute, you can use the "container['</span>
+                <span class="s2">"name"</span>
+                <span class="s1">']" notation.'</span>
             <span class="p">)</span>
         <span class="n">allowed</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">allowed</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">allowed</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">allowed</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="n">DisabledAttributeError</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">&quot;member </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> of </span><span class="si">{</span><span class="bp">self</span><span class="si">}</span><span class="s2"> is not accessible for &quot;</span>
-                    <span class="s2">&quot;the current data. It is probably not available or has no sense &quot;</span>
-                    <span class="s2">&quot;in this particular case (e.g. data file does not contain needed &quot;</span>
-                    <span class="s2">&quot;data for it). If you eally need an access to the attribute, you can use the &quot;</span>
-                    <span class="s1">&#39;&quot;container[&#39;</span>
-                    <span class="s2">&quot;name&quot;</span>
-                    <span class="s1">&#39;]&quot; notation.&#39;</span>
+                    <span class="sa">f</span><span class="s2">"member </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> of </span><span class="si">{</span><span class="bp">self</span><span class="si">}</span><span class="s2"> is not accessible for "</span>
+                    <span class="s2">"the current data. It is probably not available or has no sense "</span>
+                    <span class="s2">"in this particular case (e.g. data file does not contain needed "</span>
+                    <span class="s2">"data for it). If you eally need an access to the attribute, you can use the "</span>
+                    <span class="s1">'"container['</span>
+                    <span class="s2">"name"</span>
+                    <span class="s1">']" notation.'</span>
                 <span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="n">DisabledAttributeError</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">allowed</span><span class="p">))</span>
@@ -271,31 +453,31 @@
 
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        The members of the container are accesible as attributes of the container, too.</span>
 <span class="sd">        Either using their normal, or ``sanitized`` names.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">):</span>
+<span class="sd">        """</span>
+        <span class="k">if</span> <span class="n">name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"_"</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_member</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+            <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_attribute_member</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">AttributeError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">DisabledAttributeError</span><span class="p">):</span>
                 <span class="n">msg</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
                 <span class="bp">cls</span> <span class="o">=</span> <span class="n">DisabledAttributeError</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;There is no value with name </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> in </span><span class="si">{</span><span class="bp">self</span><span class="si">}</span><span class="s2">.</span><span class="se">\n</span><span class="s2">Maybe, you want to add a custom value using the add method?&quot;</span>
+                <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"There is no value with name </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> in </span><span class="si">{</span><span class="bp">self</span><span class="si">}</span><span class="s2">.</span><span class="se">\n</span><span class="s2">Maybe, you want to add a custom value using the add method?"</span>
                 <span class="bp">cls</span> <span class="o">=</span> <span class="ne">AttributeError</span>
             <span class="k">raise</span> <span class="bp">cls</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
         <span class="k">return</span> <span class="n">out</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        The members of the container are accesible using ``container[&quot;member name&quot;]`` notation.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        The members of the container are accesible using ``container["member name"]`` notation.</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">name</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="s2">&quot;An empty tuple not allowed as a key.&quot;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="s2">"An empty tuple not allowed as a key."</span><span class="p">)</span>
             <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_members</span><span class="p">[</span><span class="n">name</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
             <span class="n">ll</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">ll</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
@@ -307,16 +489,16 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_members</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
 
 <div class="viewcode-block" id="ConfigurationContainer._get">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.configuration_containers.ConfigurationContainer._get">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.container_definitions.ConfigurationContainer._get">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">_get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_members</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">default</span><span class="p">)</span></div>
 
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__dir__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Expose the interactive_members in the container attribute listing.</span>
 <span class="sd">        Interactive_members are the non-hidden members identified by their sanitized names.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># def ok(member):</span>
         <span class="c1">#    d = member._defintion</span>
         <span class="c1">#    return not d.condtion or d.condition(self)</span>
@@ -327,7 +509,7 @@
         <span class="k">return</span> <span class="n">members</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__contains__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;The check for existence of a member with the given name.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""The check for existence of a member with the given name."""</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
             <span class="n">ll</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">ll</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
@@ -344,46 +526,51 @@
                 <span class="k">return</span> <span class="n">name</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="ow">in</span> <span class="n">member</span>
         <span class="k">return</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_members</span>
 
-<div class="viewcode-block" id="ConfigurationContainer.clear">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.configuration_containers.ConfigurationContainer.clear">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">do_not_check_required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">call_hooks</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">generated</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Erase all values (or reset to default) from all options in the container</span>
-<span class="sd">        (ad subcontainers)</span>
+<div class="viewcode-block" id="ConfigurationContainer.stage_clear">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.container_definitions.ConfigurationContainer.stage_clear">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">stage_clear</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">transaction</span><span class="p">:</span> <span class="n">ConfigurationTransaction</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">check_required</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Stage descendant clearing in ``transaction`` without validation.</span>
 
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        do_not_check_required: bool</span>
-<span class="sd">          Do not check validity of the values after clearing. If ``False`` (default)</span>
-<span class="sd">          is passed as this argument, the required option without a default value</span>
-<span class="sd">          (or a section containing such value) throw an exception, which prevents the</span>
-<span class="sd">          clearing (neverthenless, previous values in the section will be cleared anyway).</span>
-
-<span class="sd">        call_hooks: bool</span>
-<span class="sd">          If False, the cleared values do not raise theirs hooks</span>
-
-<span class="sd">        generated: bool</span>
-<span class="sd">          If True</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_members</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
-            <span class="n">i</span><span class="o">.</span><span class="n">clear</span><span class="p">(</span><span class="n">do_not_check_required</span><span class="p">,</span> <span class="n">call_hooks</span><span class="o">=</span><span class="n">call_hooks</span><span class="p">,</span> <span class="n">generated</span><span class="o">=</span><span class="kc">False</span> <span class="k">if</span> <span class="n">generated</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">generated</span><span class="p">)</span></div>
+<span class="sd">        ``check_required`` is forwarded to descendant options.</span>
+<span class="sd">        """</span>
+        <span class="n">changed</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">for</span> <span class="n">member</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_members</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">member</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">is_generated</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">changed</span> <span class="o">=</span> <span class="n">member</span><span class="o">.</span><span class="n">stage_clear</span><span class="p">(</span>
+                <span class="n">transaction</span><span class="p">,</span>
+                <span class="n">check_required</span><span class="o">=</span><span class="n">check_required</span><span class="p">,</span>
+            <span class="p">)</span> <span class="ow">or</span> <span class="n">changed</span>
+        <span class="k">return</span> <span class="n">changed</span></div>
 
 
-<div class="viewcode-block" id="ConfigurationContainer.get_members">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.configuration_containers.ConfigurationContainer.get_members">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_members</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">unknown</span><span class="o">=</span><span class="s2">&quot;find&quot;</span><span class="p">,</span> <span class="n">is_option</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">lower_case</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="ConfigurationContainer._get_members">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.container_definitions.ConfigurationContainer._get_members">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_members</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">unknown</span><span class="p">:</span> <span class="n">UnknownMemberPolicy</span><span class="p">,</span>
+        <span class="n">is_option</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">],</span>
+        <span class="n">lower_case</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">accept</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Callable</span><span class="p">[[</span><span class="n">Configuration</span><span class="p">],</span> <span class="nb">bool</span><span class="p">]],</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Get all the members of given name. According to ``unknown`` parameter,</span>
 <span class="sd">        either only from self, or from any child containers, too.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        name: None or str</span>
-<span class="sd">          If None, return contained values as a dictionary.</span>
-<span class="sd">          Otherwise, return the value of the member with the given name.</span>
+<span class="sd">        name: str</span>
+<span class="sd">          Name or dotted path of the requested member.</span>
 
 <span class="sd">        unknown: str or None</span>
-<span class="sd">          If unknown == &#39;find&#39; and there is no member with a given name,</span>
+<span class="sd">          If unknown == 'find' and there is no member with a given name,</span>
 <span class="sd">          try to find the first such-named item (case insensitive)</span>
 <span class="sd">          in the descendant conainers.</span>
 
@@ -393,41 +580,58 @@
 <span class="sd">        lower_case: bool</span>
 <span class="sd">          If true, try to search for the lower-cased name</span>
 
+<span class="sd">        accept: callable</span>
+<span class="sd">          If given, return only members for which this predicate is true.</span>
+<span class="sd">          A rejected direct member does not prevent searching descendants.</span>
+
 <span class="sd">        Return</span>
 <span class="sd">        ------</span>
 <span class="sd">        value: mixed</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">yield</span> <span class="bp">self</span>
+<span class="sd">        """</span>
+        <span class="k">if</span> <span class="s2">"."</span> <span class="ow">in</span> <span class="n">name</span><span class="p">:</span>
+            <span class="n">section_name</span><span class="p">,</span> <span class="n">child_name</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"."</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">members</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_members</span><span class="p">(</span>
+                <span class="n">section_name</span><span class="p">,</span>
+                <span class="n">unknown</span><span class="p">,</span>
+                <span class="n">lower_case</span><span class="o">=</span><span class="n">lower_case</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="k">for</span> <span class="n">member</span> <span class="ow">in</span> <span class="n">members</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">member</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">is_option</span><span class="p">:</span>
+                    <span class="k">continue</span>
+                <span class="k">yield from</span> <span class="n">member</span><span class="o">.</span><span class="n">get_members</span><span class="p">(</span>
+                    <span class="n">child_name</span><span class="p">,</span>
+                    <span class="n">unknown</span><span class="p">,</span>
+                    <span class="n">is_option</span><span class="p">,</span>
+                    <span class="n">lower_case</span><span class="p">,</span>
+                    <span class="n">accept</span><span class="o">=</span><span class="n">accept</span><span class="p">,</span>
+                <span class="p">)</span>
             <span class="k">return</span>
-        <span class="k">if</span> <span class="s2">&quot;.&quot;</span> <span class="ow">in</span> <span class="n">name</span><span class="p">:</span>
-            <span class="n">name</span><span class="p">,</span> <span class="n">child</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">child</span> <span class="o">=</span> <span class="kc">None</span>
 
-        <span class="k">def</span><span class="w"> </span><span class="nf">values</span><span class="p">():</span>
-            <span class="n">n</span> <span class="o">=</span> <span class="n">name</span>
-            <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_members</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">out</span> <span class="ow">and</span> <span class="n">lower_case</span><span class="p">:</span>
-                <span class="n">n</span> <span class="o">=</span> <span class="n">n</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
-                <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lowercase_members</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">out</span><span class="p">:</span>
-                <span class="k">yield</span> <span class="n">out</span>
-            <span class="k">elif</span> <span class="n">unknown</span> <span class="o">==</span> <span class="s2">&quot;find&quot;</span><span class="p">:</span>
-                 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
-                     <span class="k">yield from</span> <span class="n">i</span><span class="o">.</span><span class="n">_find_members</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">is_option</span><span class="p">,</span> <span class="n">lower_case</span><span class="p">)</span>
+        <span class="n">member</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_members</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">member</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">lower_case</span><span class="p">:</span>
+            <span class="n">member</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lowercase_members</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span>
 
-        <span class="k">if</span> <span class="n">child</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">values</span><span class="p">():</span>
-                <span class="k">yield from</span> <span class="n">v</span><span class="o">.</span><span class="n">get_members</span><span class="p">(</span><span class="n">child</span><span class="p">,</span> <span class="n">unknown</span><span class="p">,</span> <span class="n">is_option</span><span class="p">,</span> <span class="n">lower_case</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">yield from</span> <span class="n">values</span><span class="p">()</span></div>
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="n">member</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="ow">and</span> <span class="p">(</span><span class="n">is_option</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">member</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">is_option</span> <span class="ow">is</span> <span class="n">is_option</span><span class="p">)</span>
+            <span class="ow">and</span> <span class="p">(</span><span class="n">accept</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">accept</span><span class="p">(</span><span class="n">member</span><span class="p">))</span>
+        <span class="p">):</span>
+            <span class="k">yield</span> <span class="n">member</span>
+            <span class="k">return</span>
+        <span class="k">elif</span> <span class="n">unknown</span> <span class="o">==</span> <span class="s2">"find"</span><span class="p">:</span>
+            <span class="n">search_name</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">if</span> <span class="n">lower_case</span> <span class="k">else</span> <span class="n">name</span>
+            <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">found_member</span> <span class="ow">in</span> <span class="n">child</span><span class="o">.</span><span class="n">_find_members</span><span class="p">(</span>
+                    <span class="n">search_name</span><span class="p">,</span> <span class="n">is_option</span><span class="p">,</span> <span class="n">lower_case</span>
+                <span class="p">):</span>
+                    <span class="k">if</span> <span class="n">accept</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">accept</span><span class="p">(</span><span class="n">found_member</span><span class="p">):</span>
+                        <span class="k">yield</span> <span class="n">found_member</span></div>
 
 
 <div class="viewcode-block" id="ConfigurationContainer.get">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.configuration_containers.ConfigurationContainer.get">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">unknown</span><span class="o">=</span><span class="s2">&quot;find&quot;</span><span class="p">,</span> <span class="n">is_option</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.container_definitions.ConfigurationContainer.get">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">unknown</span><span class="o">=</span><span class="s2">"find"</span><span class="p">,</span> <span class="n">is_option</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Get the value, either of self or of a child of a given name.</span>
 
 <span class="sd">        Parameters</span>
@@ -437,38 +641,76 @@
 <span class="sd">          Otherwise, return the value of the member with the given name.</span>
 
 <span class="sd">        unknown: str or None</span>
-<span class="sd">          If unknown == &#39;find&#39; and there is no member with a given name,</span>
+<span class="sd">          If unknown == 'find' and there is no member with a given name,</span>
 <span class="sd">          try to find the first such-named item (case insensitive)</span>
 <span class="sd">          in the descendant conainers.</span>
-<span class="sd">          unknown == &#39;find_exact&#39; do the same, case sensitive.</span>
+<span class="sd">          unknown == 'find_exact' do the same, case sensitive.</span>
 
 <span class="sd">        Return</span>
 <span class="sd">        ------</span>
 <span class="sd">        value: mixed</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">item</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_members</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">unknown</span><span class="p">,</span> <span class="n">is_option</span><span class="p">)</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">item</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
-        <span class="k">except</span> <span class="ne">StopIteration</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> member of </span><span class="si">{</span><span class="bp">self</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="sd">        """</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">as_dict</span><span class="p">(</span><span class="n">only_changed</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">generated</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">item</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_member</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">unknown</span><span class="o">=</span><span class="n">unknown</span><span class="p">,</span> <span class="n">is_option</span><span class="o">=</span><span class="n">is_option</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">item</span><span class="o">.</span><span class="n">as_dict</span><span class="p">(</span><span class="n">only_changed</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">generated</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="ConfigurationContainer.set">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.configuration_containers.ConfigurationContainer.set">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="nb">str</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="p">{},</span> <span class="n">value</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">unknown</span><span class="o">=</span><span class="s2">&quot;find&quot;</span><span class="p">,</span> <span class="n">error</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="n">error</span> <span class="o">=</span> <span class="n">error</span> <span class="ow">or</span> <span class="s2">&quot;section&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_set</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">unknown</span><span class="o">=</span><span class="n">unknown</span><span class="p">,</span> <span class="n">error</span><span class="o">=</span><span class="n">error</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">why</span><span class="o">=</span><span class="s2">&quot;warning&quot;</span><span class="p">)</span></div>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.container_definitions.ConfigurationContainer.set">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">values</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">value</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">unknown</span><span class="p">:</span> <span class="n">UnknownMemberPolicy</span> <span class="o">=</span> <span class="s2">"find"</span><span class="p">,</span>
+        <span class="n">validation_reason</span><span class="p">:</span> <span class="n">ValidationReason</span> <span class="o">=</span> <span class="s2">"set"</span><span class="p">,</span>
+        <span class="n">retain_invalid</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">RetainInvalidPolicy</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">report_invalid</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ReportInvalidPolicy</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Set values using independent retention and reporting policies.</span>
+
+<span class="sd">        ``retain_invalid`` accepts ``"none"``, ``"typed"`` or ``"all"``;</span>
+<span class="sd">        ``report_invalid`` accepts ``"raise"``, ``"warn"`` or ``"ignore"``.</span>
+<span class="sd">        Parsing defaults to retaining typed invalid values and warning. Other</span>
+<span class="sd">        assignments default to discarding invalid values and raising.</span>
+
+<span class="sd">        ``values`` is a mapping or one member name paired with ``value``;</span>
+<span class="sd">        ``unknown`` selects lookup, addition, ignoring or failure behavior.</span>
+<span class="sd">        ``validation_reason`` is ``"set"`` or ``"parse"``. Additional keyword</span>
+<span class="sd">        arguments are treated as member assignments.</span>
+<span class="sd">        """</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mutation</span><span class="p">(</span>
+            <span class="n">validation_reason</span><span class="p">,</span> <span class="n">retain_invalid</span><span class="p">,</span> <span class="n">report_invalid</span>
+        <span class="p">)</span> <span class="k">as</span> <span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">_policy</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stage</span><span class="p">(</span>
+                <span class="n">transaction</span><span class="p">,</span>
+                <span class="n">values</span><span class="p">,</span>
+                <span class="n">value</span><span class="p">,</span>
+                <span class="n">unknown</span><span class="o">=</span><span class="n">unknown</span><span class="p">,</span>
+                <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+            <span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="ConfigurationContainer._set">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.configuration_containers.ConfigurationContainer._set">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="nb">str</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="p">{},</span> <span class="n">value</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">unknown</span><span class="o">=</span><span class="s2">&quot;find&quot;</span><span class="p">,</span> <span class="n">error</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Set the value(s) of parameter(s). Usage:</span>
+<div class="viewcode-block" id="ConfigurationContainer.stage">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.container_definitions.ConfigurationContainer.stage">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">stage</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">transaction</span><span class="p">:</span> <span class="n">ConfigurationTransaction</span><span class="p">,</span>
+        <span class="n">values</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">value</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">unknown</span><span class="p">:</span> <span class="n">UnknownMemberPolicy</span> <span class="o">=</span> <span class="s2">"find"</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Stage values in a transaction. This is the sole assignment-routing</span>
+<span class="sd">        implementation for configuration containers.</span>
 
-<span class="sd">        &gt; input_parameters.set({&#39;NITER&#39;: 5, &#39;NE&#39;: [10]})</span>
+<span class="sd">        Usage:</span>
+
+<span class="sd">        &gt; input_parameters.set({'NITER': 5, 'NE': [10]})</span>
 <span class="sd">        or</span>
 <span class="sd">        &gt; input_parameters.set(NITER=5, NE=[10])</span>
 
@@ -481,69 +723,110 @@
 <span class="sd">        value:</span>
 <span class="sd">          Value to be set. Setting this argument require to pass string name to the values argument.</span>
 
-<span class="sd">        unkwnown: &#39;add&#39;, &#39;find&#39; or None</span>
+<span class="sd">        unknown: 'add', 'find' or None</span>
 <span class="sd">          How to handle unknown (not known by the definition) parameters.</span>
-<span class="sd">          If &#39;find&#39;, try to find the values in descendant containers.</span>
-<span class="sd">          If &#39;add&#39;, add unknown values as custom values.</span>
+<span class="sd">          If 'find', try to find the values in descendant containers.</span>
+<span class="sd">          If 'add', add unknown values as custom values.</span>
 <span class="sd">          If None, throw an exception.</span>
 <span class="sd">          Keyword only argument.</span>
 
+<span class="sd">        transaction: ConfigurationTransaction</span>
+<span class="sd">          Transaction receiving the staged changes.</span>
+
 <span class="sd">        **kwargs: dict</span>
 <span class="sd">          The values to be set (an alternative syntax as syntactical sugar)</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">values</span><span class="o">.</span><span class="vm">__class__</span> <span class="ow">is</span> <span class="nb">str</span><span class="p">:</span>
-            <span class="n">values</span> <span class="o">=</span> <span class="p">{</span><span class="n">values</span><span class="p">:</span> <span class="n">value</span><span class="p">}</span>
+<span class="sd">        """</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">assignments</span> <span class="o">=</span> <span class="p">{</span><span class="n">values</span><span class="p">:</span> <span class="n">value</span><span class="p">}</span>
         <span class="k">elif</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="s2">&quot;If value argument of Container.set method is given, the values have to be string name of the value&quot;</span>
+                <span class="s2">"If value argument of Container.set method is given, the values have to be string name of the value"</span>
             <span class="p">)</span>
-
-        <span class="k">def</span><span class="w"> </span><span class="nf">set_value</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-            <span class="k">if</span> <span class="s2">&quot;.&quot;</span> <span class="ow">in</span> <span class="n">name</span><span class="p">:</span>
-                <span class="n">section</span><span class="p">,</span> <span class="n">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-                <span class="k">if</span> <span class="n">section</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
-                    <span class="k">if</span> <span class="n">unknown</span> <span class="o">==</span> <span class="s2">&quot;add&quot;</span><span class="p">:</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">section</span><span class="p">)</span>
-                    <span class="k">else</span><span class="p">:</span>
-                        <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;There is no section </span><span class="si">{</span><span class="n">section</span><span class="si">}</span><span class="s2"> in </span><span class="si">{</span><span class="bp">self</span><span class="si">}</span><span class="s2"> to set</span><span class="si">{</span><span class="n">section</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> to </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_members</span><span class="p">[</span><span class="n">section</span><span class="p">]</span><span class="o">.</span><span class="n">_set</span><span class="p">(</span>
-                    <span class="p">{</span><span class="n">name</span><span class="p">:</span> <span class="n">value</span><span class="p">},</span> <span class="n">unknown</span><span class="o">=</span><span class="s2">&quot;fail&quot;</span> <span class="k">if</span> <span class="n">unknown</span> <span class="o">==</span> <span class="s2">&quot;find&quot;</span> <span class="k">else</span> <span class="n">unknown</span><span class="p">,</span> <span class="n">error</span><span class="o">=</span><span class="n">error</span>
-                <span class="p">)</span>
-                <span class="k">return</span>
-            <span class="n">option</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_members</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">option</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">option</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">accept_value</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
-                <span class="k">if</span> <span class="n">unknown</span> <span class="o">==</span> <span class="s2">&quot;find&quot;</span><span class="p">:</span>
-                    <span class="n">option</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_find_member</span><span class="p">(</span><span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
-                    <span class="k">if</span> <span class="n">option</span><span class="p">:</span>
-                        <span class="n">option</span><span class="o">.</span><span class="n">_set</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">error</span><span class="o">=</span><span class="n">error</span><span class="p">)</span>
-                        <span class="k">return</span>
-                <span class="k">if</span> <span class="n">unknown</span> <span class="o">==</span> <span class="s2">&quot;ignore&quot;</span><span class="p">:</span>
-                    <span class="k">return</span>
-                <span class="k">if</span> <span class="ow">not</span> <span class="n">unknown</span> <span class="o">==</span> <span class="s2">&quot;add&quot;</span><span class="p">:</span>
-                    <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="s2">&quot;No option with name </span><span class="si">{}</span><span class="s2"> in </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">)))</span>
-                    <span class="k">return</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">option</span><span class="o">.</span><span class="n">_set</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">unknown</span><span class="o">=</span><span class="n">unknown</span><span class="p">,</span> <span class="n">error</span><span class="o">=</span><span class="n">error</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="n">values</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">values</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">assignments</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">else</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
-                <span class="n">items</span> <span class="o">=</span> <span class="n">values</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+                <span class="n">values</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
             <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Only a dictionary can be assigned to a section.&quot;</span><span class="p">)</span>
-            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">items</span><span class="p">:</span>
-                <span class="n">set_value</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">"Only a mapping can be assigned to a section."</span>
+                <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="kc">None</span>
+            <span class="n">assignments</span> <span class="o">=</span> <span class="n">values</span>
 
         <span class="k">if</span> <span class="n">kwargs</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">validate_section</span><span class="p">(</span><span class="n">why</span><span class="o">=</span><span class="s2">&quot;set&quot;</span><span class="p">,</span> <span class="n">section_adaptor</span><span class="o">=</span><span class="n">MergeSectionAdaptor</span><span class="p">(</span><span class="n">kwargs</span><span class="p">,</span> <span class="bp">self</span><span class="p">))</span>
-            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-                <span class="n">set_value</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span></div>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">assignments</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">assignments</span><span class="p">)</span>
+                <span class="n">assignments</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="k">except</span> <span class="p">(</span><span class="ne">AttributeError</span><span class="p">,</span> <span class="ne">TypeError</span><span class="p">):</span>
+                <span class="n">assignments</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">assignments</span><span class="p">)</span>
+                <span class="n">assignments</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="n">policy</span> <span class="o">=</span> <span class="n">transaction</span><span class="o">.</span><span class="n">policy</span>
+        <span class="k">if</span> <span class="n">policy</span><span class="o">.</span><span class="n">why</span> <span class="o">==</span> <span class="s2">"parse"</span><span class="p">:</span>
+            <span class="n">transaction</span><span class="o">.</span><span class="n">push</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ParsedValuesChange</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">assignments</span><span class="p">))</span>
+
+        <span class="n">changed</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">assignment</span> <span class="ow">in</span> <span class="n">assignments</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">changed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stage_value</span><span class="p">(</span>
+                <span class="n">transaction</span><span class="p">,</span>
+                <span class="n">name</span><span class="p">,</span>
+                <span class="n">assignment</span><span class="p">,</span>
+                <span class="n">unknown</span><span class="o">=</span><span class="n">unknown</span><span class="p">,</span>
+            <span class="p">)</span> <span class="ow">or</span> <span class="n">changed</span>
+        <span class="k">return</span> <span class="n">changed</span></div>
+
+
+<div class="viewcode-block" id="ConfigurationContainer.stage_value">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.container_definitions.ConfigurationContainer.stage_value">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">stage_value</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">transaction</span><span class="p">:</span> <span class="n">ConfigurationTransaction</span><span class="p">,</span>
+        <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">unknown</span><span class="p">:</span> <span class="n">UnknownMemberPolicy</span> <span class="o">=</span> <span class="s2">"find"</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Resolve ``name`` and stage ``value`` using the supplied policies."""</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">accepts_value</span><span class="p">(</span><span class="n">member</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">            </span><span class="sd">"""Return whether ``member`` accepts the proposed value."""</span>
+            <span class="k">return</span> <span class="n">member</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">accept_value</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">member</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_member</span><span class="p">(</span>
+                <span class="n">name</span><span class="p">,</span>
+                <span class="n">unknown</span><span class="o">=</span><span class="n">unknown</span><span class="p">,</span>
+                <span class="n">accept</span><span class="o">=</span><span class="n">accepts_value</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">unknown</span> <span class="o">==</span> <span class="s2">"ignore"</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">False</span>
+            <span class="k">if</span> <span class="n">unknown</span> <span class="o">!=</span> <span class="s2">"add"</span><span class="p">:</span>
+                <span class="k">raise</span>
+            <span class="k">if</span> <span class="s2">"."</span> <span class="ow">in</span> <span class="n">name</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">"Cannot add dotted path </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> to </span><span class="si">{</span><span class="bp">self</span><span class="si">}</span><span class="s2">; "</span>
+                    <span class="s2">"set the value through its containing section"</span>
+                <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="kc">None</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">member</span><span class="o">.</span><span class="n">stage</span><span class="p">(</span>
+                <span class="n">transaction</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">unknown</span><span class="o">=</span><span class="n">unknown</span>
+            <span class="p">)</span>
+
+        <span class="k">with</span> <span class="n">transaction</span><span class="o">.</span><span class="n">savepoint</span><span class="p">()</span> <span class="k">as</span> <span class="n">savepoint</span><span class="p">:</span>
+            <span class="n">change</span> <span class="o">=</span> <span class="n">transaction</span><span class="o">.</span><span class="n">push</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">stage_member</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>
+            <span class="n">changed</span> <span class="o">=</span> <span class="n">change</span><span class="o">.</span><span class="n">member</span><span class="o">.</span><span class="n">stage</span><span class="p">(</span>
+                <span class="n">transaction</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">unknown</span><span class="o">=</span><span class="s2">"add"</span>
+            <span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">changed</span><span class="p">:</span>
+                <span class="n">savepoint</span><span class="o">.</span><span class="n">rollback</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">changed</span></div>
 
 
 <div class="viewcode-block" id="ConfigurationContainer.add">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.configuration_containers.ConfigurationContainer.add">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.container_definitions.ConfigurationContainer.add">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Add custom value to the container</span>
 
 <span class="sd">        Parameters</span>
@@ -553,28 +836,47 @@
 
 <span class="sd">        value: value</span>
 <span class="sd">          Value of the added value</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="p">,</span> <span class="s2">&quot;custom_class&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Can not add custom members to a configuration class </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="sd">        """</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mutation</span><span class="p">(</span><span class="s2">"set"</span><span class="p">)</span> <span class="k">as</span> <span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">_policy</span><span class="p">):</span>
+            <span class="n">change</span> <span class="o">=</span> <span class="n">transaction</span><span class="o">.</span><span class="n">push</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">stage_member</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">change</span><span class="o">.</span><span class="n">member</span><span class="o">.</span><span class="n">stage</span><span class="p">(</span>
+                    <span class="n">transaction</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">unknown</span><span class="o">=</span><span class="s2">"add"</span>
+                <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ConfigurationContainer.stage_member">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.container_definitions.ConfigurationContainer.stage_member">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">stage_member</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"ConfigurationContainer.MemberChange"</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Attach custom member ``name`` and return its rollback change."""</span>
+        <span class="n">custom_class</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="p">,</span> <span class="s2">"custom_class"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">custom_class</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"Can not add custom members to a configuration class "</span>
+                <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="si">}</span><span class="s2">"</span>
+            <span class="p">)</span>
         <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_members</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Section member </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> is already in the section </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="n">cc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">custom_class</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_add</span><span class="p">(</span><span class="n">cc</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="p">))</span>
-        <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_members</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">unknown</span><span class="o">=</span><span class="s2">&quot;add&quot;</span><span class="p">)</span></div>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"Section member </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> is already in the section "</span>
+                <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="si">}</span><span class="s2">"</span>
+            <span class="p">)</span>
+        <span class="n">member</span> <span class="o">=</span> <span class="n">custom_class</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+        <span class="n">change</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">MemberChange</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">member</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_add</span><span class="p">(</span><span class="n">member</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">change</span></div>
 
 
 <div class="viewcode-block" id="ConfigurationContainer.remove_member">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.configuration_containers.ConfigurationContainer.remove_member">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.container_definitions.ConfigurationContainer.remove_member">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">remove_member</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Remove a (previously added) custom value from the container</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">cclass</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="p">,</span> <span class="s2">&quot;custom_class&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+<span class="sd">        """</span>
+        <span class="n">cclass</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="p">,</span> <span class="s2">"custom_class"</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">cclass</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Can not remove items of </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_members</span><span class="p">[</span><span class="n">name</span><span class="p">],</span> <span class="s2">&quot;remove&quot;</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="s2">&quot;No custom member with name </span><span class="si">{}</span><span class="s2"> to remove&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">"Can not remove items of </span><span class="si">{}</span><span class="s2">"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_members</span><span class="p">[</span><span class="n">name</span><span class="p">],</span> <span class="s2">"remove"</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="s2">"No custom member with name </span><span class="si">{}</span><span class="s2"> to remove"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>
         <span class="n">member</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_members</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
         <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">_members</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
 
@@ -593,20 +895,27 @@
 
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Iterate over all members of the container&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Iterate over all members of the container"""</span>
         <span class="k">yield from</span> <span class="bp">self</span><span class="o">.</span><span class="n">_members</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
 
+<div class="viewcode-block" id="ConfigurationContainer.values">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.container_definitions.ConfigurationContainer.values">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Return the contained configuration values."""</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_members</span><span class="o">.</span><span class="n">values</span><span class="p">()</span></div>
+
+
 <div class="viewcode-block" id="ConfigurationContainer._values">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.configuration_containers.ConfigurationContainer._values">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.container_definitions.ConfigurationContainer._values">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">_values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Iterate over all members of the container&quot;&quot;&quot;</span>
-        <span class="k">yield from</span> <span class="bp">self</span><span class="o">.</span><span class="n">_members</span><span class="o">.</span><span class="n">values</span><span class="p">()</span></div>
+<span class="w">        </span><span class="sd">"""Iterate over all members of the container"""</span>
+        <span class="k">yield from</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="ConfigurationContainer._as_dict">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.configuration_containers.ConfigurationContainer._as_dict">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.container_definitions.ConfigurationContainer._as_dict">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">_as_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">get</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Return the content of the container as a dictionary.</span>
 <span class="sd">        Nested containers will be transformed to dictionaries as well.</span>
 
@@ -615,7 +924,7 @@
 <span class="sd">        get</span>
 <span class="sd">          This function will be applied to the options to (possible) obtain</span>
 <span class="sd">          the values</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">out</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">():</span>
             <span class="n">value</span> <span class="o">=</span> <span class="n">i</span><span class="o">.</span><span class="n">_as_dict</span><span class="p">(</span><span class="n">get</span><span class="p">)</span>
@@ -625,9 +934,9 @@
 
 
 <div class="viewcode-block" id="ConfigurationContainer._find_members">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.configuration_containers.ConfigurationContainer._find_members">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.container_definitions.ConfigurationContainer._find_members">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">_find_members</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">is_option</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">lower</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Iterates over a value of a given name in self or in any</span>
 <span class="sd">        of owned subcontainers.</span>
 
@@ -646,7 +955,7 @@
 <span class="sd">        -------</span>
 <span class="sd">        value:typing.Optional[ase2sprkkr.common.options.Option]</span>
 <span class="sd">        The first option of the given name, if such exists. ``None`` otherwise.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="n">is_option</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">True</span> <span class="ow">and</span> <span class="n">name</span> <span class="o">==</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">if</span> <span class="n">lower</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">):</span>
             <span class="k">yield</span> <span class="bp">self</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">():</span>
@@ -656,7 +965,7 @@
 
 
 <div class="viewcode-block" id="ConfigurationContainer._add">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.configuration_containers.ConfigurationContainer._add">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.container_definitions.ConfigurationContainer._add">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">_add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">member</span><span class="p">):</span>
         <span class="n">name</span> <span class="o">=</span> <span class="n">member</span><span class="o">.</span><span class="n">name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_members</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">member</span>
@@ -677,7 +986,7 @@
 
 
 <div class="viewcode-block" id="ConfigurationContainer.is_changed">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.configuration_containers.ConfigurationContainer.is_changed">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.container_definitions.ConfigurationContainer.is_changed">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">is_changed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">():</span>
             <span class="k">if</span> <span class="n">i</span><span class="o">.</span><span class="n">is_changed</span><span class="p">():</span>
@@ -686,9 +995,9 @@
 
 
 <div class="viewcode-block" id="ConfigurationContainer._save_to_file">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.configuration_containers.ConfigurationContainer._save_to_file">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_save_to_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">,</span> <span class="n">always</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">name_in_grammar</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Save the content of the container to the file (according to the definition)</span>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.container_definitions.ConfigurationContainer._save_to_file">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_save_to_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">,</span> <span class="n">always</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">name_in_grammar</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s2">""</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Save the content of the container to the file (according to the definition)</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -702,23 +1011,23 @@
 <span class="sd">        -------</span>
 <span class="sd">        something_have_been_written</span>
 <span class="sd">          If any value have been written return True, otherwise return False.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">_save_to_file</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="n">always</span><span class="p">,</span> <span class="n">name_in_grammar</span><span class="p">,</span> <span class="n">delimiter</span><span class="p">)</span></div>
 
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Setting the (unknown) attribute of a section sets the value of the member</span>
-<span class="sd">        with a given name&quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">name</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;_&quot;</span> <span class="ow">or</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span> <span class="ow">or</span> <span class="nb">hasattr</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span> <span class="s2">&quot;__set__&quot;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Setting the (unknown) attribute of a section sets the value of the member</span>
+<span class="sd">        with a given name"""</span>
+        <span class="k">if</span> <span class="n">name</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"_"</span> <span class="ow">or</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span> <span class="ow">or</span> <span class="nb">hasattr</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span> <span class="s2">"__set__"</span><span class="p">):</span>
             <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_member</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+            <span class="n">val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_attribute_member</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
             <span class="n">val</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
 
 <div class="viewcode-block" id="ConfigurationContainer._validate">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.configuration_containers.ConfigurationContainer._validate">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">why</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;save&quot;</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Validate the configuration data. Raise an exception, if the validation fail.</span>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.container_definitions.ConfigurationContainer._validate">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">why</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Validate the configuration data. Raise an exception, if the validation fail.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -727,103 +1036,63 @@
 <span class="sd">          ``save`` - Full validation, during save.</span>
 <span class="sd">          ``set`` - Validation on user input. Allow required values not to be set.</span>
 <span class="sd">          ``parse`` - Validation during parsing - some check, that are enforced by the parser, can be skipped.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">sa</span> <span class="o">=</span> <span class="n">SectionAdaptor</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">sa</span><span class="p">,</span> <span class="n">why</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">why</span> <span class="o">==</span> <span class="s2">&quot;save&quot;</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">is_optional</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_any_value</span><span class="p">():</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Non-optional section </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> has no value to save&quot;</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">():</span>
-            <span class="n">d</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">_definition</span>
-            <span class="k">if</span> <span class="n">d</span><span class="o">.</span><span class="n">allowed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-                <span class="n">o</span><span class="o">.</span><span class="n">_validate</span><span class="p">(</span><span class="n">why</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">validate_section</span><span class="p">(</span><span class="n">why</span><span class="p">,</span> <span class="n">sa</span><span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="ConfigurationContainer.validate_section">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.configuration_containers.ConfigurationContainer.validate_section">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">validate_section</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">why</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;save&quot;</span><span class="p">,</span> <span class="n">section_adaptor</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">why</span> <span class="o">==</span> <span class="s2">&quot;warning&quot;</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_validate_section</span><span class="p">(</span><span class="s2">&quot;save&quot;</span><span class="p">,</span> <span class="n">section_adaptor</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">with</span> <span class="n">warnings</span><span class="o">.</span><span class="n">catch_warnings</span><span class="p">():</span>
-                <span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s2">&quot;error&quot;</span><span class="p">,</span> <span class="n">DataValidityError</span><span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_validate_section</span><span class="p">(</span><span class="n">why</span><span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="ConfigurationContainer._validate_section">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.configuration_containers.ConfigurationContainer._validate_section">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_validate_section</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">why</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;save&quot;</span><span class="p">,</span> <span class="n">section_adaptor</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">section_adaptor</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">section_adaptor</span> <span class="o">=</span> <span class="n">SectionAdaptor</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-
-        <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">():</span>
-            <span class="n">d</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">_definition</span>
-            <span class="k">if</span> <span class="n">d</span><span class="o">.</span><span class="n">allowed</span><span class="p">(</span><span class="n">section_adaptor</span><span class="p">)</span> <span class="ow">and</span> <span class="n">d</span><span class="o">.</span><span class="n">validate_section</span><span class="p">:</span>
-                <span class="n">d</span><span class="o">.</span><span class="n">validate_section</span><span class="p">(</span><span class="n">section_adaptor</span><span class="p">,</span> <span class="n">why</span><span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="ConfigurationContainer.has_any_value">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.configuration_containers.ConfigurationContainer.has_any_value">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">has_any_value</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Return True if any member of the section has value.</span>
-
-<span class="sd">        Return</span>
-<span class="sd">        ------</span>
-<span class="sd">          has_any_value: bool</span>
-<span class="sd">              True, if no value in the container is set, False otherwise</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">():</span>
-            <span class="k">if</span> <span class="n">i</span><span class="o">.</span><span class="n">has_any_value</span><span class="p">():</span>
-                <span class="k">return</span> <span class="kc">True</span>
-        <span class="k">return</span> <span class="kc">False</span></div>
+<span class="sd">        """</span>
+        <span class="k">if</span> <span class="n">why</span> <span class="o">==</span> <span class="s2">"save"</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">is_optional</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_any_value</span><span class="p">():</span>
+            <span class="n">DataValidityError</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Non-optional section </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> has no value to save"</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">():</span>
+            <span class="k">if</span> <span class="p">(</span>
+                <span class="ow">not</span> <span class="n">item</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">is_option</span>
+                <span class="ow">and</span> <span class="ow">not</span> <span class="n">item</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">allowed</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+            <span class="p">):</span>
+                <span class="k">continue</span>
+            <span class="n">item</span><span class="o">.</span><span class="n">_validate</span><span class="p">(</span><span class="n">why</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">run_validators</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="n">why</span><span class="p">)</span></div>
 </div>
 
 
-
 <div class="viewcode-block" id="BaseSection">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.BaseSection.html#ase2sprkkr.common.configuration_containers.BaseSection">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.BaseSection.html#ase2sprkkr.common.container_definitions.BaseSection">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">BaseSection</span><span class="p">(</span><span class="n">ConfigurationContainer</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;A section of SPRKKR configuration - i.e. part of the configuration file.&quot;&quot;&quot;</span></div>
+<span class="w">    </span><span class="sd">"""A section of SPRKKR configuration - i.e. part of the configuration file."""</span></div>
 
 
 
 <div class="viewcode-block" id="Section">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.Section.html#ase2sprkkr.common.configuration_containers.Section">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.Section.html#ase2sprkkr.common.container_definitions.Section">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Section</span><span class="p">(</span><span class="n">BaseSection</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;A standard section of a task or potential (whose content is predefinded by SectionDefinition)&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""A standard section of a task or potential (whose content is predefinded by SectionDefinition)"""</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">definition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;The definition of the section.</span>
+<span class="w">        </span><span class="sd">"""The definition of the section.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        ase2sprkkr.common.configuration_definitions.ContainerDefinition</span>
 <span class="sd">        The definition of the section. I.e. the object that defines, which configuration values</span>
 <span class="sd">        are in the section, their default values etc.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span></div>
 
 
 
 <div class="viewcode-block" id="CustomSection">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.CustomSection.html#ase2sprkkr.common.configuration_containers.CustomSection">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.CustomSection.html#ase2sprkkr.common.container_definitions.CustomSection">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">CustomSection</span><span class="p">(</span><span class="n">BaseSection</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Custom task section. Section created by user with no definition&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Custom task section. Section created by user with no definition"""</span>
 
 <div class="viewcode-block" id="CustomSection.remove">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.CustomSection.html#ase2sprkkr.common.configuration_containers.CustomSection.remove">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.CustomSection.html#ase2sprkkr.common.container_definitions.CustomSection.remove">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Remove the custom section from the parent container&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Remove the custom section from the parent container"""</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_container</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="CustomSection.factory">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.CustomSection.html#ase2sprkkr.common.configuration_containers.CustomSection.factory">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.CustomSection.html#ase2sprkkr.common.container_definitions.CustomSection.factory">[docs]</a>
     <span class="nd">@classmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">factory</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">definition_type</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a factory for custom values.</span>
+<span class="w">        </span><span class="sd">"""Create a factory for custom values.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -837,7 +1106,7 @@
 <span class="sd">          Factory function of the signature (name: str, container: ase2sprkkr.common.configuration_containers.ConfigurationContainer)</span>
 <span class="sd">          that created a custom value or section of the given definition</span>
 
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
 
         <span class="k">def</span><span class="w"> </span><span class="nf">create</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">container</span><span class="p">):</span>
             <span class="n">definition</span> <span class="o">=</span> <span class="n">definition_type</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
@@ -850,19 +1119,21 @@
 
 
 <div class="viewcode-block" id="RootConfigurationContainer">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.RootConfigurationContainer.html#ase2sprkkr.common.configuration_containers.RootConfigurationContainer">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.RootConfigurationContainer.html#ase2sprkkr.common.container_definitions.RootConfigurationContainer">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">RootConfigurationContainer</span><span class="p">(</span><span class="n">ConfigurationContainer</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class for data of configuration/problem-definition files</span>
+<span class="w">    </span><span class="sd">"""Base class for data of configuration/problem-definition files</span>
 
 <span class="sd">    In addition to container capabilities, it can read its data from/to file.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="n">name_in_grammar</span> <span class="o">=</span> <span class="kc">False</span>
 
+    <span class="n">_filename</span> <span class="o">=</span> <span class="kc">None</span>
+
 <div class="viewcode-block" id="RootConfigurationContainer.read_from_file">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.RootConfigurationContainer.html#ase2sprkkr.common.configuration_containers.RootConfigurationContainer.read_from_file">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.RootConfigurationContainer.html#ase2sprkkr.common.container_definitions.RootConfigurationContainer.read_from_file">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">read_from_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">,</span> <span class="n">clear_first</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">allow_dangerous</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Read data from a file</span>
+<span class="w">        </span><span class="sd">"""Read data from a file</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -875,26 +1146,35 @@
 <span class="sd">          file are preserved.</span>
 <span class="sd">        allow_dangerous</span>
 <span class="sd">          Allow to load dangerous_values, i.e. the values that do not pass the requirements for the input values (e.g. of a different type or constraint-violating)</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">values</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">parse_file</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">allow_dangerous</span><span class="o">=</span><span class="n">allow_dangerous</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">clear_first</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">clear</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">unknown</span><span class="o">=</span><span class="s2">&quot;add&quot;</span><span class="p">)</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mutation</span><span class="p">(</span><span class="s2">"parse"</span><span class="p">)</span> <span class="k">as</span> <span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">_policy</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">clear_first</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">stage_clear</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">check_required</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stage</span><span class="p">(</span>
+                <span class="n">transaction</span><span class="p">,</span>
+                <span class="n">values</span><span class="p">,</span>
+                <span class="n">unknown</span><span class="o">=</span><span class="s2">"add"</span><span class="p">,</span>
+            <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_filename</span> <span class="o">=</span> <span class="n">filename_from_file</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span></div>
 
 
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">original_filename</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_filename</span>
+
 <div class="viewcode-block" id="RootConfigurationContainer.find">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.RootConfigurationContainer.html#ase2sprkkr.common.configuration_containers.RootConfigurationContainer.find">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">find</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">unknown</span><span class="o">=</span><span class="s2">&quot;find&quot;</span><span class="p">,</span> <span class="n">is_option</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">lower_case</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">first</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Find a configuration value of a given name in the owned sections&quot;&quot;&quot;</span>
-        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_members</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">unknown</span><span class="p">,</span> <span class="n">is_option</span><span class="p">,</span> <span class="n">lower_case</span><span class="p">)</span>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.RootConfigurationContainer.html#ase2sprkkr.common.container_definitions.RootConfigurationContainer.find">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">find</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">unknown</span><span class="o">=</span><span class="s2">"find"</span><span class="p">,</span> <span class="n">is_option</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">lower_case</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">first</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Find a configuration value of a given name in the owned sections"""</span>
         <span class="k">if</span> <span class="n">first</span><span class="p">:</span>
-            <span class="k">try</span><span class="p">:</span>
-                <span class="k">return</span> <span class="nb">next</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
-            <span class="k">except</span> <span class="ne">StopIteration</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> member of </span><span class="si">{</span><span class="bp">self</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">out</span></div>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_member</span><span class="p">(</span>
+                <span class="n">name</span><span class="p">,</span>
+                <span class="n">unknown</span><span class="o">=</span><span class="n">unknown</span><span class="p">,</span>
+                <span class="n">is_option</span><span class="o">=</span><span class="n">is_option</span><span class="p">,</span>
+                <span class="n">lower_case</span><span class="o">=</span><span class="n">lower_case</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_members</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">unknown</span><span class="p">,</span> <span class="n">is_option</span><span class="p">,</span> <span class="n">lower_case</span><span class="p">)</span></div>
 </div>
 
 </pre></div>

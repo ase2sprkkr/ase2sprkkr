@@ -1,0 +1,8 @@
+test\_gaussian\_preserves\_discrete\_integral\_for\_multiple\_spectra\_and\_variable\_width
+===========================================================================================
+
+Full name: **ase2sprkkr.physics.test\_broadening.test\_gaussian\_preserves\_discrete\_integral\_for\_multiple\_spectra\_and\_variable\_width**
+
+.. currentmodule:: ase2sprkkr.physics.test_broadening
+
+.. autofunction:: test_gaussian_preserves_discrete_integral_for_multiple_spectra_and_variable_width

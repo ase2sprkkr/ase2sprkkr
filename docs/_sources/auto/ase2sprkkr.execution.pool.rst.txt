@@ -1,0 +1,58 @@
+pool
+====
+
+Full name: **ase2sprkkr.execution.pool**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.execution.pool.ExecutorPool 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.execution.pool
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      default_executor_pool
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      ExecutorPool
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

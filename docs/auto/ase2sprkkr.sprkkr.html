@@ -17,13 +17,13 @@
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../_static/documentation_options.js?v=5929fcd5"></script>
-      <script src="../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="atomic_types" href="ase2sprkkr.sprkkr.atomic_types.html" />
-    <link rel="prev" title="Potential" href="ase2sprkkr.potentials.potentials.Potential.html" /> 
+    <link rel="prev" title="Separator" href="ase2sprkkr.result_files.result_files_definitions.Separator.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -68,17 +68,23 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.promote_ase_atoms.html">promote_ase_atoms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.__getattr__.html">__getattr__</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.common.html">common</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration.html">configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration_migration.html">configuration_migration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration_yaml.html">configuration_yaml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.conftest.html">conftest</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.examples.html">examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.execution.html">execution</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.gui.html">gui</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.input_parameters.html">input_parameters</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.output_files.html">output_files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.outputs.html">outputs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.physics.html">physics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.potentials.html">potentials</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.profiles.html">profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.result_files.html">result_files</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">sprkkr</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.atomic_types.html">atomic_types</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.atoms_region.html">atoms_region</a></li>
@@ -88,6 +94,7 @@
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.io_data.html">io_data</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.moments.html">moments</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.occupations.html">occupations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.profile.html">profile</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.radial.html">radial</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.radial_meshes.html">radial_meshes</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.reference_systems.html">reference_systems</a></li>
@@ -163,31 +170,34 @@ computations</p>
 <tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.sprkkr.occupations.html#module-ase2sprkkr.sprkkr.occupations" title="ase2sprkkr.sprkkr.occupations"><code class="xref py py-obj docutils literal notranslate"><span class="pre">occupations</span></code></a></p></td>
 <td><p>More atomic types can be on one site.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.sprkkr.radial.html#module-ase2sprkkr.sprkkr.radial" title="ase2sprkkr.sprkkr.radial"><code class="xref py py-obj docutils literal notranslate"><span class="pre">radial</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.sprkkr.profile.html#module-ase2sprkkr.sprkkr.profile" title="ase2sprkkr.sprkkr.profile"><code class="xref py py-obj docutils literal notranslate"><span class="pre">profile</span></code></a></p></td>
+<td><p>Machine-specific SPR-KKR execution profiles.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.sprkkr.radial.html#module-ase2sprkkr.sprkkr.radial" title="ase2sprkkr.sprkkr.radial"><code class="xref py py-obj docutils literal notranslate"><span class="pre">radial</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.sprkkr.radial_meshes.html#module-ase2sprkkr.sprkkr.radial_meshes" title="ase2sprkkr.sprkkr.radial_meshes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">radial_meshes</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.sprkkr.radial_meshes.html#module-ase2sprkkr.sprkkr.radial_meshes" title="ase2sprkkr.sprkkr.radial_meshes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">radial_meshes</span></code></a></p></td>
 <td><p>Definitions of radial meshes used by SPR-KKR.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.sprkkr.reference_systems.html#module-ase2sprkkr.sprkkr.reference_systems" title="ase2sprkkr.sprkkr.reference_systems"><code class="xref py py-obj docutils literal notranslate"><span class="pre">reference_systems</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.sprkkr.reference_systems.html#module-ase2sprkkr.sprkkr.reference_systems" title="ase2sprkkr.sprkkr.reference_systems"><code class="xref py py-obj docutils literal notranslate"><span class="pre">reference_systems</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.sprkkr.sites.html#module-ase2sprkkr.sprkkr.sites" title="ase2sprkkr.sprkkr.sites"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sites</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.sprkkr.sites.html#module-ase2sprkkr.sprkkr.sites" title="ase2sprkkr.sprkkr.sites"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sites</span></code></a></p></td>
 <td><p>The site class define the properties of an atom.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.sprkkr.spacegroup_info.html#module-ase2sprkkr.sprkkr.spacegroup_info" title="ase2sprkkr.sprkkr.spacegroup_info"><code class="xref py py-obj docutils literal notranslate"><span class="pre">spacegroup_info</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.sprkkr.spacegroup_info.html#module-ase2sprkkr.sprkkr.spacegroup_info" title="ase2sprkkr.sprkkr.spacegroup_info"><code class="xref py py-obj docutils literal notranslate"><span class="pre">spacegroup_info</span></code></a></p></td>
 <td><p>Wrapper for spglib for computing symmetry of a primitive cell</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.sprkkr.sprkkr_atoms.html#module-ase2sprkkr.sprkkr.sprkkr_atoms" title="ase2sprkkr.sprkkr.sprkkr_atoms"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sprkkr_atoms</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.sprkkr.sprkkr_atoms.html#module-ase2sprkkr.sprkkr.sprkkr_atoms" title="ase2sprkkr.sprkkr.sprkkr_atoms"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sprkkr_atoms</span></code></a></p></td>
 <td><p>This file contains SPRKKRAtoms - an enhanced version of Atoms to be used with SPRKKR</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.sprkkr.sprkkr_grammar_types.html#module-ase2sprkkr.sprkkr.sprkkr_grammar_types" title="ase2sprkkr.sprkkr.sprkkr_grammar_types"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sprkkr_grammar_types</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.sprkkr.sprkkr_grammar_types.html#module-ase2sprkkr.sprkkr.sprkkr_grammar_types" title="ase2sprkkr.sprkkr.sprkkr_grammar_types"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sprkkr_grammar_types</span></code></a></p></td>
 <td><p>In this module, the <code class="xref py py-class docutils literal notranslate"><span class="pre">GrammarTypes</span></code>, that are specific for SPR-KKR, are present.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.sprkkr.structure.html#module-ase2sprkkr.sprkkr.structure" title="ase2sprkkr.sprkkr.structure"><code class="xref py py-obj docutils literal notranslate"><span class="pre">structure</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.sprkkr.structure.html#module-ase2sprkkr.sprkkr.structure" title="ase2sprkkr.sprkkr.structure"><code class="xref py py-obj docutils literal notranslate"><span class="pre">structure</span></code></a></p></td>
 <td><p>Helper classes for a2s_visualise_in_struct utility.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.sprkkr.sysfile.html#module-ase2sprkkr.sprkkr.sysfile" title="ase2sprkkr.sprkkr.sysfile"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sysfile</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.sprkkr.sysfile.html#module-ase2sprkkr.sprkkr.sysfile" title="ase2sprkkr.sprkkr.sysfile"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sysfile</span></code></a></p></td>
 <td><p>Thys module contain functions to write xband sysfiles.</p></td>
 </tr>
 </tbody>
@@ -198,7 +208,7 @@ computations</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="ase2sprkkr.potentials.potentials.Potential.html" class="btn btn-neutral float-left" title="Potential" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="ase2sprkkr.result_files.result_files_definitions.Separator.html" class="btn btn-neutral float-left" title="Separator" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="ase2sprkkr.sprkkr.atomic_types.html" class="btn btn-neutral float-right" title="atomic_types" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

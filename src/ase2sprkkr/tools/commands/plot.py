@@ -165,7 +165,7 @@ def parser(parser):
 
 def run(args, global_args):
     from ...result_files import ResultFile
-    from ...result_files.definitions.sfn import SFNOutputFile
+    from ...result_files.definitions.sfn import SFNResultFile
     from pathlib import Path
     from ...gui.plot import Multiplot
 
@@ -204,7 +204,7 @@ def run(args, global_args):
                     f"Unknown SFN plot mode '{what}'; choose one of: "
                     f"{', '.join(SFN_PLOT_MODES)}"
                 )
-            if not isinstance(of, SFNOutputFile):
+            if not isinstance(of, SFNResultFile):
                 raise ValueError(
                     "SFN plot mode options are only valid for SFN files; "
                     f"'{output}' was read as {type(of).__name__}."

@@ -1,4 +1,4 @@
-from ..output_files_definitions import OutputFileValueDefinition as V, OutputFileDefinition
+from ..result_files_definitions import ResultFileValueDefinition as V, ResultFileDefinition
 from typing import Optional
 import numpy as np
 import re
@@ -8,7 +8,7 @@ from matplotlib import cm
 import warnings
 from collections import namedtuple
 
-from ..output_files import OutputFile
+from ..result_files import ResultFile
 from ...common.decorators import cached_property, cached_class_property
 from ...common.grammar_types import RawData, Table, Integer, Real, Array, Sequence, String, LineString, NumpyArray
 from ...common.configuration_definitions import SeparatorDefinition
@@ -23,7 +23,7 @@ class Coordinates(Enum):
 Selector = namedtuple("Selector", ["iq", "it"])
 
 
-class JXCOutputFile(OutputFile):
+class JXCResultFile(ResultFile):
     plot_parameters = {"exchange_radius", "iq", "it", "exclude_it", "exclude_vc", "font_size", "axis", "separate_plots"}
 
     def is_Jij(self):
@@ -427,8 +427,8 @@ class JXCOutputFile(OutputFile):
         return out
 
 
-class JXCOutputFileDefinition(OutputFileDefinition):
-    result_class = JXCOutputFile
+class JXCResultFileDefinition(ResultFileDefinition):
+    result_class = JXCResultFile
 
 
 import pyparsing as pp
@@ -458,7 +458,7 @@ def create_definition():
         ("DR", float),
     ]
 
-    definition = JXCOutputFileDefinition(
+    definition = JXCResultFileDefinition(
         "JXC",
         [
             V(

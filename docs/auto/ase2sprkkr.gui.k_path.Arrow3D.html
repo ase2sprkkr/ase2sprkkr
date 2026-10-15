@@ -17,8 +17,8 @@
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../_static/documentation_options.js?v=5929fcd5"></script>
-      <script src="../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -68,11 +68,16 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.promote_ase_atoms.html">promote_ase_atoms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.__getattr__.html">__getattr__</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.common.html">common</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration.html">configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration_migration.html">configuration_migration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration_yaml.html">configuration_yaml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.conftest.html">conftest</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.examples.html">examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.execution.html">execution</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="ase2sprkkr.gui.html">gui</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.gui.examples.html">examples</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="ase2sprkkr.gui.k_path.html">k_path</a><ul class="current">
@@ -88,10 +93,11 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.input_parameters.html">input_parameters</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.output_files.html">output_files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.outputs.html">outputs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.physics.html">physics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.potentials.html">potentials</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.profiles.html">profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.result_files.html">result_files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.sprkkr.html">sprkkr</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.tools.html">tools</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.version.html">version</a></li>
@@ -130,12 +136,23 @@
 <h1>Arrow3D<a class="headerlink" href="#arrow3d" title="Link to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="ase2sprkkr.gui.k_path.Arrow3D">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.gui.k_path.</span></span><span class="sig-name descname"><span class="pre">Arrow3D</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ys</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zs</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/gui/k_path.html#Arrow3D"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.gui.k_path.Arrow3D" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.gui.k_path.</span></span><span class="sig-name descname"><span class="pre">Arrow3D</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ys</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zs</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/gui/k_path.html#Arrow3D"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.gui.k_path.Arrow3D" title="Link to this definition"></a></dt>
 <dd><p class="rubric">Class hierarchy</p>
-<div class="graphviz"><img src="../_images/inheritance-f4cd89ee0d3e53d3210b3fa2ac2d17cfad86f58d.png" alt="Inheritance diagram of ase2sprkkr.gui.k_path.Arrow3D" usemap="#inheritance82609b462a" class="inheritance graphviz" /></div>
-<map id="inheritance82609b462a" name="inheritance82609b462a">
-<area shape="rect" id="node2" href="#ase2sprkkr.gui.k_path.Arrow3D" target="_top" title="k_path.Arrow3D" alt="" coords="485,5,611,33"/>
-</map><div class="line-block">
+digraph inheritance82609b462a {
+bgcolor=transparent;
+fontsize=14;
+rankdir=LR;
+ranksep=0.3;
+size=&quot;10.0, 10.0&quot;;
+  &quot;artist.Artist&quot; [fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,tooltip=&quot;Abstract base class for objects that render into a FigureCanvas.&quot;];
+  &quot;k_path.Arrow3D&quot; [URL=&quot;#ase2sprkkr.gui.k_path.Arrow3D&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;];
+  &quot;patches.FancyArrowPatch&quot; -&gt; &quot;k_path.Arrow3D&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;patches.FancyArrowPatch&quot; [fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,tooltip=&quot;A fancy arrow patch.&quot;];
+  &quot;patches.Patch&quot; -&gt; &quot;patches.FancyArrowPatch&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;patches.Patch&quot; [fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,tooltip=&quot;A patch is a 2D artist with a face color and an edge color.&quot;];
+  &quot;artist.Artist&quot; -&gt; &quot;patches.Patch&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+}
+<div class="line-block">
 <div class="line"><br /></div>
 </div>
 <p class="rubric">Constructor</p>
@@ -266,16 +283,18 @@ clip_on: bool
 clip_path: Patch or (Path, Transform) or None
 color: <span class="xref std std-ref">color</span>
 edgecolor or ec: <span class="xref std std-ref">color</span> or None
+edgegapcolor: <span class="xref std std-ref">color</span> or None
 facecolor or fc: <span class="xref std std-ref">color</span> or None
 figure: <cite>~matplotlib.figure.Figure</cite> or <cite>~matplotlib.figure.SubFigure</cite>
 fill: bool
 gid: str
 hatch: {‘/’, ‘\’, ‘|’, ‘-’, ‘+’, ‘x’, ‘o’, ‘O’, ‘.’, ‘*’}
 hatch_linewidth: unknown
+hatchcolor: <span class="xref std std-ref">color</span> or ‘edge’ or None
 in_layout: bool
 joinstyle: <cite>.JoinStyle</cite> or {‘miter’, ‘round’, ‘bevel’}
 label: object
-linestyle or ls: {‘-’, ‘–’, ‘-.’, ‘:’, ‘’, (offset, on-off-seq), …}
+linestyle or ls: {‘-’, ‘–’, ‘-.’, ‘:’, ‘’, …} or (offset, on-off-seq)
 linewidth or lw: float or None
 mouseover: bool
 path_effects: list of <cite>.AbstractPathEffect</cite>
@@ -317,8 +336,23 @@ returns False).</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.gui.k_path.Arrow3D.set">
-<span class="sig-name descname"><span class="pre">set</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agg_filter=&lt;UNSET&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha=&lt;UNSET&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">animated=&lt;UNSET&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">antialiased=&lt;UNSET&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arrowstyle=&lt;UNSET&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">capstyle=&lt;UNSET&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clip_box=&lt;UNSET&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clip_on=&lt;UNSET&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clip_path=&lt;UNSET&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color=&lt;UNSET&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">connectionstyle=&lt;UNSET&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edgecolor=&lt;UNSET&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">facecolor=&lt;UNSET&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fill=&lt;UNSET&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gid=&lt;UNSET&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hatch=&lt;UNSET&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hatch_linewidth=&lt;UNSET&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_layout=&lt;UNSET&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">joinstyle=&lt;UNSET&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label=&lt;UNSET&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">linestyle=&lt;UNSET&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">linewidth=&lt;UNSET&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mouseover=&lt;UNSET&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mutation_aspect=&lt;UNSET&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mutation_scale=&lt;UNSET&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">patchA=&lt;UNSET&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">patchB=&lt;UNSET&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_effects=&lt;UNSET&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">picker=&lt;UNSET&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">positions=&lt;UNSET&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rasterized=&lt;UNSET&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sketch_params=&lt;UNSET&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">snap=&lt;UNSET&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transform=&lt;UNSET&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">url=&lt;UNSET&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">visible=&lt;UNSET&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zorder=&lt;UNSET&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ase2sprkkr.gui.k_path.Arrow3D.set" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">set</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agg_filter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;UNSET&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;UNSET&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">animated</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;UNSET&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">antialiased</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;UNSET&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arrowstyle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;UNSET&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">capstyle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;UNSET&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clip_box</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;UNSET&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clip_on</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;UNSET&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clip_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;UNSET&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;UNSET&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">connectionstyle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;UNSET&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edgecolor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;UNSET&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edgegapcolor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;UNSET&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">facecolor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;UNSET&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fill</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;UNSET&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gid</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;UNSET&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hatch</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;UNSET&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hatch_linewidth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;UNSET&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hatchcolor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;UNSET&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_layout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;UNSET&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">joinstyle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;UNSET&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;UNSET&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">linestyle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;UNSET&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">linewidth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;UNSET&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mouseover</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;UNSET&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mutation_aspect</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;UNSET&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mutation_scale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;UNSET&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">patchA</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;UNSET&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">patchB</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;UNSET&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_effects</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;UNSET&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">picker</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;UNSET&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">positions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;UNSET&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rasterized</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;UNSET&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sketch_params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;UNSET&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">snap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;UNSET&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transform</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;UNSET&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">url</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;UNSET&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">visible</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;UNSET&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zorder</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;UNSET&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ase2sprkkr.gui.k_path.Arrow3D.set" title="Link to this definition"></a></dt>
 <dd><p>Set multiple properties at once.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">a</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="n">A</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="n">B</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">C</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>is equivalent to</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">a</span><span class="o">.</span><span class="n">set_a</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+<span class="n">a</span><span class="o">.</span><span class="n">set_b</span><span class="p">(</span><span class="n">B</span><span class="p">)</span>
+<span class="n">a</span><span class="o">.</span><span class="n">set_c</span><span class="p">(</span><span class="n">C</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>In addition to the full property names, aliases are also supported, e.g.
+<code class="docutils literal notranslate"><span class="pre">set(lw=2)</span></code> is equivalent to <code class="docutils literal notranslate"><span class="pre">set(linewidth=2)</span></code>, but it is an error
+to pass both simultaneously.</p>
+<p>The order of the individual setter calls matches the order of parameters
+in <code class="docutils literal notranslate"><span class="pre">set()</span></code>. However, most properties do not depend on each other so
+that order is rarely relevant.</p>
 <p>Supported properties are</p>
 <dl class="simple">
 <dt>Properties:</dt><dd><p>agg_filter: a filter function, which takes a (m, n, 3) float array and a dpi value, and returns a (m, n, 3) array and two offsets from the bottom left corner of the image
@@ -333,16 +367,18 @@ clip_path: Patch or (Path, Transform) or None
 color: <span class="xref std std-ref">color</span>
 connectionstyle: [ ‘arc3’ | ‘angle3’ | ‘angle’ | ‘arc’ | ‘bar’ ]
 edgecolor or ec: <span class="xref std std-ref">color</span> or None
+edgegapcolor: <span class="xref std std-ref">color</span> or None
 facecolor or fc: <span class="xref std std-ref">color</span> or None
 figure: <cite>~matplotlib.figure.Figure</cite> or <cite>~matplotlib.figure.SubFigure</cite>
 fill: bool
 gid: str
 hatch: {‘/’, ‘\’, ‘|’, ‘-’, ‘+’, ‘x’, ‘o’, ‘O’, ‘.’, ‘*’}
 hatch_linewidth: unknown
+hatchcolor: <span class="xref std std-ref">color</span> or ‘edge’ or None
 in_layout: bool
 joinstyle: <cite>.JoinStyle</cite> or {‘miter’, ‘round’, ‘bevel’}
 label: object
-linestyle or ls: {‘-’, ‘–’, ‘-.’, ‘:’, ‘’, (offset, on-off-seq), …}
+linestyle or ls: {‘-’, ‘–’, ‘-.’, ‘:’, ‘’, …} or (offset, on-off-seq)
 linewidth or lw: float or None
 mouseover: bool
 mutation_aspect: float

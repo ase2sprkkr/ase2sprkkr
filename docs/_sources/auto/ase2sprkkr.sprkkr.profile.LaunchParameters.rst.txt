@@ -1,0 +1,36 @@
+LaunchParameters
+================
+
+
+.. currentmodule:: ase2sprkkr.sprkkr.profile
+
+.. autoclass:: LaunchParameters
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.sprkkr.profile.LaunchParameters
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

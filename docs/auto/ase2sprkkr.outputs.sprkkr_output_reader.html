@@ -17,13 +17,13 @@
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../_static/documentation_options.js?v=5929fcd5"></script>
-      <script src="../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="SprKkrOutputParser" href="ase2sprkkr.outputs.sprkkr_output_reader.SprKkrOutputParser.html" />
-    <link rel="prev" title="OutputOption" href="ase2sprkkr.outputs.result_options.OutputOption.html" /> 
+    <link rel="prev" title="ResultFileDefinition" href="ase2sprkkr.outputs.result_options.ResultFileDefinition.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -68,16 +68,22 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.promote_ase_atoms.html">promote_ase_atoms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.__getattr__.html">__getattr__</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.common.html">common</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration.html">configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration_migration.html">configuration_migration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration_yaml.html">configuration_yaml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.conftest.html">conftest</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.examples.html">examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.execution.html">execution</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.gui.html">gui</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.input_parameters.html">input_parameters</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.output_files.html">output_files</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="ase2sprkkr.outputs.html">outputs</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.outputs.output_definitions.html">output_definitions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.outputs.persistent.html">persistent</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.outputs.reader_registry.html">reader_registry</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.outputs.readers.html">readers</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.outputs.result_options.html">result_options</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">sprkkr_output_reader</a><ul>
@@ -89,6 +95,8 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.physics.html">physics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.potentials.html">potentials</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.profiles.html">profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.result_files.html">result_files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.sprkkr.html">sprkkr</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.tools.html">tools</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.version.html">version</a></li>
@@ -126,18 +134,24 @@
 <h1>sprkkr_output_reader<a class="headerlink" href="#sprkkr-output-reader" title="Link to this heading"></a></h1>
 <p>Full name: <strong>ase2sprkkr.outputs.sprkkr_output_reader</strong></p>
 <p class="rubric">Module class hierarchy</p>
-<div class="graphviz"><img src="../_images/inheritance-54a6c8e6e46fe714bfd951692e833bafe8644470.png" alt="Inheritance diagram of ase2sprkkr.outputs.sprkkr_output_reader.SprKkrOutputParser" usemap="#inheritancedd4be995d7" class="inheritance graphviz" /></div>
-<map id="inheritancedd4be995d7" name="inheritancedd4be995d7">
-<area shape="rect" id="node1" href="ase2sprkkr.common.process_output_reader.ProcessOutputParser.html#ase2sprkkr.common.process_output_reader.ProcessOutputParser" target="_top" title="Class, that run a process, optionally saves all the output of the process to a file," alt="" coords="5,5,161,33"/>
-<area shape="rect" id="node2" href="ase2sprkkr.outputs.sprkkr_output_reader.SprKkrOutputParser.html#ase2sprkkr.outputs.sprkkr_output_reader.SprKkrOutputParser" target="_top" title="SprKkrOutputParser" alt="" coords="190,5,338,33"/>
-</map><div class="line-block">
+digraph inheritancedd4be995d7 {
+bgcolor=transparent;
+fontsize=14;
+rankdir=LR;
+ranksep=0.3;
+size=&quot;10.0, 10.0&quot;;
+  &quot;ProcessOutputParser&quot; [URL=&quot;ase2sprkkr.common.process_output_reader.ProcessOutputParser.html#ase2sprkkr.common.process_output_reader.ProcessOutputParser&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;Parse asynchronous stdout/stderr streams.&quot;];
+  &quot;SprKkrOutputParser&quot; [URL=&quot;ase2sprkkr.outputs.sprkkr_output_reader.SprKkrOutputParser.html#ase2sprkkr.outputs.sprkkr_output_reader.SprKkrOutputParser&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;];
+  &quot;ProcessOutputParser&quot; -&gt; &quot;SprKkrOutputParser&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+}
+<div class="line-block">
 <div class="line"><br /></div>
 </div>
 <p class="rubric">Description</p>
 <p class="rubric" id="module-ase2sprkkr.outputs.sprkkr_output_reader">Classes</p>
 <table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.outputs.sprkkr_output_reader.SprKkrOutputParser.html#ase2sprkkr.outputs.sprkkr_output_reader.SprKkrOutputParser" title="ase2sprkkr.outputs.sprkkr_output_reader.SprKkrOutputParser"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SprKkrOutputParser</span></code></a>([print_output, read_callback])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.outputs.sprkkr_output_reader.SprKkrOutputParser.html#ase2sprkkr.outputs.sprkkr_output_reader.SprKkrOutputParser" title="ase2sprkkr.outputs.sprkkr_output_reader.SprKkrOutputParser"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SprKkrOutputParser</span></code></a>([print_output])</p></td>
 <td><p></p></td>
 </tr>
 </tbody>
@@ -148,7 +162,7 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="ase2sprkkr.outputs.result_options.OutputOption.html" class="btn btn-neutral float-left" title="OutputOption" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="ase2sprkkr.outputs.result_options.ResultFileDefinition.html" class="btn btn-neutral float-left" title="ResultFileDefinition" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="ase2sprkkr.outputs.sprkkr_output_reader.SprKkrOutputParser.html" class="btn btn-neutral float-right" title="SprKkrOutputParser" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

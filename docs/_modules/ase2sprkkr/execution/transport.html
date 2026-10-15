@@ -1,0 +1,959 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ase2sprkkr.execution.transport &mdash; ASE2SPRKKR  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/mods.css?v=26f6988d" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            ASE2SPRKKR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage.html">How to use the package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../how-to-install.html">More about the package installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../philosophy.html">Philosophy of the package (for developers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../authors.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Examples</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../auto/ase2sprkkr.html">ase2sprkkr</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">ASE2SPRKKR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../ase2sprkkr.html">ase2sprkkr</a></li>
+      <li class="breadcrumb-item active">ase2sprkkr.execution.transport</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for ase2sprkkr.execution.transport</h1><div class="highlight"><pre>
+<span></span><span class="sd">"""Low-level asynchronous command and file transports."""</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">fnmatch</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">glob</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">hashlib</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">posixpath</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">shlex</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">shutil</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">subprocess</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">lru_cache</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span><span class="p">,</span> <span class="n">PurePosixPath</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Protocol</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">uuid</span><span class="w"> </span><span class="kn">import</span> <span class="n">uuid4</span>
+
+
+<div class="viewcode-block" id="RunningCommand">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.transport.RunningCommand.html#ase2sprkkr.execution.transport.RunningCommand">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">RunningCommand</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""A running command with independently readable output streams."""</span>
+
+    <span class="n">stdout</span><span class="p">:</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">StreamReader</span>
+    <span class="n">stderr</span><span class="p">:</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">StreamReader</span>
+    <span class="n">returncode</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
+
+<div class="viewcode-block" id="RunningCommand.wait">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.transport.RunningCommand.html#ase2sprkkr.execution.transport.RunningCommand.wait">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">wait</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span> <span class="o">...</span></div>
+
+
+<div class="viewcode-block" id="RunningCommand.terminate">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.transport.RunningCommand.html#ase2sprkkr.execution.transport.RunningCommand.terminate">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">terminate</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span> <span class="o">...</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="_sources">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.transport._sources.html#ase2sprkkr.execution.transport._sources">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_sources</span><span class="p">(</span><span class="n">sources</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">sources</span><span class="p">,</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">PathLike</span><span class="p">)):</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">sources</span><span class="p">,)</span>
+    <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">sources</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="has_file_magic">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.transport.has_file_magic.html#ase2sprkkr.execution.transport.has_file_magic">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">has_file_magic</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Return whether *path* contains shell-style wildcard characters."""</span>
+    <span class="k">return</span> <span class="n">glob</span><span class="o">.</span><span class="n">has_magic</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">fspath</span><span class="p">(</span><span class="n">path</span><span class="p">))</span></div>
+
+
+
+<div class="viewcode-block" id="_local_pattern">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.transport._local_pattern.html#ase2sprkkr.execution.transport._local_pattern">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_local_pattern</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">root</span><span class="p">):</span>
+    <span class="n">root</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">root</span><span class="p">)</span><span class="o">.</span><span class="n">expanduser</span><span class="p">()</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+    <span class="n">source</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">fspath</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">source</span><span class="p">)</span><span class="o">.</span><span class="n">expanduser</span><span class="p">()</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">path</span><span class="o">.</span><span class="n">is_absolute</span><span class="p">():</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">root</span> <span class="o">/</span> <span class="n">path</span>
+    <span class="n">pattern</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">fspath</span><span class="p">(</span><span class="n">path</span><span class="p">))</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"File pattern </span><span class="si">{</span><span class="n">source</span><span class="si">!r}</span><span class="s2"> is outside source root </span><span class="si">{</span><span class="n">root</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span>
+    <span class="n">relative</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">relative</span> <span class="o">==</span> <span class="n">os</span><span class="o">.</span><span class="n">pardir</span> <span class="ow">or</span> <span class="n">relative</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">pardir</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"File pattern </span><span class="si">{</span><span class="n">source</span><span class="si">!r}</span><span class="s2"> is outside source root </span><span class="si">{</span><span class="n">root</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">root</span><span class="p">,</span> <span class="n">pattern</span></div>
+
+
+
+<div class="viewcode-block" id="expand_local_files">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.transport.expand_local_files.html#ase2sprkkr.execution.transport.expand_local_files">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">expand_local_files</span><span class="p">(</span><span class="n">sources</span><span class="p">,</span> <span class="n">root</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Expand local source paths/patterns below *root* into concrete files."""</span>
+    <span class="n">root</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">root</span><span class="p">)</span><span class="o">.</span><span class="n">expanduser</span><span class="p">()</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+    <span class="n">files</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">seen</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">source</span> <span class="ow">in</span> <span class="n">_sources</span><span class="p">(</span><span class="n">sources</span><span class="p">):</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">pattern</span> <span class="o">=</span> <span class="n">_local_pattern</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+        <span class="n">matches</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">recursive</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">match</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">matches</span><span class="p">):</span>
+            <span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">match</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">path</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
+                <span class="k">continue</span>
+            <span class="n">path</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">path</span><span class="o">.</span><span class="n">relative_to</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">"Expanded file </span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2"> is outside source root </span><span class="si">{</span><span class="n">root</span><span class="si">}</span><span class="s2">"</span>
+                <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">fspath</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">value</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">seen</span><span class="p">:</span>
+                <span class="n">seen</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+                <span class="n">files</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">files</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="_posix_relative_pattern">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.transport._posix_relative_pattern.html#ase2sprkkr.execution.transport._posix_relative_pattern">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_posix_relative_pattern</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">root</span><span class="p">):</span>
+    <span class="n">source</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">fspath</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
+    <span class="n">root</span> <span class="o">=</span> <span class="n">posixpath</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">fspath</span><span class="p">(</span><span class="n">root</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">posixpath</span><span class="o">.</span><span class="n">isabs</span><span class="p">(</span><span class="n">source</span><span class="p">):</span>
+        <span class="n">pattern</span> <span class="o">=</span> <span class="n">posixpath</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">common</span> <span class="o">=</span> <span class="n">posixpath</span><span class="o">.</span><span class="n">commonpath</span><span class="p">((</span><span class="n">root</span><span class="p">,</span> <span class="n">pattern</span><span class="p">))</span>
+        <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"File pattern </span><span class="si">{</span><span class="n">source</span><span class="si">!r}</span><span class="s2"> is outside source root </span><span class="si">{</span><span class="n">root</span><span class="si">}</span><span class="s2">"</span>
+            <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span>
+        <span class="k">if</span> <span class="n">common</span> <span class="o">!=</span> <span class="n">root</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"File pattern </span><span class="si">{</span><span class="n">source</span><span class="si">!r}</span><span class="s2"> is outside source root </span><span class="si">{</span><span class="n">root</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="n">relative</span> <span class="o">=</span> <span class="n">posixpath</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">relative</span> <span class="o">=</span> <span class="n">posixpath</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">relative</span> <span class="o">==</span> <span class="s2">".."</span> <span class="ow">or</span> <span class="n">relative</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"../"</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"File pattern </span><span class="si">{</span><span class="n">source</span><span class="si">!r}</span><span class="s2"> is outside source root </span><span class="si">{</span><span class="n">root</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">relative</span></div>
+
+
+
+<div class="viewcode-block" id="_match_component">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.transport._match_component.html#ase2sprkkr.execution.transport._match_component">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_match_component</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">pattern</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"."</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">pattern</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"."</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">False</span>
+    <span class="k">return</span> <span class="n">fnmatch</span><span class="o">.</span><span class="n">fnmatchcase</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">pattern</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="_match_relative_path">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.transport._match_relative_path.html#ase2sprkkr.execution.transport._match_relative_path">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_match_relative_path</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">pattern</span><span class="p">):</span>
+    <span class="n">parts</span> <span class="o">=</span> <span class="n">PurePosixPath</span><span class="p">(</span><span class="n">path</span><span class="p">)</span><span class="o">.</span><span class="n">parts</span>
+    <span class="n">patterns</span> <span class="o">=</span> <span class="n">PurePosixPath</span><span class="p">(</span><span class="n">pattern</span><span class="p">)</span><span class="o">.</span><span class="n">parts</span>
+
+    <span class="nd">@lru_cache</span><span class="p">(</span><span class="n">maxsize</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">match</span><span class="p">(</span><span class="n">path_index</span><span class="p">,</span> <span class="n">pattern_index</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">pattern_index</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">patterns</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">path_index</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span>
+        <span class="n">current</span> <span class="o">=</span> <span class="n">patterns</span><span class="p">[</span><span class="n">pattern_index</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">current</span> <span class="o">==</span> <span class="s2">"**"</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">match</span><span class="p">(</span><span class="n">path_index</span><span class="p">,</span> <span class="n">pattern_index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span>
+                <span class="n">path_index</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span> <span class="ow">and</span> <span class="n">match</span><span class="p">(</span><span class="n">path_index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">pattern_index</span><span class="p">)</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="n">path_index</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span>
+            <span class="ow">and</span> <span class="n">_match_component</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="n">path_index</span><span class="p">],</span> <span class="n">current</span><span class="p">)</span>
+            <span class="ow">and</span> <span class="n">match</span><span class="p">(</span><span class="n">path_index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">pattern_index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">match</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="_literal_prefix">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.transport._literal_prefix.html#ase2sprkkr.execution.transport._literal_prefix">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_literal_prefix</span><span class="p">(</span><span class="n">pattern</span><span class="p">):</span>
+    <span class="n">parts</span> <span class="o">=</span> <span class="n">PurePosixPath</span><span class="p">(</span><span class="n">pattern</span><span class="p">)</span><span class="o">.</span><span class="n">parts</span>
+    <span class="n">prefix</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="n">parts</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">has_file_magic</span><span class="p">(</span><span class="n">part</span><span class="p">)</span> <span class="ow">or</span> <span class="n">part</span> <span class="o">==</span> <span class="s2">"**"</span><span class="p">:</span>
+            <span class="k">break</span>
+        <span class="n">prefix</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">part</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">prefix</span></div>
+
+
+
+<div class="viewcode-block" id="_local_temporary_path">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.transport._local_temporary_path.html#ase2sprkkr.execution.transport._local_temporary_path">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_local_temporary_path</span><span class="p">(</span><span class="n">destination</span><span class="p">):</span>
+    <span class="n">destination</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">destination</span><span class="p">)</span>
+    <span class="n">destination</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">destination</span><span class="o">.</span><span class="n">with_name</span><span class="p">(</span><span class="sa">f</span><span class="s2">".</span><span class="si">{</span><span class="n">destination</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">uuid4</span><span class="p">()</span><span class="o">.</span><span class="n">hex</span><span class="si">}</span><span class="s2">.tmp"</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="AtomicLocalFile">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.transport.AtomicLocalFile.html#ase2sprkkr.execution.transport.AtomicLocalFile">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">AtomicLocalFile</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""File-like sink that replaces its destination only on explicit commit.</span>
+
+<span class="sd">    ``name`` intentionally reports the final path so TaskResult/provenance never</span>
+<span class="sd">    exposes the temporary replay path used during an attach.</span>
+<span class="sd">    """</span>
+
+<div class="viewcode-block" id="AtomicLocalFile.__init__">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.transport.AtomicLocalFile.html#ase2sprkkr.execution.transport.AtomicLocalFile.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">destination</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">destination</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">destination</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">temporary_path</span> <span class="o">=</span> <span class="n">_local_temporary_path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">destination</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">temporary_path</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">"w+b"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">fspath</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">destination</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_finished</span> <span class="o">=</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="AtomicLocalFile.write">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.transport.AtomicLocalFile.html#ase2sprkkr.execution.transport.AtomicLocalFile.write">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">data</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="AtomicLocalFile.flush">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.transport.AtomicLocalFile.html#ase2sprkkr.execution.transport.AtomicLocalFile.flush">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">flush</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_file</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="AtomicLocalFile.fileno">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.transport.AtomicLocalFile.html#ase2sprkkr.execution.transport.AtomicLocalFile.fileno">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">fileno</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_file</span><span class="o">.</span><span class="n">fileno</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="AtomicLocalFile.commit">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.transport.AtomicLocalFile.html#ase2sprkkr.execution.transport.AtomicLocalFile.commit">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">commit</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_finished</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_file</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">temporary_path</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">destination</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_finished</span> <span class="o">=</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="AtomicLocalFile.discard">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.transport.AtomicLocalFile.html#ase2sprkkr.execution.transport.AtomicLocalFile.discard">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">discard</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_finished</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">temporary_path</span><span class="o">.</span><span class="n">unlink</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
+            <span class="k">pass</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_finished</span> <span class="o">=</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="AtomicLocalFile.close">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.transport.AtomicLocalFile.html#ase2sprkkr.execution.transport.AtomicLocalFile.close">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">discard</span><span class="p">()</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="Transport">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.transport.Transport.html#ase2sprkkr.execution.transport.Transport">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Transport</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Run commands and move files on one target machine.</span>
+
+<span class="sd">    Transport operations are asynchronous because remote execution is mostly</span>
+<span class="sd">    I/O. ``put_file()`` and ``get_file()`` are exact one-file primitives.</span>
+<span class="sd">    ``put_files()`` and ``get_files()`` accept one path/pattern or an iterable</span>
+<span class="sd">    and preserve each matched file's path relative to the supplied source root.</span>
+<span class="sd">    Wildcards are always expanded on the source side of the transfer.</span>
+<span class="sd">    """</span>
+
+<div class="viewcode-block" id="Transport.run">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.transport.Transport.html#ase2sprkkr.execution.transport.Transport.run">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">argv</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">cwd</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="nb">input</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">check</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+
+<div class="viewcode-block" id="Transport.start">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.transport.Transport.html#ase2sprkkr.execution.transport.Transport.start">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">argv</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">cwd</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">stdin</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RunningCommand</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+
+<div class="viewcode-block" id="Transport.put_file">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.transport.Transport.html#ase2sprkkr.execution.transport.Transport.put_file">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">put_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">destination</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+
+<div class="viewcode-block" id="Transport.get_file">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.transport.Transport.html#ase2sprkkr.execution.transport.Transport.get_file">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">destination</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+
+<div class="viewcode-block" id="Transport.put_files">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.transport.Transport.html#ase2sprkkr.execution.transport.Transport.put_files">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">put_files</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sources</span><span class="p">,</span> <span class="n">source_root</span><span class="p">,</span> <span class="n">destination_root</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+
+<div class="viewcode-block" id="Transport.get_files">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.transport.Transport.html#ase2sprkkr.execution.transport.Transport.get_files">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_files</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sources</span><span class="p">,</span> <span class="n">source_root</span><span class="p">,</span> <span class="n">destination_root</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+
+<div class="viewcode-block" id="Transport.expand_files">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.transport.Transport.html#ase2sprkkr.execution.transport.Transport.expand_files">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">expand_files</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sources</span><span class="p">,</span> <span class="n">root</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Expand paths/patterns on the target filesystem into concrete files."""</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+
+<div class="viewcode-block" id="Transport.read_file">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.transport.Transport.html#ase2sprkkr.execution.transport.Transport.read_file">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">read_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+
+<div class="viewcode-block" id="Transport.file_digest">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.transport.Transport.html#ase2sprkkr.execution.transport.Transport.file_digest">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">file_digest</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Return the SHA-256 digest of *path*, or ``None`` if it does not exist."""</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+
+<div class="viewcode-block" id="Transport.file_signature">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.transport.Transport.html#ase2sprkkr.execution.transport.Transport.file_signature">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">file_signature</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Return ``(size, mtime_ns)`` for *path*, or ``None`` if absent."""</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="local_file_digest">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.transport.local_file_digest.html#ase2sprkkr.execution.transport.local_file_digest">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">local_file_digest</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Return the SHA-256 digest of a local file, or ``None`` if absent."""</span>
+    <span class="n">digest</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">()</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">"rb"</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="nb">iter</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="n">file</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span><span class="p">),</span> <span class="sa">b</span><span class="s2">""</span><span class="p">):</span>
+                <span class="n">digest</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="k">return</span> <span class="n">digest</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span></div>
+
+
+
+<div class="viewcode-block" id="local_file_signature">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.transport.local_file_signature.html#ase2sprkkr.execution.transport.local_file_signature">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">local_file_signature</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Return ``(size, mtime_ns)`` for a local file, or ``None`` if absent."""</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">stat</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">stat</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="k">return</span> <span class="n">stat</span><span class="o">.</span><span class="n">st_size</span><span class="p">,</span> <span class="n">stat</span><span class="o">.</span><span class="n">st_mtime_ns</span></div>
+
+
+
+<div class="viewcode-block" id="_parse_remote_file_signature">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.transport._parse_remote_file_signature.html#ase2sprkkr.execution.transport._parse_remote_file_signature">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_parse_remote_file_signature</span><span class="p">(</span><span class="n">raw</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Parse GNU ``stat`` output into ``(size, mtime_ns)``."""</span>
+    <span class="n">size</span><span class="p">,</span> <span class="n">seconds</span><span class="p">,</span> <span class="n">timestamp</span> <span class="o">=</span> <span class="n">raw</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">"utf8"</span><span class="p">)</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"|"</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">fraction</span> <span class="o">=</span> <span class="s2">""</span>
+    <span class="k">if</span> <span class="s2">"."</span> <span class="ow">in</span> <span class="n">timestamp</span><span class="p">:</span>
+        <span class="n">fraction</span> <span class="o">=</span> <span class="n">timestamp</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"."</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">nanoseconds</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="n">fraction</span> <span class="o">+</span> <span class="s2">"000000000"</span><span class="p">)[:</span><span class="mi">9</span><span class="p">])</span> <span class="k">if</span> <span class="n">fraction</span> <span class="k">else</span> <span class="mi">0</span>
+    <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">size</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">seconds</span><span class="p">)</span> <span class="o">*</span> <span class="mi">1_000_000_000</span> <span class="o">+</span> <span class="n">nanoseconds</span></div>
+
+
+
+<span class="c1"># Kept temporarily for code using the helper inside the execution package.</span>
+<span class="n">_sha256_file</span> <span class="o">=</span> <span class="n">local_file_digest</span>
+
+
+<div class="viewcode-block" id="_completed_process">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.transport._completed_process.html#ase2sprkkr.execution.transport._completed_process">[docs]</a>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_completed_process</span><span class="p">(</span><span class="n">process</span><span class="p">,</span> <span class="n">argv</span><span class="p">,</span> <span class="nb">input</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">check</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="n">stdout</span><span class="p">,</span> <span class="n">stderr</span> <span class="o">=</span> <span class="k">await</span> <span class="n">process</span><span class="o">.</span><span class="n">communicate</span><span class="p">(</span><span class="nb">input</span><span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">CompletedProcess</span><span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="n">argv</span><span class="p">),</span> <span class="n">process</span><span class="o">.</span><span class="n">returncode</span><span class="p">,</span> <span class="n">stdout</span><span class="p">,</span> <span class="n">stderr</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">check</span> <span class="ow">and</span> <span class="n">result</span><span class="o">.</span><span class="n">returncode</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">CalledProcessError</span><span class="p">(</span>
+            <span class="n">result</span><span class="o">.</span><span class="n">returncode</span><span class="p">,</span>
+            <span class="n">result</span><span class="o">.</span><span class="n">args</span><span class="p">,</span>
+            <span class="n">output</span><span class="o">=</span><span class="n">result</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span>
+            <span class="n">stderr</span><span class="o">=</span><span class="n">result</span><span class="o">.</span><span class="n">stderr</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="k">return</span> <span class="n">result</span></div>
+
+
+
+<div class="viewcode-block" id="LocalTransport">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.transport.LocalTransport.html#ase2sprkkr.execution.transport.LocalTransport">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">LocalTransport</span><span class="p">(</span><span class="n">Transport</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Transport backed by asyncio subprocesses and the local filesystem."""</span>
+
+<div class="viewcode-block" id="LocalTransport.start">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.transport.LocalTransport.html#ase2sprkkr.execution.transport.LocalTransport.start">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">argv</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">cwd</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">stdin</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">create_subprocess_exec</span><span class="p">(</span>
+            <span class="o">*</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">fspath</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span> <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">argv</span><span class="p">),</span>
+            <span class="n">cwd</span><span class="o">=</span><span class="n">cwd</span><span class="p">,</span>
+            <span class="n">stdin</span><span class="o">=</span><span class="n">stdin</span><span class="p">,</span>
+            <span class="n">stdout</span><span class="o">=</span><span class="n">asyncio</span><span class="o">.</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
+            <span class="n">stderr</span><span class="o">=</span><span class="n">asyncio</span><span class="o">.</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="LocalTransport.run">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.transport.LocalTransport.html#ase2sprkkr.execution.transport.LocalTransport.run">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">argv</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">cwd</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="nb">input</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">check</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="n">argv</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">fspath</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span> <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">argv</span><span class="p">)</span>
+        <span class="n">process</span> <span class="o">=</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">create_subprocess_exec</span><span class="p">(</span>
+            <span class="o">*</span><span class="n">argv</span><span class="p">,</span>
+            <span class="n">cwd</span><span class="o">=</span><span class="n">cwd</span><span class="p">,</span>
+            <span class="n">stdin</span><span class="o">=</span><span class="n">asyncio</span><span class="o">.</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span> <span class="k">if</span> <span class="nb">input</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">stdout</span><span class="o">=</span><span class="n">asyncio</span><span class="o">.</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
+            <span class="n">stderr</span><span class="o">=</span><span class="n">asyncio</span><span class="o">.</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="k">await</span> <span class="n">_completed_process</span><span class="p">(</span><span class="n">process</span><span class="p">,</span> <span class="n">argv</span><span class="p">,</span> <span class="nb">input</span><span class="o">=</span><span class="nb">input</span><span class="p">,</span> <span class="n">check</span><span class="o">=</span><span class="n">check</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="LocalTransport.put_file">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.transport.LocalTransport.html#ase2sprkkr.execution.transport.LocalTransport.put_file">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">put_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">destination</span><span class="p">):</span>
+        <span class="n">source</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">fspath</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
+        <span class="n">signature</span> <span class="o">=</span> <span class="n">local_file_signature</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">signature</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
+        <span class="n">destination</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">destination</span><span class="p">)</span>
+        <span class="n">temporary</span> <span class="o">=</span> <span class="n">_local_temporary_path</span><span class="p">(</span><span class="n">destination</span><span class="p">)</span>
+        <span class="n">loop</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">get_running_loop</span><span class="p">()</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">await</span> <span class="n">loop</span><span class="o">.</span><span class="n">run_in_executor</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">shutil</span><span class="o">.</span><span class="n">copyfile</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">temporary</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">local_file_signature</span><span class="p">(</span><span class="n">source</span><span class="p">)</span> <span class="o">!=</span> <span class="n">signature</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Local file changed while copying: </span><span class="si">{</span><span class="n">source</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+            <span class="n">stat</span> <span class="o">=</span> <span class="n">temporary</span><span class="o">.</span><span class="n">stat</span><span class="p">()</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">utime</span><span class="p">(</span><span class="n">temporary</span><span class="p">,</span> <span class="n">ns</span><span class="o">=</span><span class="p">(</span><span class="n">stat</span><span class="o">.</span><span class="n">st_atime_ns</span><span class="p">,</span> <span class="n">signature</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">temporary</span><span class="p">,</span> <span class="n">destination</span><span class="p">)</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">temporary</span><span class="o">.</span><span class="n">unlink</span><span class="p">()</span>
+            <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
+                <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="LocalTransport.get_file">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.transport.LocalTransport.html#ase2sprkkr.execution.transport.LocalTransport.get_file">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">destination</span><span class="p">):</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">put_file</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">destination</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="LocalTransport.expand_files">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.transport.LocalTransport.html#ase2sprkkr.execution.transport.LocalTransport.expand_files">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">expand_files</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sources</span><span class="p">,</span> <span class="n">root</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">expand_local_files</span><span class="p">(</span><span class="n">sources</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="LocalTransport.put_files">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.transport.LocalTransport.html#ase2sprkkr.execution.transport.LocalTransport.put_files">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">put_files</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sources</span><span class="p">,</span> <span class="n">source_root</span><span class="p">,</span> <span class="n">destination_root</span><span class="p">):</span>
+        <span class="n">source_root</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">source_root</span><span class="p">)</span><span class="o">.</span><span class="n">expanduser</span><span class="p">()</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+        <span class="n">destination_root</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">destination_root</span><span class="p">)</span><span class="o">.</span><span class="n">expanduser</span><span class="p">()</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+        <span class="n">transfers</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">source</span> <span class="ow">in</span> <span class="n">expand_local_files</span><span class="p">(</span><span class="n">sources</span><span class="p">,</span> <span class="n">source_root</span><span class="p">):</span>
+            <span class="n">relative</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">source</span><span class="p">)</span><span class="o">.</span><span class="n">relative_to</span><span class="p">(</span><span class="n">source_root</span><span class="p">)</span>
+            <span class="n">destination</span> <span class="o">=</span> <span class="n">destination_root</span> <span class="o">/</span> <span class="n">relative</span>
+            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">put_file</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">destination</span><span class="p">)</span>
+            <span class="n">transfers</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">source</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">fspath</span><span class="p">(</span><span class="n">destination</span><span class="p">)))</span>
+        <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">transfers</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="LocalTransport.get_files">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.transport.LocalTransport.html#ase2sprkkr.execution.transport.LocalTransport.get_files">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_files</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sources</span><span class="p">,</span> <span class="n">source_root</span><span class="p">,</span> <span class="n">destination_root</span><span class="p">):</span>
+        <span class="n">source_root</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">source_root</span><span class="p">)</span><span class="o">.</span><span class="n">expanduser</span><span class="p">()</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+        <span class="n">destination_root</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">destination_root</span><span class="p">)</span><span class="o">.</span><span class="n">expanduser</span><span class="p">()</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+        <span class="n">transfers</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">source</span> <span class="ow">in</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">expand_files</span><span class="p">(</span><span class="n">sources</span><span class="p">,</span> <span class="n">source_root</span><span class="p">):</span>
+            <span class="n">relative</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">source</span><span class="p">)</span><span class="o">.</span><span class="n">relative_to</span><span class="p">(</span><span class="n">source_root</span><span class="p">)</span>
+            <span class="n">destination</span> <span class="o">=</span> <span class="n">destination_root</span> <span class="o">/</span> <span class="n">relative</span>
+            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_file</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">destination</span><span class="p">)</span>
+            <span class="n">transfers</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">source</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">fspath</span><span class="p">(</span><span class="n">destination</span><span class="p">)))</span>
+        <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">transfers</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="LocalTransport.read_file">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.transport.LocalTransport.html#ase2sprkkr.execution.transport.LocalTransport.read_file">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">read_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+        <span class="n">loop</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">get_running_loop</span><span class="p">()</span>
+        <span class="k">return</span> <span class="k">await</span> <span class="n">loop</span><span class="o">.</span><span class="n">run_in_executor</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">Path</span><span class="p">(</span><span class="n">path</span><span class="p">)</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="LocalTransport.file_digest">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.transport.LocalTransport.html#ase2sprkkr.execution.transport.LocalTransport.file_digest">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">file_digest</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+        <span class="n">loop</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">get_running_loop</span><span class="p">()</span>
+        <span class="k">return</span> <span class="k">await</span> <span class="n">loop</span><span class="o">.</span><span class="n">run_in_executor</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">local_file_digest</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="LocalTransport.file_signature">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.transport.LocalTransport.html#ase2sprkkr.execution.transport.LocalTransport.file_signature">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">file_signature</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+        <span class="n">loop</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">get_running_loop</span><span class="p">()</span>
+        <span class="k">return</span> <span class="k">await</span> <span class="n">loop</span><span class="o">.</span><span class="n">run_in_executor</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">local_file_signature</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="SshTransport">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.transport.SshTransport.html#ase2sprkkr.execution.transport.SshTransport">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">SshTransport</span><span class="p">(</span><span class="n">Transport</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Transport using the system ``ssh`` client."""</span>
+
+<div class="viewcode-block" id="SshTransport.__init__">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.transport.SshTransport.html#ase2sprkkr.execution.transport.SshTransport.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">host</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">ssh</span><span class="o">=</span><span class="s2">"ssh"</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="p">()):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">host</span> <span class="o">=</span> <span class="n">host</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ssh</span> <span class="o">=</span> <span class="n">ssh</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">options</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">options</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SshTransport._command">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.transport.SshTransport.html#ase2sprkkr.execution.transport.SshTransport._command">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_command</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">argv</span><span class="p">,</span> <span class="n">cwd</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">command</span> <span class="o">=</span> <span class="n">shlex</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">os</span><span class="o">.</span><span class="n">fspath</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span> <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">argv</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">cwd</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">command</span> <span class="o">=</span> <span class="s2">"cd </span><span class="si">{}</span><span class="s2"> &amp;&amp; exec </span><span class="si">{}</span><span class="s2">"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">shlex</span><span class="o">.</span><span class="n">quote</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">fspath</span><span class="p">(</span><span class="n">cwd</span><span class="p">)),</span> <span class="n">command</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">ssh</span><span class="p">,</span> <span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">host</span><span class="p">,</span> <span class="n">command</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="SshTransport.start">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.transport.SshTransport.html#ase2sprkkr.execution.transport.SshTransport.start">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">argv</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">cwd</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">stdin</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">create_subprocess_exec</span><span class="p">(</span>
+            <span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">_command</span><span class="p">(</span><span class="n">argv</span><span class="p">,</span> <span class="n">cwd</span><span class="p">),</span>
+            <span class="n">stdin</span><span class="o">=</span><span class="n">stdin</span><span class="p">,</span>
+            <span class="n">stdout</span><span class="o">=</span><span class="n">asyncio</span><span class="o">.</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
+            <span class="n">stderr</span><span class="o">=</span><span class="n">asyncio</span><span class="o">.</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SshTransport.run">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.transport.SshTransport.html#ase2sprkkr.execution.transport.SshTransport.run">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">argv</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">cwd</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="nb">input</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">check</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="n">command</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_command</span><span class="p">(</span><span class="n">argv</span><span class="p">,</span> <span class="n">cwd</span><span class="p">)</span>
+        <span class="n">process</span> <span class="o">=</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">create_subprocess_exec</span><span class="p">(</span>
+            <span class="o">*</span><span class="n">command</span><span class="p">,</span>
+            <span class="n">stdin</span><span class="o">=</span><span class="n">asyncio</span><span class="o">.</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span> <span class="k">if</span> <span class="nb">input</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">stdout</span><span class="o">=</span><span class="n">asyncio</span><span class="o">.</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
+            <span class="n">stderr</span><span class="o">=</span><span class="n">asyncio</span><span class="o">.</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="k">await</span> <span class="n">_completed_process</span><span class="p">(</span><span class="n">process</span><span class="p">,</span> <span class="n">command</span><span class="p">,</span> <span class="nb">input</span><span class="o">=</span><span class="nb">input</span><span class="p">,</span> <span class="n">check</span><span class="o">=</span><span class="n">check</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SshTransport.put_file">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.transport.SshTransport.html#ase2sprkkr.execution.transport.SshTransport.put_file">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">put_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">destination</span><span class="p">):</span>
+        <span class="n">source</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">fspath</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
+        <span class="n">signature</span> <span class="o">=</span> <span class="n">local_file_signature</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">signature</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
+
+        <span class="n">destination</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">fspath</span><span class="p">(</span><span class="n">destination</span><span class="p">)</span>
+        <span class="n">parent</span> <span class="o">=</span> <span class="n">posixpath</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">destination</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">parent</span><span class="p">:</span>
+            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">run</span><span class="p">((</span><span class="s2">"mkdir"</span><span class="p">,</span> <span class="s2">"-p"</span><span class="p">,</span> <span class="s2">"--"</span><span class="p">,</span> <span class="n">parent</span><span class="p">))</span>
+        <span class="n">temporary</span> <span class="o">=</span> <span class="n">posixpath</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="n">parent</span> <span class="ow">or</span> <span class="s2">"."</span><span class="p">,</span>
+            <span class="sa">f</span><span class="s2">".</span><span class="si">{</span><span class="n">posixpath</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">destination</span><span class="p">)</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">uuid4</span><span class="p">()</span><span class="o">.</span><span class="n">hex</span><span class="si">}</span><span class="s2">.tmp"</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="n">command</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_command</span><span class="p">((</span><span class="s2">"sh"</span><span class="p">,</span> <span class="s2">"-c"</span><span class="p">,</span> <span class="s1">'cat &gt; "$1"'</span><span class="p">,</span> <span class="s2">"sh"</span><span class="p">,</span> <span class="n">temporary</span><span class="p">))</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="s2">"rb"</span><span class="p">)</span> <span class="k">as</span> <span class="n">source_file</span><span class="p">:</span>
+                <span class="n">process</span> <span class="o">=</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">create_subprocess_exec</span><span class="p">(</span>
+                    <span class="o">*</span><span class="n">command</span><span class="p">,</span>
+                    <span class="n">stdin</span><span class="o">=</span><span class="n">source_file</span><span class="p">,</span>
+                    <span class="n">stdout</span><span class="o">=</span><span class="n">asyncio</span><span class="o">.</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
+                    <span class="n">stderr</span><span class="o">=</span><span class="n">asyncio</span><span class="o">.</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="k">await</span> <span class="n">_completed_process</span><span class="p">(</span><span class="n">process</span><span class="p">,</span> <span class="n">command</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">local_file_signature</span><span class="p">(</span><span class="n">source</span><span class="p">)</span> <span class="o">!=</span> <span class="n">signature</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Local file changed while uploading: </span><span class="si">{</span><span class="n">source</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+            <span class="n">seconds</span><span class="p">,</span> <span class="n">nanoseconds</span> <span class="o">=</span> <span class="nb">divmod</span><span class="p">(</span><span class="n">signature</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">1_000_000_000</span><span class="p">)</span>
+            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
+                <span class="p">(</span>
+                    <span class="s2">"touch"</span><span class="p">,</span>
+                    <span class="s2">"-d"</span><span class="p">,</span>
+                    <span class="sa">f</span><span class="s2">"@</span><span class="si">{</span><span class="n">seconds</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">nanoseconds</span><span class="si">:</span><span class="s2">09d</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
+                    <span class="s2">"--"</span><span class="p">,</span>
+                    <span class="n">temporary</span><span class="p">,</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">run</span><span class="p">((</span><span class="s2">"mv"</span><span class="p">,</span> <span class="s2">"-f"</span><span class="p">,</span> <span class="s2">"--"</span><span class="p">,</span> <span class="n">temporary</span><span class="p">,</span> <span class="n">destination</span><span class="p">))</span>
+        <span class="k">except</span> <span class="ne">BaseException</span><span class="p">:</span>
+            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">run</span><span class="p">((</span><span class="s2">"rm"</span><span class="p">,</span> <span class="s2">"-f"</span><span class="p">,</span> <span class="s2">"--"</span><span class="p">,</span> <span class="n">temporary</span><span class="p">),</span> <span class="n">check</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="k">raise</span></div>
+
+
+<div class="viewcode-block" id="SshTransport.get_file">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.transport.SshTransport.html#ase2sprkkr.execution.transport.SshTransport.get_file">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">destination</span><span class="p">):</span>
+        <span class="n">source</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">fspath</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
+        <span class="n">signature</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">file_signature</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">signature</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
+
+        <span class="n">destination</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">destination</span><span class="p">)</span>
+        <span class="n">temporary</span> <span class="o">=</span> <span class="n">_local_temporary_path</span><span class="p">(</span><span class="n">destination</span><span class="p">)</span>
+        <span class="n">command</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_command</span><span class="p">((</span><span class="s2">"cat"</span><span class="p">,</span> <span class="s2">"--"</span><span class="p">,</span> <span class="n">source</span><span class="p">))</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">with</span> <span class="n">temporary</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">"wb"</span><span class="p">)</span> <span class="k">as</span> <span class="n">destination_file</span><span class="p">:</span>
+                <span class="n">process</span> <span class="o">=</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">create_subprocess_exec</span><span class="p">(</span>
+                    <span class="o">*</span><span class="n">command</span><span class="p">,</span>
+                    <span class="n">stdout</span><span class="o">=</span><span class="n">destination_file</span><span class="p">,</span>
+                    <span class="n">stderr</span><span class="o">=</span><span class="n">asyncio</span><span class="o">.</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="n">_</span><span class="p">,</span> <span class="n">stderr</span> <span class="o">=</span> <span class="k">await</span> <span class="n">process</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
+                <span class="k">if</span> <span class="n">process</span><span class="o">.</span><span class="n">returncode</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">CalledProcessError</span><span class="p">(</span>
+                        <span class="n">process</span><span class="o">.</span><span class="n">returncode</span><span class="p">,</span> <span class="n">command</span><span class="p">,</span> <span class="n">stderr</span><span class="o">=</span><span class="n">stderr</span>
+                    <span class="p">)</span>
+            <span class="k">if</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">file_signature</span><span class="p">(</span><span class="n">source</span><span class="p">)</span> <span class="o">!=</span> <span class="n">signature</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Remote file changed while downloading: </span><span class="si">{</span><span class="n">source</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+            <span class="n">stat</span> <span class="o">=</span> <span class="n">temporary</span><span class="o">.</span><span class="n">stat</span><span class="p">()</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">utime</span><span class="p">(</span><span class="n">temporary</span><span class="p">,</span> <span class="n">ns</span><span class="o">=</span><span class="p">(</span><span class="n">stat</span><span class="o">.</span><span class="n">st_atime_ns</span><span class="p">,</span> <span class="n">signature</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">temporary</span><span class="p">,</span> <span class="n">destination</span><span class="p">)</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">temporary</span><span class="o">.</span><span class="n">unlink</span><span class="p">()</span>
+            <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
+                <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="SshTransport.expand_files">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.transport.SshTransport.html#ase2sprkkr.execution.transport.SshTransport.expand_files">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">expand_files</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sources</span><span class="p">,</span> <span class="n">root</span><span class="p">):</span>
+        <span class="n">root</span> <span class="o">=</span> <span class="n">posixpath</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">fspath</span><span class="p">(</span><span class="n">root</span><span class="p">))</span>
+        <span class="n">files</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">seen</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">source</span> <span class="ow">in</span> <span class="n">_sources</span><span class="p">(</span><span class="n">sources</span><span class="p">):</span>
+            <span class="n">pattern</span> <span class="o">=</span> <span class="n">_posix_relative_pattern</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">has_file_magic</span><span class="p">(</span><span class="n">pattern</span><span class="p">):</span>
+                <span class="n">path</span> <span class="o">=</span> <span class="n">posixpath</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">pattern</span><span class="p">)</span>
+                <span class="k">if</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">file_signature</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">path</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">seen</span><span class="p">:</span>
+                    <span class="n">seen</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+                    <span class="n">files</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+                <span class="k">continue</span>
+
+            <span class="n">prefix</span> <span class="o">=</span> <span class="n">_literal_prefix</span><span class="p">(</span><span class="n">pattern</span><span class="p">)</span>
+            <span class="n">search_root</span> <span class="o">=</span> <span class="n">posixpath</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="o">*</span><span class="n">prefix</span><span class="p">)</span> <span class="k">if</span> <span class="n">prefix</span> <span class="k">else</span> <span class="n">root</span>
+            <span class="n">exists</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">run</span><span class="p">((</span><span class="s2">"test"</span><span class="p">,</span> <span class="s2">"-d"</span><span class="p">,</span> <span class="n">search_root</span><span class="p">),</span> <span class="n">check</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">exists</span><span class="o">.</span><span class="n">returncode</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">run</span><span class="p">((</span><span class="s2">"find"</span><span class="p">,</span> <span class="n">search_root</span><span class="p">,</span> <span class="s2">"-type"</span><span class="p">,</span> <span class="s2">"f"</span><span class="p">,</span> <span class="s2">"-print0"</span><span class="p">))</span>
+            <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">"utf8"</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"</span><span class="se">\0</span><span class="s2">"</span><span class="p">):</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">item</span><span class="p">:</span>
+                    <span class="k">continue</span>
+                <span class="n">relative</span> <span class="o">=</span> <span class="n">posixpath</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">_match_relative_path</span><span class="p">(</span><span class="n">relative</span><span class="p">,</span> <span class="n">pattern</span><span class="p">)</span> <span class="ow">and</span> <span class="n">item</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">seen</span><span class="p">:</span>
+                    <span class="n">seen</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+                    <span class="n">files</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">files</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="SshTransport._pipe">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.transport.SshTransport.html#ase2sprkkr.execution.transport.SshTransport._pipe">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_pipe</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">destination</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+                <span class="n">chunk</span> <span class="o">=</span> <span class="k">await</span> <span class="n">source</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span><span class="p">)</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">chunk</span><span class="p">:</span>
+                    <span class="k">break</span>
+                <span class="n">destination</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span>
+                <span class="k">await</span> <span class="n">destination</span><span class="o">.</span><span class="n">drain</span><span class="p">()</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="n">destination</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="SshTransport.put_files">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.transport.SshTransport.html#ase2sprkkr.execution.transport.SshTransport.put_files">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">put_files</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sources</span><span class="p">,</span> <span class="n">source_root</span><span class="p">,</span> <span class="n">destination_root</span><span class="p">):</span>
+        <span class="n">source_root</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">source_root</span><span class="p">)</span><span class="o">.</span><span class="n">expanduser</span><span class="p">()</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+        <span class="n">destination_root</span> <span class="o">=</span> <span class="n">posixpath</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">fspath</span><span class="p">(</span><span class="n">destination_root</span><span class="p">))</span>
+        <span class="n">files</span> <span class="o">=</span> <span class="n">expand_local_files</span><span class="p">(</span><span class="n">sources</span><span class="p">,</span> <span class="n">source_root</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">files</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">()</span>
+
+        <span class="n">relatives</span> <span class="o">=</span> <span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">fspath</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">source</span><span class="p">)</span><span class="o">.</span><span class="n">relative_to</span><span class="p">(</span><span class="n">source_root</span><span class="p">))</span> <span class="k">for</span> <span class="n">source</span> <span class="ow">in</span> <span class="n">files</span><span class="p">]</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">run</span><span class="p">((</span><span class="s2">"mkdir"</span><span class="p">,</span> <span class="s2">"-p"</span><span class="p">,</span> <span class="s2">"--"</span><span class="p">,</span> <span class="n">destination_root</span><span class="p">))</span>
+        <span class="n">remote_command</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_command</span><span class="p">((</span><span class="s2">"tar"</span><span class="p">,</span> <span class="s2">"-C"</span><span class="p">,</span> <span class="n">destination_root</span><span class="p">,</span> <span class="s2">"-xf"</span><span class="p">,</span> <span class="s2">"-"</span><span class="p">))</span>
+        <span class="n">remote</span> <span class="o">=</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">create_subprocess_exec</span><span class="p">(</span>
+            <span class="o">*</span><span class="n">remote_command</span><span class="p">,</span>
+            <span class="n">stdin</span><span class="o">=</span><span class="n">asyncio</span><span class="o">.</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
+            <span class="n">stdout</span><span class="o">=</span><span class="n">asyncio</span><span class="o">.</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
+            <span class="n">stderr</span><span class="o">=</span><span class="n">asyncio</span><span class="o">.</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">local</span> <span class="o">=</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">create_subprocess_exec</span><span class="p">(</span>
+            <span class="s2">"tar"</span><span class="p">,</span> <span class="s2">"-C"</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">fspath</span><span class="p">(</span><span class="n">source_root</span><span class="p">),</span> <span class="s2">"-cf"</span><span class="p">,</span> <span class="s2">"-"</span><span class="p">,</span> <span class="s2">"--"</span><span class="p">,</span> <span class="o">*</span><span class="n">relatives</span><span class="p">,</span>
+            <span class="n">stdout</span><span class="o">=</span><span class="n">asyncio</span><span class="o">.</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
+            <span class="n">stderr</span><span class="o">=</span><span class="n">asyncio</span><span class="o">.</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pipe</span><span class="p">(</span><span class="n">local</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span> <span class="n">remote</span><span class="o">.</span><span class="n">stdin</span><span class="p">)</span>
+        <span class="n">local_stderr</span><span class="p">,</span> <span class="n">remote_stderr</span> <span class="o">=</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span>
+            <span class="n">local</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">read</span><span class="p">(),</span> <span class="n">remote</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="p">)</span>
+        <span class="n">local_returncode</span><span class="p">,</span> <span class="n">remote_returncode</span> <span class="o">=</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span>
+            <span class="n">local</span><span class="o">.</span><span class="n">wait</span><span class="p">(),</span> <span class="n">remote</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">local_returncode</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">CalledProcessError</span><span class="p">(</span>
+                <span class="n">local_returncode</span><span class="p">,</span> <span class="p">(</span><span class="s2">"tar"</span><span class="p">,</span> <span class="s2">"-C"</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">fspath</span><span class="p">(</span><span class="n">source_root</span><span class="p">),</span> <span class="s2">"-cf"</span><span class="p">,</span> <span class="s2">"-"</span><span class="p">),</span>
+                <span class="n">stderr</span><span class="o">=</span><span class="n">local_stderr</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="n">remote_returncode</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">CalledProcessError</span><span class="p">(</span>
+                <span class="n">remote_returncode</span><span class="p">,</span> <span class="n">remote_command</span><span class="p">,</span> <span class="n">stderr</span><span class="o">=</span><span class="n">remote_stderr</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span>
+            <span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">posixpath</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">destination_root</span><span class="p">,</span> <span class="o">*</span><span class="n">Path</span><span class="p">(</span><span class="n">relative</span><span class="p">)</span><span class="o">.</span><span class="n">parts</span><span class="p">))</span>
+            <span class="k">for</span> <span class="n">source</span><span class="p">,</span> <span class="n">relative</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">files</span><span class="p">,</span> <span class="n">relatives</span><span class="p">)</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SshTransport.get_files">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.transport.SshTransport.html#ase2sprkkr.execution.transport.SshTransport.get_files">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_files</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sources</span><span class="p">,</span> <span class="n">source_root</span><span class="p">,</span> <span class="n">destination_root</span><span class="p">):</span>
+        <span class="n">source_root</span> <span class="o">=</span> <span class="n">posixpath</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">fspath</span><span class="p">(</span><span class="n">source_root</span><span class="p">))</span>
+        <span class="n">destination_root</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">destination_root</span><span class="p">)</span><span class="o">.</span><span class="n">expanduser</span><span class="p">()</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+        <span class="n">files</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">expand_files</span><span class="p">(</span><span class="n">sources</span><span class="p">,</span> <span class="n">source_root</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">files</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">()</span>
+
+        <span class="n">relatives</span> <span class="o">=</span> <span class="p">[</span><span class="n">posixpath</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">source_root</span><span class="p">)</span> <span class="k">for</span> <span class="n">source</span> <span class="ow">in</span> <span class="n">files</span><span class="p">]</span>
+        <span class="n">destination_root</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">remote_command</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_command</span><span class="p">(</span>
+            <span class="p">(</span><span class="s2">"tar"</span><span class="p">,</span> <span class="s2">"-C"</span><span class="p">,</span> <span class="n">source_root</span><span class="p">,</span> <span class="s2">"-cf"</span><span class="p">,</span> <span class="s2">"-"</span><span class="p">,</span> <span class="s2">"--"</span><span class="p">,</span> <span class="o">*</span><span class="n">relatives</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">remote</span> <span class="o">=</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">create_subprocess_exec</span><span class="p">(</span>
+            <span class="o">*</span><span class="n">remote_command</span><span class="p">,</span>
+            <span class="n">stdout</span><span class="o">=</span><span class="n">asyncio</span><span class="o">.</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
+            <span class="n">stderr</span><span class="o">=</span><span class="n">asyncio</span><span class="o">.</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">local</span> <span class="o">=</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">create_subprocess_exec</span><span class="p">(</span>
+            <span class="s2">"tar"</span><span class="p">,</span> <span class="s2">"-C"</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">fspath</span><span class="p">(</span><span class="n">destination_root</span><span class="p">),</span> <span class="s2">"-xf"</span><span class="p">,</span> <span class="s2">"-"</span><span class="p">,</span>
+            <span class="n">stdin</span><span class="o">=</span><span class="n">asyncio</span><span class="o">.</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
+            <span class="n">stdout</span><span class="o">=</span><span class="n">asyncio</span><span class="o">.</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
+            <span class="n">stderr</span><span class="o">=</span><span class="n">asyncio</span><span class="o">.</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pipe</span><span class="p">(</span><span class="n">remote</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span> <span class="n">local</span><span class="o">.</span><span class="n">stdin</span><span class="p">)</span>
+        <span class="n">remote_stderr</span><span class="p">,</span> <span class="n">local_stderr</span> <span class="o">=</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span>
+            <span class="n">remote</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">read</span><span class="p">(),</span> <span class="n">local</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="p">)</span>
+        <span class="n">remote_returncode</span><span class="p">,</span> <span class="n">local_returncode</span> <span class="o">=</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span>
+            <span class="n">remote</span><span class="o">.</span><span class="n">wait</span><span class="p">(),</span> <span class="n">local</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">remote_returncode</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">CalledProcessError</span><span class="p">(</span>
+                <span class="n">remote_returncode</span><span class="p">,</span> <span class="n">remote_command</span><span class="p">,</span> <span class="n">stderr</span><span class="o">=</span><span class="n">remote_stderr</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="n">local_returncode</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">CalledProcessError</span><span class="p">(</span>
+                <span class="n">local_returncode</span><span class="p">,</span>
+                <span class="p">(</span><span class="s2">"tar"</span><span class="p">,</span> <span class="s2">"-C"</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">fspath</span><span class="p">(</span><span class="n">destination_root</span><span class="p">),</span> <span class="s2">"-xf"</span><span class="p">,</span> <span class="s2">"-"</span><span class="p">),</span>
+                <span class="n">stderr</span><span class="o">=</span><span class="n">local_stderr</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span>
+            <span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">fspath</span><span class="p">(</span><span class="n">destination_root</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="o">*</span><span class="n">PurePosixPath</span><span class="p">(</span><span class="n">relative</span><span class="p">)</span><span class="o">.</span><span class="n">parts</span><span class="p">)))</span>
+            <span class="k">for</span> <span class="n">source</span><span class="p">,</span> <span class="n">relative</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">files</span><span class="p">,</span> <span class="n">relatives</span><span class="p">)</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SshTransport.read_file">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.transport.SshTransport.html#ase2sprkkr.execution.transport.SshTransport.read_file">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">read_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span><span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">run</span><span class="p">((</span><span class="s2">"cat"</span><span class="p">,</span> <span class="s2">"--"</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">fspath</span><span class="p">(</span><span class="n">path</span><span class="p">))))</span><span class="o">.</span><span class="n">stdout</span></div>
+
+
+<div class="viewcode-block" id="SshTransport.file_digest">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.transport.SshTransport.html#ase2sprkkr.execution.transport.SshTransport.file_digest">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">file_digest</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">fspath</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
+            <span class="p">(</span>
+                <span class="s2">"sh"</span><span class="p">,</span>
+                <span class="s2">"-c"</span><span class="p">,</span>
+                <span class="s1">'[ -f "$1" ] || exit 3; sha256sum -- "$1"'</span><span class="p">,</span>
+                <span class="s2">"sh"</span><span class="p">,</span>
+                <span class="n">path</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="n">check</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">returncode</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">returncode</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">CalledProcessError</span><span class="p">(</span>
+                <span class="n">result</span><span class="o">.</span><span class="n">returncode</span><span class="p">,</span>
+                <span class="n">result</span><span class="o">.</span><span class="n">args</span><span class="p">,</span>
+                <span class="n">output</span><span class="o">=</span><span class="n">result</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span>
+                <span class="n">stderr</span><span class="o">=</span><span class="n">result</span><span class="o">.</span><span class="n">stderr</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="n">result</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">"ascii"</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="SshTransport.file_signature">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.transport.SshTransport.html#ase2sprkkr.execution.transport.SshTransport.file_signature">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">file_signature</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">fspath</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
+            <span class="p">(</span>
+                <span class="s2">"sh"</span><span class="p">,</span>
+                <span class="s2">"-c"</span><span class="p">,</span>
+                <span class="s1">'[ -f "$1" ] || exit 3; stat -c "</span><span class="si">%s</span><span class="s1">|%Y|%y" -- "$1"'</span><span class="p">,</span>
+                <span class="s2">"sh"</span><span class="p">,</span>
+                <span class="n">path</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="n">check</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">returncode</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">returncode</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">CalledProcessError</span><span class="p">(</span>
+                <span class="n">result</span><span class="o">.</span><span class="n">returncode</span><span class="p">,</span>
+                <span class="n">result</span><span class="o">.</span><span class="n">args</span><span class="p">,</span>
+                <span class="n">output</span><span class="o">=</span><span class="n">result</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span>
+                <span class="n">stderr</span><span class="o">=</span><span class="n">result</span><span class="o">.</span><span class="n">stderr</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="n">_parse_remote_file_signature</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">stdout</span><span class="p">)</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Matyáš Novák &amp; Jano Minár.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

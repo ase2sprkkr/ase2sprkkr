@@ -17,8 +17,8 @@
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../_static/documentation_options.js?v=5929fcd5"></script>
-      <script src="../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -68,17 +68,23 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">ase2sprkkr</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.promote_ase_atoms.html">promote_ase_atoms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.__getattr__.html">__getattr__</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.common.html">common</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration.html">configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration_migration.html">configuration_migration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration_yaml.html">configuration_yaml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.conftest.html">conftest</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.examples.html">examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.execution.html">execution</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.gui.html">gui</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.input_parameters.html">input_parameters</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.output_files.html">output_files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.outputs.html">outputs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.physics.html">physics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.potentials.html">potentials</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.profiles.html">profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.result_files.html">result_files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.sprkkr.html">sprkkr</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.tools.html">tools</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.version.html">version</a></li>
@@ -114,11 +120,10 @@
 <h1>ase2sprkkr<a class="headerlink" href="#ase2sprkkr" title="Link to this heading"></a></h1>
 <p>Full name: <strong>ase2sprkkr</strong></p>
 <p class="rubric">Description</p>
-<blockquote id="module-ase2sprkkr">
-<div><p>ase2sprkkr - ASE interface to SPR-KKR electron structure calculation.</p>
+<p id="module-ase2sprkkr">ase2sprkkr - ASE interface to SPR-KKR electron structure calculation.</p>
 <p>This root package import a few most used objects to provide shortcuts to them.</p>
-</div></blockquote>
-<p class="rubric">Module Attributes</p>
+<blockquote>
+<div><p class="rubric">Module Attributes</p>
 <table class="autosummary longtable docutils align-default">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.promote_ase_atoms.html#ase2sprkkr.promote_ase_atoms" title="ase2sprkkr.promote_ase_atoms"><code class="xref py py-obj docutils literal notranslate"><span class="pre">promote_ase_atoms</span></code></a>(obj[, symmetry, update_info])</p></td>
@@ -126,6 +131,15 @@
 </tr>
 </tbody>
 </table>
+<p class="rubric">Functions</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.__getattr__.html#ase2sprkkr.__getattr__" title="ase2sprkkr.__getattr__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__getattr__</span></code></a>(name)</p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
 <p class="rubric">Modules</p>
 <table class="autosummary longtable docutils align-default">
 <tbody>
@@ -139,10 +153,22 @@
 <td><p>sprkkr.common - common modules used in ase2sprkkr package</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.configuration.html#module-ase2sprkkr.configuration" title="ase2sprkkr.configuration"><code class="xref py py-obj docutils literal notranslate"><span class="pre">configuration</span></code></a></p></td>
-<td><p>This module contains configuration, that could be changed, preferrably by .config/ase2sprkkr/__init__.py file</p></td>
+<td><p>ASE2SPRKKR user configuration.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.examples.html#module-ase2sprkkr.examples" title="ase2sprkkr.examples"><code class="xref py py-obj docutils literal notranslate"><span class="pre">examples</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.configuration_migration.html#module-ase2sprkkr.configuration_migration" title="ase2sprkkr.configuration_migration"><code class="xref py py-obj docutils literal notranslate"><span class="pre">configuration_migration</span></code></a></p></td>
+<td><p>Migration helpers for the deprecated executable-Python user configuration.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.configuration_yaml.html#module-ase2sprkkr.configuration_yaml" title="ase2sprkkr.configuration_yaml"><code class="xref py py-obj docutils literal notranslate"><span class="pre">configuration_yaml</span></code></a></p></td>
+<td><p>YAML persistence helpers for the ASE2SPRKKR configuration.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.conftest.html#module-ase2sprkkr.conftest" title="ase2sprkkr.conftest"><code class="xref py py-obj docutils literal notranslate"><span class="pre">conftest</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.examples.html#module-ase2sprkkr.examples" title="ase2sprkkr.examples"><code class="xref py py-obj docutils literal notranslate"><span class="pre">examples</span></code></a></p></td>
 <td><p>Examples of the usage of ase2sprkkr.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.execution.html#module-ase2sprkkr.execution" title="ase2sprkkr.execution"><code class="xref py py-obj docutils literal notranslate"><span class="pre">execution</span></code></a></p></td>
+<td><p>Calculation execution subsystem.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.gui.html#module-ase2sprkkr.gui" title="ase2sprkkr.gui"><code class="xref py py-obj docutils literal notranslate"><span class="pre">gui</span></code></a></p></td>
 <td><p></p></td>
@@ -150,25 +176,28 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.html#module-ase2sprkkr.input_parameters" title="ase2sprkkr.input_parameters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">input_parameters</span></code></a></p></td>
 <td><p>ase2sprkkr.input_parameters - SPR-KKR tasks' input files definitions.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.output_files.html#module-ase2sprkkr.output_files" title="ase2sprkkr.output_files"><code class="xref py py-obj docutils literal notranslate"><span class="pre">output_files</span></code></a></p></td>
-<td><p>Output files contains the objects for reading the results of SPRKKR calculations</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.outputs.html#module-ase2sprkkr.outputs" title="ase2sprkkr.outputs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">outputs</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.outputs.html#module-ase2sprkkr.outputs" title="ase2sprkkr.outputs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">outputs</span></code></a></p></td>
 <td><p>This package contains the parsers of SPR-KKR output files.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.physics.html#module-ase2sprkkr.physics" title="ase2sprkkr.physics"><code class="xref py py-obj docutils literal notranslate"><span class="pre">physics</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.physics.html#module-ase2sprkkr.physics" title="ase2sprkkr.physics"><code class="xref py py-obj docutils literal notranslate"><span class="pre">physics</span></code></a></p></td>
 <td><p>This module should contain the general stuff related to physics, lattice geometry and so on.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.potentials.html#module-ase2sprkkr.potentials" title="ase2sprkkr.potentials"><code class="xref py py-obj docutils literal notranslate"><span class="pre">potentials</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.potentials.html#module-ase2sprkkr.potentials" title="ase2sprkkr.potentials"><code class="xref py py-obj docutils literal notranslate"><span class="pre">potentials</span></code></a></p></td>
 <td><p>sprkkr.potential - SPR-KKR potential description, input and output routines</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.sprkkr.html#module-ase2sprkkr.sprkkr" title="ase2sprkkr.sprkkr"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sprkkr</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.profiles.html#module-ase2sprkkr.profiles" title="ase2sprkkr.profiles"><code class="xref py py-obj docutils literal notranslate"><span class="pre">profiles</span></code></a></p></td>
+<td><p>Execution-profile views used by the ase2sprkkr configuration.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.result_files.html#module-ase2sprkkr.result_files" title="ase2sprkkr.result_files"><code class="xref py py-obj docutils literal notranslate"><span class="pre">result_files</span></code></a></p></td>
+<td><p>Structured scientific result files produced by SPR-KKR calculations.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.sprkkr.html#module-ase2sprkkr.sprkkr" title="ase2sprkkr.sprkkr"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sprkkr</span></code></a></p></td>
 <td><p>sprkkr.sprkkr - calculator for SPR-KKR and data structures used for describing the SPR-KKR computations</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.tools.html#module-ase2sprkkr.tools" title="ase2sprkkr.tools"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tools</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.tools.html#module-ase2sprkkr.tools" title="ase2sprkkr.tools"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tools</span></code></a></p></td>
 <td><p>Tools (scripts) for processing SPR-KKR results.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.version.html#module-ase2sprkkr.version" title="ase2sprkkr.version"><code class="xref py py-obj docutils literal notranslate"><span class="pre">version</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.version.html#module-ase2sprkkr.version" title="ase2sprkkr.version"><code class="xref py py-obj docutils literal notranslate"><span class="pre">version</span></code></a></p></td>
 <td><p>Module version</p></td>
 </tr>
 </tbody>

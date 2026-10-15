@@ -1,0 +1,895 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ase2sprkkr.execution.psij &mdash; ASE2SPRKKR  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/mods.css?v=26f6988d" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            ASE2SPRKKR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage.html">How to use the package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../how-to-install.html">More about the package installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../philosophy.html">Philosophy of the package (for developers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../authors.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Examples</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../auto/ase2sprkkr.html">ase2sprkkr</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">ASE2SPRKKR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../ase2sprkkr.html">ase2sprkkr</a></li>
+      <li class="breadcrumb-item active">ase2sprkkr.execution.psij</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for ase2sprkkr.execution.psij</h1><div class="highlight"><pre>
+<span></span><span class="sd">"""PSI/J execution backend."""</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">shlex</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">subprocess</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">threading</span><span class="w"> </span><span class="kn">import</span> <span class="n">Event</span><span class="p">,</span> <span class="n">Lock</span><span class="p">,</span> <span class="n">Thread</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.base</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">ExecutionSpec</span><span class="p">,</span>
+    <span class="n">Executor</span><span class="p">,</span>
+    <span class="n">OutputObservers</span><span class="p">,</span>
+    <span class="n">RunReference</span><span class="p">,</span>
+    <span class="n">RunState</span><span class="p">,</span>
+    <span class="n">RunStatus</span><span class="p">,</span>
+    <span class="n">SubmissionNotStarted</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<span class="n">_STATE_MAP</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"NEW"</span><span class="p">:</span> <span class="n">RunState</span><span class="o">.</span><span class="n">NEW</span><span class="p">,</span>
+    <span class="s2">"STAGE_IN"</span><span class="p">:</span> <span class="n">RunState</span><span class="o">.</span><span class="n">QUEUED</span><span class="p">,</span>
+    <span class="s2">"QUEUED"</span><span class="p">:</span> <span class="n">RunState</span><span class="o">.</span><span class="n">QUEUED</span><span class="p">,</span>
+    <span class="s2">"ACTIVE"</span><span class="p">:</span> <span class="n">RunState</span><span class="o">.</span><span class="n">RUNNING</span><span class="p">,</span>
+    <span class="s2">"STAGE_OUT"</span><span class="p">:</span> <span class="n">RunState</span><span class="o">.</span><span class="n">RUNNING</span><span class="p">,</span>
+    <span class="s2">"COMPLETED"</span><span class="p">:</span> <span class="n">RunState</span><span class="o">.</span><span class="n">FINISHED</span><span class="p">,</span>
+    <span class="s2">"FAILED"</span><span class="p">:</span> <span class="n">RunState</span><span class="o">.</span><span class="n">FAILED</span><span class="p">,</span>
+    <span class="s2">"CANCELED"</span><span class="p">:</span> <span class="n">RunState</span><span class="o">.</span><span class="n">CANCELLED</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="n">_SLURM_STATE_MAP</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"PENDING"</span><span class="p">:</span> <span class="n">RunState</span><span class="o">.</span><span class="n">QUEUED</span><span class="p">,</span>
+    <span class="s2">"CONFIGURING"</span><span class="p">:</span> <span class="n">RunState</span><span class="o">.</span><span class="n">QUEUED</span><span class="p">,</span>
+    <span class="s2">"SUSPENDED"</span><span class="p">:</span> <span class="n">RunState</span><span class="o">.</span><span class="n">QUEUED</span><span class="p">,</span>
+    <span class="s2">"RUNNING"</span><span class="p">:</span> <span class="n">RunState</span><span class="o">.</span><span class="n">RUNNING</span><span class="p">,</span>
+    <span class="s2">"COMPLETING"</span><span class="p">:</span> <span class="n">RunState</span><span class="o">.</span><span class="n">RUNNING</span><span class="p">,</span>
+    <span class="s2">"RESIZING"</span><span class="p">:</span> <span class="n">RunState</span><span class="o">.</span><span class="n">RUNNING</span><span class="p">,</span>
+    <span class="s2">"COMPLETED"</span><span class="p">:</span> <span class="n">RunState</span><span class="o">.</span><span class="n">FINISHED</span><span class="p">,</span>
+    <span class="s2">"CANCELLED"</span><span class="p">:</span> <span class="n">RunState</span><span class="o">.</span><span class="n">CANCELLED</span><span class="p">,</span>
+    <span class="s2">"CANCELED"</span><span class="p">:</span> <span class="n">RunState</span><span class="o">.</span><span class="n">CANCELLED</span><span class="p">,</span>
+    <span class="s2">"BOOT_FAIL"</span><span class="p">:</span> <span class="n">RunState</span><span class="o">.</span><span class="n">FAILED</span><span class="p">,</span>
+    <span class="s2">"DEADLINE"</span><span class="p">:</span> <span class="n">RunState</span><span class="o">.</span><span class="n">FAILED</span><span class="p">,</span>
+    <span class="s2">"FAILED"</span><span class="p">:</span> <span class="n">RunState</span><span class="o">.</span><span class="n">FAILED</span><span class="p">,</span>
+    <span class="s2">"NODE_FAIL"</span><span class="p">:</span> <span class="n">RunState</span><span class="o">.</span><span class="n">FAILED</span><span class="p">,</span>
+    <span class="s2">"OUT_OF_MEMORY"</span><span class="p">:</span> <span class="n">RunState</span><span class="o">.</span><span class="n">FAILED</span><span class="p">,</span>
+    <span class="s2">"PREEMPTED"</span><span class="p">:</span> <span class="n">RunState</span><span class="o">.</span><span class="n">FAILED</span><span class="p">,</span>
+    <span class="s2">"REVOKED"</span><span class="p">:</span> <span class="n">RunState</span><span class="o">.</span><span class="n">FAILED</span><span class="p">,</span>
+    <span class="s2">"TIMEOUT"</span><span class="p">:</span> <span class="n">RunState</span><span class="o">.</span><span class="n">FAILED</span><span class="p">,</span>
+<span class="p">}</span>
+
+
+<div class="viewcode-block" id="_load_psij">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.psij._load_psij.html#ase2sprkkr.execution.psij._load_psij">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_load_psij</span><span class="p">():</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">psij</span>
+    <span class="k">except</span> <span class="ne">ImportError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span>
+            <span class="s2">"PSI/J support requires the optional 'psij-python' package. "</span>
+            <span class="s2">"Install it with 'python -m pip install </span><span class="se">\"</span><span class="s2">ase2sprkkr[psij]</span><span class="se">\"</span><span class="s2">'."</span>
+        <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span>
+    <span class="k">return</span> <span class="n">psij</span></div>
+
+
+
+<div class="viewcode-block" id="_path">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.psij._path.html#ase2sprkkr.execution.psij._path">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_path</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">directory</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="n">value</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="s2">"name"</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">fspath</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">TypeError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"PSI/J execution requires named input/output files"</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span>
+    <span class="k">if</span> <span class="n">directory</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isabs</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">path</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="_scheduler_output">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.psij._scheduler_output.html#ase2sprkkr.execution.psij._scheduler_output">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_scheduler_output</span><span class="p">(</span><span class="n">argv</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Run one scheduler inspection command; failures remain transport failures."""</span>
+    <span class="k">return</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
+        <span class="nb">tuple</span><span class="p">(</span><span class="n">argv</span><span class="p">),</span>
+        <span class="n">check</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
+        <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
+        <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">stdout</span></div>
+
+
+
+<div class="viewcode-block" id="_slurm_state">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.psij._slurm_state.html#ase2sprkkr.execution.psij._slurm_state">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_slurm_state</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Map an extended Slurm state, including suffixes, to RunState."""</span>
+    <span class="n">value</span> <span class="o">=</span> <span class="p">(</span><span class="n">value</span> <span class="ow">or</span> <span class="s2">""</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"+"</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">_SLURM_STATE_MAP</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">RunState</span><span class="o">.</span><span class="n">UNKNOWN</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="_slurm_exit_code">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.psij._slurm_exit_code.html#ase2sprkkr.execution.psij._slurm_exit_code">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_slurm_exit_code</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">value</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="n">code</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">":"</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">code</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+
+
+<div class="viewcode-block" id="_slurm_details">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.psij._slurm_details.html#ase2sprkkr.execution.psij._slurm_details">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_slurm_details</span><span class="p">(</span><span class="n">native_id</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Return fields needed to reconstruct a live Slurm reference."""</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="n">_scheduler_output</span><span class="p">((</span><span class="s2">"scontrol"</span><span class="p">,</span> <span class="s2">"--oneliner"</span><span class="p">,</span> <span class="s2">"show"</span><span class="p">,</span> <span class="s2">"job"</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">native_id</span><span class="p">)))</span>
+    <span class="n">fields</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">shlex</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">output</span><span class="p">):</span>
+        <span class="n">name</span><span class="p">,</span> <span class="n">separator</span><span class="p">,</span> <span class="n">value</span> <span class="o">=</span> <span class="n">token</span><span class="o">.</span><span class="n">partition</span><span class="p">(</span><span class="s2">"="</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">separator</span><span class="p">:</span>
+            <span class="n">fields</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+    <span class="k">return</span> <span class="n">fields</span></div>
+
+
+
+<div class="viewcode-block" id="_slurm_current_matches">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.psij._slurm_current_matches.html#ase2sprkkr.execution.psij._slurm_current_matches">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_slurm_current_matches</span><span class="p">(</span><span class="n">run_id</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Find current user's live jobs carrying this ASE2SPRKKR identity."""</span>
+    <span class="n">marker</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"ase2sprkkr:</span><span class="si">{</span><span class="n">run_id</span><span class="si">}</span><span class="s2">"</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="n">_scheduler_output</span><span class="p">(</span>
+        <span class="p">(</span><span class="s2">"squeue"</span><span class="p">,</span> <span class="s2">"--noheader"</span><span class="p">,</span> <span class="s2">"--me"</span><span class="p">,</span> <span class="s2">"--format=</span><span class="si">%i</span><span class="s2">|%k|%T|%Z"</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="n">matches</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">output</span><span class="o">.</span><span class="n">splitlines</span><span class="p">():</span>
+        <span class="n">fields</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"|"</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">fields</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">4</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="n">native_id</span><span class="p">,</span> <span class="n">comment</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">directory</span> <span class="o">=</span> <span class="p">(</span><span class="n">field</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">comment</span> <span class="o">==</span> <span class="n">marker</span><span class="p">:</span>
+            <span class="n">matches</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">native_id</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">directory</span><span class="p">))</span>
+    <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">matches</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="_slurm_accounting_stores_comments">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.psij._slurm_accounting_stores_comments.html#ase2sprkkr.execution.psij._slurm_accounting_stores_comments">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_slurm_accounting_stores_comments</span><span class="p">():</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="n">_scheduler_output</span><span class="p">((</span><span class="s2">"scontrol"</span><span class="p">,</span> <span class="s2">"show"</span><span class="p">,</span> <span class="s2">"config"</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">output</span><span class="o">.</span><span class="n">splitlines</span><span class="p">():</span>
+        <span class="n">name</span><span class="p">,</span> <span class="n">separator</span><span class="p">,</span> <span class="n">value</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">partition</span><span class="p">(</span><span class="s2">"="</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">separator</span> <span class="ow">and</span> <span class="n">name</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">==</span> <span class="s2">"AccountingStoreFlags"</span><span class="p">:</span>
+            <span class="n">flags</span> <span class="o">=</span> <span class="p">{</span><span class="n">flag</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">for</span> <span class="n">flag</span> <span class="ow">in</span> <span class="n">value</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">","</span><span class="p">)}</span>
+            <span class="k">return</span> <span class="s2">"job_comment"</span> <span class="ow">in</span> <span class="n">flags</span>
+    <span class="k">return</span> <span class="kc">False</span></div>
+
+
+
+<div class="viewcode-block" id="_slurm_time">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.psij._slurm_time.html#ase2sprkkr.execution.psij._slurm_time">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_slurm_time</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Format an ASE2SPRKKR timestamp using Slurm's accepted local-time syntax."""</span>
+    <span class="n">parsed</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">fromisoformat</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">parsed</span><span class="o">.</span><span class="n">tzinfo</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">parsed</span> <span class="o">=</span> <span class="n">parsed</span><span class="o">.</span><span class="n">astimezone</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">parsed</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">"%Y-%m-</span><span class="si">%d</span><span class="s2">T%H:%M:%S"</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="_slurm_accounting_matches">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.psij._slurm_accounting_matches.html#ase2sprkkr.execution.psij._slurm_accounting_matches">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_slurm_accounting_matches</span><span class="p">(</span><span class="n">run_id</span><span class="p">,</span> <span class="n">submitted_at</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Look up a completed/recent job by its persisted Slurm comment."""</span>
+    <span class="n">marker</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"ase2sprkkr:</span><span class="si">{</span><span class="n">run_id</span><span class="si">}</span><span class="s2">"</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="n">_scheduler_output</span><span class="p">(</span>
+        <span class="p">(</span>
+            <span class="s2">"sacct"</span><span class="p">,</span>
+            <span class="s2">"-X"</span><span class="p">,</span>
+            <span class="s2">"-n"</span><span class="p">,</span>
+            <span class="s2">"-P"</span><span class="p">,</span>
+            <span class="sa">f</span><span class="s2">"--starttime=</span><span class="si">{</span><span class="n">_slurm_time</span><span class="p">(</span><span class="n">submitted_at</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
+            <span class="s2">"--format=JobIDRaw,Comment,State,WorkDir,StdOut,StdErr,ExitCode"</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="p">)</span>
+    <span class="n">matches</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">output</span><span class="o">.</span><span class="n">splitlines</span><span class="p">():</span>
+        <span class="n">fields</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s2">"|"</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"|"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">fields</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">7</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="n">native_id</span><span class="p">,</span> <span class="n">comment</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">directory</span><span class="p">,</span> <span class="n">stdout</span><span class="p">,</span> <span class="n">stderr</span><span class="p">,</span> <span class="n">exit_code</span> <span class="o">=</span> <span class="n">fields</span>
+        <span class="k">if</span> <span class="n">comment</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">==</span> <span class="n">marker</span><span class="p">:</span>
+            <span class="n">matches</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="p">(</span>
+                    <span class="n">native_id</span><span class="o">.</span><span class="n">strip</span><span class="p">(),</span>
+                    <span class="n">state</span><span class="o">.</span><span class="n">strip</span><span class="p">(),</span>
+                    <span class="n">directory</span><span class="o">.</span><span class="n">strip</span><span class="p">(),</span>
+                    <span class="n">stdout</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="ow">or</span> <span class="kc">None</span><span class="p">,</span>
+                    <span class="n">stderr</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="ow">or</span> <span class="kc">None</span><span class="p">,</span>
+                    <span class="n">_slurm_exit_code</span><span class="p">(</span><span class="n">exit_code</span><span class="o">.</span><span class="n">strip</span><span class="p">()),</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+    <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">matches</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="PsijRunner">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.psij.PsijRunner.html#ase2sprkkr.execution.psij.PsijRunner">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">PsijRunner</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""One job managed by a PSI/J executor.</span>
+
+<span class="sd">    PSI/J scheduler executors redirect stdout/stderr to files. The runner</span>
+<span class="sd">    follows those files while the job is active and feeds the same asynchronous</span>
+<span class="sd">    output reader that is used by :class:`LocalRunner`.</span>
+<span class="sd">    """</span>
+
+<div class="viewcode-block" id="PsijRunner.__init__">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.psij.PsijRunner.html#ase2sprkkr.execution.psij.PsijRunner.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">executor</span><span class="p">,</span>
+        <span class="n">reader</span><span class="p">,</span>
+        <span class="n">spec</span><span class="p">:</span> <span class="n">ExecutionSpec</span><span class="p">,</span>
+        <span class="n">callback</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">output_listener</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">start</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">job</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">attached</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">run_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">executor</span> <span class="o">=</span> <span class="n">executor</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reader</span> <span class="o">=</span> <span class="n">reader</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">spec</span> <span class="o">=</span> <span class="n">spec</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">callback</span> <span class="o">=</span> <span class="n">callback</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">result</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="n">create_result</span><span class="p">(</span><span class="n">spec</span><span class="o">.</span><span class="n">output_file</span><span class="p">,</span> <span class="n">spec</span><span class="o">.</span><span class="n">input_file</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_run_id</span> <span class="o">=</span> <span class="n">run_id</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_stdout_path</span> <span class="o">=</span> <span class="n">_path</span><span class="p">(</span><span class="n">spec</span><span class="o">.</span><span class="n">output_file</span><span class="p">,</span> <span class="n">spec</span><span class="o">.</span><span class="n">directory</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stdout_path</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"PSI/J execution requires an output file"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_stderr_path</span> <span class="o">=</span> <span class="n">_path</span><span class="p">(</span><span class="n">spec</span><span class="o">.</span><span class="n">error_file</span><span class="p">,</span> <span class="n">spec</span><span class="o">.</span><span class="n">directory</span><span class="p">)</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stdout_path</span> <span class="o">+</span> <span class="s2">".err"</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_stdin_path</span> <span class="o">=</span> <span class="n">_path</span><span class="p">(</span><span class="n">spec</span><span class="o">.</span><span class="n">stdin</span><span class="p">,</span> <span class="n">spec</span><span class="o">.</span><span class="n">directory</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_output_observers</span> <span class="o">=</span> <span class="n">OutputObservers</span><span class="p">(</span><span class="n">output_listener</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span> <span class="o">=</span> <span class="n">Lock</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_submit_lock</span> <span class="o">=</span> <span class="n">Lock</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_done</span> <span class="o">=</span> <span class="n">Event</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_exception</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_callback_exception</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_finalization_failed</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_return_code</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_attached</span> <span class="o">=</span> <span class="n">attached</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_psij</span> <span class="o">=</span> <span class="n">executor</span><span class="o">.</span><span class="n">_psij</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_job</span> <span class="o">=</span> <span class="n">job</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_job</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">start</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">start</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="PsijRunner._mpi_launcher">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.psij.PsijRunner.html#ase2sprkkr.execution.psij.PsijRunner._mpi_launcher">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_mpi_launcher</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">"srun"</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">executor</span><span class="o">.</span><span class="n">backend</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">"slurm"</span> <span class="k">else</span> <span class="s2">"mpirun"</span></div>
+
+
+<div class="viewcode-block" id="PsijRunner._job_command">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.psij.PsijRunner.html#ase2sprkkr.execution.psij.PsijRunner._job_command">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_job_command</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">launch</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">launch</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">launch</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">mpi_argv</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">argv</span><span class="p">),</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
+
+        <span class="n">mpi</span> <span class="o">=</span> <span class="n">launch</span><span class="o">.</span><span class="n">mpi</span>
+        <span class="k">if</span> <span class="n">mpi</span><span class="o">.</span><span class="n">launcher</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">(</span><span class="o">*</span><span class="n">mpi</span><span class="o">.</span><span class="n">launcher</span><span class="p">,</span> <span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">mpi_argv</span><span class="p">),</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
+
+        <span class="n">resources</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">mpi</span><span class="o">.</span><span class="n">process_count</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">resources</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_psij</span><span class="o">.</span><span class="n">ResourceSpecV1</span><span class="p">(</span>
+                <span class="n">process_count</span><span class="o">=</span><span class="n">mpi</span><span class="o">.</span><span class="n">process_count</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">mpi_argv</span><span class="p">),</span> <span class="n">resources</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mpi_launcher</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="PsijRunner._persistent_metadata">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.psij.PsijRunner.html#ase2sprkkr.execution.psij.PsijRunner._persistent_metadata">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_persistent_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_run_id</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
+        <span class="n">environment</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"ASE2SPRKKR_RUN_ID"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_run_id</span><span class="p">}</span>
+        <span class="n">attributes</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">executor</span><span class="o">.</span><span class="n">backend</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">"slurm"</span><span class="p">:</span>
+            <span class="n">attributes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_psij</span><span class="o">.</span><span class="n">JobAttributes</span><span class="p">(</span>
+                <span class="n">custom_attributes</span><span class="o">=</span><span class="p">{</span>
+                    <span class="s2">"slurm.comment"</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"ase2sprkkr:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_run_id</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
+                <span class="p">}</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="n">environment</span><span class="p">,</span> <span class="n">attributes</span></div>
+
+
+<div class="viewcode-block" id="PsijRunner._create_job">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.psij.PsijRunner.html#ase2sprkkr.execution.psij.PsijRunner._create_job">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_create_job</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">argv</span><span class="p">,</span> <span class="n">resources</span><span class="p">,</span> <span class="n">launcher</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_job_command</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">argv</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Cannot submit a PSI/J run without a command"</span><span class="p">)</span>
+        <span class="n">environment</span><span class="p">,</span> <span class="n">attributes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_persistent_metadata</span><span class="p">()</span>
+        <span class="n">job_spec</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_psij</span><span class="o">.</span><span class="n">JobSpec</span><span class="p">(</span>
+            <span class="n">executable</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">fspath</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
+            <span class="n">arguments</span><span class="o">=</span><span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">fspath</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span> <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">:]],</span>
+            <span class="n">directory</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">directory</span><span class="p">,</span>
+            <span class="n">environment</span><span class="o">=</span><span class="n">environment</span><span class="p">,</span>
+            <span class="n">stdin_path</span><span class="o">=</span><span class="kc">None</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">launch</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">mpi_argv</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stdin_path</span><span class="p">,</span>
+            <span class="n">stdout_path</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_stdout_path</span><span class="p">,</span>
+            <span class="n">stderr_path</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_stderr_path</span><span class="p">,</span>
+            <span class="n">resources</span><span class="o">=</span><span class="n">resources</span><span class="p">,</span>
+            <span class="n">attributes</span><span class="o">=</span><span class="n">attributes</span><span class="p">,</span>
+            <span class="n">launcher</span><span class="o">=</span><span class="n">launcher</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_psij</span><span class="o">.</span><span class="n">Job</span><span class="p">(</span><span class="n">job_spec</span><span class="p">)</span></div>
+
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">state</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_finalization_failed</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">RunState</span><span class="o">.</span><span class="n">FAILED</span>
+        <span class="n">state</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_job</span><span class="p">,</span> <span class="s2">"status"</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span> <span class="s2">"state"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">_STATE_MAP</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="s2">"name"</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span> <span class="n">RunState</span><span class="o">.</span><span class="n">UNKNOWN</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">exception</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_exception</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">return_code</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_return_code</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_return_code</span>
+        <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_job</span><span class="p">,</span> <span class="s2">"status"</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span> <span class="s2">"exit_code"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">reference</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">native_id</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_job</span><span class="p">,</span> <span class="s2">"native_id"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">native_id</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="n">RunReference</span><span class="p">(</span>
+            <span class="n">executor</span><span class="o">=</span><span class="sa">f</span><span class="s2">"psij:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">executor</span><span class="o">.</span><span class="n">backend</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
+            <span class="n">native_id</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">native_id</span><span class="p">),</span>
+            <span class="n">computer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">executor</span><span class="o">.</span><span class="n">url</span><span class="p">,</span>
+            <span class="n">directory</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">fspath</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">directory</span><span class="p">),</span>
+            <span class="n">input_file</span><span class="o">=</span><span class="n">_path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">input_file</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">directory</span><span class="p">),</span>
+            <span class="n">output_file</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_stdout_path</span><span class="p">,</span>
+            <span class="n">error_file</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_stderr_path</span><span class="p">,</span>
+        <span class="p">)</span>
+
+<div class="viewcode-block" id="PsijRunner.add_output_listener">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.psij.PsijRunner.html#ase2sprkkr.execution.psij.PsijRunner.add_output_listener">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_output_listener</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">callback</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_output_observers</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">callback</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="PsijRunner.add_output_error_listener">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.psij.PsijRunner.html#ase2sprkkr.execution.psij.PsijRunner.add_output_error_listener">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_output_error_listener</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">callback</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_output_observers</span><span class="o">.</span><span class="n">add_error_listener</span><span class="p">(</span><span class="n">callback</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="PsijRunner._emit_output">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.psij.PsijRunner.html#ase2sprkkr.execution.psij.PsijRunner._emit_output">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_emit_output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">kind</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">data</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">"utf8"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">reader</span><span class="o">.</span><span class="n">print_output</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s2">""</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span> <span class="k">if</span> <span class="n">kind</span> <span class="o">==</span> <span class="s2">"err"</span> <span class="k">else</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_output_observers</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">kind</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="PsijRunner._flush">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.psij.PsijRunner.html#ase2sprkkr.execution.psij.PsijRunner._flush">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_flush</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="s2">"flush"</span><span class="p">):</span>
+            <span class="n">value</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="PsijRunner._close">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.psij.PsijRunner.html#ase2sprkkr.execution.psij.PsijRunner._close">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_close</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="s2">"close"</span><span class="p">):</span>
+            <span class="n">value</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="PsijRunner._prepare_io">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.psij.PsijRunner.html#ase2sprkkr.execution.psij.PsijRunner._prepare_io">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_prepare_io</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_flush</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">input_file</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_flush</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">output_file</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_flush</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">error_file</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_close</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">output_file</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_close</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">error_file</span><span class="p">)</span>
+        <span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stdout_path</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stderr_path</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stdout_path</span><span class="p">)</span><span class="o">.</span><span class="n">write_bytes</span><span class="p">(</span><span class="sa">b</span><span class="s2">""</span><span class="p">)</span>
+        <span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stderr_path</span><span class="p">)</span><span class="o">.</span><span class="n">write_bytes</span><span class="p">(</span><span class="sa">b</span><span class="s2">""</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="PsijRunner._follow_file">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.psij.PsijRunner.html#ase2sprkkr.execution.psij.PsijRunner._follow_file">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_follow_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">stream</span><span class="p">,</span> <span class="n">kind</span><span class="p">,</span> <span class="n">finished</span><span class="p">):</span>
+        <span class="n">position</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">empty_after_finish</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="sa">b</span><span class="s2">""</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">size</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">getsize</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">size</span> <span class="o">&lt;</span> <span class="n">position</span><span class="p">:</span>
+                        <span class="n">position</span> <span class="o">=</span> <span class="mi">0</span>
+                    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">"rb"</span><span class="p">)</span> <span class="k">as</span> <span class="n">source</span><span class="p">:</span>
+                        <span class="n">source</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">position</span><span class="p">)</span>
+                        <span class="n">data</span> <span class="o">=</span> <span class="n">source</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+                <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
+                    <span class="k">pass</span>
+
+                <span class="k">if</span> <span class="n">data</span><span class="p">:</span>
+                    <span class="n">position</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_emit_output</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">kind</span><span class="p">)</span>
+                    <span class="n">stream</span><span class="o">.</span><span class="n">feed_data</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+                    <span class="n">empty_after_finish</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="k">elif</span> <span class="n">finished</span><span class="o">.</span><span class="n">is_set</span><span class="p">():</span>
+                    <span class="k">if</span> <span class="n">empty_after_finish</span><span class="p">:</span>
+                        <span class="k">break</span>
+                    <span class="n">empty_after_finish</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">executor</span><span class="o">.</span><span class="n">poll_interval</span><span class="p">)</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="n">stream</span><span class="o">.</span><span class="n">feed_eof</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="PsijRunner._monitor">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.psij.PsijRunner.html#ase2sprkkr.execution.psij.PsijRunner._monitor">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_monitor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">stdout</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">StreamReader</span><span class="p">()</span>
+        <span class="n">stderr</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">StreamReader</span><span class="p">()</span>
+        <span class="n">finished</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">Event</span><span class="p">()</span>
+        <span class="n">parse_task</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">reader</span><span class="o">.</span><span class="n">parse_streams</span><span class="p">(</span><span class="n">stdout</span><span class="p">,</span> <span class="n">stderr</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">result</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">followers</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">asyncio</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_follow_file</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stdout_path</span><span class="p">,</span> <span class="n">stdout</span><span class="p">,</span> <span class="s2">"out"</span><span class="p">,</span> <span class="n">finished</span><span class="p">)),</span>
+            <span class="n">asyncio</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_follow_file</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stderr_path</span><span class="p">,</span> <span class="n">stderr</span><span class="p">,</span> <span class="s2">"err"</span><span class="p">,</span> <span class="n">finished</span><span class="p">)),</span>
+        <span class="p">]</span>
+        <span class="n">status</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">loop</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">get_running_loop</span><span class="p">()</span>
+            <span class="n">status</span> <span class="o">=</span> <span class="k">await</span> <span class="n">loop</span><span class="o">.</span><span class="n">run_in_executor</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_job</span><span class="o">.</span><span class="n">wait</span><span class="p">)</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="n">finished</span><span class="o">.</span><span class="n">set</span><span class="p">()</span>
+            <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="o">*</span><span class="n">followers</span><span class="p">,</span> <span class="n">return_exceptions</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_return_code</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">status</span><span class="p">,</span> <span class="s2">"exit_code"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_return_code</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_return_code</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="mi">0</span>
+                <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">status</span><span class="p">,</span> <span class="s2">"state"</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span> <span class="s2">"name"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="o">==</span> <span class="s2">"COMPLETED"</span>
+                <span class="k">else</span> <span class="mi">1</span>
+            <span class="p">)</span>
+        <span class="n">output</span><span class="p">,</span> <span class="n">error</span> <span class="o">=</span> <span class="k">await</span> <span class="n">parse_task</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">reader</span><span class="o">.</span><span class="n">complete_result</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">result</span><span class="p">,</span> <span class="n">output</span><span class="p">,</span> <span class="n">error</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_return_code</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="PsijRunner._thread_main">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.psij.PsijRunner.html#ase2sprkkr.execution.psij.PsijRunner._thread_main">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_thread_main</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_monitor</span><span class="p">())</span>
+        <span class="k">except</span> <span class="ne">BaseException</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_exception</span> <span class="o">=</span> <span class="n">exc</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_finalization_failed</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">callback</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">callback</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">result</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">BaseException</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_callback_exception</span> <span class="o">=</span> <span class="n">exc</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_done</span><span class="o">.</span><span class="n">set</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="PsijRunner._start_monitor">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.psij.PsijRunner.html#ase2sprkkr.execution.psij.PsijRunner._start_monitor">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_start_monitor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">return</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span> <span class="o">=</span> <span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_thread_main</span><span class="p">,</span> <span class="n">daemon</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="PsijRunner.start">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.psij.PsijRunner.html#ase2sprkkr.execution.psij.PsijRunner.start">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_attached</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_start_monitor</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">submit</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="PsijRunner.submit">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.psij.PsijRunner.html#ase2sprkkr.execution.psij.PsijRunner.submit">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">submit</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_submit_lock</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">!=</span> <span class="n">RunState</span><span class="o">.</span><span class="n">NEW</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Run is already </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">value</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_prepare_io</span><span class="p">()</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">SubmissionNotStarted</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">exc</span><span class="p">))</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">executor</span><span class="o">.</span><span class="n">_job_executor</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_job</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_start_monitor</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="PsijRunner.wait">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.psij.PsijRunner.html#ase2sprkkr.execution.psij.PsijRunner.wait">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">wait</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">"Run has not been started"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_done</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_exception</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="bp">self</span><span class="o">.</span><span class="n">_exception</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_callback_exception</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="bp">self</span><span class="o">.</span><span class="n">_callback_exception</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">result</span></div>
+
+
+<div class="viewcode-block" id="PsijRunner.run">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.psij.PsijRunner.html#ase2sprkkr.execution.psij.PsijRunner.run">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="PsijRunner.run_async">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.psij.PsijRunner.html#ase2sprkkr.execution.psij.PsijRunner.run_async">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">run_async</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+        <span class="n">loop</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">get_running_loop</span><span class="p">()</span>
+        <span class="k">return</span> <span class="k">await</span> <span class="n">loop</span><span class="o">.</span><span class="n">run_in_executor</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">wait</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="PsijRunner.cancel">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.psij.PsijRunner.html#ase2sprkkr.execution.psij.PsijRunner.cancel">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">cancel</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_attached</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">"Run has not been submitted"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_job</span><span class="o">.</span><span class="n">cancel</span><span class="p">()</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="PsijExecutor">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.psij.PsijExecutor.html#ase2sprkkr.execution.psij.PsijExecutor">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">PsijExecutor</span><span class="p">(</span><span class="n">Executor</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Execute calculations through a PSI/J backend such as Slurm or PBS."""</span>
+
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">"psij"</span>
+
+<div class="viewcode-block" id="PsijExecutor.__init__">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.psij.PsijExecutor.html#ase2sprkkr.execution.psij.PsijExecutor.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">backend</span><span class="o">=</span><span class="s2">"slurm"</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">url</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">config</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">job_executor</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">poll_interval</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">backend</span> <span class="o">=</span> <span class="n">backend</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">url</span> <span class="o">=</span> <span class="n">url</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">poll_interval</span> <span class="o">=</span> <span class="n">poll_interval</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_psij</span> <span class="o">=</span> <span class="n">_load_psij</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_job_executor</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">job_executor</span>
+            <span class="k">if</span> <span class="n">job_executor</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_psij</span><span class="o">.</span><span class="n">JobExecutor</span><span class="o">.</span><span class="n">get_instance</span><span class="p">(</span><span class="n">backend</span><span class="p">,</span> <span class="n">url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_status_jobs</span> <span class="o">=</span> <span class="p">{}</span></div>
+
+
+<div class="viewcode-block" id="PsijExecutor.create_run">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.psij.PsijExecutor.html#ase2sprkkr.execution.psij.PsijExecutor.create_run">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reader</span><span class="p">,</span> <span class="n">spec</span><span class="p">:</span> <span class="n">ExecutionSpec</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">PsijRunner</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reader</span><span class="p">,</span> <span class="n">spec</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="n">callback</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="PsijExecutor.create_persistent_run">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.psij.PsijExecutor.html#ase2sprkkr.execution.psij.PsijExecutor.create_persistent_run">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_persistent_run</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">reader</span><span class="p">,</span> <span class="n">spec</span><span class="p">:</span> <span class="n">ExecutionSpec</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">run_id</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="kc">None</span>
+    <span class="p">):</span>
+        <span class="k">return</span> <span class="n">PsijRunner</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">reader</span><span class="p">,</span>
+            <span class="n">spec</span><span class="p">,</span>
+            <span class="n">callback</span><span class="o">=</span><span class="n">callback</span><span class="p">,</span>
+            <span class="n">run_id</span><span class="o">=</span><span class="n">run_id</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="PsijExecutor.status">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.psij.PsijExecutor.html#ase2sprkkr.execution.psij.PsijExecutor.status">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">status</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">references</span><span class="p">:</span> <span class="n">RunReference</span><span class="p">):</span>
+        <span class="n">expected</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"psij:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">backend</span><span class="si">}</span><span class="s2">"</span>
+        <span class="k">for</span> <span class="n">reference</span> <span class="ow">in</span> <span class="n">references</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">reference</span><span class="o">.</span><span class="n">executor</span> <span class="o">!=</span> <span class="n">expected</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">"Run reference belongs to </span><span class="si">{</span><span class="n">reference</span><span class="o">.</span><span class="n">executor</span><span class="si">!r}</span><span class="s2">, not </span><span class="si">{</span><span class="n">expected</span><span class="si">!r}</span><span class="s2">"</span>
+                <span class="p">)</span>
+
+        <span class="n">statuses</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">reference</span> <span class="ow">in</span> <span class="n">references</span><span class="p">:</span>
+            <span class="n">attached</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="n">job</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_status_jobs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">reference</span><span class="o">.</span><span class="n">native_id</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">job</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">job</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_psij</span><span class="o">.</span><span class="n">Job</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_job_executor</span><span class="o">.</span><span class="n">attach</span><span class="p">(</span><span class="n">job</span><span class="p">,</span> <span class="n">reference</span><span class="o">.</span><span class="n">native_id</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_status_jobs</span><span class="p">[</span><span class="n">reference</span><span class="o">.</span><span class="n">native_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">job</span>
+                <span class="n">attached</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="n">status</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">job</span><span class="p">,</span> <span class="s2">"status"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="n">state</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">status</span><span class="p">,</span> <span class="s2">"state"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="n">state_name</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="s2">"name"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="n">run_state</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">RunState</span><span class="o">.</span><span class="n">UNKNOWN</span>
+                <span class="k">if</span> <span class="n">attached</span> <span class="ow">and</span> <span class="n">state_name</span> <span class="o">==</span> <span class="s2">"NEW"</span>
+                <span class="k">else</span> <span class="n">_STATE_MAP</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">state_name</span><span class="p">,</span> <span class="n">RunState</span><span class="o">.</span><span class="n">UNKNOWN</span><span class="p">)</span>
+            <span class="p">)</span>
+            <span class="n">statuses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="n">RunStatus</span><span class="p">(</span>
+                    <span class="n">reference</span><span class="p">,</span>
+                    <span class="n">run_state</span><span class="p">,</span>
+                    <span class="n">return_code</span><span class="o">=</span><span class="nb">getattr</span><span class="p">(</span><span class="n">status</span><span class="p">,</span> <span class="s2">"exit_code"</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+                    <span class="n">message</span><span class="o">=</span><span class="nb">getattr</span><span class="p">(</span><span class="n">status</span><span class="p">,</span> <span class="s2">"message"</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">statuses</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="PsijExecutor._recovered_reference">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.psij.PsijExecutor.html#ase2sprkkr.execution.psij.PsijExecutor._recovered_reference">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_recovered_reference</span><span class="p">(</span><span class="n">backend</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">native_id</span><span class="p">,</span> <span class="n">directory</span><span class="p">,</span> <span class="n">output_file</span><span class="p">,</span> <span class="n">error_file</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">RunReference</span><span class="p">(</span>
+            <span class="n">executor</span><span class="o">=</span><span class="sa">f</span><span class="s2">"psij:</span><span class="si">{</span><span class="n">backend</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
+            <span class="n">native_id</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">native_id</span><span class="p">),</span>
+            <span class="n">computer</span><span class="o">=</span><span class="n">url</span><span class="p">,</span>
+            <span class="n">directory</span><span class="o">=</span><span class="n">directory</span> <span class="ow">or</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">output_file</span><span class="o">=</span><span class="n">output_file</span> <span class="ow">or</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">error_file</span><span class="o">=</span><span class="n">error_file</span> <span class="ow">or</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="PsijExecutor.recover_submission">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.psij.PsijExecutor.html#ase2sprkkr.execution.psij.PsijExecutor.recover_submission">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">recover_submission</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">run_id</span><span class="p">,</span> <span class="n">submission</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">submitted_at</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">backend</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">!=</span> <span class="s2">"slurm"</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"PSI/J backend </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">backend</span><span class="si">!r}</span><span class="s2"> cannot recover uncertain submissions"</span>
+            <span class="p">)</span>
+
+        <span class="n">matches</span> <span class="o">=</span> <span class="n">_slurm_current_matches</span><span class="p">(</span><span class="n">run_id</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">matches</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"Multiple live Slurm jobs carry ASE2SPRKKR run id </span><span class="si">{</span><span class="n">run_id</span><span class="si">!r}</span><span class="s2">"</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="n">matches</span><span class="p">:</span>
+            <span class="n">native_id</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">directory</span> <span class="o">=</span> <span class="n">matches</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">details</span> <span class="o">=</span> <span class="n">_slurm_details</span><span class="p">(</span><span class="n">native_id</span><span class="p">)</span>
+            <span class="n">reference</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_recovered_reference</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">backend</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="p">,</span>
+                <span class="n">native_id</span><span class="p">,</span>
+                <span class="n">details</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"WorkDir"</span><span class="p">)</span> <span class="ow">or</span> <span class="n">directory</span> <span class="ow">or</span> <span class="n">submission</span><span class="o">.</span><span class="n">directory</span><span class="p">,</span>
+                <span class="n">details</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"StdOut"</span><span class="p">),</span>
+                <span class="n">details</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"StdErr"</span><span class="p">),</span>
+            <span class="p">)</span>
+            <span class="k">return</span> <span class="n">RunStatus</span><span class="p">(</span><span class="n">reference</span><span class="p">,</span> <span class="n">_slurm_state</span><span class="p">(</span><span class="n">state</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="n">submitted_at</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">_slurm_accounting_stores_comments</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
+                <span class="s2">"Slurm cannot safely determine whether this submission already "</span>
+                <span class="s2">"finished because job comments are unavailable in accounting"</span>
+            <span class="p">)</span>
+
+        <span class="n">accounting</span> <span class="o">=</span> <span class="n">_slurm_accounting_matches</span><span class="p">(</span><span class="n">run_id</span><span class="p">,</span> <span class="n">submitted_at</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">accounting</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"Multiple Slurm accounting records carry ASE2SPRKKR run id </span><span class="si">{</span><span class="n">run_id</span><span class="si">!r}</span><span class="s2">"</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="n">accounting</span><span class="p">:</span>
+            <span class="n">native_id</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">directory</span><span class="p">,</span> <span class="n">stdout</span><span class="p">,</span> <span class="n">stderr</span><span class="p">,</span> <span class="n">return_code</span> <span class="o">=</span> <span class="n">accounting</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">reference</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_recovered_reference</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">backend</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="p">,</span>
+                <span class="n">native_id</span><span class="p">,</span>
+                <span class="n">directory</span> <span class="ow">or</span> <span class="n">submission</span><span class="o">.</span><span class="n">directory</span><span class="p">,</span>
+                <span class="n">stdout</span><span class="p">,</span>
+                <span class="n">stderr</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="k">return</span> <span class="n">RunStatus</span><span class="p">(</span>
+                <span class="n">reference</span><span class="p">,</span>
+                <span class="n">_slurm_state</span><span class="p">(</span><span class="n">state</span><span class="p">),</span>
+                <span class="n">return_code</span><span class="o">=</span><span class="n">return_code</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="PsijExecutor.attach">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.psij.PsijExecutor.html#ase2sprkkr.execution.psij.PsijExecutor.attach">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">attach</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">reference</span><span class="p">:</span> <span class="n">RunReference</span><span class="p">,</span>
+        <span class="n">reader</span><span class="p">,</span>
+        <span class="n">callback</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">output_listener</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">start</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="n">expected</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"psij:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">backend</span><span class="si">}</span><span class="s2">"</span>
+        <span class="k">if</span> <span class="n">reference</span><span class="o">.</span><span class="n">executor</span> <span class="o">!=</span> <span class="n">expected</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"Run reference belongs to </span><span class="si">{</span><span class="n">reference</span><span class="o">.</span><span class="n">executor</span><span class="si">!r}</span><span class="s2">, not </span><span class="si">{</span><span class="n">expected</span><span class="si">!r}</span><span class="s2">"</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">reference</span><span class="o">.</span><span class="n">directory</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">reference</span><span class="o">.</span><span class="n">output_file</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"PSI/J run reference lacks output location"</span><span class="p">)</span>
+
+        <span class="n">job</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_psij</span><span class="o">.</span><span class="n">Job</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_job_executor</span><span class="o">.</span><span class="n">attach</span><span class="p">(</span><span class="n">job</span><span class="p">,</span> <span class="n">reference</span><span class="o">.</span><span class="n">native_id</span><span class="p">)</span>
+        <span class="n">spec</span> <span class="o">=</span> <span class="n">ExecutionSpec</span><span class="p">(</span>
+            <span class="n">argv</span><span class="o">=</span><span class="p">(),</span>
+            <span class="n">input_file</span><span class="o">=</span><span class="n">reference</span><span class="o">.</span><span class="n">input_file</span><span class="p">,</span>
+            <span class="n">output_file</span><span class="o">=</span><span class="n">reference</span><span class="o">.</span><span class="n">output_file</span><span class="p">,</span>
+            <span class="n">error_file</span><span class="o">=</span><span class="n">reference</span><span class="o">.</span><span class="n">error_file</span><span class="p">,</span>
+            <span class="n">directory</span><span class="o">=</span><span class="n">reference</span><span class="o">.</span><span class="n">directory</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">PsijRunner</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">reader</span><span class="p">,</span>
+            <span class="n">spec</span><span class="p">,</span>
+            <span class="n">callback</span><span class="o">=</span><span class="n">callback</span><span class="p">,</span>
+            <span class="n">output_listener</span><span class="o">=</span><span class="n">output_listener</span><span class="p">,</span>
+            <span class="n">start</span><span class="o">=</span><span class="n">start</span><span class="p">,</span>
+            <span class="n">job</span><span class="o">=</span><span class="n">job</span><span class="p">,</span>
+            <span class="n">attached</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="p">)</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Matyáš Novák &amp; Jano Minár.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

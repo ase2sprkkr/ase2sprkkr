@@ -1,0 +1,36 @@
+BSFTaskSection
+==============
+
+
+.. currentmodule:: ase2sprkkr.input_parameters.definitions.bsf
+
+.. autoclass:: BSFTaskSection
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.input_parameters.definitions.bsf.BSFTaskSection
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

@@ -17,8 +17,8 @@
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../_static/documentation_options.js?v=5929fcd5"></script>
-      <script src="../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
@@ -100,6 +100,10 @@
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.promote_ase_atoms.html#ase2sprkkr.promote_ase_atoms"><code class="docutils literal notranslate"><span class="pre">promote_ase_atoms()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.__getattr__.html">__getattr__</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.__getattr__.html#ase2sprkkr.__getattr__"><code class="docutils literal notranslate"><span class="pre">__getattr__()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.ase.build.html">build</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.ase.build._ext_gcd.html">_ext_gcd</a></li>
@@ -126,10 +130,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.ase.register.html">register</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.ase.register.calculator.html">calculator</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.ase.register.register.html">register</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.ase.register.sprkkr_reader.html">sprkkr_reader</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.ase.register.sprkkr_writer.html">sprkkr_writer</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.ase.symbols.html">symbols</a><ul>
@@ -152,6 +153,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.bindings.es_finder.html">es_finder</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.bindings.es_finder._prepare_radii_ratios_map.html">_prepare_radii_ratios_map</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.bindings.es_finder.empty_spheres.html">empty_spheres</a></li>
 </ul>
 </li>
@@ -162,8 +164,8 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.bindings.spglib.html">spglib</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.bindings.spglib.spglib_dataset.html">spglib_dataset</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.bindings.spglib.spglib_dataset_wrapper.html">spglib_dataset_wrapper</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.bindings.spglib.tag_sites.html">tag_sites</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.bindings.spglib._SpglibCompatibilityWrapper.html">_SpglibCompatibilityWrapper</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.bindings.uppasd.html">uppasd</a><ul>
@@ -176,8 +178,6 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.bindings.xband.html">xband</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.bindings.xband.spheres_debug.html">spheres_debug</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.bindings.xband.spheres.html">spheres</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.bindings.xband.symmetry.html">symmetry</a></li>
 </ul>
 </li>
 </ul>
@@ -191,7 +191,10 @@
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.alternative_types.normalize_type.html">normalize_type</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.backward_compatibility.html">backward_compatibility</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.backward_compatibility.html">backward_compatibility</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.backward_compatibility._FallbackExceptionGroup.html">ase2sprkkr.common.backward_compatibility._FallbackExceptionGroup</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.configuration.html">configuration</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.configuration.Configuration.html">Configuration</a></li>
 </ul>
@@ -209,6 +212,7 @@
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.configuration_definitions.html">configuration_definitions</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.configuration_definitions._definition_write_condition_always_true.html">_definition_write_condition_always_true</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.configuration_definitions._if_defined_helper.html">_if_defined_helper</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.configuration_definitions._validate_warning_condition.html">_validate_warning_condition</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.configuration_definitions.gather-instance.html">gather</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.configuration_definitions.if_defined.html">if_defined</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.configuration_definitions.if_not_defined.html">if_not_defined</a></li>
@@ -223,6 +227,12 @@
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.configuration_definitions.Stub.html">Stub</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.configuration_definitions.Switch.html">Switch</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.configuration_definitions.VirtualDefinition.html">VirtualDefinition</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.configuration_definitions._TreeState.html">_TreeState</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.configuration_transaction.html">configuration_transaction</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.configuration_transaction.ConfigurationTransaction.html">ConfigurationTransaction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.configuration_transaction.PostChangeHookError.html">ase2sprkkr.common.configuration_transaction.PostChangeHookError</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.container_definitions.html">container_definitions</a><ul>
@@ -231,9 +241,16 @@
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.container_definitions.SectionDefinition.html">SectionDefinition</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.dangerous_values.html">dangerous_values</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.dangerous_values.DangerousValue.html">DangerousValue</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.debug.html">debug</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.debug.add_debug_hook.html">add_debug_hook</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.debug.backtrace_pyparsing.html">backtrace_pyparsing</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.debug.check_whitespaces.html">check_whitespaces</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.debug.debug_pyparsing.html">debug_pyparsing</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.debug.print_grammar.html">print_grammar</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.decorators.html">decorators</a><ul>
@@ -247,14 +264,28 @@
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.decorators.maybeclassmethod.html">maybeclassmethod</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.dependencies.html">dependencies</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.dependencies.DependentValue.html">DependentValue</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.doc.html">doc</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.doc.process_input_parameters_definition.html">process_input_parameters_definition</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.doc.verbatim.html">verbatim</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.file_fingerprints.html">file_fingerprints</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.file_fingerprints.file_fingerprint.html">file_fingerprint</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.file_fingerprints.FileFingerprint.html">FileFingerprint</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.file_locks.html">file_locks</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.file_locks.FileLock.html">FileLock</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.file_utils.html">file_utils</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.file_utils.filename_from_file.html">filename_from_file</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.file_utils.Directory.html">Directory</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.file_utils.FilePath.html">FilePath</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.formats.html">formats</a><ul>
@@ -264,6 +295,8 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.generated_configuration_definitions.html">generated_configuration_definitions</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.generated_configuration_definitions._validate_length.html">_validate_length</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.generated_configuration_definitions._validate_length_values.html">_validate_length_values</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.generated_configuration_definitions.BaseGeneratedValueDefinition.html">BaseGeneratedValueDefinition</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.generated_configuration_definitions.GeneratedValueDefinition.html">GeneratedValueDefinition</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.generated_configuration_definitions.Length.html">Length</a></li>
@@ -277,12 +310,17 @@
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar.optional_quote.html">optional_quote</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar.add_condition_ex.html">add_condition_ex</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar.add_parse_action_ex.html">add_parse_action_ex</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar.as_delimiter.html">as_delimiter</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar.delimitedList.html">delimitedList</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar.generate_grammar.html">generate_grammar</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar.replace_whitechars.html">replace_whitechars</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar.separator_grammar.html">separator_grammar</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar.separator_pattern.html">separator_pattern</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar.Forward.html">Forward</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar.SkipToRegex.html">SkipToRegex</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar.Suppress.html">Suppress</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar.TokenConverter.html">TokenConverter</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar.Transparent.html">Transparent</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar.White.html">White</a></li>
 </ul>
 </li>
@@ -296,19 +334,6 @@
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.grammar_type.html">grammar_type</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.mixed.html">mixed</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.warnings.html">warnings</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.init_tests.html">init_tests</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.init_tests.arr_testfce.html">arr_testfce</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.init_tests.assertDictEqual.html">assertDictEqual</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.init_tests.assertListEqual.html">assertListEqual</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.init_tests.assert_almost_equals.html">assert_almost_equals</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.init_tests.assert_equals.html">assert_equals</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.init_tests.patch_package.html">patch_package</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.init_tests.run_sprkkr.html">run_sprkkr</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.init_tests.testfce.html">testfce</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.init_tests.TestCase.html">TestCase</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.init_tests.extdict.html">extdict</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.lazy_string.html">lazy_string</a><ul>
@@ -325,6 +350,12 @@
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.misc.numpy_index.html">numpy_index</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.module_registry.html">module_registry</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.module_registry.ModuleRegistry.html">ModuleRegistry</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.module_registry.RegistryDefinitionError.html">ase2sprkkr.common.module_registry.RegistryDefinitionError</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.module_registry.RegistryEntryNotFound.html">ase2sprkkr.common.module_registry.RegistryEntryNotFound</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.no_output.html">no_output</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.no_output.NoOutput.html">NoOutput</a></li>
 </ul>
@@ -332,19 +363,21 @@
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.options.html">options</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.options.BaseOption.html">BaseOption</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.options.CustomOption.html">CustomOption</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.options.DangerousValue.html">DangerousValue</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.options.Dummy.html">Dummy</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.options.DummyStub.html">DummyStub</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.options.Option.html">Option</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.options._DiscardInvalidValue.html">ase2sprkkr.common.options._DiscardInvalidValue</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.parsing_results.html">parsing_results</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.parsing_results.dict_from_parsed.html">dict_from_parsed</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.parsing_results.ArrayKey.html">ArrayKey</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.parsing_results.DefArrayKey.html">DefArrayKey</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.parsing_results.DefDictKey.html">DefDictKey</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.parsing_results.DictKey.html">DictKey</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.parsing_results.IgnoredKey.html">IgnoredKey</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.parsing_results.Key.html">Key</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.parsing_results.KeyType.html">KeyType</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.parsing_results.RepeatedKey.html">RepeatedKey</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.parsing_results.Result.html">Result</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.parsing_results.SubKey.html">SubKey</a></li>
@@ -364,13 +397,19 @@
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.repeated_configuration_containers.RepeatedConfigurationContainer.html">RepeatedConfigurationContainer</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.section_adaptors.html">section_adaptors</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.section_adaptors.MergeSectionAdaptor.html">MergeSectionAdaptor</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.section_adaptors.MergeSectionDefinitionAdaptor.html">MergeSectionDefinitionAdaptor</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.section_adaptors.SectionAdaptor.html">SectionAdaptor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.repetition.html">repetition</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.repetition.AnyRepeatedItemGrammar.html">AnyRepeatedItemGrammar</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.repetition.ConstRepeatedItemGrammar.html">ConstRepeatedItemGrammar</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.repetition.NotRepeatedItemGrammar.html">NotRepeatedItemGrammar</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.repetition.Repeated.html">Repeated</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.repetition.RepeatedItemGrammar.html">RepeatedItemGrammar</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.repetition.RepeatedNumberedIf.html">RepeatedNumberedIf</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.repetition.ValidatedRepeatedItemGrammar.html">ValidatedRepeatedItemGrammar</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.repetition.VariableRepeatedItemGrammar.html">VariableRepeatedItemGrammar</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.subprocess.html">subprocess</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.subprocess._call.html">_call</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.subprocess._call_function.html">_call_function</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.subprocess.ignore_signal.html">ignore_signal</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.subprocess.in_subprocess.html">in_subprocess</a></li>
@@ -389,14 +428,22 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.value_definitions.html">value_definitions</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.value_definitions._rebuild_modified_definition.html">_rebuild_modified_definition</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.value_definitions._reduce_modified_definition.html">_reduce_modified_definition</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.value_definitions._validate_numbering.html">_validate_numbering</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.value_definitions._validate_required.html">_validate_required</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.value_definitions.InheritingValueModifier.html">InheritingValueModifier</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.value_definitions.ValueDefinition.html">ValueDefinition</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.value_definitions.ValueModifier.html">ValueModifier</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.warnings.html">warnings</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.warnings.catch_warnings_of.html">catch_warnings_of</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.warnings.InvalidValuePolicy.html">InvalidValuePolicy</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.warnings.DataValidityError.html">ase2sprkkr.common.warnings.DataValidityError</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.warnings.DataValidityErrors.html">ase2sprkkr.common.warnings.DataValidityErrors</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.warnings.DataValidityWarning.html">ase2sprkkr.common.warnings.DataValidityWarning</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.warnings.ValidationResult.html">ase2sprkkr.common.warnings.ValidationResult</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.yaml.html">yaml</a><ul>
@@ -406,28 +453,72 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration.html">configuration</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.configuration.V.html">V</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.configuration.V.html#ase2sprkkr.configuration.V"><code class="docutils literal notranslate"><span class="pre">V</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.configuration.EXECUTOR.html">EXECUTOR</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.configuration.EXECUTOR.html#ase2sprkkr.configuration.EXECUTOR"><code class="docutils literal notranslate"><span class="pre">EXECUTOR</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.configuration._get_suffix.html">_get_suffix</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.configuration._get_suffix.html#ase2sprkkr.configuration._get_suffix"><code class="docutils literal notranslate"><span class="pre">_get_suffix()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.configuration.find_default_mpi_runner.html">find_default_mpi_runner</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.configuration.find_default_mpi_runner.html#ase2sprkkr.configuration.find_default_mpi_runner"><code class="docutils literal notranslate"><span class="pre">find_default_mpi_runner()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.configuration._legacy_executable_dir.html">_legacy_executable_dir</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.configuration._legacy_executable_dir.html#ase2sprkkr.configuration._legacy_executable_dir"><code class="docutils literal notranslate"><span class="pre">_legacy_executable_dir()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.configuration.get_default_mpi_runner.html">get_default_mpi_runner</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.configuration.get_default_mpi_runner.html#ase2sprkkr.configuration.get_default_mpi_runner"><code class="docutils literal notranslate"><span class="pre">get_default_mpi_runner()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.configuration._legacy_executable_suffix.html">_legacy_executable_suffix</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.configuration._legacy_executable_suffix.html#ase2sprkkr.configuration._legacy_executable_suffix"><code class="docutils literal notranslate"><span class="pre">_legacy_executable_suffix()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.configuration._legacy_mpi.html">_legacy_mpi</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.configuration._legacy_mpi.html#ase2sprkkr.configuration._legacy_mpi"><code class="docutils literal notranslate"><span class="pre">_legacy_mpi()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.configuration._legacy_mpi_warning.html">_legacy_mpi_warning</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.configuration._legacy_mpi_warning.html#ase2sprkkr.configuration._legacy_mpi_warning"><code class="docutils literal notranslate"><span class="pre">_legacy_mpi_warning()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.configuration._legacy_value.html">_legacy_value</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.configuration._legacy_value.html#ase2sprkkr.configuration._legacy_value"><code class="docutils literal notranslate"><span class="pre">_legacy_value()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.configuration._load_legacy_user_preferences.html">_load_legacy_user_preferences</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.configuration._load_legacy_user_preferences.html#ase2sprkkr.configuration._load_legacy_user_preferences"><code class="docutils literal notranslate"><span class="pre">_load_legacy_user_preferences()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.configuration._profile_overlay_values.html">_profile_overlay_values</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.configuration._profile_overlay_values.html#ase2sprkkr.configuration._profile_overlay_values"><code class="docutils literal notranslate"><span class="pre">_profile_overlay_values()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.configuration._set_legacy_executable_dir.html">_set_legacy_executable_dir</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.configuration._set_legacy_executable_dir.html#ase2sprkkr.configuration._set_legacy_executable_dir"><code class="docutils literal notranslate"><span class="pre">_set_legacy_executable_dir()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.configuration._set_legacy_executable_suffix.html">_set_legacy_executable_suffix</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.configuration._set_legacy_executable_suffix.html#ase2sprkkr.configuration._set_legacy_executable_suffix"><code class="docutils literal notranslate"><span class="pre">_set_legacy_executable_suffix()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.configuration._set_legacy_mpi.html">_set_legacy_mpi</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.configuration._set_legacy_mpi.html#ase2sprkkr.configuration._set_legacy_mpi"><code class="docutils literal notranslate"><span class="pre">_set_legacy_mpi()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.configuration._set_legacy_mpi_warning.html">_set_legacy_mpi_warning</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.configuration._set_legacy_mpi_warning.html#ase2sprkkr.configuration._set_legacy_mpi_warning"><code class="docutils literal notranslate"><span class="pre">_set_legacy_mpi_warning()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.configuration._set_legacy_value.html">_set_legacy_value</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.configuration._set_legacy_value.html#ase2sprkkr.configuration._set_legacy_value"><code class="docutils literal notranslate"><span class="pre">_set_legacy_value()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.configuration.legacy_user_preferences_file.html">legacy_user_preferences_file</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.configuration.legacy_user_preferences_file.html#ase2sprkkr.configuration.legacy_user_preferences_file"><code class="docutils literal notranslate"><span class="pre">legacy_user_preferences_file()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.configuration.load_user_preferences.html">load_user_preferences</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.configuration.load_user_preferences.html#ase2sprkkr.configuration.load_user_preferences"><code class="docutils literal notranslate"><span class="pre">load_user_preferences()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.configuration.mpi_runner.html">mpi_runner</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.configuration.mpi_runner.html#ase2sprkkr.configuration.mpi_runner"><code class="docutils literal notranslate"><span class="pre">mpi_runner()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.configuration.user_preferences_directory.html">user_preferences_directory</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.configuration.user_preferences_directory.html#ase2sprkkr.configuration.user_preferences_directory"><code class="docutils literal notranslate"><span class="pre">user_preferences_directory()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.configuration.user_preferences_file.html">user_preferences_file</a><ul>
@@ -450,12 +541,181 @@
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.configuration.ConfigurationOption.html#ase2sprkkr.configuration.ConfigurationOption"><code class="docutils literal notranslate"><span class="pre">ConfigurationOption</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.configuration.ExecutionProfile.html">ExecutionProfile</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.configuration.ExecutionProfile.html#ase2sprkkr.configuration.ExecutionProfile"><code class="docutils literal notranslate"><span class="pre">ExecutionProfile</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.configuration.G.html">G</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.configuration.G.html#ase2sprkkr.configuration.G"><code class="docutils literal notranslate"><span class="pre">G</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.configuration.GeneratedConfigValueDefinition.html">GeneratedConfigValueDefinition</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.configuration.GeneratedConfigValueDefinition.html#ase2sprkkr.configuration.GeneratedConfigValueDefinition"><code class="docutils literal notranslate"><span class="pre">GeneratedConfigValueDefinition</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.configuration.GeneratedConfigurationOption.html">GeneratedConfigurationOption</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.configuration.GeneratedConfigurationOption.html#ase2sprkkr.configuration.GeneratedConfigurationOption"><code class="docutils literal notranslate"><span class="pre">GeneratedConfigurationOption</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.configuration.ProfilesSection.html">ProfilesSection</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.configuration.ProfilesSection.html#ase2sprkkr.configuration.ProfilesSection"><code class="docutils literal notranslate"><span class="pre">ProfilesSection</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.configuration.Section.html">Section</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.configuration.Section.html#ase2sprkkr.configuration.Section"><code class="docutils literal notranslate"><span class="pre">Section</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.configuration.V.html">V</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.configuration.V.html#ase2sprkkr.configuration.V"><code class="docutils literal notranslate"><span class="pre">V</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration_migration.html">configuration_migration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.configuration_migration._collapse_blank_lines.html">_collapse_blank_lines</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.configuration_migration._collapse_blank_lines.html#ase2sprkkr.configuration_migration._collapse_blank_lines"><code class="docutils literal notranslate"><span class="pre">_collapse_blank_lines()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.configuration_migration._config_attribute.html">_config_attribute</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.configuration_migration._config_attribute.html#ase2sprkkr.configuration_migration._config_attribute"><code class="docutils literal notranslate"><span class="pre">_config_attribute()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.configuration_migration._config_import_lines.html">_config_import_lines</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.configuration_migration._config_import_lines.html#ase2sprkkr.configuration_migration._config_import_lines"><code class="docutils literal notranslate"><span class="pre">_config_import_lines()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.configuration_migration._convert_legacy_execution_profile.html">_convert_legacy_execution_profile</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.configuration_migration._convert_legacy_execution_profile.html#ase2sprkkr.configuration_migration._convert_legacy_execution_profile"><code class="docutils literal notranslate"><span class="pre">_convert_legacy_execution_profile()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.configuration_migration._is_config_assignment.html">_is_config_assignment</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.configuration_migration._is_config_assignment.html#ase2sprkkr.configuration_migration._is_config_assignment"><code class="docutils literal notranslate"><span class="pre">_is_config_assignment()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.configuration_migration._is_config_import.html">_is_config_import</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.configuration_migration._is_config_import.html#ase2sprkkr.configuration_migration._is_config_import"><code class="docutils literal notranslate"><span class="pre">_is_config_import()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.configuration_migration._migrated_profile_name.html">_migrated_profile_name</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.configuration_migration._migrated_profile_name.html#ase2sprkkr.configuration_migration._migrated_profile_name"><code class="docutils literal notranslate"><span class="pre">_migrated_profile_name()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.configuration_migration.clean_legacy_configuration.html">clean_legacy_configuration</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.configuration_migration.clean_legacy_configuration.html#ase2sprkkr.configuration_migration.clean_legacy_configuration"><code class="docutils literal notranslate"><span class="pre">clean_legacy_configuration()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.configuration_migration.load_legacy_configuration.html">load_legacy_configuration</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.configuration_migration.load_legacy_configuration.html#ase2sprkkr.configuration_migration.load_legacy_configuration"><code class="docutils literal notranslate"><span class="pre">load_legacy_configuration()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.configuration_migration.migrate_legacy_configuration.html">migrate_legacy_configuration</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.configuration_migration.migrate_legacy_configuration.html#ase2sprkkr.configuration_migration.migrate_legacy_configuration"><code class="docutils literal notranslate"><span class="pre">migrate_legacy_configuration()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration_yaml.html">configuration_yaml</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.configuration_yaml._apply_with_recovery.html">_apply_with_recovery</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.configuration_yaml._apply_with_recovery.html#ase2sprkkr.configuration_yaml._apply_with_recovery"><code class="docutils literal notranslate"><span class="pre">_apply_with_recovery()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.configuration_yaml._classify_document.html">_classify_document</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.configuration_yaml._classify_document.html#ase2sprkkr.configuration_yaml._classify_document"><code class="docutils literal notranslate"><span class="pre">_classify_document()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.configuration_yaml._discard_invalid_default_profile.html">_discard_invalid_default_profile</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.configuration_yaml._discard_invalid_default_profile.html#ase2sprkkr.configuration_yaml._discard_invalid_default_profile"><code class="docutils literal notranslate"><span class="pre">_discard_invalid_default_profile()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.configuration_yaml._format_issues.html">_format_issues</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.configuration_yaml._format_issues.html#ase2sprkkr.configuration_yaml._format_issues"><code class="docutils literal notranslate"><span class="pre">_format_issues()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.configuration_yaml._recover_configuration.html">_recover_configuration</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.configuration_yaml._recover_configuration.html#ase2sprkkr.configuration_yaml._recover_configuration"><code class="docutils literal notranslate"><span class="pre">_recover_configuration()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.configuration_yaml._recover_profiles.html">_recover_profiles</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.configuration_yaml._recover_profiles.html#ase2sprkkr.configuration_yaml._recover_profiles"><code class="docutils literal notranslate"><span class="pre">_recover_profiles()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.configuration_yaml._recover_section.html">_recover_section</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.configuration_yaml._recover_section.html#ase2sprkkr.configuration_yaml._recover_section"><code class="docutils literal notranslate"><span class="pre">_recover_section()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.configuration_yaml._set_persisted_configuration.html">_set_persisted_configuration</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.configuration_yaml._set_persisted_configuration.html#ase2sprkkr.configuration_yaml._set_persisted_configuration"><code class="docutils literal notranslate"><span class="pre">_set_persisted_configuration()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.configuration_yaml._shell_string.html">_shell_string</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.configuration_yaml._shell_string.html#ase2sprkkr.configuration_yaml._shell_string"><code class="docutils literal notranslate"><span class="pre">_shell_string()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.configuration_yaml._stage_persisted_configuration.html">_stage_persisted_configuration</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.configuration_yaml._stage_persisted_configuration.html#ase2sprkkr.configuration_yaml._stage_persisted_configuration"><code class="docutils literal notranslate"><span class="pre">_stage_persisted_configuration()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.configuration_yaml._storage_configuration.html">_storage_configuration</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.configuration_yaml._storage_configuration.html#ase2sprkkr.configuration_yaml._storage_configuration"><code class="docutils literal notranslate"><span class="pre">_storage_configuration()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.configuration_yaml._typed_configuration.html">_typed_configuration</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.configuration_yaml._typed_configuration.html#ase2sprkkr.configuration_yaml._typed_configuration"><code class="docutils literal notranslate"><span class="pre">_typed_configuration()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.configuration_yaml._update_mapping.html">_update_mapping</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.configuration_yaml._update_mapping.html#ase2sprkkr.configuration_yaml._update_mapping"><code class="docutils literal notranslate"><span class="pre">_update_mapping()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.configuration_yaml._valid_default_profile.html">_valid_default_profile</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.configuration_yaml._valid_default_profile.html#ase2sprkkr.configuration_yaml._valid_default_profile"><code class="docutils literal notranslate"><span class="pre">_valid_default_profile()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.configuration_yaml._validate_yaml_shape.html">_validate_yaml_shape</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.configuration_yaml._validate_yaml_shape.html#ase2sprkkr.configuration_yaml._validate_yaml_shape"><code class="docutils literal notranslate"><span class="pre">_validate_yaml_shape()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.configuration_yaml._yaml.html">_yaml</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.configuration_yaml._yaml.html#ase2sprkkr.configuration_yaml._yaml"><code class="docutils literal notranslate"><span class="pre">_yaml()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.configuration_yaml.apply_yaml_document.html">apply_yaml_document</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.configuration_yaml.apply_yaml_document.html#ase2sprkkr.configuration_yaml.apply_yaml_document"><code class="docutils literal notranslate"><span class="pre">apply_yaml_document()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.configuration_yaml.dump_yaml_document.html">dump_yaml_document</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.configuration_yaml.dump_yaml_document.html#ase2sprkkr.configuration_yaml.dump_yaml_document"><code class="docutils literal notranslate"><span class="pre">dump_yaml_document()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.configuration_yaml.explicit_configuration.html">explicit_configuration</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.configuration_yaml.explicit_configuration.html#ase2sprkkr.configuration_yaml.explicit_configuration"><code class="docutils literal notranslate"><span class="pre">explicit_configuration()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.configuration_yaml.load_configuration_yaml.html">load_configuration_yaml</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.configuration_yaml.load_configuration_yaml.html#ase2sprkkr.configuration_yaml.load_configuration_yaml"><code class="docutils literal notranslate"><span class="pre">load_configuration_yaml()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.configuration_yaml.load_yaml_document.html">load_yaml_document</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.configuration_yaml.load_yaml_document.html#ase2sprkkr.configuration_yaml.load_yaml_document"><code class="docutils literal notranslate"><span class="pre">load_yaml_document()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.configuration_yaml.save_configuration_yaml.html">save_configuration_yaml</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.configuration_yaml.save_configuration_yaml.html#ase2sprkkr.configuration_yaml.save_configuration_yaml"><code class="docutils literal notranslate"><span class="pre">save_configuration_yaml()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.configuration_yaml.YamlConfigurationWarning.html">ase2sprkkr.configuration_yaml.YamlConfigurationWarning</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.configuration_yaml.YamlConfigurationWarning.html#ase2sprkkr.configuration_yaml.YamlConfigurationWarning"><code class="docutils literal notranslate"><span class="pre">YamlConfigurationWarning</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.conftest.html">conftest</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.conftest.pytest_collection_modifyitems.html">pytest_collection_modifyitems</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.conftest.pytest_collection_modifyitems.html#ase2sprkkr.conftest.pytest_collection_modifyitems"><code class="docutils literal notranslate"><span class="pre">pytest_collection_modifyitems()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.conftest.pytest_configure.html">pytest_configure</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.conftest.pytest_configure.html#ase2sprkkr.conftest.pytest_configure"><code class="docutils literal notranslate"><span class="pre">pytest_configure()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -535,6 +795,182 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.execution.html">execution</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.execution.base.html">base</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.base._pathlike.html">_pathlike</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.base.ExecutionResources.html">ExecutionResources</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.base.ExecutionSpec.html">ExecutionSpec</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.base.Executor.html">Executor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.base.LaunchSpec.html">LaunchSpec</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.base.MpiSpec.html">MpiSpec</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.base.OutputObservers.html">OutputObservers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.base.ResourceOwnedRunner.html">ResourceOwnedRunner</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.base.RunReference.html">RunReference</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.base.RunState.html">RunState</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.base.RunStatus.html">RunStatus</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.base.Runner.html">Runner</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.base.MpiNotFoundWarning.html">ase2sprkkr.execution.base.MpiNotFoundWarning</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.base.OutputObserverWarning.html">ase2sprkkr.execution.base.OutputObserverWarning</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.base.SubmissionNotStarted.html">ase2sprkkr.execution.base.SubmissionNotStarted</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.execution.detached.html">detached</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.detached._absolute_file.html">_absolute_file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.detached._read_state.html">_read_state</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.detached._read_state_unlocked.html">_read_state_unlocked</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.detached._request_path.html">_request_path</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.detached._request_spec.html">_request_spec</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.detached._run_directory.html">_run_directory</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.detached._state_lock.html">_state_lock</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.detached._state_lock_path.html">_state_lock_path</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.detached._state_path.html">_state_path</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.detached._terminate_process_group.html">_terminate_process_group</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.detached._timestamp.html">_timestamp</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.detached._write_state.html">_write_state</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.detached._write_state_unlocked.html">_write_state_unlocked</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.detached.cancel_detached.html">cancel_detached</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.detached.clean_detached_runs.html">clean_detached_runs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.detached.follow_detached.html">follow_detached</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.detached.list_detached_runs.html">list_detached_runs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.detached.resolve_detached_mpi.html">resolve_detached_mpi</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.detached.run_detached_worker.html">run_detached_worker</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.detached.status_detached.html">status_detached</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.detached.submit_detached.html">submit_detached</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.execution.endpoint.html">endpoint</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.endpoint.create_executor_from_endpoint.html">create_executor_from_endpoint</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.endpoint.endpoint_for_executor.html">endpoint_for_executor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.endpoint.ExecutorEndpoint.html">ExecutorEndpoint</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.execution.local.html">local</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.local._mpi_command.html">_mpi_command</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.local._path.html">_path</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.local._pid_running.html">_pid_running</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.local.materialize_local_spec.html">materialize_local_spec</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.local.LocalExecutor.html">LocalExecutor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.local.LocalRunner.html">LocalRunner</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.execution.local_persistent.html">local_persistent</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.local_persistent._file_path.html">_file_path</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.local_persistent._reference.html">_reference</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.local_persistent._reference_from_request.html">_reference_from_request</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.local_persistent.attach_local.html">attach_local</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.local_persistent.detached_local_status.html">detached_local_status</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.local_persistent.recover_local_submission.html">recover_local_submission</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.local_persistent.LocalPersistentRunner.html">LocalPersistentRunner</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.execution.manager.html">manager</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.manager._now.html">_now</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.manager._processing_state.html">_processing_state</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.manager._result_file_path.html">_result_file_path</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.manager._timestamp.html">_timestamp</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.manager._unique.html">_unique</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.manager.ExecutionManager.html">ExecutionManager</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.manager.FileFingerprint.html">FileFingerprint</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.manager.FileRetrievalState.html">FileRetrievalState</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.manager.PersistentRunner.html">PersistentRunner</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.manager.ResultFilesRecord.html">ResultFilesRecord</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.manager.ResultFilesState.html">ResultFilesState</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.manager.RunRecord.html">RunRecord</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.manager.RunStore.html">RunStore</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.manager.SubmissionKey.html">SubmissionKey</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.manager.CorruptRunRecord.html">ase2sprkkr.execution.manager.CorruptRunRecord</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.manager.DuplicateSubmissionError.html">ase2sprkkr.execution.manager.DuplicateSubmissionError</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.execution.mpi.html">mpi</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.mpi._single_cpu_available.html">_single_cpu_available</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.mpi._with_process_count.html">_with_process_count</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.mpi.find_default_mpi_launcher.html">find_default_mpi_launcher</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.mpi.resolve_mpi_command.html">resolve_mpi_command</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.execution.persistence.html">persistence</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.persistence.default_execution_manager.html">default_execution_manager</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.persistence.resolve_execution_manager.html">resolve_execution_manager</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.execution.pool.html">pool</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.pool.default_executor_pool.html">default_executor_pool</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.pool.ExecutorPool.html">ExecutorPool</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.execution.psij.html">psij</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.psij._load_psij.html">_load_psij</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.psij._path.html">_path</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.psij._scheduler_output.html">_scheduler_output</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.psij._slurm_accounting_matches.html">_slurm_accounting_matches</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.psij._slurm_accounting_stores_comments.html">_slurm_accounting_stores_comments</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.psij._slurm_current_matches.html">_slurm_current_matches</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.psij._slurm_details.html">_slurm_details</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.psij._slurm_exit_code.html">_slurm_exit_code</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.psij._slurm_state.html">_slurm_state</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.psij._slurm_time.html">_slurm_time</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.psij.PsijExecutor.html">PsijExecutor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.psij.PsijRunner.html">PsijRunner</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.execution.remote.html">remote</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.remote._run_sync.html">_run_sync</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.remote.FileSyncPolicy.html">FileSyncPolicy</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.remote.RemoteRunner.html">RemoteRunner</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.execution.remote_endpoint.html">remote_endpoint</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.remote_endpoint.RemoteEndpointExecutor.html">RemoteEndpointExecutor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.remote_endpoint._RemoteRun.html">_RemoteRun</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.remote_endpoint._RemoteRunContext.html">_RemoteRunContext</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.execution.remote_psij.html">remote_psij</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.remote_psij._agent_is_running.html">_agent_is_running</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.remote_psij._agent_lock_path.html">_agent_lock_path</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.remote_psij._execution_spec.html">_execution_spec</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.remote_psij._executor.html">_executor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.remote_psij._executor_key.html">_executor_key</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.remote_psij._spawn_agent.html">_spawn_agent</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.remote_psij._try_agent_lock.html">_try_agent_lock</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.remote_psij.cancel_remote_psij.html">cancel_remote_psij</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.remote_psij.ensure_remote_psij_agent.html">ensure_remote_psij_agent</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.remote_psij.run_remote_psij_worker.html">run_remote_psij_worker</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.remote_psij._ActiveRun.html">_ActiveRun</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.remote_psij._RemotePsijAgent.html">_RemotePsijAgent</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.remote_psij._RemoteReader.html">_RemoteReader</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.remote_psij._RemoteResult.html">_RemoteResult</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.execution.remote_worker.html">remote_worker</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.remote_worker.main.html">main</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.execution.transport.html">transport</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.transport._completed_process.html">_completed_process</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.transport._literal_prefix.html">_literal_prefix</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.transport._local_pattern.html">_local_pattern</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.transport._local_temporary_path.html">_local_temporary_path</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.transport._match_component.html">_match_component</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.transport._match_relative_path.html">_match_relative_path</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.transport._parse_remote_file_signature.html">_parse_remote_file_signature</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.transport._posix_relative_pattern.html">_posix_relative_pattern</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.transport._sha256_file.html">_sha256_file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.transport._sources.html">_sources</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.transport.expand_local_files.html">expand_local_files</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.transport.has_file_magic.html">has_file_magic</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.transport.local_file_digest.html">local_file_digest</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.transport.local_file_signature.html">local_file_signature</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.transport.AtomicLocalFile.html">AtomicLocalFile</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.transport.LocalTransport.html">LocalTransport</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.transport.RunningCommand.html">RunningCommand</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.transport.SshTransport.html">SshTransport</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.transport.Transport.html">Transport</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.gui.html">gui</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.gui.examples.html">examples</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.gui.examples.examples_dir.html">examples_dir</a></li>
@@ -583,8 +1019,7 @@
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.input_parameters.html">input_parameters</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.html">definitions</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.arpes.html">arpes</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.bsfek.html">bsfek</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.bsfkk.html">bsfkk</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.bsf.html">bsf</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.dos.html">dos</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.gilbert.html">gilbert</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.jxc.html">jxc</a></li>
@@ -593,7 +1028,6 @@
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.sections.html">sections</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.torque.html">torque</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.xas.html">xas</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.marpes.html">marpes</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.input_parameters.input_parameters.html">input_parameters</a><ul>
@@ -607,37 +1041,19 @@
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.input_parameters_definitions.InputValueDefinition.html">InputValueDefinition</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.input_parameters.task_definition.html">task_definition</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.task_definition.InputParametersRegistry.html">InputParametersRegistry</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.task_definition.TaskDefinition.html">TaskDefinition</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.task_definition.TaskRegistry.html">TaskRegistry</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.output_files.html">output_files</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.output_files.definitions.html">definitions</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.output_files.definitions.Arithmetic.html">Arithmetic</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.output_files.definitions.CommonOutputFile.html">CommonOutputFile</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.output_files.definitions.OutputFile.html">OutputFile</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.output_files.definitions.UnknownDataValue.html">UnknownDataValue</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.output_files.definitions.bsf.html">bsf</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.output_files.definitions.dos.html">dos</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.output_files.definitions.jxc.html">jxc</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.output_files.definitions.rat.html">rat</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.output_files.definitions.spc.html">spc</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.output_files.output_files.html">output_files</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.output_files.output_files.Arithmetic.html">Arithmetic</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.output_files.output_files.CommonOutputFile.html">CommonOutputFile</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.output_files.output_files.OutputFile.html">OutputFile</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.output_files.output_files.UnknownDataValue.html">UnknownDataValue</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.output_files.output_files_definitions.html">output_files_definitions</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.output_files.output_files_definitions.create_output_file_definition.html">create_output_file_definition</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.output_files.output_files_definitions.output_file_header.html">output_file_header</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.output_files.output_files_definitions.BlankSeparator.html">BlankSeparator</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.output_files.output_files_definitions.OutputFileDefinition.html">OutputFileDefinition</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.output_files.output_files_definitions.OutputFileSection.html">OutputFileSection</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.output_files.output_files_definitions.OutputFileSectionDefinition.html">OutputFileSectionDefinition</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.output_files.output_files_definitions.OutputFileValueDefinition.html">OutputFileValueDefinition</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.output_files.output_files_definitions.Separator.html">Separator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.input_parameters.tasks.html">tasks</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.tasks.aipes.html">aipes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.tasks.arpes.html">arpes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.tasks.band.html">band</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.tasks.bsfek.html">bsfek</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.tasks.bsfkk.html">bsfkk</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.tasks.spleed.html">spleed</a></li>
 </ul>
 </li>
 </ul>
@@ -648,6 +1064,20 @@
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.outputs.output_definitions.OutputSectionDefinition.html">OutputSectionDefinition</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.outputs.output_definitions.OutputValueDefinition.html">OutputValueDefinition</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.outputs.output_definitions.OutputValueEqualDefinition.html">OutputValueEqualDefinition</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.outputs.persistent.html">persistent</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.outputs.persistent._input_parameters_for_record.html">_input_parameters_for_record</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.outputs.persistent._reader_for_record.html">_reader_for_record</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.outputs.persistent._record.html">_record</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.outputs.persistent._task_definition_for_record.html">_task_definition_for_record</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.outputs.persistent.attach_persistent_run.html">attach_persistent_run</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.outputs.persistent.load_persistent_result.html">load_persistent_result</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.outputs.persistent.PersistentResultUnavailableError.html">ase2sprkkr.outputs.persistent.PersistentResultUnavailableError</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.outputs.reader_registry.html">reader_registry</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.outputs.reader_registry.OutputReaderRegistry.html">OutputReaderRegistry</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.outputs.readers.html">readers</a><ul>
@@ -665,10 +1095,10 @@
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.outputs.result_options.create_output_section.html">create_output_section</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.outputs.result_options.generated_output.html">generated_output</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.outputs.result_options.DataOutputOption.html">DataOutputOption</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.outputs.result_options.OutputFileDefinition.html">OutputFileDefinition</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.outputs.result_options.OutputFileOption.html">OutputFileOption</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.outputs.result_options.OutputFilesSection.html">OutputFilesSection</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.outputs.result_options.OutputOption.html">OutputOption</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.outputs.result_options.ResultFileDefinition.html">ResultFileDefinition</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.outputs.sprkkr_output_reader.html">sprkkr_output_reader</a><ul>
@@ -677,7 +1107,6 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.outputs.task_result.html">task_result</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.outputs.task_result.KkrOutputReader.html">KkrOutputReader</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.outputs.task_result.KkrProcess.html">KkrProcess</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.outputs.task_result.TaskResult.html">TaskResult</a></li>
 </ul>
 </li>
@@ -703,9 +1132,20 @@
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.physics.lattice_data.international_numbers_to_AP.html">international_numbers_to_AP</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.physics.lattice_data.hall_numbers_to_AP.html">hall_numbers_to_AP</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.physics.lattice_data.ap_number_from_spacegroup.html">ap_number_from_spacegroup</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.physics.lattice_data.bravais_number.html">bravais_number</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.physics.lattice_data.reorder_matrix.html">reorder_matrix</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.physics.lattice_data.LatticeData.html">LatticeData</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.physics.lattice_data.Pearson.html">Pearson</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.physics.test_broadening.html">test_broadening</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.physics.test_broadening._bin_widths.html">_bin_widths</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.physics.test_broadening._sorted_reference.html">_sorted_reference</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.physics.test_broadening.test_gaussian_broadens_last_axis_and_supports_distinct_output_grid.html">test_gaussian_broadens_last_axis_and_supports_distinct_output_grid</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.physics.test_broadening.test_gaussian_preserves_discrete_integral_for_multiple_spectra_and_variable_width.html">test_gaussian_preserves_discrete_integral_for_multiple_spectra_and_variable_width</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.physics.test_broadening.test_gaussian_rejects_wrong_energy_axis_length.html">test_gaussian_rejects_wrong_energy_axis_length</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.physics.test_broadening.test_gaussian_unsorted_grid_reorders_data_and_sigma.html">test_gaussian_unsorted_grid_reorders_data_and_sigma</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.physics.test_broadening.test_gaussian_unsorted_grid_reorders_fwhm.html">test_gaussian_unsorted_grid_reorders_fwhm</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.physics.winger_seitz_radii.html">winger_seitz_radii</a><ul>
@@ -746,6 +1186,69 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.potentials.potentials.html">potentials</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.potentials.potentials.Potential.html">Potential</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.potentials.potentials.PotentialFileChanged.html">ase2sprkkr.potentials.potentials.PotentialFileChanged</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.profiles.html">profiles</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.profiles._external_warning_stacklevel.html">_external_warning_stacklevel</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.profiles._external_warning_stacklevel.html#ase2sprkkr.profiles._external_warning_stacklevel"><code class="docutils literal notranslate"><span class="pre">_external_warning_stacklevel()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.profiles.ase_command_profile_values.html">ase_command_profile_values</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.profiles.ase_command_profile_values.html#ase2sprkkr.profiles.ase_command_profile_values"><code class="docutils literal notranslate"><span class="pre">ase_command_profile_values()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.profiles.ASEProfile.html">ASEProfile</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.profiles.ASEProfile.html#ase2sprkkr.profiles.ASEProfile"><code class="docutils literal notranslate"><span class="pre">ASEProfile</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.profiles.LegacyProfile.html">LegacyProfile</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.profiles.LegacyProfile.html#ase2sprkkr.profiles.LegacyProfile"><code class="docutils literal notranslate"><span class="pre">LegacyProfile</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.profiles.ProfilesConfigurationContainer.html">ProfilesConfigurationContainer</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.profiles.ProfilesConfigurationContainer.html#ase2sprkkr.profiles.ProfilesConfigurationContainer"><code class="docutils literal notranslate"><span class="pre">ProfilesConfigurationContainer</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.profiles.ReadOnlyProfileValue.html">ReadOnlyProfileValue</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.profiles.ReadOnlyProfileValue.html#ase2sprkkr.profiles.ReadOnlyProfileValue"><code class="docutils literal notranslate"><span class="pre">ReadOnlyProfileValue</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.result_files.html">result_files</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.result_files.definition_registry.html">definition_registry</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.result_files.definition_registry.ResultFileDefinitionRegistry.html">ResultFileDefinitionRegistry</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.result_files.definitions.html">definitions</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.result_files.definitions.bsf.html">bsf</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.result_files.definitions.dos.html">dos</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.result_files.definitions.jxc.html">jxc</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.result_files.definitions.rat.html">rat</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.result_files.definitions.sfn.html">sfn</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.result_files.definitions.spc.html">spc</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.result_files.output_files.html">output_files</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.result_files.result_files.html">result_files</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.result_files.result_files.Arithmetic.html">Arithmetic</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.result_files.result_files.CommonResultFile.html">CommonResultFile</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.result_files.result_files.ResultFile.html">ResultFile</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.result_files.result_files.UnknownDataValue.html">UnknownDataValue</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.result_files.result_files_definitions.html">result_files_definitions</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.result_files.result_files_definitions.create_result_file_definition.html">create_result_file_definition</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.result_files.result_files_definitions.result_file_header.html">result_file_header</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.result_files.result_files_definitions.BlankSeparator.html">BlankSeparator</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.result_files.result_files_definitions.ResultFileDefinition.html">ResultFileDefinition</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.result_files.result_files_definitions.ResultFileSection.html">ResultFileSection</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.result_files.result_files_definitions.ResultFileSectionDefinition.html">ResultFileSectionDefinition</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.result_files.result_files_definitions.ResultFileValueDefinition.html">ResultFileValueDefinition</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.result_files.result_files_definitions.Separator.html">Separator</a></li>
 </ul>
 </li>
 </ul>
@@ -767,8 +1270,6 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.calculator.html">calculator</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.sprkkr.calculator.html#module-calculator">Module calculator</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.sprkkr.calculator.FilenameTemplator.html">FilenameTemplator</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.sprkkr.calculator.SPRKKR.html">SPRKKR</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.configuration.html">configuration</a><ul>
@@ -798,6 +1299,19 @@
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.occupations.html">occupations</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.sprkkr.occupations.Occupation.html">Occupation</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.sprkkr.occupations.SiteOccupation.html">SiteOccupation</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.profile.html">profile</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.sprkkr.profile._configured_profile.html">_configured_profile</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.sprkkr.profile._normalize_mpi.html">_normalize_mpi</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.sprkkr.profile._profile_value.html">_profile_value</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.sprkkr.profile._shell_argv.html">_shell_argv</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.sprkkr.profile.create_executor_from_profile.html">create_executor_from_profile</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.sprkkr.profile.executor_from_profile.html">executor_from_profile</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.sprkkr.profile.profile_from_ase_command.html">profile_from_ase_command</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.sprkkr.profile.resolve_sprkkr_profile.html">resolve_sprkkr_profile</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.sprkkr.profile.LaunchParameters.html">LaunchParameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.sprkkr.profile.SPRKKRProfile.html">SPRKKRProfile</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.radial.html">radial</a><ul>
@@ -868,6 +1382,7 @@
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.tools.commands.k_path.html">k_path</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.tools.commands.nomad.html">nomad</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.tools.commands.plot.html">plot</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.tools.commands.remote.html">remote</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.tools.commands.run.html">run</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.tools.commands.shell.html">shell</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.tools.commands.show_structure.html">show_structure</a></li>

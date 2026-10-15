@@ -16,8 +16,8 @@
       <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
-      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
@@ -81,6 +81,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../../ase2sprkkr.html">ase2sprkkr</a></li>
       <li class="breadcrumb-item active">ase2sprkkr.examples.A09_EmptySpheres.empty_spheres</li>
       <li class="wy-breadcrumbs-aside">
       </li>
@@ -91,7 +92,7 @@
            <div itemprop="articleBody">
              
   <h1>Source code for ase2sprkkr.examples.A09_EmptySpheres.empty_spheres</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Add empty spheres to open diamond Si for an atomic-sphere calculation.&quot;&quot;&quot;</span>
+<span></span><span class="sd">"""Add empty spheres to open diamond Si for an atomic-sphere calculation."""</span>
 
 
 <div class="viewcode-block" id="main">
@@ -102,33 +103,33 @@
 
     <span class="c1"># Diamond Si has large interstitial voids.  It is therefore a natural</span>
     <span class="c1"># example of a structure whose ASA basis benefits from empty spheres.</span>
-    <span class="n">silicon</span> <span class="o">=</span> <span class="n">bulk</span><span class="p">(</span><span class="s2">&quot;Si&quot;</span><span class="p">,</span> <span class="s2">&quot;diamond&quot;</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="mf">5.43</span><span class="p">)</span>
+    <span class="n">silicon</span> <span class="o">=</span> <span class="n">bulk</span><span class="p">(</span><span class="s2">"Si"</span><span class="p">,</span> <span class="s2">"diamond"</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="mf">5.43</span><span class="p">)</span>
     <span class="n">calculator</span> <span class="o">=</span> <span class="n">SPRKKR</span><span class="p">(</span><span class="n">atoms</span><span class="o">=</span><span class="n">silicon</span><span class="p">)</span>
 
     <span class="c1"># The simplest form asks ASE2SPRKKR to choose all settings automatically:</span>
-    <span class="c1"># calculator.save_input(potential_file=&quot;Si.pot&quot;, empty_spheres=True)</span>
+    <span class="c1"># calculator.save_input(potential_file="Si.pot", empty_spheres=True)</span>
 
     <span class="c1"># A two-item tuple limits the permitted empty-sphere radii:</span>
     <span class="c1"># calculator.save_input(</span>
-    <span class="c1">#     potential_file=&quot;Si.pot&quot;,</span>
+    <span class="c1">#     potential_file="Si.pot",</span>
     <span class="c1">#     empty_spheres=(0.2, 2.0),</span>
     <span class="c1"># )</span>
 
     <span class="c1"># A dictionary exposes the complete set of useful tuning parameters.  This</span>
     <span class="c1"># example only writes the input, so no SPR-KKR executable is launched.</span>
     <span class="n">calculator</span><span class="o">.</span><span class="n">save_input</span><span class="p">(</span>
-        <span class="n">potential_file</span><span class="o">=</span><span class="s2">&quot;Si.pot&quot;</span><span class="p">,</span>
+        <span class="n">potential_file</span><span class="o">=</span><span class="s2">"Si.pot"</span><span class="p">,</span>
         <span class="n">empty_spheres</span><span class="o">=</span><span class="p">{</span>
-            <span class="s2">&quot;min_radius&quot;</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">,</span>
-            <span class="s2">&quot;max_radius&quot;</span><span class="p">:</span> <span class="mf">2.0</span><span class="p">,</span>
-            <span class="s2">&quot;max_spheres&quot;</span><span class="p">:</span> <span class="mi">300</span><span class="p">,</span>
-            <span class="s2">&quot;verbose&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">"min_radius"</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">,</span>
+            <span class="s2">"max_radius"</span><span class="p">:</span> <span class="mf">2.0</span><span class="p">,</span>
+            <span class="s2">"max_spheres"</span><span class="p">:</span> <span class="mi">300</span><span class="p">,</span>
+            <span class="s2">"verbose"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
         <span class="p">},</span>
     <span class="p">)</span></div>
 
 
 
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
     <span class="n">main</span><span class="p">()</span>
 </pre></div>
 

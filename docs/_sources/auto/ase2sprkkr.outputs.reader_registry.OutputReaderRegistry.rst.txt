@@ -1,0 +1,36 @@
+OutputReaderRegistry
+====================
+
+
+.. currentmodule:: ase2sprkkr.outputs.reader_registry
+
+.. autoclass:: OutputReaderRegistry
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.outputs.reader_registry.OutputReaderRegistry
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

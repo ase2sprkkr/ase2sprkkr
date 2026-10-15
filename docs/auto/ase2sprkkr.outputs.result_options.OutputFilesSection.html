@@ -17,8 +17,8 @@
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../_static/documentation_options.js?v=5929fcd5"></script>
-      <script src="../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -68,26 +68,32 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.promote_ase_atoms.html">promote_ase_atoms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.__getattr__.html">__getattr__</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.common.html">common</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration.html">configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration_migration.html">configuration_migration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration_yaml.html">configuration_yaml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.conftest.html">conftest</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.examples.html">examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.execution.html">execution</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.gui.html">gui</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.input_parameters.html">input_parameters</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.output_files.html">output_files</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="ase2sprkkr.outputs.html">outputs</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.outputs.output_definitions.html">output_definitions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.outputs.persistent.html">persistent</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.outputs.reader_registry.html">reader_registry</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.outputs.readers.html">readers</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="ase2sprkkr.outputs.result_options.html">result_options</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.outputs.result_options.create_files_section.html">create_files_section</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.outputs.result_options.create_output_section.html">create_output_section</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.outputs.result_options.generated_output.html">generated_output</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.outputs.result_options.DataOutputOption.html">DataOutputOption</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.outputs.result_options.OutputFileDefinition.html">OutputFileDefinition</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.outputs.result_options.OutputFileOption.html">OutputFileOption</a></li>
 <li class="toctree-l4 current"><a class="current reference internal" href="#">OutputFilesSection</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.outputs.result_options.OutputOption.html">OutputOption</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.outputs.result_options.ResultFileDefinition.html">ResultFileDefinition</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.outputs.sprkkr_output_reader.html">sprkkr_output_reader</a></li>
@@ -96,6 +102,8 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.physics.html">physics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.potentials.html">potentials</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.profiles.html">profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.result_files.html">result_files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.sprkkr.html">sprkkr</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.tools.html">tools</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.version.html">version</a></li>
@@ -134,17 +142,29 @@
 <h1>OutputFilesSection<a class="headerlink" href="#outputfilessection" title="Link to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="ase2sprkkr.outputs.result_options.OutputFilesSection">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.outputs.result_options.</span></span><span class="sig-name descname"><span class="pre">OutputFilesSection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">definition</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">container</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/outputs/result_options.html#OutputFilesSection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.outputs.result_options.OutputFilesSection" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.outputs.result_options.</span></span><span class="sig-name descname"><span class="pre">OutputFilesSection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">definition</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">container</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/outputs/result_options.html#OutputFilesSection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.outputs.result_options.OutputFilesSection" title="Link to this definition"></a></dt>
 <dd><p class="rubric">Class hierarchy</p>
-<div class="graphviz"><img src="../_images/inheritance-bee04797f41845ccec9399d5278c79cddc098fcb.png" alt="Inheritance diagram of ase2sprkkr.outputs.result_options.OutputFilesSection" usemap="#inheritanceaa27041dd8" class="inheritance graphviz" /></div>
-<map id="inheritanceaa27041dd8" name="inheritanceaa27041dd8">
-<area shape="rect" id="node1" href="ase2sprkkr.common.configuration.Configuration.html#ase2sprkkr.common.configuration.Configuration" target="_top" title="The common base class for all configurations values and containers. I.e." alt="" coords="3,3,108,18"/>
-<area shape="rect" id="node2" href="ase2sprkkr.common.configuration_containers.BaseConfigurationContainer.html#ase2sprkkr.common.configuration_containers.BaseConfigurationContainer" target="_top" title="Configuration container, that holds members, either in classical way" alt="" coords="124,3,320,18"/>
-<area shape="rect" id="node4" href="ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.configuration_containers.ConfigurationContainer" target="_top" title="A container for configuration (problem&#45;definition) options and/or sections." alt="" coords="336,3,515,18"/>
-<area shape="rect" id="node3" href="ase2sprkkr.common.configuration_containers.BaseSection.html#ase2sprkkr.common.configuration_containers.BaseSection" target="_top" title="A section of SPRKKR configuration &#45; i.e. part of the configuration file." alt="" coords="531,3,673,18"/>
-<area shape="rect" id="node5" href="ase2sprkkr.common.configuration_containers.Section.html#ase2sprkkr.common.configuration_containers.Section" target="_top" title="A standard section of a task or potential (whose content is predefinded by SectionDefinition)" alt="" coords="689,3,813,18"/>
-<area shape="rect" id="node6" href="#ase2sprkkr.outputs.result_options.OutputFilesSection" target="_top" title="result_options.OutputFilesSection" alt="" coords="829,3,957,18"/>
-</map><div class="line-block">
+digraph inheritanceaa27041dd8 {
+bgcolor=transparent;
+fontsize=14;
+rankdir=LR;
+ranksep=0.3;
+size=&quot;10.0, 10.0&quot;;
+  &quot;abc.ABC&quot; [fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,tooltip=&quot;Helper class that provides a standard way to create an ABC using&quot;];
+  &quot;configuration.Configuration&quot; [URL=&quot;ase2sprkkr.common.configuration.Configuration.html#ase2sprkkr.common.configuration.Configuration&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;The common base class for all configurations values and containers. I.e.&quot;];
+  &quot;configuration_containers.BaseConfigurationContainer&quot; [URL=&quot;ase2sprkkr.common.configuration_containers.BaseConfigurationContainer.html#ase2sprkkr.common.configuration_containers.BaseConfigurationContainer&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;Configuration container, that holds members, either in classical way&quot;];
+  &quot;configuration.Configuration&quot; -&gt; &quot;configuration_containers.BaseConfigurationContainer&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;abc.ABC&quot; -&gt; &quot;configuration_containers.BaseConfigurationContainer&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;configuration_containers.BaseSection&quot; [URL=&quot;ase2sprkkr.common.configuration_containers.BaseSection.html#ase2sprkkr.common.configuration_containers.BaseSection&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;A section of SPRKKR configuration - i.e. part of the configuration file.&quot;];
+  &quot;configuration_containers.ConfigurationContainer&quot; -&gt; &quot;configuration_containers.BaseSection&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;configuration_containers.ConfigurationContainer&quot; [URL=&quot;ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.configuration_containers.ConfigurationContainer&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;A container for configuration (problem-definition) options and/or sections.&quot;];
+  &quot;configuration_containers.BaseConfigurationContainer&quot; -&gt; &quot;configuration_containers.ConfigurationContainer&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;configuration_containers.Section&quot; [URL=&quot;ase2sprkkr.common.configuration_containers.Section.html#ase2sprkkr.common.configuration_containers.Section&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;A standard section of a task or potential (whose content is predefinded by SectionDefinition)&quot;];
+  &quot;configuration_containers.BaseSection&quot; -&gt; &quot;configuration_containers.Section&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;result_options.OutputFilesSection&quot; [URL=&quot;#ase2sprkkr.outputs.result_options.OutputFilesSection&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;];
+  &quot;configuration_containers.Section&quot; -&gt; &quot;result_options.OutputFilesSection&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+}
+<div class="line-block">
 <div class="line"><br /></div>
 </div>
 <p class="rubric">Constructor</p>
@@ -164,6 +184,11 @@
 <span class="sig-name descname"><span class="pre">set_file_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_type</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/outputs/result_options.html#OutputFilesSection.set_file_type"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.outputs.result_options.OutputFilesSection.set_file_type" title="Link to this definition"></a></dt>
 <dd><p>Set the parser type for an already registered output file.</p>
 </dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ase2sprkkr.outputs.result_options.OutputFilesSection._abc_impl">
+<span class="sig-name descname"><span class="pre">_abc_impl</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;_abc._abc_data</span> <span class="pre">object&gt;</span></span><a class="headerlink" href="#ase2sprkkr.outputs.result_options.OutputFilesSection._abc_impl" title="Link to this definition"></a></dt>
+<dd></dd></dl>
 
 </dd></dl>
 

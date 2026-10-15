@@ -17,8 +17,8 @@
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="_static/documentation_options.js?v=5929fcd5"></script>
-      <script src="_static/doctools.js?v=9bcbadda"></script>
-      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -51,8 +51,13 @@
 <li class="toctree-l1"><a class="reference internal" href="how-to-install.html">More about the package installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="philosophy.html">Philosophy of the package (for developers)</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Changelog</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#version-3-5">Version 3.5</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#version-3-6-0">Version 3.6.0</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#internals">Internals</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#version-3-5-1">Version 3.5.1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#version-3-5">Version 3.5</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id1">Internals</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#version-3-4">Version 3.4</a></li>
@@ -67,31 +72,31 @@
 <li class="toctree-l2"><a class="reference internal" href="#version-3-1-0-beta">Version 3.1.0-beta</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#version-3-0-2-beta">Version 3.0.2-beta</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#version-3-0-0-beta">Version 3.0.0-beta</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#id1">User interface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id2">User interface</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#tools">Tools</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#id2">Internals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id3">Internals</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#refactoring">Refactoring</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#version-2-2-1">Version 2.2.1</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#version-2-2-0-beta">Version 2.2.0-beta</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#id3">Internals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id4">Internals</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#version-2-1-1">Version 2.1.1</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#id4">User interface</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#id5">Internals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id5">User interface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id6">Internals</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#version-2-0-4">Version 2.0.4</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#version-2-0-1">Version 2.0.1</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#version-2-0-0-beta2">Version 2.0.0-beta2</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#id6">User interface</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#id7">Internals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id7">User interface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id8">Internals</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#version-2-0-0-beta1">Version 2.0.0-beta1</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#id8">User interface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id9">User interface</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#architecture-changes">Architecture changes</a></li>
 </ul>
 </li>
@@ -143,6 +148,43 @@
              
   <section id="changelog">
 <h1>Changelog<a class="headerlink" href="#changelog" title="Link to this heading"></a></h1>
+<section id="version-3-6-0">
+<h2>Version 3.6.0<a class="headerlink" href="#version-3-6-0" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>Structured SPR-KKR result parsers are now exposed as <code class="docutils literal notranslate"><span class="pre">ResultFile</span></code> from
+<code class="docutils literal notranslate"><span class="pre">ase2sprkkr</span></code> and <code class="docutils literal notranslate"><span class="pre">ase2sprkkr.result_files</span></code>. The top-level
+<code class="docutils literal notranslate"><span class="pre">OutputFile</span></code> name remains as a deprecated compatibility alias.</p></li>
+<li><p>SFN files readeding/writing/plotting</p></li>
+<li><p>SFNFIL value for explicit setting of SFN file</p></li>
+<li><p>Info, whether SFN is generated by SPR-KKR</p></li>
+<li><p>SCF parsing now supports runs without EMIN (thanks to Chriss Woodgate)</p></li>
+</ul>
+<section id="internals">
+<h3>Internals<a class="headerlink" href="#internals" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Refactoring of repeated Values to allow more general usage</p></li>
+<li><p>Refactoring of validation to allow cross-section validation (e.g. lengths of arrays),
+validation is now fully transactional</p></li>
+<li><p>Numpy arrays with a given number of lines</p></li>
+</ul>
+</section>
+</section>
+<section id="version-3-5-1">
+<h2>Version 3.5.1<a class="headerlink" href="#version-3-5-1" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>The base class of SPRKKR calculator is now BaseCalculator</p></li>
+<li><p>Added support for ANDERSON mixing, BSF task improved</p></li>
+<li><p>Merged-BSF task support
+* Conditionaly numbered value
+* Conditional length item in grammar
+* Some checks are done on tree level to allow cross-section conditions</p></li>
+<li><p>Improvements for GUI:
+* ResultValues are implemented as Options, to reuse existing functionality in GUI
+* Better result files handling
+* Files in results provide both relative and absolute path</p></li>
+<li><p>A better debugging in <cite>ase2sprkkr shell</cite></p></li>
+</ul>
+</section>
 <section id="version-3-5">
 <h2>Version 3.5<a class="headerlink" href="#version-3-5" title="Link to this heading"></a></h2>
 <ul class="simple">
@@ -166,8 +208,8 @@
 <li><p>Examples from ASE2SPRKKR article were added</p></li>
 <li><p>Runtime dependencies were revisited</p></li>
 </ul>
-<section id="internals">
-<h3>Internals<a class="headerlink" href="#internals" title="Link to this heading"></a></h3>
+<section id="id1">
+<h3>Internals<a class="headerlink" href="#id1" title="Link to this heading"></a></h3>
 <ul class="simple">
 <li><p>Adoption of Ruff: code formatting and cleanup</p></li>
 <li><p>Picklability of Atom objects (for better ase.view compatibility)</p></li>
@@ -274,8 +316,8 @@
 </section>
 <section id="version-3-0-0-beta">
 <h2>Version 3.0.0-beta<a class="headerlink" href="#version-3-0-0-beta" title="Link to this heading"></a></h2>
-<section id="id1">
-<h3>User interface<a class="headerlink" href="#id1" title="Link to this heading"></a></h3>
+<section id="id2">
+<h3>User interface<a class="headerlink" href="#id2" title="Link to this heading"></a></h3>
 <ul class="simple">
 <li><p>Empty spheres finding has been added</p></li>
 <li><p>SiteType class added: sites are now always distinct, site_types can be shared between sites
@@ -305,8 +347,8 @@ due to symmetry</p></li>
 <li><p>Various tools and plotting fixies</p></li>
 </ul>
 </section>
-<section id="id2">
-<h3>Internals<a class="headerlink" href="#id2" title="Link to this heading"></a></h3>
+<section id="id3">
+<h3>Internals<a class="headerlink" href="#id3" title="Link to this heading"></a></h3>
 <ul class="simple">
 <li><p>NumpyArray grammar type improved</p></li>
 <li><p>Some fixies and code lininting</p></li>
@@ -341,8 +383,8 @@ due to symmetry</p></li>
 <li><p>Plotting improved</p></li>
 <li><p>Better help values for output files</p></li>
 </ul>
-<section id="id3">
-<h3>Internals<a class="headerlink" href="#id3" title="Link to this heading"></a></h3>
+<section id="id4">
+<h3>Internals<a class="headerlink" href="#id4" title="Link to this heading"></a></h3>
 <ul class="simple">
 <li><p>Generated type improvement</p></li>
 <li><p>Switch grammar element: format of a parsed file can depend on the previously parsed values</p></li>
@@ -354,8 +396,8 @@ due to symmetry</p></li>
 </section>
 <section id="version-2-1-1">
 <h2>Version 2.1.1<a class="headerlink" href="#version-2-1-1" title="Link to this heading"></a></h2>
-<section id="id4">
-<h3>User interface<a class="headerlink" href="#id4" title="Link to this heading"></a></h3>
+<section id="id5">
+<h3>User interface<a class="headerlink" href="#id5" title="Link to this heading"></a></h3>
 <ul class="simple">
 <li><p>ARPES and SCF task definition improved</p></li>
 <li><p>ARPES SPC results can be parsed and plotted</p></li>
@@ -371,8 +413,8 @@ due to symmetry</p></li>
 <li><p>Some minor tweaks and corrections of input parameters</p></li>
 </ul>
 </section>
-<section id="id5">
-<h3>Internals<a class="headerlink" href="#id5" title="Link to this heading"></a></h3>
+<section id="id6">
+<h3>Internals<a class="headerlink" href="#id6" title="Link to this heading"></a></h3>
 <ul class="simple">
 <li><p>GrammmarTypes refactorized (splitted to more files)</p></li>
 <li><p>NumpyArray and RestOfTheFile grammar types for output files</p></li>
@@ -397,8 +439,8 @@ due to symmetry</p></li>
 </section>
 <section id="version-2-0-0-beta2">
 <h2>Version 2.0.0-beta2<a class="headerlink" href="#version-2-0-0-beta2" title="Link to this heading"></a></h2>
-<section id="id6">
-<h3>User interface<a class="headerlink" href="#id6" title="Link to this heading"></a></h3>
+<section id="id7">
+<h3>User interface<a class="headerlink" href="#id7" title="Link to this heading"></a></h3>
 <ul class="simple">
 <li><p>es_finder integration for empty spheres finding</p></li>
 <li><p>Support for 2D problems</p></li>
@@ -407,8 +449,8 @@ due to symmetry</p></li>
 <li><p>calculate(…, directory=False) runs the calculation in a temporary directory</p></li>
 </ul>
 </section>
-<section id="id7">
-<h3>Internals<a class="headerlink" href="#id7" title="Link to this heading"></a></h3>
+<section id="id8">
+<h3>Internals<a class="headerlink" href="#id8" title="Link to this heading"></a></h3>
 <ul class="simple">
 <li><p>Sections validation</p></li>
 <li><p>LatticeData class refactored</p></li>
@@ -418,8 +460,8 @@ due to symmetry</p></li>
 </section>
 <section id="version-2-0-0-beta1">
 <h2>Version 2.0.0-beta1<a class="headerlink" href="#version-2-0-0-beta1" title="Link to this heading"></a></h2>
-<section id="id8">
-<h3>User interface<a class="headerlink" href="#id8" title="Link to this heading"></a></h3>
+<section id="id9">
+<h3>User interface<a class="headerlink" href="#id9" title="Link to this heading"></a></h3>
 <ul class="simple">
 <li><p>Runtime documentation available.</p></li>
 <li><p>Runtime documentation is added to the docstring and to the generated documentation.

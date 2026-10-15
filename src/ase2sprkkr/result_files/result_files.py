@@ -21,8 +21,8 @@ class UnknownDataValue(ConfigurationValue):
         return out
 
 
-class OutputFile(ConfigurationFile):
-    """Objects of this class holds datas of an output file"""
+class ResultFile(ConfigurationFile):
+    """Objects of this class holds datas of an result file"""
 
     plot_parameters = {}
     additional_actions = ()
@@ -62,7 +62,7 @@ class OutputFile(ConfigurationFile):
     @cached_property
     def potential_filename(self):
         if not getattr(self, "_filename", None):
-            raise ValueError("The output file has no filename. Set the potential filename manually.")
+            raise ValueError("The result file has no filename. Set the potential filename manually.")
 
         path = Path(self._filename)
         directory = path.parent
@@ -107,23 +107,23 @@ class OutputFile(ConfigurationFile):
         return self.potential.atoms
 
     @cached_class_property
-    def unknown_output_file_definition(cls):
-        """a definition of unwnown (not yet known) output file that can hold any data in the rest
+    def unknown_result_file_definition(cls):
+        """a definition of unwnown (not yet known) result file that can hold any data in the rest
         of the file"""
-        V = output_files_definitions.OutputFileValueDefinition
-        return output_files_definitions.create_output_file_definition(
+        V = result_files_definitions.ResultFileValueDefinition
+        return result_files_definitions.create_result_file_definition(
             V("KEYWORD", str), [V("DATA", RestOfTheFile(), name_in_grammar=False, result_class=UnknownDataValue)]
         )
 
     @cached_class_property
     def definitions(cls):
-        """Return all known definitions of the SPR-KKR output files."""
+        """Return all known definitions of the SPR-KKR result files."""
         # Discovery imports individual definition modules. Defer construction
-        # until OutputFile and output_files_definitions are fully initialized so
+        # until ResultFile and result_files_definitions are fully initialized so
         # definition modules can safely import this class.
-        from .definition_registry import output_file_definition_registry
+        from .definition_registry import result_file_definition_registry
 
-        return output_file_definition_registry.by_extension()
+        return result_file_definition_registry.by_extension()
 
     @classmethod
     def definition(cls, self):
@@ -139,8 +139,8 @@ class OutputFile(ConfigurationFile):
         potential=None,
     ):
         """
-        Read SPRKKR output file (DOS, BSF....). The type of content of the
-        output file is guessed from the content, however you can get hint what
+        Read SPRKKR result file (DOS, BSF....). The type of content of the
+        result file is guessed from the content, however you can get hint what
         to try first or force to read only certain file type(s).
 
         Parameters
@@ -149,15 +149,15 @@ class OutputFile(ConfigurationFile):
           The file to read
 
         first_try
-          List of output file types, that can be read first. If it is None, it is guessed
+          List of result file types, that can be read first. If it is None, it is guessed
           from the file extension.
 
         try_only
-          List of the output file types, that can be read.
+          List of the result file types, that can be read.
           None mean read any known file type.
 
         unknown
-          If True, at last, an unknown output file is readed: such file has just
+          If True, at last, an unknown result file is readed: such file has just
           parsed header and then one property that holds the rest of the file as
           text.
           If False, raise an exception if no known (and allowed) file type is
@@ -166,7 +166,7 @@ class OutputFile(ConfigurationFile):
 
         potential
           A :class:`Potential` or its filename. If omitted, it is looked up
-          lazily from the output filename when it is needed.
+          lazily from the result filename when it is needed.
         """
         fname = filename
         if hasattr(filename, "name"):
@@ -227,7 +227,7 @@ class OutputFile(ConfigurationFile):
             unknown = try_only is None
         if unknown:
             try:
-                return cls.unknown_output_file_definition.read_from_file(
+                return cls.unknown_result_file_definition.read_from_file(
                     filename, potential=potential
                 )
             except pp.ParseBaseException as e:
@@ -235,7 +235,7 @@ class OutputFile(ConfigurationFile):
         raise (first or last or ValueError(f"File {filename} is not recognized as any known file type"))
 
 
-class CommonOutputFile(OutputFile):
+class CommonResultFile(ResultFile):
     def n_atoms(self):
         return len(self.ORBITALS)
 
@@ -248,7 +248,7 @@ class CommonOutputFile(OutputFile):
         for i, t in enumerate(self.TYPES):
             if t["TXT_T"] == type:
                 return i
-        raise ValueError(f"There is no {type} atom in the output file")
+        raise ValueError(f"There is no {type} atom in the result file")
 
     def n_orbitals(self, type):
         type = self.site_type_index(type)
@@ -316,4 +316,4 @@ class Arithmetic:
         return self
 
 
-from . import output_files_definitions  # NOQA: E402
+from . import result_files_definitions  # NOQA: E402

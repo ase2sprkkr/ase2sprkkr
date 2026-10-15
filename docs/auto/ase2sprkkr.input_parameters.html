@@ -17,8 +17,8 @@
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../_static/documentation_options.js?v=5929fcd5"></script>
-      <script src="../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -68,22 +68,30 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.promote_ase_atoms.html">promote_ase_atoms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.__getattr__.html">__getattr__</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.common.html">common</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration.html">configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration_migration.html">configuration_migration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration_yaml.html">configuration_yaml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.conftest.html">conftest</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.examples.html">examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.execution.html">execution</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.gui.html">gui</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">input_parameters</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.html">definitions</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.input_parameters.input_parameters.html">input_parameters</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.input_parameters.input_parameters_definitions.html">input_parameters_definitions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.input_parameters.task_definition.html">task_definition</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.input_parameters.tasks.html">tasks</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.output_files.html">output_files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.outputs.html">outputs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.physics.html">physics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.potentials.html">potentials</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.profiles.html">profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.result_files.html">result_files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.sprkkr.html">sprkkr</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.tools.html">tools</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.version.html">version</a></li>
@@ -125,13 +133,19 @@
 <table class="autosummary longtable docutils align-default">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.html#module-ase2sprkkr.input_parameters.definitions" title="ase2sprkkr.input_parameters.definitions"><code class="xref py py-obj docutils literal notranslate"><span class="pre">definitions</span></code></a></p></td>
-<td><p>sprkkr.input_parameters.definitions - definitions of InputParameterss: definition of configurtion options and their default values for SPR-KKR input_parameters.</p></td>
+<td><p>Input-parameter schema definitions.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.input_parameters.html#module-ase2sprkkr.input_parameters.input_parameters" title="ase2sprkkr.input_parameters.input_parameters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">input_parameters</span></code></a></p></td>
-<td><p>Containers for configuration parameters of SPR-KKR task.</p></td>
+<td><p>Containers for configuration parameters of SPR-KKR tasks.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.input_parameters_definitions.html#module-ase2sprkkr.input_parameters.input_parameters_definitions" title="ase2sprkkr.input_parameters.input_parameters_definitions"><code class="xref py py-obj docutils literal notranslate"><span class="pre">input_parameters_definitions</span></code></a></p></td>
-<td><p>This file contains the classes for definitions of InputParameterss: the list of sections and their allowed (or standard) options and their value formats.</p></td>
+<td><p>Definitions of SPR-KKR input-parameter file formats.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.task_definition.html#module-ase2sprkkr.input_parameters.task_definition" title="ase2sprkkr.input_parameters.task_definition"><code class="xref py py-obj docutils literal notranslate"><span class="pre">task_definition</span></code></a></p></td>
+<td><p>Task-level metadata and registries for SPR-KKR calculations.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.tasks.html#module-ase2sprkkr.input_parameters.tasks" title="ase2sprkkr.input_parameters.tasks"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tasks</span></code></a></p></td>
+<td><p>Explicit task definitions for tasks sharing input schemas.</p></td>
 </tr>
 </tbody>
 </table>

@@ -17,8 +17,8 @@
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../_static/documentation_options.js?v=5929fcd5"></script>
-      <script src="../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -68,11 +68,16 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.promote_ase_atoms.html">promote_ase_atoms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.__getattr__.html">__getattr__</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.common.html">common</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration.html">configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration_migration.html">configuration_migration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration_yaml.html">configuration_yaml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.conftest.html">conftest</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.examples.html">examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.execution.html">execution</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.gui.html">gui</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="ase2sprkkr.input_parameters.html">input_parameters</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.html">definitions</a></li>
@@ -83,12 +88,15 @@
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.input_parameters_definitions.InputValueDefinition.html">InputValueDefinition</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.input_parameters.task_definition.html">task_definition</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.input_parameters.tasks.html">tasks</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.output_files.html">output_files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.outputs.html">outputs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.physics.html">physics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.potentials.html">potentials</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.profiles.html">profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.result_files.html">result_files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.sprkkr.html">sprkkr</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.tools.html">tools</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.version.html">version</a></li>
@@ -126,40 +134,52 @@
 <h1>input_parameters_definitions<a class="headerlink" href="#input-parameters-definitions" title="Link to this heading"></a></h1>
 <p>Full name: <strong>ase2sprkkr.input_parameters.input_parameters_definitions</strong></p>
 <p class="rubric">Module class hierarchy</p>
-<div class="graphviz"><img src="../_images/inheritance-1bfb28b40e047f51c60cf76be67a3acccaa72b39.png" alt="Inheritance diagram of ase2sprkkr.input_parameters.input_parameters_definitions.InputParametersDefinition, ase2sprkkr.input_parameters.input_parameters_definitions.InputSectionDefinition, ase2sprkkr.input_parameters.input_parameters_definitions.InputValueDefinition" usemap="#inheritance728eb39cfa" class="inheritance graphviz" /></div>
-<map id="inheritance728eb39cfa" name="inheritance728eb39cfa">
-<area shape="rect" id="node1" href="ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.common.configuration_definitions.BaseDefinition" target="_top" title="This class is a member of definition of configuration, that can be both" alt="" coords="4,68,99,91"/>
-<area shape="rect" id="node9" href="ase2sprkkr.common.configuration_definitions.RealItemDefinition.html#ase2sprkkr.common.configuration_definitions.RealItemDefinition" target="_top" title="A base class for a configuration definition, either of an option, or of a container." alt="" coords="123,68,239,91"/>
-<area shape="rect" id="node2" href="ase2sprkkr.sprkkr.configuration.ConfigurationFileDefinition.html#ase2sprkkr.sprkkr.configuration.ConfigurationFileDefinition" target="_top" title="The class for the configuration files (the root nodes of the configuration)." alt="" coords="609,4,766,27"/>
-<area shape="rect" id="node10" href="ase2sprkkr.input_parameters.input_parameters_definitions.InputParametersDefinition.html#ase2sprkkr.input_parameters.input_parameters_definitions.InputParametersDefinition" target="_top" title="This class describes the format of a task file." alt="" coords="800,4,956,27"/>
-<area shape="rect" id="node3" href="ase2sprkkr.common.container_definitions.ConfigurationRootDefinition.html#ase2sprkkr.common.container_definitions.ConfigurationRootDefinition" target="_top" title="From this class, the definition of the format of a whole configuration file should be derived." alt="" coords="409,4,572,27"/>
-<area shape="rect" id="node4" href="ase2sprkkr.common.container_definitions.ContainerDefinition.html#ase2sprkkr.common.container_definitions.ContainerDefinition" target="_top" title="Base class for a definition (of contained data, format, etc)" alt="" coords="263,47,382,69"/>
-<area shape="rect" id="node6" href="ase2sprkkr.common.container_definitions.SectionDefinition.html#ase2sprkkr.common.container_definitions.SectionDefinition" target="_top" title="Base class for definition of the sections in Pot or InputParameters files." alt="" coords="437,47,544,69"/>
-<area shape="rect" id="node5" href="ase2sprkkr.sprkkr.configuration.ConfigurationSectionDefinition.html#ase2sprkkr.sprkkr.configuration.ConfigurationSectionDefinition" target="_top" title="Default class for definitions of SPRKKR configuration files&#39; sections" alt="" coords="598,47,776,69"/>
-<area shape="rect" id="node11" href="ase2sprkkr.input_parameters.input_parameters_definitions.InputSectionDefinition.html#ase2sprkkr.input_parameters.input_parameters_definitions.InputSectionDefinition" target="_top" title="This class describes the format of one" alt="" coords="811,47,945,69"/>
-<area shape="rect" id="node7" href="ase2sprkkr.sprkkr.configuration.ConfigurationValueDefinition.html#ase2sprkkr.sprkkr.configuration.ConfigurationValueDefinition" target="_top" title="Definition o a configuration value, used in SPRKKR configuration file." alt="" coords="406,89,575,111"/>
-<area shape="rect" id="node12" href="ase2sprkkr.input_parameters.input_parameters_definitions.InputValueDefinition.html#ase2sprkkr.input_parameters.input_parameters_definitions.InputValueDefinition" target="_top" title="This class describes the format of one value of" alt="" coords="625,89,750,111"/>
-<area shape="rect" id="node8" href="ase2sprkkr.common.value_definitions.ValueDefinition.html#ase2sprkkr.common.value_definitions.ValueDefinition" target="_top" title="ValueDefinition" alt="" coords="274,89,371,111"/>
-</map><div class="line-block">
+digraph inheritance728eb39cfa {
+bgcolor=transparent;
+fontsize=14;
+rankdir=LR;
+ranksep=0.3;
+size=&quot;10.0, 10.0&quot;;
+  &quot;BaseDefinition&quot; [URL=&quot;ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.common.configuration_definitions.BaseDefinition&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;This class is a member of definition of configuration, that can be both&quot;];
+  &quot;ConfigurationFileDefinition&quot; [URL=&quot;ase2sprkkr.sprkkr.configuration.ConfigurationFileDefinition.html#ase2sprkkr.sprkkr.configuration.ConfigurationFileDefinition&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;The class for the configuration files (the root nodes of the configuration).&quot;];
+  &quot;ConfigurationRootDefinition&quot; -&gt; &quot;ConfigurationFileDefinition&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;ConfigurationRootDefinition&quot; [URL=&quot;ase2sprkkr.common.container_definitions.ConfigurationRootDefinition.html#ase2sprkkr.common.container_definitions.ConfigurationRootDefinition&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;From this class, the definition of the format of a whole configuration file should be derived.&quot;];
+  &quot;ContainerDefinition&quot; -&gt; &quot;ConfigurationRootDefinition&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;ConfigurationSectionDefinition&quot; [URL=&quot;ase2sprkkr.sprkkr.configuration.ConfigurationSectionDefinition.html#ase2sprkkr.sprkkr.configuration.ConfigurationSectionDefinition&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;Default class for definitions of SPRKKR configuration files' sections&quot;];
+  &quot;SectionDefinition&quot; -&gt; &quot;ConfigurationSectionDefinition&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;ConfigurationValueDefinition&quot; [URL=&quot;ase2sprkkr.sprkkr.configuration.ConfigurationValueDefinition.html#ase2sprkkr.sprkkr.configuration.ConfigurationValueDefinition&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;Definition o a configuration value, used in SPRKKR configuration file.&quot;];
+  &quot;ValueDefinition&quot; -&gt; &quot;ConfigurationValueDefinition&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;ContainerDefinition&quot; [URL=&quot;ase2sprkkr.common.container_definitions.ContainerDefinition.html#ase2sprkkr.common.container_definitions.ContainerDefinition&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;Base class for a definition (of contained data, format, etc)&quot;];
+  &quot;RealItemDefinition&quot; -&gt; &quot;ContainerDefinition&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;InputParametersDefinition&quot; [URL=&quot;ase2sprkkr.input_parameters.input_parameters_definitions.InputParametersDefinition.html#ase2sprkkr.input_parameters.input_parameters_definitions.InputParametersDefinition&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;Syntax and parameter semantics of one SPR-KKR input-file schema.&quot;];
+  &quot;ConfigurationFileDefinition&quot; -&gt; &quot;InputParametersDefinition&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;InputSectionDefinition&quot; [URL=&quot;ase2sprkkr.input_parameters.input_parameters_definitions.InputSectionDefinition.html#ase2sprkkr.input_parameters.input_parameters_definitions.InputSectionDefinition&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;];
+  &quot;ConfigurationSectionDefinition&quot; -&gt; &quot;InputSectionDefinition&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;InputValueDefinition&quot; [URL=&quot;ase2sprkkr.input_parameters.input_parameters_definitions.InputValueDefinition.html#ase2sprkkr.input_parameters.input_parameters_definitions.InputValueDefinition&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;];
+  &quot;ConfigurationValueDefinition&quot; -&gt; &quot;InputValueDefinition&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;RealItemDefinition&quot; [URL=&quot;ase2sprkkr.common.configuration_definitions.RealItemDefinition.html#ase2sprkkr.common.configuration_definitions.RealItemDefinition&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;A base class for a configuration definition, either of an option, or of a container.&quot;];
+  &quot;BaseDefinition&quot; -&gt; &quot;RealItemDefinition&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;SectionDefinition&quot; [URL=&quot;ase2sprkkr.common.container_definitions.SectionDefinition.html#ase2sprkkr.common.container_definitions.SectionDefinition&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;Base class for definition of the sections in Pot or InputParameters files.&quot;];
+  &quot;ContainerDefinition&quot; -&gt; &quot;SectionDefinition&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;ValueDefinition&quot; [URL=&quot;ase2sprkkr.common.value_definitions.ValueDefinition.html#ase2sprkkr.common.value_definitions.ValueDefinition&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;];
+  &quot;RealItemDefinition&quot; -&gt; &quot;ValueDefinition&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+}
+<div class="line-block">
 <div class="line"><br /></div>
 </div>
 <p class="rubric">Description</p>
-<p id="module-ase2sprkkr.input_parameters.input_parameters_definitions">This file contains the classes for definitions of InputParameterss:
-the list of sections and their allowed (or standard) options
-and their value formats. InputParameterss and potentials have a simlilar
-structure, so they share common functionalities from
-sprkkr.common.configuration_definitions</p>
+<p id="module-ase2sprkkr.input_parameters.input_parameters_definitions">Definitions of SPR-KKR input-parameter file formats.</p>
 <p class="rubric">Classes</p>
 <table class="autosummary longtable docutils align-default">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.input_parameters_definitions.InputParametersDefinition.html#ase2sprkkr.input_parameters.input_parameters_definitions.InputParametersDefinition" title="ase2sprkkr.input_parameters.input_parameters_definitions.InputParametersDefinition"><code class="xref py py-obj docutils literal notranslate"><span class="pre">InputParametersDefinition</span></code></a>(name[, members, ...])</p></td>
-<td><p>This class describes the format of a task file.</p></td>
+<td><p>Syntax and parameter semantics of one SPR-KKR input-file schema.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.input_parameters_definitions.InputSectionDefinition.html#ase2sprkkr.input_parameters.input_parameters_definitions.InputSectionDefinition" title="ase2sprkkr.input_parameters.input_parameters_definitions.InputSectionDefinition"><code class="xref py py-obj docutils literal notranslate"><span class="pre">InputSectionDefinition</span></code></a>(name[, members, ...])</p></td>
-<td><p>This class describes the format of one value of a task section</p></td>
+<td><p></p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.input_parameters_definitions.InputValueDefinition.html#ase2sprkkr.input_parameters.input_parameters_definitions.InputValueDefinition" title="ase2sprkkr.input_parameters.input_parameters_definitions.InputValueDefinition"><code class="xref py py-obj docutils literal notranslate"><span class="pre">InputValueDefinition</span></code></a>(name[, type, ...])</p></td>
-<td><p>This class describes the format of one value of a task configuration</p></td>
+<td><p></p></td>
 </tr>
 </tbody>
 </table>

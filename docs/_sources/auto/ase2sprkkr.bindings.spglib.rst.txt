@@ -5,6 +5,14 @@ Full name: **ase2sprkkr.bindings.spglib**
 
 
 
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.bindings.spglib._SpglibCompatibilityWrapper 
+      :parts: 1
+
+|
+
+
 .. rubric:: Description
 
 .. automodule:: ase2sprkkr.bindings.spglib
@@ -23,13 +31,20 @@ Full name: **ase2sprkkr.bindings.spglib**
       :template: custom-base-template.rst
    
       spglib_dataset
-      spglib_dataset_wrapper
       tag_sites
    
    
 
 
    
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      _SpglibCompatibilityWrapper
    
    
 

@@ -16,8 +16,8 @@
       <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
-      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
@@ -81,6 +81,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../../ase2sprkkr.html">ase2sprkkr</a></li>
       <li class="breadcrumb-item active">ase2sprkkr.bindings.nomad.nomad_api</li>
       <li class="wy-breadcrumbs-aside">
       </li>
@@ -91,9 +92,9 @@
            <div itemprop="articleBody">
              
   <h1>Source code for ase2sprkkr.bindings.nomad.nomad_api</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;This module contains routines to talk with NOMAD. They are only</span>
+<span></span><span class="sd">"""This module contains routines to talk with NOMAD. They are only</span>
 <span class="sd">slightly modified routines provided by the NOMAD guys.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">ase2sprkkr.common.decorators</span><span class="w"> </span><span class="kn">import</span> <span class="n">add_to_signature</span><span class="p">,</span> <span class="n">cached_class_property</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">wraps</span>
@@ -108,7 +109,7 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">func_with_token</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">token</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="n">token</span> <span class="o">=</span> <span class="n">token</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">token</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">token</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Nomad authentication token not set&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Nomad authentication token not set"</span><span class="p">)</span>
         <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span> <span class="n">token</span><span class="o">=</span><span class="n">token</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">func_with_token</span></div>
@@ -118,11 +119,11 @@
 <div class="viewcode-block" id="NomadApi">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.bindings.nomad.nomad_api.NomadApi.html#ase2sprkkr.bindings.nomad.nomad_api.NomadApi">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">NomadApi</span><span class="p">:</span>
-    <span class="n">default_api_url</span> <span class="o">=</span> <span class="s2">&quot;https://nomad-lab.eu/prod/v1/api/v1/&quot;</span>
+    <span class="n">default_api_url</span> <span class="o">=</span> <span class="s2">"https://nomad-lab.eu/prod/v1/api/v1/"</span>
 
     <span class="nd">@cached_class_property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">requests</span><span class="p">():</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Loading requests lasts for ages&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Loading requests lasts for ages"""</span>
         <span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
 
         <span class="k">return</span> <span class="n">requests</span>
@@ -137,73 +138,73 @@
 <div class="viewcode-block" id="NomadApi.get_authentication_token">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.bindings.nomad.nomad_api.NomadApi.html#ase2sprkkr.bindings.nomad.nomad_api.NomadApi.get_authentication_token">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_authentication_token</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="n">expires</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the token for accessing your NOMAD unpublished uploads remotely&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Get the token for accessing your NOMAD unpublished uploads remotely"""</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">url</span> <span class="o">+</span> <span class="s2">&quot;auth/token&quot;</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="n">password</span><span class="p">),</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">10</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">url</span> <span class="o">+</span> <span class="s2">"auth/token"</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="n">password</span><span class="p">),</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">10</span>
             <span class="p">)</span>
-            <span class="n">token</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;access_token&quot;</span><span class="p">)</span>
+            <span class="n">token</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"access_token"</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">token</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">expires</span><span class="p">:</span>
                     <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">url</span> <span class="o">+</span> <span class="s2">&quot;auth/token&quot;</span><span class="p">,</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">url</span> <span class="o">+</span> <span class="s2">"auth/token"</span><span class="p">,</span>
                         <span class="n">params</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">token</span><span class="o">=</span><span class="n">token</span><span class="p">,</span> <span class="n">username</span><span class="o">=</span><span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="n">password</span><span class="p">,</span> <span class="n">expires</span><span class="o">=</span><span class="n">expires</span><span class="p">),</span>
                         <span class="n">timeout</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
                     <span class="p">)</span>
-                    <span class="n">token</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;access_token&quot;</span><span class="p">)</span>
+                    <span class="n">token</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"access_token"</span><span class="p">)</span>
 
                 <span class="k">if</span> <span class="n">token</span><span class="p">:</span>
                     <span class="k">return</span> <span class="n">token</span>
 
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Nomad response is missing token: </span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()))</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Nomad response is missing token: </span><span class="se">\n</span><span class="s2">"</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()))</span>
         <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Something went wrong trying to get Nomad authentication token&quot;</span><span class="p">)</span></div>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">"Something went wrong trying to get Nomad authentication token"</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="NomadApi.create_dataset">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.bindings.nomad.nomad_api.NomadApi.html#ase2sprkkr.bindings.nomad.nomad_api.NomadApi.create_dataset">[docs]</a>
     <span class="nd">@with_token</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">create_dataset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset_name</span><span class="p">,</span> <span class="n">token</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a dataset to group a series of NOMAD entries&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Create a dataset to group a series of NOMAD entries"""</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">url</span> <span class="o">+</span> <span class="s2">&quot;datasets/&quot;</span><span class="p">,</span>
-                <span class="n">headers</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;Authorization&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;Bearer </span><span class="si">{</span><span class="n">token</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;Accept&quot;</span><span class="p">:</span> <span class="s2">&quot;application/json&quot;</span><span class="p">},</span>
-                <span class="n">json</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;dataset_name&quot;</span><span class="p">:</span> <span class="n">dataset_name</span><span class="p">},</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">url</span> <span class="o">+</span> <span class="s2">"datasets/"</span><span class="p">,</span>
+                <span class="n">headers</span><span class="o">=</span><span class="p">{</span><span class="s2">"Authorization"</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"Bearer </span><span class="si">{</span><span class="n">token</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="s2">"Accept"</span><span class="p">:</span> <span class="s2">"application/json"</span><span class="p">},</span>
+                <span class="n">json</span><span class="o">=</span><span class="p">{</span><span class="s2">"dataset_name"</span><span class="p">:</span> <span class="n">dataset_name</span><span class="p">},</span>
                 <span class="n">timeout</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
             <span class="p">)</span>
-            <span class="n">dataset_id</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;dataset_id&quot;</span><span class="p">)</span>
+            <span class="n">dataset_id</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"dataset_id"</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">dataset_id</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">dataset_id</span>
 
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Nomad response is missing dataset_id:</span><span class="se">\n</span><span class="s2"> &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()))</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Nomad response is missing dataset_id:</span><span class="se">\n</span><span class="s2"> "</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()))</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Something went wrong trying to create a Nomad dataset&quot;</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span></div>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">"Something went wrong trying to create a Nomad dataset"</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span></div>
 
 
 <div class="viewcode-block" id="NomadApi.upload">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.bindings.nomad.nomad_api.NomadApi.html#ase2sprkkr.bindings.nomad.nomad_api.NomadApi.upload">[docs]</a>
     <span class="nd">@with_token</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">upload</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">upload_file</span><span class="p">,</span> <span class="n">token</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Upload a single file for NOMAD upload, e.g., zip format&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Upload a single file for NOMAD upload, e.g., zip format"""</span>
 
         <span class="k">def</span><span class="w"> </span><span class="nf">upload</span><span class="p">():</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">url</span> <span class="o">+</span> <span class="s2">&quot;uploads&quot;</span><span class="p">,</span>
-                    <span class="n">headers</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;Authorization&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;Bearer </span><span class="si">{</span><span class="n">token</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;Accept&quot;</span><span class="p">:</span> <span class="s2">&quot;application/json&quot;</span><span class="p">},</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">url</span> <span class="o">+</span> <span class="s2">"uploads"</span><span class="p">,</span>
+                    <span class="n">headers</span><span class="o">=</span><span class="p">{</span><span class="s2">"Authorization"</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"Bearer </span><span class="si">{</span><span class="n">token</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="s2">"Accept"</span><span class="p">:</span> <span class="s2">"application/json"</span><span class="p">},</span>
                     <span class="n">data</span><span class="o">=</span><span class="n">f</span><span class="p">,</span>
                     <span class="n">timeout</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span>
                 <span class="p">)</span>
-                <span class="n">upload_id</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;upload_id&quot;</span><span class="p">)</span>
+                <span class="n">upload_id</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"upload_id"</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">upload_id</span><span class="p">:</span>
                     <span class="k">return</span> <span class="n">upload_id</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Nomad response is missing upload_id:</span><span class="se">\n</span><span class="s2"> &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()))</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Nomad response is missing upload_id:</span><span class="se">\n</span><span class="s2"> "</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()))</span>
             <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Something went wrong uploading to NOMAD&quot;</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">"Something went wrong uploading to NOMAD"</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
 
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">upload_file</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">upload_file</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">upload_file</span><span class="p">,</span> <span class="s2">"rb"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
                 <span class="n">upload</span><span class="p">()</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">upload</span><span class="p">()</span></div>
@@ -213,21 +214,21 @@
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.bindings.nomad.nomad_api.NomadApi.html#ase2sprkkr.bindings.nomad.nomad_api.NomadApi.check_upload_status">[docs]</a>
     <span class="nd">@with_token</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">check_upload_status</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">upload_id</span><span class="p">,</span> <span class="n">token</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        # upload success =&gt; returns &#39;Process publish_upload completed successfully&#39;</span>
-<span class="sd">        # publish success =&gt; &#39;Process publish_upload completed successfully&#39;</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        # upload success =&gt; returns 'Process publish_upload completed successfully'</span>
+<span class="sd">        # publish success =&gt; 'Process publish_upload completed successfully'</span>
+<span class="sd">        """</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">url</span> <span class="o">+</span> <span class="s2">&quot;uploads/&quot;</span> <span class="o">+</span> <span class="n">upload_id</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;Authorization&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;Bearer </span><span class="si">{</span><span class="n">token</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">},</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">30</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">url</span> <span class="o">+</span> <span class="s2">"uploads/"</span> <span class="o">+</span> <span class="n">upload_id</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="p">{</span><span class="s2">"Authorization"</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"Bearer </span><span class="si">{</span><span class="n">token</span><span class="si">}</span><span class="s2">"</span><span class="p">},</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">30</span>
             <span class="p">)</span>
-            <span class="n">status_message</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;data&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;last_status_message&quot;</span><span class="p">)</span>
+            <span class="n">status_message</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"data"</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"last_status_message"</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">status_message</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">status_message</span>
 
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Nomad response is missing status_message: </span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()))</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Nomad response is missing status_message: </span><span class="se">\n</span><span class="s2">"</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()))</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Something went wrong trying to check the status of upload&quot;</span> <span class="o">+</span> <span class="n">upload_id</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span></div>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">"Something went wrong trying to check the status of upload"</span> <span class="o">+</span> <span class="n">upload_id</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span></div>
 
             <span class="c1"># upload gets deleted from the upload staging area once published...or in this case something went wrong</span>
 
@@ -235,48 +236,48 @@
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.bindings.nomad.nomad_api.NomadApi.html#ase2sprkkr.bindings.nomad.nomad_api.NomadApi.edit_upload_metadata">[docs]</a>
     <span class="nd">@with_token</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">edit_upload_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">upload_id</span><span class="p">,</span> <span class="n">metadata</span><span class="p">,</span> <span class="n">token</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Example of new metadata:</span>
 
 <span class="sd">        ..code-block:: text</span>
-<span class="sd">            upload_name = &#39;Test_Upload_Name&#39;</span>
+<span class="sd">            upload_name = 'Test_Upload_Name'</span>
 <span class="sd">            metadata = {</span>
-<span class="sd">                &quot;metadata&quot;: {</span>
-<span class="sd">                &quot;upload_name&quot;: upload_name,</span>
-<span class="sd">                &quot;references&quot;: [&quot;https://doi.org/xx.xxxx/xxxxxx&quot;],</span>
-<span class="sd">                &quot;datasets&quot;: dataset_id,</span>
-<span class="sd">                &quot;embargo_length&quot;: 0,</span>
-<span class="sd">                &quot;coauthors&quot;: [&quot;coauthor@affiliation.de&quot;],</span>
-<span class="sd">                &quot;comment&quot;: &#39;This is a test upload...&#39;</span>
+<span class="sd">                "metadata": {</span>
+<span class="sd">                "upload_name": upload_name,</span>
+<span class="sd">                "references": ["https://doi.org/xx.xxxx/xxxxxx"],</span>
+<span class="sd">                "datasets": dataset_id,</span>
+<span class="sd">                "embargo_length": 0,</span>
+<span class="sd">                "coauthors": ["coauthor@affiliation.de"],</span>
+<span class="sd">                "comment": 'This is a test upload...'</span>
 <span class="sd">                },</span>
 <span class="sd">            }</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
 
         <span class="k">try</span><span class="p">:</span>
             <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">url</span> <span class="o">+</span> <span class="s2">&quot;uploads/&quot;</span> <span class="o">+</span> <span class="n">upload_id</span> <span class="o">+</span> <span class="s2">&quot;/edit&quot;</span><span class="p">,</span>
-                <span class="n">headers</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;Authorization&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;Bearer </span><span class="si">{</span><span class="n">token</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;Accept&quot;</span><span class="p">:</span> <span class="s2">&quot;application/json&quot;</span><span class="p">},</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">url</span> <span class="o">+</span> <span class="s2">"uploads/"</span> <span class="o">+</span> <span class="n">upload_id</span> <span class="o">+</span> <span class="s2">"/edit"</span><span class="p">,</span>
+                <span class="n">headers</span><span class="o">=</span><span class="p">{</span><span class="s2">"Authorization"</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"Bearer </span><span class="si">{</span><span class="n">token</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="s2">"Accept"</span><span class="p">:</span> <span class="s2">"application/json"</span><span class="p">},</span>
                 <span class="n">json</span><span class="o">=</span><span class="n">metadata</span><span class="p">,</span>
                 <span class="n">timeout</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span>
             <span class="p">)</span>
             <span class="k">return</span> <span class="n">response</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Something went wrong trying to add metadata to upload&quot;</span> <span class="o">+</span> <span class="n">upload_id</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span></div>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">"Something went wrong trying to add metadata to upload"</span> <span class="o">+</span> <span class="n">upload_id</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span></div>
 
 
 <div class="viewcode-block" id="NomadApi.publish_upload">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.bindings.nomad.nomad_api.NomadApi.html#ase2sprkkr.bindings.nomad.nomad_api.NomadApi.publish_upload">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">publish_upload</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">upload_id</span><span class="p">,</span> <span class="n">token</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Publish an upload&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Publish an upload"""</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">url</span> <span class="o">+</span> <span class="s2">&quot;uploads/&quot;</span> <span class="o">+</span> <span class="n">upload_id</span> <span class="o">+</span> <span class="s2">&quot;/action/publish&quot;</span><span class="p">,</span>
-                <span class="n">headers</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;Authorization&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;Bearer </span><span class="si">{</span><span class="n">token</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;Accept&quot;</span><span class="p">:</span> <span class="s2">&quot;application/json&quot;</span><span class="p">},</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">url</span> <span class="o">+</span> <span class="s2">"uploads/"</span> <span class="o">+</span> <span class="n">upload_id</span> <span class="o">+</span> <span class="s2">"/action/publish"</span><span class="p">,</span>
+                <span class="n">headers</span><span class="o">=</span><span class="p">{</span><span class="s2">"Authorization"</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"Bearer </span><span class="si">{</span><span class="n">token</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="s2">"Accept"</span><span class="p">:</span> <span class="s2">"application/json"</span><span class="p">},</span>
                 <span class="n">timeout</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span>
             <span class="p">)</span>
             <span class="k">return</span> <span class="n">response</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Something went wrong trying to publish upload: &quot;</span> <span class="o">+</span> <span class="n">upload_id</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span></div>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">"Something went wrong trying to publish upload: "</span> <span class="o">+</span> <span class="n">upload_id</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span></div>
 </div>
 
 </pre></div>

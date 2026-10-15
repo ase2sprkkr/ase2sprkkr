@@ -1,0 +1,8 @@
+test\_gaussian\_broadens\_last\_axis\_and\_supports\_distinct\_output\_grid
+===========================================================================
+
+Full name: **ase2sprkkr.physics.test\_broadening.test\_gaussian\_broadens\_last\_axis\_and\_supports\_distinct\_output\_grid**
+
+.. currentmodule:: ase2sprkkr.physics.test_broadening
+
+.. autofunction:: test_gaussian_broadens_last_axis_and_supports_distinct_output_grid

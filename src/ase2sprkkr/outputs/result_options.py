@@ -173,7 +173,7 @@ class OutputFileOption(OutputOption):
             subprocess.run(["xdg-open", directory])
 
 
-class OutputFileDefinition(ValueDefinition):
+class ResultFileDefinition(ValueDefinition):
     result_class = OutputFileOption
     name_in_grammar = False
 
@@ -205,7 +205,7 @@ class OutputFilesSection(Section):
             if file_type is not None:
                 option._definition.file_type = file_type
             return option
-        definition = OutputFileDefinition(name, file_type)
+        definition = ResultFileDefinition(name, file_type)
         definition.added_to_container(self._definition)
         self._definition._members[name] = definition
         option = definition.create_object(self)

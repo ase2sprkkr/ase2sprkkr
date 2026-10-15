@@ -1,0 +1,588 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ase2sprkkr.execution.detached &mdash; ASE2SPRKKR  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/mods.css?v=26f6988d" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            ASE2SPRKKR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage.html">How to use the package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../how-to-install.html">More about the package installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../philosophy.html">Philosophy of the package (for developers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../authors.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Examples</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../auto/ase2sprkkr.html">ase2sprkkr</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">ASE2SPRKKR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../ase2sprkkr.html">ase2sprkkr</a></li>
+      <li class="breadcrumb-item active">ase2sprkkr.execution.detached</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for ase2sprkkr.execution.detached</h1><div class="highlight"><pre>
+<span></span><span class="sd">"""Shared detached execution protocol for local and remote persistent runs.</span>
+
+<span class="sd">This module owns the target-side state files and worker lifecycle.  It is</span>
+<span class="sd">independent of how a target is reached: local persistent execution uses it on</span>
+<span class="sd">the current machine, while remote execution invokes the same protocol through</span>
+<span class="sd">a transport.</span>
+<span class="sd">"""</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">shutil</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">signal</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">subprocess</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timezone</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">..common.file_locks</span><span class="w"> </span><span class="kn">import</span> <span class="n">FileLock</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">ExecutionSpec</span><span class="p">,</span> <span class="n">LaunchSpec</span>
+
+
+<span class="n">_FINAL_STATES</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"finished"</span><span class="p">,</span> <span class="s2">"failed"</span><span class="p">,</span> <span class="s2">"cancelled"</span><span class="p">}</span>
+<span class="n">_METADATA_DIR</span> <span class="o">=</span> <span class="s2">".ase2sprkkr"</span>
+<span class="n">_RUNS_DIR</span> <span class="o">=</span> <span class="s2">"runs"</span>
+<span class="n">_STATE_FILE</span> <span class="o">=</span> <span class="s2">"state.json"</span>
+<span class="n">_STATE_LOCK_FILE</span> <span class="o">=</span> <span class="s2">"state.lock"</span>
+<span class="n">_REQUEST_FILE</span> <span class="o">=</span> <span class="s2">"request.json"</span>
+<span class="n">_DETACHED_EXECUTORS</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"local"</span><span class="p">,</span> <span class="s2">"psij"</span><span class="p">}</span>
+
+
+<div class="viewcode-block" id="_timestamp">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.detached._timestamp.html#ase2sprkkr.execution.detached._timestamp">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_timestamp</span><span class="p">():</span>
+    <span class="k">return</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">)</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span></div>
+
+
+
+<div class="viewcode-block" id="_run_directory">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.detached._run_directory.html#ase2sprkkr.execution.detached._run_directory">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_run_directory</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">run_id</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">Path</span><span class="p">(</span><span class="n">directory</span><span class="p">)</span> <span class="o">/</span> <span class="n">_METADATA_DIR</span> <span class="o">/</span> <span class="n">_RUNS_DIR</span> <span class="o">/</span> <span class="n">run_id</span></div>
+
+
+
+<div class="viewcode-block" id="_state_path">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.detached._state_path.html#ase2sprkkr.execution.detached._state_path">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_state_path</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">run_id</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">_run_directory</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">run_id</span><span class="p">)</span> <span class="o">/</span> <span class="n">_STATE_FILE</span></div>
+
+
+
+<div class="viewcode-block" id="_state_lock_path">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.detached._state_lock_path.html#ase2sprkkr.execution.detached._state_lock_path">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_state_lock_path</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">run_id</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">_run_directory</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">run_id</span><span class="p">)</span> <span class="o">/</span> <span class="n">_STATE_LOCK_FILE</span></div>
+
+
+
+<div class="viewcode-block" id="_request_path">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.detached._request_path.html#ase2sprkkr.execution.detached._request_path">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_request_path</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">run_id</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">_run_directory</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">run_id</span><span class="p">)</span> <span class="o">/</span> <span class="n">_REQUEST_FILE</span></div>
+
+
+
+<div class="viewcode-block" id="_state_lock">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.detached._state_lock.html#ase2sprkkr.execution.detached._state_lock">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_state_lock</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">run_id</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Return the inter-process lock guarding one detached run state."""</span>
+    <span class="k">return</span> <span class="n">FileLock</span><span class="p">(</span><span class="n">_state_lock_path</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">run_id</span><span class="p">))</span></div>
+
+
+
+<div class="viewcode-block" id="_read_state_unlocked">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.detached._read_state_unlocked.html#ase2sprkkr.execution.detached._read_state_unlocked">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_read_state_unlocked</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">run_id</span><span class="p">):</span>
+    <span class="k">with</span> <span class="n">_state_path</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">run_id</span><span class="p">)</span><span class="o">.</span><span class="n">open</span><span class="p">()</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">file</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="_read_state">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.detached._read_state.html#ase2sprkkr.execution.detached._read_state">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_read_state</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">run_id</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">_read_state_unlocked</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">run_id</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="_write_state_unlocked">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.detached._write_state_unlocked.html#ase2sprkkr.execution.detached._write_state_unlocked">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_write_state_unlocked</span><span class="p">(</span><span class="n">workspace</span><span class="p">,</span> <span class="n">run_id</span><span class="p">,</span> <span class="o">**</span><span class="n">changes</span><span class="p">):</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="n">_state_path</span><span class="p">(</span><span class="n">workspace</span><span class="p">,</span> <span class="n">run_id</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">state</span> <span class="o">=</span> <span class="n">_read_state_unlocked</span><span class="p">(</span><span class="n">workspace</span><span class="p">,</span> <span class="n">run_id</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
+        <span class="n">state</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">state</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">changes</span><span class="p">)</span>
+    <span class="n">temporary</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">with_suffix</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">suffix</span> <span class="o">+</span> <span class="s2">".tmp"</span><span class="p">)</span>
+    <span class="n">temporary</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">state</span><span class="p">))</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">temporary</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">state</span></div>
+
+
+
+<div class="viewcode-block" id="_write_state">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.detached._write_state.html#ase2sprkkr.execution.detached._write_state">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_write_state</span><span class="p">(</span><span class="n">workspace</span><span class="p">,</span> <span class="n">run_id</span><span class="p">,</span> <span class="o">**</span><span class="n">changes</span><span class="p">):</span>
+    <span class="k">with</span> <span class="n">_state_lock</span><span class="p">(</span><span class="n">workspace</span><span class="p">,</span> <span class="n">run_id</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">_write_state_unlocked</span><span class="p">(</span><span class="n">workspace</span><span class="p">,</span> <span class="n">run_id</span><span class="p">,</span> <span class="o">**</span><span class="n">changes</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="_absolute_file">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.detached._absolute_file.html#ase2sprkkr.execution.detached._absolute_file">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_absolute_file</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">path</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">path</span><span class="o">.</span><span class="n">is_absolute</span><span class="p">():</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">directory</span><span class="p">)</span> <span class="o">/</span> <span class="n">path</span>
+    <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">fspath</span><span class="p">(</span><span class="n">path</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="submit_detached">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.detached.submit_detached.html#ase2sprkkr.execution.detached.submit_detached">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">submit_detached</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Start a detached target-side executor and return its initial state."""</span>
+    <span class="n">executor</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"executor"</span><span class="p">,</span> <span class="s2">"local"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">executor</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">_DETACHED_EXECUTORS</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Unsupported detached executor: </span><span class="si">{</span><span class="n">executor</span><span class="si">!r}</span><span class="s2">"</span><span class="p">)</span>
+
+    <span class="n">directory</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">request</span><span class="p">[</span><span class="s2">"directory"</span><span class="p">])</span><span class="o">.</span><span class="n">expanduser</span><span class="p">()</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+    <span class="n">directory</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">run_id</span> <span class="o">=</span> <span class="n">request</span><span class="p">[</span><span class="s2">"id"</span><span class="p">]</span>
+    <span class="n">run_directory</span> <span class="o">=</span> <span class="n">_run_directory</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">run_id</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">run_directory</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">FileExistsError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Detached run already exists: </span><span class="si">{</span><span class="n">run_id</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span>
+
+    <span class="n">request</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">directory</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">fspath</span><span class="p">(</span><span class="n">directory</span><span class="p">))</span>
+    <span class="n">output_file</span> <span class="o">=</span> <span class="n">_absolute_file</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">request</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"output_file"</span><span class="p">))</span>
+    <span class="n">error_file</span> <span class="o">=</span> <span class="n">_absolute_file</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">request</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"error_file"</span><span class="p">))</span>
+    <span class="n">cleared</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="p">(</span><span class="n">output_file</span><span class="p">,</span> <span class="n">error_file</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">path</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">cleared</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="n">cleared</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+        <span class="n">path</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">path</span><span class="o">.</span><span class="n">write_bytes</span><span class="p">(</span><span class="sa">b</span><span class="s2">""</span><span class="p">)</span>
+
+    <span class="n">_request_path</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">run_id</span><span class="p">)</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">request</span><span class="p">))</span>
+    <span class="n">state</span> <span class="o">=</span> <span class="n">_write_state</span><span class="p">(</span>
+        <span class="n">directory</span><span class="p">,</span>
+        <span class="n">run_id</span><span class="p">,</span>
+        <span class="nb">id</span><span class="o">=</span><span class="n">run_id</span><span class="p">,</span>
+        <span class="n">state</span><span class="o">=</span><span class="s2">"queued"</span><span class="p">,</span>
+        <span class="n">directory</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">fspath</span><span class="p">(</span><span class="n">directory</span><span class="p">),</span>
+        <span class="n">input_file</span><span class="o">=</span><span class="n">_absolute_file</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">request</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"input_file"</span><span class="p">)),</span>
+        <span class="n">output_file</span><span class="o">=</span><span class="n">output_file</span><span class="p">,</span>
+        <span class="n">error_file</span><span class="o">=</span><span class="n">error_file</span><span class="p">,</span>
+        <span class="n">return_code</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">error</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">pid</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">backend_reference</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">created_at</span><span class="o">=</span><span class="n">_timestamp</span><span class="p">(),</span>
+        <span class="n">started_at</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">finished_at</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span>
+        <span class="p">[</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">executable</span><span class="p">,</span>
+            <span class="s2">"-m"</span><span class="p">,</span>
+            <span class="s2">"ase2sprkkr.execution.remote_worker"</span><span class="p">,</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">fspath</span><span class="p">(</span><span class="n">directory</span><span class="p">),</span>
+            <span class="n">run_id</span><span class="p">,</span>
+        <span class="p">],</span>
+        <span class="n">stdin</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">DEVNULL</span><span class="p">,</span>
+        <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">DEVNULL</span><span class="p">,</span>
+        <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">DEVNULL</span><span class="p">,</span>
+        <span class="n">start_new_session</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">close_fds</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">state</span></div>
+
+
+
+<div class="viewcode-block" id="status_detached">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.detached.status_detached.html#ase2sprkkr.execution.detached.status_detached">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">status_detached</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">run_id</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">_read_state</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">directory</span><span class="p">)</span><span class="o">.</span><span class="n">expanduser</span><span class="p">()</span><span class="o">.</span><span class="n">resolve</span><span class="p">(),</span> <span class="n">run_id</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="_terminate_process_group">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.detached._terminate_process_group.html#ase2sprkkr.execution.detached._terminate_process_group">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_terminate_process_group</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">run_id</span><span class="p">,</span> <span class="n">pid</span><span class="p">,</span> <span class="n">timeout</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">pid</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">_read_state</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">run_id</span><span class="p">)</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">killpg</span><span class="p">(</span><span class="n">pid</span><span class="p">,</span> <span class="n">signal</span><span class="o">.</span><span class="n">SIGTERM</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">ProcessLookupError</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">_read_state</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">run_id</span><span class="p">)</span>
+
+    <span class="n">deadline</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">monotonic</span><span class="p">()</span> <span class="o">+</span> <span class="n">timeout</span>
+    <span class="k">while</span> <span class="n">time</span><span class="o">.</span><span class="n">monotonic</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">deadline</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">killpg</span><span class="p">(</span><span class="n">pid</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">ProcessLookupError</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">_read_state</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">run_id</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">PermissionError</span><span class="p">:</span>
+            <span class="k">pass</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.05</span><span class="p">)</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">killpg</span><span class="p">(</span><span class="n">pid</span><span class="p">,</span> <span class="n">signal</span><span class="o">.</span><span class="n">SIGKILL</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">ProcessLookupError</span><span class="p">:</span>
+        <span class="k">pass</span>
+    <span class="k">return</span> <span class="n">_read_state</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">run_id</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="cancel_detached">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.detached.cancel_detached.html#ase2sprkkr.execution.detached.cancel_detached">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">cancel_detached</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">run_id</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Cancel a detached run through its target-side executor."""</span>
+    <span class="n">directory</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">directory</span><span class="p">)</span><span class="o">.</span><span class="n">expanduser</span><span class="p">()</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+    <span class="n">request</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">_request_path</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">run_id</span><span class="p">)</span><span class="o">.</span><span class="n">read_text</span><span class="p">())</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"executor"</span><span class="p">,</span> <span class="s2">"local"</span><span class="p">)</span> <span class="o">==</span> <span class="s2">"psij"</span><span class="p">:</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">.remote_psij</span><span class="w"> </span><span class="kn">import</span> <span class="n">cancel_remote_psij</span>
+
+        <span class="k">return</span> <span class="n">cancel_remote_psij</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">run_id</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
+
+    <span class="k">with</span> <span class="n">_state_lock</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">run_id</span><span class="p">):</span>
+        <span class="n">state</span> <span class="o">=</span> <span class="n">_read_state_unlocked</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">run_id</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"state"</span><span class="p">)</span> <span class="ow">in</span> <span class="n">_FINAL_STATES</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">state</span>
+        <span class="n">state</span> <span class="o">=</span> <span class="n">_write_state_unlocked</span><span class="p">(</span>
+            <span class="n">directory</span><span class="p">,</span> <span class="n">run_id</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="s2">"cancelled"</span><span class="p">,</span> <span class="n">finished_at</span><span class="o">=</span><span class="n">_timestamp</span><span class="p">()</span>
+        <span class="p">)</span>
+        <span class="n">pid</span> <span class="o">=</span> <span class="n">state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"pid"</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">_terminate_process_group</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">run_id</span><span class="p">,</span> <span class="n">pid</span><span class="p">,</span> <span class="n">timeout</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="follow_detached">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.detached.follow_detached.html#ase2sprkkr.execution.detached.follow_detached">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">follow_detached</span><span class="p">(</span>
+    <span class="n">directory</span><span class="p">,</span>
+    <span class="n">run_id</span><span class="p">,</span>
+    <span class="n">stdout</span><span class="p">,</span>
+    <span class="n">stderr</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">stdout_offset</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="n">stderr_offset</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="n">poll_interval</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Forward newly written stdout/stderr until the detached run is final."""</span>
+    <span class="n">directory</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">directory</span><span class="p">)</span><span class="o">.</span><span class="n">expanduser</span><span class="p">()</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+    <span class="n">offsets</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"out"</span><span class="p">:</span> <span class="n">stdout_offset</span><span class="p">,</span> <span class="s2">"err"</span><span class="p">:</span> <span class="n">stderr_offset</span><span class="p">}</span>
+    <span class="n">streams</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"out"</span><span class="p">:</span> <span class="n">stdout</span><span class="p">,</span> <span class="s2">"err"</span><span class="p">:</span> <span class="n">stderr</span><span class="p">}</span>
+
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">state</span> <span class="o">=</span> <span class="n">_read_state</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">run_id</span><span class="p">)</span>
+        <span class="n">had_data</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">for</span> <span class="n">kind</span><span class="p">,</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">((</span><span class="s2">"out"</span><span class="p">,</span> <span class="s2">"output_file"</span><span class="p">),</span> <span class="p">(</span><span class="s2">"err"</span><span class="p">,</span> <span class="s2">"error_file"</span><span class="p">)):</span>
+            <span class="n">path</span> <span class="o">=</span> <span class="n">state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">path</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">"rb"</span><span class="p">)</span> <span class="k">as</span> <span class="n">source</span><span class="p">:</span>
+                    <span class="n">source</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">offsets</span><span class="p">[</span><span class="n">kind</span><span class="p">])</span>
+                    <span class="n">data</span> <span class="o">=</span> <span class="n">source</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+            <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="sa">b</span><span class="s2">""</span>
+            <span class="k">if</span> <span class="n">data</span><span class="p">:</span>
+                <span class="n">streams</span><span class="p">[</span><span class="n">kind</span><span class="p">]</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+                <span class="n">streams</span><span class="p">[</span><span class="n">kind</span><span class="p">]</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+                <span class="n">offsets</span><span class="p">[</span><span class="n">kind</span><span class="p">]</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+                <span class="n">had_data</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="k">if</span> <span class="n">state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"state"</span><span class="p">)</span> <span class="ow">in</span> <span class="n">_FINAL_STATES</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">had_data</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">state</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">had_data</span><span class="p">:</span>
+            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">poll_interval</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="list_detached_runs">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.detached.list_detached_runs.html#ase2sprkkr.execution.detached.list_detached_runs">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">list_detached_runs</span><span class="p">(</span><span class="n">directory</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Return states of detached runs recorded in a workspace."""</span>
+    <span class="n">directory</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">directory</span><span class="p">)</span><span class="o">.</span><span class="n">expanduser</span><span class="p">()</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+    <span class="n">runs_directory</span> <span class="o">=</span> <span class="n">directory</span> <span class="o">/</span> <span class="n">_METADATA_DIR</span> <span class="o">/</span> <span class="n">_RUNS_DIR</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">runs_directory</span><span class="o">.</span><span class="n">is_dir</span><span class="p">():</span>
+        <span class="k">return</span> <span class="p">[]</span>
+
+    <span class="n">runs</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">run_directory</span> <span class="ow">in</span> <span class="n">runs_directory</span><span class="o">.</span><span class="n">iterdir</span><span class="p">():</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">run_directory</span><span class="o">.</span><span class="n">is_dir</span><span class="p">():</span>
+            <span class="k">continue</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">runs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_read_state</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">run_directory</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+        <span class="k">except</span> <span class="p">(</span><span class="ne">FileNotFoundError</span><span class="p">,</span> <span class="n">json</span><span class="o">.</span><span class="n">JSONDecodeError</span><span class="p">):</span>
+            <span class="k">continue</span>
+    <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">runs</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">state</span><span class="p">:</span> <span class="n">state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"created_at"</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">""</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="clean_detached_runs">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.detached.clean_detached_runs.html#ase2sprkkr.execution.detached.clean_detached_runs">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">clean_detached_runs</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">older_than</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Remove completed detached metadata without touching workspace artifacts."""</span>
+    <span class="n">directory</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">directory</span><span class="p">)</span><span class="o">.</span><span class="n">expanduser</span><span class="p">()</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+    <span class="n">now</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">)</span>
+    <span class="n">removed</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">active</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">state</span> <span class="ow">in</span> <span class="n">list_detached_runs</span><span class="p">(</span><span class="n">directory</span><span class="p">):</span>
+        <span class="n">run_id</span> <span class="o">=</span> <span class="n">state</span><span class="p">[</span><span class="s2">"id"</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"state"</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">_FINAL_STATES</span><span class="p">:</span>
+            <span class="n">active</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">run_id</span><span class="p">)</span>
+            <span class="k">continue</span>
+        <span class="k">if</span> <span class="n">older_than</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">timestamp</span> <span class="o">=</span> <span class="n">state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"finished_at"</span><span class="p">)</span> <span class="ow">or</span> <span class="n">state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"created_at"</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">timestamp</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">finished</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">fromisoformat</span><span class="p">(</span><span class="n">timestamp</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">finished</span><span class="o">.</span><span class="n">tzinfo</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">finished</span> <span class="o">=</span> <span class="n">finished</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">tzinfo</span><span class="o">=</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">)</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">now</span> <span class="o">-</span> <span class="n">finished</span><span class="p">)</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">older_than</span><span class="p">:</span>
+                <span class="k">continue</span>
+        <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="n">_run_directory</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">run_id</span><span class="p">))</span>
+        <span class="n">removed</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">run_id</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="p">{</span><span class="s2">"removed"</span><span class="p">:</span> <span class="n">removed</span><span class="p">,</span> <span class="s2">"active"</span><span class="p">:</span> <span class="n">active</span><span class="p">}</span></div>
+
+
+
+<div class="viewcode-block" id="resolve_detached_mpi">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.detached.resolve_detached_mpi.html#ase2sprkkr.execution.detached.resolve_detached_mpi">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">resolve_detached_mpi</span><span class="p">(</span><span class="n">mpi</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Compatibility helper for the detached target-side CLI."""</span>
+    <span class="k">return</span> <span class="n">LaunchSpec</span><span class="o">.</span><span class="n">from_mpi</span><span class="p">(</span><span class="n">mpi</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="_request_spec">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.detached._request_spec.html#ase2sprkkr.execution.detached._request_spec">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_request_spec</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span>
+    <span class="n">mpi_argv</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"mpi_argv"</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ExecutionSpec</span><span class="p">(</span>
+        <span class="n">argv</span><span class="o">=</span><span class="nb">tuple</span><span class="p">(</span><span class="n">request</span><span class="p">[</span><span class="s2">"argv"</span><span class="p">]),</span>
+        <span class="n">input_file</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"input_file"</span><span class="p">),</span>
+        <span class="n">output_file</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"output_file"</span><span class="p">),</span>
+        <span class="n">error_file</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"error_file"</span><span class="p">),</span>
+        <span class="n">directory</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">fspath</span><span class="p">(</span><span class="n">directory</span><span class="p">),</span>
+        <span class="n">stdin</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"stdin"</span><span class="p">),</span>
+        <span class="n">mpi_argv</span><span class="o">=</span><span class="kc">None</span> <span class="k">if</span> <span class="n">mpi_argv</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">mpi_argv</span><span class="p">),</span>
+        <span class="n">launch</span><span class="o">=</span><span class="n">LaunchSpec</span><span class="p">(</span><span class="o">**</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"launch"</span><span class="p">)</span> <span class="ow">or</span> <span class="p">{})),</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="run_detached_worker">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.detached.run_detached_worker.html#ase2sprkkr.execution.detached.run_detached_worker">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">run_detached_worker</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">run_id</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Execute one run using the executor selected by the detached request."""</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">.local</span><span class="w"> </span><span class="kn">import</span> <span class="n">materialize_local_spec</span>
+
+    <span class="n">directory</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">directory</span><span class="p">)</span><span class="o">.</span><span class="n">expanduser</span><span class="p">()</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">request</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">_request_path</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">run_id</span><span class="p">)</span><span class="o">.</span><span class="n">read_text</span><span class="p">())</span>
+        <span class="n">executor</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"executor"</span><span class="p">,</span> <span class="s2">"local"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">executor</span> <span class="o">==</span> <span class="s2">"psij"</span><span class="p">:</span>
+            <span class="kn">from</span><span class="w"> </span><span class="nn">.remote_psij</span><span class="w"> </span><span class="kn">import</span> <span class="n">run_remote_psij_worker</span>
+
+            <span class="n">run_remote_psij_worker</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">run_id</span><span class="p">,</span> <span class="n">request</span><span class="p">)</span>
+            <span class="k">return</span>
+        <span class="k">if</span> <span class="n">executor</span> <span class="o">!=</span> <span class="s2">"local"</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Unsupported detached executor: </span><span class="si">{</span><span class="n">executor</span><span class="si">!r}</span><span class="s2">"</span><span class="p">)</span>
+
+        <span class="n">spec</span> <span class="o">=</span> <span class="n">materialize_local_spec</span><span class="p">(</span><span class="n">_request_spec</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">request</span><span class="p">))</span>
+        <span class="n">output_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">spec</span><span class="o">.</span><span class="n">output_file</span> <span class="ow">or</span> <span class="s2">"stdout"</span><span class="p">)</span>
+        <span class="n">error_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">spec</span><span class="o">.</span><span class="n">error_file</span> <span class="ow">or</span> <span class="s2">"stderr"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">output_path</span><span class="o">.</span><span class="n">is_absolute</span><span class="p">():</span>
+            <span class="n">output_path</span> <span class="o">=</span> <span class="n">directory</span> <span class="o">/</span> <span class="n">output_path</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">error_path</span><span class="o">.</span><span class="n">is_absolute</span><span class="p">():</span>
+            <span class="n">error_path</span> <span class="o">=</span> <span class="n">directory</span> <span class="o">/</span> <span class="n">error_path</span>
+        <span class="n">output_path</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">error_path</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">spec</span><span class="o">.</span><span class="n">stdin</span><span class="p">:</span>
+            <span class="n">stdin_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">spec</span><span class="o">.</span><span class="n">stdin</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">stdin_path</span><span class="o">.</span><span class="n">is_absolute</span><span class="p">():</span>
+                <span class="n">stdin_path</span> <span class="o">=</span> <span class="n">directory</span> <span class="o">/</span> <span class="n">stdin_path</span>
+            <span class="n">stdin</span> <span class="o">=</span> <span class="n">stdin_path</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">"rb"</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">stdin</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">DEVNULL</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">with</span> <span class="n">output_path</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">"wb"</span><span class="p">)</span> <span class="k">as</span> <span class="n">output</span><span class="p">,</span> <span class="n">error_path</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">"wb"</span><span class="p">)</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+                <span class="k">with</span> <span class="n">_state_lock</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">run_id</span><span class="p">):</span>
+                    <span class="n">state</span> <span class="o">=</span> <span class="n">_read_state_unlocked</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">run_id</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"state"</span><span class="p">)</span> <span class="ow">in</span> <span class="n">_FINAL_STATES</span><span class="p">:</span>
+                        <span class="k">return</span>
+                    <span class="k">if</span> <span class="n">state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"state"</span><span class="p">)</span> <span class="o">!=</span> <span class="s2">"queued"</span><span class="p">:</span>
+                        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+                            <span class="sa">f</span><span class="s2">"Cannot start detached run </span><span class="si">{</span><span class="n">run_id</span><span class="si">!r}</span><span class="s2"> from state "</span>
+                            <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'state'</span><span class="p">)</span><span class="si">!r}</span><span class="s2">"</span>
+                        <span class="p">)</span>
+                    <span class="n">process</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span>
+                        <span class="n">spec</span><span class="o">.</span><span class="n">argv</span><span class="p">,</span>
+                        <span class="n">cwd</span><span class="o">=</span><span class="n">directory</span><span class="p">,</span>
+                        <span class="n">stdin</span><span class="o">=</span><span class="n">stdin</span><span class="p">,</span>
+                        <span class="n">stdout</span><span class="o">=</span><span class="n">output</span><span class="p">,</span>
+                        <span class="n">stderr</span><span class="o">=</span><span class="n">error</span><span class="p">,</span>
+                        <span class="n">start_new_session</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                    <span class="p">)</span>
+                    <span class="n">_write_state_unlocked</span><span class="p">(</span>
+                        <span class="n">directory</span><span class="p">,</span>
+                        <span class="n">run_id</span><span class="p">,</span>
+                        <span class="n">state</span><span class="o">=</span><span class="s2">"running"</span><span class="p">,</span>
+                        <span class="n">pid</span><span class="o">=</span><span class="n">process</span><span class="o">.</span><span class="n">pid</span><span class="p">,</span>
+                        <span class="n">started_at</span><span class="o">=</span><span class="n">_timestamp</span><span class="p">(),</span>
+                    <span class="p">)</span>
+                <span class="n">return_code</span> <span class="o">=</span> <span class="n">process</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">stdin</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">DEVNULL</span><span class="p">:</span>
+                <span class="n">stdin</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+        <span class="k">with</span> <span class="n">_state_lock</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">run_id</span><span class="p">):</span>
+            <span class="n">state</span> <span class="o">=</span> <span class="n">_read_state_unlocked</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">run_id</span><span class="p">)</span>
+            <span class="n">final_state</span> <span class="o">=</span> <span class="n">state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"state"</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">final_state</span> <span class="o">!=</span> <span class="s2">"cancelled"</span><span class="p">:</span>
+                <span class="n">final_state</span> <span class="o">=</span> <span class="s2">"finished"</span> <span class="k">if</span> <span class="n">return_code</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="s2">"failed"</span>
+            <span class="n">_write_state_unlocked</span><span class="p">(</span>
+                <span class="n">directory</span><span class="p">,</span>
+                <span class="n">run_id</span><span class="p">,</span>
+                <span class="n">state</span><span class="o">=</span><span class="n">final_state</span><span class="p">,</span>
+                <span class="n">return_code</span><span class="o">=</span><span class="n">return_code</span><span class="p">,</span>
+                <span class="n">finished_at</span><span class="o">=</span><span class="n">state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"finished_at"</span><span class="p">)</span> <span class="ow">or</span> <span class="n">_timestamp</span><span class="p">(),</span>
+            <span class="p">)</span>
+    <span class="k">except</span> <span class="ne">BaseException</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+        <span class="k">with</span> <span class="n">_state_lock</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">run_id</span><span class="p">):</span>
+            <span class="n">state</span> <span class="o">=</span> <span class="n">_read_state_unlocked</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">run_id</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"state"</span><span class="p">)</span> <span class="o">!=</span> <span class="s2">"cancelled"</span><span class="p">:</span>
+                <span class="n">_write_state_unlocked</span><span class="p">(</span>
+                    <span class="n">directory</span><span class="p">,</span>
+                    <span class="n">run_id</span><span class="p">,</span>
+                    <span class="n">state</span><span class="o">=</span><span class="s2">"failed"</span><span class="p">,</span>
+                    <span class="n">error</span><span class="o">=</span><span class="nb">repr</span><span class="p">(</span><span class="n">exc</span><span class="p">),</span>
+                    <span class="n">return_code</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                    <span class="n">finished_at</span><span class="o">=</span><span class="n">_timestamp</span><span class="p">(),</span>
+                <span class="p">)</span>
+        <span class="k">raise</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Matyáš Novák &amp; Jano Minár.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

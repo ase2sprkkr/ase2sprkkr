@@ -1,0 +1,50 @@
+definition\_registry
+====================
+
+Full name: **ase2sprkkr.result\_files.definition\_registry**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.result_files.definition_registry.ResultFileDefinitionRegistry 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.result_files.definition_registry
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      ResultFileDefinitionRegistry
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

@@ -1,0 +1,494 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ase2sprkkr.result_files.result_files &mdash; ASE2SPRKKR  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/mods.css?v=26f6988d" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            ASE2SPRKKR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage.html">How to use the package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../how-to-install.html">More about the package installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../philosophy.html">Philosophy of the package (for developers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../authors.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Examples</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../auto/ase2sprkkr.html">ase2sprkkr</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">ASE2SPRKKR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../ase2sprkkr.html">ase2sprkkr</a></li>
+      <li class="breadcrumb-item active">ase2sprkkr.result_files.result_files</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for ase2sprkkr.result_files.result_files</h1><div class="highlight"><pre>
+<span></span><span class="sd">"""This module describe common header, that appears in the output</span>
+<span class="sd">files of SPRKKR"""</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">..sprkkr.configuration</span><span class="w"> </span><span class="kn">import</span> <span class="n">ConfigurationFile</span><span class="p">,</span> <span class="n">ConfigurationValue</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..potentials.potentials</span><span class="w"> </span><span class="kn">import</span> <span class="n">Potential</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyparsing</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pp</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..common.decorators</span><span class="w"> </span><span class="kn">import</span> <span class="n">cached_class_property</span><span class="p">,</span> <span class="n">cached_property</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..common.grammar_types.data</span><span class="w"> </span><span class="kn">import</span> <span class="n">RestOfTheFile</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">io</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+
+
+<div class="viewcode-block" id="UnknownDataValue">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.result_files.result_files.UnknownDataValue.html#ase2sprkkr.result_files.definitions.bsf.UnknownDataValue">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">UnknownDataValue</span><span class="p">(</span><span class="n">ConfigurationValue</span><span class="p">):</span>
+<div class="viewcode-block" id="UnknownDataValue.as_array">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.result_files.result_files.UnknownDataValue.html#ase2sprkkr.result_files.definitions.bsf.UnknownDataValue.as_array">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">as_array</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+            <span class="n">out</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">genfromtxt</span><span class="p">(</span><span class="n">io</span><span class="o">.</span><span class="n">StringIO</span><span class="p">(</span><span class="n">out</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">out</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="ResultFile">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.result_files.result_files.ResultFile.html#ase2sprkkr.result_files.definitions.bsf.ResultFile">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ResultFile</span><span class="p">(</span><span class="n">ConfigurationFile</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Objects of this class holds datas of an result file"""</span>
+
+    <span class="n">plot_parameters</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">additional_actions</span> <span class="o">=</span> <span class="p">()</span>
+
+<div class="viewcode-block" id="ResultFile.__init__">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.result_files.result_files.ResultFile.html#ase2sprkkr.result_files.definitions.bsf.ResultFile.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">definition</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">container</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">potential</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">definition</span><span class="p">,</span> <span class="n">container</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_potential</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_potential_filename</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">potential</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">potential</span> <span class="o">=</span> <span class="n">potential</span></div>
+
+
+<div class="viewcode-block" id="ResultFile.read_from_file">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.result_files.result_files.ResultFile.html#ase2sprkkr.result_files.definitions.bsf.ResultFile.read_from_file">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">read_from_file</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">file</span><span class="p">,</span>
+        <span class="n">clear_first</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">allow_dangerous</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">potential</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Read the output data and optionally associate its potential."""</span>
+
+        <span class="k">if</span> <span class="n">potential</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">potential</span> <span class="o">=</span> <span class="n">potential</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">read_from_file</span><span class="p">(</span>
+            <span class="n">file</span><span class="p">,</span>
+            <span class="n">clear_first</span><span class="o">=</span><span class="n">clear_first</span><span class="p">,</span>
+            <span class="n">allow_dangerous</span><span class="o">=</span><span class="n">allow_dangerous</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ResultFile.can_be_plotted">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.result_files.result_files.ResultFile.html#ase2sprkkr.result_files.definitions.bsf.ResultFile.can_be_plotted">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">can_be_plotted</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">callable</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="s2">"plot"</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="ResultFile.set_potential_filename">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.result_files.result_files.ResultFile.html#ase2sprkkr.result_files.definitions.bsf.ResultFile.set_potential_filename">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_potential_filename</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">potential_filename</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="s2">"potential_filename"</span><span class="p">]</span> <span class="o">=</span> <span class="n">potential_filename</span>
+        <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">"potential"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span></div>
+
+
+    <span class="nd">@cached_property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">potential_filename</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">"_filename"</span><span class="p">,</span> <span class="kc">None</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"The result file has no filename. Set the potential filename manually."</span><span class="p">)</span>
+
+        <span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_filename</span><span class="p">)</span>
+        <span class="n">directory</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">parent</span>
+        <span class="n">stem</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">stem</span>
+
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">suffix</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">".pot_new"</span><span class="p">,</span> <span class="s2">".pot"</span><span class="p">):</span>
+                <span class="n">candidate</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">directory</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">stem</span> <span class="o">+</span> <span class="n">suffix</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">candidate</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
+                    <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">candidate</span><span class="p">)</span>
+            <span class="n">stem</span> <span class="o">=</span> <span class="n">stem</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s2">"_"</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">stem</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="k">break</span>
+            <span class="n">stem</span> <span class="o">=</span> <span class="n">stem</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">"No potential file found for </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_filename</span><span class="si">}</span><span class="s2">. Set it manually using set_potential_filename()."</span>
+        <span class="p">)</span>
+
+    <span class="nd">@potential_filename</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">potential_filename</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_potential_filename</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+    <span class="nd">@cached_property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">potential</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">Potential</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">potential_filename</span><span class="p">)</span>
+
+    <span class="nd">@potential</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">potential</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">Potential</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="s2">"potential"</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="s2">"_filename"</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="s2">"potential_filename"</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">_filename</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">"potential_filename"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="s2">"potential_filename"</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+            <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">"potential"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">potential</span><span class="o">.</span><span class="n">atoms</span>
+
+    <span class="nd">@cached_class_property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">unknown_result_file_definition</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""a definition of unwnown (not yet known) result file that can hold any data in the rest</span>
+<span class="sd">        of the file"""</span>
+        <span class="n">V</span> <span class="o">=</span> <span class="n">result_files_definitions</span><span class="o">.</span><span class="n">ResultFileValueDefinition</span>
+        <span class="k">return</span> <span class="n">result_files_definitions</span><span class="o">.</span><span class="n">create_result_file_definition</span><span class="p">(</span>
+            <span class="n">V</span><span class="p">(</span><span class="s2">"KEYWORD"</span><span class="p">,</span> <span class="nb">str</span><span class="p">),</span> <span class="p">[</span><span class="n">V</span><span class="p">(</span><span class="s2">"DATA"</span><span class="p">,</span> <span class="n">RestOfTheFile</span><span class="p">(),</span> <span class="n">name_in_grammar</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">result_class</span><span class="o">=</span><span class="n">UnknownDataValue</span><span class="p">)]</span>
+        <span class="p">)</span>
+
+    <span class="nd">@cached_class_property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">definitions</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Return all known definitions of the SPR-KKR result files."""</span>
+        <span class="c1"># Discovery imports individual definition modules. Defer construction</span>
+        <span class="c1"># until ResultFile and result_files_definitions are fully initialized so</span>
+        <span class="c1"># definition modules can safely import this class.</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">.definition_registry</span><span class="w"> </span><span class="kn">import</span> <span class="n">result_file_definition_registry</span>
+
+        <span class="k">return</span> <span class="n">result_file_definition_registry</span><span class="o">.</span><span class="n">by_extension</span><span class="p">()</span>
+
+<div class="viewcode-block" id="ResultFile.definition">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.result_files.result_files.ResultFile.html#ase2sprkkr.result_files.definitions.bsf.ResultFile.definition">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">definition</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">definitions</span><span class="p">[</span><span class="bp">self</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="ResultFile.from_file">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.result_files.result_files.ResultFile.html#ase2sprkkr.result_files.definitions.bsf.ResultFile.from_file">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">from_file</span><span class="p">(</span>
+        <span class="bp">cls</span><span class="p">,</span>
+        <span class="n">filename</span><span class="p">,</span>
+        <span class="n">first_try</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">try_only</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">unknown</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">potential</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Read SPRKKR result file (DOS, BSF....). The type of content of the</span>
+<span class="sd">        result file is guessed from the content, however you can get hint what</span>
+<span class="sd">        to try first or force to read only certain file type(s).</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        filename</span>
+<span class="sd">          The file to read</span>
+
+<span class="sd">        first_try</span>
+<span class="sd">          List of result file types, that can be read first. If it is None, it is guessed</span>
+<span class="sd">          from the file extension.</span>
+
+<span class="sd">        try_only</span>
+<span class="sd">          List of the result file types, that can be read.</span>
+<span class="sd">          None mean read any known file type.</span>
+
+<span class="sd">        unknown</span>
+<span class="sd">          If True, at last, an unknown result file is readed: such file has just</span>
+<span class="sd">          parsed header and then one property that holds the rest of the file as</span>
+<span class="sd">          text.</span>
+<span class="sd">          If False, raise an exception if no known (and allowed) file type is</span>
+<span class="sd">          recognized.</span>
+<span class="sd">          None means True if try_only is None, False otherwise.</span>
+
+<span class="sd">        potential</span>
+<span class="sd">          A :class:`Potential` or its filename. If omitted, it is looked up</span>
+<span class="sd">          lazily from the result filename when it is needed.</span>
+<span class="sd">        """</span>
+        <span class="n">fname</span> <span class="o">=</span> <span class="n">filename</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">"name"</span><span class="p">):</span>
+            <span class="n">fname</span> <span class="o">=</span> <span class="n">filename</span><span class="o">.</span><span class="n">name</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"File </span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s2"> to be read does not exists"</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">first_try</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">try_only</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">first_try</span> <span class="o">=</span> <span class="n">fname</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s2">"."</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+                <span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
+                    <span class="n">first_try</span> <span class="o">=</span> <span class="kc">None</span>
+                <span class="n">special</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s2">"^.+_([^/</span><span class="se">\\</span><span class="s2">]+\.[^/</span><span class="se">\\</span><span class="s2">]+)$"</span><span class="p">,</span> <span class="n">fname</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">special</span><span class="p">:</span>
+                    <span class="n">first_try</span> <span class="o">=</span> <span class="p">[</span><span class="n">special</span><span class="o">.</span><span class="n">groups</span><span class="p">(</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span> <span class="n">first_try</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">first_try</span> <span class="o">=</span> <span class="s2">""</span>
+
+        <span class="n">first</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">first_try</span><span class="p">:</span>
+            <span class="n">out</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">out</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span>
+                    <span class="n">filename</span><span class="p">,</span>
+                    <span class="n">first_try</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                    <span class="n">try_only</span><span class="o">=</span><span class="n">first_try</span><span class="p">,</span>
+                    <span class="n">potential</span><span class="o">=</span><span class="n">potential</span><span class="p">,</span>
+                <span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">first</span> <span class="o">=</span> <span class="n">e</span>
+            <span class="k">if</span> <span class="n">out</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">out</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">last</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="n">try_only</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">try_only</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                <span class="n">try_only</span> <span class="o">=</span> <span class="p">[</span><span class="n">try_only</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">try_only</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">definitions</span><span class="p">:</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">definitions</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">read_from_file</span><span class="p">(</span>
+                            <span class="n">filename</span><span class="p">,</span> <span class="n">potential</span><span class="o">=</span><span class="n">potential</span>
+                        <span class="p">)</span>
+                    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                        <span class="n">last</span> <span class="o">=</span> <span class="n">e</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">ext</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">definitions</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="k">if</span> <span class="n">first_try</span> <span class="ow">and</span> <span class="n">ext</span> <span class="ow">in</span> <span class="n">first_try</span><span class="p">:</span>
+                    <span class="k">continue</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="n">i</span><span class="o">.</span><span class="n">read_from_file</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">potential</span><span class="o">=</span><span class="n">potential</span><span class="p">)</span>
+                <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                    <span class="n">last</span> <span class="o">=</span> <span class="n">e</span>
+        <span class="k">if</span> <span class="n">unknown</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">unknown</span> <span class="o">=</span> <span class="n">try_only</span> <span class="ow">is</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">unknown</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">unknown_result_file_definition</span><span class="o">.</span><span class="n">read_from_file</span><span class="p">(</span>
+                    <span class="n">filename</span><span class="p">,</span> <span class="n">potential</span><span class="o">=</span><span class="n">potential</span>
+                <span class="p">)</span>
+            <span class="k">except</span> <span class="n">pp</span><span class="o">.</span><span class="n">ParseBaseException</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Can not parse file: </span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
+        <span class="k">raise</span> <span class="p">(</span><span class="n">first</span> <span class="ow">or</span> <span class="n">last</span> <span class="ow">or</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"File </span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s2"> is not recognized as any known file type"</span><span class="p">))</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="CommonResultFile">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.result_files.result_files.CommonResultFile.html#ase2sprkkr.result_files.definitions.bsf.CommonResultFile">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">CommonResultFile</span><span class="p">(</span><span class="n">ResultFile</span><span class="p">):</span>
+<div class="viewcode-block" id="CommonResultFile.n_atoms">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.result_files.result_files.CommonResultFile.html#ase2sprkkr.result_files.definitions.bsf.CommonResultFile.n_atoms">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">n_atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ORBITALS</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="CommonResultFile.n_types">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.result_files.result_files.CommonResultFile.html#ase2sprkkr.result_files.definitions.bsf.CommonResultFile.n_types">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">n_types</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">TYPES</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="CommonResultFile.site_type_index">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.result_files.result_files.CommonResultFile.html#ase2sprkkr.result_files.definitions.bsf.CommonResultFile.site_type_index">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">site_type_index</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">type</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="nb">type</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+            <span class="k">return</span> <span class="nb">type</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">TYPES</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">t</span><span class="p">[</span><span class="s2">"TXT_T"</span><span class="p">]</span> <span class="o">==</span> <span class="nb">type</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">i</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"There is no </span><span class="si">{</span><span class="nb">type</span><span class="si">}</span><span class="s2"> atom in the result file"</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="CommonResultFile.n_orbitals">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.result_files.result_files.CommonResultFile.html#ase2sprkkr.result_files.definitions.bsf.CommonResultFile.n_orbitals">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">n_orbitals</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">type</span><span class="p">):</span>
+        <span class="nb">type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">site_type_index</span><span class="p">(</span><span class="nb">type</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ORBITALS</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">TYPES</span><span class="p">[</span><span class="nb">type</span><span class="p">][</span><span class="s2">"IQAT"</span><span class="p">][</span><span class="mi">0</span><span class="p">]][</span><span class="s2">"NLQ"</span><span class="p">]</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="Arithmetic">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.result_files.result_files.Arithmetic.html#ase2sprkkr.result_files.definitions.bsf.Arithmetic">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Arithmetic</span><span class="p">:</span>
+<div class="viewcode-block" id="Arithmetic._check_arithmetic">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.result_files.result_files.Arithmetic.html#ase2sprkkr.result_files.definitions.bsf.Arithmetic._check_arithmetic">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_check_arithmetic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">"_assert_arithmetic"</span><span class="p">):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_assert_arithmetic</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">AssertionError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"The outputs are not compatibile to be summed or subtracted."</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
+        <span class="k">pass</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">copy_values</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">out</span> <span class="o">+=</span> <span class="n">other</span>
+        <span class="k">return</span> <span class="n">out</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__sub__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">copy_values</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">out</span> <span class="o">-=</span> <span class="n">other</span>
+        <span class="k">return</span> <span class="n">out</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__mul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">copy_values</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">out</span> <span class="o">*=</span> <span class="n">other</span>
+        <span class="k">return</span> <span class="n">out</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">__div__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">copy_values</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">out</span> <span class="o">/=</span> <span class="n">other</span>
+        <span class="k">return</span> <span class="n">out</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__rmul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">out</span> <span class="o">*=</span> <span class="n">other</span>
+        <span class="k">return</span> <span class="n">out</span>
+
+<div class="viewcode-block" id="Arithmetic._do_arithmetic">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.result_files.result_files.Arithmetic.html#ase2sprkkr.result_files.definitions.bsf.Arithmetic._do_arithmetic">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_do_arithmetic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Run given function for all "summable/subtractable/etc... data"""</span>
+        <span class="n">vals</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_arithmetic_values</span>
+        <span class="k">if</span> <span class="nb">callable</span><span class="p">(</span><span class="n">vals</span><span class="p">):</span>
+            <span class="n">vals</span> <span class="o">=</span> <span class="n">vals</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">val</span><span class="p">,</span> <span class="n">selector</span> <span class="ow">in</span> <span class="n">vals</span><span class="p">:</span>
+            <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="n">val</span><span class="p">]()[</span><span class="n">selector</span><span class="p">],</span> <span class="n">func</span><span class="p">)(</span><span class="n">other</span><span class="p">[</span><span class="n">val</span><span class="p">]()[</span><span class="n">selector</span><span class="p">])</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__iadd__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_check_arithmetic</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_do_arithmetic</span><span class="p">(</span><span class="s2">"__iadd__"</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__isub__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_check_arithmetic</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_do_arithmetic</span><span class="p">(</span><span class="s2">"__isub__"</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__imul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_do_arithmetic</span><span class="p">(</span><span class="s2">"__imul__"</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">__idiv__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_do_arithmetic</span><span class="p">(</span><span class="s2">"__idiv__"</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.</span><span class="w"> </span><span class="kn">import</span> <span class="n">result_files_definitions</span>  <span class="c1"># NOQA: E402</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Matyáš Novák &amp; Jano Minár.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

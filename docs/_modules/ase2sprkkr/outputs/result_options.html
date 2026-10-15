@@ -16,8 +16,8 @@
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
-      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -81,6 +81,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../ase2sprkkr.html">ase2sprkkr</a></li>
       <li class="breadcrumb-item active">ase2sprkkr.outputs.result_options</li>
       <li class="wy-breadcrumbs-aside">
       </li>
@@ -91,24 +92,32 @@
            <div itemprop="articleBody">
              
   <h1>Source code for ase2sprkkr.outputs.result_options</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Option and section types used to expose task results.&quot;&quot;&quot;</span>
+<span></span><span class="sd">"""Option and section types used to expose task results."""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">platform</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">shutil</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">subprocess</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">functools</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Tuple</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">..common.container_definitions</span><span class="w"> </span><span class="kn">import</span> <span class="n">SectionDefinition</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">..common.generated_configuration_definitions</span><span class="w"> </span><span class="kn">import</span> <span class="n">GeneratedValueDefinition</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">..common.options</span><span class="w"> </span><span class="kn">import</span> <span class="n">Option</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">..common.configuration_containers</span><span class="w"> </span><span class="kn">import</span> <span class="n">Section</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..common.file_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">FilePath</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">..common.value_definitions</span><span class="w"> </span><span class="kn">import</span> <span class="n">ValueDefinition</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">..output_files.output_files</span><span class="w"> </span><span class="kn">import</span> <span class="n">OutputFile</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..common.warnings</span><span class="w"> </span><span class="kn">import</span> <span class="n">ValidationResult</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..result_files</span><span class="w"> </span><span class="kn">import</span> <span class="n">ResultFile</span>
 
 
 <div class="viewcode-block" id="OutputOption">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.result_options.OutputOption.html#ase2sprkkr.outputs.result_options.OutputOption">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">OutputOption</span><span class="p">(</span><span class="n">Option</span><span class="p">):</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">display_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="p">,</span> <span class="s2">"display_name"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
 <div class="viewcode-block" id="OutputOption.value_label">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.result_options.OutputOption.html#ase2sprkkr.outputs.result_options.OutputOption.value_label">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">value_label</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -118,7 +127,7 @@
 <div class="viewcode-block" id="OutputOption.actions">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.result_options.OutputOption.html#ase2sprkkr.outputs.result_options.OutputOption.actions">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">actions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="p">(</span><span class="s2">&quot;plot&quot;</span><span class="p">,)</span> <span class="k">if</span> <span class="nb">callable</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;plot&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span> <span class="k">else</span> <span class="p">()</span></div>
+        <span class="k">return</span> <span class="p">(</span><span class="s2">"plot"</span><span class="p">,)</span> <span class="k">if</span> <span class="nb">callable</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">"plot"</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span> <span class="k">else</span> <span class="p">()</span></div>
 </div>
 
 
@@ -129,13 +138,13 @@
 <div class="viewcode-block" id="DataOutputOption.value_label">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.result_options.DataOutputOption.html#ase2sprkkr.outputs.result_options.DataOutputOption.value_label">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">value_label</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s2">&quot;&lt;data...&gt;&quot;</span></div>
+        <span class="k">return</span> <span class="s2">"&lt;data...&gt;"</span></div>
 
 
 <div class="viewcode-block" id="DataOutputOption.actions">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.result_options.DataOutputOption.html#ase2sprkkr.outputs.result_options.DataOutputOption.actions">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">actions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="p">(</span><span class="s2">&quot;data&quot;</span><span class="p">,)</span></div>
+        <span class="k">return</span> <span class="p">(</span><span class="s2">"data"</span><span class="p">,)</span></div>
 
 
 <div class="viewcode-block" id="DataOutputOption.data">
@@ -149,42 +158,125 @@
 <div class="viewcode-block" id="OutputFileOption">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.result_options.OutputFileOption.html#ase2sprkkr.outputs.result_options.OutputFileOption">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">OutputFileOption</span><span class="p">(</span><span class="n">OutputOption</span><span class="p">):</span>
+    <span class="n">_FILE_DISPLAY_NAMES</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">"output"</span><span class="p">:</span> <span class="s2">"Output file"</span><span class="p">,</span>
+        <span class="s2">"input"</span><span class="p">:</span> <span class="s2">"Input file"</span><span class="p">,</span>
+        <span class="s2">"potential"</span><span class="p">:</span> <span class="s2">"Potential file"</span><span class="p">,</span>
+        <span class="s2">"converged"</span><span class="p">:</span> <span class="s2">"Converged potential file"</span><span class="p">,</span>
+        <span class="s2">"sfn"</span><span class="p">:</span> <span class="s2">"Shape functions (SFN)"</span><span class="p">,</span>
+        <span class="s2">"dos"</span><span class="p">:</span> <span class="s2">"Density of states (DOS)"</span><span class="p">,</span>
+        <span class="s2">"bloch-sf"</span><span class="p">:</span> <span class="s2">"Bloch spectral function (BSF)"</span><span class="p">,</span>
+        <span class="s2">"spc"</span><span class="p">:</span> <span class="s2">"Photoemission spectrum"</span><span class="p">,</span>
+        <span class="s2">"jxc"</span><span class="p">:</span> <span class="s2">"Exchange couplings"</span><span class="p">,</span>
+        <span class="s2">"dij"</span><span class="p">:</span> <span class="s2">"Exchange tensors"</span><span class="p">,</span>
+        <span class="s2">"dmi"</span><span class="p">:</span> <span class="s2">"Dzyaloshinskii–Moriya vectors"</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="n">_TYPE_DISPLAY_NAMES</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">"dos"</span><span class="p">:</span> <span class="s2">"Density of states (DOS)"</span><span class="p">,</span>
+        <span class="s2">"bsf"</span><span class="p">:</span> <span class="s2">"Bloch spectral function (BSF)"</span><span class="p">,</span>
+        <span class="s2">"spc"</span><span class="p">:</span> <span class="s2">"Photoemission spectrum"</span><span class="p">,</span>
+        <span class="s2">"jxc"</span><span class="p">:</span> <span class="s2">"Exchange-interaction data"</span><span class="p">,</span>
+        <span class="s2">"rat"</span><span class="p">:</span> <span class="s2">"X-ray spectroscopy data"</span><span class="p">,</span>
+        <span class="s2">"sfn"</span><span class="p">:</span> <span class="s2">"Shape functions (SFN)"</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="n">_FILE_INFO</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">"output"</span><span class="p">:</span> <span class="s2">"Main text output produced by SPR-KKR."</span><span class="p">,</span>
+        <span class="s2">"input"</span><span class="p">:</span> <span class="s2">"Input parameters used for this calculation."</span><span class="p">,</span>
+        <span class="s2">"potential"</span><span class="p">:</span> <span class="s2">"Potential used as input for this calculation."</span><span class="p">,</span>
+        <span class="s2">"converged"</span><span class="p">:</span> <span class="s2">"Potential produced by the converged SCF calculation."</span><span class="p">,</span>
+        <span class="s2">"sfn"</span><span class="p">:</span> <span class="s2">"Shape-function data used by a full-potential calculation."</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="n">_TYPE_INFO</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">"dos"</span><span class="p">:</span> <span class="s2">"Density-of-states data produced by the calculation."</span><span class="p">,</span>
+        <span class="s2">"bsf"</span><span class="p">:</span> <span class="s2">"Bloch spectral-function data produced by the calculation."</span><span class="p">,</span>
+        <span class="s2">"spc"</span><span class="p">:</span> <span class="s2">"Photoemission spectrum data produced by the calculation."</span><span class="p">,</span>
+        <span class="s2">"jxc"</span><span class="p">:</span> <span class="s2">"Exchange-interaction data produced by the calculation."</span><span class="p">,</span>
+        <span class="s2">"rat"</span><span class="p">:</span> <span class="s2">"X-ray spectroscopy data produced by the calculation."</span><span class="p">,</span>
+        <span class="s2">"sfn"</span><span class="p">:</span> <span class="s2">"Shape-function data used by a full-potential calculation."</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">info</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_TYPE_INFO</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">file_type</span><span class="p">)</span>
+            <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_FILE_INFO</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">casefold</span><span class="p">())</span>
+            <span class="ow">or</span> <span class="sa">f</span><span class="s2">"File produced or used by the calculation: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">."</span>
+        <span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">display_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_FILE_DISPLAY_NAMES</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">casefold</span><span class="p">())</span>
+            <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_TYPE_DISPLAY_NAMES</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">file_type</span><span class="p">)</span>
+            <span class="ow">or</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">display_name</span>
+        <span class="p">)</span>
+
 <div class="viewcode-block" id="OutputFileOption.path">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.result_options.OutputFileOption.html#ase2sprkkr.outputs.result_options.OutputFileOption.path">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">path</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">owner</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_container</span><span class="p">,</span> <span class="s2">&quot;result&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">owner</span><span class="o">.</span><span class="n">path_to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span> <span class="k">if</span> <span class="n">owner</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="bp">self</span><span class="p">()</span></div>
+        <span class="n">owner</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_container</span><span class="p">,</span> <span class="s2">"result"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">owner</span><span class="o">.</span><span class="n">path_to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span> <span class="k">if</span> <span class="n">owner</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">os</span><span class="o">.</span><span class="n">fspath</span><span class="p">(</span><span class="bp">self</span><span class="p">())</span></div>
 
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">file_type</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">file_type</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">file_type</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">file_type</span>
+        <span class="n">extension</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="bp">self</span><span class="p">())[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">lstrip</span><span class="p">(</span><span class="s2">"."</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">extension</span> <span class="k">if</span> <span class="n">extension</span> <span class="ow">in</span> <span class="n">ResultFile</span><span class="o">.</span><span class="n">definitions</span> <span class="k">else</span> <span class="kc">None</span>
 
 <div class="viewcode-block" id="OutputFileOption.definition">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.result_options.OutputFileOption.html#ase2sprkkr.outputs.result_options.OutputFileOption.definition">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">definition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">OutputFile</span><span class="o">.</span><span class="n">definitions</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">file_type</span><span class="p">]</span></div>
+        <span class="k">return</span> <span class="n">ResultFile</span><span class="o">.</span><span class="n">definitions</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">file_type</span><span class="p">]</span></div>
 
 
 <div class="viewcode-block" id="OutputFileOption.value_label">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.result_options.OutputFileOption.html#ase2sprkkr.outputs.result_options.OutputFileOption.value_label">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">value_label</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&lt;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">file_type</span><span class="si">}</span><span class="s2"> file&gt;&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">file_type</span> <span class="k">else</span> <span class="bp">self</span><span class="p">()</span></div>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">"&lt;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">file_type</span><span class="si">}</span><span class="s2"> file&gt;"</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">file_type</span> <span class="k">else</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">())</span></div>
 
 
 <div class="viewcode-block" id="OutputFileOption.actions">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.result_options.OutputFileOption.html#ase2sprkkr.outputs.result_options.OutputFileOption.actions">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">actions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">out</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;open&quot;</span><span class="p">,</span> <span class="s2">&quot;open_directory&quot;</span><span class="p">,</span> <span class="s2">&quot;save&quot;</span><span class="p">]</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">file_type</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">definition</span><span class="p">()</span><span class="o">.</span><span class="n">result_class</span><span class="o">.</span><span class="n">can_be_plotted</span><span class="p">():</span>
-            <span class="n">out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;plot&quot;</span><span class="p">)</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"open"</span><span class="p">,</span> <span class="s2">"open_directory"</span><span class="p">,</span> <span class="s2">"save"</span><span class="p">]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">file_type</span><span class="p">:</span>
+            <span class="n">result_class</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">definition</span><span class="p">()</span><span class="o">.</span><span class="n">result_class</span>
+            <span class="k">if</span> <span class="n">result_class</span><span class="o">.</span><span class="n">can_be_plotted</span><span class="p">():</span>
+                <span class="n">out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">"plot"</span><span class="p">)</span>
+            <span class="n">out</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">result_class</span><span class="o">.</span><span class="n">additional_actions</span><span class="p">)</span>
         <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">out</span><span class="p">)</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"_"</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">file_type</span><span class="p">:</span>
+            <span class="n">result_class</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">definition</span><span class="p">()</span><span class="o">.</span><span class="n">result_class</span>
+            <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">result_class</span><span class="o">.</span><span class="n">additional_actions</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">functools</span><span class="o">.</span><span class="n">partial</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_run_file_action</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">!s}</span><span class="s2"> has no attribute </span><span class="si">{</span><span class="n">name</span><span class="si">!r}</span><span class="s2">"</span><span class="p">)</span>
+
+<div class="viewcode-block" id="OutputFileOption._run_file_action">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.result_options.OutputFileOption.html#ase2sprkkr.outputs.result_options.OutputFileOption._run_file_action">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_run_file_action</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parsed_file</span><span class="p">(),</span> <span class="n">action</span><span class="p">)(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="OutputFileOption.parsed_file">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.result_options.OutputFileOption.html#ase2sprkkr.outputs.result_options.OutputFileOption.parsed_file">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">parsed_file</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">OutputFile</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">(),</span> <span class="n">try_only</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">file_type</span><span class="p">)</span></div>
+    <span class="k">def</span><span class="w"> </span><span class="nf">parsed_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">potential</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Parse the file, using its task result as context when available."""</span>
+        <span class="n">owner</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_container</span><span class="o">.</span><span class="n">result</span>
+        <span class="k">if</span> <span class="n">owner</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">owner</span><span class="o">.</span><span class="n">parse_result_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">potential</span><span class="o">=</span><span class="n">potential</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">ResultFile</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">(),</span>
+            <span class="n">try_only</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">file_type</span><span class="p">,</span>
+            <span class="n">potential</span><span class="o">=</span><span class="n">potential</span><span class="p">,</span>
+        <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="OutputFileOption.plot">
@@ -198,8 +290,8 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="kn">from</span><span class="w"> </span><span class="nn">PyQt6.QtWidgets</span><span class="w"> </span><span class="kn">import</span> <span class="n">QFileDialog</span>
 
-        <span class="n">extension</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">definition</span><span class="p">()</span><span class="o">.</span><span class="n">extension</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">file_type</span> <span class="k">else</span> <span class="s2">&quot;*&quot;</span>
-        <span class="n">filename</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">QFileDialog</span><span class="o">.</span><span class="n">getSaveFileName</span><span class="p">(</span><span class="n">parent</span><span class="p">,</span> <span class="s2">&quot;Save File&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;(*.</span><span class="si">{</span><span class="n">extension</span><span class="si">}</span><span class="s2">);;All Files (*)&quot;</span><span class="p">)</span>
+        <span class="n">extension</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">definition</span><span class="p">()</span><span class="o">.</span><span class="n">extension</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">file_type</span> <span class="k">else</span> <span class="s2">"*"</span>
+        <span class="n">filename</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">QFileDialog</span><span class="o">.</span><span class="n">getSaveFileName</span><span class="p">(</span><span class="n">parent</span><span class="p">,</span> <span class="s2">"Save File"</span><span class="p">,</span> <span class="s2">""</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"(*.</span><span class="si">{</span><span class="n">extension</span><span class="si">}</span><span class="s2">);;All Files (*)"</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">filename</span><span class="p">:</span>
             <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">(),</span> <span class="n">filename</span><span class="p">)</span></div>
 
@@ -207,39 +299,60 @@
 <div class="viewcode-block" id="OutputFileOption.open">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.result_options.OutputFileOption.html#ase2sprkkr.outputs.result_options.OutputFileOption.open">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">open</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">platform</span><span class="o">.</span><span class="n">system</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;Windows&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">platform</span><span class="o">.</span><span class="n">system</span><span class="p">()</span> <span class="o">==</span> <span class="s2">"Windows"</span><span class="p">:</span>
             <span class="n">os</span><span class="o">.</span><span class="n">startfile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">())</span>
-        <span class="k">elif</span> <span class="n">platform</span><span class="o">.</span><span class="n">system</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;Darwin&quot;</span><span class="p">:</span>
-            <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="s2">&quot;open&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">()])</span>
+        <span class="k">elif</span> <span class="n">platform</span><span class="o">.</span><span class="n">system</span><span class="p">()</span> <span class="o">==</span> <span class="s2">"Darwin"</span><span class="p">:</span>
+            <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="s2">"open"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">()])</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="s2">&quot;xdg-open&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">()])</span></div>
+            <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="s2">"xdg-open"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">()])</span></div>
 
 
 <div class="viewcode-block" id="OutputFileOption.open_directory">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.result_options.OutputFileOption.html#ase2sprkkr.outputs.result_options.OutputFileOption.open_directory">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">open_directory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="n">directory</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">()))</span>
-        <span class="k">if</span> <span class="n">platform</span><span class="o">.</span><span class="n">system</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;Windows&quot;</span><span class="p">:</span>
-            <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="s2">&quot;explorer&quot;</span><span class="p">,</span> <span class="n">directory</span><span class="p">])</span>
-        <span class="k">elif</span> <span class="n">platform</span><span class="o">.</span><span class="n">system</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;Darwin&quot;</span><span class="p">:</span>
-            <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="s2">&quot;open&quot;</span><span class="p">,</span> <span class="n">directory</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">platform</span><span class="o">.</span><span class="n">system</span><span class="p">()</span> <span class="o">==</span> <span class="s2">"Windows"</span><span class="p">:</span>
+            <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="s2">"explorer"</span><span class="p">,</span> <span class="n">directory</span><span class="p">])</span>
+        <span class="k">elif</span> <span class="n">platform</span><span class="o">.</span><span class="n">system</span><span class="p">()</span> <span class="o">==</span> <span class="s2">"Darwin"</span><span class="p">:</span>
+            <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="s2">"open"</span><span class="p">,</span> <span class="n">directory</span><span class="p">])</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="s2">&quot;xdg-open&quot;</span><span class="p">,</span> <span class="n">directory</span><span class="p">])</span></div>
+            <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="s2">"xdg-open"</span><span class="p">,</span> <span class="n">directory</span><span class="p">])</span></div>
 </div>
 
 
 
-<div class="viewcode-block" id="OutputFileDefinition">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.result_options.OutputFileDefinition.html#ase2sprkkr.outputs.result_options.OutputFileDefinition">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">OutputFileDefinition</span><span class="p">(</span><span class="n">ValueDefinition</span><span class="p">):</span>
+<div class="viewcode-block" id="ResultFileDefinition">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.result_options.ResultFileDefinition.html#ase2sprkkr.outputs.result_options.ResultFileDefinition">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ResultFileDefinition</span><span class="p">(</span><span class="n">ValueDefinition</span><span class="p">):</span>
     <span class="n">result_class</span> <span class="o">=</span> <span class="n">OutputFileOption</span>
     <span class="n">name_in_grammar</span> <span class="o">=</span> <span class="kc">False</span>
 
-<div class="viewcode-block" id="OutputFileDefinition.__init__">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.result_options.OutputFileDefinition.html#ase2sprkkr.outputs.result_options.OutputFileDefinition.__init__">[docs]</a>
+<div class="viewcode-block" id="ResultFileDefinition.__init__">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.result_options.ResultFileDefinition.html#ase2sprkkr.outputs.result_options.ResultFileDefinition.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">file_type</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">file_type</span> <span class="o">=</span> <span class="n">file_type</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">is_optional</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ResultFileDefinition.convert_value">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.result_options.ResultFileDefinition.html#ase2sprkkr.outputs.result_options.ResultFileDefinition.convert_value">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">convert_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">option</span><span class="p">:</span> <span class="n">Option</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">item</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FilePath</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Resolve ``value`` relative to the result owning ``option``.</span>
+
+<span class="sd">        ``item`` is accepted for the common value-definition conversion API.</span>
+<span class="sd">        """</span>
+        <span class="n">owner</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">option</span><span class="o">.</span><span class="n">_container</span><span class="p">,</span> <span class="s2">"result"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">directory</span> <span class="o">=</span> <span class="n">owner</span><span class="o">.</span><span class="n">directory</span> <span class="k">if</span> <span class="n">owner</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="n">FilePath</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">directory</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ResultFileDefinition.validate_converted">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.result_options.ResultFileDefinition.html#ase2sprkkr.outputs.result_options.ResultFileDefinition.validate_converted">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">validate_converted</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">option</span><span class="p">:</span> <span class="n">Option</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">why</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"set"</span><span class="p">,</span> <span class="n">item</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">ValidationResult</span><span class="p">,</span> <span class="o">...</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">"""Accept converted ``value``; remaining arguments match the common API."""</span>
+        <span class="k">return</span> <span class="p">()</span></div>
 </div>
 
 
@@ -256,7 +369,7 @@
             <span class="k">if</span> <span class="n">file_type</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">option</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">file_type</span> <span class="o">=</span> <span class="n">file_type</span>
             <span class="k">return</span> <span class="n">option</span>
-        <span class="n">definition</span> <span class="o">=</span> <span class="n">OutputFileDefinition</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">file_type</span><span class="p">)</span>
+        <span class="n">definition</span> <span class="o">=</span> <span class="n">ResultFileDefinition</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">file_type</span><span class="p">)</span>
         <span class="n">definition</span><span class="o">.</span><span class="n">added_to_container</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">_members</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">definition</span>
         <span class="n">option</span> <span class="o">=</span> <span class="n">definition</span><span class="o">.</span><span class="n">create_object</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
@@ -268,7 +381,7 @@
 <div class="viewcode-block" id="OutputFilesSection.set_file_type">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.result_options.OutputFilesSection.html#ase2sprkkr.outputs.result_options.OutputFilesSection.set_file_type">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">set_file_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">file_type</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the parser type for an already registered output file.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Set the parser type for an already registered output file."""</span>
         <span class="bp">self</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">file_type</span> <span class="o">=</span> <span class="n">file_type</span>
         <span class="k">return</span> <span class="bp">self</span><span class="p">[</span><span class="n">name</span><span class="p">]</span></div>
 </div>
@@ -278,17 +391,33 @@
 <div class="viewcode-block" id="create_files_section">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.result_options.create_files_section.html#ase2sprkkr.outputs.result_options.create_files_section">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">create_files_section</span><span class="p">(</span><span class="n">result</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="n">SectionDefinition</span><span class="p">(</span><span class="s2">&quot;FILES&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="n">result_class</span><span class="o">=</span><span class="n">OutputFilesSection</span><span class="p">)</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="n">SectionDefinition</span><span class="p">(</span><span class="s2">"FILES"</span><span class="p">,</span> <span class="p">[],</span> <span class="n">result_class</span><span class="o">=</span><span class="n">OutputFilesSection</span><span class="p">)</span>
     <span class="n">out</span> <span class="o">=</span> <span class="n">definition</span><span class="o">.</span><span class="n">create_object</span><span class="p">()</span>
-    <span class="nb">object</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="s2">&quot;result&quot;</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span>
+    <span class="nb">object</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="s2">"result"</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">out</span></div>
 
 
 
 <div class="viewcode-block" id="generated_output">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.result_options.generated_output.html#ase2sprkkr.outputs.result_options.generated_output">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">generated_output</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">getter</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">result_class</span><span class="o">=</span><span class="n">OutputOption</span><span class="p">,</span> <span class="n">plot</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">GeneratedValueDefinition</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">getter</span><span class="p">,</span> <span class="n">result_class</span><span class="o">=</span><span class="n">result_class</span><span class="p">,</span> <span class="n">plot</span><span class="o">=</span><span class="n">plot</span><span class="p">)</span></div>
+<span class="k">def</span><span class="w"> </span><span class="nf">generated_output</span><span class="p">(</span>
+    <span class="n">name</span><span class="p">,</span>
+    <span class="n">getter</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">result_class</span><span class="o">=</span><span class="n">OutputOption</span><span class="p">,</span>
+    <span class="n">plot</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">info</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">display_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="n">GeneratedValueDefinition</span><span class="p">(</span>
+        <span class="n">name</span><span class="p">,</span>
+        <span class="n">getter</span><span class="p">,</span>
+        <span class="n">result_class</span><span class="o">=</span><span class="n">result_class</span><span class="p">,</span>
+        <span class="n">plot</span><span class="o">=</span><span class="n">plot</span><span class="p">,</span>
+        <span class="n">info</span><span class="o">=</span><span class="n">info</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">definition</span><span class="o">.</span><span class="n">display_name</span> <span class="o">=</span> <span class="n">display_name</span> <span class="ow">or</span> <span class="n">name</span>
+    <span class="k">return</span> <span class="n">definition</span></div>
 
 
 

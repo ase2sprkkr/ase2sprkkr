@@ -1,0 +1,591 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ase2sprkkr.input_parameters.definitions.bsf &mdash; ASE2SPRKKR  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/plot_directive.css" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/mods.css?v=26f6988d" />
+
+  
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            ASE2SPRKKR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../usage.html">How to use the package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../how-to-install.html">More about the package installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../philosophy.html">Philosophy of the package (for developers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../authors.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../examples.html">Examples</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../auto/ase2sprkkr.html">ase2sprkkr</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">ASE2SPRKKR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../../ase2sprkkr.html">ase2sprkkr</a></li>
+      <li class="breadcrumb-item active">ase2sprkkr.input_parameters.definitions.bsf</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for ase2sprkkr.input_parameters.definitions.bsf</h1><div class="highlight"><pre>
+<span></span><span class="sd">"""BSF input-parameters definition."""</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">cache</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">...common.generated_configuration_definitions</span><span class="w"> </span><span class="kn">import</span> <span class="n">Length</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">...common.grammar_types</span><span class="w"> </span><span class="kn">import</span> <span class="n">Keyword</span><span class="p">,</span> <span class="n">SetOf</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">...common.warnings</span><span class="w"> </span><span class="kn">import</span> <span class="n">DataValidityError</span><span class="p">,</span> <span class="n">DataValidityWarning</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..input_parameters</span><span class="w"> </span><span class="kn">import</span> <span class="n">InputSection</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">...physics.lattice_data</span><span class="w"> </span><span class="kn">import</span> <span class="n">bravais_number</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..input_parameters_definitions</span><span class="w"> </span><span class="kn">import</span> <span class="n">InputParametersDefinition</span><span class="p">,</span> <span class="n">InputValueDefinition</span> <span class="k">as</span> <span class="n">V</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.sections</span><span class="w"> </span><span class="kn">import</span> <span class="n">CONTROL</span><span class="p">,</span> <span class="n">CPA</span><span class="p">,</span> <span class="n">ENERGY</span><span class="p">,</span> <span class="n">MODE</span><span class="p">,</span> <span class="n">SITES</span><span class="p">,</span> <span class="n">STRCONST</span><span class="p">,</span> <span class="n">TASK</span><span class="p">,</span> <span class="n">TAU</span>
+
+
+<span class="n">EK</span> <span class="o">=</span> <span class="s2">"EK"</span>
+<span class="n">KK</span> <span class="o">=</span> <span class="s2">"KK"</span>
+
+<span class="n">EK_TASK_ITEMS</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"NK"</span><span class="p">,</span> <span class="s2">"KPATH"</span><span class="p">,</span> <span class="s2">"NKDIR"</span><span class="p">,</span> <span class="s2">"KE"</span><span class="p">)</span>
+<span class="n">KK_TASK_ITEMS</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"NK1"</span><span class="p">,</span> <span class="s2">"NK2"</span><span class="p">,</span> <span class="s2">"K1"</span><span class="p">,</span> <span class="s2">"K2"</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="_mode_hint">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.definitions.bsf._mode_hint.html#ase2sprkkr.input_parameters.definitions.bsf._mode_hint">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_mode_hint</span><span class="p">(</span><span class="n">parameters</span><span class="p">):</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">parameters</span><span class="o">.</span><span class="n">task_name</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">"BSFEK"</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">EK</span>
+    <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">"BSFKK"</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">KK</span>
+    <span class="k">return</span> <span class="kc">None</span></div>
+
+
+
+<div class="viewcode-block" id="bsf_mode">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.definitions.bsf.bsf_mode.html#ase2sprkkr.input_parameters.definitions.bsf.bsf_mode">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">bsf_mode</span><span class="p">(</span><span class="n">parameters</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Return the BSF mode selected by the number of energy points."""</span>
+    <span class="n">ne</span> <span class="o">=</span> <span class="n">parameters</span><span class="p">[</span><span class="s2">"ENERGY"</span><span class="p">][</span><span class="s2">"NE"</span><span class="p">]()</span>
+    <span class="k">if</span> <span class="n">ne</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">ne</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">_mode_hint</span><span class="p">(</span><span class="n">parameters</span><span class="p">)</span> <span class="ow">or</span> <span class="n">KK</span>
+    <span class="k">return</span> <span class="n">EK</span> <span class="k">if</span> <span class="n">ne</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="k">else</span> <span class="n">KK</span></div>
+
+
+
+<div class="viewcode-block" id="_root">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.definitions.bsf._root.html#ase2sprkkr.input_parameters.definitions.bsf._root">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_root</span><span class="p">(</span><span class="n">container</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">container</span><span class="o">.</span><span class="n">_get_root_container</span><span class="p">()</span></div>
+
+
+
+<div class="viewcode-block" id="_ek_item">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.definitions.bsf._ek_item.html#ase2sprkkr.input_parameters.definitions.bsf._ek_item">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_ek_item</span><span class="p">(</span><span class="n">_definition</span><span class="p">,</span> <span class="n">container</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">bsf_mode</span><span class="p">(</span><span class="n">_root</span><span class="p">(</span><span class="n">container</span><span class="p">))</span> <span class="o">!=</span> <span class="n">KK</span></div>
+
+
+
+<div class="viewcode-block" id="_ek_vectors_item">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.definitions.bsf._ek_vectors_item.html#ase2sprkkr.input_parameters.definitions.bsf._ek_vectors_item">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_ek_vectors_item</span><span class="p">(</span><span class="n">_definition</span><span class="p">,</span> <span class="n">container</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">_ek_item</span><span class="p">(</span><span class="n">_definition</span><span class="p">,</span> <span class="n">container</span><span class="p">)</span> <span class="ow">and</span> <span class="n">container</span><span class="p">[</span><span class="s2">"KPATH"</span><span class="p">]()</span> <span class="ow">is</span> <span class="kc">None</span></div>
+
+
+
+<div class="viewcode-block" id="_kk_item">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.definitions.bsf._kk_item.html#ase2sprkkr.input_parameters.definitions.bsf._kk_item">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_kk_item</span><span class="p">(</span><span class="n">_definition</span><span class="p">,</span> <span class="n">container</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">bsf_mode</span><span class="p">(</span><span class="n">_root</span><span class="p">(</span><span class="n">container</span><span class="p">))</span> <span class="o">!=</span> <span class="n">EK</span></div>
+
+
+
+<div class="viewcode-block" id="_ka_item">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.definitions.bsf._ka_item.html#ase2sprkkr.input_parameters.definitions.bsf._ka_item">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_ka_item</span><span class="p">(</span><span class="n">definition</span><span class="p">,</span> <span class="n">container</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">_kk_item</span><span class="p">(</span><span class="n">definition</span><span class="p">,</span> <span class="n">container</span><span class="p">)</span> <span class="ow">or</span> <span class="n">_ek_vectors_item</span><span class="p">(</span><span class="n">definition</span><span class="p">,</span> <span class="n">container</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="_ka_numbered">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.definitions.bsf._ka_numbered.html#ase2sprkkr.input_parameters.definitions.bsf._ka_numbered">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_ka_numbered</span><span class="p">(</span><span class="n">option</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">bsf_mode</span><span class="p">(</span><span class="n">_root</span><span class="p">(</span><span class="n">option</span><span class="p">))</span> <span class="o">==</span> <span class="n">EK</span></div>
+
+
+
+<div class="viewcode-block" id="_ne_default">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.definitions.bsf._ne_default.html#ase2sprkkr.input_parameters.definitions.bsf._ne_default">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_ne_default</span><span class="p">(</span><span class="n">option</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">[</span><span class="mi">200</span><span class="p">]</span> <span class="k">if</span> <span class="n">_mode_hint</span><span class="p">(</span><span class="n">_root</span><span class="p">(</span><span class="n">option</span><span class="p">))</span> <span class="o">==</span> <span class="n">EK</span> <span class="k">else</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span></div>
+
+
+
+<div class="viewcode-block" id="_emin_default">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.definitions.bsf._emin_default.html#ase2sprkkr.input_parameters.definitions.bsf._emin_default">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_emin_default</span><span class="p">(</span><span class="n">option</span><span class="p">):</span>
+    <span class="k">return</span> <span class="o">-</span><span class="mf">0.2</span> <span class="k">if</span> <span class="n">bsf_mode</span><span class="p">(</span><span class="n">_root</span><span class="p">(</span><span class="n">option</span><span class="p">))</span> <span class="o">==</span> <span class="n">EK</span> <span class="k">else</span> <span class="mf">0.7</span></div>
+
+
+
+<div class="viewcode-block" id="_emaxev_default">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.definitions.bsf._emaxev_default.html#ase2sprkkr.input_parameters.definitions.bsf._emaxev_default">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_emaxev_default</span><span class="p">(</span><span class="n">option</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">bsf_mode</span><span class="p">(</span><span class="n">_root</span><span class="p">(</span><span class="n">option</span><span class="p">))</span> <span class="o">==</span> <span class="n">KK</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">option</span><span class="o">.</span><span class="n">_container</span><span class="p">[</span><span class="s2">"EMINEV"</span><span class="p">]()</span>
+    <span class="k">return</span> <span class="kc">None</span></div>
+
+
+
+<div class="viewcode-block" id="_emax_default">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.definitions.bsf._emax_default.html#ase2sprkkr.input_parameters.definitions.bsf._emax_default">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_emax_default</span><span class="p">(</span><span class="n">option</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">bsf_mode</span><span class="p">(</span><span class="n">_root</span><span class="p">(</span><span class="n">option</span><span class="p">))</span> <span class="o">==</span> <span class="n">KK</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">option</span><span class="o">.</span><span class="n">_container</span><span class="p">[</span><span class="s2">"EMIN"</span><span class="p">]()</span>
+    <span class="k">return</span> <span class="o">-</span><span class="mf">1.0</span></div>
+
+
+
+<div class="viewcode-block" id="_validate_bsf">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.definitions.bsf._validate_bsf.html#ase2sprkkr.input_parameters.definitions.bsf._validate_bsf">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_validate_bsf</span><span class="p">(</span>
+    <span class="n">parameters</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">_values</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">why</span><span class="p">:</span> <span class="nb">str</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">DataValidityWarning</span><span class="p">]]:</span>
+    <span class="n">issues</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">mode</span> <span class="o">=</span> <span class="n">bsf_mode</span><span class="p">(</span><span class="n">parameters</span><span class="p">)</span>
+    <span class="n">hint</span> <span class="o">=</span> <span class="n">_mode_hint</span><span class="p">(</span><span class="n">parameters</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">hint</span> <span class="ow">and</span> <span class="n">hint</span> <span class="o">!=</span> <span class="n">mode</span><span class="p">:</span>
+        <span class="n">issues</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="n">DataValidityWarning</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"ENERGY.NE selects BSF-</span><span class="si">{</span><span class="n">mode</span><span class="si">}</span><span class="s2">, but BSF-</span><span class="si">{</span><span class="n">hint</span><span class="si">}</span><span class="s2"> was requested"</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+
+    <span class="n">task</span> <span class="o">=</span> <span class="n">parameters</span><span class="p">[</span><span class="s2">"TASK"</span><span class="p">]</span>
+    <span class="n">incompatible</span> <span class="o">=</span> <span class="n">KK_TASK_ITEMS</span> <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="n">EK</span> <span class="k">else</span> <span class="n">EK_TASK_ITEMS</span>
+    <span class="n">incompatible</span> <span class="o">=</span> <span class="p">[</span><span class="n">name</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">incompatible</span> <span class="k">if</span> <span class="n">task</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">is_set</span><span class="p">()]</span>
+    <span class="k">if</span> <span class="n">incompatible</span><span class="p">:</span>
+        <span class="n">issues</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="n">DataValidityError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"TASK.</span><span class="si">{</span><span class="s1">', TASK.'</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">incompatible</span><span class="p">)</span><span class="si">}</span><span class="s2"> cannot be used in BSF-</span><span class="si">{</span><span class="n">mode</span><span class="si">}</span><span class="s2"> mode. "</span>
+                 <span class="s2">"The mode is chosen by setting number of energies in ENERGY.NE."</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="n">EK</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">why</span> <span class="o">!=</span> <span class="s2">"set"</span> <span class="ow">and</span> <span class="n">task</span><span class="p">[</span><span class="s2">"KPATH"</span><span class="p">]()</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="p">(</span>
+            <span class="n">task</span><span class="p">[</span><span class="s2">"KA"</span><span class="p">]()</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">task</span><span class="p">[</span><span class="s2">"KE"</span><span class="p">]()</span> <span class="ow">is</span> <span class="kc">None</span>
+        <span class="p">):</span>
+            <span class="n">issues</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="n">DataValidityError</span><span class="p">(</span>
+                    <span class="s2">"Please, specify either TASK.KPATH or TASK.KA and TASK.KE"</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+        <span class="n">nkdir</span> <span class="o">=</span> <span class="n">task</span><span class="p">[</span><span class="s2">"NKDIR"</span><span class="p">]()</span>
+        <span class="k">if</span> <span class="n">nkdir</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">nkdir</span> <span class="o">&gt;</span> <span class="mi">9</span><span class="p">:</span>
+            <span class="n">issues</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">DataValidityError</span><span class="p">(</span><span class="s2">"TASK.NKDIR cannot be greater than 9"</span><span class="p">))</span>
+    <span class="k">elif</span> <span class="n">why</span> <span class="o">!=</span> <span class="s2">"set"</span><span class="p">:</span>
+        <span class="n">missing</span> <span class="o">=</span> <span class="p">[</span><span class="n">name</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">KK_TASK_ITEMS</span> <span class="k">if</span> <span class="n">task</span><span class="p">[</span><span class="n">name</span><span class="p">]()</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">missing</span><span class="p">:</span>
+            <span class="n">issues</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="n">DataValidityError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">"TASK.</span><span class="si">{</span><span class="s1">', TASK.'</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">missing</span><span class="p">)</span><span class="si">}</span><span class="s2"> are required in BSFKK mode"</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+    <span class="k">return</span> <span class="n">issues</span> <span class="ow">or</span> <span class="kc">None</span></div>
+
+
+
+<span class="n">kpaths</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="mi">0</span><span class="p">:</span> <span class="s2">"Default short path: Γ-X / Γ-H (Bravais 13, 14)"</span><span class="p">,</span>
+    <span class="mi">1</span><span class="p">:</span> <span class="s2">"Full standard high-symmetry path (4, 11, 12, 13, 14)"</span><span class="p">,</span>
+    <span class="mi">2</span><span class="p">:</span> <span class="s2">"Reduced standard high-symmetry path (4, 11, 12, 13, 14)"</span><span class="p">,</span>
+    <span class="mi">3</span><span class="p">:</span> <span class="s2">"Short standard high-symmetry path (4, 11, 12, 13, 14)"</span><span class="p">,</span>
+    <span class="mi">4</span><span class="p">:</span> <span class="s2">"Short path: Γ-Y-T-Z / Γ-M / Γ-X-M / Γ-X / Γ-H-N-Γ (4, 11, 12, 13, 14)"</span><span class="p">,</span>
+    <span class="mi">5</span><span class="p">:</span> <span class="s2">"Selected path: Γ-X / K-Γ / Γ-X,Y,Z / Γ-L / Γ-H (4, 11, 12, 13, 14)"</span><span class="p">,</span>
+    <span class="mi">6</span><span class="p">:</span> <span class="s2">"Selected directions: Γ-Y / Γ-X,Y,Z (4, 13, 14)"</span><span class="p">,</span>
+    <span class="mi">7</span><span class="p">:</span> <span class="s2">"Selected paths: X-Γ + Γ-Y (4)"</span><span class="p">,</span>
+    <span class="mi">10</span><span class="p">:</span> <span class="s2">"Alternative FCC path with L-K branch (13)"</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="n">kpaths_full</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="mi">4</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">"name"</span><span class="p">:</span> <span class="s2">"orthorhombic primitive"</span><span class="p">,</span>
+        <span class="s2">"paths"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="mi">1</span><span class="p">:</span> <span class="p">(</span><span class="s2">"full standard path"</span><span class="p">,</span>
+                <span class="s2">"Γ-Σ-X-G-U-A-Z-Λ-Γ-∆-Y-H-T-B-Z + X-D-S-C-Y + U-P-R-E-T + S-Q-T"</span><span class="p">),</span>
+            <span class="mi">2</span><span class="p">:</span> <span class="p">(</span><span class="s2">"reduced standard path"</span><span class="p">,</span>
+                <span class="s2">"Γ-Σ-X-G-U-A-Z-Λ-Γ-∆-Y-H-T-B-Z"</span><span class="p">),</span>
+            <span class="mi">3</span><span class="p">:</span> <span class="p">(</span><span class="s2">"short standard path"</span><span class="p">,</span>
+                <span class="s2">"Γ-Σ-X-G-U-A-Z-Λ-Γ"</span><span class="p">),</span>
+            <span class="mi">4</span><span class="p">:</span> <span class="p">(</span><span class="s2">"secondary standard path"</span><span class="p">,</span>
+                <span class="s2">"Γ-∆-Y-H-T-B-Z"</span><span class="p">),</span>
+            <span class="mi">5</span><span class="p">:</span> <span class="p">(</span><span class="s2">"Γ-X direction"</span><span class="p">,</span>
+                <span class="s2">"Γ-Σ-X"</span><span class="p">),</span>
+            <span class="mi">6</span><span class="p">:</span> <span class="p">(</span><span class="s2">"Γ-Y direction"</span><span class="p">,</span>
+                <span class="s2">"Γ-∆-Y"</span><span class="p">),</span>
+            <span class="mi">7</span><span class="p">:</span> <span class="p">(</span><span class="s2">"X-Γ and Γ-Y directions"</span><span class="p">,</span>
+                <span class="s2">"X-Σ-Γ + Γ-∆-Y"</span><span class="p">),</span>
+        <span class="p">},</span>
+    <span class="p">},</span>
+
+    <span class="mi">11</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">"name"</span><span class="p">:</span> <span class="s2">"hexagonal primitive"</span><span class="p">,</span>
+        <span class="s2">"paths"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="mi">1</span><span class="p">:</span> <span class="p">(</span><span class="s2">"full standard path"</span><span class="p">,</span>
+                <span class="s2">"Γ-Σ-M-T'-K-T-Γ-∆-A-R-L-S'-H-S-A + M-U-L + K-P-H"</span><span class="p">),</span>
+            <span class="mi">2</span><span class="p">:</span> <span class="p">(</span><span class="s2">"reduced standard path"</span><span class="p">,</span>
+                <span class="s2">"Γ-Σ-M-T'-K-T-Γ-∆-A-R-L-S'-H-S-A"</span><span class="p">),</span>
+            <span class="mi">3</span><span class="p">:</span> <span class="p">(</span><span class="s2">"short standard path"</span><span class="p">,</span>
+                <span class="s2">"Γ-Σ-M-T'-K-T-Γ-∆-A"</span><span class="p">),</span>
+            <span class="mi">4</span><span class="p">:</span> <span class="p">(</span><span class="s2">"Γ-M direction"</span><span class="p">,</span>
+                <span class="s2">"Γ-Σ-M"</span><span class="p">),</span>
+            <span class="mi">5</span><span class="p">:</span> <span class="p">(</span><span class="s2">"K-Γ direction"</span><span class="p">,</span>
+                <span class="s2">"K-T-Γ"</span><span class="p">),</span>
+        <span class="p">},</span>
+    <span class="p">},</span>
+
+    <span class="mi">12</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">"name"</span><span class="p">:</span> <span class="s2">"cubic primitive"</span><span class="p">,</span>
+        <span class="s2">"paths"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="mi">1</span><span class="p">:</span> <span class="p">(</span><span class="s2">"full standard path"</span><span class="p">,</span>
+                <span class="s2">"Γ-∆-X-Y-M-V-R-Λ-Γ-Σ-M"</span><span class="p">),</span>
+            <span class="mi">2</span><span class="p">:</span> <span class="p">(</span><span class="s2">"reduced standard path"</span><span class="p">,</span>
+                <span class="s2">"Γ-∆-X-Y-M-V-R-Λ-Γ"</span><span class="p">),</span>
+            <span class="mi">3</span><span class="p">:</span> <span class="p">(</span><span class="s2">"short standard path"</span><span class="p">,</span>
+                <span class="s2">"Γ-∆-X-Y-M-V-R"</span><span class="p">),</span>
+            <span class="mi">4</span><span class="p">:</span> <span class="p">(</span><span class="s2">"Γ-X-M path"</span><span class="p">,</span>
+                <span class="s2">"Γ-∆-X-Y-M"</span><span class="p">),</span>
+            <span class="mi">5</span><span class="p">:</span> <span class="p">(</span><span class="s2">"three principal Γ-axis directions"</span><span class="p">,</span>
+                <span class="s2">"Γ-∆-X + Γ-∆-Y + Γ-∆-Z"</span><span class="p">),</span>
+        <span class="p">},</span>
+    <span class="p">},</span>
+
+    <span class="mi">13</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">"name"</span><span class="p">:</span> <span class="s2">"cubic face-centered"</span><span class="p">,</span>
+        <span class="s2">"paths"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="mi">0</span><span class="p">:</span> <span class="p">(</span><span class="s2">"default path"</span><span class="p">,</span>
+                <span class="s2">"Γ-∆-X"</span><span class="p">),</span>
+            <span class="mi">1</span><span class="p">:</span> <span class="p">(</span><span class="s2">"full standard path"</span><span class="p">,</span>
+                <span class="s2">"X-∆-Γ-Λ-L-Q-W-N-K-Σ-Γ + L-M-U-S-X-Z-W-B-U"</span><span class="p">),</span>
+            <span class="mi">2</span><span class="p">:</span> <span class="p">(</span><span class="s2">"reduced standard path"</span><span class="p">,</span>
+                <span class="s2">"X-∆-Γ-Λ-L-Q-W-N-K-Σ-Γ"</span><span class="p">),</span>
+            <span class="mi">3</span><span class="p">:</span> <span class="p">(</span><span class="s2">"short standard path"</span><span class="p">,</span>
+                <span class="s2">"X-∆-Γ-Λ-L"</span><span class="p">),</span>
+            <span class="mi">4</span><span class="p">:</span> <span class="p">(</span><span class="s2">"Γ-X direction"</span><span class="p">,</span>
+                <span class="s2">"Γ-∆-X"</span><span class="p">),</span>
+            <span class="mi">5</span><span class="p">:</span> <span class="p">(</span><span class="s2">"Γ-L direction"</span><span class="p">,</span>
+                <span class="s2">"Γ-Λ-L"</span><span class="p">),</span>
+            <span class="mi">6</span><span class="p">:</span> <span class="p">(</span><span class="s2">"three principal Γ-axis directions"</span><span class="p">,</span>
+                <span class="s2">"Γ-∆-X + Γ-∆-Y + Γ-∆-Z"</span><span class="p">),</span>
+            <span class="mi">10</span><span class="p">:</span> <span class="p">(</span><span class="s2">"alternative full path with L-K branch"</span><span class="p">,</span>
+                 <span class="s2">"X-∆-Γ-Λ-L + L-?-K + W-N-K-Σ-Γ + L-M-U-S-X-Z-W-B-U"</span><span class="p">),</span>
+        <span class="p">},</span>
+    <span class="p">},</span>
+
+    <span class="mi">14</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">"name"</span><span class="p">:</span> <span class="s2">"cubic body-centered"</span><span class="p">,</span>
+        <span class="s2">"paths"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="mi">0</span><span class="p">:</span> <span class="p">(</span><span class="s2">"default path"</span><span class="p">,</span>
+                <span class="s2">"Γ-D-H"</span><span class="p">),</span>
+            <span class="mi">1</span><span class="p">:</span> <span class="p">(</span><span class="s2">"full standard path"</span><span class="p">,</span>
+                <span class="s2">"Γ-D-H-G-N-Σ-Γ-Λ-P-F-H + N-D-P"</span><span class="p">),</span>
+            <span class="mi">2</span><span class="p">:</span> <span class="p">(</span><span class="s2">"reduced standard path"</span><span class="p">,</span>
+                <span class="s2">"Γ-D-H-G-N-Σ-Γ-Λ-P-F-H"</span><span class="p">),</span>
+            <span class="mi">3</span><span class="p">:</span> <span class="p">(</span><span class="s2">"short standard path"</span><span class="p">,</span>
+                <span class="s2">"Γ-D-H-G-N-Σ-Γ-Λ-P"</span><span class="p">),</span>
+            <span class="mi">4</span><span class="p">:</span> <span class="p">(</span><span class="s2">"Γ-H-N-Γ path"</span><span class="p">,</span>
+                <span class="s2">"Γ-D-H-G-N-Σ-Γ"</span><span class="p">),</span>
+            <span class="mi">5</span><span class="p">:</span> <span class="p">(</span><span class="s2">"Γ-H direction"</span><span class="p">,</span>
+                <span class="s2">"Γ-D-H"</span><span class="p">),</span>
+            <span class="mi">6</span><span class="p">:</span> <span class="p">(</span><span class="s2">"three principal Γ-axis directions"</span><span class="p">,</span>
+                <span class="s2">"Γ-∆-X + Γ-∆-Y + Γ-∆-Z"</span><span class="p">),</span>
+        <span class="p">},</span>
+    <span class="p">},</span>
+<span class="p">}</span>
+
+<div class="viewcode-block" id="kpaths_for_atoms">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.definitions.bsf.kpaths_for_atoms.html#ase2sprkkr.input_parameters.definitions.bsf.kpaths_for_atoms">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">kpaths_for_atoms</span><span class="p">(</span><span class="n">atoms_or_bravais</span><span class="p">):</span>
+    <span class="n">bravais</span> <span class="o">=</span> <span class="n">bravais_number</span><span class="p">(</span><span class="n">atoms_or_bravais</span><span class="p">)</span>
+    <span class="n">paths</span> <span class="o">=</span> <span class="n">kpaths_full</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">bravais</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'paths'</span><span class="p">,</span> <span class="p">{})</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="n">number</span><span class="p">:</span> <span class="n">label</span> <span class="k">for</span> <span class="n">number</span><span class="p">,</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">paths</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+    <span class="p">}</span></div>
+
+
+
+
+<div class="viewcode-block" id="_task_definition">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.definitions.bsf._task_definition.html#ase2sprkkr.input_parameters.definitions.bsf._task_definition">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_task_definition</span><span class="p">():</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">kpaths_cli_help</span><span class="p">(</span><span class="n">kpaths_full</span><span class="o">=</span><span class="n">kpaths_full</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">88</span><span class="p">):</span>
+        <span class="n">lines</span> <span class="o">=</span> <span class="p">[</span> <span class="s1">' Valid values for the given Bravais lattice'</span><span class="p">,</span>
+                  <span class="s1">' ------------------------------------------'</span><span class="p">,</span>
+                  <span class="s1">'  '</span><span class="p">]</span>
+
+        <span class="k">for</span> <span class="n">bravais</span><span class="p">,</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">kpaths_full</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">bravais</span><span class="si">:</span><span class="s2">2</span><span class="si">}</span><span class="s2">:  </span><span class="si">{</span><span class="n">data</span><span class="p">[</span><span class="s1">'name'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">kpath</span><span class="p">,</span> <span class="p">(</span><span class="n">description</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s2">"paths"</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">prefix</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"    </span><span class="si">{</span><span class="n">kpath</span><span class="si">:</span><span class="s2">2</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">description</span><span class="si">}</span><span class="s2">"</span>
+                <span class="n">path_indent</span> <span class="o">=</span> <span class="s2">" "</span> <span class="o">*</span> <span class="mi">8</span>
+
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">prefix</span><span class="p">)</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">width</span><span class="p">:</span>
+                    <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">prefix</span><span class="si">:</span><span class="s2">&lt;40</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">prefix</span><span class="p">)</span>
+                    <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">path_indent</span><span class="si">}{</span><span class="n">path</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+            <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">""</span><span class="p">)</span>
+
+        <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">" other Bravais lattices require manual k-path settings"</span><span class="p">)</span>
+        <span class="k">return</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span><span class="o">.</span><span class="n">rstrip</span><span class="p">()</span>
+
+    <span class="n">out</span> <span class="o">=</span> <span class="n">TASK</span><span class="p">(</span>
+        <span class="s2">"BSF"</span><span class="p">,</span>
+        <span class="n">add</span><span class="o">=</span><span class="p">[</span>
+            <span class="n">V</span><span class="p">(</span><span class="s2">"NK"</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span> <span class="n">condition</span><span class="o">=</span><span class="n">_ek_item</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s2">"total number of k-points"</span><span class="p">),</span>
+            <span class="n">V</span><span class="p">(</span>
+                <span class="s2">"KPATH"</span><span class="p">,</span>
+                <span class="n">Keyword</span><span class="p">(</span><span class="n">kpaths</span><span class="p">),</span>
+                <span class="n">condition</span><span class="o">=</span><span class="n">_ek_item</span><span class="p">,</span>
+                <span class="n">info</span><span class="o">=</span><span class="s2">"Predefined path in k-space"</span><span class="p">,</span>
+                <span class="n">description</span><span class="o">=</span><span class="n">kpaths_cli_help</span><span class="p">(),</span>
+                <span class="n">is_optional</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="n">V</span><span class="p">(</span>
+                <span class="s2">"NKDIR"</span><span class="p">,</span>
+                <span class="n">Length</span><span class="p">(</span>
+                    <span class="s2">"KA"</span><span class="p">,</span>
+                    <span class="s2">"KE"</span><span class="p">,</span>
+                    <span class="n">default_values</span><span class="o">=</span><span class="p">[[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]],</span>
+                <span class="p">),</span>
+                <span class="n">condition</span><span class="o">=</span><span class="n">_ek_vectors_item</span><span class="p">,</span>
+                <span class="n">info</span><span class="o">=</span><span class="s2">"Number of directions treated in k-spaces"</span><span class="p">,</span>
+                <span class="n">is_optional</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="n">is_required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="n">V</span><span class="p">(</span>
+                <span class="s2">"KA"</span><span class="p">,</span>
+                <span class="n">SetOf</span><span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mi">3</span><span class="p">),</span>
+                <span class="n">condition</span><span class="o">=</span><span class="n">_ka_item</span><span class="p">,</span>
+                <span class="n">is_repeated</span><span class="o">=</span><span class="n">V</span><span class="o">.</span><span class="n">Repeated</span><span class="o">.</span><span class="n">NUMBERED_IF</span><span class="p">(</span><span class="n">_ka_numbered</span><span class="p">),</span>
+                <span class="n">info</span><span class="o">=</span><span class="p">(</span>
+                    <span class="s2">"First k-vector segment in k-space in multiples of 2π/a and "</span>
+                    <span class="s2">"rectangular coordinates with * = 1, ...,NKDIR"</span>
+                <span class="p">),</span>
+                <span class="n">is_optional</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="n">is_required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="n">V</span><span class="p">(</span>
+                <span class="s2">"KE"</span><span class="p">,</span>
+                <span class="n">SetOf</span><span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mi">3</span><span class="p">),</span>
+                <span class="n">condition</span><span class="o">=</span><span class="n">_ek_vectors_item</span><span class="p">,</span>
+                <span class="n">is_repeated</span><span class="o">=</span><span class="s2">"NUMBERED"</span><span class="p">,</span>
+                <span class="n">info</span><span class="o">=</span><span class="p">(</span>
+                    <span class="s2">"Last k-vector segment in k-space in multiples of 2π/a and "</span>
+                    <span class="s2">"rectangular coordinates with * = 1, ...,NKDIR"</span>
+                <span class="p">),</span>
+                <span class="n">is_optional</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="n">is_required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="n">V</span><span class="p">(</span>
+                <span class="s2">"NK1"</span><span class="p">,</span>
+                <span class="nb">int</span><span class="p">,</span>
+                <span class="n">condition</span><span class="o">=</span><span class="n">_kk_item</span><span class="p">,</span>
+                <span class="n">info</span><span class="o">=</span><span class="s2">"number of k-points along k1"</span><span class="p">,</span>
+                <span class="n">is_optional</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="n">V</span><span class="p">(</span>
+                <span class="s2">"NK2"</span><span class="p">,</span>
+                <span class="nb">int</span><span class="p">,</span>
+                <span class="n">condition</span><span class="o">=</span><span class="n">_kk_item</span><span class="p">,</span>
+                <span class="n">info</span><span class="o">=</span><span class="s2">"number of k-points along k2"</span><span class="p">,</span>
+                <span class="n">is_optional</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="n">V</span><span class="p">(</span>
+                <span class="s2">"K1"</span><span class="p">,</span>
+                <span class="n">SetOf</span><span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mi">3</span><span class="p">),</span>
+                <span class="n">condition</span><span class="o">=</span><span class="n">_kk_item</span><span class="p">,</span>
+                <span class="n">is_optional</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">info</span><span class="o">=</span><span class="s2">"first k-vector to span a two-dimensional region in k-space"</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="n">V</span><span class="p">(</span>
+                <span class="s2">"K2"</span><span class="p">,</span>
+                <span class="n">SetOf</span><span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mi">3</span><span class="p">),</span>
+                <span class="n">condition</span><span class="o">=</span><span class="n">_kk_item</span><span class="p">,</span>
+                <span class="n">is_optional</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">info</span><span class="o">=</span><span class="s2">"second k-vector to span a two-dimensional region in k-space"</span><span class="p">,</span>
+            <span class="p">),</span>
+        <span class="p">],</span>
+    <span class="p">)</span>
+    <span class="n">out</span><span class="p">[</span><span class="s1">'KPATH'</span><span class="p">]</span><span class="o">.</span><span class="n">choices_for_atoms</span> <span class="o">=</span> <span class="n">kpaths_for_atoms</span>
+
+    <span class="k">return</span> <span class="n">out</span></div>
+
+
+
+<div class="viewcode-block" id="_energy_definition">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.definitions.bsf._energy_definition.html#ase2sprkkr.input_parameters.definitions.bsf._energy_definition">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_energy_definition</span><span class="p">():</span>
+    <span class="n">energy</span> <span class="o">=</span> <span class="n">ENERGY</span><span class="p">(</span>
+        <span class="n">emin</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">0.2</span><span class="p">,</span> <span class="s2">"The energy at which the BSF mesh starts"</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+        <span class="n">emax</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="s2">"The energy at which the BSF mesh ends"</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+        <span class="n">defaults</span><span class="o">=</span><span class="p">{</span><span class="s2">"GRID"</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s2">"NE"</span><span class="p">:</span> <span class="n">_ne_default</span><span class="p">,</span> <span class="s2">"ImE"</span><span class="p">:</span> <span class="mf">0.001</span><span class="p">},</span>
+    <span class="p">)</span>
+    <span class="n">energy</span><span class="p">[</span><span class="s2">"EMIN"</span><span class="p">]</span><span class="o">.</span><span class="n">_energy_default_value</span> <span class="o">=</span> <span class="n">_emin_default</span>
+    <span class="n">energy</span><span class="p">[</span><span class="s2">"EMAX"</span><span class="p">]</span><span class="o">.</span><span class="n">_energy_default_value</span> <span class="o">=</span> <span class="n">_emax_default</span>
+    <span class="n">energy</span><span class="p">[</span><span class="s2">"EMAXEV"</span><span class="p">]</span><span class="o">.</span><span class="n">_energy_default_value</span> <span class="o">=</span> <span class="n">_emaxev_default</span>
+    <span class="k">return</span> <span class="n">energy</span></div>
+
+
+
+<div class="viewcode-block" id="BSFTaskSection">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.definitions.bsf.BSFTaskSection.html#ase2sprkkr.input_parameters.definitions.bsf.BSFTaskSection">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">BSFTaskSection</span><span class="p">(</span><span class="n">InputSection</span><span class="p">):</span>
+<div class="viewcode-block" id="BSFTaskSection.k_path_gui">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.definitions.bsf.BSFTaskSection.html#ase2sprkkr.input_parameters.definitions.bsf.BSFTaskSection.k_path_gui">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">k_path_gui</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">ase2sprkkr.gui.k_path</span><span class="w"> </span><span class="kn">import</span> <span class="n">k_path_gui</span>
+
+        <span class="n">out</span> <span class="o">=</span> <span class="n">k_path_gui</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">parent</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">out</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">KPATH</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">out</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="BSFInputParametersDefinition">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.definitions.bsf.BSFInputParametersDefinition.html#ase2sprkkr.input_parameters.definitions.bsf.BSFInputParametersDefinition">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">BSFInputParametersDefinition</span><span class="p">(</span><span class="n">InputParametersDefinition</span><span class="p">):</span>
+<div class="viewcode-block" id="BSFInputParametersDefinition.task_definition_name">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.definitions.bsf.BSFInputParametersDefinition.html#ase2sprkkr.input_parameters.definitions.bsf.BSFInputParametersDefinition.task_definition_name">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">task_definition_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parameters</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">"BSFEK"</span> <span class="k">if</span> <span class="n">bsf_mode</span><span class="p">(</span><span class="n">parameters</span><span class="p">)</span> <span class="o">==</span> <span class="n">EK</span> <span class="k">else</span> <span class="s2">"BSFKK"</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="bsf_definition">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.definitions.bsf.bsf_definition.html#ase2sprkkr.input_parameters.definitions.bsf.bsf_definition">[docs]</a>
+<span class="nd">@cache</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">bsf_definition</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">"""Return the single definition shared by BSF task views."""</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">BSFInputParametersDefinition</span><span class="p">(</span>
+        <span class="s2">"bsf"</span><span class="p">,</span>
+        <span class="p">[</span>
+            <span class="n">CONTROL</span><span class="p">(</span><span class="s2">"BLOCHSF"</span><span class="p">),</span>
+            <span class="n">TAU</span><span class="p">,</span>
+            <span class="n">_task_definition</span><span class="p">(),</span>
+            <span class="n">_energy_definition</span><span class="p">(),</span>
+            <span class="n">MODE</span><span class="p">,</span>
+            <span class="n">STRCONST</span><span class="p">,</span>
+            <span class="n">CPA</span><span class="p">,</span>
+            <span class="n">SITES</span><span class="p">,</span>
+        <span class="p">],</span>
+        <span class="n">info</span><span class="o">=</span><span class="s2">"BSF - Bloch spectral functions in the E-K or K-K plane"</span><span class="p">,</span>
+        <span class="n">validators</span><span class="o">=</span><span class="n">_validate_bsf</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">out</span><span class="p">[</span><span class="s2">"TASK"</span><span class="p">]</span><span class="o">.</span><span class="n">result_class</span> <span class="o">=</span> <span class="n">BSFTaskSection</span>
+    <span class="k">return</span> <span class="n">out</span></div>
+
+
+
+<span class="n">input_parameters_definition</span> <span class="o">=</span> <span class="n">bsf_definition</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Matyáš Novák &amp; Jano Minár.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

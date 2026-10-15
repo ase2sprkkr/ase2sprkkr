@@ -16,8 +16,8 @@
       <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
-      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
@@ -81,6 +81,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../../ase2sprkkr.html">ase2sprkkr</a></li>
       <li class="breadcrumb-item active">ase2sprkkr.examples.A07_SrTiO3_MSSPEC.STO</li>
       <li class="wy-breadcrumbs-aside">
       </li>
@@ -91,12 +92,12 @@
            <div itemprop="articleBody">
              
   <h1>Source code for ase2sprkkr.examples.A07_SrTiO3_MSSPEC.STO</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span></span><span class="sd">"""</span>
 <span class="sd">SCF calculations for  SrTiO3 in combination with msspec code to generate</span>
 <span class="sd">photoelectron diffraction.</span>
 
 <span class="sd">Call with ``msspec`` and/or ``sprkkr`` commandline argument.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 
 <div class="viewcode-block" id="main">
@@ -121,24 +122,24 @@
 
     <span class="c1"># Generate the base STO cell</span>
     <span class="n">a0</span> <span class="o">=</span> <span class="mf">3.905</span>
-    <span class="n">STO</span> <span class="o">=</span> <span class="n">Perovskite</span><span class="p">((</span><span class="s2">&quot;Sr&quot;</span><span class="p">,</span> <span class="s2">&quot;Ti&quot;</span><span class="p">,</span> <span class="s2">&quot;O&quot;</span><span class="p">),</span> <span class="n">latticeconstant</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;a&quot;</span><span class="p">:</span> <span class="n">a0</span><span class="p">,</span> <span class="s2">&quot;c/a&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">},</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
-    <span class="k">if</span> <span class="s2">&quot;view&quot;</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
+    <span class="n">STO</span> <span class="o">=</span> <span class="n">Perovskite</span><span class="p">((</span><span class="s2">"Sr"</span><span class="p">,</span> <span class="s2">"Ti"</span><span class="p">,</span> <span class="s2">"O"</span><span class="p">),</span> <span class="n">latticeconstant</span><span class="o">=</span><span class="p">{</span><span class="s2">"a"</span><span class="p">:</span> <span class="n">a0</span><span class="p">,</span> <span class="s2">"c/a"</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">},</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+    <span class="k">if</span> <span class="s2">"view"</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
         <span class="n">view</span><span class="p">(</span><span class="n">STO</span><span class="p">)</span>
 
     <span class="c1"># ########## SPRKKR part</span>
-    <span class="k">if</span> <span class="s2">&quot;sprkkr&quot;</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
-        <span class="n">calc</span> <span class="o">=</span> <span class="n">SPRKKR</span><span class="p">(</span><span class="n">atoms</span><span class="o">=</span><span class="n">STO</span><span class="p">,</span> <span class="n">mpi</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;mpirun&quot;</span><span class="p">,</span> <span class="s2">&quot;-np&quot;</span><span class="p">,</span> <span class="s2">&quot;16&quot;</span><span class="p">])</span>
+    <span class="k">if</span> <span class="s2">"sprkkr"</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
+        <span class="n">calc</span> <span class="o">=</span> <span class="n">SPRKKR</span><span class="p">(</span><span class="n">atoms</span><span class="o">=</span><span class="n">STO</span><span class="p">,</span> <span class="n">mpi</span><span class="o">=</span><span class="p">[</span><span class="s2">"mpirun"</span><span class="p">,</span> <span class="s2">"-np"</span><span class="p">,</span> <span class="s2">"16"</span><span class="p">])</span>
         <span class="n">calc</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">NL</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
         <span class="n">calc</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">SCF</span><span class="o">.</span><span class="n">MIX</span> <span class="o">=</span> <span class="mf">0.01</span>
         <span class="n">calc</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">SCF</span><span class="o">.</span><span class="n">NITER</span> <span class="o">=</span> <span class="mi">1000</span>
-        <span class="n">calc</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">CONTROL</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s2">&quot;NOSYM&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="n">calc</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">CONTROL</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s2">"NOSYM"</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
 
         <span class="n">out_scf</span> <span class="o">=</span> <span class="n">calc</span><span class="o">.</span><span class="n">calculate</span><span class="p">()</span>
-        <span class="n">calc</span><span class="o">.</span><span class="n">input_parameters</span> <span class="o">=</span> <span class="s2">&quot;PHAGEN&quot;</span>
+        <span class="n">calc</span><span class="o">.</span><span class="n">input_parameters</span> <span class="o">=</span> <span class="s2">"PHAGEN"</span>
         <span class="n">calc</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span><span class="n">potential</span><span class="o">=</span><span class="n">out_scf</span><span class="o">.</span><span class="n">potential_filename</span><span class="p">)</span>
 
     <span class="c1"># ######### MsSpec part</span>
-    <span class="k">if</span> <span class="s2">&quot;msspec&quot;</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
+    <span class="k">if</span> <span class="s2">"msspec"</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
         <span class="kn">from</span><span class="w"> </span><span class="nn">msspec.calculator</span><span class="w"> </span><span class="kn">import</span> <span class="n">MSSPEC</span>
         <span class="kn">from</span><span class="w"> </span><span class="nn">msspec.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">SPRKKRPotential</span><span class="p">,</span> <span class="n">hemispherical_cluster</span><span class="p">,</span> <span class="n">get_atom_index</span>
 
@@ -146,11 +147,11 @@
         <span class="c1"># Build the SrTiO3 cluster                                                #</span>
         <span class="c1">###########################################################################</span>
         <span class="c1"># We start by loading the potential since it updates info in the STO cell</span>
-        <span class="n">pot</span> <span class="o">=</span> <span class="n">SPRKKRPotential</span><span class="p">(</span><span class="n">STO</span><span class="p">,</span> <span class="s2">&quot;SrTiO3_scf.pot_new&quot;</span><span class="p">,</span> <span class="o">*</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;*PHAGEN.pot&quot;</span><span class="p">))</span>
+        <span class="n">pot</span> <span class="o">=</span> <span class="n">SPRKKRPotential</span><span class="p">(</span><span class="n">STO</span><span class="p">,</span> <span class="s2">"SrTiO3_scf.pot_new"</span><span class="p">,</span> <span class="o">*</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">"*PHAGEN.pot"</span><span class="p">))</span>
 
         <span class="c1"># tag each atom in the STO object to easily set the emitter in the</span>
         <span class="c1"># hemispherical_cluster function</span>
-        <span class="p">[</span><span class="n">atom</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s2">&quot;tag&quot;</span><span class="p">,</span> <span class="p">(</span><span class="s2">&quot;Sr&quot;</span><span class="p">,</span> <span class="s2">&quot;Ti&quot;</span><span class="p">,</span> <span class="s2">&quot;O&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">atom</span><span class="o">.</span><span class="n">symbol</span><span class="p">))</span> <span class="k">for</span> <span class="n">atom</span> <span class="ow">in</span> <span class="n">STO</span><span class="p">]</span>
+        <span class="p">[</span><span class="n">atom</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s2">"tag"</span><span class="p">,</span> <span class="p">(</span><span class="s2">"Sr"</span><span class="p">,</span> <span class="s2">"Ti"</span><span class="p">,</span> <span class="s2">"O"</span><span class="p">)</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">atom</span><span class="o">.</span><span class="n">symbol</span><span class="p">))</span> <span class="k">for</span> <span class="n">atom</span> <span class="ow">in</span> <span class="n">STO</span><span class="p">]</span>
 
         <span class="c1"># Create a hemispherical cluster centered on a Ti emitter from the</span>
         <span class="c1"># STO primitive cell used in the SPRKKR step.</span>
@@ -166,7 +167,7 @@
         <span class="c1"># Set up the PhotoElectron Diffraction calculator                         #</span>
         <span class="c1">###########################################################################</span>
         <span class="c1"># Create the calculator</span>
-        <span class="n">calc</span> <span class="o">=</span> <span class="n">MSSPEC</span><span class="p">(</span><span class="n">spectroscopy</span><span class="o">=</span><span class="s2">&quot;PED&quot;</span><span class="p">,</span> <span class="n">algorithm</span><span class="o">=</span><span class="s2">&quot;expansion&quot;</span><span class="p">,</span> <span class="n">folder</span><span class="o">=</span><span class="s2">&quot;PED&quot;</span><span class="p">)</span>
+        <span class="n">calc</span> <span class="o">=</span> <span class="n">MSSPEC</span><span class="p">(</span><span class="n">spectroscopy</span><span class="o">=</span><span class="s2">"PED"</span><span class="p">,</span> <span class="n">algorithm</span><span class="o">=</span><span class="s2">"expansion"</span><span class="p">,</span> <span class="n">folder</span><span class="o">=</span><span class="s2">"PED"</span><span class="p">)</span>
 
         <span class="c1"># minimalistic set of parameter for XPD scan</span>
         <span class="n">calc</span><span class="o">.</span><span class="n">set_atoms</span><span class="p">(</span><span class="n">cluster</span><span class="p">)</span>
@@ -174,25 +175,25 @@
         <span class="c1"># We need to impose a maximum number of tl to use because there is still</span>
         <span class="c1"># a memory bug that I need to investigate. Anyway, usually 25 is not that</span>
         <span class="c1"># bad for the kind of atoms and the photon energy of lab sources...</span>
-        <span class="n">calc</span><span class="o">.</span><span class="n">tmatrix_parameters</span><span class="o">.</span><span class="n">lmax_mode</span> <span class="o">=</span> <span class="s2">&quot;imposed&quot;</span>
+        <span class="n">calc</span><span class="o">.</span><span class="n">tmatrix_parameters</span><span class="o">.</span><span class="n">lmax_mode</span> <span class="o">=</span> <span class="s2">"imposed"</span>
         <span class="n">calc</span><span class="o">.</span><span class="n">tmatrix_parameters</span><span class="o">.</span><span class="n">lmaxt</span> <span class="o">=</span> <span class="mi">25</span>
 
         <span class="n">data</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">for</span> <span class="n">source_energy</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">500.0</span><span class="p">,</span> <span class="mf">1501.0</span><span class="p">,</span> <span class="mf">100.0</span><span class="p">):</span>
             <span class="n">calc</span><span class="o">.</span><span class="n">source_parameters</span><span class="o">.</span><span class="n">energy</span> <span class="o">=</span> <span class="n">source_energy</span>
             <span class="c1"># Run a polar scan with the default MuffinTin potential for Ti(2p3/2)</span>
-            <span class="n">calc</span><span class="o">.</span><span class="n">tmatrix_parameters</span><span class="o">.</span><span class="n">potential</span> <span class="o">=</span> <span class="s2">&quot;muffin_tin&quot;</span>
-            <span class="n">data</span> <span class="o">=</span> <span class="n">calc</span><span class="o">.</span><span class="n">get_theta_scan</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="s2">&quot;2p3/2&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+            <span class="n">calc</span><span class="o">.</span><span class="n">tmatrix_parameters</span><span class="o">.</span><span class="n">potential</span> <span class="o">=</span> <span class="s2">"muffin_tin"</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">calc</span><span class="o">.</span><span class="n">get_theta_scan</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="s2">"2p3/2"</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
 
             <span class="c1"># Now we use the previously generated SPRKKR potential and run the same</span>
             <span class="c1"># calculation</span>
             <span class="n">calc</span><span class="o">.</span><span class="n">tmatrix_parameters</span><span class="o">.</span><span class="n">potential</span> <span class="o">=</span> <span class="n">pot</span>
-            <span class="n">data</span> <span class="o">=</span> <span class="n">calc</span><span class="o">.</span><span class="n">get_theta_scan</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="s2">&quot;2p3/2&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">calc</span><span class="o">.</span><span class="n">get_theta_scan</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="s2">"2p3/2"</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
 
             <span class="c1"># To better see the differences, plot the normalized signal on the</span>
             <span class="c1"># same graph</span>
             <span class="c1"># add a new dataset for storing normalized values</span>
-            <span class="n">dset</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">add_dset</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;comparison at </span><span class="si">{</span><span class="n">source_energy</span><span class="si">}</span><span class="s2"> eV&quot;</span><span class="p">)</span>
+            <span class="n">dset</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">add_dset</span><span class="p">(</span><span class="sa">f</span><span class="s2">"comparison at </span><span class="si">{</span><span class="n">source_energy</span><span class="si">}</span><span class="s2"> eV"</span><span class="p">)</span>
             <span class="c1"># make a copy of previous scans values</span>
             <span class="n">theta</span><span class="p">,</span> <span class="n">muffintin_cs</span><span class="p">,</span> <span class="n">sprkkr_cs</span> <span class="o">=</span> <span class="p">(</span>
                 <span class="n">data</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">theta</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span>
@@ -206,29 +207,29 @@
             <span class="n">dset</span><span class="o">.</span><span class="n">add_columns</span><span class="p">(</span><span class="n">theta</span><span class="o">=</span><span class="n">theta</span><span class="p">,</span> <span class="n">sprkkr</span><span class="o">=</span><span class="n">sprkkr_cs</span><span class="p">,</span> <span class="n">muffintin</span><span class="o">=</span><span class="n">muffintin_cs</span><span class="p">)</span>
             <span class="c1"># add a view for this dataset</span>
             <span class="n">dview</span> <span class="o">=</span> <span class="n">dset</span><span class="o">.</span><span class="n">add_view</span><span class="p">(</span>
-                <span class="s2">&quot;Comparison&quot;</span><span class="p">,</span>
+                <span class="s2">"Comparison"</span><span class="p">,</span>
                 <span class="n">title</span><span class="o">=</span><span class="p">(</span>
-                    <span class="s2">&quot;Comparison of XPD polar scans for &quot;</span>
-                    <span class="sa">r</span><span class="s2">&quot;Ti(2p3/2) at $h\nu$ = </span><span class="si">{:.0f}</span><span class="s2"> eV&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">source_energy</span><span class="p">)</span>
+                    <span class="s2">"Comparison of XPD polar scans for "</span>
+                    <span class="sa">r</span><span class="s2">"Ti(2p3/2) at $h\nu$ = </span><span class="si">{:.0f}</span><span class="s2"> eV"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">source_energy</span><span class="p">)</span>
                 <span class="p">),</span>
-                <span class="n">xlabel</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$\Theta (\degree$)&quot;</span><span class="p">,</span>
-                <span class="n">ylabel</span><span class="o">=</span><span class="s2">&quot;Normalized Signal (a.u.)&quot;</span><span class="p">,</span>
+                <span class="n">xlabel</span><span class="o">=</span><span class="sa">r</span><span class="s2">"$\Theta (\degree$)"</span><span class="p">,</span>
+                <span class="n">ylabel</span><span class="o">=</span><span class="s2">"Normalized Signal (a.u.)"</span><span class="p">,</span>
             <span class="p">)</span>
-            <span class="n">dview</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s2">&quot;theta&quot;</span><span class="p">,</span> <span class="s2">&quot;sprkkr&quot;</span><span class="p">,</span> <span class="n">legend</span><span class="o">=</span><span class="s2">&quot;With SPRKKR potential&quot;</span><span class="p">)</span>
-            <span class="n">dview</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s2">&quot;theta&quot;</span><span class="p">,</span> <span class="s2">&quot;muffintin&quot;</span><span class="p">,</span> <span class="n">legend</span><span class="o">=</span><span class="s2">&quot;With internal MT potential&quot;</span><span class="p">)</span>
+            <span class="n">dview</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s2">"theta"</span><span class="p">,</span> <span class="s2">"sprkkr"</span><span class="p">,</span> <span class="n">legend</span><span class="o">=</span><span class="s2">"With SPRKKR potential"</span><span class="p">)</span>
+            <span class="n">dview</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s2">"theta"</span><span class="p">,</span> <span class="s2">"muffintin"</span><span class="p">,</span> <span class="n">legend</span><span class="o">=</span><span class="s2">"With internal MT potential"</span><span class="p">)</span>
             <span class="n">dview</span><span class="o">.</span><span class="n">set_plot_options</span><span class="p">(</span><span class="n">autoscale</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
         <span class="c1"># Pop up the final result</span>
         <span class="n">data</span><span class="o">.</span><span class="n">view</span><span class="p">()</span>
 
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Please specify either &#39;sprkkr&#39;, &#39;msspec&#39; keywords or both of them on the command line&quot;</span><span class="p">)</span></div>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">"Please specify either 'sprkkr', 'msspec' keywords or both of them on the command line"</span><span class="p">)</span></div>
 
 
 
 <span class="c1"># Just run the script only when directly called from command line</span>
 
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
     <span class="n">main</span><span class="p">()</span>
 </pre></div>
 

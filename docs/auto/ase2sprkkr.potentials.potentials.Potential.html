@@ -17,12 +17,12 @@
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../_static/documentation_options.js?v=5929fcd5"></script>
-      <script src="../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="sprkkr" href="ase2sprkkr.sprkkr.html" />
+    <link rel="next" title="ase2sprkkr.potentials.potentials.PotentialFileChanged" href="ase2sprkkr.potentials.potentials.PotentialFileChanged.html" />
     <link rel="prev" title="potentials" href="ase2sprkkr.potentials.potentials.html" /> 
 </head>
 
@@ -68,14 +68,18 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.promote_ase_atoms.html">promote_ase_atoms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.__getattr__.html">__getattr__</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.common.html">common</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration.html">configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration_migration.html">configuration_migration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration_yaml.html">configuration_yaml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.conftest.html">conftest</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.examples.html">examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.execution.html">execution</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.gui.html">gui</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.input_parameters.html">input_parameters</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.output_files.html">output_files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.outputs.html">outputs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.physics.html">physics</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="ase2sprkkr.potentials.html">potentials</a><ul class="current">
@@ -85,10 +89,13 @@
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.potentials.potential_sections.html">potential_sections</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="ase2sprkkr.potentials.potentials.html">potentials</a><ul class="current">
 <li class="toctree-l4 current"><a class="current reference internal" href="#">Potential</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.potentials.potentials.PotentialFileChanged.html">ase2sprkkr.potentials.potentials.PotentialFileChanged</a></li>
 </ul>
 </li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.profiles.html">profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.result_files.html">result_files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.sprkkr.html">sprkkr</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.tools.html">tools</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.version.html">version</a></li>
@@ -127,21 +134,34 @@
 <h1>Potential<a class="headerlink" href="#potential" title="Link to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="ase2sprkkr.potentials.potentials.Potential">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.potentials.potentials.</span></span><span class="sig-name descname"><span class="pre">Potential</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">atoms</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">definition</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">set_from_atoms</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/potentials/potentials.html#Potential"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.potentials.potentials.Potential" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.potentials.potentials.</span></span><span class="sig-name descname"><span class="pre">Potential</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">atoms</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">definition</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">set_from_atoms</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/potentials/potentials.html#Potential"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.potentials.potentials.Potential" title="Link to this definition"></a></dt>
 <dd><p>It holds data form SPR-KKR potential file</p>
 <p>It, in addition to being a containers for their sections, can read/write
 its properties from/to an ASE atoms object.</p>
 <p class="rubric">Class hierarchy</p>
-<div class="graphviz"><img src="../_images/inheritance-3c0e5647eab8c1588e289f2c5612b6f766138731.png" alt="Inheritance diagram of ase2sprkkr.potentials.potentials.Potential" usemap="#inheritanced9c38b00e0" class="inheritance graphviz" /></div>
-<map id="inheritanced9c38b00e0" name="inheritanced9c38b00e0">
-<area shape="rect" id="node1" href="ase2sprkkr.common.configuration.Configuration.html#ase2sprkkr.common.configuration.Configuration" target="_top" title="The common base class for all configurations values and containers. I.e." alt="" coords="3,3,109,18"/>
-<area shape="rect" id="node5" href="ase2sprkkr.common.configuration_containers.BaseConfigurationContainer.html#ase2sprkkr.common.configuration_containers.BaseConfigurationContainer" target="_top" title="Configuration container, that holds members, either in classical way" alt="" coords="124,3,321,18"/>
-<area shape="rect" id="node2" href="ase2sprkkr.sprkkr.configuration.ConfigurationFile.html#ase2sprkkr.sprkkr.configuration.ConfigurationFile" target="_top" title="&#39;Root&#39; configuration container for SPRKKR configuration file" alt="" coords="744,17,862,32"/>
-<area shape="rect" id="node7" href="#ase2sprkkr.potentials.potentials.Potential" target="_top" title="It holds data form SPR&#45;KKR potential file" alt="" coords="878,17,957,32"/>
-<area shape="rect" id="node3" href="ase2sprkkr.common.configuration_containers.RootConfigurationContainer.html#ase2sprkkr.common.configuration_containers.RootConfigurationContainer" target="_top" title="Base class for data of configuration/problem&#45;definition files" alt="" coords="532,3,728,18"/>
-<area shape="rect" id="node4" href="ase2sprkkr.sprkkr.configuration.ConfigurationSectionTrait.html#ase2sprkkr.sprkkr.configuration.ConfigurationSectionTrait" target="_top" title="configuration.ConfigurationSectionTrait" alt="" coords="557,31,703,46"/>
-<area shape="rect" id="node6" href="ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.configuration_containers.ConfigurationContainer" target="_top" title="A container for configuration (problem&#45;definition) options and/or sections." alt="" coords="337,3,517,18"/>
-</map><div class="line-block">
+digraph inheritanced9c38b00e0 {
+bgcolor=transparent;
+fontsize=14;
+rankdir=LR;
+ranksep=0.3;
+size=&quot;10.0, 10.0&quot;;
+  &quot;abc.ABC&quot; [fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,tooltip=&quot;Helper class that provides a standard way to create an ABC using&quot;];
+  &quot;configuration.Configuration&quot; [URL=&quot;ase2sprkkr.common.configuration.Configuration.html#ase2sprkkr.common.configuration.Configuration&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;The common base class for all configurations values and containers. I.e.&quot;];
+  &quot;configuration.ConfigurationFile&quot; [URL=&quot;ase2sprkkr.sprkkr.configuration.ConfigurationFile.html#ase2sprkkr.sprkkr.configuration.ConfigurationFile&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;'Root' configuration container for SPRKKR configuration file&quot;];
+  &quot;configuration_containers.RootConfigurationContainer&quot; -&gt; &quot;configuration.ConfigurationFile&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;configuration.ConfigurationSectionTrait&quot; -&gt; &quot;configuration.ConfigurationFile&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;configuration.ConfigurationSectionTrait&quot; [URL=&quot;ase2sprkkr.sprkkr.configuration.ConfigurationSectionTrait.html#ase2sprkkr.sprkkr.configuration.ConfigurationSectionTrait&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;];
+  &quot;configuration_containers.BaseConfigurationContainer&quot; [URL=&quot;ase2sprkkr.common.configuration_containers.BaseConfigurationContainer.html#ase2sprkkr.common.configuration_containers.BaseConfigurationContainer&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;Configuration container, that holds members, either in classical way&quot;];
+  &quot;configuration.Configuration&quot; -&gt; &quot;configuration_containers.BaseConfigurationContainer&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;abc.ABC&quot; -&gt; &quot;configuration_containers.BaseConfigurationContainer&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;configuration_containers.ConfigurationContainer&quot; [URL=&quot;ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.configuration_containers.ConfigurationContainer&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;A container for configuration (problem-definition) options and/or sections.&quot;];
+  &quot;configuration_containers.BaseConfigurationContainer&quot; -&gt; &quot;configuration_containers.ConfigurationContainer&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;configuration_containers.RootConfigurationContainer&quot; [URL=&quot;ase2sprkkr.common.configuration_containers.RootConfigurationContainer.html#ase2sprkkr.common.configuration_containers.RootConfigurationContainer&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;Base class for data of configuration/problem-definition files&quot;];
+  &quot;configuration_containers.ConfigurationContainer&quot; -&gt; &quot;configuration_containers.RootConfigurationContainer&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;potentials.Potential&quot; [URL=&quot;#ase2sprkkr.potentials.potentials.Potential&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;It holds data form SPR-KKR potential file&quot;];
+  &quot;configuration.ConfigurationFile&quot; -&gt; &quot;potentials.Potential&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+}
+<div class="line-block">
 <div class="line"><br /></div>
 </div>
 <p class="rubric">Constructor</p>
@@ -178,7 +198,7 @@ to create the atoms object</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="ase2sprkkr.potentials.potentials.Potential.atoms">
-<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">atoms</span></span><a class="headerlink" href="#ase2sprkkr.potentials.potentials.Potential.atoms" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">atoms</span></span><a class="headerlink" href="#ase2sprkkr.potentials.potentials.Potential.atoms" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -205,20 +225,34 @@ If is not set, it is created from the atoms.</p></li>
 </dl>
 </dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.potentials.potentials.Potential.is_scf_converged">
+<span class="sig-name descname"><span class="pre">is_scf_converged</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">atoms</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/potentials/potentials.html#Potential.is_scf_converged"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.potentials.potentials.Potential.is_scf_converged" title="Link to this definition"></a></dt>
+<dd><p>Return whether this potential represents a converged SCF state.</p>
+</dd></dl>
+
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ase2sprkkr.potentials.potentials.Potential.potential_definition">
-<span class="sig-name descname"><span class="pre">potential_definition</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;POTENTIAL</span> <span class="pre">FILE</span> <span class="pre">PotentialDefinition&gt;</span></em><a class="headerlink" href="#ase2sprkkr.potentials.potentials.Potential.potential_definition" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">potential_definition</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;POTENTIAL</span> <span class="pre">FILE</span> <span class="pre">PotentialDefinition&gt;</span></span><a class="headerlink" href="#ase2sprkkr.potentials.potentials.Potential.potential_definition" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.potentials.potentials.Potential.from_file">
-<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atoms</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_dangerous</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/potentials/potentials.html#Potential.from_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.potentials.potentials.Potential.from_file" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atoms</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_dangerous</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">check_file_unchanged</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/potentials/potentials.html#Potential.from_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.potentials.potentials.Potential.from_file" title="Link to this definition"></a></dt>
 <dd><p>Create a potential from a given potential file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>check_file_unchanged</strong> – If True, require <code class="docutils literal notranslate"><span class="pre">filename</span></code> to be a filesystem path and verify with
+cheap filesystem fingerprints that it was not replaced or rewritten
+while being parsed. The check is opt-in because normal potential
+loading does not require this provenance guarantee.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.potentials.potentials.Potential.from_string">
-<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">string</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atoms</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_dangerous</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/potentials/potentials.html#Potential.from_string"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.potentials.potentials.Potential.from_string" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">string</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atoms</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_dangerous</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/potentials/potentials.html#Potential.from_string"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.potentials.potentials.Potential.from_string" title="Link to this definition"></a></dt>
 <dd><p>Create a potential from a string containing a content of a potential file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -229,7 +263,7 @@ If is not set, it is created from the atoms.</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.potentials.potentials.Potential.from_atoms">
-<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_atoms</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">atoms</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/potentials/potentials.html#Potential.from_atoms"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.potentials.potentials.Potential.from_atoms" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_atoms</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">atoms</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/potentials/potentials.html#Potential.from_atoms"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.potentials.potentials.Potential.from_atoms" title="Link to this definition"></a></dt>
 <dd><p>Create a potential, that describes the given atoms object.</p>
 </dd></dl>
 
@@ -238,22 +272,24 @@ If is not set, it is created from the atoms.</p></li>
 <span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">update_atoms</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/potentials/potentials.html#Potential.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.potentials.potentials.Potential.reset" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ase2sprkkr.potentials.potentials.Potential._abc_impl">
+<span class="sig-name descname"><span class="pre">_abc_impl</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;_abc._abc_data</span> <span class="pre">object&gt;</span></span><a class="headerlink" href="#ase2sprkkr.potentials.potentials.Potential._abc_impl" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.potentials.potentials.Potential.save_to_file">
-<span class="sig-name descname"><span class="pre">save_to_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atoms</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">validate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'save'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/potentials/potentials.html#Potential.save_to_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.potentials.potentials.Potential.save_to_file" title="Link to this definition"></a></dt>
-<dd><p>Save the configuration to a file in a given format.</p>
-<p>This routine do some basic stuff and then call _save_to_file routine,
-that contains the implementation specific for the type of the
-configuration container/value.</p>
+<span class="sig-name descname"><span class="pre">save_to_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atoms</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">validate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'save'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">restart_scf</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/potentials/potentials.html#Potential.save_to_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.potentials.potentials.Potential.save_to_file" title="Link to this definition"></a></dt>
+<dd><p>Save the potential, optionally restarting SCF only in serialized output.</p>
+<p><code class="docutils literal notranslate"><span class="pre">restart_scf</span></code> is an execution/serialization intent, not potential state.
+All normal synchronization from atoms is performed first. The value
+written for <code class="docutils literal notranslate"><span class="pre">SCFSTATUS</span></code> is then overridden to <code class="docutils literal notranslate"><span class="pre">START</span></code> without
+changing the canonical status or discarding converged electronic data.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>file</strong> (<em>str</em><em> or </em><em>file</em>) – File to read the data from</p></li>
-<li><p><strong>validate</strong> (<em>str</em><em> | </em><em>bool</em>) – Validate the data in the container first and raise an exception,
-if there is an error (e.g. the the data are not complete).
-The string value can be used to select the type of validation
-<code class="docutils literal notranslate"><span class="pre">save</span></code> means the full check (same as the default value <code class="docutils literal notranslate"><span class="pre">True</span></code>),
-use <code class="docutils literal notranslate"><span class="pre">set</span></code> to allow some missing values.</p></li>
+<li><p><strong>validate</strong> (<em>str</em><em> | </em><em>bool</em>)</p></li>
+<li><p><strong>restart_scf</strong> (<em>bool</em>)</p></li>
 </ul>
 </dd>
 </dl>
@@ -268,7 +304,7 @@ use <code class="docutils literal notranslate"><span class="pre">set</span></cod
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="ase2sprkkr.potentials.potentials.html" class="btn btn-neutral float-left" title="potentials" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="ase2sprkkr.sprkkr.html" class="btn btn-neutral float-right" title="sprkkr" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="ase2sprkkr.potentials.potentials.PotentialFileChanged.html" class="btn btn-neutral float-right" title="ase2sprkkr.potentials.potentials.PotentialFileChanged" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

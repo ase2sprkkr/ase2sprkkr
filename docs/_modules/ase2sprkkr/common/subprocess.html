@@ -16,8 +16,8 @@
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
-      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -81,6 +81,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../ase2sprkkr.html">ase2sprkkr</a></li>
       <li class="breadcrumb-item active">ase2sprkkr.common.subprocess</li>
       <li class="wy-breadcrumbs-aside">
       </li>
@@ -100,8 +101,6 @@
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">multiprocessing</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mp</span>
 
-<span class="n">mp</span><span class="o">.</span><span class="n">set_start_method</span><span class="p">(</span><span class="s2">&quot;spawn&quot;</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
 
 <div class="viewcode-block" id="ignore_signal">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.common.subprocess.ignore_signal.html#ase2sprkkr.common.subprocess.ignore_signal">[docs]</a>
@@ -116,12 +115,20 @@
 
 
 
+<div class="viewcode-block" id="_call">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.subprocess._call.html#ase2sprkkr.common.subprocess._call">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_call</span><span class="p">(</span><span class="n">lmbda</span><span class="p">):</span>
+    <span class="k">with</span> <span class="n">ignore_signal</span><span class="p">(</span><span class="n">signal</span><span class="o">.</span><span class="n">SIGCHLD</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">lmbda</span><span class="p">()</span></div>
+
+
+
 <div class="viewcode-block" id="_call_function">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.common.subprocess._call_function.html#ase2sprkkr.common.subprocess._call_function">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">_call_function</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">module</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">):</span>
     <span class="n">mod</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="n">module</span><span class="p">)</span>
-    <span class="n">out</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">mod</span><span class="p">,</span> <span class="n">name</span><span class="p">)(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">out</span></div>
+    <span class="k">with</span> <span class="n">ignore_signal</span><span class="p">(</span><span class="n">signal</span><span class="o">.</span><span class="n">SIGCHLD</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">mod</span><span class="p">,</span> <span class="n">name</span><span class="p">)(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 
 
@@ -131,18 +138,21 @@
     <span class="k">global</span> <span class="n">_pool</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">_pool</span><span class="p">:</span>
-        <span class="n">_pool</span> <span class="o">=</span> <span class="n">ProcessPoolExecutor</span><span class="p">(</span><span class="n">max_workers</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">_pool</span> <span class="o">=</span> <span class="n">ProcessPoolExecutor</span><span class="p">(</span>
+            <span class="n">max_workers</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+            <span class="n">mp_context</span><span class="o">=</span><span class="n">mp</span><span class="o">.</span><span class="n">get_context</span><span class="p">(</span><span class="s2">"spawn"</span><span class="p">),</span>
+        <span class="p">)</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="k">with</span> <span class="n">ignore_signal</span><span class="p">(</span><span class="n">signal</span><span class="o">.</span><span class="n">SIGCHLD</span><span class="p">):</span>
-            <span class="k">if</span> <span class="n">module</span><span class="p">:</span>
-                <span class="n">future</span> <span class="o">=</span> <span class="n">_pool</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="n">_call_function</span><span class="p">,</span> <span class="n">lmbda</span><span class="p">,</span> <span class="n">module</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">future</span> <span class="o">=</span> <span class="n">_pool</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="n">lmbda</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">module</span><span class="p">:</span>
+            <span class="n">future</span> <span class="o">=</span> <span class="n">_pool</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="n">_call_function</span><span class="p">,</span> <span class="n">lmbda</span><span class="p">,</span> <span class="n">module</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">future</span> <span class="o">=</span> <span class="n">_pool</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="n">_call</span><span class="p">,</span> <span class="n">lmbda</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">future</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>
     <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-        <span class="n">_pool</span><span class="o">.</span><span class="n">shutdown</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">pool</span> <span class="o">=</span> <span class="n">_pool</span>
         <span class="n">_pool</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error when running the supbprocess: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span></div>
+        <span class="n">pool</span><span class="o">.</span><span class="n">shutdown</span><span class="p">(</span><span class="n">wait</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Error when running the subprocess: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span></div>
 
 </pre></div>
 

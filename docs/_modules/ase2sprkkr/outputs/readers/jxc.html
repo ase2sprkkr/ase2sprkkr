@@ -16,8 +16,8 @@
       <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
-      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
@@ -81,6 +81,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../../ase2sprkkr.html">ase2sprkkr</a></li>
       <li class="breadcrumb-item active">ase2sprkkr.outputs.readers.jxc</li>
       <li class="wy-breadcrumbs-aside">
       </li>
@@ -91,7 +92,7 @@
            <div itemprop="articleBody">
              
   <h1>Source code for ase2sprkkr.outputs.readers.jxc</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;The reader for JXC task, providing exchange couplings, exchange tensors, and Dzyaloshinski-Moriya vectors.&quot;&quot;&quot;</span>
+<span></span><span class="sd">"""The reader for JXC task, providing exchange couplings, exchange tensors, and Dzyaloshinski-Moriya vectors."""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
@@ -106,96 +107,78 @@
 <div class="viewcode-block" id="JxcResult">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.readers.jxc.JxcResult.html#ase2sprkkr.outputs.readers.jxc.JxcResult">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">JxcResult</span><span class="p">(</span><span class="n">TaskResult</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;JXC task provides access to the generated JXC output file.</span>
+<span class="w">    </span><span class="sd">"""JXC task provides access to the generated JXC output file.</span>
 <span class="sd">    It provides access to exchange couplings, exchange tensors, and Dzyaloshinski-Moriya vectors,</span>
 <span class="sd">    using the :py:attr:`~jxc`, :py:attr:`~dij` and :py:attr:`~dmi` properties.</span>
 <span class="sd">    Not all of them may be present in the output, depending on the settings of the JXC task.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
-<div class="viewcode-block" id="JxcResult.dmi_filename">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.readers.jxc.JxcResult.html#ase2sprkkr.outputs.readers.jxc.JxcResult.dmi_filename">[docs]</a>
     <span class="nd">@cached_property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">dmi_filename</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Dzyaloshinski-Moriya vectors file name&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Dzyaloshinski-Moriya vectors file name"""</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">path_to</span><span class="p">(</span><span class="s2">&quot;dmi&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">path_to</span><span class="p">(</span><span class="s2">"dmi"</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s2">&quot;Dzyaloshinski-Moriya vectors file not found in output&quot;</span><span class="p">)</span></div>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s2">"Dzyaloshinski-Moriya vectors file not found in output"</span><span class="p">)</span>
 
-
-<div class="viewcode-block" id="JxcResult.dmi">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.readers.jxc.JxcResult.html#ase2sprkkr.outputs.readers.jxc.JxcResult.dmi">[docs]</a>
     <span class="nd">@cached_property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">dmi</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Dzyaloshinski-Moriya vectors.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_values</span><span class="p">[</span><span class="s2">&quot;dmi&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">parsed_file</span><span class="p">()</span></div>
+<span class="w">        </span><span class="sd">"""Dzyaloshinski-Moriya vectors."""</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_values</span><span class="p">[</span><span class="s2">"dmi"</span><span class="p">]</span><span class="o">.</span><span class="n">parsed_file</span><span class="p">()</span>
 
-
-<div class="viewcode-block" id="JxcResult.dij_filename">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.readers.jxc.JxcResult.html#ase2sprkkr.outputs.readers.jxc.JxcResult.dij_filename">[docs]</a>
     <span class="nd">@cached_property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">dij_filename</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Exchange tensors file name&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Exchange tensors file name"""</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">path_to</span><span class="p">(</span><span class="s2">&quot;dij&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">path_to</span><span class="p">(</span><span class="s2">"dij"</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s2">&quot;Exchange tensors file not found in output&quot;</span><span class="p">)</span></div>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s2">"Exchange tensors file not found in output"</span><span class="p">)</span>
 
-
-<div class="viewcode-block" id="JxcResult.dij">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.readers.jxc.JxcResult.html#ase2sprkkr.outputs.readers.jxc.JxcResult.dij">[docs]</a>
     <span class="nd">@cached_property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">dij</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Exchange tensors.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_values</span><span class="p">[</span><span class="s2">&quot;dij&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">parsed_file</span><span class="p">()</span></div>
+<span class="w">        </span><span class="sd">"""Exchange tensors."""</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_values</span><span class="p">[</span><span class="s2">"dij"</span><span class="p">]</span><span class="o">.</span><span class="n">parsed_file</span><span class="p">()</span>
 
-
-<div class="viewcode-block" id="JxcResult.jxc_filename">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.readers.jxc.JxcResult.html#ase2sprkkr.outputs.readers.jxc.JxcResult.jxc_filename">[docs]</a>
     <span class="nd">@cached_property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">jxc_filename</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Exchange couplings file name&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Exchange couplings file name"""</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">path_to</span><span class="p">(</span><span class="s2">&quot;jxc&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">path_to</span><span class="p">(</span><span class="s2">"jxc"</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s2">&quot;Exchange couplings file not found in output&quot;</span><span class="p">)</span></div>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s2">"Exchange couplings file not found in output"</span><span class="p">)</span>
 
-
-<div class="viewcode-block" id="JxcResult.jxc">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.readers.jxc.JxcResult.html#ase2sprkkr.outputs.readers.jxc.JxcResult.jxc">[docs]</a>
     <span class="nd">@cached_property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">jxc</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Exchange couplings.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_values</span><span class="p">[</span><span class="s2">&quot;jxc&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">parsed_file</span><span class="p">()</span></div>
-
+<span class="w">        </span><span class="sd">"""Exchange couplings."""</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_values</span><span class="p">[</span><span class="s2">"jxc"</span><span class="p">]</span><span class="o">.</span><span class="n">parsed_file</span><span class="p">()</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">output_values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">files</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;jxc&quot;</span><span class="p">:</span> <span class="s2">&quot;Exchange couplings&quot;</span><span class="p">,</span> <span class="s2">&quot;dij&quot;</span><span class="p">:</span> <span class="s2">&quot;Exchange tensors&quot;</span><span class="p">,</span> <span class="s2">&quot;dmi&quot;</span><span class="p">:</span> <span class="s2">&quot;Dzyaloshinski-Moriya vectors&quot;</span><span class="p">}</span>
+        <span class="n">files</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"jxc"</span><span class="p">:</span> <span class="s2">"Exchange couplings"</span><span class="p">,</span> <span class="s2">"dij"</span><span class="p">:</span> <span class="s2">"Exchange tensors"</span><span class="p">,</span> <span class="s2">"dmi"</span><span class="p">:</span> <span class="s2">"Dzyaloshinski-Moriya vectors"</span><span class="p">}</span>
         <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">files</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">files</span><span class="o">.</span><span class="n">set_file_type</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="s2">&quot;jxc&quot;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">files</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">files</span><span class="o">.</span><span class="n">set_file_type</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="s2">"jxc"</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">output_values</span>
 
 <div class="viewcode-block" id="JxcResult.write_uppasd_files">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.readers.jxc.JxcResult.html#ase2sprkkr.outputs.readers.jxc.JxcResult.write_uppasd_files">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">write_uppasd_files</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">directory</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">jxc_file</span><span class="o">=</span><span class="s2">&quot;jfile.dat&quot;</span><span class="p">,</span>
-        <span class="n">dmi_file</span><span class="o">=</span><span class="s2">&quot;dmfile.dat&quot;</span><span class="p">,</span>
-        <span class="n">pos_file</span><span class="o">=</span><span class="s2">&quot;posfile.dat&quot;</span><span class="p">,</span>
-        <span class="n">mom_file</span><span class="o">=</span><span class="s2">&quot;momfile.dat&quot;</span><span class="p">,</span>
-        <span class="n">inpsd_file</span><span class="o">=</span><span class="s2">&quot;inpsd.dat&quot;</span><span class="p">,</span>
+        <span class="n">jxc_file</span><span class="o">=</span><span class="s2">"jfile.dat"</span><span class="p">,</span>
+        <span class="n">dmi_file</span><span class="o">=</span><span class="s2">"dmfile.dat"</span><span class="p">,</span>
+        <span class="n">pos_file</span><span class="o">=</span><span class="s2">"posfile.dat"</span><span class="p">,</span>
+        <span class="n">mom_file</span><span class="o">=</span><span class="s2">"momfile.dat"</span><span class="p">,</span>
+        <span class="n">inpsd_file</span><span class="o">=</span><span class="s2">"inpsd.dat"</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
     <span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Write the computed exchange couplings, exchange tensors and Dzyaloshinski-Moriya vectors</span>
-<span class="sd">        to UppASD input files in the specified directory.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Write the computed exchange couplings, exchange tensors and Dzyaloshinski-Moriya vectors</span>
+<span class="sd">        to UppASD input files in the specified directory."""</span>
         <span class="n">output_file</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="n">args</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;dmi&quot;</span><span class="p">:</span> <span class="s2">&quot;biqdm&quot;</span><span class="p">,</span> <span class="s2">&quot;jxc&quot;</span><span class="p">:</span> <span class="s2">&quot;exchange&quot;</span><span class="p">}</span>
-        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;jxc&quot;</span><span class="p">,</span> <span class="s2">&quot;dmi&quot;</span><span class="p">]:</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"dmi"</span><span class="p">:</span> <span class="s2">"biqdm"</span><span class="p">,</span> <span class="s2">"jxc"</span><span class="p">:</span> <span class="s2">"exchange"</span><span class="p">}</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">"jxc"</span><span class="p">,</span> <span class="s2">"dmi"</span><span class="p">]:</span>
             <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">files</span><span class="p">:</span>
-                <span class="n">file_name</span> <span class="o">=</span> <span class="nb">locals</span><span class="p">()[</span><span class="n">key</span> <span class="o">+</span> <span class="s2">&quot;_file&quot;</span><span class="p">]</span>
+                <span class="n">file_name</span> <span class="o">=</span> <span class="nb">locals</span><span class="p">()[</span><span class="n">key</span> <span class="o">+</span> <span class="s2">"_file"</span><span class="p">]</span>
                 <span class="k">if</span> <span class="n">file_name</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
                     <span class="k">continue</span>
                 <span class="n">output_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_values</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">parsed_file</span><span class="p">()</span>
@@ -203,7 +186,7 @@
                 <span class="n">argname</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
                 <span class="k">if</span> <span class="n">argname</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
                     <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
-                        <span class="sa">f</span><span class="s2">&quot;Option `</span><span class="si">{</span><span class="n">argname</span><span class="si">}</span><span class="s2">` already present in the kwargs. I have no place to wrute the name of </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2"> file into inpsd.dat&quot;</span>
+                        <span class="sa">f</span><span class="s2">"Option `</span><span class="si">{</span><span class="n">argname</span><span class="si">}</span><span class="s2">` already present in the kwargs. I have no place to wrute the name of </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2"> file into inpsd.dat"</span>
                     <span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">kwargs</span><span class="p">[</span><span class="n">argname</span><span class="p">]</span> <span class="o">=</span> <span class="n">file_name</span>
@@ -220,17 +203,17 @@
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.readers.jxc.JxcResult.html#ase2sprkkr.outputs.readers.jxc.JxcResult.run_uppasd">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">run_uppasd</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">executable</span><span class="o">=</span><span class="s2">&quot;uppasd&quot;</span><span class="p">,</span>
+        <span class="n">executable</span><span class="o">=</span><span class="s2">"uppasd"</span><span class="p">,</span>
         <span class="n">directory</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">jxc_file</span><span class="o">=</span><span class="s2">&quot;jfile.dat&quot;</span><span class="p">,</span>
-        <span class="n">dmi_file</span><span class="o">=</span><span class="s2">&quot;dmfile.dat&quot;</span><span class="p">,</span>
-        <span class="n">pos_file</span><span class="o">=</span><span class="s2">&quot;posfile.dat&quot;</span><span class="p">,</span>
-        <span class="n">mom_file</span><span class="o">=</span><span class="s2">&quot;momfile.dat&quot;</span><span class="p">,</span>
-        <span class="n">inpsd_file</span><span class="o">=</span><span class="s2">&quot;inpsd.dat&quot;</span><span class="p">,</span>
+        <span class="n">jxc_file</span><span class="o">=</span><span class="s2">"jfile.dat"</span><span class="p">,</span>
+        <span class="n">dmi_file</span><span class="o">=</span><span class="s2">"dmfile.dat"</span><span class="p">,</span>
+        <span class="n">pos_file</span><span class="o">=</span><span class="s2">"posfile.dat"</span><span class="p">,</span>
+        <span class="n">mom_file</span><span class="o">=</span><span class="s2">"momfile.dat"</span><span class="p">,</span>
+        <span class="n">inpsd_file</span><span class="o">=</span><span class="s2">"inpsd.dat"</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">write_uppasd_files</span><span class="p">(</span>
-            <span class="o">**</span><span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">locals</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">k</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;self&quot;</span><span class="p">,</span> <span class="s2">&quot;kwargs&quot;</span><span class="p">,</span> <span class="s2">&quot;executable&quot;</span><span class="p">)},</span> <span class="o">**</span><span class="n">kwargs</span>
+            <span class="o">**</span><span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">locals</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">k</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"self"</span><span class="p">,</span> <span class="s2">"kwargs"</span><span class="p">,</span> <span class="s2">"executable"</span><span class="p">)},</span> <span class="o">**</span><span class="n">kwargs</span>
         <span class="p">)</span>
         <span class="kn">import</span><span class="w"> </span><span class="nn">subprocess</span>
         <span class="kn">from</span><span class="w"> </span><span class="nn">...common.file_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">Directory</span>
@@ -250,16 +233,16 @@
         <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_commons</span><span class="p">(</span><span class="n">stdout</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span>
 
         <span class="n">pattern</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span>
-            <span class="sa">rb</span><span class="s2">&quot;\s*(?:(?:&quot;</span>
-            <span class="o">+</span> <span class="sa">rb</span><span class="s2">&quot;)|(?:&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="sa">rb</span><span class="s2">"\s*(?:(?:"</span>
+            <span class="o">+</span> <span class="sa">rb</span><span class="s2">")|(?:"</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
                 <span class="p">[</span>
-                    <span class="sa">rb</span><span class="s2">&quot;(?P&lt;file&gt;results written to file:(?P&lt;file_name&gt;.+_(?P&lt;file_type&gt;XCPLTEN_Jij|XCPLTEN_Dij|DMIVEC_Dij)\.dat|.*))&quot;</span><span class="p">,</span>
-                    <span class="sa">rb</span><span class="s2">&quot;Curie temperature within mean field approximation  T_C =\s*(?P&lt;curie_temp&gt;[0-9.]+) K&quot;</span><span class="p">,</span>
+                    <span class="sa">rb</span><span class="s2">"(?P&lt;file&gt;results written to file:(?P&lt;file_name&gt;.+_(?P&lt;file_type&gt;XCPLTEN_Jij|XCPLTEN_Dij|DMIVEC_Dij)\.dat|.*))"</span><span class="p">,</span>
+                    <span class="sa">rb</span><span class="s2">"Curie temperature within mean field approximation  T_C =\s*(?P&lt;curie_temp&gt;[0-9.]+) K"</span><span class="p">,</span>
                 <span class="p">]</span>
             <span class="p">)</span>
-            <span class="o">+</span> <span class="sa">rb</span><span class="s2">&quot;))\s*&quot;</span>
+            <span class="o">+</span> <span class="sa">rb</span><span class="s2">"))\s*"</span>
         <span class="p">)</span>
-        <span class="n">file_types</span> <span class="o">=</span> <span class="p">{</span><span class="sa">b</span><span class="s2">&quot;XCPLTEN_Jij&quot;</span><span class="p">:</span> <span class="s2">&quot;jxc&quot;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;XCPLTEN_Dij&quot;</span><span class="p">:</span> <span class="s2">&quot;dij&quot;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;DMIVEC_Dij&quot;</span><span class="p">:</span> <span class="s2">&quot;dmi&quot;</span><span class="p">}</span>
+        <span class="n">file_types</span> <span class="o">=</span> <span class="p">{</span><span class="sa">b</span><span class="s2">"XCPLTEN_Jij"</span><span class="p">:</span> <span class="s2">"jxc"</span><span class="p">,</span> <span class="sa">b</span><span class="s2">"XCPLTEN_Dij"</span><span class="p">:</span> <span class="s2">"dij"</span><span class="p">,</span> <span class="sa">b</span><span class="s2">"DMIVEC_Dij"</span><span class="p">:</span> <span class="s2">"dmi"</span><span class="p">}</span>
 
         <span class="n">match</span> <span class="o">=</span> <span class="kc">None</span>
 
@@ -273,17 +256,17 @@
             <span class="n">line</span> <span class="o">=</span> <span class="k">await</span> <span class="n">readline_until</span><span class="p">(</span><span class="n">stdout</span><span class="p">,</span> <span class="n">important</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">line</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="k">break</span>
-            <span class="k">if</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">&quot;file&quot;</span><span class="p">):</span>
-                <span class="n">file_type</span> <span class="o">=</span> <span class="n">file_types</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">&quot;file_type&quot;</span><span class="p">),</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">"file"</span><span class="p">):</span>
+                <span class="n">file_type</span> <span class="o">=</span> <span class="n">file_types</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">"file_type"</span><span class="p">),</span> <span class="kc">None</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">file_type</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                    <span class="n">result</span><span class="o">.</span><span class="n">files</span><span class="o">.</span><span class="n">add_file</span><span class="p">(</span><span class="n">file_type</span><span class="p">,</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">&quot;file_name&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf8&quot;</span><span class="p">),</span> <span class="s2">&quot;jxc&quot;</span><span class="p">)</span>
+                    <span class="n">result</span><span class="o">.</span><span class="n">files</span><span class="o">.</span><span class="n">add_file</span><span class="p">(</span><span class="n">file_type</span><span class="p">,</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">"file_name"</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">"utf8"</span><span class="p">),</span> <span class="s2">"jxc"</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unexpected file type in JXC output: </span><span class="si">{</span><span class="n">line</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">&quot;curie_temp&quot;</span><span class="p">):</span>
-                <span class="n">result</span><span class="o">.</span><span class="n">mean_field_curie_temperature</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">&quot;curie_temp&quot;</span><span class="p">))</span>
+                    <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Unexpected file type in JXC output: </span><span class="si">{</span><span class="n">line</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">"curie_temp"</span><span class="p">):</span>
+                <span class="n">result</span><span class="o">.</span><span class="n">mean_field_curie_temperature</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">"curie_temp"</span><span class="p">))</span>
 
         <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">mean_field_curie_temperature</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Curie temperature not found in JXC output&quot;</span><span class="p">)</span></div>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">"Curie temperature not found in JXC output"</span><span class="p">)</span></div>
 </div>
 
 

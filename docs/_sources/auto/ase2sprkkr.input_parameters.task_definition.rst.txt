@@ -1,0 +1,52 @@
+task\_definition
+================
+
+Full name: **ase2sprkkr.input\_parameters.task\_definition**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.input_parameters.task_definition.InputParametersRegistry  ase2sprkkr.input_parameters.task_definition.TaskDefinition  ase2sprkkr.input_parameters.task_definition.TaskRegistry 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.input_parameters.task_definition
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      InputParametersRegistry
+      TaskDefinition
+      TaskRegistry
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

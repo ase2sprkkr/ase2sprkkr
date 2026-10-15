@@ -16,8 +16,8 @@
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
-      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -81,6 +81,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../ase2sprkkr.html">ase2sprkkr</a></li>
       <li class="breadcrumb-item active">ase2sprkkr.common.misc</li>
       <li class="wy-breadcrumbs-aside">
       </li>
@@ -91,7 +92,7 @@
            <div itemprop="articleBody">
              
   <h1>Source code for ase2sprkkr.common.misc</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Various classes and routines used thorough the package&quot;&quot;&quot;</span>
+<span></span><span class="sd">"""Various classes and routines used thorough the package"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">copy</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
@@ -101,8 +102,8 @@
 <div class="viewcode-block" id="copy_list">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.common.misc.copy_list.html#ase2sprkkr.common.misc.copy_list">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">copy_list</span><span class="p">(</span><span class="n">src</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Copy list of objects. Each object is copied just once (so</span>
-<span class="sd">    the number of unique objects in the list is retained&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Copy list of objects. Each object is copied just once (so</span>
+<span class="sd">    the number of unique objects in the list is retained"""</span>
 
     <span class="n">mp</span> <span class="o">=</span> <span class="p">{}</span>
 
@@ -123,7 +124,7 @@
 <div class="viewcode-block" id="njit">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.common.misc.njit.html#ase2sprkkr.common.misc.njit">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">njit</span><span class="p">(</span><span class="n">fce</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Mock the numba JIT compiler, if it is not available&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Mock the numba JIT compiler, if it is not available"""</span>
         <span class="k">return</span> <span class="n">fce</span></div>
 
 
@@ -132,9 +133,9 @@
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.common.misc.numpy_index.html#ase2sprkkr.common.misc.numpy_index">[docs]</a>
 <span class="nd">@njit</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">numpy_index</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns index of the first occurence of the item in the array</span>
+<span class="w">    </span><span class="sd">"""Returns index of the first occurence of the item in the array</span>
 <span class="sd">    If numba is installed, the function is accelerated.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">ndenumerate</span><span class="p">(</span><span class="n">array</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">val</span> <span class="o">==</span> <span class="n">item</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">idx</span></div>
@@ -146,7 +147,7 @@
 <div class="viewcode-block" id="as_integer">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.common.misc.as_integer.html#ase2sprkkr.common.misc.as_integer">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">as_integer</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Interpret the value as integer, or raise (even for float, complex etc.) TypeError.i</span>
+<span class="w">    </span><span class="sd">"""Interpret the value as integer, or raise (even for float, complex etc.) TypeError.i</span>
 <span class="sd">    &gt;&gt;&gt; as_integer(4)</span>
 <span class="sd">    4</span>
 <span class="sd">    &gt;&gt;&gt; as_integer(np.int64(4))</span>
@@ -154,8 +155,8 @@
 <span class="sd">    &gt;&gt;&gt; as_integer(4.0)</span>
 <span class="sd">    Traceback (most recent call last):</span>
 <span class="sd">    ...</span>
-<span class="sd">    TypeError: &#39;float&#39; object cannot be interpreted as an integer</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    TypeError: 'float' object cannot be interpreted as an integer</span>
+<span class="sd">    """</span>
     <span class="k">return</span> <span class="n">operator</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">value</span><span class="p">)</span></div>
 
 
@@ -163,11 +164,11 @@
 <div class="viewcode-block" id="dict_first_item">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.common.misc.dict_first_item.html#ase2sprkkr.common.misc.dict_first_item">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">dict_first_item</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Return the first item of the given dict.</span>
-<span class="sd">    &gt;&gt;&gt; dict_first_item({&quot;a&quot;: 4, &quot;c&quot;: 2, &quot;h&quot;: 8})</span>
+<span class="sd">    &gt;&gt;&gt; dict_first_item({"a": 4, "c": 2, "h": 8})</span>
 <span class="sd">    4</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">return</span> <span class="bp">self</span><span class="p">[</span><span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="bp">self</span><span class="p">))]</span></div>
 
 
@@ -185,7 +186,7 @@
 <div class="viewcode-block" id="config_property">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.common.misc.config_property.html#ase2sprkkr.common.misc.config_property">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">config_property</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">option</span><span class="p">):</span>
-    <span class="n">uname</span> <span class="o">=</span> <span class="s2">&quot;_&quot;</span> <span class="o">+</span> <span class="n">name</span>
+    <span class="n">uname</span> <span class="o">=</span> <span class="s2">"_"</span> <span class="o">+</span> <span class="n">name</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">getter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>

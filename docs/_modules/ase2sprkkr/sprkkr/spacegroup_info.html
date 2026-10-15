@@ -16,8 +16,8 @@
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
-      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -81,6 +81,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../ase2sprkkr.html">ase2sprkkr</a></li>
       <li class="breadcrumb-item active">ase2sprkkr.sprkkr.spacegroup_info</li>
       <li class="wy-breadcrumbs-aside">
       </li>
@@ -91,9 +92,9 @@
            <div itemprop="articleBody">
              
   <h1>Source code for ase2sprkkr.sprkkr.spacegroup_info</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span></span><span class="sd">"""</span>
 <span class="sd">Wrapper for spglib for computing symmetry of a primitive cell</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Dict</span>
@@ -109,7 +110,7 @@
 <div class="viewcode-block" id="site_type_copier">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.spacegroup_info.site_type_copier.html#ase2sprkkr.sprkkr.spacegroup_info.site_type_copier">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">site_type_copier</span><span class="p">(</span><span class="n">atoms</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a function, that always copy the site_type&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Return a function, that always copy the site_type"""</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">copy</span><span class="p">(</span><span class="n">site</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">site</span><span class="o">.</span><span class="n">site_type</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">atoms</span><span class="o">=</span><span class="n">atoms</span><span class="p">)</span>
@@ -121,7 +122,7 @@
 <div class="viewcode-block" id="used_site_type_copier">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.spacegroup_info.used_site_type_copier.html#ase2sprkkr.sprkkr.spacegroup_info.used_site_type_copier">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">used_site_type_copier</span><span class="p">(</span><span class="n">atoms</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a function, that copy the site_type, if it is requested more than once&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Return a function, that copy the site_type, if it is requested more than once"""</span>
     <span class="n">used</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">copy</span><span class="p">(</span><span class="n">site</span><span class="p">):</span>
@@ -141,20 +142,20 @@
 <div class="viewcode-block" id="BaseSpacegroupInfo.spacegroup_number">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.spacegroup_info.BaseSpacegroupInfo.html#ase2sprkkr.sprkkr.spacegroup_info.BaseSpacegroupInfo.spacegroup_number">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">spacegroup_number</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        spacegroup</span>
 <span class="sd">          Spacegroup number or None, if there is no spacegroup.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">dataset</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dataset</span>
         <span class="k">return</span> <span class="n">dataset</span><span class="o">.</span><span class="n">number</span> <span class="k">if</span> <span class="n">dataset</span> <span class="k">else</span> <span class="kc">None</span></div>
 
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">dataset</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return SpgLib dataset containing informations about symmetry,</span>
-<span class="sd">        spacegroup, equivalence of sites etc...&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Return SpgLib dataset containing informations about symmetry,</span>
+<span class="sd">        spacegroup, equivalence of sites etc..."""</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dataset</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">recompute</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dataset</span>
@@ -162,7 +163,7 @@
 <div class="viewcode-block" id="BaseSpacegroupInfo.kto_kyda_table">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.spacegroup_info.BaseSpacegroupInfo.html#ase2sprkkr.sprkkr.spacegroup_info.BaseSpacegroupInfo.kto_kyda_table">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">kto_kyda_table</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">symprec</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Build KTO_KYDA-style table, that maps the atoms before-after symmetry operations.</span>
 
 <span class="sd">        Parameters</span>
@@ -175,7 +176,7 @@
 <span class="sd">        table: (len(rotations), len(atoms) ) np.ndarray of</span>
 <span class="sd">            If table[i,j] = k, then the i-th symmetry operation maps the j-th atom</span>
 <span class="sd">            into k-th atom</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
 
         <span class="n">atoms</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">for_atoms</span>
         <span class="n">frac</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">get_scaled_positions</span><span class="p">(</span><span class="n">wrap</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># (nat, 3), fractional</span>
@@ -216,8 +217,8 @@
                     <span class="n">table</span><span class="p">[</span><span class="n">g</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">idxs</span><span class="p">[</span><span class="n">jloc</span><span class="p">]</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
-                        <span class="sa">f</span><span class="s2">&quot;No match for op </span><span class="si">{</span><span class="n">g</span><span class="si">}</span><span class="s2"> atom </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2"> within tolerance; &quot;</span>
-                        <span class="s2">&quot;consider increasing symprec or standardizing the cell.&quot;</span>
+                        <span class="sa">f</span><span class="s2">"No match for op </span><span class="si">{</span><span class="n">g</span><span class="si">}</span><span class="s2"> atom </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2"> within tolerance; "</span>
+                        <span class="s2">"consider increasing symprec or standardizing the cell."</span>
                     <span class="p">)</span>
         <span class="k">return</span> <span class="n">table</span></div>
 </div>
@@ -238,7 +239,8 @@
 <div class="viewcode-block" id="RegionSpacegroupInfo.recompute">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.spacegroup_info.RegionSpacegroupInfo.html#ase2sprkkr.sprkkr.spacegroup_info.RegionSpacegroupInfo.recompute">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">recompute</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_dataset</span><span class="o">.</span><span class="n">recompute</span><span class="p">()</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="o">.</span><span class="n">recompute</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
 </div>
 
 
@@ -246,12 +248,12 @@
 <div class="viewcode-block" id="SpacegroupInfo">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.spacegroup_info.SpacegroupInfo.html#ase2sprkkr.sprkkr.spacegroup_info.SpacegroupInfo">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">SpacegroupInfo</span><span class="p">(</span><span class="n">BaseSpacegroupInfo</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Class, that carry information about spacegroup and symmetry of a structure&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Class, that carry information about spacegroup and symmetry of a structure"""</span>
 
 <div class="viewcode-block" id="SpacegroupInfo.__init__">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.spacegroup_info.SpacegroupInfo.html#ase2sprkkr.sprkkr.spacegroup_info.SpacegroupInfo.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">:</span> <span class="n">sprkkr_atoms</span><span class="o">.</span><span class="n">SPRKKRAtoms</span><span class="p">,</span> <span class="n">symmetry</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">dataset</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        atoms</span>
@@ -264,7 +266,7 @@
 <span class="sd">          SPGLib dataset - a dictionary, containing many informations about the symmetry and</span>
 <span class="sd">          spacegroup of the structure. If it is not provided, and ``spacegroup`` is not ``None``</span>
 <span class="sd">          the spacegroup is recomputed to obtain the dataset, if the dataset is requested.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">atoms</span> <span class="o">=</span> <span class="n">sprkkr_atoms</span><span class="o">.</span><span class="n">SPRKKRAtoms</span><span class="o">.</span><span class="n">promote_ase_atoms</span><span class="p">(</span><span class="n">atoms</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span> <span class="o">=</span> <span class="n">atoms</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_dataset</span> <span class="o">=</span> <span class="n">dataset</span>
@@ -280,7 +282,7 @@
 <div class="viewcode-block" id="SpacegroupInfo.to_dict">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.spacegroup_info.SpacegroupInfo.html#ase2sprkkr.sprkkr.spacegroup_info.SpacegroupInfo.to_dict">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;dataset&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dataset</span><span class="p">,</span> <span class="s2">&quot;symmetry&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">symmetry</span><span class="p">}</span></div>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">"dataset"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dataset</span><span class="p">,</span> <span class="s2">"symmetry"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">symmetry</span><span class="p">}</span></div>
 
 
 <div class="viewcode-block" id="SpacegroupInfo.info_for_region">
@@ -292,13 +294,13 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_regions</span><span class="p">[</span><span class="n">name</span><span class="p">]</span></div>
 
 
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; ASE requires this form of name&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">""" ASE requires this form of name"""</span>
     <span class="n">todict</span> <span class="o">=</span> <span class="n">to_dict</span>
 
 <div class="viewcode-block" id="SpacegroupInfo.copy_for">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.spacegroup_info.SpacegroupInfo.html#ase2sprkkr.sprkkr.spacegroup_info.SpacegroupInfo.copy_for">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">copy_for</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return copy of the object for the given atoms&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Return copy of the object for the given atoms"""</span>
         <span class="n">out</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="n">out</span><span class="o">.</span><span class="n">atoms</span> <span class="o">=</span> <span class="n">atoms</span>
         <span class="n">out</span><span class="o">.</span><span class="n">_dataset</span> <span class="o">=</span> <span class="kc">None</span>
@@ -308,16 +310,22 @@
 <div class="viewcode-block" id="SpacegroupInfo.check_spacegroup_kinds">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.spacegroup_info.SpacegroupInfo.html#ase2sprkkr.sprkkr.spacegroup_info.SpacegroupInfo.check_spacegroup_kinds">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">check_spacegroup_kinds</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns True, if the spacegroup_kinds array match the sites info.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Returns True, if the spacegroup_kinds array match the sites info."""</span>
         <span class="n">a</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span>
-        <span class="k">if</span> <span class="s2">&quot;spacegroup_kinds&quot;</span> <span class="ow">in</span> <span class="n">a</span><span class="o">.</span><span class="n">arrays</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s2">"spacegroup_kinds"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">a</span><span class="o">.</span><span class="n">arrays</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">False</span>
         <span class="n">kinds</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="n">sites</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="n">occ</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;occupancy&quot;</span><span class="p">,</span> <span class="p">{})</span>
-        <span class="k">for</span> <span class="n">site</span><span class="p">,</span> <span class="n">kind</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">sites</span><span class="p">,</span> <span class="n">a</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="s2">&quot;spacegroup_kinds&quot;</span><span class="p">)):</span>
+        <span class="n">occ</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"occupancy"</span><span class="p">,</span> <span class="p">{})</span>
+        <span class="k">for</span> <span class="n">site</span><span class="p">,</span> <span class="n">kind</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">sites</span><span class="p">,</span> <span class="n">a</span><span class="o">.</span><span class="n">arrays</span><span class="p">[</span><span class="s2">"spacegroup_kinds"</span><span class="p">]):</span>
             <span class="n">st</span> <span class="o">=</span> <span class="n">site</span><span class="o">.</span><span class="n">site_type</span>
-            <span class="k">if</span> <span class="n">kinds</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">kind</span><span class="p">,</span> <span class="n">st</span><span class="p">)</span> <span class="o">!=</span> <span class="n">st</span> <span class="ow">or</span> <span class="n">sites</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">st</span><span class="p">,</span> <span class="n">kind</span><span class="p">)</span> <span class="o">!=</span> <span class="n">kind</span> <span class="ow">or</span> <span class="nb">str</span><span class="p">(</span><span class="n">kind</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">occ</span><span class="p">:</span>
+            <span class="n">key</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">kind</span><span class="p">))</span>
+            <span class="k">if</span> <span class="p">(</span>
+                <span class="n">kinds</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">kind</span><span class="p">,</span> <span class="n">st</span><span class="p">)</span> <span class="o">!=</span> <span class="n">st</span>
+                <span class="ow">or</span> <span class="n">sites</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">st</span><span class="p">,</span> <span class="n">kind</span><span class="p">)</span> <span class="o">!=</span> <span class="n">kind</span>
+                <span class="ow">or</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">occ</span>
+                <span class="ow">or</span> <span class="n">occ</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">!=</span> <span class="n">st</span><span class="o">.</span><span class="n">occupation</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+            <span class="p">):</span>
                 <span class="k">return</span> <span class="kc">False</span>
         <span class="k">return</span> <span class="kc">True</span></div>
 
@@ -325,10 +333,10 @@
 <div class="viewcode-block" id="SpacegroupInfo.update_spacegroup_kinds">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.spacegroup_info.SpacegroupInfo.html#ase2sprkkr.sprkkr.spacegroup_info.SpacegroupInfo.update_spacegroup_kinds">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">update_spacegroup_kinds</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">if_required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">invalidate_spacegroup</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update the occupancy info and spagroup_kinds array&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Update the occupancy info and spagroup_kinds array"""</span>
         <span class="k">if</span> <span class="n">invalidate_spacegroup</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_dataset</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="k">if</span> <span class="n">if_required</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_spacegroup_kinds</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">if_required</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_spacegroup_kinds</span><span class="p">():</span>
             <span class="k">return</span>
         <span class="n">sgi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">atoms</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
         <span class="n">stypes</span> <span class="o">=</span> <span class="p">{}</span>
@@ -343,22 +351,22 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">sgi</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">stypes</span><span class="p">[</span><span class="n">st</span><span class="p">]</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">set_array</span><span class="p">(</span><span class="s2">&quot;spacegroup_kinds&quot;</span><span class="p">,</span> <span class="n">sgi</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s2">&quot;occupancy&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">occ</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">set_array</span><span class="p">(</span><span class="s2">"spacegroup_kinds"</span><span class="p">,</span> <span class="n">sgi</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s2">"occupancy"</span><span class="p">]</span> <span class="o">=</span> <span class="n">occ</span></div>
 
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Spacegroup </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spacegroup_number</span><span class="p">()</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="s1">&#39;None&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">"Spacegroup </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spacegroup_number</span><span class="p">()</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="s1">'None'</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">()</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">equivalent_sites</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return numpy array, that tags the sites by its equivalence</span>
-<span class="sd">        classes&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Return numpy array, that tags the sites by its equivalence</span>
+<span class="sd">        classes"""</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">sites</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">get_array</span><span class="p">(</span><span class="s2">&quot;spacegroup_kinds&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">get_array</span><span class="p">(</span><span class="s2">"spacegroup_kinds"</span><span class="p">)</span>
 
 <div class="viewcode-block" id="SpacegroupInfo.recompute">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.spacegroup_info.SpacegroupInfo.html#ase2sprkkr.sprkkr.spacegroup_info.SpacegroupInfo.recompute">[docs]</a>
@@ -374,23 +382,23 @@
         <span class="n">init</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="n">update_info</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Init the sites array: the array of Sites objects,</span>
-<span class="sd">        that holds additional SPRKKR properties and informations about site-equivalence&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Init the sites array: the array of Sites objects,</span>
+<span class="sd">        that holds additional SPRKKR properties and informations about site-equivalence"""</span>
         <span class="k">if</span> <span class="n">symmetry</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">symmetry</span> <span class="o">=</span> <span class="n">symmetry</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_block</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">init</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">__block</span><span class="o">.</span><span class="n">init</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_block</span><span class="o">.</span><span class="n">init</span> <span class="o">=</span> <span class="kc">True</span>
             <span class="k">if</span> <span class="n">copy</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_block</span><span class="o">.</span><span class="n">copy</span> <span class="o">=</span> <span class="kc">True</span>
             <span class="k">if</span> <span class="n">update_info</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_block</span><span class="o">.</span><span class="n">update_info</span> <span class="o">=</span> <span class="kc">True</span>
-            <span class="k">if</span> <span class="n">atomic_kinds</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">atomic_kinds</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
-                    <span class="s2">&quot;Calling recompute during _block with atomic_kinds specified is not implemented&quot;</span>
+                    <span class="s2">"Calling recompute during _block with atomic_kinds specified is not implemented"</span>
                 <span class="p">)</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">consider_old</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">consider_old</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_block</span><span class="o">.</span><span class="n">consider_old</span> <span class="o">=</span> <span class="kc">False</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_block</span><span class="o">.</span><span class="n">angular_precision</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">angular_precision</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_block</span><span class="o">.</span><span class="n">angular_precision</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_block</span><span class="o">.</span><span class="n">precision</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">precision</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_block</span><span class="o">.</span><span class="n">precision</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_block</span><span class="o">.</span><span class="n">do</span> <span class="o">=</span> <span class="kc">True</span>
@@ -463,15 +471,19 @@
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.spacegroup_info.SpacegroupInfo.html#ase2sprkkr.sprkkr.spacegroup_info.SpacegroupInfo.block_updating">[docs]</a>
     <span class="nd">@contextmanager</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">block_updating</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">always_recompute</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_block</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_block</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">block</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_block</span> <span class="o">=</span> <span class="n">SpacegroupInfoBlock</span><span class="p">()</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">block</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_block</span><span class="o">.</span><span class="n">raise_counter</span><span class="p">()</span>
-        <span class="k">yield</span>
-        <span class="k">if</span> <span class="n">always_recompute</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">recompute</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_block</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_block</span><span class="o">.</span><span class="n">lower_counter</span><span class="p">()</span>
-        <span class="n">block</span><span class="o">.</span><span class="n">recompute</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+            <span class="n">block</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_block</span>
+            <span class="n">block</span><span class="o">.</span><span class="n">raise_counter</span><span class="p">()</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">yield</span>
+            <span class="k">if</span> <span class="n">always_recompute</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">recompute</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_block</span> <span class="o">=</span> <span class="n">block</span><span class="o">.</span><span class="n">lower_counter</span><span class="p">()</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_block</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">block</span><span class="o">.</span><span class="n">recompute</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
 </div>
 
 
@@ -479,8 +491,8 @@
 <div class="viewcode-block" id="SpacegroupInfoBlock">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.spacegroup_info.SpacegroupInfoBlock.html#ase2sprkkr.sprkkr.spacegroup_info.SpacegroupInfoBlock">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">SpacegroupInfoBlock</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Class, for locking the update of spacegroup_info. If more operation are performed, the</span>
-<span class="sd">    update is performed after the all operations are done.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Class, for locking the update of spacegroup_info. If more operation are performed, the</span>
+<span class="sd">    update is performed after the all operations are done."""</span>
 
 <div class="viewcode-block" id="SpacegroupInfoBlock.__init__">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.spacegroup_info.SpacegroupInfoBlock.html#ase2sprkkr.sprkkr.spacegroup_info.SpacegroupInfoBlock.__init__">[docs]</a>
@@ -489,7 +501,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">copy</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">update_info</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">consider_old</span> <span class="o">=</span> <span class="kc">True</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">precision</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">angular_precision</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;Inf&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">precision</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">angular_precision</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s2">"Inf"</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">do</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">counter</span> <span class="o">=</span> <span class="mi">1</span></div>
 

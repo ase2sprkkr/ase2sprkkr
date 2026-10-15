@@ -1,0 +1,48 @@
+test\_broadening
+================
+
+Full name: **ase2sprkkr.physics.test\_broadening**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.physics.test_broadening
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      _bin_widths
+      _sorted_reference
+      test_gaussian_broadens_last_axis_and_supports_distinct_output_grid
+      test_gaussian_preserves_discrete_integral_for_multiple_spectra_and_variable_width
+      test_gaussian_rejects_wrong_energy_axis_length
+      test_gaussian_unsorted_grid_reorders_data_and_sigma
+      test_gaussian_unsorted_grid_reorders_fwhm
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

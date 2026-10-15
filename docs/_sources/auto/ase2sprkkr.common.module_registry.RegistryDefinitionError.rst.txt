@@ -1,0 +1,6 @@
+ase2sprkkr.common.module\_registry.RegistryDefinitionError
+==========================================================
+
+.. currentmodule:: ase2sprkkr.common.module_registry
+
+.. autoexception:: RegistryDefinitionError

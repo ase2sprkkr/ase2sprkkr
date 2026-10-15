@@ -1,0 +1,36 @@
+ResultFilesState
+================
+
+
+.. currentmodule:: ase2sprkkr.execution.manager
+
+.. autoclass:: ResultFilesState
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.execution.manager.ResultFilesState
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

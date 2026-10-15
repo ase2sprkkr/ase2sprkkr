@@ -1,0 +1,36 @@
+RunRecord
+=========
+
+
+.. currentmodule:: ase2sprkkr.execution.manager
+
+.. autoclass:: RunRecord
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.execution.manager.RunRecord
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

@@ -1,0 +1,8 @@
+run\_remote\_psij\_worker
+=========================
+
+Full name: **ase2sprkkr.execution.remote\_psij.run\_remote\_psij\_worker**
+
+.. currentmodule:: ase2sprkkr.execution.remote_psij
+
+.. autofunction:: run_remote_psij_worker

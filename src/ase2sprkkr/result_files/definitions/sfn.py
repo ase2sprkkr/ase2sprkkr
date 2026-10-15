@@ -5,11 +5,11 @@ import math
 
 import numpy as np
 
-from ..output_files import OutputFile
-from ..output_files_definitions import (
-    OutputFileDefinition,
-    OutputFileSectionDefinition,
-    OutputFileValueDefinition,
+from ..result_files import ResultFile
+from ..result_files_definitions import (
+    ResultFileDefinition,
+    ResultFileSectionDefinition,
+    ResultFileValueDefinition,
 )
 from ...common.configuration_definitions import gather
 from ...common.dependencies import DependentValue
@@ -19,13 +19,13 @@ from ...common.grammar_types import Integer, NumpyArray, Real
 from ...gui.plot import Multiplot, single_plot
 
 
-class _SFNValueDefinition(OutputFileValueDefinition):
+class _SFNValueDefinition(ResultFileValueDefinition):
 
     """An output value without the leading blank used by standard outputs."""
     prefix = ""
 
 
-class _SFNSectionDefinition(OutputFileSectionDefinition):
+class _SFNSectionDefinition(ResultFileSectionDefinition):
     """A section whose surrounding grammar owns its trailing newline."""
 
     write_last_delimiter = False
@@ -561,7 +561,7 @@ class _MeshesView(Sequence):
         return ShapeFunctionMesh(self.output, index)
 
 
-class SFNOutputFile(OutputFile):
+class SFNResultFile(ResultFile):
     """Grammar-backed representation of an SPR-KKR shape-function file."""
 
     additional_actions = (
@@ -641,7 +641,7 @@ class SFNOutputFile(OutputFile):
         except (OSError, ValueError) as exc:
             raise ValueError(
                 "A potential is required to plot SFN data in the unit cell. "
-                "Pass potential=... to OutputFile.from_file(), or place the "
+                "Pass potential=... to ResultFile.from_file(), or place the "
                 "matching .pot or .pot_new file beside the SFN file."
             ) from exc
         if atoms is None:
@@ -749,7 +749,7 @@ class SFNOutputFile(OutputFile):
     def _draw_cell(axis, cell, color):
         """Draw unit-cell edges and return their Cartesian corners."""
 
-        corners = SFNOutputFile._cell_corners(cell)
+        corners = SFNResultFile._cell_corners(cell)
         for start in range(8):
             for bit in (1, 2, 4):
                 end = start ^ bit
@@ -1389,11 +1389,11 @@ class SFNOutputFile(OutputFile):
             alat = f"{self.alat:.6g}"
         except (AttributeError, OSError, ValueError):
             alat = "unknown"
-        return f"SFNOutputFile(nm={self.nm}, alat={alat})"
+        return f"SFNResultFile(nm={self.nm}, alat={alat})"
 
 
-class SFNDefinition(OutputFileDefinition):
-    result_class = SFNOutputFile
+class SFNDefinition(ResultFileDefinition):
+    result_class = SFNResultFile
 
 
 def create_definition():
@@ -1583,4 +1583,4 @@ def create_definition():
 definition = create_definition()
 
 
-__all__ = ["SFNOutputFile", "ShapeFunctionMesh", "SFNDefinition", "definition"]
+__all__ = ["SFNResultFile", "ShapeFunctionMesh", "SFNDefinition", "definition"]

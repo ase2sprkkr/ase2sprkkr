@@ -1,14 +1,14 @@
-from ..output_files_definitions import (
-    OutputFileValueDefinition as V,
-    create_output_file_definition,
-    OutputFileDefinition,
+from ..result_files_definitions import (
+    ResultFileValueDefinition as V,
+    create_result_file_definition,
+    ResultFileDefinition,
 )
 from typing import Optional
 import numpy as np
 import matplotlib
 import copy
 
-from ..output_files import CommonOutputFile, Arithmetic
+from ..result_files import CommonResultFile, Arithmetic
 from ...common.grammar_types import NumpyArray
 from ...common.decorators import cached_property
 from ...common.generated_configuration_definitions import NumpyViewDefinition as NV
@@ -123,7 +123,7 @@ class DOS(Arithmetic):
             return "DOS"
 
 
-class DOSOutputFile(CommonOutputFile):
+class DOSResultFile(CommonResultFile):
     def __init__(self, definition, container=None, potential=None):
         super().__init__(definition, container, potential=potential)
         self.ENERGY.add_hook(self._clear_computed)
@@ -267,8 +267,8 @@ class DOSOutputFile(CommonOutputFile):
         return ln // orbitals
 
 
-class DOSDefinition(OutputFileDefinition):
-    result_class = DOSOutputFile
+class DOSDefinition(ResultFileDefinition):
+    result_class = DOSResultFile
 
 
 def create_definition():
@@ -276,7 +276,7 @@ def create_definition():
     def i(j):
         return slice(None), j
 
-    definition = create_output_file_definition(
+    definition = create_result_file_definition(
         "DOS",
         [
             V("DOS-FMT", str, written_name="DOS-FMT:"),

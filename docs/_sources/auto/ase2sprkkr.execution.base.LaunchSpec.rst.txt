@@ -1,0 +1,36 @@
+LaunchSpec
+==========
+
+
+.. currentmodule:: ase2sprkkr.execution.base
+
+.. autoclass:: LaunchSpec
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.execution.base.LaunchSpec
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

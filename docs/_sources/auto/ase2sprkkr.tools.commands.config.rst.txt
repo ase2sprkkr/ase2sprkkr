@@ -22,6 +22,13 @@ Full name: **ase2sprkkr.tools.commands.config**
       :toctree:
       :template: custom-base-template.rst
    
+      _edit
+      _migrate
+      _parse_set_value
+      _print_profiles
+      _requested_cleanup
+      _set_configuration_value
+      _unset_configuration_value
       default_content
       parser
       run

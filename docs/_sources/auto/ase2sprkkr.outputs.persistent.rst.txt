@@ -1,0 +1,54 @@
+persistent
+==========
+
+Full name: **ase2sprkkr.outputs.persistent**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.outputs.persistent
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      _input_parameters_for_record
+      _reader_for_record
+      _record
+      _task_definition_for_record
+      attach_persistent_run
+      load_persistent_result
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Exceptions
+
+   .. autosummary::
+      :toctree:
+   
+      PersistentResultUnavailableError
+   
+   
+
+
+  
+  
+  

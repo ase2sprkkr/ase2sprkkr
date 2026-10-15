@@ -24,6 +24,14 @@ Full name: **ase2sprkkr**
 
    
    
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      __getattr__
+   
    
 
 
@@ -59,16 +67,25 @@ Full name: **ase2sprkkr**
      configuration
   
   
+     configuration_migration
+  
+  
+     configuration_yaml
+  
+  
+     conftest
+  
+  
      examples
+  
+  
+     execution
   
   
      gui
   
   
      input_parameters
-  
-  
-     output_files
   
   
      outputs
@@ -78,6 +95,12 @@ Full name: **ase2sprkkr**
   
   
      potentials
+  
+  
+     profiles
+  
+  
+     result_files
   
   
      sprkkr

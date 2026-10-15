@@ -1,0 +1,638 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ase2sprkkr.execution.local_persistent &mdash; ASE2SPRKKR  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/mods.css?v=26f6988d" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            ASE2SPRKKR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage.html">How to use the package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../how-to-install.html">More about the package installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../philosophy.html">Philosophy of the package (for developers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../authors.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Examples</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../auto/ase2sprkkr.html">ase2sprkkr</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">ASE2SPRKKR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../ase2sprkkr.html">ase2sprkkr</a></li>
+      <li class="breadcrumb-item active">ase2sprkkr.execution.local_persistent</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for ase2sprkkr.execution.local_persistent</h1><div class="highlight"><pre>
+<span></span><span class="sd">"""Reconnectable local execution using the detached execution helper."""</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">asdict</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">threading</span><span class="w"> </span><span class="kn">import</span> <span class="n">Event</span><span class="p">,</span> <span class="n">Lock</span><span class="p">,</span> <span class="n">Thread</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.base</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">ExecutionSpec</span><span class="p">,</span>
+    <span class="n">OutputObservers</span><span class="p">,</span>
+    <span class="n">RunReference</span><span class="p">,</span>
+    <span class="n">RunState</span><span class="p">,</span>
+    <span class="n">RunStatus</span><span class="p">,</span>
+    <span class="n">SubmissionNotStarted</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.detached</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">_request_path</span><span class="p">,</span>
+    <span class="n">_run_directory</span><span class="p">,</span>
+    <span class="n">cancel_detached</span><span class="p">,</span>
+    <span class="n">status_detached</span><span class="p">,</span>
+    <span class="n">submit_detached</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.transport</span><span class="w"> </span><span class="kn">import</span> <span class="n">AtomicLocalFile</span>
+
+<span class="n">_FINAL_STATES</span> <span class="o">=</span> <span class="p">{</span><span class="n">RunState</span><span class="o">.</span><span class="n">FINISHED</span><span class="p">,</span> <span class="n">RunState</span><span class="o">.</span><span class="n">FAILED</span><span class="p">,</span> <span class="n">RunState</span><span class="o">.</span><span class="n">CANCELLED</span><span class="p">}</span>
+
+
+<div class="viewcode-block" id="_file_path">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.local_persistent._file_path.html#ase2sprkkr.execution.local_persistent._file_path">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_file_path</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">directory</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="s2">"flush"</span><span class="p">):</span>
+        <span class="n">value</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+    <span class="n">value</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="s2">"name"</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">fspath</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="n">directory</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isabs</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">path</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="_reference">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.local_persistent._reference.html#ase2sprkkr.execution.local_persistent._reference">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_reference</span><span class="p">(</span><span class="n">run_id</span><span class="p">,</span> <span class="n">spec</span><span class="p">):</span>
+    <span class="n">directory</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">fspath</span><span class="p">(</span><span class="n">spec</span><span class="o">.</span><span class="n">directory</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">RunReference</span><span class="p">(</span>
+        <span class="n">executor</span><span class="o">=</span><span class="s2">"local"</span><span class="p">,</span>
+        <span class="n">native_id</span><span class="o">=</span><span class="n">run_id</span><span class="p">,</span>
+        <span class="n">directory</span><span class="o">=</span><span class="n">directory</span><span class="p">,</span>
+        <span class="n">input_file</span><span class="o">=</span><span class="n">_file_path</span><span class="p">(</span><span class="n">spec</span><span class="o">.</span><span class="n">input_file</span><span class="p">,</span> <span class="n">directory</span><span class="p">),</span>
+        <span class="n">output_file</span><span class="o">=</span><span class="n">_file_path</span><span class="p">(</span><span class="n">spec</span><span class="o">.</span><span class="n">output_file</span><span class="p">,</span> <span class="n">directory</span><span class="p">),</span>
+        <span class="n">error_file</span><span class="o">=</span><span class="n">_file_path</span><span class="p">(</span><span class="n">spec</span><span class="o">.</span><span class="n">error_file</span><span class="p">,</span> <span class="n">directory</span><span class="p">),</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="_reference_from_request">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.local_persistent._reference_from_request.html#ase2sprkkr.execution.local_persistent._reference_from_request">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_reference_from_request</span><span class="p">(</span><span class="n">run_id</span><span class="p">,</span> <span class="n">directory</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">RunReference</span><span class="p">(</span>
+        <span class="n">executor</span><span class="o">=</span><span class="s2">"local"</span><span class="p">,</span>
+        <span class="n">native_id</span><span class="o">=</span><span class="n">run_id</span><span class="p">,</span>
+        <span class="n">directory</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">fspath</span><span class="p">(</span><span class="n">directory</span><span class="p">)),</span>
+        <span class="n">input_file</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"client_input_file"</span><span class="p">)</span> <span class="ow">or</span> <span class="n">request</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"input_file"</span><span class="p">),</span>
+        <span class="n">output_file</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"client_output_file"</span><span class="p">),</span>
+        <span class="n">error_file</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"client_error_file"</span><span class="p">),</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="detached_local_status">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.local_persistent.detached_local_status.html#ase2sprkkr.execution.local_persistent.detached_local_status">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">detached_local_status</span><span class="p">(</span><span class="n">reference</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Return detached-helper status, or ``None`` for legacy PID references."""</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">reference</span><span class="o">.</span><span class="n">directory</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">state</span> <span class="o">=</span> <span class="n">status_detached</span><span class="p">(</span><span class="n">reference</span><span class="o">.</span><span class="n">directory</span><span class="p">,</span> <span class="n">reference</span><span class="o">.</span><span class="n">native_id</span><span class="p">)</span>
+    <span class="k">except</span> <span class="p">(</span><span class="ne">FileNotFoundError</span><span class="p">,</span> <span class="n">json</span><span class="o">.</span><span class="n">JSONDecodeError</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="k">return</span> <span class="n">RunStatus</span><span class="p">(</span>
+        <span class="n">reference</span><span class="p">,</span>
+        <span class="n">RunState</span><span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"state"</span><span class="p">,</span> <span class="s2">"unknown"</span><span class="p">)),</span>
+        <span class="n">return_code</span><span class="o">=</span><span class="n">state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"return_code"</span><span class="p">),</span>
+        <span class="n">message</span><span class="o">=</span><span class="n">state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"error"</span><span class="p">),</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="recover_local_submission">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.local_persistent.recover_local_submission.html#ase2sprkkr.execution.local_persistent.recover_local_submission">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">recover_local_submission</span><span class="p">(</span><span class="n">run_id</span><span class="p">,</span> <span class="n">submission</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Recover a local detached submit whose reference was not persisted."""</span>
+    <span class="n">directory</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">fspath</span><span class="p">(</span><span class="n">submission</span><span class="o">.</span><span class="n">directory</span><span class="p">))</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">state</span> <span class="o">=</span> <span class="n">status_detached</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">run_id</span><span class="p">)</span>
+        <span class="n">request</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">_request_path</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">run_id</span><span class="p">)</span><span class="o">.</span><span class="n">read_text</span><span class="p">())</span>
+    <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
+        <span class="c1"># ``submit_detached`` creates the state before it starts the helper, so</span>
+        <span class="c1"># absence on this same filesystem proves that submission did not happen.</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="n">reference</span> <span class="o">=</span> <span class="n">_reference_from_request</span><span class="p">(</span><span class="n">run_id</span><span class="p">,</span> <span class="n">directory</span><span class="p">,</span> <span class="n">request</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">RunStatus</span><span class="p">(</span>
+        <span class="n">reference</span><span class="p">,</span>
+        <span class="n">RunState</span><span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"state"</span><span class="p">,</span> <span class="s2">"unknown"</span><span class="p">)),</span>
+        <span class="n">return_code</span><span class="o">=</span><span class="n">state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"return_code"</span><span class="p">),</span>
+        <span class="n">message</span><span class="o">=</span><span class="n">state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"error"</span><span class="p">),</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="LocalPersistentRunner">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.local_persistent.LocalPersistentRunner.html#ase2sprkkr.execution.local_persistent.LocalPersistentRunner">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">LocalPersistentRunner</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Local runner whose calculation is owned by a detached helper process."""</span>
+
+<div class="viewcode-block" id="LocalPersistentRunner.__init__">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.local_persistent.LocalPersistentRunner.html#ase2sprkkr.execution.local_persistent.LocalPersistentRunner.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">executor</span><span class="p">,</span>
+        <span class="n">reader</span><span class="p">,</span>
+        <span class="n">spec</span><span class="p">:</span> <span class="n">ExecutionSpec</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">run_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">callback</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">output_listener</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">start</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">reference</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">state</span><span class="o">=</span><span class="n">RunState</span><span class="o">.</span><span class="n">NEW</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">executor</span> <span class="o">=</span> <span class="n">executor</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reader</span> <span class="o">=</span> <span class="n">reader</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">spec</span> <span class="o">=</span> <span class="n">spec</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">callback</span> <span class="o">=</span> <span class="n">callback</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">result</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="n">create_result</span><span class="p">(</span><span class="n">spec</span><span class="o">.</span><span class="n">output_file</span><span class="p">,</span> <span class="n">spec</span><span class="o">.</span><span class="n">input_file</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_run_id</span> <span class="o">=</span> <span class="n">run_id</span> <span class="ow">or</span> <span class="p">(</span><span class="n">reference</span><span class="o">.</span><span class="n">native_id</span> <span class="k">if</span> <span class="n">reference</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_reference</span> <span class="o">=</span> <span class="n">reference</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_attached</span> <span class="o">=</span> <span class="n">reference</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_state</span> <span class="o">=</span> <span class="n">RunState</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_return_code</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_output_observers</span> <span class="o">=</span> <span class="n">OutputObservers</span><span class="p">(</span><span class="n">output_listener</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span> <span class="o">=</span> <span class="n">Lock</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_done</span> <span class="o">=</span> <span class="n">Event</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_exception</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_callback_exception</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="n">start</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">start</span><span class="p">()</span></div>
+
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">reference</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reference</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">state</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reference</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state</span> <span class="ow">in</span> <span class="n">_FINAL_STATES</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state</span>
+        <span class="n">status</span> <span class="o">=</span> <span class="n">detached_local_status</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_reference</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_state</span> <span class="o">=</span> <span class="n">RunState</span><span class="o">.</span><span class="n">UNKNOWN</span> <span class="k">if</span> <span class="n">status</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">status</span><span class="o">.</span><span class="n">state</span>
+        <span class="k">if</span> <span class="n">status</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">status</span><span class="o">.</span><span class="n">return_code</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_return_code</span> <span class="o">=</span> <span class="n">status</span><span class="o">.</span><span class="n">return_code</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">exception</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_exception</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">return_code</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_return_code</span>
+
+<div class="viewcode-block" id="LocalPersistentRunner.add_output_listener">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.local_persistent.LocalPersistentRunner.html#ase2sprkkr.execution.local_persistent.LocalPersistentRunner.add_output_listener">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_output_listener</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">callback</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_output_observers</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">callback</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="LocalPersistentRunner.add_output_error_listener">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.local_persistent.LocalPersistentRunner.html#ase2sprkkr.execution.local_persistent.LocalPersistentRunner.add_output_error_listener">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_output_error_listener</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">callback</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_output_observers</span><span class="o">.</span><span class="n">add_error_listener</span><span class="p">(</span><span class="n">callback</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="LocalPersistentRunner._emit_output">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.local_persistent.LocalPersistentRunner.html#ase2sprkkr.execution.local_persistent.LocalPersistentRunner._emit_output">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_emit_output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">kind</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">data</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">"utf8"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">reader</span><span class="o">.</span><span class="n">print_output</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s2">""</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span> <span class="k">if</span> <span class="n">kind</span> <span class="o">==</span> <span class="s2">"err"</span> <span class="k">else</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_output_observers</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">kind</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="LocalPersistentRunner._open_target">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.local_persistent.LocalPersistentRunner.html#ase2sprkkr.execution.local_persistent.LocalPersistentRunner._open_target">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_open_target</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">path</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+        <span class="n">path</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_attached</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">AtomicLocalFile</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">path</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">"wb"</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="LocalPersistentRunner._open_mirrors">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.local_persistent.LocalPersistentRunner.html#ase2sprkkr.execution.local_persistent.LocalPersistentRunner._open_mirrors">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_open_mirrors</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">output_path</span> <span class="o">=</span> <span class="n">_file_path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">output_file</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">directory</span><span class="p">)</span>
+        <span class="n">error_path</span> <span class="o">=</span> <span class="n">_file_path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">error_file</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">directory</span><span class="p">)</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_open_target</span><span class="p">(</span><span class="n">output_path</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">error_path</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">error_path</span> <span class="o">==</span> <span class="n">output_path</span><span class="p">:</span>
+            <span class="n">error</span> <span class="o">=</span> <span class="n">output</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">error</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_open_target</span><span class="p">(</span><span class="n">error_path</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">output</span><span class="p">,</span> <span class="n">error</span></div>
+
+
+<div class="viewcode-block" id="LocalPersistentRunner._finish_target">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.local_persistent.LocalPersistentRunner.html#ase2sprkkr.execution.local_persistent.LocalPersistentRunner._finish_target">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_finish_target</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">commit</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">target</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="n">method</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="s2">"commit"</span> <span class="k">if</span> <span class="n">commit</span> <span class="k">else</span> <span class="s2">"discard"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">method</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">method</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">target</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="LocalPersistentRunner._finish_mirrors">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.local_persistent.LocalPersistentRunner.html#ase2sprkkr.execution.local_persistent.LocalPersistentRunner._finish_mirrors">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_finish_mirrors</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">output</span><span class="p">,</span> <span class="n">error</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">commit</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">error</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">error</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">output</span><span class="p">:</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">_finish_target</span><span class="p">(</span><span class="n">error</span><span class="p">,</span> <span class="n">commit</span><span class="o">=</span><span class="n">commit</span><span class="p">)</span>
+        <span class="bp">cls</span><span class="o">.</span><span class="n">_finish_target</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">commit</span><span class="o">=</span><span class="n">commit</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="LocalPersistentRunner._read_new">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.local_persistent.LocalPersistentRunner.html#ase2sprkkr.execution.local_persistent.LocalPersistentRunner._read_new">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_read_new</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">offset</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">path</span><span class="p">:</span>
+            <span class="k">return</span> <span class="sa">b</span><span class="s2">""</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">"rb"</span><span class="p">)</span> <span class="k">as</span> <span class="n">source</span><span class="p">:</span>
+                <span class="n">source</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">offset</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">source</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
+            <span class="k">return</span> <span class="sa">b</span><span class="s2">""</span></div>
+
+
+<div class="viewcode-block" id="LocalPersistentRunner._monitor">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.local_persistent.LocalPersistentRunner.html#ase2sprkkr.execution.local_persistent.LocalPersistentRunner._monitor">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_monitor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">stdout</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">StreamReader</span><span class="p">()</span>
+        <span class="n">stderr</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">StreamReader</span><span class="p">()</span>
+        <span class="n">parse_task</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">reader</span><span class="o">.</span><span class="n">parse_streams</span><span class="p">(</span><span class="n">stdout</span><span class="p">,</span> <span class="n">stderr</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">result</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">offsets</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"out"</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">"err"</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>
+        <span class="n">output_target</span><span class="p">,</span> <span class="n">error_target</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_open_mirrors</span><span class="p">()</span>
+        <span class="n">status</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">mirrors_committed</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+                <span class="n">status</span> <span class="o">=</span> <span class="n">status_detached</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_reference</span><span class="o">.</span><span class="n">directory</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reference</span><span class="o">.</span><span class="n">native_id</span>
+                <span class="p">)</span>
+                <span class="n">had_data</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="k">for</span> <span class="n">kind</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">stream</span><span class="p">,</span> <span class="n">target</span> <span class="ow">in</span> <span class="p">(</span>
+                    <span class="p">(</span><span class="s2">"out"</span><span class="p">,</span> <span class="s2">"output_file"</span><span class="p">,</span> <span class="n">stdout</span><span class="p">,</span> <span class="n">output_target</span><span class="p">),</span>
+                    <span class="p">(</span><span class="s2">"err"</span><span class="p">,</span> <span class="s2">"error_file"</span><span class="p">,</span> <span class="n">stderr</span><span class="p">,</span> <span class="n">error_target</span><span class="p">),</span>
+                <span class="p">):</span>
+                    <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_read_new</span><span class="p">(</span><span class="n">status</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">),</span> <span class="n">offsets</span><span class="p">[</span><span class="n">kind</span><span class="p">])</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">data</span><span class="p">:</span>
+                        <span class="k">continue</span>
+                    <span class="n">offsets</span><span class="p">[</span><span class="n">kind</span><span class="p">]</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">target</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="n">target</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+                        <span class="n">target</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_emit_output</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">kind</span><span class="p">)</span>
+                    <span class="n">stream</span><span class="o">.</span><span class="n">feed_data</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+                    <span class="n">had_data</span> <span class="o">=</span> <span class="kc">True</span>
+
+                <span class="n">state</span> <span class="o">=</span> <span class="n">RunState</span><span class="p">(</span><span class="n">status</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"state"</span><span class="p">,</span> <span class="s2">"unknown"</span><span class="p">))</span>
+                <span class="k">if</span> <span class="n">state</span> <span class="ow">in</span> <span class="n">_FINAL_STATES</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">had_data</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_state</span> <span class="o">=</span> <span class="n">state</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_return_code</span> <span class="o">=</span> <span class="n">status</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"return_code"</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_return_code</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_return_code</span> <span class="o">=</span> <span class="mi">0</span> <span class="k">if</span> <span class="n">state</span> <span class="o">==</span> <span class="n">RunState</span><span class="o">.</span><span class="n">FINISHED</span> <span class="k">else</span> <span class="mi">1</span>
+                    <span class="k">break</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">had_data</span><span class="p">:</span>
+                    <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.05</span><span class="p">)</span>
+
+            <span class="n">stdout</span><span class="o">.</span><span class="n">feed_eof</span><span class="p">()</span>
+            <span class="n">stderr</span><span class="o">.</span><span class="n">feed_eof</span><span class="p">()</span>
+            <span class="c1"># Replay becomes authoritative once the detached execution and full</span>
+            <span class="c1"># stream replay have completed. Parsing is deliberately separate.</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_finish_mirrors</span><span class="p">(</span><span class="n">output_target</span><span class="p">,</span> <span class="n">error_target</span><span class="p">,</span> <span class="n">commit</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">mirrors_committed</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="n">output</span><span class="p">,</span> <span class="n">error</span> <span class="o">=</span> <span class="k">await</span> <span class="n">parse_task</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">reader</span><span class="o">.</span><span class="n">complete_result</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">result</span><span class="p">,</span> <span class="n">output</span><span class="p">,</span> <span class="n">error</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_return_code</span>
+            <span class="p">)</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="n">stdout</span><span class="o">.</span><span class="n">feed_eof</span><span class="p">()</span>
+            <span class="n">stderr</span><span class="o">.</span><span class="n">feed_eof</span><span class="p">()</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">parse_task</span><span class="o">.</span><span class="n">done</span><span class="p">():</span>
+                <span class="n">parse_task</span><span class="o">.</span><span class="n">cancel</span><span class="p">()</span>
+            <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="n">parse_task</span><span class="p">,</span> <span class="n">return_exceptions</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">mirrors_committed</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_finish_mirrors</span><span class="p">(</span><span class="n">output_target</span><span class="p">,</span> <span class="n">error_target</span><span class="p">,</span> <span class="n">commit</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="LocalPersistentRunner._close_output_files">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.local_persistent.LocalPersistentRunner.html#ase2sprkkr.execution.local_persistent.LocalPersistentRunner._close_output_files">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_close_output_files</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">closed</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">output_file</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">error_file</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">file</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="nb">id</span><span class="p">(</span><span class="n">file</span><span class="p">)</span> <span class="ow">in</span> <span class="n">closed</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">closed</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="nb">id</span><span class="p">(</span><span class="n">file</span><span class="p">))</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="s2">"close"</span><span class="p">):</span>
+                <span class="n">file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="LocalPersistentRunner._thread_main">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.local_persistent.LocalPersistentRunner.html#ase2sprkkr.execution.local_persistent.LocalPersistentRunner._thread_main">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_thread_main</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_monitor</span><span class="p">())</span>
+        <span class="k">except</span> <span class="ne">BaseException</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_exception</span> <span class="o">=</span> <span class="n">exc</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_close_output_files</span><span class="p">()</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">callback</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">callback</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">result</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">BaseException</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_callback_exception</span> <span class="o">=</span> <span class="n">exc</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_done</span><span class="o">.</span><span class="n">set</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="LocalPersistentRunner._start_monitor">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.local_persistent.LocalPersistentRunner.html#ase2sprkkr.execution.local_persistent.LocalPersistentRunner._start_monitor">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_start_monitor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">return</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reference</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">"Run has no backend reference"</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span> <span class="o">=</span> <span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_thread_main</span><span class="p">,</span> <span class="n">daemon</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="LocalPersistentRunner.start">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.local_persistent.LocalPersistentRunner.html#ase2sprkkr.execution.local_persistent.LocalPersistentRunner.start">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reference</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">submit</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_start_monitor</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="LocalPersistentRunner._request">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.local_persistent.LocalPersistentRunner.html#ase2sprkkr.execution.local_persistent.LocalPersistentRunner._request">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_request</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">directory</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">fspath</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">directory</span><span class="p">))</span>
+        <span class="n">run_directory</span> <span class="o">=</span> <span class="n">_run_directory</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_run_id</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">"id"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_run_id</span><span class="p">,</span>
+            <span class="s2">"executor"</span><span class="p">:</span> <span class="s2">"local"</span><span class="p">,</span>
+            <span class="s2">"directory"</span><span class="p">:</span> <span class="n">directory</span><span class="p">,</span>
+            <span class="s2">"argv"</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">argv</span><span class="p">),</span>
+            <span class="s2">"mpi_argv"</span><span class="p">:</span> <span class="kc">None</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">mpi_argv</span> <span class="ow">is</span> <span class="kc">None</span>
+            <span class="k">else</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">mpi_argv</span><span class="p">),</span>
+            <span class="s2">"launch"</span><span class="p">:</span> <span class="n">asdict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">launch</span><span class="p">),</span>
+            <span class="s2">"input_file"</span><span class="p">:</span> <span class="n">_file_path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">input_file</span><span class="p">,</span> <span class="n">directory</span><span class="p">),</span>
+            <span class="s2">"stdin"</span><span class="p">:</span> <span class="n">_file_path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">stdin</span><span class="p">,</span> <span class="n">directory</span><span class="p">),</span>
+            <span class="c1"># The helper owns private streams. The monitor mirrors them to the</span>
+            <span class="c1"># user-facing output paths and can replay them after a restart.</span>
+            <span class="s2">"output_file"</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">fspath</span><span class="p">(</span><span class="n">run_directory</span> <span class="o">/</span> <span class="s2">"stdout"</span><span class="p">),</span>
+            <span class="s2">"error_file"</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">fspath</span><span class="p">(</span><span class="n">run_directory</span> <span class="o">/</span> <span class="s2">"stderr"</span><span class="p">),</span>
+            <span class="s2">"client_input_file"</span><span class="p">:</span> <span class="n">_file_path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">input_file</span><span class="p">,</span> <span class="n">directory</span><span class="p">),</span>
+            <span class="s2">"client_output_file"</span><span class="p">:</span> <span class="n">_file_path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">output_file</span><span class="p">,</span> <span class="n">directory</span><span class="p">),</span>
+            <span class="s2">"client_error_file"</span><span class="p">:</span> <span class="n">_file_path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">error_file</span><span class="p">,</span> <span class="n">directory</span><span class="p">),</span>
+        <span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="LocalPersistentRunner.submit">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.local_persistent.LocalPersistentRunner.html#ase2sprkkr.execution.local_persistent.LocalPersistentRunner.submit">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">submit</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state</span> <span class="o">!=</span> <span class="n">RunState</span><span class="o">.</span><span class="n">NEW</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Run is already </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="o">.</span><span class="n">value</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_run_id</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">"Persistent local run has no run id"</span><span class="p">)</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">request</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="p">()</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">SubmissionNotStarted</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">exc</span><span class="p">))</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span>
+            <span class="c1"># submit_detached creates recoverable target state before spawning</span>
+            <span class="c1"># the helper. An exception from it is therefore conservatively</span>
+            <span class="c1"># treated as uncertain by ExecutionManager.</span>
+            <span class="n">status</span> <span class="o">=</span> <span class="n">submit_detached</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_state</span> <span class="o">=</span> <span class="n">RunState</span><span class="p">(</span><span class="n">status</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"state"</span><span class="p">,</span> <span class="s2">"queued"</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_return_code</span> <span class="o">=</span> <span class="n">status</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"return_code"</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_reference</span> <span class="o">=</span> <span class="n">_reference</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_run_id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_start_monitor</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="LocalPersistentRunner.wait">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.local_persistent.LocalPersistentRunner.html#ase2sprkkr.execution.local_persistent.LocalPersistentRunner.wait">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">wait</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state</span> <span class="o">==</span> <span class="n">RunState</span><span class="o">.</span><span class="n">NEW</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">"Run has not been submitted"</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">"Attached run has not been started"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_done</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_exception</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="bp">self</span><span class="o">.</span><span class="n">_exception</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_callback_exception</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="bp">self</span><span class="o">.</span><span class="n">_callback_exception</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">result</span></div>
+
+
+<div class="viewcode-block" id="LocalPersistentRunner.run">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.local_persistent.LocalPersistentRunner.html#ase2sprkkr.execution.local_persistent.LocalPersistentRunner.run">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="LocalPersistentRunner.run_async">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.local_persistent.LocalPersistentRunner.html#ase2sprkkr.execution.local_persistent.LocalPersistentRunner.run_async">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">run_async</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">to_thread</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">run</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="LocalPersistentRunner.cancel">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.local_persistent.LocalPersistentRunner.html#ase2sprkkr.execution.local_persistent.LocalPersistentRunner.cancel">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">cancel</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reference</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">"Run has not been submitted"</span><span class="p">)</span>
+        <span class="n">state</span> <span class="o">=</span> <span class="n">cancel_detached</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_reference</span><span class="o">.</span><span class="n">directory</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reference</span><span class="o">.</span><span class="n">native_id</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_state</span> <span class="o">=</span> <span class="n">RunState</span><span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"state"</span><span class="p">,</span> <span class="s2">"cancelled"</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"return_code"</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_return_code</span> <span class="o">=</span> <span class="n">state</span><span class="p">[</span><span class="s2">"return_code"</span><span class="p">]</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="attach_local">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.local_persistent.attach_local.html#ase2sprkkr.execution.local_persistent.attach_local">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">attach_local</span><span class="p">(</span>
+    <span class="n">executor</span><span class="p">,</span>
+    <span class="n">reference</span><span class="p">,</span>
+    <span class="n">reader</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">callback</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">output_listener</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">start</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="k">if</span> <span class="n">reference</span><span class="o">.</span><span class="n">executor</span> <span class="o">!=</span> <span class="s2">"local"</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">"Run reference belongs to </span><span class="si">{</span><span class="n">reference</span><span class="o">.</span><span class="n">executor</span><span class="si">!r}</span><span class="s2">, not 'local'"</span>
+        <span class="p">)</span>
+    <span class="n">status</span> <span class="o">=</span> <span class="n">detached_local_status</span><span class="p">(</span><span class="n">reference</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">status</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">"Legacy PID-only local runs cannot be reattached"</span><span class="p">)</span>
+    <span class="n">spec</span> <span class="o">=</span> <span class="n">ExecutionSpec</span><span class="p">(</span>
+        <span class="n">argv</span><span class="o">=</span><span class="p">(),</span>
+        <span class="n">input_file</span><span class="o">=</span><span class="n">reference</span><span class="o">.</span><span class="n">input_file</span><span class="p">,</span>
+        <span class="n">output_file</span><span class="o">=</span><span class="n">reference</span><span class="o">.</span><span class="n">output_file</span><span class="p">,</span>
+        <span class="n">error_file</span><span class="o">=</span><span class="n">reference</span><span class="o">.</span><span class="n">error_file</span><span class="p">,</span>
+        <span class="n">directory</span><span class="o">=</span><span class="n">reference</span><span class="o">.</span><span class="n">directory</span> <span class="ow">or</span> <span class="s2">"."</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">runner</span> <span class="o">=</span> <span class="n">LocalPersistentRunner</span><span class="p">(</span>
+        <span class="n">executor</span><span class="p">,</span>
+        <span class="n">reader</span><span class="p">,</span>
+        <span class="n">spec</span><span class="p">,</span>
+        <span class="n">callback</span><span class="o">=</span><span class="n">callback</span><span class="p">,</span>
+        <span class="n">output_listener</span><span class="o">=</span><span class="n">output_listener</span><span class="p">,</span>
+        <span class="n">start</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">reference</span><span class="o">=</span><span class="n">reference</span><span class="p">,</span>
+        <span class="n">state</span><span class="o">=</span><span class="n">status</span><span class="o">.</span><span class="n">state</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">runner</span><span class="o">.</span><span class="n">_return_code</span> <span class="o">=</span> <span class="n">status</span><span class="o">.</span><span class="n">return_code</span>
+    <span class="k">if</span> <span class="n">start</span><span class="p">:</span>
+        <span class="n">runner</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">runner</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Matyáš Novák &amp; Jano Minár.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

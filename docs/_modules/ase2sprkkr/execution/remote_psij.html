@@ -1,0 +1,843 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ase2sprkkr.execution.remote_psij &mdash; ASE2SPRKKR  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/mods.css?v=26f6988d" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            ASE2SPRKKR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage.html">How to use the package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../how-to-install.html">More about the package installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../philosophy.html">Philosophy of the package (for developers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../authors.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Examples</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../auto/ase2sprkkr.html">ase2sprkkr</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">ASE2SPRKKR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../ase2sprkkr.html">ase2sprkkr</a></li>
+      <li class="breadcrumb-item active">ase2sprkkr.execution.remote_psij</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for ase2sprkkr.execution.remote_psij</h1><div class="highlight"><pre>
+<span></span><span class="sd">"""PSI/J backend used by the detached execution helper."""</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">subprocess</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">asdict</span><span class="p">,</span> <span class="n">dataclass</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">types</span><span class="w"> </span><span class="kn">import</span> <span class="n">SimpleNamespace</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">..common.file_locks</span><span class="w"> </span><span class="kn">import</span> <span class="n">FileLock</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">ExecutionSpec</span><span class="p">,</span> <span class="n">LaunchSpec</span><span class="p">,</span> <span class="n">RunReference</span><span class="p">,</span> <span class="n">RunState</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.psij</span><span class="w"> </span><span class="kn">import</span> <span class="n">PsijExecutor</span>
+
+
+<span class="n">_FINAL_RUN_STATES</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="n">RunState</span><span class="o">.</span><span class="n">FINISHED</span><span class="p">,</span>
+    <span class="n">RunState</span><span class="o">.</span><span class="n">FAILED</span><span class="p">,</span>
+    <span class="n">RunState</span><span class="o">.</span><span class="n">CANCELLED</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="n">_FINAL_STATE_NAMES</span> <span class="o">=</span> <span class="p">{</span><span class="n">state</span><span class="o">.</span><span class="n">value</span> <span class="k">for</span> <span class="n">state</span> <span class="ow">in</span> <span class="n">_FINAL_RUN_STATES</span><span class="p">}</span>
+<span class="n">_AGENT_LOCK_FILE</span> <span class="o">=</span> <span class="s2">"psij-agent.lock"</span>
+<span class="n">_AGENT_POLL_INTERVAL</span> <span class="o">=</span> <span class="mf">0.1</span>
+<span class="n">_AGENT_IDLE_TIMEOUT</span> <span class="o">=</span> <span class="mf">5.0</span>
+<span class="n">_RETRY_INITIAL</span> <span class="o">=</span> <span class="mf">0.5</span>
+<span class="n">_RETRY_MAX</span> <span class="o">=</span> <span class="mf">10.0</span>
+
+
+<div class="viewcode-block" id="_RemoteResult">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.remote_psij._RemoteResult.html#ase2sprkkr.execution.remote_psij._RemoteResult">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">_RemoteResult</span><span class="p">:</span>
+    <span class="n">return_code</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+
+
+<div class="viewcode-block" id="_RemoteReader">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.remote_psij._RemoteReader.html#ase2sprkkr.execution.remote_psij._RemoteReader">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">_RemoteReader</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Drain scheduler output; parsing is done by the local RemoteRunner."""</span>
+
+    <span class="n">print_output</span> <span class="o">=</span> <span class="kc">False</span>
+
+<div class="viewcode-block" id="_RemoteReader.create_result">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.remote_psij._RemoteReader.html#ase2sprkkr.execution.remote_psij._RemoteReader.create_result">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_result</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output_file</span><span class="p">,</span> <span class="n">input_file</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">_RemoteResult</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="_RemoteReader.parse_streams">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.remote_psij._RemoteReader.html#ase2sprkkr.execution.remote_psij._RemoteReader.parse_streams">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">parse_streams</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stdout</span><span class="p">,</span> <span class="n">stderr</span><span class="p">,</span> <span class="n">result</span><span class="p">):</span>
+        <span class="k">return</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="n">stdout</span><span class="o">.</span><span class="n">read</span><span class="p">(),</span> <span class="n">stderr</span><span class="o">.</span><span class="n">read</span><span class="p">())</span></div>
+
+
+<div class="viewcode-block" id="_RemoteReader.complete_result">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.remote_psij._RemoteReader.html#ase2sprkkr.execution.remote_psij._RemoteReader.complete_result">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">complete_result</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="n">output</span><span class="p">,</span> <span class="n">error</span><span class="p">,</span> <span class="n">return_code</span><span class="p">):</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">return_code</span> <span class="o">=</span> <span class="n">return_code</span>
+        <span class="k">return</span> <span class="n">result</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="_executor">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.remote_psij._executor.html#ase2sprkkr.execution.remote_psij._executor">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_executor</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="n">options</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"executor_options"</span><span class="p">)</span> <span class="ow">or</span> <span class="p">{}</span>
+    <span class="k">return</span> <span class="n">PsijExecutor</span><span class="p">(</span>
+        <span class="n">options</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"backend"</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">"slurm"</span><span class="p">,</span>
+        <span class="n">url</span><span class="o">=</span><span class="n">options</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"url"</span><span class="p">),</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="_executor_key">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.remote_psij._executor_key.html#ase2sprkkr.execution.remote_psij._executor_key">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_executor_key</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Stable key for one target-side PSI/J executor configuration."""</span>
+    <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span>
+        <span class="n">request</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"executor_options"</span><span class="p">)</span> <span class="ow">or</span> <span class="p">{},</span>
+        <span class="n">sort_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">separators</span><span class="o">=</span><span class="p">(</span><span class="s2">","</span><span class="p">,</span> <span class="s2">":"</span><span class="p">),</span>
+        <span class="n">default</span><span class="o">=</span><span class="nb">repr</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="_execution_spec">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.remote_psij._execution_spec.html#ase2sprkkr.execution.remote_psij._execution_spec">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_execution_spec</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">output_file</span><span class="p">,</span> <span class="n">error_file</span><span class="p">):</span>
+    <span class="n">mpi_argv</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"mpi_argv"</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ExecutionSpec</span><span class="p">(</span>
+        <span class="n">argv</span><span class="o">=</span><span class="nb">tuple</span><span class="p">(</span><span class="n">request</span><span class="p">[</span><span class="s2">"argv"</span><span class="p">]),</span>
+        <span class="n">input_file</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"input_file"</span><span class="p">),</span>
+        <span class="n">output_file</span><span class="o">=</span><span class="n">output_file</span><span class="p">,</span>
+        <span class="n">error_file</span><span class="o">=</span><span class="n">error_file</span><span class="p">,</span>
+        <span class="n">directory</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">fspath</span><span class="p">(</span><span class="n">directory</span><span class="p">),</span>
+        <span class="n">stdin</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"stdin"</span><span class="p">),</span>
+        <span class="n">mpi_argv</span><span class="o">=</span><span class="kc">None</span> <span class="k">if</span> <span class="n">mpi_argv</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">mpi_argv</span><span class="p">),</span>
+        <span class="n">launch</span><span class="o">=</span><span class="n">LaunchSpec</span><span class="p">(</span><span class="o">**</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"launch"</span><span class="p">)</span> <span class="ow">or</span> <span class="p">{})),</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="_agent_lock_path">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.remote_psij._agent_lock_path.html#ase2sprkkr.execution.remote_psij._agent_lock_path">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_agent_lock_path</span><span class="p">(</span><span class="n">directory</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">Path</span><span class="p">(</span><span class="n">directory</span><span class="p">)</span> <span class="o">/</span> <span class="s2">".ase2sprkkr"</span> <span class="o">/</span> <span class="n">_AGENT_LOCK_FILE</span></div>
+
+
+
+<div class="viewcode-block" id="_try_agent_lock">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.remote_psij._try_agent_lock.html#ase2sprkkr.execution.remote_psij._try_agent_lock">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_try_agent_lock</span><span class="p">(</span><span class="n">directory</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Return an acquired lock, or ``None`` if an agent owns it."""</span>
+    <span class="n">lock</span> <span class="o">=</span> <span class="n">FileLock</span><span class="p">(</span><span class="n">_agent_lock_path</span><span class="p">(</span><span class="n">directory</span><span class="p">))</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">lock</span><span class="o">.</span><span class="n">acquire</span><span class="p">(</span><span class="n">blocking</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="k">return</span> <span class="n">lock</span></div>
+
+
+
+<div class="viewcode-block" id="_agent_is_running">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.remote_psij._agent_is_running.html#ase2sprkkr.execution.remote_psij._agent_is_running">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_agent_is_running</span><span class="p">(</span><span class="n">directory</span><span class="p">):</span>
+    <span class="n">lock</span> <span class="o">=</span> <span class="n">_try_agent_lock</span><span class="p">(</span><span class="n">directory</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">lock</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">True</span>
+    <span class="n">lock</span><span class="o">.</span><span class="n">release</span><span class="p">()</span>
+    <span class="k">return</span> <span class="kc">False</span></div>
+
+
+
+<div class="viewcode-block" id="_spawn_agent">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.remote_psij._spawn_agent.html#ase2sprkkr.execution.remote_psij._spawn_agent">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_spawn_agent</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">run_id</span><span class="p">):</span>
+    <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span>
+        <span class="p">[</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">executable</span><span class="p">,</span>
+            <span class="s2">"-m"</span><span class="p">,</span>
+            <span class="s2">"ase2sprkkr.execution.remote_worker"</span><span class="p">,</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">fspath</span><span class="p">(</span><span class="n">directory</span><span class="p">),</span>
+            <span class="nb">str</span><span class="p">(</span><span class="n">run_id</span><span class="p">),</span>
+        <span class="p">],</span>
+        <span class="n">stdin</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">DEVNULL</span><span class="p">,</span>
+        <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">DEVNULL</span><span class="p">,</span>
+        <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">DEVNULL</span><span class="p">,</span>
+        <span class="n">start_new_session</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">close_fds</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="ensure_remote_psij_agent">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.remote_psij.ensure_remote_psij_agent.html#ase2sprkkr.execution.remote_psij.ensure_remote_psij_agent">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">ensure_remote_psij_agent</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">run_ids</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Ensure an agent exists when a requested PSI/J run needs attention."""</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">.detached</span><span class="w"> </span><span class="kn">import</span> <span class="n">_read_state</span><span class="p">,</span> <span class="n">_request_path</span>
+
+    <span class="n">directory</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">directory</span><span class="p">)</span><span class="o">.</span><span class="n">expanduser</span><span class="p">()</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">_agent_is_running</span><span class="p">(</span><span class="n">directory</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">True</span>
+
+    <span class="k">for</span> <span class="n">run_id</span> <span class="ow">in</span> <span class="n">run_ids</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">state</span> <span class="o">=</span> <span class="n">_read_state</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">run_id</span><span class="p">)</span>
+            <span class="n">request</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">_request_path</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">run_id</span><span class="p">)</span><span class="o">.</span><span class="n">read_text</span><span class="p">())</span>
+        <span class="k">except</span> <span class="p">(</span><span class="ne">FileNotFoundError</span><span class="p">,</span> <span class="n">json</span><span class="o">.</span><span class="n">JSONDecodeError</span><span class="p">):</span>
+            <span class="k">continue</span>
+        <span class="k">if</span> <span class="n">state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"state"</span><span class="p">)</span> <span class="ow">in</span> <span class="n">_FINAL_STATE_NAMES</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"executor"</span><span class="p">,</span> <span class="s2">"local"</span><span class="p">)</span> <span class="o">!=</span> <span class="s2">"psij"</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="n">_spawn_agent</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">run_id</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">return</span> <span class="kc">False</span></div>
+
+
+
+<div class="viewcode-block" id="_ActiveRun">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.remote_psij._ActiveRun.html#ase2sprkkr.execution.remote_psij._ActiveRun">[docs]</a>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">_ActiveRun</span><span class="p">:</span>
+    <span class="n">runner</span><span class="p">:</span> <span class="nb">object</span>
+    <span class="n">last_state</span><span class="p">:</span> <span class="n">RunState</span>
+    <span class="n">cancel_sent</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span></div>
+
+
+
+<div class="viewcode-block" id="_RemotePsijAgent">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.remote_psij._RemotePsijAgent.html#ase2sprkkr.execution.remote_psij._RemotePsijAgent">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">_RemotePsijAgent</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Temporarily own shared PSI/J executors for one detached workspace."""</span>
+
+<div class="viewcode-block" id="_RemotePsijAgent.__init__">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.remote_psij._RemotePsijAgent.html#ase2sprkkr.execution.remote_psij._RemotePsijAgent.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">directory</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">directory</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">directory</span><span class="p">)</span><span class="o">.</span><span class="n">expanduser</span><span class="p">()</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_executors</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_active</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_retry</span> <span class="o">=</span> <span class="p">{}</span></div>
+
+
+<div class="viewcode-block" id="_RemotePsijAgent._retry_ready">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.remote_psij._RemotePsijAgent.html#ase2sprkkr.execution.remote_psij._RemotePsijAgent._retry_ready">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_retry_ready</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">run_id</span><span class="p">):</span>
+        <span class="n">retry</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_retry</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">run_id</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">retry</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">time</span><span class="o">.</span><span class="n">monotonic</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="n">retry</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="_RemotePsijAgent._schedule_retry">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.remote_psij._RemotePsijAgent.html#ase2sprkkr.execution.remote_psij._RemotePsijAgent._schedule_retry">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_schedule_retry</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">run_id</span><span class="p">):</span>
+        <span class="n">attempts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_retry</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">run_id</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="n">exponent</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">attempts</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+        <span class="n">delay</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">_RETRY_INITIAL</span> <span class="o">*</span> <span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="n">exponent</span><span class="p">),</span> <span class="n">_RETRY_MAX</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_retry</span><span class="p">[</span><span class="n">run_id</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">attempts</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">monotonic</span><span class="p">()</span> <span class="o">+</span> <span class="n">delay</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="_RemotePsijAgent._clear_retry">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.remote_psij._RemotePsijAgent.html#ase2sprkkr.execution.remote_psij._RemotePsijAgent._clear_retry">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_clear_retry</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">run_id</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_retry</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">run_id</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="_RemotePsijAgent._executor_for">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.remote_psij._RemotePsijAgent.html#ase2sprkkr.execution.remote_psij._RemotePsijAgent._executor_for">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_executor_for</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span>
+        <span class="n">key</span> <span class="o">=</span> <span class="n">_executor_key</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+        <span class="n">executor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_executors</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">executor</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">executor</span> <span class="o">=</span> <span class="n">_executor</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_executors</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">executor</span>
+        <span class="k">return</span> <span class="n">executor</span></div>
+
+
+<div class="viewcode-block" id="_RemotePsijAgent._runs">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.remote_psij._RemotePsijAgent.html#ase2sprkkr.execution.remote_psij._RemotePsijAgent._runs">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_runs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">.detached</span><span class="w"> </span><span class="kn">import</span> <span class="n">_request_path</span><span class="p">,</span> <span class="n">list_detached_runs</span>
+
+        <span class="n">current</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">state</span> <span class="ow">in</span> <span class="n">list_detached_runs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">directory</span><span class="p">):</span>
+            <span class="n">run_id</span> <span class="o">=</span> <span class="n">state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"id"</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">run_id</span><span class="p">:</span>
+                <span class="n">current</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">run_id</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"state"</span><span class="p">)</span> <span class="ow">in</span> <span class="n">_FINAL_STATE_NAMES</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">run_id</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_clear_retry</span><span class="p">(</span><span class="n">run_id</span><span class="p">)</span>
+                <span class="k">continue</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">run_id</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">request</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">_request_path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">directory</span><span class="p">,</span> <span class="n">run_id</span><span class="p">)</span><span class="o">.</span><span class="n">read_text</span><span class="p">())</span>
+            <span class="k">except</span> <span class="p">(</span><span class="ne">FileNotFoundError</span><span class="p">,</span> <span class="n">json</span><span class="o">.</span><span class="n">JSONDecodeError</span><span class="p">):</span>
+                <span class="k">continue</span>
+            <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"executor"</span><span class="p">,</span> <span class="s2">"local"</span><span class="p">)</span> <span class="o">==</span> <span class="s2">"psij"</span><span class="p">:</span>
+                <span class="k">yield</span> <span class="n">run_id</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">request</span>
+        <span class="k">for</span> <span class="n">run_id</span> <span class="ow">in</span> <span class="nb">tuple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_retry</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">run_id</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">current</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_clear_retry</span><span class="p">(</span><span class="n">run_id</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="_RemotePsijAgent._fail">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.remote_psij._RemotePsijAgent.html#ase2sprkkr.execution.remote_psij._RemotePsijAgent._fail">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_fail</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">run_id</span><span class="p">,</span> <span class="n">exc</span><span class="p">):</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">.detached</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+            <span class="n">_read_state_unlocked</span><span class="p">,</span>
+            <span class="n">_state_lock</span><span class="p">,</span>
+            <span class="n">_timestamp</span><span class="p">,</span>
+            <span class="n">_write_state_unlocked</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="k">with</span> <span class="n">_state_lock</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">directory</span><span class="p">,</span> <span class="n">run_id</span><span class="p">):</span>
+            <span class="n">state</span> <span class="o">=</span> <span class="n">_read_state_unlocked</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">directory</span><span class="p">,</span> <span class="n">run_id</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"state"</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">_FINAL_STATE_NAMES</span><span class="p">:</span>
+                <span class="n">_write_state_unlocked</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">directory</span><span class="p">,</span>
+                    <span class="n">run_id</span><span class="p">,</span>
+                    <span class="n">state</span><span class="o">=</span><span class="n">RunState</span><span class="o">.</span><span class="n">FAILED</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+                    <span class="n">error</span><span class="o">=</span><span class="nb">repr</span><span class="p">(</span><span class="n">exc</span><span class="p">),</span>
+                    <span class="n">return_code</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                    <span class="n">finished_at</span><span class="o">=</span><span class="n">state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"finished_at"</span><span class="p">)</span> <span class="ow">or</span> <span class="n">_timestamp</span><span class="p">(),</span>
+                <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_active</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">run_id</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_clear_retry</span><span class="p">(</span><span class="n">run_id</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="_RemotePsijAgent._record_retryable_error">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.remote_psij._RemotePsijAgent.html#ase2sprkkr.execution.remote_psij._RemotePsijAgent._record_retryable_error">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_record_retryable_error</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">run_id</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">exc</span><span class="p">):</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">.detached</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+            <span class="n">_read_state_unlocked</span><span class="p">,</span>
+            <span class="n">_state_lock</span><span class="p">,</span>
+            <span class="n">_write_state_unlocked</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="k">with</span> <span class="n">_state_lock</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">directory</span><span class="p">,</span> <span class="n">run_id</span><span class="p">):</span>
+            <span class="n">state</span> <span class="o">=</span> <span class="n">_read_state_unlocked</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">directory</span><span class="p">,</span> <span class="n">run_id</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"state"</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">_FINAL_STATE_NAMES</span><span class="p">:</span>
+                <span class="n">_write_state_unlocked</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">directory</span><span class="p">,</span>
+                    <span class="n">run_id</span><span class="p">,</span>
+                    <span class="o">**</span><span class="p">{</span><span class="n">field</span><span class="p">:</span> <span class="nb">repr</span><span class="p">(</span><span class="n">exc</span><span class="p">),</span> <span class="s2">"error"</span><span class="p">:</span> <span class="nb">repr</span><span class="p">(</span><span class="n">exc</span><span class="p">)},</span>
+                <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="_RemotePsijAgent._submit">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.remote_psij._RemotePsijAgent.html#ase2sprkkr.execution.remote_psij._RemotePsijAgent._submit">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_submit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">run_id</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">.detached</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+            <span class="n">_read_state_unlocked</span><span class="p">,</span>
+            <span class="n">_state_lock</span><span class="p">,</span>
+            <span class="n">_timestamp</span><span class="p">,</span>
+            <span class="n">_write_state_unlocked</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="n">executor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_executor_for</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+        <span class="n">output_file</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"output_file"</span><span class="p">)</span> <span class="ow">or</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">directory</span><span class="p">,</span> <span class="s2">"stdout"</span><span class="p">)</span>
+        <span class="n">error_file</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"error_file"</span><span class="p">)</span> <span class="ow">or</span> <span class="n">output_file</span> <span class="o">+</span> <span class="s2">".err"</span>
+        <span class="n">spec</span> <span class="o">=</span> <span class="n">_execution_spec</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">directory</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">output_file</span><span class="p">,</span> <span class="n">error_file</span><span class="p">)</span>
+        <span class="n">runner</span> <span class="o">=</span> <span class="n">executor</span><span class="o">.</span><span class="n">create_persistent_run</span><span class="p">(</span><span class="n">_RemoteReader</span><span class="p">(),</span> <span class="n">spec</span><span class="p">,</span> <span class="n">run_id</span><span class="o">=</span><span class="n">run_id</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="n">_state_lock</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">directory</span><span class="p">,</span> <span class="n">run_id</span><span class="p">):</span>
+            <span class="n">state</span> <span class="o">=</span> <span class="n">_read_state_unlocked</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">directory</span><span class="p">,</span> <span class="n">run_id</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"state"</span><span class="p">)</span> <span class="ow">in</span> <span class="n">_FINAL_STATE_NAMES</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">False</span>
+            <span class="k">if</span> <span class="n">state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"backend_reference"</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">False</span>
+            <span class="k">if</span> <span class="n">state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"cancel_requested"</span><span class="p">):</span>
+                <span class="n">_write_state_unlocked</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">directory</span><span class="p">,</span>
+                    <span class="n">run_id</span><span class="p">,</span>
+                    <span class="n">state</span><span class="o">=</span><span class="n">RunState</span><span class="o">.</span><span class="n">CANCELLED</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+                    <span class="n">finished_at</span><span class="o">=</span><span class="n">state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"finished_at"</span><span class="p">)</span> <span class="ow">or</span> <span class="n">_timestamp</span><span class="p">(),</span>
+                <span class="p">)</span>
+                <span class="k">return</span> <span class="kc">True</span>
+            <span class="k">if</span> <span class="n">state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"state"</span><span class="p">)</span> <span class="o">!=</span> <span class="n">RunState</span><span class="o">.</span><span class="n">QUEUED</span><span class="o">.</span><span class="n">value</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">"Cannot submit remote PSI/J run </span><span class="si">{</span><span class="n">run_id</span><span class="si">!r}</span><span class="s2"> from state "</span>
+                    <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'state'</span><span class="p">)</span><span class="si">!r}</span><span class="s2">"</span>
+                <span class="p">)</span>
+            <span class="n">started_at</span> <span class="o">=</span> <span class="n">state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"started_at"</span><span class="p">)</span> <span class="ow">or</span> <span class="n">_timestamp</span><span class="p">()</span>
+            <span class="n">_write_state_unlocked</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">directory</span><span class="p">,</span>
+                <span class="n">run_id</span><span class="p">,</span>
+                <span class="n">state</span><span class="o">=</span><span class="n">RunState</span><span class="o">.</span><span class="n">SUBMITTING</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+                <span class="n">pid</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">getpid</span><span class="p">(),</span>
+                <span class="n">started_at</span><span class="o">=</span><span class="n">started_at</span><span class="p">,</span>
+                <span class="n">submission_error</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">runner</span><span class="o">.</span><span class="n">submit</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">BaseException</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+            <span class="c1"># Submission failure can be ambiguous: the scheduler may already</span>
+            <span class="c1"># have accepted the job even if the client call raised. Keep the</span>
+            <span class="c1"># explicit SUBMITTING state and let recovery by persistent run id</span>
+            <span class="c1"># decide whether a scheduler job exists before releasing the run.</span>
+            <span class="k">with</span> <span class="n">_state_lock</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">directory</span><span class="p">,</span> <span class="n">run_id</span><span class="p">):</span>
+                <span class="n">latest</span> <span class="o">=</span> <span class="n">_read_state_unlocked</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">directory</span><span class="p">,</span> <span class="n">run_id</span><span class="p">)</span>
+                <span class="k">if</span> <span class="p">(</span>
+                    <span class="n">latest</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"state"</span><span class="p">)</span> <span class="o">==</span> <span class="n">RunState</span><span class="o">.</span><span class="n">SUBMITTING</span><span class="o">.</span><span class="n">value</span>
+                    <span class="ow">and</span> <span class="n">latest</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"backend_reference"</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span>
+                <span class="p">):</span>
+                    <span class="n">_write_state_unlocked</span><span class="p">(</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">directory</span><span class="p">,</span>
+                        <span class="n">run_id</span><span class="p">,</span>
+                        <span class="n">submission_error</span><span class="o">=</span><span class="nb">repr</span><span class="p">(</span><span class="n">exc</span><span class="p">),</span>
+                        <span class="n">error</span><span class="o">=</span><span class="nb">repr</span><span class="p">(</span><span class="n">exc</span><span class="p">),</span>
+                    <span class="p">)</span>
+            <span class="k">return</span> <span class="kc">True</span>
+
+        <span class="n">reference</span> <span class="o">=</span> <span class="n">runner</span><span class="o">.</span><span class="n">reference</span>
+        <span class="k">if</span> <span class="n">reference</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">with</span> <span class="n">_state_lock</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">directory</span><span class="p">,</span> <span class="n">run_id</span><span class="p">):</span>
+                <span class="n">_write_state_unlocked</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">directory</span><span class="p">,</span>
+                    <span class="n">run_id</span><span class="p">,</span>
+                    <span class="n">submission_error</span><span class="o">=</span><span class="s2">"PSI/J did not provide a persistent job reference"</span><span class="p">,</span>
+                    <span class="n">error</span><span class="o">=</span><span class="s2">"PSI/J did not provide a persistent job reference"</span><span class="p">,</span>
+                <span class="p">)</span>
+            <span class="k">return</span> <span class="kc">True</span>
+
+        <span class="n">current</span> <span class="o">=</span> <span class="n">runner</span><span class="o">.</span><span class="n">state</span>
+        <span class="n">published</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">current</span>
+            <span class="k">if</span> <span class="n">current</span> <span class="ow">in</span> <span class="p">(</span><span class="n">RunState</span><span class="o">.</span><span class="n">QUEUED</span><span class="p">,</span> <span class="n">RunState</span><span class="o">.</span><span class="n">RUNNING</span><span class="p">)</span>
+            <span class="k">else</span> <span class="n">RunState</span><span class="o">.</span><span class="n">QUEUED</span>
+        <span class="p">)</span>
+        <span class="k">with</span> <span class="n">_state_lock</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">directory</span><span class="p">,</span> <span class="n">run_id</span><span class="p">):</span>
+            <span class="n">latest</span> <span class="o">=</span> <span class="n">_read_state_unlocked</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">directory</span><span class="p">,</span> <span class="n">run_id</span><span class="p">)</span>
+            <span class="n">_write_state_unlocked</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">directory</span><span class="p">,</span>
+                <span class="n">run_id</span><span class="p">,</span>
+                <span class="n">state</span><span class="o">=</span><span class="n">published</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+                <span class="n">pid</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">getpid</span><span class="p">(),</span>
+                <span class="n">backend_reference</span><span class="o">=</span><span class="n">asdict</span><span class="p">(</span><span class="n">reference</span><span class="p">),</span>
+                <span class="n">started_at</span><span class="o">=</span><span class="n">latest</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"started_at"</span><span class="p">)</span> <span class="ow">or</span> <span class="n">_timestamp</span><span class="p">(),</span>
+                <span class="n">submission_error</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                <span class="n">recovery_error</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                <span class="n">attach_error</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                <span class="n">error</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_clear_retry</span><span class="p">(</span><span class="n">run_id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_active</span><span class="p">[</span><span class="n">run_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">_ActiveRun</span><span class="p">(</span><span class="n">runner</span><span class="p">,</span> <span class="n">current</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="_RemotePsijAgent._recover_submitting">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.remote_psij._RemotePsijAgent.html#ase2sprkkr.execution.remote_psij._RemotePsijAgent._recover_submitting">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_recover_submitting</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">run_id</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Recover the scheduler identity after a target-agent submit crash."""</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">.detached</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+            <span class="n">_read_state_unlocked</span><span class="p">,</span>
+            <span class="n">_state_lock</span><span class="p">,</span>
+            <span class="n">_timestamp</span><span class="p">,</span>
+            <span class="n">_write_state_unlocked</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="n">executor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_executor_for</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+        <span class="n">submission</span> <span class="o">=</span> <span class="n">SimpleNamespace</span><span class="p">(</span>
+            <span class="n">directory</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"directory"</span><span class="p">)</span> <span class="ow">or</span> <span class="n">os</span><span class="o">.</span><span class="n">fspath</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">directory</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">status</span> <span class="o">=</span> <span class="n">executor</span><span class="o">.</span><span class="n">recover_submission</span><span class="p">(</span>
+                <span class="n">run_id</span><span class="p">,</span>
+                <span class="n">submission</span><span class="p">,</span>
+                <span class="n">submitted_at</span><span class="o">=</span><span class="n">state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"started_at"</span><span class="p">)</span> <span class="ow">or</span> <span class="n">state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"created_at"</span><span class="p">),</span>
+            <span class="p">)</span>
+        <span class="k">except</span> <span class="ne">NotImplementedError</span><span class="p">:</span>
+            <span class="c1"># Absence cannot be proven. Leaving SUBMITTING is deliberately safer</span>
+            <span class="c1"># than creating a duplicate scheduler job.</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_record_retryable_error</span><span class="p">(</span><span class="n">run_id</span><span class="p">,</span> <span class="s2">"recovery_error"</span><span class="p">,</span> <span class="n">exc</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_schedule_retry</span><span class="p">(</span><span class="n">run_id</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_clear_retry</span><span class="p">(</span><span class="n">run_id</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">status</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">with</span> <span class="n">_state_lock</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">directory</span><span class="p">,</span> <span class="n">run_id</span><span class="p">):</span>
+                <span class="n">latest</span> <span class="o">=</span> <span class="n">_read_state_unlocked</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">directory</span><span class="p">,</span> <span class="n">run_id</span><span class="p">)</span>
+                <span class="k">if</span> <span class="p">(</span>
+                    <span class="n">latest</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"state"</span><span class="p">)</span> <span class="o">!=</span> <span class="n">RunState</span><span class="o">.</span><span class="n">SUBMITTING</span><span class="o">.</span><span class="n">value</span>
+                    <span class="ow">or</span> <span class="n">latest</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"backend_reference"</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+                <span class="p">):</span>
+                    <span class="k">return</span> <span class="kc">False</span>
+                <span class="k">if</span> <span class="n">latest</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"cancel_requested"</span><span class="p">):</span>
+                    <span class="n">_write_state_unlocked</span><span class="p">(</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">directory</span><span class="p">,</span>
+                        <span class="n">run_id</span><span class="p">,</span>
+                        <span class="n">state</span><span class="o">=</span><span class="n">RunState</span><span class="o">.</span><span class="n">CANCELLED</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+                        <span class="n">finished_at</span><span class="o">=</span><span class="n">latest</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"finished_at"</span><span class="p">)</span> <span class="ow">or</span> <span class="n">_timestamp</span><span class="p">(),</span>
+                        <span class="n">recovery_error</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                    <span class="p">)</span>
+                <span class="k">elif</span> <span class="n">latest</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"submission_error"</span><span class="p">):</span>
+                    <span class="n">_write_state_unlocked</span><span class="p">(</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">directory</span><span class="p">,</span>
+                        <span class="n">run_id</span><span class="p">,</span>
+                        <span class="n">state</span><span class="o">=</span><span class="n">RunState</span><span class="o">.</span><span class="n">FAILED</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+                        <span class="n">return_code</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                        <span class="n">finished_at</span><span class="o">=</span><span class="n">latest</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"finished_at"</span><span class="p">)</span> <span class="ow">or</span> <span class="n">_timestamp</span><span class="p">(),</span>
+                        <span class="n">recovery_error</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                    <span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">_write_state_unlocked</span><span class="p">(</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">directory</span><span class="p">,</span>
+                        <span class="n">run_id</span><span class="p">,</span>
+                        <span class="n">state</span><span class="o">=</span><span class="n">RunState</span><span class="o">.</span><span class="n">QUEUED</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+                        <span class="n">pid</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                        <span class="n">recovery_error</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                    <span class="p">)</span>
+            <span class="k">return</span> <span class="kc">True</span>
+
+        <span class="n">reference</span> <span class="o">=</span> <span class="n">status</span><span class="o">.</span><span class="n">reference</span>
+        <span class="k">if</span> <span class="n">reference</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">"Recovered PSI/J submission lacks a job reference"</span><span class="p">)</span>
+        <span class="n">recovered_state</span> <span class="o">=</span> <span class="n">RunState</span><span class="p">(</span><span class="n">status</span><span class="o">.</span><span class="n">state</span><span class="p">)</span>
+        <span class="k">with</span> <span class="n">_state_lock</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">directory</span><span class="p">,</span> <span class="n">run_id</span><span class="p">):</span>
+            <span class="n">latest</span> <span class="o">=</span> <span class="n">_read_state_unlocked</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">directory</span><span class="p">,</span> <span class="n">run_id</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">latest</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"state"</span><span class="p">)</span> <span class="o">!=</span> <span class="n">RunState</span><span class="o">.</span><span class="n">SUBMITTING</span><span class="o">.</span><span class="n">value</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">False</span>
+            <span class="n">changes</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">"state"</span><span class="p">:</span> <span class="n">recovered_state</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+                <span class="s2">"backend_reference"</span><span class="p">:</span> <span class="n">asdict</span><span class="p">(</span><span class="n">reference</span><span class="p">),</span>
+                <span class="s2">"pid"</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">getpid</span><span class="p">(),</span>
+                <span class="s2">"submission_error"</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                <span class="s2">"recovery_error"</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                <span class="s2">"error"</span><span class="p">:</span> <span class="n">status</span><span class="o">.</span><span class="n">message</span><span class="p">,</span>
+            <span class="p">}</span>
+            <span class="k">if</span> <span class="n">status</span><span class="o">.</span><span class="n">return_code</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">changes</span><span class="p">[</span><span class="s2">"return_code"</span><span class="p">]</span> <span class="o">=</span> <span class="n">status</span><span class="o">.</span><span class="n">return_code</span>
+            <span class="k">if</span> <span class="n">recovered_state</span> <span class="ow">in</span> <span class="n">_FINAL_RUN_STATES</span><span class="p">:</span>
+                <span class="n">changes</span><span class="p">[</span><span class="s2">"finished_at"</span><span class="p">]</span> <span class="o">=</span> <span class="n">latest</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"finished_at"</span><span class="p">)</span> <span class="ow">or</span> <span class="n">_timestamp</span><span class="p">()</span>
+            <span class="n">recovered</span> <span class="o">=</span> <span class="n">_write_state_unlocked</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">directory</span><span class="p">,</span> <span class="n">run_id</span><span class="p">,</span> <span class="o">**</span><span class="n">changes</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">recovered_state</span> <span class="ow">in</span> <span class="n">_FINAL_RUN_STATES</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_attach</span><span class="p">(</span><span class="n">run_id</span><span class="p">,</span> <span class="n">recovered</span><span class="p">,</span> <span class="n">request</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="_RemotePsijAgent._attach">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.remote_psij._RemotePsijAgent.html#ase2sprkkr.execution.remote_psij._RemotePsijAgent._attach">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_attach</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">run_id</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span>
+        <span class="n">reference</span> <span class="o">=</span> <span class="n">state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"backend_reference"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">reference</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="n">executor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_executor_for</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">runner</span> <span class="o">=</span> <span class="n">executor</span><span class="o">.</span><span class="n">attach</span><span class="p">(</span><span class="n">RunReference</span><span class="p">(</span><span class="o">**</span><span class="n">reference</span><span class="p">),</span> <span class="n">_RemoteReader</span><span class="p">())</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_record_retryable_error</span><span class="p">(</span><span class="n">run_id</span><span class="p">,</span> <span class="s2">"attach_error"</span><span class="p">,</span> <span class="n">exc</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_schedule_retry</span><span class="p">(</span><span class="n">run_id</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_clear_retry</span><span class="p">(</span><span class="n">run_id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_active</span><span class="p">[</span><span class="n">run_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">_ActiveRun</span><span class="p">(</span>
+            <span class="n">runner</span><span class="p">,</span>
+            <span class="n">RunState</span><span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"state"</span><span class="p">,</span> <span class="n">RunState</span><span class="o">.</span><span class="n">UNKNOWN</span><span class="o">.</span><span class="n">value</span><span class="p">)),</span>
+        <span class="p">)</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">.detached</span><span class="w"> </span><span class="kn">import</span> <span class="n">_read_state_unlocked</span><span class="p">,</span> <span class="n">_state_lock</span><span class="p">,</span> <span class="n">_write_state_unlocked</span>
+
+        <span class="k">with</span> <span class="n">_state_lock</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">directory</span><span class="p">,</span> <span class="n">run_id</span><span class="p">):</span>
+            <span class="n">latest</span> <span class="o">=</span> <span class="n">_read_state_unlocked</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">directory</span><span class="p">,</span> <span class="n">run_id</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">latest</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"state"</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">_FINAL_STATE_NAMES</span><span class="p">:</span>
+                <span class="n">_write_state_unlocked</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">directory</span><span class="p">,</span>
+                    <span class="n">run_id</span><span class="p">,</span>
+                    <span class="n">attach_error</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                    <span class="n">error</span><span class="o">=</span><span class="p">(</span>
+                        <span class="kc">None</span>
+                        <span class="k">if</span> <span class="n">latest</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"error"</span><span class="p">)</span> <span class="o">==</span> <span class="n">latest</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"attach_error"</span><span class="p">)</span>
+                        <span class="k">else</span> <span class="n">latest</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"error"</span><span class="p">)</span>
+                    <span class="p">),</span>
+                <span class="p">)</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="_RemotePsijAgent._discover">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.remote_psij._RemotePsijAgent.html#ase2sprkkr.execution.remote_psij._RemotePsijAgent._discover">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_discover</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">activity</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">for</span> <span class="n">run_id</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">request</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_runs</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">run_id</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_active</span> <span class="ow">or</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_retry_ready</span><span class="p">(</span><span class="n">run_id</span><span class="p">):</span>
+                <span class="k">continue</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"backend_reference"</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">activity</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_attach</span><span class="p">(</span><span class="n">run_id</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">request</span><span class="p">)</span> <span class="ow">or</span> <span class="n">activity</span>
+                <span class="k">elif</span> <span class="n">state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"state"</span><span class="p">)</span> <span class="o">==</span> <span class="n">RunState</span><span class="o">.</span><span class="n">QUEUED</span><span class="o">.</span><span class="n">value</span><span class="p">:</span>
+                    <span class="n">activity</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_submit</span><span class="p">(</span><span class="n">run_id</span><span class="p">,</span> <span class="n">request</span><span class="p">)</span> <span class="ow">or</span> <span class="n">activity</span>
+                <span class="k">elif</span> <span class="n">state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"state"</span><span class="p">)</span> <span class="o">==</span> <span class="n">RunState</span><span class="o">.</span><span class="n">SUBMITTING</span><span class="o">.</span><span class="n">value</span><span class="p">:</span>
+                    <span class="n">activity</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_recover_submitting</span><span class="p">(</span><span class="n">run_id</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">request</span><span class="p">)</span> <span class="ow">or</span> <span class="n">activity</span>
+            <span class="k">except</span> <span class="ne">BaseException</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_fail</span><span class="p">(</span><span class="n">run_id</span><span class="p">,</span> <span class="n">exc</span><span class="p">)</span>
+                <span class="n">activity</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="n">activity</span></div>
+
+
+<div class="viewcode-block" id="_RemotePsijAgent._finish">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.remote_psij._RemotePsijAgent.html#ase2sprkkr.execution.remote_psij._RemotePsijAgent._finish">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_finish</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">run_id</span><span class="p">,</span> <span class="n">active</span><span class="p">,</span> <span class="n">requested_cancel</span><span class="p">):</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">.detached</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+            <span class="n">_read_state_unlocked</span><span class="p">,</span>
+            <span class="n">_state_lock</span><span class="p">,</span>
+            <span class="n">_timestamp</span><span class="p">,</span>
+            <span class="n">_write_state_unlocked</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">active</span><span class="o">.</span><span class="n">runner</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+            <span class="n">return_code</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">active</span><span class="o">.</span><span class="n">runner</span><span class="p">,</span> <span class="s2">"return_code"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">return_code</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">return_code</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">return_code</span>
+            <span class="n">final</span> <span class="o">=</span> <span class="n">active</span><span class="o">.</span><span class="n">runner</span><span class="o">.</span><span class="n">state</span>
+        <span class="k">except</span> <span class="ne">BaseException</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+            <span class="n">final</span> <span class="o">=</span> <span class="n">active</span><span class="o">.</span><span class="n">runner</span><span class="o">.</span><span class="n">state</span>
+            <span class="n">return_code</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">active</span><span class="o">.</span><span class="n">runner</span><span class="p">,</span> <span class="s2">"return_code"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">requested_cancel</span><span class="p">:</span>
+                <span class="n">final</span> <span class="o">=</span> <span class="n">RunState</span><span class="o">.</span><span class="n">CANCELLED</span>
+            <span class="k">elif</span> <span class="n">final</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">_FINAL_RUN_STATES</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_fail</span><span class="p">(</span><span class="n">run_id</span><span class="p">,</span> <span class="n">exc</span><span class="p">)</span>
+                <span class="k">return</span>
+
+        <span class="k">if</span> <span class="n">final</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">_FINAL_RUN_STATES</span><span class="p">:</span>
+            <span class="n">final</span> <span class="o">=</span> <span class="n">RunState</span><span class="o">.</span><span class="n">FINISHED</span> <span class="k">if</span> <span class="n">return_code</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">RunState</span><span class="o">.</span><span class="n">FAILED</span>
+
+        <span class="k">with</span> <span class="n">_state_lock</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">directory</span><span class="p">,</span> <span class="n">run_id</span><span class="p">):</span>
+            <span class="n">state</span> <span class="o">=</span> <span class="n">_read_state_unlocked</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">directory</span><span class="p">,</span> <span class="n">run_id</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"cancel_requested"</span><span class="p">)</span> <span class="ow">or</span> <span class="n">requested_cancel</span><span class="p">:</span>
+                <span class="n">final</span> <span class="o">=</span> <span class="n">RunState</span><span class="o">.</span><span class="n">CANCELLED</span>
+            <span class="n">_write_state_unlocked</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">directory</span><span class="p">,</span>
+                <span class="n">run_id</span><span class="p">,</span>
+                <span class="n">state</span><span class="o">=</span><span class="n">final</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+                <span class="n">return_code</span><span class="o">=</span><span class="n">return_code</span><span class="p">,</span>
+                <span class="n">finished_at</span><span class="o">=</span><span class="n">state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"finished_at"</span><span class="p">)</span> <span class="ow">or</span> <span class="n">_timestamp</span><span class="p">(),</span>
+            <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_active</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">run_id</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_clear_retry</span><span class="p">(</span><span class="n">run_id</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="_RemotePsijAgent._poll_active">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.remote_psij._RemotePsijAgent.html#ase2sprkkr.execution.remote_psij._RemotePsijAgent._poll_active">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_poll_active</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">.detached</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+            <span class="n">_read_state</span><span class="p">,</span>
+            <span class="n">_read_state_unlocked</span><span class="p">,</span>
+            <span class="n">_state_lock</span><span class="p">,</span>
+            <span class="n">_write_state_unlocked</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="n">activity</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">for</span> <span class="n">run_id</span><span class="p">,</span> <span class="n">active</span> <span class="ow">in</span> <span class="nb">tuple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_active</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">state</span> <span class="o">=</span> <span class="n">_read_state</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">directory</span><span class="p">,</span> <span class="n">run_id</span><span class="p">)</span>
+                <span class="n">requested_cancel</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"cancel_requested"</span><span class="p">))</span>
+                <span class="n">current</span> <span class="o">=</span> <span class="n">active</span><span class="o">.</span><span class="n">runner</span><span class="o">.</span><span class="n">state</span>
+                <span class="k">if</span> <span class="n">current</span> <span class="ow">in</span> <span class="n">_FINAL_RUN_STATES</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_finish</span><span class="p">(</span><span class="n">run_id</span><span class="p">,</span> <span class="n">active</span><span class="p">,</span> <span class="n">requested_cancel</span><span class="p">)</span>
+                    <span class="n">activity</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="k">continue</span>
+
+                <span class="k">if</span> <span class="n">requested_cancel</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">active</span><span class="o">.</span><span class="n">cancel_sent</span><span class="p">:</span>
+                    <span class="n">active</span><span class="o">.</span><span class="n">runner</span><span class="o">.</span><span class="n">cancel</span><span class="p">()</span>
+                    <span class="n">active</span><span class="o">.</span><span class="n">cancel_sent</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="n">activity</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="n">current</span> <span class="o">=</span> <span class="n">active</span><span class="o">.</span><span class="n">runner</span><span class="o">.</span><span class="n">state</span>
+                    <span class="k">if</span> <span class="n">current</span> <span class="ow">in</span> <span class="n">_FINAL_RUN_STATES</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_finish</span><span class="p">(</span><span class="n">run_id</span><span class="p">,</span> <span class="n">active</span><span class="p">,</span> <span class="n">requested_cancel</span><span class="p">)</span>
+                        <span class="k">continue</span>
+
+                <span class="k">if</span> <span class="p">(</span>
+                    <span class="n">current</span> <span class="ow">in</span> <span class="p">(</span><span class="n">RunState</span><span class="o">.</span><span class="n">QUEUED</span><span class="p">,</span> <span class="n">RunState</span><span class="o">.</span><span class="n">RUNNING</span><span class="p">)</span>
+                    <span class="ow">and</span> <span class="n">current</span> <span class="o">!=</span> <span class="n">active</span><span class="o">.</span><span class="n">last_state</span>
+                <span class="p">):</span>
+                    <span class="k">with</span> <span class="n">_state_lock</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">directory</span><span class="p">,</span> <span class="n">run_id</span><span class="p">):</span>
+                        <span class="n">current_state</span> <span class="o">=</span> <span class="n">_read_state_unlocked</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">directory</span><span class="p">,</span> <span class="n">run_id</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="n">current_state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"state"</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">_FINAL_STATE_NAMES</span><span class="p">:</span>
+                            <span class="n">_write_state_unlocked</span><span class="p">(</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">directory</span><span class="p">,</span> <span class="n">run_id</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="n">current</span><span class="o">.</span><span class="n">value</span>
+                            <span class="p">)</span>
+                    <span class="n">activity</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="n">active</span><span class="o">.</span><span class="n">last_state</span> <span class="o">=</span> <span class="n">current</span>
+            <span class="k">except</span> <span class="ne">BaseException</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_fail</span><span class="p">(</span><span class="n">run_id</span><span class="p">,</span> <span class="n">exc</span><span class="p">)</span>
+                <span class="n">activity</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="n">activity</span></div>
+
+
+<div class="viewcode-block" id="_RemotePsijAgent.run">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.remote_psij._RemotePsijAgent.html#ase2sprkkr.execution.remote_psij._RemotePsijAgent.run">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">idle_since</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">activity</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_discover</span><span class="p">()</span>
+            <span class="n">activity</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_poll_active</span><span class="p">()</span> <span class="ow">or</span> <span class="n">activity</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_active</span> <span class="ow">or</span> <span class="n">activity</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_retry</span><span class="p">:</span>
+                <span class="n">idle_since</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">elif</span> <span class="n">idle_since</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">idle_since</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">monotonic</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">time</span><span class="o">.</span><span class="n">monotonic</span><span class="p">()</span> <span class="o">-</span> <span class="n">idle_since</span> <span class="o">&gt;=</span> <span class="n">_AGENT_IDLE_TIMEOUT</span><span class="p">:</span>
+                <span class="k">return</span>
+            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">_AGENT_POLL_INTERVAL</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="run_remote_psij_worker">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.remote_psij.run_remote_psij_worker.html#ase2sprkkr.execution.remote_psij.run_remote_psij_worker">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">run_remote_psij_worker</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">run_id</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Join or become the workspace PSI/J agent."""</span>
+    <span class="n">directory</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">directory</span><span class="p">)</span><span class="o">.</span><span class="n">expanduser</span><span class="p">()</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+    <span class="n">lock</span> <span class="o">=</span> <span class="n">_try_agent_lock</span><span class="p">(</span><span class="n">directory</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">lock</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">_RemotePsijAgent</span><span class="p">(</span><span class="n">directory</span><span class="p">)</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="n">lock</span><span class="o">.</span><span class="n">release</span><span class="p">()</span></div>
+
+
+
+<div class="viewcode-block" id="cancel_remote_psij">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.remote_psij.cancel_remote_psij.html#ase2sprkkr.execution.remote_psij.cancel_remote_psij">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">cancel_remote_psij</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">run_id</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Request cancellation through the target-side PSI/J agent."""</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">.detached</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+        <span class="n">_read_state</span><span class="p">,</span>
+        <span class="n">_read_state_unlocked</span><span class="p">,</span>
+        <span class="n">_state_lock</span><span class="p">,</span>
+        <span class="n">_write_state_unlocked</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">directory</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">directory</span><span class="p">)</span><span class="o">.</span><span class="n">expanduser</span><span class="p">()</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+    <span class="k">with</span> <span class="n">_state_lock</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">run_id</span><span class="p">):</span>
+        <span class="n">state</span> <span class="o">=</span> <span class="n">_read_state_unlocked</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">run_id</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"state"</span><span class="p">)</span> <span class="ow">in</span> <span class="n">_FINAL_STATE_NAMES</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">state</span>
+        <span class="n">_write_state_unlocked</span><span class="p">(</span>
+            <span class="n">directory</span><span class="p">,</span>
+            <span class="n">run_id</span><span class="p">,</span>
+            <span class="n">cancel_requested</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="n">ensure_remote_psij_agent</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="p">(</span><span class="n">run_id</span><span class="p">,))</span>
+
+    <span class="n">deadline</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">monotonic</span><span class="p">()</span> <span class="o">+</span> <span class="n">timeout</span>
+    <span class="k">while</span> <span class="n">time</span><span class="o">.</span><span class="n">monotonic</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">deadline</span><span class="p">:</span>
+        <span class="n">state</span> <span class="o">=</span> <span class="n">_read_state</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">run_id</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"state"</span><span class="p">)</span> <span class="ow">in</span> <span class="n">_FINAL_STATE_NAMES</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">state</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.05</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">_read_state</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">run_id</span><span class="p">)</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Matyáš Novák &amp; Jano Minár.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

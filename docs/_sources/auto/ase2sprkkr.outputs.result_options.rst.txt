@@ -7,7 +7,7 @@ Full name: **ase2sprkkr.outputs.result\_options**
 
 .. rubric:: Module class hierarchy
 
-.. inheritance-diagram::  ase2sprkkr.outputs.result_options.DataOutputOption  ase2sprkkr.outputs.result_options.OutputFileDefinition  ase2sprkkr.outputs.result_options.OutputFileOption  ase2sprkkr.outputs.result_options.OutputFilesSection  ase2sprkkr.outputs.result_options.OutputOption 
+.. inheritance-diagram::  ase2sprkkr.outputs.result_options.DataOutputOption  ase2sprkkr.outputs.result_options.OutputFileOption  ase2sprkkr.outputs.result_options.OutputFilesSection  ase2sprkkr.outputs.result_options.OutputOption  ase2sprkkr.outputs.result_options.ResultFileDefinition 
       :parts: 1
 
 |
@@ -46,10 +46,10 @@ Full name: **ase2sprkkr.outputs.result\_options**
       :template: custom-class-template.rst
    
       DataOutputOption
-      OutputFileDefinition
       OutputFileOption
       OutputFilesSection
       OutputOption
+      ResultFileDefinition
    
    
 

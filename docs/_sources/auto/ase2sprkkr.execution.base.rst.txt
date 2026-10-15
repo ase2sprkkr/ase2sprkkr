@@ -1,0 +1,77 @@
+base
+====
+
+Full name: **ase2sprkkr.execution.base**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.execution.base.ExecutionResources  ase2sprkkr.execution.base.ExecutionSpec  ase2sprkkr.execution.base.Executor  ase2sprkkr.execution.base.LaunchSpec  ase2sprkkr.execution.base.MpiSpec  ase2sprkkr.execution.base.OutputObservers  ase2sprkkr.execution.base.ResourceOwnedRunner  ase2sprkkr.execution.base.RunReference  ase2sprkkr.execution.base.RunState  ase2sprkkr.execution.base.RunStatus  ase2sprkkr.execution.base.Runner 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.execution.base
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      _pathlike
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      ExecutionResources
+      ExecutionSpec
+      Executor
+      LaunchSpec
+      MpiSpec
+      OutputObservers
+      ResourceOwnedRunner
+      RunReference
+      RunState
+      RunStatus
+      Runner
+   
+   
+
+
+   
+   
+   .. rubric:: Exceptions
+
+   .. autosummary::
+      :toctree:
+   
+      MpiNotFoundWarning
+      OutputObserverWarning
+      SubmissionNotStarted
+   
+   
+
+
+  
+  
+  

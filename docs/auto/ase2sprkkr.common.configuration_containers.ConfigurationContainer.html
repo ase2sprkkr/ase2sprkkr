@@ -17,8 +17,8 @@
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../_static/documentation_options.js?v=5929fcd5"></script>
-      <script src="../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -68,6 +68,7 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.promote_ase_atoms.html">promote_ase_atoms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.__getattr__.html">__getattr__</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="ase2sprkkr.common.html">common</a><ul class="current">
@@ -85,24 +86,29 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.configuration_definitions.html">configuration_definitions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.configuration_transaction.html">configuration_transaction</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.container_definitions.html">container_definitions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.dangerous_values.html">dangerous_values</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.debug.html">debug</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.decorators.html">decorators</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.dependencies.html">dependencies</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.doc.html">doc</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.file_fingerprints.html">file_fingerprints</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.file_locks.html">file_locks</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.file_utils.html">file_utils</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.formats.html">formats</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.generated_configuration_definitions.html">generated_configuration_definitions</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.grammar.html">grammar</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.grammar_types.html">grammar_types</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.init_tests.html">init_tests</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.lazy_string.html">lazy_string</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.misc.html">misc</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.module_registry.html">module_registry</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.no_output.html">no_output</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.options.html">options</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.parsing_results.html">parsing_results</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.process_output_reader.html">process_output_reader</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.repeated_configuration_containers.html">repeated_configuration_containers</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.section_adaptors.html">section_adaptors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.repetition.html">repetition</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.subprocess.html">subprocess</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.tools.html">tools</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.unique_values.html">unique_values</a></li>
@@ -112,13 +118,18 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration.html">configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration_migration.html">configuration_migration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration_yaml.html">configuration_yaml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.conftest.html">conftest</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.examples.html">examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.execution.html">execution</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.gui.html">gui</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.input_parameters.html">input_parameters</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.output_files.html">output_files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.outputs.html">outputs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.physics.html">physics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.potentials.html">potentials</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.profiles.html">profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.result_files.html">result_files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.sprkkr.html">sprkkr</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.tools.html">tools</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.version.html">version</a></li>
@@ -157,18 +168,27 @@
 <h1>ConfigurationContainer<a class="headerlink" href="#configurationcontainer" title="Link to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="ase2sprkkr.common.configuration_containers.ConfigurationContainer">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.common.configuration_containers.</span></span><span class="sig-name descname"><span class="pre">ConfigurationContainer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">definition</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">container</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/configuration_containers.html#ConfigurationContainer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.configuration_containers.ConfigurationContainer" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.common.configuration_containers.</span></span><span class="sig-name descname"><span class="pre">ConfigurationContainer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">definition</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">container</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/configuration_containers.html#ConfigurationContainer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.configuration_containers.ConfigurationContainer" title="Link to this definition"></a></dt>
 <dd><p>A container for configuration (problem-definition) options and/or sections.</p>
 <p>Options in the configuration (problem-definition) files are grouped to
 sections, sections are then grouped in a configuration file object.
 This is a base class for these containers.</p>
 <p class="rubric">Class hierarchy</p>
-<div class="graphviz"><img src="../_images/inheritance-2597f43ca425524e8b203335c10dde4d759e62b5.png" alt="Inheritance diagram of ase2sprkkr.common.configuration_containers.ConfigurationContainer" usemap="#inheritance8e42dd6b20" class="inheritance graphviz" /></div>
-<map id="inheritance8e42dd6b20" name="inheritance8e42dd6b20">
-<area shape="rect" id="node1" href="ase2sprkkr.common.configuration.Configuration.html#ase2sprkkr.common.configuration.Configuration" target="_top" title="The common base class for all configurations values and containers. I.e." alt="" coords="5,5,201,33"/>
-<area shape="rect" id="node2" href="ase2sprkkr.common.configuration_containers.BaseConfigurationContainer.html#ase2sprkkr.common.configuration_containers.BaseConfigurationContainer" target="_top" title="Configuration container, that holds members, either in classical way" alt="" coords="230,5,594,33"/>
-<area shape="rect" id="node3" href="#ase2sprkkr.common.configuration_containers.ConfigurationContainer" target="_top" title="A container for configuration (problem&#45;definition) options and/or sections." alt="" coords="623,5,955,33"/>
-</map><div class="line-block">
+digraph inheritance8e42dd6b20 {
+bgcolor=transparent;
+fontsize=14;
+rankdir=LR;
+ranksep=0.3;
+size=&quot;10.0, 10.0&quot;;
+  &quot;abc.ABC&quot; [fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,tooltip=&quot;Helper class that provides a standard way to create an ABC using&quot;];
+  &quot;configuration.Configuration&quot; [URL=&quot;ase2sprkkr.common.configuration.Configuration.html#ase2sprkkr.common.configuration.Configuration&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;The common base class for all configurations values and containers. I.e.&quot;];
+  &quot;configuration_containers.BaseConfigurationContainer&quot; [URL=&quot;ase2sprkkr.common.configuration_containers.BaseConfigurationContainer.html#ase2sprkkr.common.configuration_containers.BaseConfigurationContainer&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;Configuration container, that holds members, either in classical way&quot;];
+  &quot;configuration.Configuration&quot; -&gt; &quot;configuration_containers.BaseConfigurationContainer&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;abc.ABC&quot; -&gt; &quot;configuration_containers.BaseConfigurationContainer&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;configuration_containers.ConfigurationContainer&quot; [URL=&quot;#ase2sprkkr.common.configuration_containers.ConfigurationContainer&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;A container for configuration (problem-definition) options and/or sections.&quot;];
+  &quot;configuration_containers.BaseConfigurationContainer&quot; -&gt; &quot;configuration_containers.ConfigurationContainer&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+}
+<div class="line-block">
 <div class="line"><br /></div>
 </div>
 <p class="rubric">Constructor</p>
@@ -176,6 +196,89 @@ This is a base class for these containers.</p>
 <dt class="sig sig-object py" id="ase2sprkkr.common.configuration_containers.ConfigurationContainer.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">definition</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">container</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/configuration_containers.html#ConfigurationContainer.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.configuration_containers.ConfigurationContainer.__init__" title="Link to this definition"></a></dt>
 <dd><p>Create the container and its members, according to the definition</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="ase2sprkkr.common.configuration_containers.ConfigurationContainer.MemberChange">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">MemberChange</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">container</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">member</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/configuration_containers.html#ConfigurationContainer.MemberChange"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.configuration_containers.ConfigurationContainer.MemberChange" title="Link to this definition"></a></dt>
+<dd><p>Attachment of a custom member staged on a container.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>container</strong> (<a class="reference internal" href="#ase2sprkkr.common.configuration_containers.ConfigurationContainer" title="ase2sprkkr.common.configuration_containers.ConfigurationContainer"><em>ConfigurationContainer</em></a>)</p></li>
+<li><p><strong>member</strong> (<a class="reference internal" href="ase2sprkkr.common.configuration.Configuration.html#ase2sprkkr.common.configuration.Configuration" title="ase2sprkkr.common.configuration.Configuration"><em>Configuration</em></a>)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.common.configuration_containers.ConfigurationContainer.MemberChange.commit">
+<span class="sig-name descname"><span class="pre">commit</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/configuration_containers.html#ConfigurationContainer.MemberChange.commit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.configuration_containers.ConfigurationContainer.MemberChange.commit" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.common.configuration_containers.ConfigurationContainer.MemberChange.rollback">
+<span class="sig-name descname"><span class="pre">rollback</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/configuration_containers.html#ConfigurationContainer.MemberChange.rollback"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.configuration_containers.ConfigurationContainer.MemberChange.rollback" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="ase2sprkkr.common.configuration_containers.ConfigurationContainer.ParsedValuesChange">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">ParsedValuesChange</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">container</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/configuration_containers.html#ConfigurationContainer.ParsedValuesChange"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.configuration_containers.ConfigurationContainer.ParsedValuesChange" title="Link to this definition"></a></dt>
+<dd><p>Temporary record of the values explicitly present in parsed input.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>container</strong> (<a class="reference internal" href="#ase2sprkkr.common.configuration_containers.ConfigurationContainer" title="ase2sprkkr.common.configuration_containers.ConfigurationContainer"><em>ConfigurationContainer</em></a>)</p></li>
+<li><p><strong>values</strong> (<em>Mapping</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ase2sprkkr.common.configuration_containers.ConfigurationContainer.ParsedValuesChange._MISSING">
+<span class="sig-name descname"><span class="pre">_MISSING</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;object</span> <span class="pre">object&gt;</span></span><a class="headerlink" href="#ase2sprkkr.common.configuration_containers.ConfigurationContainer.ParsedValuesChange._MISSING" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.common.configuration_containers.ConfigurationContainer.ParsedValuesChange.commit">
+<span class="sig-name descname"><span class="pre">commit</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/configuration_containers.html#ConfigurationContainer.ParsedValuesChange.commit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.configuration_containers.ConfigurationContainer.ParsedValuesChange.commit" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.common.configuration_containers.ConfigurationContainer.ParsedValuesChange.rollback">
+<span class="sig-name descname"><span class="pre">rollback</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/configuration_containers.html#ConfigurationContainer.ParsedValuesChange.rollback"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.configuration_containers.ConfigurationContainer.ParsedValuesChange.rollback" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.common.configuration_containers.ConfigurationContainer.ParsedValuesChange._restore">
+<span class="sig-name descname"><span class="pre">_restore</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/configuration_containers.html#ConfigurationContainer.ParsedValuesChange._restore"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.configuration_containers.ConfigurationContainer.ParsedValuesChange._restore" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="py method">
@@ -200,10 +303,19 @@ of the configuration file e.t.c.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.common.configuration_containers.ConfigurationContainer._get_member">
-<span class="sig-name descname"><span class="pre">_get_member</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/configuration_containers.html#ConfigurationContainer._get_member"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.configuration_containers.ConfigurationContainer._get_member" title="Link to this definition"></a></dt>
-<dd><p>Return the member of the container of a given name.
-It search either the members and interactive_members containers</p>
+<dt class="sig sig-object py" id="ase2sprkkr.common.configuration_containers.ConfigurationContainer._get_attribute_member">
+<span class="sig-name descname"><span class="pre">_get_attribute_member</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/configuration_containers.html#ConfigurationContainer._get_attribute_member"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.configuration_containers.ConfigurationContainer._get_attribute_member" title="Link to this definition"></a></dt>
+<dd><p>Return a directly accessible member for attribute access.</p>
+<p>Search both the original and sanitized interactive names, and reject
+members which are hidden or disabled by their condition.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="ase2sprkkr.common.configuration.Configuration.html#ase2sprkkr.common.configuration.Configuration" title="ase2sprkkr.common.configuration.Configuration"><em>Configuration</em></a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -212,39 +324,39 @@ It search either the members and interactive_members containers</p>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.common.configuration_containers.ConfigurationContainer.clear">
-<span class="sig-name descname"><span class="pre">clear</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">do_not_check_required</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">call_hooks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">generated</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/configuration_containers.html#ConfigurationContainer.clear"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.configuration_containers.ConfigurationContainer.clear" title="Link to this definition"></a></dt>
-<dd><p>Erase all values (or reset to default) from all options in the container
-(ad subcontainers)</p>
+<dt class="sig sig-object py" id="ase2sprkkr.common.configuration_containers.ConfigurationContainer.stage_clear">
+<span class="sig-name descname"><span class="pre">stage_clear</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transaction</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">check_required</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/configuration_containers.html#ConfigurationContainer.stage_clear"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.configuration_containers.ConfigurationContainer.stage_clear" title="Link to this definition"></a></dt>
+<dd><p>Stage descendant clearing in <code class="docutils literal notranslate"><span class="pre">transaction</span></code> without validation.</p>
+<p><code class="docutils literal notranslate"><span class="pre">check_required</span></code> is forwarded to descendant options.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>do_not_check_required</strong> (<em>bool</em>) – Do not check validity of the values after clearing. If <code class="docutils literal notranslate"><span class="pre">False</span></code> (default)
-is passed as this argument, the required option without a default value
-(or a section containing such value) throw an exception, which prevents the
-clearing (neverthenless, previous values in the section will be cleared anyway).</p></li>
-<li><p><strong>call_hooks</strong> (<em>bool</em>) – If False, the cleared values do not raise theirs hooks</p></li>
-<li><p><strong>generated</strong> (<em>bool</em>) – If True</p></li>
+<li><p><strong>transaction</strong> (<a class="reference internal" href="ase2sprkkr.common.configuration_transaction.ConfigurationTransaction.html#ase2sprkkr.common.configuration_transaction.ConfigurationTransaction" title="ase2sprkkr.common.configuration_transaction.ConfigurationTransaction"><em>ConfigurationTransaction</em></a>)</p></li>
+<li><p><strong>check_required</strong> (<em>bool</em>)</p></li>
 </ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.common.configuration_containers.ConfigurationContainer.get_members">
-<span class="sig-name descname"><span class="pre">get_members</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unknown</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'find'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_option</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lower_case</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/configuration_containers.html#ConfigurationContainer.get_members"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.configuration_containers.ConfigurationContainer.get_members" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="ase2sprkkr.common.configuration_containers.ConfigurationContainer._get_members">
+<span class="sig-name descname"><span class="pre">_get_members</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unknown</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_option</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lower_case</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">accept</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/configuration_containers.html#ConfigurationContainer._get_members"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.configuration_containers.ConfigurationContainer._get_members" title="Link to this definition"></a></dt>
 <dd><p>Get all the members of given name. According to <code class="docutils literal notranslate"><span class="pre">unknown</span></code> parameter,
 either only from self, or from any child containers, too.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> (<em>None</em><em> or </em><em>str</em>) – If None, return contained values as a dictionary.
-Otherwise, return the value of the member with the given name.</p></li>
+<li><p><strong>name</strong> (<em>str</em>) – Name or dotted path of the requested member.</p></li>
 <li><p><strong>unknown</strong> (<em>str</em><em> or </em><em>None</em>) – If unknown == ‘find’ and there is no member with a given name,
 try to find the first such-named item (case insensitive)
 in the descendant conainers.</p></li>
 <li><p><strong>is_option</strong> (<em>bool</em>) – If set, limit to either Option or non-option items</p></li>
 <li><p><strong>lower_case</strong> (<em>bool</em>) – If true, try to search for the lower-cased name</p></li>
+<li><p><strong>accept</strong> (<em>callable</em>) – If given, return only members for which this predicate is true.
+A rejected direct member does not prevent searching descendants.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -282,33 +394,78 @@ unknown == ‘find_exact’ do the same, case sensitive.</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.common.configuration_containers.ConfigurationContainer.set">
-<span class="sig-name descname"><span class="pre">set</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">unknown</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'find'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">error</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/configuration_containers.html#ConfigurationContainer.set"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.configuration_containers.ConfigurationContainer.set" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<span class="sig-name descname"><span class="pre">set</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">unknown</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'find'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">validation_reason</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'set'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">retain_invalid</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">report_invalid</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/configuration_containers.html#ConfigurationContainer.set"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.configuration_containers.ConfigurationContainer.set" title="Link to this definition"></a></dt>
+<dd><p>Set values using independent retention and reporting policies.</p>
+<p><code class="docutils literal notranslate"><span class="pre">retain_invalid</span></code> accepts <code class="docutils literal notranslate"><span class="pre">&quot;none&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;typed&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">&quot;all&quot;</span></code>;
+<code class="docutils literal notranslate"><span class="pre">report_invalid</span></code> accepts <code class="docutils literal notranslate"><span class="pre">&quot;raise&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;warn&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">&quot;ignore&quot;</span></code>.
+Parsing defaults to retaining typed invalid values and warning. Other
+assignments default to discarding invalid values and raising.</p>
+<p><code class="docutils literal notranslate"><span class="pre">values</span></code> is a mapping or one member name paired with <code class="docutils literal notranslate"><span class="pre">value</span></code>;
+<code class="docutils literal notranslate"><span class="pre">unknown</span></code> selects lookup, addition, ignoring or failure behavior.
+<code class="docutils literal notranslate"><span class="pre">validation_reason</span></code> is <code class="docutils literal notranslate"><span class="pre">&quot;set&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">&quot;parse&quot;</span></code>. Additional keyword
+arguments are treated as member assignments.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>values</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>] </em><em>| </em><em>str</em><em> | </em><em>None</em>)</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>values</strong> (<em>Mapping</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>] </em><em>| </em><em>str</em><em> | </em><em>None</em>)</p></li>
+<li><p><strong>value</strong> (<em>Any</em>)</p></li>
+<li><p><strong>unknown</strong> (<em>Literal</em><em>[</em><em>'find'</em><em>, </em><em>'add'</em><em>, </em><em>'ignore'</em><em>, </em><em>'fail'</em><em>] </em><em>| </em><em>None</em>)</p></li>
+<li><p><strong>validation_reason</strong> (<em>Literal</em><em>[</em><em>'set'</em><em>, </em><em>'parse'</em><em>, </em><em>'save'</em><em>]</em>)</p></li>
+<li><p><strong>retain_invalid</strong> (<em>Literal</em><em>[</em><em>'none'</em><em>, </em><em>'typed'</em><em>, </em><em>'all'</em><em>] </em><em>| </em><em>None</em>)</p></li>
+<li><p><strong>report_invalid</strong> (<em>Literal</em><em>[</em><em>'raise'</em><em>, </em><em>'warn'</em><em>, </em><em>'ignore'</em><em>] </em><em>| </em><em>None</em>)</p></li>
+<li><p><strong>kwargs</strong> (<em>Any</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.common.configuration_containers.ConfigurationContainer._set">
-<span class="sig-name descname"><span class="pre">_set</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">unknown</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'find'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">error</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/configuration_containers.html#ConfigurationContainer._set"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.configuration_containers.ConfigurationContainer._set" title="Link to this definition"></a></dt>
-<dd><p>Set the value(s) of parameter(s). Usage:</p>
+<dt class="sig sig-object py" id="ase2sprkkr.common.configuration_containers.ConfigurationContainer.stage">
+<span class="sig-name descname"><span class="pre">stage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transaction</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">values</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">unknown</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'find'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/configuration_containers.html#ConfigurationContainer.stage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.configuration_containers.ConfigurationContainer.stage" title="Link to this definition"></a></dt>
+<dd><p>Stage values in a transaction. This is the sole assignment-routing
+implementation for configuration containers.</p>
+<p>Usage:</p>
 <p>&gt; input_parameters.set({‘NITER’: 5, ‘NE’: [10]})
 or
 &gt; input_parameters.set(NITER=5, NE=[10])</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>values</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>] </em><em>| </em><em>str</em><em> | </em><em>None</em>) – Dictionary of values to be set, or the name of the value, if the value is given.</p></li>
-<li><p><strong>value</strong> – Value to be set. Setting this argument require to pass string name to the values argument.</p></li>
-<li><p><strong>unkwnown</strong> (<em>'add'</em><em>, </em><em>'find'</em><em> or </em><em>None</em>) – How to handle unknown (not known by the definition) parameters.
+<li><p><strong>values</strong> (<em>Mapping</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>] </em><em>| </em><em>str</em><em> | </em><em>None</em>) – Dictionary of values to be set, or the name of the value, if the value is given.</p></li>
+<li><p><strong>value</strong> (<em>Any</em>) – Value to be set. Setting this argument require to pass string name to the values argument.</p></li>
+<li><p><strong>unknown</strong> (<em>'add'</em><em>, </em><em>'find'</em><em> or </em><em>None</em>) – How to handle unknown (not known by the definition) parameters.
 If ‘find’, try to find the values in descendant containers.
 If ‘add’, add unknown values as custom values.
 If None, throw an exception.
 Keyword only argument.</p></li>
+<li><p><strong>transaction</strong> (<a class="reference internal" href="ase2sprkkr.common.configuration_transaction.ConfigurationTransaction.html#ase2sprkkr.common.configuration_transaction.ConfigurationTransaction" title="ase2sprkkr.common.configuration_transaction.ConfigurationTransaction"><em>ConfigurationTransaction</em></a>) – Transaction receiving the staged changes.</p></li>
 <li><p><strong>**kwargs</strong> (<em>dict</em>) – The values to be set (an alternative syntax as syntactical sugar)</p></li>
 </ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.common.configuration_containers.ConfigurationContainer.stage_value">
+<span class="sig-name descname"><span class="pre">stage_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transaction</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">unknown</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'find'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/configuration_containers.html#ConfigurationContainer.stage_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.configuration_containers.ConfigurationContainer.stage_value" title="Link to this definition"></a></dt>
+<dd><p>Resolve <code class="docutils literal notranslate"><span class="pre">name</span></code> and stage <code class="docutils literal notranslate"><span class="pre">value</span></code> using the supplied policies.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>transaction</strong> (<a class="reference internal" href="ase2sprkkr.common.configuration_transaction.ConfigurationTransaction.html#ase2sprkkr.common.configuration_transaction.ConfigurationTransaction" title="ase2sprkkr.common.configuration_transaction.ConfigurationTransaction"><em>ConfigurationTransaction</em></a>)</p></li>
+<li><p><strong>name</strong> (<em>str</em>)</p></li>
+<li><p><strong>value</strong> (<em>Any</em>)</p></li>
+<li><p><strong>unknown</strong> (<em>Literal</em><em>[</em><em>'find'</em><em>, </em><em>'add'</em><em>, </em><em>'ignore'</em><em>, </em><em>'fail'</em><em>] </em><em>| </em><em>None</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
 </dd>
 </dl>
 </dd></dl>
@@ -321,8 +478,22 @@ Keyword only argument.</p></li>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>name</strong> (<em>str</em>) – Name of the added value</p></li>
-<li><p><strong>value</strong> (<em>value</em>) – Value of the added value</p></li>
+<li><p><strong>value</strong> (<a class="reference internal" href="ase2sprkkr.common.lazy_string.LazyString.html#ase2sprkkr.common.lazy_string.LazyString.value" title="ase2sprkkr.common.lazy_string.LazyString.value"><em>value</em></a>) – Value of the added value</p></li>
 </ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.common.configuration_containers.ConfigurationContainer.stage_member">
+<span class="sig-name descname"><span class="pre">stage_member</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/configuration_containers.html#ConfigurationContainer.stage_member"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.configuration_containers.ConfigurationContainer.stage_member" title="Link to this definition"></a></dt>
+<dd><p>Attach custom member <code class="docutils literal notranslate"><span class="pre">name</span></code> and return its rollback change.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#ase2sprkkr.common.configuration_containers.ConfigurationContainer.MemberChange" title="ase2sprkkr.common.configuration_containers.ConfigurationContainer.MemberChange"><em>MemberChange</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -336,6 +507,12 @@ Keyword only argument.</p></li>
 <dd class="field-odd"><p><strong>name</strong> (<em>str</em>)</p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.common.configuration_containers.ConfigurationContainer.values">
+<span class="sig-name descname"><span class="pre">values</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/configuration_containers.html#ConfigurationContainer.values"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.configuration_containers.ConfigurationContainer.values" title="Link to this definition"></a></dt>
+<dd><p>Return the contained configuration values.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -419,7 +596,7 @@ of owned subcontainers.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.common.configuration_containers.ConfigurationContainer._validate">
-<span class="sig-name descname"><span class="pre">_validate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">why</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'save'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/configuration_containers.html#ConfigurationContainer._validate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.configuration_containers.ConfigurationContainer._validate" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">_validate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">why</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/configuration_containers.html#ConfigurationContainer._validate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.configuration_containers.ConfigurationContainer._validate" title="Link to this definition"></a></dt>
 <dd><p>Validate the configuration data. Raise an exception, if the validation fail.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -431,39 +608,10 @@ of owned subcontainers.</p>
 </dl>
 </dd></dl>
 
-<dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.common.configuration_containers.ConfigurationContainer.validate_section">
-<span class="sig-name descname"><span class="pre">validate_section</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">why</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'save'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">section_adaptor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/configuration_containers.html#ConfigurationContainer.validate_section"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.configuration_containers.ConfigurationContainer.validate_section" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>why</strong> (<em>str</em>)</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.common.configuration_containers.ConfigurationContainer._validate_section">
-<span class="sig-name descname"><span class="pre">_validate_section</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">why</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'save'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">section_adaptor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/configuration_containers.html#ConfigurationContainer._validate_section"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.configuration_containers.ConfigurationContainer._validate_section" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>why</strong> (<em>str</em>)</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.common.configuration_containers.ConfigurationContainer.has_any_value">
-<span class="sig-name descname"><span class="pre">has_any_value</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/configuration_containers.html#ConfigurationContainer.has_any_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.configuration_containers.ConfigurationContainer.has_any_value" title="Link to this definition"></a></dt>
-<dd><p>Return True if any member of the section has value.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>has_any_value</strong> – True, if no value in the container is set, False otherwise</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>bool</p>
-</dd>
-</dl>
-</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ase2sprkkr.common.configuration_containers.ConfigurationContainer._abc_impl">
+<span class="sig-name descname"><span class="pre">_abc_impl</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;_abc._abc_data</span> <span class="pre">object&gt;</span></span><a class="headerlink" href="#ase2sprkkr.common.configuration_containers.ConfigurationContainer._abc_impl" title="Link to this definition"></a></dt>
+<dd></dd></dl>
 
 </dd></dl>
 

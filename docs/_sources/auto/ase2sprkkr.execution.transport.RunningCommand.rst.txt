@@ -1,0 +1,36 @@
+RunningCommand
+==============
+
+
+.. currentmodule:: ase2sprkkr.execution.transport
+
+.. autoclass:: RunningCommand
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.execution.transport.RunningCommand
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

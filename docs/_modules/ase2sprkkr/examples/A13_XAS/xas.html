@@ -16,8 +16,8 @@
       <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
-      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
@@ -81,6 +81,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../../ase2sprkkr.html">ase2sprkkr</a></li>
       <li class="breadcrumb-item active">ase2sprkkr.examples.A13_XAS.xas</li>
       <li class="wy-breadcrumbs-aside">
       </li>
@@ -91,13 +92,13 @@
            <div itemprop="articleBody">
              
   <h1>Source code for ase2sprkkr.examples.A13_XAS.xas</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Calculate and plot Ni L2,3 XAS and XMCD spectra of Ni2FeGa.&quot;&quot;&quot;</span>
+<span></span><span class="sd">"""Calculate and plot Ni L2,3 XAS and XMCD spectra of Ni2FeGa."""</span>
 
 
 <div class="viewcode-block" id="make_ni2fega">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.examples.A13_XAS.xas.make_ni2fega.html#ase2sprkkr.examples.A13_XAS.xas.make_ni2fega">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">make_ni2fega</span><span class="p">():</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the ordered primitive Ni2FeGa Heusler cell.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Return the ordered primitive Ni2FeGa Heusler cell."""</span>
     <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">ase2sprkkr</span><span class="w"> </span><span class="kn">import</span> <span class="n">SPRKKRAtoms</span>
 
@@ -105,7 +106,7 @@
         <span class="p">[[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]]</span>
     <span class="p">)</span>
     <span class="k">return</span> <span class="n">SPRKKRAtoms</span><span class="p">(</span>
-        <span class="n">symbols</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Ni&quot;</span><span class="p">,</span> <span class="s2">&quot;Ni&quot;</span><span class="p">,</span> <span class="s2">&quot;Fe&quot;</span><span class="p">,</span> <span class="s2">&quot;Ga&quot;</span><span class="p">],</span>
+        <span class="n">symbols</span><span class="o">=</span><span class="p">[</span><span class="s2">"Ni"</span><span class="p">,</span> <span class="s2">"Ni"</span><span class="p">,</span> <span class="s2">"Fe"</span><span class="p">,</span> <span class="s2">"Ga"</span><span class="p">],</span>
         <span class="n">scaled_positions</span><span class="o">=</span><span class="p">[</span>
             <span class="p">[</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">],</span>
             <span class="p">[</span><span class="mf">0.75</span><span class="p">,</span> <span class="mf">0.75</span><span class="p">,</span> <span class="mf">0.75</span><span class="p">],</span>
@@ -122,40 +123,40 @@
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.examples.A13_XAS.xas.main.html#ase2sprkkr.examples.A13_XAS.xas.main">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">glob</span><span class="w"> </span><span class="kn">import</span> <span class="n">glob</span>
-    <span class="kn">from</span><span class="w"> </span><span class="nn">ase2sprkkr</span><span class="w"> </span><span class="kn">import</span> <span class="n">OutputFile</span><span class="p">,</span> <span class="n">SPRKKR</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">ase2sprkkr</span><span class="w"> </span><span class="kn">import</span> <span class="n">ResultFile</span><span class="p">,</span> <span class="n">SPRKKR</span>
 
     <span class="c1"># XAS is a post-SCF task, so first obtain a converged potential.  Keeping</span>
     <span class="c1"># this step here makes the example independent of every other example.</span>
     <span class="n">calculator</span> <span class="o">=</span> <span class="n">SPRKKR</span><span class="p">(</span><span class="n">atoms</span><span class="o">=</span><span class="n">make_ni2fega</span><span class="p">())</span>
     <span class="n">scf_result</span> <span class="o">=</span> <span class="n">calculator</span><span class="o">.</span><span class="n">calculate</span><span class="p">()</span>
 
-    <span class="c1"># IT=1 selects Ni and CL=&#39;2p&#39; selects the spin-orbit split L2,3 edge.</span>
+    <span class="c1"># IT=1 selects Ni and CL='2p' selects the spin-orbit split L2,3 edge.</span>
     <span class="n">xas_options</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">&quot;CONTROL.DATASET&quot;</span><span class="p">:</span> <span class="s2">&quot;Ni2FeGa&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;TAU.NKTAB&quot;</span><span class="p">:</span> <span class="mi">500</span><span class="p">,</span>
-        <span class="s2">&quot;TASK.IT&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-        <span class="s2">&quot;TASK.CL&quot;</span><span class="p">:</span> <span class="s2">&quot;2p&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;TASK.FRAMETET&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-        <span class="s2">&quot;TASK.FRAMEPHI&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-        <span class="s2">&quot;ENERGY.NE&quot;</span><span class="p">:</span> <span class="mi">180</span><span class="p">,</span>
-        <span class="s2">&quot;ENERGY.GRID&quot;</span><span class="p">:</span> <span class="mi">6</span><span class="p">,</span>
-        <span class="s2">&quot;ENERGY.EMAX&quot;</span><span class="p">:</span> <span class="mf">40.0</span><span class="p">,</span>
+        <span class="s2">"CONTROL.DATASET"</span><span class="p">:</span> <span class="s2">"Ni2FeGa"</span><span class="p">,</span>
+        <span class="s2">"TAU.NKTAB"</span><span class="p">:</span> <span class="mi">500</span><span class="p">,</span>
+        <span class="s2">"TASK.IT"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="s2">"TASK.CL"</span><span class="p">:</span> <span class="s2">"2p"</span><span class="p">,</span>
+        <span class="s2">"TASK.FRAMETET"</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="s2">"TASK.FRAMEPHI"</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="s2">"ENERGY.NE"</span><span class="p">:</span> <span class="mi">180</span><span class="p">,</span>
+        <span class="s2">"ENERGY.GRID"</span><span class="p">:</span> <span class="mi">6</span><span class="p">,</span>
+        <span class="s2">"ENERGY.EMAX"</span><span class="p">:</span> <span class="mf">40.0</span><span class="p">,</span>
     <span class="p">}</span>
     <span class="n">calculator</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span>
         <span class="n">potential</span><span class="o">=</span><span class="n">scf_result</span><span class="o">.</span><span class="n">potential_filename</span><span class="p">,</span>
-        <span class="n">input_parameters</span><span class="o">=</span><span class="s2">&quot;xas&quot;</span><span class="p">,</span>
+        <span class="n">input_parameters</span><span class="o">=</span><span class="s2">"xas"</span><span class="p">,</span>
         <span class="n">options</span><span class="o">=</span><span class="n">xas_options</span><span class="p">,</span>
     <span class="p">)</span>
 
     <span class="c1"># SPR-KKR writes one RAT file for each selected absorbing edge.</span>
-    <span class="n">rat_files</span> <span class="o">=</span> <span class="n">glob</span><span class="p">(</span><span class="s2">&quot;Ni2FeGa_XAS_*.rat&quot;</span><span class="p">)</span>
+    <span class="n">rat_files</span> <span class="o">=</span> <span class="n">glob</span><span class="p">(</span><span class="s2">"Ni2FeGa_XAS_*.rat"</span><span class="p">)</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">rat_files</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Expected one XAS RAT file, found </span><span class="si">{</span><span class="n">rat_files</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="n">OutputFile</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="n">rat_files</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span></div>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Expected one XAS RAT file, found </span><span class="si">{</span><span class="n">rat_files</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="n">ResultFile</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="n">rat_files</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span></div>
 
 
 
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
     <span class="n">main</span><span class="p">()</span>
 </pre></div>
 

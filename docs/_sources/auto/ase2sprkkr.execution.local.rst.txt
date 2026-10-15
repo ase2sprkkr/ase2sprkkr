@@ -1,0 +1,62 @@
+local
+=====
+
+Full name: **ase2sprkkr.execution.local**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.execution.local.LocalExecutor  ase2sprkkr.execution.local.LocalRunner 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.execution.local
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      _mpi_command
+      _path
+      _pid_running
+      materialize_local_spec
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      LocalExecutor
+      LocalRunner
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

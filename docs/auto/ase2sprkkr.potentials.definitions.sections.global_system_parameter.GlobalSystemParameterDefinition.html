@@ -17,8 +17,8 @@
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../_static/documentation_options.js?v=5929fcd5"></script>
-      <script src="../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -68,14 +68,18 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.promote_ase_atoms.html">promote_ase_atoms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.__getattr__.html">__getattr__</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.common.html">common</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration.html">configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration_migration.html">configuration_migration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration_yaml.html">configuration_yaml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.conftest.html">conftest</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.examples.html">examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.execution.html">execution</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.gui.html">gui</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.input_parameters.html">input_parameters</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.output_files.html">output_files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.outputs.html">outputs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.physics.html">physics</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="ase2sprkkr.potentials.html">potentials</a><ul class="current">
@@ -90,6 +94,8 @@
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.potentials.potentials.html">potentials</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.profiles.html">profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.result_files.html">result_files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.sprkkr.html">sprkkr</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.tools.html">tools</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.version.html">version</a></li>
@@ -130,18 +136,29 @@
 <h1>GlobalSystemParameterDefinition<a class="headerlink" href="#globalsystemparameterdefinition" title="Link to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="ase2sprkkr.potentials.definitions.sections.global_system_parameter.GlobalSystemParameterDefinition">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.potentials.definitions.sections.global_system_parameter.</span></span><span class="sig-name descname"><span class="pre">GlobalSystemParameterDefinition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'GLOBAL</span> <span class="pre">SYSTEM</span> <span class="pre">PARAMETER'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/potentials/definitions/sections/global_system_parameter.html#GlobalSystemParameterDefinition"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.potentials.definitions.sections.global_system_parameter.GlobalSystemParameterDefinition" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.potentials.definitions.sections.global_system_parameter.</span></span><span class="sig-name descname"><span class="pre">GlobalSystemParameterDefinition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'GLOBAL</span> <span class="pre">SYSTEM</span> <span class="pre">PARAMETER'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/potentials/definitions/sections/global_system_parameter.html#GlobalSystemParameterDefinition"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.potentials.definitions.sections.global_system_parameter.GlobalSystemParameterDefinition" title="Link to this definition"></a></dt>
 <dd><p class="rubric">Class hierarchy</p>
-<div class="graphviz"><img src="../_images/inheritance-70b8f0a886525bbc8ff1947ff75ef5972f19010e.png" alt="Inheritance diagram of ase2sprkkr.potentials.definitions.sections.global_system_parameter.GlobalSystemParameterDefinition" usemap="#inheritance6d0348332b" class="inheritance graphviz" /></div>
-<map id="inheritance6d0348332b" name="inheritance6d0348332b">
-<area shape="rect" id="node1" href="ase2sprkkr.sprkkr.configuration.ConfigurationSectionDefinition.html#ase2sprkkr.sprkkr.configuration.ConfigurationSectionDefinition" target="_top" title="Default class for definitions of SPRKKR configuration files&#39; sections" alt="" coords="519,2,645,13"/>
-<area shape="rect" id="node7" href="ase2sprkkr.potentials.potential_definitions.PotSectionDefinition.html#ase2sprkkr.potentials.potential_definitions.PotSectionDefinition" target="_top" title="This class describes the format of one" alt="" coords="657,2,776,13"/>
-<area shape="rect" id="node2" href="ase2sprkkr.common.container_definitions.SectionDefinition.html#ase2sprkkr.common.container_definitions.SectionDefinition" target="_top" title="Base class for definition of the sections in Pot or InputParameters files." alt="" coords="396,2,507,13"/>
-<area shape="rect" id="node3" href="ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.common.configuration_definitions.BaseDefinition" target="_top" title="This class is a member of definition of configuration, that can be both" alt="" coords="2,2,117,13"/>
-<area shape="rect" id="node4" href="ase2sprkkr.common.configuration_definitions.RealItemDefinition.html#ase2sprkkr.common.configuration_definitions.RealItemDefinition" target="_top" title="A base class for a configuration definition, either of an option, or of a container." alt="" coords="129,2,254,13"/>
-<area shape="rect" id="node5" href="ase2sprkkr.common.container_definitions.ContainerDefinition.html#ase2sprkkr.common.container_definitions.ContainerDefinition" target="_top" title="Base class for a definition (of contained data, format, etc)" alt="" coords="266,2,384,13"/>
-<area shape="rect" id="node6" href="#ase2sprkkr.potentials.definitions.sections.global_system_parameter.GlobalSystemParameterDefinition" target="_top" title="global_system_parameter.GlobalSystemParameterDefinition" alt="" coords="788,2,958,13"/>
-</map><div class="line-block">
+digraph inheritance6d0348332b {
+bgcolor=transparent;
+fontsize=14;
+rankdir=LR;
+ranksep=0.3;
+size=&quot;10.0, 10.0&quot;;
+  &quot;configuration.ConfigurationSectionDefinition&quot; [URL=&quot;ase2sprkkr.sprkkr.configuration.ConfigurationSectionDefinition.html#ase2sprkkr.sprkkr.configuration.ConfigurationSectionDefinition&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;Default class for definitions of SPRKKR configuration files' sections&quot;];
+  &quot;container_definitions.SectionDefinition&quot; -&gt; &quot;configuration.ConfigurationSectionDefinition&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;configuration_definitions.BaseDefinition&quot; [URL=&quot;ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.common.configuration_definitions.BaseDefinition&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;This class is a member of definition of configuration, that can be both&quot;];
+  &quot;configuration_definitions.RealItemDefinition&quot; [URL=&quot;ase2sprkkr.common.configuration_definitions.RealItemDefinition.html#ase2sprkkr.common.configuration_definitions.RealItemDefinition&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;A base class for a configuration definition, either of an option, or of a container.&quot;];
+  &quot;configuration_definitions.BaseDefinition&quot; -&gt; &quot;configuration_definitions.RealItemDefinition&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;container_definitions.ContainerDefinition&quot; [URL=&quot;ase2sprkkr.common.container_definitions.ContainerDefinition.html#ase2sprkkr.common.container_definitions.ContainerDefinition&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;Base class for a definition (of contained data, format, etc)&quot;];
+  &quot;configuration_definitions.RealItemDefinition&quot; -&gt; &quot;container_definitions.ContainerDefinition&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;container_definitions.SectionDefinition&quot; [URL=&quot;ase2sprkkr.common.container_definitions.SectionDefinition.html#ase2sprkkr.common.container_definitions.SectionDefinition&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;Base class for definition of the sections in Pot or InputParameters files.&quot;];
+  &quot;container_definitions.ContainerDefinition&quot; -&gt; &quot;container_definitions.SectionDefinition&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;global_system_parameter.GlobalSystemParameterDefinition&quot; [URL=&quot;#ase2sprkkr.potentials.definitions.sections.global_system_parameter.GlobalSystemParameterDefinition&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;];
+  &quot;potential_definitions.PotSectionDefinition&quot; -&gt; &quot;global_system_parameter.GlobalSystemParameterDefinition&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;potential_definitions.PotSectionDefinition&quot; [URL=&quot;ase2sprkkr.potentials.potential_definitions.PotSectionDefinition.html#ase2sprkkr.potentials.potential_definitions.PotSectionDefinition&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;This class describes the format of one&quot;];
+  &quot;configuration.ConfigurationSectionDefinition&quot; -&gt; &quot;potential_definitions.PotSectionDefinition&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+}
+<div class="line-block">
 <div class="line"><br /></div>
 </div>
 <p class="rubric">Constructor</p>

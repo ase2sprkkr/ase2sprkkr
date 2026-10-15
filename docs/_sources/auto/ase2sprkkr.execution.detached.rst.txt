@@ -1,0 +1,62 @@
+detached
+========
+
+Full name: **ase2sprkkr.execution.detached**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.execution.detached
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      _absolute_file
+      _read_state
+      _read_state_unlocked
+      _request_path
+      _request_spec
+      _run_directory
+      _state_lock
+      _state_lock_path
+      _state_path
+      _terminate_process_group
+      _timestamp
+      _write_state
+      _write_state_unlocked
+      cancel_detached
+      clean_detached_runs
+      follow_detached
+      list_detached_runs
+      resolve_detached_mpi
+      run_detached_worker
+      status_detached
+      submit_detached
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

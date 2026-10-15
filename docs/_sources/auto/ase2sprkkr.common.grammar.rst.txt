@@ -7,7 +7,7 @@ Full name: **ase2sprkkr.common.grammar**
 
 .. rubric:: Module class hierarchy
 
-.. inheritance-diagram::  ase2sprkkr.common.grammar.SkipToRegex  ase2sprkkr.common.grammar.White 
+.. inheritance-diagram::  ase2sprkkr.common.grammar.Forward  ase2sprkkr.common.grammar.SkipToRegex  ase2sprkkr.common.grammar.Suppress  ase2sprkkr.common.grammar.TokenConverter  ase2sprkkr.common.grammar.Transparent  ase2sprkkr.common.grammar.White 
       :parts: 1
 
 |
@@ -43,6 +43,7 @@ Full name: **ase2sprkkr.common.grammar**
    
       add_condition_ex
       add_parse_action_ex
+      as_delimiter
       delimitedList
       generate_grammar
       replace_whitechars
@@ -60,7 +61,11 @@ Full name: **ase2sprkkr.common.grammar**
       :toctree:
       :template: custom-class-template.rst
    
+      Forward
       SkipToRegex
+      Suppress
+      TokenConverter
+      Transparent
       White
    
    

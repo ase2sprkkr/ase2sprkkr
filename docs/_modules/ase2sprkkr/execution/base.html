@@ -1,0 +1,856 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ase2sprkkr.execution.base &mdash; ASE2SPRKKR  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/mods.css?v=26f6988d" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            ASE2SPRKKR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage.html">How to use the package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../how-to-install.html">More about the package installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../philosophy.html">Philosophy of the package (for developers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../authors.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Examples</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../auto/ase2sprkkr.html">ase2sprkkr</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">ASE2SPRKKR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../ase2sprkkr.html">ase2sprkkr</a></li>
+      <li class="breadcrumb-item active">ase2sprkkr.execution.base</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for ase2sprkkr.execution.base</h1><div class="highlight"><pre>
+<span></span><span class="sd">"""Backend-independent calculation execution contracts."""</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">Enum</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">threading</span><span class="w"> </span><span class="kn">import</span> <span class="n">Event</span><span class="p">,</span> <span class="n">Lock</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Protocol</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">,</span> <span class="n">Tuple</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">..common.decorators</span><span class="w"> </span><span class="kn">import</span> <span class="n">class_property</span>
+
+
+<div class="viewcode-block" id="MpiNotFoundWarning">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.base.MpiNotFoundWarning.html#ase2sprkkr.execution.base.MpiNotFoundWarning">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">MpiNotFoundWarning</span><span class="p">(</span><span class="ne">UserWarning</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""MPI autodetection was requested, but no MPI launcher was found."""</span></div>
+
+
+
+<div class="viewcode-block" id="OutputObserverWarning">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.base.OutputObserverWarning.html#ase2sprkkr.execution.base.OutputObserverWarning">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">OutputObserverWarning</span><span class="p">(</span><span class="ne">RuntimeWarning</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""An output observer failed while the calculation itself keeps running."""</span></div>
+
+
+
+<div class="viewcode-block" id="SubmissionNotStarted">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.base.SubmissionNotStarted.html#ase2sprkkr.execution.base.SubmissionNotStarted">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">SubmissionNotStarted</span><span class="p">(</span><span class="ne">RuntimeError</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Submission failed before the backend could possibly accept the run."""</span></div>
+
+
+
+<div class="viewcode-block" id="OutputObservers">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.base.OutputObservers.html#ase2sprkkr.execution.base.OutputObservers">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">OutputObservers</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Deliver output without allowing observers to control execution outcome."""</span>
+
+<div class="viewcode-block" id="OutputObservers.__init__">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.base.OutputObservers.html#ase2sprkkr.execution.base.OutputObservers.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">listener</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_listeners</span> <span class="o">=</span> <span class="p">[]</span> <span class="k">if</span> <span class="n">listener</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="p">[</span><span class="n">listener</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_error_listeners</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span> <span class="o">=</span> <span class="n">Lock</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="OutputObservers.add">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.base.OutputObservers.html#ase2sprkkr.execution.base.OutputObservers.add">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">callback</span><span class="p">):</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_listeners</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">callback</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="OutputObservers.add_error_listener">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.base.OutputObservers.html#ase2sprkkr.execution.base.OutputObservers.add_error_listener">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_error_listener</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">callback</span><span class="p">):</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_error_listeners</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">callback</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="OutputObservers.emit">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.base.OutputObservers.html#ase2sprkkr.execution.base.OutputObservers.emit">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">emit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">kind</span><span class="p">):</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+            <span class="n">listeners</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_listeners</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">callback</span> <span class="ow">in</span> <span class="n">listeners</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">callback</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">kind</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+                <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_listeners</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">callback</span><span class="p">)</span>
+                    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                        <span class="k">pass</span>
+                    <span class="n">handlers</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_error_listeners</span><span class="p">)</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">handlers</span><span class="p">:</span>
+                    <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">"Output observer </span><span class="si">{</span><span class="n">callback</span><span class="si">!r}</span><span class="s2"> failed: </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
+                        <span class="n">OutputObserverWarning</span><span class="p">,</span>
+                        <span class="n">stacklevel</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+                    <span class="p">)</span>
+                    <span class="k">continue</span>
+                <span class="k">for</span> <span class="n">handler</span> <span class="ow">in</span> <span class="n">handlers</span><span class="p">:</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="n">handler</span><span class="p">(</span><span class="n">callback</span><span class="p">,</span> <span class="n">exc</span><span class="p">)</span>
+                    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">handler_exc</span><span class="p">:</span>
+                        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                            <span class="sa">f</span><span class="s2">"Output observer error handler </span><span class="si">{</span><span class="n">handler</span><span class="si">!r}</span><span class="s2"> failed: "</span>
+                            <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">handler_exc</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
+                            <span class="n">OutputObserverWarning</span><span class="p">,</span>
+                            <span class="n">stacklevel</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+                        <span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="RunState">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.base.RunState.html#ase2sprkkr.execution.base.RunState">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">RunState</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Enum</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Backend-independent state of a calculation run."""</span>
+
+    <span class="n">NEW</span> <span class="o">=</span> <span class="s2">"new"</span>
+    <span class="n">SUBMITTING</span> <span class="o">=</span> <span class="s2">"submitting"</span>
+    <span class="n">QUEUED</span> <span class="o">=</span> <span class="s2">"queued"</span>
+    <span class="n">RUNNING</span> <span class="o">=</span> <span class="s2">"running"</span>
+    <span class="n">FINISHING</span> <span class="o">=</span> <span class="s2">"finishing"</span>
+    <span class="n">FINISHED</span> <span class="o">=</span> <span class="s2">"finished"</span>
+    <span class="n">FAILED</span> <span class="o">=</span> <span class="s2">"failed"</span>
+    <span class="n">CANCELLED</span> <span class="o">=</span> <span class="s2">"cancelled"</span>
+    <span class="n">UNKNOWN</span> <span class="o">=</span> <span class="s2">"unknown"</span></div>
+
+
+
+<div class="viewcode-block" id="ExecutionResources">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.base.ExecutionResources.html#ase2sprkkr.execution.base.ExecutionResources">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ExecutionResources</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Closable resources whose ownership is transferred to a calculation run.</span>
+
+<span class="sd">    Closing is idempotent and thread-safe. Duplicate objects are closed only</span>
+<span class="sd">    once, which matters when two execution roles reference the same file handle.</span>
+<span class="sd">    """</span>
+
+<div class="viewcode-block" id="ExecutionResources.__init__">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.base.ExecutionResources.html#ase2sprkkr.execution.base.ExecutionResources.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">resources</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_resources</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">resources</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_closed</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span> <span class="o">=</span> <span class="n">Lock</span><span class="p">()</span></div>
+
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">closed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_closed</span>
+
+<div class="viewcode-block" id="ExecutionResources.close">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.base.ExecutionResources.html#ase2sprkkr.execution.base.ExecutionResources.close">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">suppress_errors</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_closed</span><span class="p">:</span>
+                <span class="k">return</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_closed</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="n">resources</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_resources</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_resources</span> <span class="o">=</span> <span class="p">()</span>
+
+        <span class="n">first_error</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">seen</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">resource</span> <span class="ow">in</span> <span class="n">resources</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">resource</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="nb">id</span><span class="p">(</span><span class="n">resource</span><span class="p">)</span> <span class="ow">in</span> <span class="n">seen</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">seen</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="nb">id</span><span class="p">(</span><span class="n">resource</span><span class="p">))</span>
+            <span class="n">close</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">resource</span><span class="p">,</span> <span class="s2">"close"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">close</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">resource</span><span class="p">,</span> <span class="s2">"closed"</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
+                <span class="k">continue</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">close</span><span class="p">()</span>
+            <span class="k">except</span> <span class="ne">BaseException</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">first_error</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">first_error</span> <span class="o">=</span> <span class="n">exc</span>
+
+        <span class="k">if</span> <span class="n">first_error</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">suppress_errors</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">first_error</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="ResourceOwnedRunner">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.base.ResourceOwnedRunner.html#ase2sprkkr.execution.base.ResourceOwnedRunner">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ResourceOwnedRunner</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Runner proxy owning resources and the public submit/cancel boundary.</span>
+
+<span class="sd">    Resources remain owned by the caller until this proxy is constructed. From</span>
+<span class="sd">    that point they are released on completion, on a synchronous submission</span>
+<span class="sd">    failure, or explicitly through :meth:`close` while the run is still new.</span>
+
+<span class="sd">    Cancellation is latched and thread-safe even before submission. If</span>
+<span class="sd">    :meth:`cancel` wins the race with :meth:`submit`, the backend runner is not</span>
+<span class="sd">    submitted and ``submit()`` raises :class:`asyncio.CancelledError`. If the</span>
+<span class="sd">    request arrives while backend submission is already in progress, cancellation</span>
+<span class="sd">    is dispatched exactly once after that submission boundary completes.</span>
+<span class="sd">    """</span>
+
+<div class="viewcode-block" id="ResourceOwnedRunner.__init__">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.base.ResourceOwnedRunner.html#ase2sprkkr.execution.base.ResourceOwnedRunner.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">runner</span><span class="p">,</span> <span class="n">resources</span><span class="p">:</span> <span class="n">ExecutionResources</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_runner</span> <span class="o">=</span> <span class="n">runner</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_resources</span> <span class="o">=</span> <span class="n">resources</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_submission_lock</span> <span class="o">=</span> <span class="n">Lock</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_cancel_requested</span> <span class="o">=</span> <span class="n">Event</span><span class="p">()</span>
+        <span class="c1"># A proxy may also be constructed around an already-started runner.</span>
+        <span class="c1"># Only NEW unambiguously means the backend submission boundary has not</span>
+        <span class="c1"># been crossed; for every other state cancellation must be delegated.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_submitted</span> <span class="o">=</span> <span class="n">runner</span><span class="o">.</span><span class="n">state</span> <span class="o">!=</span> <span class="n">RunState</span><span class="o">.</span><span class="n">NEW</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_cancel_dispatched</span> <span class="o">=</span> <span class="kc">False</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_runner</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">result</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_runner</span><span class="o">.</span><span class="n">result</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">state</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cancel_requested</span><span class="o">.</span><span class="n">is_set</span><span class="p">():</span>
+            <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_submission_lock</span><span class="p">:</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_submitted</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="n">RunState</span><span class="o">.</span><span class="n">CANCELLED</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_runner</span><span class="o">.</span><span class="n">state</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">reference</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_runner</span><span class="o">.</span><span class="n">reference</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">exception</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_runner</span><span class="o">.</span><span class="n">exception</span>
+
+<div class="viewcode-block" id="ResourceOwnedRunner._release_after_failure">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.base.ResourceOwnedRunner.html#ase2sprkkr.execution.base.ResourceOwnedRunner._release_after_failure">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_release_after_failure</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_resources</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">suppress_errors</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ResourceOwnedRunner._raise_if_cancelled_before_submit">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.base.ResourceOwnedRunner.html#ase2sprkkr.execution.base.ResourceOwnedRunner._raise_if_cancelled_before_submit">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_raise_if_cancelled_before_submit</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cancel_requested</span><span class="o">.</span><span class="n">is_set</span><span class="p">():</span>
+            <span class="k">return</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_submission_lock</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_submitted</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">CancelledError</span><span class="p">(</span><span class="s2">"Run was cancelled before submission"</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ResourceOwnedRunner.submit">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.base.ResourceOwnedRunner.html#ase2sprkkr.execution.base.ResourceOwnedRunner.submit">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">submit</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_submission_lock</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cancel_requested</span><span class="o">.</span><span class="n">is_set</span><span class="p">():</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_resources</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+                <span class="k">raise</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">CancelledError</span><span class="p">(</span><span class="s2">"Run was cancelled before submission"</span><span class="p">)</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_runner</span><span class="o">.</span><span class="n">submit</span><span class="p">()</span>
+            <span class="k">except</span> <span class="ne">BaseException</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_release_after_failure</span><span class="p">()</span>
+                <span class="k">raise</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_submitted</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="n">cancel_after_submit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cancel_requested</span><span class="o">.</span><span class="n">is_set</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">cancel_after_submit</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cancel</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">result</span></div>
+
+
+<div class="viewcode-block" id="ResourceOwnedRunner.wait">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.base.ResourceOwnedRunner.html#ase2sprkkr.execution.base.ResourceOwnedRunner.wait">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">wait</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_raise_if_cancelled_before_submit</span><span class="p">()</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_runner</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">BaseException</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_release_after_failure</span><span class="p">()</span>
+            <span class="k">raise</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_resources</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">result</span></div>
+
+
+<div class="viewcode-block" id="ResourceOwnedRunner.run">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.base.ResourceOwnedRunner.html#ase2sprkkr.execution.base.ResourceOwnedRunner.run">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_raise_if_cancelled_before_submit</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">==</span> <span class="n">RunState</span><span class="o">.</span><span class="n">NEW</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">submit</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="ResourceOwnedRunner.run_async">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.base.ResourceOwnedRunner.html#ase2sprkkr.execution.base.ResourceOwnedRunner.run_async">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">run_async</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_raise_if_cancelled_before_submit</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">==</span> <span class="n">RunState</span><span class="o">.</span><span class="n">NEW</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">submit</span><span class="p">()</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">run_async</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_runner</span><span class="p">,</span> <span class="s2">"run_async"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">run_async</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">run_async</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">to_thread</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_runner</span><span class="o">.</span><span class="n">wait</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">BaseException</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_release_after_failure</span><span class="p">()</span>
+            <span class="k">raise</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_resources</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">result</span></div>
+
+
+<div class="viewcode-block" id="ResourceOwnedRunner.cancel">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.base.ResourceOwnedRunner.html#ase2sprkkr.execution.base.ResourceOwnedRunner.cancel">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">cancel</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_cancel_requested</span><span class="o">.</span><span class="n">set</span><span class="p">()</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_submission_lock</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_submitted</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_resources</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+                <span class="k">return</span> <span class="kc">None</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cancel_dispatched</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">None</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_runner</span><span class="o">.</span><span class="n">cancel</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_cancel_dispatched</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">return</span> <span class="n">result</span></div>
+
+
+<div class="viewcode-block" id="ResourceOwnedRunner.close">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.base.ResourceOwnedRunner.html#ase2sprkkr.execution.base.ResourceOwnedRunner.close">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Release resources belonging to a run that has not been started."""</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_resources</span><span class="o">.</span><span class="n">closed</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="n">state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span>
+        <span class="k">if</span> <span class="n">state</span> <span class="o">!=</span> <span class="n">RunState</span><span class="o">.</span><span class="n">NEW</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"Cannot close execution resources while run is </span><span class="si">{</span><span class="n">state</span><span class="o">.</span><span class="n">value</span><span class="si">}</span><span class="s2">"</span>
+            <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_resources</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="ResourceOwnedRunner.add_output_listener">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.base.ResourceOwnedRunner.html#ase2sprkkr.execution.base.ResourceOwnedRunner.add_output_listener">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_output_listener</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">callback</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_runner</span><span class="o">.</span><span class="n">add_output_listener</span><span class="p">(</span><span class="n">callback</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ResourceOwnedRunner.add_output_error_listener">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.base.ResourceOwnedRunner.html#ase2sprkkr.execution.base.ResourceOwnedRunner.add_output_error_listener">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_output_error_listener</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">callback</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_runner</span><span class="o">.</span><span class="n">add_output_error_listener</span><span class="p">(</span><span class="n">callback</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="RunReference">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.base.RunReference.html#ase2sprkkr.execution.base.RunReference">[docs]</a>
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">RunReference</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Serializable information needed to reconnect to a persistent run."""</span>
+
+    <span class="n">executor</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">native_id</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">computer</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">directory</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">input_file</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">output_file</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">error_file</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+
+
+<div class="viewcode-block" id="RunStatus">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.base.RunStatus.html#ase2sprkkr.execution.base.RunStatus">[docs]</a>
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">RunStatus</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""One backend status snapshot for a persistent run reference."""</span>
+
+    <span class="n">reference</span><span class="p">:</span> <span class="n">RunReference</span>
+    <span class="n">state</span><span class="p">:</span> <span class="n">RunState</span>
+    <span class="n">return_code</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">message</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+
+
+<div class="viewcode-block" id="MpiSpec">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.base.MpiSpec.html#ase2sprkkr.execution.base.MpiSpec">[docs]</a>
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">MpiSpec</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Portable MPI launch semantics independent of the execution host.</span>
+
+<span class="sd">    ``autodetect`` requests host-specific launcher discovery. ``required``</span>
+<span class="sd">    distinguishes mandatory MPI from ``auto`` mode, which may fall back to</span>
+<span class="sd">    serial execution. An explicit ``launcher`` disables autodetection.</span>
+<span class="sd">    ``process_count`` is kept portable until the launcher is materialized.</span>
+<span class="sd">    """</span>
+
+    <span class="n">required</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">autodetect</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">launcher</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="p">()</span>
+    <span class="n">process_count</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">warning</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">object</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="s2">"launcher"</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">fspath</span><span class="p">(</span><span class="n">part</span><span class="p">)</span> <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">launcher</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">process_count</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">process_count</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"process_count must be positive"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">launcher</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">autodetect</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"explicit MPI launcher cannot be combined with autodetection"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">launcher</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">required</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"explicit MPI launcher must be required"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">required</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">autodetect</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">launcher</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"required MPI needs autodetection or an explicit launcher"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">requested</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">process_count</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"process_count requires MPI"</span><span class="p">)</span>
+
+<div class="viewcode-block" id="MpiSpec.from_value">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.base.MpiSpec.html#ase2sprkkr.execution.base.MpiSpec.from_value">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">from_value</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">mpi</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">process_count</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">warning</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Translate public ``mpi`` syntax into normalized portable semantics."""</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">mpi</span><span class="p">,</span> <span class="bp">cls</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">process_count</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">warning</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">True</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"MPI options cannot override an existing MpiSpec"</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">mpi</span>
+        <span class="k">if</span> <span class="n">mpi</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">mpi</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">process_count</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"process_count requires MPI"</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">warning</span><span class="o">=</span><span class="n">warning</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">mpi</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span>
+                <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">autodetect</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">process_count</span><span class="o">=</span><span class="n">process_count</span><span class="p">,</span>
+                <span class="n">warning</span><span class="o">=</span><span class="n">warning</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">mpi</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">process_count</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"MPI process count was specified twice"</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span>
+                <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">autodetect</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">process_count</span><span class="o">=</span><span class="n">mpi</span><span class="p">,</span>
+                <span class="n">warning</span><span class="o">=</span><span class="n">warning</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="n">mpi</span> <span class="o">==</span> <span class="s2">"auto"</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span>
+                <span class="n">autodetect</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">process_count</span><span class="o">=</span><span class="n">process_count</span><span class="p">,</span>
+                <span class="n">warning</span><span class="o">=</span><span class="n">warning</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">mpi</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">launcher</span> <span class="o">=</span> <span class="p">(</span><span class="n">mpi</span><span class="p">,)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">launcher</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">fspath</span><span class="p">(</span><span class="n">part</span><span class="p">)</span> <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="n">mpi</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span>
+            <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">launcher</span><span class="o">=</span><span class="n">launcher</span><span class="p">,</span>
+            <span class="n">process_count</span><span class="o">=</span><span class="n">process_count</span><span class="p">,</span>
+            <span class="n">warning</span><span class="o">=</span><span class="n">warning</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">requested</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Whether the calculation requests an MPI launch."""</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">required</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">autodetect</span> <span class="ow">or</span> <span class="nb">bool</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">launcher</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">allows_serial_fallback</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Whether failure to find MPI may fall back to serial execution."""</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">autodetect</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">required</span></div>
+
+
+
+<div class="viewcode-block" id="LaunchSpec">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.base.LaunchSpec.html#ase2sprkkr.execution.base.LaunchSpec">[docs]</a>
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">LaunchSpec</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Portable launch and staging parameters for one concrete run.</span>
+
+<span class="sd">    MPI semantics are represented by :class:`MpiSpec`; host-independent MPI</span>
+<span class="sd">    intent therefore stays grouped instead of being spread over parallel launch</span>
+<span class="sd">    fields. The remaining fields describe remote filesystem mapping and</span>
+<span class="sd">    synchronization for this run.</span>
+<span class="sd">    """</span>
+
+    <span class="n">mpi</span><span class="p">:</span> <span class="n">MpiSpec</span> <span class="o">=</span> <span class="n">MpiSpec</span><span class="p">()</span>
+    <span class="n">local_root</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">remote_root</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">input_sync</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"changed"</span>
+    <span class="n">output_sync</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"changed"</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">mpi</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mpi</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">mpi</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="n">mpi</span> <span class="o">=</span> <span class="n">MpiSpec</span><span class="p">(</span><span class="o">**</span><span class="n">mpi</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">mpi</span><span class="p">,</span> <span class="n">MpiSpec</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">"LaunchSpec.mpi must be an MpiSpec"</span><span class="p">)</span>
+        <span class="nb">object</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">"mpi"</span><span class="p">,</span> <span class="n">mpi</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"local_root"</span><span class="p">,</span> <span class="s2">"remote_root"</span><span class="p">):</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="nb">object</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">fspath</span><span class="p">(</span><span class="n">value</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"input_sync"</span><span class="p">,</span> <span class="s2">"output_sync"</span><span class="p">):</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+            <span class="nb">object</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="s2">"value"</span><span class="p">,</span> <span class="n">value</span><span class="p">))</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__bool__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Whether this run requests MPI."""</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">mpi</span><span class="o">.</span><span class="n">requested</span>
+
+<div class="viewcode-block" id="LaunchSpec.from_mpi">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.base.LaunchSpec.html#ase2sprkkr.execution.base.LaunchSpec.from_mpi">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">from_mpi</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">mpi</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Translate public ``mpi`` syntax without probing an execution host."""</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">mpi</span><span class="p">,</span> <span class="bp">cls</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">mpi</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">mpi</span><span class="o">=</span><span class="n">MpiSpec</span><span class="o">.</span><span class="n">from_value</span><span class="p">(</span><span class="n">mpi</span><span class="p">))</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="_pathlike">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.base._pathlike.html#ase2sprkkr.execution.base._pathlike">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_pathlike</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Normalize path-like values without touching open file objects."""</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">PathLike</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">fspath</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">value</span></div>
+
+
+
+<div class="viewcode-block" id="ExecutionSpec">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.base.ExecutionSpec.html#ase2sprkkr.execution.base.ExecutionSpec">[docs]</a>
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ExecutionSpec</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""A command and launch intent ready to be handed to an execution backend."""</span>
+
+    <span class="n">argv</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+    <span class="n">input_file</span><span class="p">:</span> <span class="n">Any</span>
+    <span class="n">output_file</span><span class="p">:</span> <span class="n">Any</span>
+    <span class="n">directory</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">stdin</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">error_file</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">input_files</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">()</span>
+    <span class="n">output_files</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">()</span>
+    <span class="n">cache_files</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">()</span>
+    <span class="n">mpi_argv</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">launch</span><span class="p">:</span> <span class="n">LaunchSpec</span> <span class="o">=</span> <span class="n">LaunchSpec</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">object</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">"directory"</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">fspath</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">directory</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"input_file"</span><span class="p">,</span> <span class="s2">"output_file"</span><span class="p">,</span> <span class="s2">"stdin"</span><span class="p">,</span> <span class="s2">"error_file"</span><span class="p">):</span>
+            <span class="nb">object</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">_pathlike</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">)))</span>
+        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"input_files"</span><span class="p">,</span> <span class="s2">"output_files"</span><span class="p">,</span> <span class="s2">"cache_files"</span><span class="p">):</span>
+            <span class="nb">object</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span>
+                <span class="bp">self</span><span class="p">,</span>
+                <span class="n">name</span><span class="p">,</span>
+                <span class="nb">tuple</span><span class="p">(</span><span class="n">_pathlike</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">)),</span>
+            <span class="p">)</span>
+        <span class="nb">object</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">"argv"</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">fspath</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">argv</span><span class="p">))</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mpi_argv</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="nb">object</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span>
+                <span class="bp">self</span><span class="p">,</span>
+                <span class="s2">"mpi_argv"</span><span class="p">,</span>
+                <span class="nb">tuple</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">fspath</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">mpi_argv</span><span class="p">),</span>
+            <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="Runner">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.base.Runner.html#ase2sprkkr.execution.base.Runner">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Runner</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""One concrete calculation execution."""</span>
+
+    <span class="n">result</span><span class="p">:</span> <span class="n">Any</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">state</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RunState</span><span class="p">:</span> <span class="o">...</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">reference</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">RunReference</span><span class="p">]:</span> <span class="o">...</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">exception</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="ne">BaseException</span><span class="p">]:</span> <span class="o">...</span>
+
+<div class="viewcode-block" id="Runner.submit">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.base.Runner.html#ase2sprkkr.execution.base.Runner.submit">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">submit</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span> <span class="o">...</span></div>
+
+
+<div class="viewcode-block" id="Runner.wait">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.base.Runner.html#ase2sprkkr.execution.base.Runner.wait">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">wait</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span> <span class="o">...</span></div>
+
+
+<div class="viewcode-block" id="Runner.run">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.base.Runner.html#ase2sprkkr.execution.base.Runner.run">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span> <span class="o">...</span></div>
+
+
+<div class="viewcode-block" id="Runner.cancel">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.base.Runner.html#ase2sprkkr.execution.base.Runner.cancel">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">cancel</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span> <span class="o">...</span></div>
+
+
+<div class="viewcode-block" id="Runner.add_output_listener">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.base.Runner.html#ase2sprkkr.execution.base.Runner.add_output_listener">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_output_listener</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">callback</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span> <span class="o">...</span></div>
+
+
+<div class="viewcode-block" id="Runner.add_output_error_listener">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.base.Runner.html#ase2sprkkr.execution.base.Runner.add_output_error_listener">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_output_error_listener</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">callback</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span> <span class="o">...</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="Executor">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.base.Executor.html#ase2sprkkr.execution.base.Executor">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Executor</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Factory/backend for calculation runners."""</span>
+
+    <span class="n">name</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="nd">@class_property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">supports_result_file_retrieval</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Whether this executor can restore files belonging to a stored run."""</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">fetch_result_files</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">Executor</span><span class="o">.</span><span class="n">fetch_result_files</span>
+
+<div class="viewcode-block" id="Executor.fetch_result_files">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.base.Executor.html#ase2sprkkr.execution.base.Executor.fetch_result_files">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">fetch_result_files</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reference</span><span class="p">:</span> <span class="n">RunReference</span><span class="p">,</span> <span class="n">files</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Restore requested local files belonging to a persistent run.</span>
+
+<span class="sd">        ``files`` contains the concrete historical local paths, or pre-capture</span>
+<span class="sd">        patterns, selected by the persistence layer. Backends only map and</span>
+<span class="sd">        retrieve those requested files; they must not rediscover a historical</span>
+<span class="sd">        result by re-expanding their own current output manifests.</span>
+<span class="sd">        """</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> cannot retrieve persistent result files"</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Executor.submission_directory">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.base.Executor.html#ase2sprkkr.execution.base.Executor.submission_directory">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">submission_directory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">spec</span><span class="p">:</span> <span class="n">ExecutionSpec</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Return this run's directory in the backend filesystem namespace."""</span>
+        <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">fspath</span><span class="p">(</span><span class="n">spec</span><span class="o">.</span><span class="n">directory</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="Executor.resolve_mpi">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.base.Executor.html#ase2sprkkr.execution.base.Executor.resolve_mpi">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">resolve_mpi</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mpi</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Convert profile MPI syntax to portable launch intent.</span>
+
+<span class="sd">        No host probing is done here. The executor that actually starts the</span>
+<span class="sd">        calculation decides how to materialize the returned launch request.</span>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="n">LaunchSpec</span><span class="o">.</span><span class="n">from_mpi</span><span class="p">(</span><span class="n">mpi</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Executor.status">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.base.Executor.html#ase2sprkkr.execution.base.Executor.status">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">status</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">references</span><span class="p">:</span> <span class="n">RunReference</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">RunStatus</span><span class="p">,</span> <span class="o">...</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">"""Return ordered status snapshots for persistent run references.</span>
+
+<span class="sd">        Backends override this method directly. There is deliberately one API</span>
+<span class="sd">        for one or many jobs so scheduler-backed executors can batch queries.</span>
+<span class="sd">        """</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">references</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">()</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> cannot query persistent run status"</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Executor.recover_submission">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.base.Executor.html#ase2sprkkr.execution.base.Executor.recover_submission">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">recover_submission</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">run_id</span><span class="p">,</span> <span class="n">submission</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">submitted_at</span><span class="o">=</span><span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">RunStatus</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">"""Recover a submit whose backend reference was not persisted.</span>
+
+<span class="sd">        ``submitted_at`` is the timestamp at which ASE2SPRKKR reserved the</span>
+<span class="sd">        submission. Scheduler backends may use it to bound accounting-history</span>
+<span class="sd">        queries after a job has left the live queue.</span>
+
+<span class="sd">        Return a status with a reconstructed backend reference when the submit</span>
+<span class="sd">        is found, ``None`` only when the backend can positively establish that</span>
+<span class="sd">        it does not exist, and raise :class:`NotImplementedError` when this</span>
+<span class="sd">        backend cannot perform such recovery. Transport/backend failures should</span>
+<span class="sd">        propagate rather than being mistaken for absence.</span>
+<span class="sd">        """</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> cannot recover an uncertain submission"</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Executor.create_persistent_run">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.base.Executor.html#ase2sprkkr.execution.base.Executor.create_persistent_run">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_persistent_run</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">reader</span><span class="p">,</span> <span class="n">spec</span><span class="p">:</span> <span class="n">ExecutionSpec</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">run_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Runner</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Create a run with an ASE2SPRKKR identity known before submission.</span>
+
+<span class="sd">        Backends that can expose the identity to an external scheduler or helper</span>
+<span class="sd">        override this method. Other backends use the normal runner unchanged.</span>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_run</span><span class="p">(</span><span class="n">reader</span><span class="p">,</span> <span class="n">spec</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="n">callback</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Executor.create_run">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.base.Executor.html#ase2sprkkr.execution.base.Executor.create_run">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reader</span><span class="p">,</span> <span class="n">spec</span><span class="p">:</span> <span class="n">ExecutionSpec</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Runner</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+
+<div class="viewcode-block" id="Executor.attach">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.base.Executor.html#ase2sprkkr.execution.base.Executor.attach">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">attach</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">reference</span><span class="p">:</span> <span class="n">RunReference</span><span class="p">,</span>
+        <span class="n">reader</span><span class="p">,</span>
+        <span class="n">callback</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">output_listener</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">start</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Runner</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Reconnect to a persistent run.</span>
+
+<span class="sd">        ``output_listener`` is part of runner construction, while ``start``</span>
+<span class="sd">        controls the lifecycle side effect. Backends must install the listener</span>
+<span class="sd">        before honoring ``start=True`` so immediately replayed output is never</span>
+<span class="sd">        lost.</span>
+<span class="sd">        """</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> cannot attach to an existing run"</span>
+        <span class="p">)</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Matyáš Novák &amp; Jano Minár.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

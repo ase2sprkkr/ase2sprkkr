@@ -17,8 +17,8 @@
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../_static/documentation_options.js?v=5929fcd5"></script>
-      <script src="../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -68,6 +68,7 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.promote_ase_atoms.html">promote_ase_atoms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.__getattr__.html">__getattr__</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.bindings.empty_spheres.html">empty_spheres</a></li>
@@ -77,21 +78,24 @@
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.bindings.uppasd.html">uppasd</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="ase2sprkkr.bindings.xband.html">xband</a><ul class="current">
 <li class="toctree-l4 current"><a class="current reference internal" href="#">spheres_debug</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.bindings.xband.spheres.html">spheres</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.bindings.xband.symmetry.html">symmetry</a></li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.common.html">common</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration.html">configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration_migration.html">configuration_migration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration_yaml.html">configuration_yaml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.conftest.html">conftest</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.examples.html">examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.execution.html">execution</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.gui.html">gui</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.input_parameters.html">input_parameters</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.output_files.html">output_files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.outputs.html">outputs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.physics.html">physics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.potentials.html">potentials</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.profiles.html">profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.result_files.html">result_files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.sprkkr.html">sprkkr</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.tools.html">tools</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.version.html">version</a></li>
@@ -130,10 +134,15 @@
 <h1>spheres_debug<a class="headerlink" href="#spheres-debug" title="Link to this heading"></a></h1>
 <p>Full name: <strong>ase2sprkkr.bindings.xband.spheres_debug</strong></p>
 <p class="rubric">Module class hierarchy</p>
-<div class="graphviz"><img src="../_images/inheritance-56d27bfe390f8a4e8eeb9c01d06741f14bd1156d.png" alt="Inheritance diagram of ase2sprkkr.bindings.xband.spheres_debug.FindEmptySpheresInputs" usemap="#inheritance97610fdefc" class="inheritance graphviz" /></div>
-<map id="inheritance97610fdefc" name="inheritance97610fdefc">
-<area shape="rect" id="node1" href="ase2sprkkr.bindings.xband.spheres_debug.FindEmptySpheresInputs.html#ase2sprkkr.bindings.xband.spheres_debug.FindEmptySpheresInputs" target="_top" title="FindEmptySpheresInputs(max_spheres: &#39;int&#39;, min_radius_bohr: &#39;float&#39;, max_radius_bohr: &#39;float&#39;, alat_bohr: &#39;float&#39;, cell_scaled: &#39;np.ndarray&#39;, positions_scaled: &#39;np.ndarray&#39;, mapping: &#39;np.ndarray&#39;, n_classes: &#39;int&#39;, n_types: &#39;int&#39;, symbols4: &#39;list[str]&#39;, atomic_numbers: &#39;np.ndarray&#39;, occupations: &#39;np.ndarray&#39;, type_eq_class: &#39;np.ndarray&#39;, mesh: &#39;np.ndarray&#39;, n_symmetry_ops: &#39;int&#39;, rotations: &#39;np.ndarray | None&#39;, translations: &#39;np.ndarray | None&#39;, verbose: &#39;int&#39;)" alt="" coords="5,5,188,33"/>
-</map><div class="line-block">
+digraph inheritance97610fdefc {
+bgcolor=transparent;
+fontsize=14;
+rankdir=LR;
+ranksep=0.3;
+size=&quot;10.0, 10.0&quot;;
+  &quot;FindEmptySpheresInputs&quot; [URL=&quot;ase2sprkkr.bindings.xband.spheres_debug.FindEmptySpheresInputs.html#ase2sprkkr.bindings.xband.spheres_debug.FindEmptySpheresInputs&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;FindEmptySpheresInputs(max_spheres: 'int', min_radius_bohr: 'float', max_radius_bohr: 'float', alat_bohr: 'float', cell_scaled: 'np.ndarray', positions_scaled: 'np.ndarray', mapping: 'np.ndarray', n_classes: 'int', n_types: 'int', symbols4: 'list[str]', atomic_numbers: 'np.ndarray', occupations: 'np.ndarray', type_eq_class: 'np.ndarray', mesh: 'np.ndarray', n_symmetry_ops: 'int', rotations: 'np.ndarray | None', translations: 'np.ndarray | None', verbose: 'int')&quot;];
+}
+<div class="line-block">
 <div class="line"><br /></div>
 </div>
 <p class="rubric">Description</p>

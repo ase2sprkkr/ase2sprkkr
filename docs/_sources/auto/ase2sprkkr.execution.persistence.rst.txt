@@ -1,0 +1,43 @@
+persistence
+===========
+
+Full name: **ase2sprkkr.execution.persistence**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.execution.persistence
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      default_execution_manager
+      resolve_execution_manager
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

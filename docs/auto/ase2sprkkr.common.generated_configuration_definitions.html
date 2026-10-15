@@ -17,12 +17,12 @@
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../_static/documentation_options.js?v=5929fcd5"></script>
-      <script src="../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="BaseGeneratedValueDefinition" href="ase2sprkkr.common.generated_configuration_definitions.BaseGeneratedValueDefinition.html" />
+    <link rel="next" title="_validate_length" href="ase2sprkkr.common.generated_configuration_definitions._validate_length.html" />
     <link rel="prev" title="full_format_for_string" href="ase2sprkkr.common.formats.full_format_for_string.html" /> 
 </head>
 
@@ -68,6 +68,7 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.promote_ase_atoms.html">promote_ase_atoms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.__getattr__.html">__getattr__</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="ase2sprkkr.common.html">common</a><ul class="current">
@@ -76,13 +77,20 @@
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.configuration.html">configuration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.configuration_containers.html">configuration_containers</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.configuration_definitions.html">configuration_definitions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.configuration_transaction.html">configuration_transaction</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.container_definitions.html">container_definitions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.dangerous_values.html">dangerous_values</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.debug.html">debug</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.decorators.html">decorators</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.dependencies.html">dependencies</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.doc.html">doc</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.file_fingerprints.html">file_fingerprints</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.file_locks.html">file_locks</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.file_utils.html">file_utils</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.formats.html">formats</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">generated_configuration_definitions</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.generated_configuration_definitions._validate_length.html">_validate_length</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.generated_configuration_definitions._validate_length_values.html">_validate_length_values</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.generated_configuration_definitions.BaseGeneratedValueDefinition.html">BaseGeneratedValueDefinition</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.generated_configuration_definitions.GeneratedValueDefinition.html">GeneratedValueDefinition</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.generated_configuration_definitions.Length.html">Length</a></li>
@@ -91,15 +99,15 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.grammar.html">grammar</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.grammar_types.html">grammar_types</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.init_tests.html">init_tests</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.lazy_string.html">lazy_string</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.misc.html">misc</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.module_registry.html">module_registry</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.no_output.html">no_output</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.options.html">options</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.parsing_results.html">parsing_results</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.process_output_reader.html">process_output_reader</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.repeated_configuration_containers.html">repeated_configuration_containers</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.section_adaptors.html">section_adaptors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.repetition.html">repetition</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.subprocess.html">subprocess</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.tools.html">tools</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.unique_values.html">unique_values</a></li>
@@ -109,13 +117,18 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration.html">configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration_migration.html">configuration_migration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration_yaml.html">configuration_yaml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.conftest.html">conftest</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.examples.html">examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.execution.html">execution</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.gui.html">gui</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.input_parameters.html">input_parameters</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.output_files.html">output_files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.outputs.html">outputs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.physics.html">physics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.potentials.html">potentials</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.profiles.html">profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.result_files.html">result_files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.sprkkr.html">sprkkr</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.tools.html">tools</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.version.html">version</a></li>
@@ -153,22 +166,44 @@
 <h1>generated_configuration_definitions<a class="headerlink" href="#generated-configuration-definitions" title="Link to this heading"></a></h1>
 <p>Full name: <strong>ase2sprkkr.common.generated_configuration_definitions</strong></p>
 <p class="rubric">Module class hierarchy</p>
-<div class="graphviz"><img src="../_images/inheritance-008442acda16cdeed164c793c96d9194bdb7a704.png" alt="Inheritance diagram of ase2sprkkr.common.generated_configuration_definitions.BaseGeneratedValueDefinition, ase2sprkkr.common.generated_configuration_definitions.GeneratedValueDefinition, ase2sprkkr.common.generated_configuration_definitions.Length, ase2sprkkr.common.generated_configuration_definitions.NumpyViewDefinition" usemap="#inheritance04b6e29d02" class="inheritance graphviz" /></div>
-<map id="inheritance04b6e29d02" name="inheritance04b6e29d02">
-<area shape="rect" id="node1" href="ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.common.configuration_definitions.BaseDefinition" target="_top" title="This class is a member of definition of configuration, that can be both" alt="" coords="5,57,122,85"/>
-<area shape="rect" id="node3" href="ase2sprkkr.common.configuration_definitions.RealItemDefinition.html#ase2sprkkr.common.configuration_definitions.RealItemDefinition" target="_top" title="A base class for a configuration definition, either of an option, or of a container." alt="" coords="166,57,309,85"/>
-<area shape="rect" id="node2" href="ase2sprkkr.common.generated_configuration_definitions.BaseGeneratedValueDefinition.html#ase2sprkkr.common.generated_configuration_definitions.BaseGeneratedValueDefinition" target="_top" title="Base class for all generated values. It just set" alt="" coords="353,57,573,85"/>
-<area shape="rect" id="node4" href="ase2sprkkr.common.generated_configuration_definitions.GeneratedValueDefinition.html#ase2sprkkr.common.generated_configuration_definitions.GeneratedValueDefinition" target="_top" title="GeneratedValueDefinition" alt="" coords="602,31,791,58"/>
-<area shape="rect" id="node8" href="ase2sprkkr.common.generated_configuration_definitions.NumpyViewDefinition.html#ase2sprkkr.common.generated_configuration_definitions.NumpyViewDefinition" target="_top" title="Values described by this description are possibly reshaped views into a large" alt="" coords="615,83,778,110"/>
-<area shape="rect" id="node5" href="ase2sprkkr.common.value_definitions.InheritingValueModifier.html#ase2sprkkr.common.value_definitions.InheritingValueModifier" target="_top" title="The definition of the value will be inherited from this class as well." alt="" coords="151,5,323,33"/>
-<area shape="rect" id="node7" href="ase2sprkkr.common.generated_configuration_definitions.Length.html#ase2sprkkr.common.generated_configuration_definitions.Length" target="_top" title="Sometimes, the length of some array should appear in the config file" alt="" coords="427,5,499,33"/>
-<area shape="rect" id="node6" href="ase2sprkkr.common.value_definitions.ValueModifier.html#ase2sprkkr.common.value_definitions.ValueModifier" target="_top" title="If this class is given as a type of a Value, it will modify the definition" alt="" coords="8,5,119,33"/>
-</map><div class="line-block">
+digraph inheritance04b6e29d02 {
+bgcolor=transparent;
+fontsize=14;
+rankdir=LR;
+ranksep=0.3;
+size=&quot;10.0, 10.0&quot;;
+  &quot;BaseDefinition&quot; [URL=&quot;ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.common.configuration_definitions.BaseDefinition&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;This class is a member of definition of configuration, that can be both&quot;];
+  &quot;BaseGeneratedValueDefinition&quot; [URL=&quot;ase2sprkkr.common.generated_configuration_definitions.BaseGeneratedValueDefinition.html#ase2sprkkr.common.generated_configuration_definitions.BaseGeneratedValueDefinition&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;Base class for all generated values. It just set&quot;];
+  &quot;RealItemDefinition&quot; -&gt; &quot;BaseGeneratedValueDefinition&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;GeneratedValueDefinition&quot; [URL=&quot;ase2sprkkr.common.generated_configuration_definitions.GeneratedValueDefinition.html#ase2sprkkr.common.generated_configuration_definitions.GeneratedValueDefinition&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;Definition of a value computed from its runtime section.&quot;];
+  &quot;BaseGeneratedValueDefinition&quot; -&gt; &quot;GeneratedValueDefinition&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;InheritingValueModifier&quot; [URL=&quot;ase2sprkkr.common.value_definitions.InheritingValueModifier.html#ase2sprkkr.common.value_definitions.InheritingValueModifier&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;The definition of the value will be inherited from this class as well.&quot;];
+  &quot;ValueModifier&quot; -&gt; &quot;InheritingValueModifier&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;Length&quot; [URL=&quot;ase2sprkkr.common.generated_configuration_definitions.Length.html#ase2sprkkr.common.generated_configuration_definitions.Length&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;Sometimes, the length of some array should appear in the config file&quot;];
+  &quot;InheritingValueModifier&quot; -&gt; &quot;Length&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;NumpyViewDefinition&quot; [URL=&quot;ase2sprkkr.common.generated_configuration_definitions.NumpyViewDefinition.html#ase2sprkkr.common.generated_configuration_definitions.NumpyViewDefinition&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;Values described by this description are possibly reshaped views into a large&quot;];
+  &quot;BaseGeneratedValueDefinition&quot; -&gt; &quot;NumpyViewDefinition&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;RealItemDefinition&quot; [URL=&quot;ase2sprkkr.common.configuration_definitions.RealItemDefinition.html#ase2sprkkr.common.configuration_definitions.RealItemDefinition&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;A base class for a configuration definition, either of an option, or of a container.&quot;];
+  &quot;BaseDefinition&quot; -&gt; &quot;RealItemDefinition&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;ValueModifier&quot; [URL=&quot;ase2sprkkr.common.value_definitions.ValueModifier.html#ase2sprkkr.common.value_definitions.ValueModifier&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;If this class is given as a type of a Value, it will modify the definition&quot;];
+}
+<div class="line-block">
 <div class="line"><br /></div>
 </div>
 <p class="rubric">Description</p>
 <p id="module-ase2sprkkr.common.generated_configuration_definitions">Definition of value in configuration/output files,
 that is generated from other values</p>
+<p class="rubric">Functions</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.generated_configuration_definitions._validate_length.html#ase2sprkkr.common.generated_configuration_definitions._validate_length" title="ase2sprkkr.common.generated_configuration_definitions._validate_length"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_validate_length</span></code></a>(option, container, why)</p></td>
+<td><p>Validate the generated length <code class="docutils literal notranslate"><span class="pre">option</span></code> for phase <code class="docutils literal notranslate"><span class="pre">why</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.generated_configuration_definitions._validate_length_values.html#ase2sprkkr.common.generated_configuration_definitions._validate_length_values" title="ase2sprkkr.common.generated_configuration_definitions._validate_length_values"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_validate_length_values</span></code></a>(definition, container)</p></td>
+<td><p>Validate source lengths in <code class="docutils literal notranslate"><span class="pre">container</span></code> against optional <code class="docutils literal notranslate"><span class="pre">length</span></code>.</p></td>
+</tr>
+</tbody>
+</table>
 <p class="rubric">Classes</p>
 <table class="autosummary longtable docutils align-default">
 <tbody>
@@ -176,7 +211,7 @@ that is generated from other values</p>
 <td><p>Base class for all generated values.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.generated_configuration_definitions.GeneratedValueDefinition.html#ase2sprkkr.common.generated_configuration_definitions.GeneratedValueDefinition" title="ase2sprkkr.common.generated_configuration_definitions.GeneratedValueDefinition"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GeneratedValueDefinition</span></code></a>(name, getter[, ...])</p></td>
-<td><p></p></td>
+<td><p>Definition of a value computed from its runtime section.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.generated_configuration_definitions.Length.html#ase2sprkkr.common.generated_configuration_definitions.Length" title="ase2sprkkr.common.generated_configuration_definitions.Length"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Length</span></code></a>(*of[, default_values])</p></td>
 <td><p>Sometimes, the length of some array should appear in the config file</p></td>
@@ -193,7 +228,7 @@ that is generated from other values</p>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="ase2sprkkr.common.formats.full_format_for_string.html" class="btn btn-neutral float-left" title="full_format_for_string" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="ase2sprkkr.common.generated_configuration_definitions.BaseGeneratedValueDefinition.html" class="btn btn-neutral float-right" title="BaseGeneratedValueDefinition" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="ase2sprkkr.common.generated_configuration_definitions._validate_length.html" class="btn btn-neutral float-right" title="_validate_length" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

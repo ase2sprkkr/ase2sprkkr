@@ -5,6 +5,14 @@ Full name: **ase2sprkkr.input\_parameters.definitions.scf**
 
 
 
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.input_parameters.definitions.scf.SCFTaskDefinition 
+      :parts: 1
+
+|
+
+
 .. rubric:: Description
 
 .. automodule:: ase2sprkkr.input_parameters.definitions.scf
@@ -22,12 +30,20 @@ Full name: **ase2sprkkr.input\_parameters.definitions.scf**
       :toctree:
       :template: custom-base-template.rst
    
-      input_parameters
+      input_parameters_definition
    
    
 
 
    
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      SCFTaskDefinition
    
    
 

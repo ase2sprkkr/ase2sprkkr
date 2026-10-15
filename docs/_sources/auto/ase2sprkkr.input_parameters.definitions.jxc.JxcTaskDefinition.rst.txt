@@ -1,0 +1,36 @@
+JxcTaskDefinition
+=================
+
+
+.. currentmodule:: ase2sprkkr.input_parameters.definitions.jxc
+
+.. autoclass:: JxcTaskDefinition
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.input_parameters.definitions.jxc.JxcTaskDefinition
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

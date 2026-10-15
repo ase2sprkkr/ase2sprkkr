@@ -1,0 +1,8 @@
+clean\_detached\_runs
+=====================
+
+Full name: **ase2sprkkr.execution.detached.clean\_detached\_runs**
+
+.. currentmodule:: ase2sprkkr.execution.detached
+
+.. autofunction:: clean_detached_runs

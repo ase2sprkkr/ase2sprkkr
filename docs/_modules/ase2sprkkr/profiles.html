@@ -1,0 +1,775 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ase2sprkkr.profiles &mdash; ASE2SPRKKR  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/mods.css?v=26f6988d" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            ASE2SPRKKR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../usage.html">How to use the package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../how-to-install.html">More about the package installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../philosophy.html">Philosophy of the package (for developers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../authors.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples.html">Examples</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../auto/ase2sprkkr.html">ase2sprkkr</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">ASE2SPRKKR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../ase2sprkkr.html">ase2sprkkr</a></li>
+      <li class="breadcrumb-item active">ase2sprkkr.profiles</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for ase2sprkkr.profiles</h1><div class="highlight"><pre>
+<span></span><span class="sd">"""Execution-profile views used by the ase2sprkkr configuration.</span>
+
+<span class="sd">Persistent named profiles live in the ase2sprkkr configuration. ``ase`` is a</span>
+<span class="sd">virtual read-only profile backed by ASE's own configuration. ``legacy`` is a</span>
+<span class="sd">persisted compatibility profile, but is exposed through a read-only view and</span>
+<span class="sd">can only be modified through the deprecated configuration options.</span>
+<span class="sd">"""</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Iterator</span><span class="p">,</span> <span class="n">Mapping</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">inspect</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">shlex</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyparsing</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pp</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.common.configuration_transaction</span><span class="w"> </span><span class="kn">import</span> <span class="n">ConfigurationTransaction</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.common.repeated_configuration_containers</span><span class="w"> </span><span class="kn">import</span> <span class="n">RepeatedConfigurationContainer</span>
+
+
+<span class="n">_PACKAGE_DIR</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normcase</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)))</span>
+
+
+<div class="viewcode-block" id="_external_warning_stacklevel">
+<a class="viewcode-back" href="../../auto/ase2sprkkr.profiles._external_warning_stacklevel.html#ase2sprkkr.profiles._external_warning_stacklevel">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_external_warning_stacklevel</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">"""Return a warning stacklevel for the first caller outside this package."""</span>
+    <span class="n">frame</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">currentframe</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">frame</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">1</span>
+    <span class="n">frame</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">f_back</span>
+    <span class="n">stacklevel</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">while</span> <span class="n">frame</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normcase</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="n">frame</span><span class="o">.</span><span class="n">f_code</span><span class="o">.</span><span class="n">co_filename</span><span class="p">))</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">internal</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">commonpath</span><span class="p">((</span><span class="n">filename</span><span class="p">,</span> <span class="n">_PACKAGE_DIR</span><span class="p">))</span> <span class="o">==</span> <span class="n">_PACKAGE_DIR</span>
+            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                <span class="n">internal</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">internal</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">stacklevel</span>
+            <span class="n">frame</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">f_back</span>
+            <span class="n">stacklevel</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="k">del</span> <span class="n">frame</span>
+    <span class="k">return</span> <span class="mi">1</span></div>
+
+
+
+<div class="viewcode-block" id="ase_command_profile_values">
+<a class="viewcode-back" href="../../auto/ase2sprkkr.profiles.ase_command_profile_values.html#ase2sprkkr.profiles.ase_command_profile_values">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">ase_command_profile_values</span><span class="p">(</span><span class="n">command</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Map ASE's canonical ``kkrscf`` command to the common profile fields.</span>
+
+<span class="sd">    ASE's ``command`` remains a real command line.  For SPR-KKR it must name</span>
+<span class="sd">    the canonical serial ``kkrscf`` executable directly.  Its directory and</span>
+<span class="sd">    suffix locate the other executables from the same installation.  Command</span>
+<span class="sd">    prefixes and wrappers are intentionally rejected because MPI and execution</span>
+<span class="sd">    policy can depend on the particular SPR-KKR task.</span>
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">command</span><span class="o">.</span><span class="n">strip</span><span class="p">():</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">"ASE SPR-KKR command must directly name the kkrscf executable"</span>
+        <span class="p">)</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">argv</span> <span class="o">=</span> <span class="n">shlex</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"ASE SPR-KKR command is not a valid command line"</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">argv</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">"ASE SPR-KKR command must directly name the kkrscf executable; "</span>
+            <span class="s2">"command prefixes and wrappers are not supported"</span>
+        <span class="p">)</span>
+
+    <span class="n">executable_dir</span><span class="p">,</span> <span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">filename</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"kkrscf"</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">"ASE SPR-KKR command must directly name the canonical kkrscf executable"</span>
+        <span class="p">)</span>
+
+    <span class="n">values</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"executable_suffix"</span><span class="p">:</span> <span class="n">filename</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="s2">"kkrscf"</span><span class="p">):</span> <span class="p">]}</span>
+    <span class="k">if</span> <span class="n">executable_dir</span><span class="p">:</span>
+        <span class="n">values</span><span class="p">[</span><span class="s2">"executable_dir"</span><span class="p">]</span> <span class="o">=</span> <span class="n">executable_dir</span>
+    <span class="k">return</span> <span class="n">values</span></div>
+
+
+
+<div class="viewcode-block" id="ReadOnlyProfileValue">
+<a class="viewcode-back" href="../../auto/ase2sprkkr.profiles.ReadOnlyProfileValue.html#ase2sprkkr.profiles.ReadOnlyProfileValue">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ReadOnlyProfileValue</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Small option-like read-only value used by virtual/read-only profiles."""</span>
+
+<div class="viewcode-block" id="ReadOnlyProfileValue.__init__">
+<a class="viewcode-back" href="../../auto/ase2sprkkr.profiles.ReadOnlyProfileValue.html#ase2sprkkr.profiles.ReadOnlyProfileValue.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">getter</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_getter</span> <span class="o">=</span> <span class="n">getter</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_getter</span><span class="p">()</span>
+
+    <span class="n">get</span> <span class="o">=</span> <span class="fm">__call__</span>
+
+<div class="viewcode-block" id="ReadOnlyProfileValue.set">
+<a class="viewcode-back" href="../../auto/ase2sprkkr.profiles.ReadOnlyProfileValue.html#ase2sprkkr.profiles.ReadOnlyProfileValue.set">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Profile value </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">!r}</span><span class="s2"> is read-only"</span><span class="p">)</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Profile value </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">!r}</span><span class="s2"> is read-only"</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">repr</span><span class="p">(</span><span class="bp">self</span><span class="p">())</span></div>
+
+
+
+<div class="viewcode-block" id="LegacyProfile">
+<a class="viewcode-back" href="../../auto/ase2sprkkr.profiles.LegacyProfile.html#ase2sprkkr.profiles.LegacyProfile">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">LegacyProfile</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Read-only public view of the deprecated execution configuration."""</span>
+
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">"legacy"</span>
+    <span class="n">source</span> <span class="o">=</span> <span class="s2">"legacy"</span>
+    <span class="n">read_only</span> <span class="o">=</span> <span class="kc">True</span>
+
+<div class="viewcode-block" id="LegacyProfile.__init__">
+<a class="viewcode-back" href="../../auto/ase2sprkkr.profiles.LegacyProfile.html#ase2sprkkr.profiles.LegacyProfile.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">profiles</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_profiles</span> <span class="o">=</span> <span class="n">profiles</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mpi</span> <span class="o">=</span> <span class="n">ReadOnlyProfileValue</span><span class="p">(</span>
+            <span class="k">lambda</span><span class="p">:</span> <span class="n">profiles</span><span class="o">.</span><span class="n">legacy_value</span><span class="p">(</span><span class="s2">"mpi"</span><span class="p">,</span> <span class="s2">"auto"</span><span class="p">),</span> <span class="s2">"mpi"</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mpi_warning</span> <span class="o">=</span> <span class="n">ReadOnlyProfileValue</span><span class="p">(</span>
+            <span class="k">lambda</span><span class="p">:</span> <span class="n">profiles</span><span class="o">.</span><span class="n">legacy_value</span><span class="p">(</span><span class="s2">"mpi_warning"</span><span class="p">,</span> <span class="kc">True</span><span class="p">),</span> <span class="s2">"mpi_warning"</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">executable_dir</span> <span class="o">=</span> <span class="n">ReadOnlyProfileValue</span><span class="p">(</span>
+            <span class="k">lambda</span><span class="p">:</span> <span class="n">profiles</span><span class="o">.</span><span class="n">legacy_value</span><span class="p">(</span><span class="s2">"executable_dir"</span><span class="p">),</span> <span class="s2">"executable_dir"</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">executable_suffix</span> <span class="o">=</span> <span class="n">ReadOnlyProfileValue</span><span class="p">(</span>
+            <span class="k">lambda</span><span class="p">:</span> <span class="n">profiles</span><span class="o">.</span><span class="n">legacy_value</span><span class="p">(</span><span class="s2">"executable_suffix"</span><span class="p">),</span>
+            <span class="s2">"executable_suffix"</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="LegacyProfile.as_dict">
+<a class="viewcode-back" href="../../auto/ase2sprkkr.profiles.LegacyProfile.html#ase2sprkkr.profiles.LegacyProfile.as_dict">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">as_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">"mpi"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">mpi</span><span class="p">(),</span>
+            <span class="s2">"mpi_warning"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">mpi_warning</span><span class="p">(),</span>
+            <span class="s2">"executable_dir"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">executable_dir</span><span class="p">(),</span>
+            <span class="s2">"executable_suffix"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">executable_suffix</span><span class="p">(),</span>
+        <span class="p">}</span></div>
+
+
+    <span class="n">get</span> <span class="o">=</span> <span class="n">as_dict</span>
+
+<div class="viewcode-block" id="LegacyProfile.set">
+<a class="viewcode-back" href="../../auto/ase2sprkkr.profiles.LegacyProfile.html#ase2sprkkr.profiles.LegacyProfile.set">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+            <span class="s2">"The 'legacy' profile is read-only; create a named profile or use "</span>
+            <span class="s2">"the ASE [sprkkr] profile instead"</span>
+        <span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="ASEProfile">
+<a class="viewcode-back" href="../../auto/ase2sprkkr.profiles.ASEProfile.html#ase2sprkkr.profiles.ASEProfile">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ASEProfile</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Typed read-only view of ASE's ``[sprkkr]`` calculator configuration."""</span>
+
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">"ase"</span>
+    <span class="n">source</span> <span class="o">=</span> <span class="s2">"ase"</span>
+    <span class="n">read_only</span> <span class="o">=</span> <span class="kc">True</span>
+
+<div class="viewcode-block" id="ASEProfile.__init__">
+<a class="viewcode-back" href="../../auto/ase2sprkkr.profiles.ASEProfile.html#ase2sprkkr.profiles.ASEProfile.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">profiles</span><span class="p">,</span> <span class="n">ase_config</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_profiles</span> <span class="o">=</span> <span class="n">profiles</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ase_config</span> <span class="o">=</span> <span class="n">ase_config</span></div>
+
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_section</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ase_config</span><span class="o">.</span><span class="n">parser</span><span class="p">[</span><span class="s2">"sprkkr"</span><span class="p">]</span>
+
+<div class="viewcode-block" id="ASEProfile.configuration_profile">
+<a class="viewcode-back" href="../../auto/ase2sprkkr.profiles.ASEProfile.html#ase2sprkkr.profiles.ASEProfile.configuration_profile">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">configuration_profile</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Return a typed, non-persistent profile snapshot."""</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_profiles</span><span class="o">.</span><span class="n">_parse_ase_profile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_ase_config</span><span class="p">)</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"_"</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">configuration_profile</span><span class="p">(),</span> <span class="n">name</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="kc">None</span>
+        <span class="k">return</span> <span class="n">ReadOnlyProfileValue</span><span class="p">(</span>
+            <span class="k">lambda</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">configuration_profile</span><span class="p">(),</span> <span class="n">name</span><span class="p">)(),</span>
+            <span class="n">name</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">command</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">ReadOnlyProfileValue</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"command"</span><span class="p">),</span> <span class="s2">"command"</span><span class="p">)</span>
+
+<div class="viewcode-block" id="ASEProfile.as_dict">
+<a class="viewcode-back" href="../../auto/ase2sprkkr.profiles.ASEProfile.html#ase2sprkkr.profiles.ASEProfile.as_dict">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">as_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">values</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">configuration_profile</span><span class="p">()</span><span class="o">.</span><span class="n">as_dict</span><span class="p">(</span>
+            <span class="n">only_changed</span><span class="o">=</span><span class="s2">"explicit"</span><span class="p">,</span> <span class="n">generated</span><span class="o">=</span><span class="kc">False</span>
+        <span class="p">)</span> <span class="ow">or</span> <span class="p">{}</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">"command"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">command</span><span class="p">(),</span> <span class="o">**</span><span class="n">values</span><span class="p">}</span></div>
+
+
+    <span class="n">get</span> <span class="o">=</span> <span class="n">as_dict</span>
+
+<div class="viewcode-block" id="ASEProfile.set">
+<a class="viewcode-back" href="../../auto/ase2sprkkr.profiles.ASEProfile.html#ase2sprkkr.profiles.ASEProfile.set">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+            <span class="s2">"The 'ase' profile is read-only in this configuration API; "</span>
+            <span class="s2">"edit the ASE [sprkkr] configuration instead"</span>
+        <span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="ProfilesConfigurationContainer">
+<a class="viewcode-back" href="../../auto/ase2sprkkr.profiles.ProfilesConfigurationContainer.html#ase2sprkkr.profiles.ProfilesConfigurationContainer">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ProfilesConfigurationContainer</span><span class="p">(</span><span class="n">RepeatedConfigurationContainer</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Dict-like repeated section with persistent and virtual profile views."""</span>
+
+<div class="viewcode-block" id="ProfilesConfigurationContainer.RemovalChange">
+<a class="viewcode-back" href="../../auto/ase2sprkkr.profiles.ProfilesConfigurationContainer.html#ase2sprkkr.profiles.ProfilesConfigurationContainer.RemovalChange">[docs]</a>
+    <span class="k">class</span><span class="w"> </span><span class="nc">RemovalChange</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Rollback state for removing one stored profile."""</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">profiles</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">profiles</span> <span class="o">=</span> <span class="n">profiles</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">old_values</span> <span class="o">=</span> <span class="n">profiles</span><span class="o">.</span><span class="n">_values</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+<div class="viewcode-block" id="ProfilesConfigurationContainer.RemovalChange.commit">
+<a class="viewcode-back" href="../../auto/ase2sprkkr.profiles.ProfilesConfigurationContainer.html#ase2sprkkr.profiles.ProfilesConfigurationContainer.RemovalChange.commit">[docs]</a>
+        <span class="k">def</span><span class="w"> </span><span class="nf">commit</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="ProfilesConfigurationContainer.RemovalChange.rollback">
+<a class="viewcode-back" href="../../auto/ase2sprkkr.profiles.ProfilesConfigurationContainer.html#ase2sprkkr.profiles.ProfilesConfigurationContainer.RemovalChange.rollback">[docs]</a>
+        <span class="k">def</span><span class="w"> </span><span class="nf">rollback</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">profiles</span><span class="o">.</span><span class="n">_values</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">old_values</span></div>
+</div>
+
+
+    <span class="n">reserved_names</span> <span class="o">=</span> <span class="nb">frozenset</span><span class="p">((</span><span class="s2">"legacy"</span><span class="p">,</span> <span class="s2">"ase"</span><span class="p">))</span>
+    <span class="n">legacy_fields</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">"mpi"</span><span class="p">,</span>
+        <span class="s2">"mpi_warning"</span><span class="p">,</span>
+        <span class="s2">"executable_dir"</span><span class="p">,</span>
+        <span class="s2">"executable_suffix"</span><span class="p">,</span>
+    <span class="p">)</span>
+
+<div class="viewcode-block" id="ProfilesConfigurationContainer._add">
+<a class="viewcode-back" href="../../auto/ase2sprkkr.profiles.ProfilesConfigurationContainer.html#ase2sprkkr.profiles.ProfilesConfigurationContainer._add">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Create one stored profile while keeping ``ase`` strictly virtual."""</span>
+        <span class="k">if</span> <span class="nb">id</span> <span class="o">==</span> <span class="s2">"ase"</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"'ase' is a virtual profile and cannot be stored"</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">_add</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ProfilesConfigurationContainer._legacy_profile">
+<a class="viewcode-back" href="../../auto/ase2sprkkr.profiles.ProfilesConfigurationContainer.html#ase2sprkkr.profiles.ProfilesConfigurationContainer._legacy_profile">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_legacy_profile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">create</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Return the mutable backing profile used by deprecated options."""</span>
+        <span class="n">profile</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"legacy"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">profile</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">create</span><span class="p">:</span>
+            <span class="n">profile</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_add</span><span class="p">(</span><span class="s2">"legacy"</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">profile</span></div>
+
+
+<div class="viewcode-block" id="ProfilesConfigurationContainer._legacy_available">
+<a class="viewcode-back" href="../../auto/ase2sprkkr.profiles.ProfilesConfigurationContainer.html#ase2sprkkr.profiles.ProfilesConfigurationContainer._legacy_available">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_legacy_available</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="n">profile</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_legacy_profile</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">profile</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">any</span><span class="p">(</span>
+            <span class="nb">getattr</span><span class="p">(</span><span class="n">profile</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">_value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">legacy_fields</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ProfilesConfigurationContainer.legacy_value">
+<a class="viewcode-back" href="../../auto/ase2sprkkr.profiles.ProfilesConfigurationContainer.html#ase2sprkkr.profiles.ProfilesConfigurationContainer.legacy_value">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">legacy_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Return a value from the internal legacy profile."""</span>
+        <span class="n">profile</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_legacy_profile</span><span class="p">()</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="kc">None</span> <span class="k">if</span> <span class="n">profile</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">profile</span><span class="p">,</span> <span class="n">name</span><span class="p">)()</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">default</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">default</span><span class="p">()</span> <span class="k">if</span> <span class="nb">callable</span><span class="p">(</span><span class="n">default</span><span class="p">)</span> <span class="k">else</span> <span class="n">default</span>
+        <span class="k">return</span> <span class="n">value</span></div>
+
+
+<div class="viewcode-block" id="ProfilesConfigurationContainer._warn_legacy_write">
+<a class="viewcode-back" href="../../auto/ase2sprkkr.profiles.ProfilesConfigurationContainer.html#ase2sprkkr.profiles.ProfilesConfigurationContainer._warn_legacy_write">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_warn_legacy_write</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">"_legacy_write_warning_emitted"</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
+            <span class="k">return</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+            <span class="s2">"config.executables.dir is deprecated together with "</span>
+            <span class="s2">"config.executables.suffix, config.running.mpi and "</span>
+            <span class="s2">"config.running.mpi_warning.</span><span class="se">\n</span><span class="s2">"</span>
+            <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span>
+            <span class="s2">"To migrate the existing configuration to config.yaml and convert "</span>
+            <span class="s2">"these settings to an execution profile, run:</span><span class="se">\n</span><span class="s2">"</span>
+            <span class="s2">"  ase2sprkkr config --migrate</span><span class="se">\n</span><span class="s2">"</span>
+            <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span>
+            <span class="s2">"For new configuration, use an execution profile directly. For example,</span><span class="se">\n</span><span class="s2">"</span>
+            <span class="s2">"configure SPR-KKR through ASE:</span><span class="se">\n</span><span class="s2">"</span>
+            <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span>
+            <span class="s2">"  [sprkkr]</span><span class="se">\n</span><span class="s2">"</span>
+            <span class="s2">"  command = /opt/sprkkr/kkrscf_v8</span><span class="se">\n</span><span class="s2">"</span>
+            <span class="s2">"  mpi = 8</span><span class="se">\n</span><span class="s2">"</span>
+            <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span>
+            <span class="s2">"or create a named ASE2SPRKKR profile:</span><span class="se">\n</span><span class="s2">"</span>
+            <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span>
+            <span class="s2">"  ase2sprkkr config --set profiles.local "</span>
+            <span class="s2">"'{mpi: 8, executable_dir: /opt/sprkkr, executable_suffix: _v8}'</span><span class="se">\n</span><span class="s2">"</span>
+            <span class="s2">"  ase2sprkkr config --set default_profile local"</span><span class="p">,</span>
+            <span class="ne">FutureWarning</span><span class="p">,</span>
+            <span class="n">stacklevel</span><span class="o">=</span><span class="n">_external_warning_stacklevel</span><span class="p">(),</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_legacy_write_warning_emitted</span> <span class="o">=</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="ProfilesConfigurationContainer._set_legacy_value">
+<a class="viewcode-back" href="../../auto/ase2sprkkr.profiles.ProfilesConfigurationContainer.html#ase2sprkkr.profiles.ProfilesConfigurationContainer._set_legacy_value">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_set_legacy_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Stage a deprecated option into the internal legacy profile."""</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_warn_legacy_write</span><span class="p">()</span>
+        <span class="n">profile</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_legacy_profile</span><span class="p">(</span><span class="n">create</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">option</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">profile</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="n">ConfigurationTransaction</span><span class="o">.</span><span class="n">current</span><span class="p">(</span><span class="n">profile</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">transaction</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">option</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">option</span><span class="o">.</span><span class="n">stage</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ProfilesConfigurationContainer._ase_config">
+<a class="viewcode-back" href="../../auto/ase2sprkkr.profiles.ProfilesConfigurationContainer.html#ase2sprkkr.profiles.ProfilesConfigurationContainer._ase_config">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_ase_config</span><span class="p">():</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="kn">from</span><span class="w"> </span><span class="nn">ase.config</span><span class="w"> </span><span class="kn">import</span> <span class="n">cfg</span>
+        <span class="k">except</span> <span class="p">(</span><span class="ne">ImportError</span><span class="p">,</span> <span class="ne">AttributeError</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="n">cfg</span></div>
+
+
+<div class="viewcode-block" id="ProfilesConfigurationContainer._parse_ase_value">
+<a class="viewcode-back" href="../../auto/ase2sprkkr.profiles.ProfilesConfigurationContainer.html#ase2sprkkr.profiles.ProfilesConfigurationContainer._parse_ase_value">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_parse_ase_value</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">option</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Parse one ASE INI value using the common profile type contract."""</span>
+        <span class="n">value_type</span> <span class="o">=</span> <span class="n">option</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">type</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">value_type</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">pp</span><span class="o">.</span><span class="n">ParseBaseException</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">section</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">"Invalid ASE SPR-KKR profile option </span><span class="si">{</span><span class="n">name</span><span class="si">!r}</span><span class="s2">: </span><span class="si">{</span><span class="n">value</span><span class="si">!r}</span><span class="s2">"</span>
+                <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span></div>
+
+
+<div class="viewcode-block" id="ProfilesConfigurationContainer._parse_ase_profile">
+<a class="viewcode-back" href="../../auto/ase2sprkkr.profiles.ProfilesConfigurationContainer.html#ase2sprkkr.profiles.ProfilesConfigurationContainer._parse_ase_profile">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_parse_ase_profile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cfg</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Parse ASE's text configuration through the common profile schema."""</span>
+        <span class="n">section</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">parser</span><span class="p">[</span><span class="s2">"sprkkr"</span><span class="p">]</span>
+        <span class="n">command</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"command"</span><span class="p">)</span>
+        <span class="n">values</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">section</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
+        <span class="n">values</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">"command"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+        <span class="n">duplicate</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"executable_dir"</span><span class="p">,</span> <span class="s2">"executable_suffix"</span><span class="p">}</span> <span class="o">&amp;</span> <span class="n">values</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">duplicate</span><span class="p">:</span>
+            <span class="n">names</span> <span class="o">=</span> <span class="s2">", "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">duplicate</span><span class="p">))</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"ASE [sprkkr] </span><span class="si">{</span><span class="n">names</span><span class="si">}</span><span class="s2"> must be expressed through the command option"</span>
+            <span class="p">)</span>
+
+        <span class="n">profile</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">create_object</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">repeated</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">parsed</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">values</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">option</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">profile</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">"Unknown ASE SPR-KKR profile option </span><span class="si">{</span><span class="n">name</span><span class="si">!r}</span><span class="s2">"</span>
+                <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="kc">None</span>
+            <span class="n">parsed</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parse_ase_value</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">option</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+
+        <span class="n">parsed</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">ase_command_profile_values</span><span class="p">(</span><span class="n">command</span><span class="p">))</span>
+        <span class="n">profile</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">parsed</span><span class="p">,</span> <span class="n">unknown</span><span class="o">=</span><span class="s2">"fail"</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">profile</span></div>
+
+
+<div class="viewcode-block" id="ProfilesConfigurationContainer._ase_available">
+<a class="viewcode-back" href="../../auto/ase2sprkkr.profiles.ProfilesConfigurationContainer.html#ase2sprkkr.profiles.ProfilesConfigurationContainer._ase_available">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_ase_available</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="n">cfg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ase_config</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">cfg</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">section</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">parser</span><span class="p">[</span><span class="s2">"sprkkr"</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"command"</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="ProfilesConfigurationContainer._reserved_in">
+<a class="viewcode-back" href="../../auto/ase2sprkkr.profiles.ProfilesConfigurationContainer.html#ase2sprkkr.profiles.ProfilesConfigurationContainer._reserved_in">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_reserved_in</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">names</span> <span class="o">=</span> <span class="p">(</span><span class="n">values</span><span class="p">,)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">Mapping</span><span class="p">):</span>
+            <span class="n">names</span> <span class="o">=</span> <span class="n">values</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">()</span>
+        <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">reserved_names</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">names</span><span class="p">)))</span></div>
+
+
+<div class="viewcode-block" id="ProfilesConfigurationContainer.stage">
+<a class="viewcode-back" href="../../auto/ase2sprkkr.profiles.ProfilesConfigurationContainer.html#ase2sprkkr.profiles.ProfilesConfigurationContainer.stage">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">stage</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">transaction</span><span class="p">,</span>
+        <span class="n">values</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">value</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">unknown</span><span class="o">=</span><span class="s2">"find"</span><span class="p">,</span>
+        <span class="n">merge</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Stage public profile changes without exposing reserved profiles."""</span>
+        <span class="n">reserved</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reserved_in</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">reserved</span><span class="p">:</span>
+            <span class="n">names</span> <span class="o">=</span> <span class="s2">", "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">reserved</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Reserved profiles are read-only: </span><span class="si">{</span><span class="n">names</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+        <span class="n">legacy</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"legacy"</span><span class="p">)</span>
+        <span class="n">changed</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">stage</span><span class="p">(</span>
+            <span class="n">transaction</span><span class="p">,</span>
+            <span class="n">values</span><span class="p">,</span>
+            <span class="n">value</span><span class="p">,</span>
+            <span class="n">unknown</span><span class="o">=</span><span class="n">unknown</span><span class="p">,</span>
+            <span class="n">merge</span><span class="o">=</span><span class="n">merge</span><span class="p">,</span>
+            <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">legacy</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">merge</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[</span><span class="s2">"legacy"</span><span class="p">]</span> <span class="o">=</span> <span class="n">legacy</span>
+            <span class="n">legacy</span><span class="o">.</span><span class="n">_container</span> <span class="o">=</span> <span class="bp">self</span>
+        <span class="k">return</span> <span class="n">changed</span></div>
+
+
+<div class="viewcode-block" id="ProfilesConfigurationContainer._stage_persisted">
+<a class="viewcode-back" href="../../auto/ase2sprkkr.profiles.ProfilesConfigurationContainer.html#ase2sprkkr.profiles.ProfilesConfigurationContainer._stage_persisted">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_stage_persisted</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">transaction</span><span class="p">,</span>
+        <span class="n">values</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">value</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">unknown</span><span class="o">=</span><span class="s2">"find"</span><span class="p">,</span>
+        <span class="n">merge</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Stage profiles read from persisted ASE2SPRKKR configuration."""</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">stage</span><span class="p">(</span>
+            <span class="n">transaction</span><span class="p">,</span>
+            <span class="n">values</span><span class="p">,</span>
+            <span class="n">value</span><span class="p">,</span>
+            <span class="n">unknown</span><span class="o">=</span><span class="n">unknown</span><span class="p">,</span>
+            <span class="n">merge</span><span class="o">=</span><span class="n">merge</span><span class="p">,</span>
+            <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ProfilesConfigurationContainer.add">
+<a class="viewcode-back" href="../../auto/ase2sprkkr.profiles.ProfilesConfigurationContainer.html#ase2sprkkr.profiles.ProfilesConfigurationContainer.add">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">id</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">reserved_names</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="nb">id</span><span class="si">!r}</span><span class="s2"> is a reserved profile name"</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_add</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ProfilesConfigurationContainer.remove">
+<a class="viewcode-back" href="../../auto/ase2sprkkr.profiles.ProfilesConfigurationContainer.html#ase2sprkkr.profiles.ProfilesConfigurationContainer.remove">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Transactionally remove one mutable named profile."""</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">reserved_names</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">name</span><span class="si">!r}</span><span class="s2"> is a reserved profile name"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_container</span><span class="o">.</span><span class="n">default_profile</span><span class="p">()</span> <span class="o">==</span> <span class="n">name</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"Cannot remove default execution profile </span><span class="si">{</span><span class="n">name</span><span class="si">!r}</span><span class="s2">; "</span>
+                <span class="s2">"unset or change default_profile first"</span>
+            <span class="p">)</span>
+
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mutation</span><span class="p">(</span><span class="s2">"set"</span><span class="p">)</span> <span class="k">as</span> <span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">_policy</span><span class="p">):</span>
+            <span class="n">change</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">RemovalChange</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+            <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+            <span class="n">transaction</span><span class="o">.</span><span class="n">push</span><span class="p">(</span><span class="n">change</span><span class="p">)</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">"legacy"</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_legacy_available</span><span class="p">():</span>
+                <span class="k">return</span> <span class="n">LegacyProfile</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">"ase"</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ase_available</span><span class="p">():</span>
+                <span class="k">return</span> <span class="n">ASEProfile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ase_config</span><span class="p">())</span>
+            <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__getitem__</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__contains__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">"legacy"</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_legacy_available</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">"ase"</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ase_available</span><span class="p">()</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__contains__</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+
+<div class="viewcode-block" id="ProfilesConfigurationContainer._virtual_names">
+<a class="viewcode-back" href="../../auto/ase2sprkkr.profiles.ProfilesConfigurationContainer.html#ase2sprkkr.profiles.ProfilesConfigurationContainer._virtual_names">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_virtual_names</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ase_available</span><span class="p">():</span>
+            <span class="k">yield</span> <span class="s2">"ase"</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__iter__</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">name</span> <span class="o">!=</span> <span class="s2">"legacy"</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_legacy_available</span><span class="p">():</span>
+                <span class="k">yield</span> <span class="n">name</span>
+        <span class="k">yield from</span> <span class="bp">self</span><span class="o">.</span><span class="n">_virtual_names</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="mi">1</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">)</span>
+
+<div class="viewcode-block" id="ProfilesConfigurationContainer.items">
+<a class="viewcode-back" href="../../auto/ase2sprkkr.profiles.ProfilesConfigurationContainer.html#ase2sprkkr.profiles.ProfilesConfigurationContainer.items">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">items</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Iterate over public profile views only."""</span>
+        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
+            <span class="k">yield</span> <span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="p">[</span><span class="n">name</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="ProfilesConfigurationContainer.values">
+<a class="viewcode-back" href="../../auto/ase2sprkkr.profiles.ProfilesConfigurationContainer.html#ase2sprkkr.profiles.ProfilesConfigurationContainer.values">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Iterate over public profile views only."""</span>
+        <span class="k">for</span> <span class="n">_name</span><span class="p">,</span> <span class="n">profile</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">yield</span> <span class="n">profile</span></div>
+
+
+<div class="viewcode-block" id="ProfilesConfigurationContainer._as_dict">
+<a class="viewcode-back" href="../../auto/ase2sprkkr.profiles.ProfilesConfigurationContainer.html#ase2sprkkr.profiles.ProfilesConfigurationContainer._as_dict">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_as_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">get</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Serialize stored profiles while preserving empty named profiles."""</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">profile</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_raw_items</span><span class="p">():</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">profile</span><span class="o">.</span><span class="n">_as_dict</span><span class="p">(</span><span class="n">get</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">out</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+            <span class="k">elif</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">reserved_names</span><span class="p">:</span>
+                <span class="n">out</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">return</span> <span class="n">out</span> <span class="ow">or</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="ProfilesConfigurationContainer.available_items">
+<a class="viewcode-back" href="../../auto/ase2sprkkr.profiles.ProfilesConfigurationContainer.html#ase2sprkkr.profiles.ProfilesConfigurationContainer.available_items">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">available_items</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Backward-compatible alias for public profile items."""</span>
+        <span class="k">yield from</span> <span class="bp">self</span><span class="o">.</span><span class="n">items</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="ProfilesConfigurationContainer._get_members">
+<a class="viewcode-back" href="../../auto/ase2sprkkr.profiles.ProfilesConfigurationContainer.html#ase2sprkkr.profiles.ProfilesConfigurationContainer._get_members">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_members</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">name</span><span class="p">,</span>
+        <span class="n">unknown</span><span class="p">,</span>
+        <span class="n">is_option</span><span class="p">,</span>
+        <span class="n">lower_case</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">accept</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="c1"># The backing legacy section is an implementation detail. Generic</span>
+        <span class="c1"># lookup must not expose mutable options below its read-only public view.</span>
+        <span class="n">head</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"."</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">else</span> <span class="n">name</span>
+        <span class="k">if</span> <span class="n">head</span> <span class="o">==</span> <span class="s2">"legacy"</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="k">yield from</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">_get_members</span><span class="p">(</span>
+            <span class="n">name</span><span class="p">,</span>
+            <span class="n">unknown</span><span class="p">,</span>
+            <span class="n">is_option</span><span class="p">,</span>
+            <span class="n">lower_case</span><span class="p">,</span>
+            <span class="n">accept</span><span class="o">=</span><span class="n">accept</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ProfilesConfigurationContainer.resolve_name">
+<a class="viewcode-back" href="../../auto/ase2sprkkr.profiles.ProfilesConfigurationContainer.html#ase2sprkkr.profiles.ProfilesConfigurationContainer.resolve_name">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">resolve_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Resolve a profile name according to configuration precedence."""</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_container</span><span class="o">.</span><span class="n">default_profile</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Unknown execution profile </span><span class="si">{</span><span class="n">name</span><span class="si">!r}</span><span class="s2">"</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">name</span>
+        <span class="k">if</span> <span class="s2">"ase"</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">"ase"</span>
+        <span class="k">if</span> <span class="s2">"legacy"</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">"legacy"</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="ProfilesConfigurationContainer.resolve">
+<a class="viewcode-back" href="../../auto/ase2sprkkr.profiles.ProfilesConfigurationContainer.html#ase2sprkkr.profiles.ProfilesConfigurationContainer.resolve">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">resolve</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Return the resolved profile object, or ``None`` for auto fallback."""</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">resolve_name</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span> <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="bp">self</span><span class="p">[</span><span class="n">name</span><span class="p">]</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Matyáš Novák &amp; Jano Minár.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

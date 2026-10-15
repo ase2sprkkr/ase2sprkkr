@@ -43,6 +43,8 @@ Full name: **ase2sprkkr.common.grammar\_types.arrays**
       _array_dtype_condition_always_true
       _array_dtype_condition_not_object
       _array_dtype_condition_not_object_and_scalar
+      _named_sequence_type
+      _restore_named_sequence
    
    
 

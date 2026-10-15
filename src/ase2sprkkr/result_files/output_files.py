@@ -1,9 +1,9 @@
-"""Internal compatibility imports for result-file format definitions."""
+"""Temporary compatibility shim for the historical ``OutputFile`` name."""
 
-from .result_files import Arithmetic, CommonOutputFile, ResultFile
+from .result_files import ResultFile
 
-# Concrete format definitions historically use this internal base name.
-# Public compatibility lives exclusively in ase2sprkkr.output_files.
+# TODO: Remove this compatibility alias in a future release after downstream
+# users have migrated to ``ResultFile``.
 OutputFile = ResultFile
 
-__all__ = ["Arithmetic", "CommonOutputFile"]
+__all__ = ["OutputFile"]

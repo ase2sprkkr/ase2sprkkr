@@ -17,8 +17,8 @@
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../_static/documentation_options.js?v=5929fcd5"></script>
-      <script src="../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -68,16 +68,22 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.promote_ase_atoms.html">promote_ase_atoms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.__getattr__.html">__getattr__</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.common.html">common</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration.html">configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration_migration.html">configuration_migration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration_yaml.html">configuration_yaml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.conftest.html">conftest</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.examples.html">examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.execution.html">execution</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.gui.html">gui</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.input_parameters.html">input_parameters</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.output_files.html">output_files</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="ase2sprkkr.outputs.html">outputs</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.outputs.output_definitions.html">output_definitions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.outputs.persistent.html">persistent</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.outputs.reader_registry.html">reader_registry</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="ase2sprkkr.outputs.readers.html">readers</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.outputs.readers.arpes.html">arpes</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.outputs.readers.bsf.html">bsf</a></li>
@@ -95,6 +101,8 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.physics.html">physics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.potentials.html">potentials</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.profiles.html">profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.result_files.html">result_files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.sprkkr.html">sprkkr</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.tools.html">tools</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.version.html">version</a></li>
@@ -133,26 +141,43 @@
 <h1>scf<a class="headerlink" href="#scf" title="Link to this heading"></a></h1>
 <p>Full name: <strong>ase2sprkkr.outputs.readers.scf</strong></p>
 <p class="rubric">Module class hierarchy</p>
-<div class="graphviz"><img src="../_images/inheritance-3bc2009215cfa258d4a34788790b871362489373.png" alt="Inheritance diagram of ase2sprkkr.outputs.readers.scf.PlottableValue, ase2sprkkr.outputs.readers.scf.RealOrStars, ase2sprkkr.outputs.readers.scf.ScfOutputParser, ase2sprkkr.outputs.readers.scf.ScfOutputReader, ase2sprkkr.outputs.readers.scf.ScfResult" usemap="#inheritancecb74887816" class="inheritance graphviz" /></div>
-<map id="inheritancecb74887816" name="inheritancecb74887816">
-<area shape="rect" id="node1" href="ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.common.configuration_definitions.BaseDefinition" target="_top" title="This class is a member of definition of configuration, that can be both" alt="" coords="25,213,141,241"/>
-<area shape="rect" id="node11" href="ase2sprkkr.common.configuration_definitions.RealItemDefinition.html#ase2sprkkr.common.configuration_definitions.RealItemDefinition" target="_top" title="A base class for a configuration definition, either of an option, or of a container." alt="" coords="194,213,337,241"/>
-<area shape="rect" id="node2" href="ase2sprkkr.common.grammar_types.grammar_type.GrammarType.html#ase2sprkkr.common.grammar_types.grammar_type.GrammarType" target="_top" title="Base class for definition of configuration option types" alt="" coords="26,161,140,189"/>
-<area shape="rect" id="node5" href="ase2sprkkr.common.grammar_types.grammar_type.TypedGrammarType.html#ase2sprkkr.common.grammar_types.grammar_type.TypedGrammarType" target="_top" title="TypedGrammarType" alt="" coords="190,161,341,189"/>
-<area shape="rect" id="node3" href="ase2sprkkr.outputs.task_result.KkrOutputReader.html#ase2sprkkr.outputs.task_result.KkrOutputReader" target="_top" title="Class, that runs a process and reads its output using the underlying" alt="" coords="16,109,150,137"/>
-<area shape="rect" id="node15" href="ase2sprkkr.outputs.readers.scf.ScfOutputReader.html#ase2sprkkr.outputs.readers.scf.ScfOutputReader" target="_top" title="ScfOutputReader" alt="" coords="200,109,331,137"/>
-<area shape="rect" id="node4" href="ase2sprkkr.common.grammar_types.basic.Number.html#ase2sprkkr.common.grammar_types.basic.Number" target="_top" title="Base class for a number &#45; descendants of this class can have minimal and/or maximal possible value." alt="" coords="397,161,470,189"/>
-<area shape="rect" id="node10" href="ase2sprkkr.common.grammar_types.basic.Real.html#ase2sprkkr.common.grammar_types.basic.Real" target="_top" title="A real value" alt="" coords="572,161,644,189"/>
-<area shape="rect" id="node6" href="ase2sprkkr.outputs.output_definitions.OutputValueDefinition.html#ase2sprkkr.outputs.output_definitions.OutputValueDefinition" target="_top" title="Value in an output file, of a form &#39;NAME &#160;&#160;VALUE&#39;" alt="" coords="525,213,690,241"/>
-<area shape="rect" id="node8" href="ase2sprkkr.outputs.readers.scf.PlottableValue.html#ase2sprkkr.outputs.readers.scf.PlottableValue" target="_top" title="PlottableValue" alt="" coords="719,213,834,241"/>
-<area shape="rect" id="node7" href="ase2sprkkr.common.value_definitions.ValueDefinition.html#ase2sprkkr.common.value_definitions.ValueDefinition" target="_top" title="ValueDefinition" alt="" coords="373,213,494,241"/>
-<area shape="rect" id="node9" href="ase2sprkkr.common.process_output_reader.ProcessOutputParser.html#ase2sprkkr.common.process_output_reader.ProcessOutputParser" target="_top" title="Class, that run a process, optionally saves all the output of the process to a file," alt="" coords="5,57,161,85"/>
-<area shape="rect" id="node14" href="ase2sprkkr.outputs.sprkkr_output_reader.SprKkrOutputParser.html#ase2sprkkr.outputs.sprkkr_output_reader.SprKkrOutputParser" target="_top" title="SprKkrOutputParser" alt="" coords="192,57,340,85"/>
-<area shape="rect" id="node12" href="ase2sprkkr.outputs.readers.scf.RealOrStars.html#ase2sprkkr.outputs.readers.scf.RealOrStars" target="_top" title="A real value, where ``****`` means ``NaN``" alt="" coords="728,161,826,189"/>
-<area shape="rect" id="node13" href="ase2sprkkr.outputs.readers.scf.ScfOutputParser.html#ase2sprkkr.outputs.readers.scf.ScfOutputParser" target="_top" title="This class reads and parses the output of the SCF task of the SPR&#45;KKR." alt="" coords="371,57,496,85"/>
-<area shape="rect" id="node16" href="ase2sprkkr.outputs.readers.scf.ScfResult.html#ase2sprkkr.outputs.readers.scf.ScfResult" target="_top" title="Objects of this class holds the results of a self&#45;consistent cycle and its iterations." alt="" coords="224,5,307,33"/>
-<area shape="rect" id="node17" href="ase2sprkkr.outputs.task_result.TaskResult.html#ase2sprkkr.outputs.task_result.TaskResult" target="_top" title="A base class for a result of a runned task (kkrscf executable)" alt="" coords="37,5,129,33"/>
-</map><div class="line-block">
+digraph inheritancecb74887816 {
+bgcolor=transparent;
+fontsize=14;
+rankdir=LR;
+ranksep=0.3;
+size=&quot;10.0, 10.0&quot;;
+  &quot;BaseDefinition&quot; [URL=&quot;ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.common.configuration_definitions.BaseDefinition&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;This class is a member of definition of configuration, that can be both&quot;];
+  &quot;GrammarType&quot; [URL=&quot;ase2sprkkr.common.grammar_types.grammar_type.GrammarType.html#ase2sprkkr.common.grammar_types.grammar_type.GrammarType&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;Base class for definition of configuration option types&quot;];
+  &quot;KkrOutputReader&quot; [URL=&quot;ase2sprkkr.outputs.task_result.KkrOutputReader.html#ase2sprkkr.outputs.task_result.KkrOutputReader&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;Parse SPR-KKR output streams into a TaskResult.&quot;];
+  &quot;Number&quot; [URL=&quot;ase2sprkkr.common.grammar_types.basic.Number.html#ase2sprkkr.common.grammar_types.basic.Number&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;Base class for a number - descendants of this class can have minimal and/or maximal possible value.&quot;];
+  &quot;TypedGrammarType&quot; -&gt; &quot;Number&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;OutputValueDefinition&quot; [URL=&quot;ase2sprkkr.outputs.output_definitions.OutputValueDefinition.html#ase2sprkkr.outputs.output_definitions.OutputValueDefinition&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;Value in an output file, of a form 'NAME   VALUE'&quot;];
+  &quot;ValueDefinition&quot; -&gt; &quot;OutputValueDefinition&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;PlottableValue&quot; [URL=&quot;ase2sprkkr.outputs.readers.scf.PlottableValue.html#ase2sprkkr.outputs.readers.scf.PlottableValue&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;];
+  &quot;OutputValueDefinition&quot; -&gt; &quot;PlottableValue&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;ProcessOutputParser&quot; [URL=&quot;ase2sprkkr.common.process_output_reader.ProcessOutputParser.html#ase2sprkkr.common.process_output_reader.ProcessOutputParser&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;Parse asynchronous stdout/stderr streams.&quot;];
+  &quot;Real&quot; [URL=&quot;ase2sprkkr.common.grammar_types.basic.Real.html#ase2sprkkr.common.grammar_types.basic.Real&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;A real value&quot;];
+  &quot;Number&quot; -&gt; &quot;Real&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;RealItemDefinition&quot; [URL=&quot;ase2sprkkr.common.configuration_definitions.RealItemDefinition.html#ase2sprkkr.common.configuration_definitions.RealItemDefinition&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;A base class for a configuration definition, either of an option, or of a container.&quot;];
+  &quot;BaseDefinition&quot; -&gt; &quot;RealItemDefinition&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;RealOrStars&quot; [URL=&quot;ase2sprkkr.outputs.readers.scf.RealOrStars.html#ase2sprkkr.outputs.readers.scf.RealOrStars&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;A real value, where ``****`` means ``NaN``&quot;];
+  &quot;Real&quot; -&gt; &quot;RealOrStars&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;ScfOutputParser&quot; [URL=&quot;ase2sprkkr.outputs.readers.scf.ScfOutputParser.html#ase2sprkkr.outputs.readers.scf.ScfOutputParser&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;This class reads and parses the output of the SCF task of the SPR-KKR.&quot;];
+  &quot;SprKkrOutputParser&quot; -&gt; &quot;ScfOutputParser&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;ScfOutputReader&quot; [URL=&quot;ase2sprkkr.outputs.readers.scf.ScfOutputReader.html#ase2sprkkr.outputs.readers.scf.ScfOutputReader&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;];
+  &quot;KkrOutputReader&quot; -&gt; &quot;ScfOutputReader&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;ScfResult&quot; [URL=&quot;ase2sprkkr.outputs.readers.scf.ScfResult.html#ase2sprkkr.outputs.readers.scf.ScfResult&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;Objects of this class holds the results of a self-consistent cycle and its iterations.&quot;];
+  &quot;TaskResult&quot; -&gt; &quot;ScfResult&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;SprKkrOutputParser&quot; [URL=&quot;ase2sprkkr.outputs.sprkkr_output_reader.SprKkrOutputParser.html#ase2sprkkr.outputs.sprkkr_output_reader.SprKkrOutputParser&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;];
+  &quot;ProcessOutputParser&quot; -&gt; &quot;SprKkrOutputParser&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;TaskResult&quot; [URL=&quot;ase2sprkkr.outputs.task_result.TaskResult.html#ase2sprkkr.outputs.task_result.TaskResult&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;A base class for a result of a runned task (kkrscf executable)&quot;];
+  &quot;TypedGrammarType&quot; [URL=&quot;ase2sprkkr.common.grammar_types.grammar_type.TypedGrammarType.html#ase2sprkkr.common.grammar_types.grammar_type.TypedGrammarType&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;];
+  &quot;GrammarType&quot; -&gt; &quot;TypedGrammarType&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;ValueDefinition&quot; [URL=&quot;ase2sprkkr.common.value_definitions.ValueDefinition.html#ase2sprkkr.common.value_definitions.ValueDefinition&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;];
+  &quot;RealItemDefinition&quot; -&gt; &quot;ValueDefinition&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+}
+<div class="line-block">
 <div class="line"><br /></div>
 </div>
 <p class="rubric">Description</p>
@@ -174,7 +199,7 @@
 <tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.outputs.readers.scf.RealOrStars.html#ase2sprkkr.outputs.readers.scf.RealOrStars" title="ase2sprkkr.outputs.readers.scf.RealOrStars"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RealOrStars</span></code></a>([prefix, postfix, format, ...])</p></td>
 <td><p>A real value, where <code class="docutils literal notranslate"><span class="pre">****</span></code> means <code class="docutils literal notranslate"><span class="pre">NaN</span></code></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.outputs.readers.scf.ScfOutputParser.html#ase2sprkkr.outputs.readers.scf.ScfOutputParser" title="ase2sprkkr.outputs.readers.scf.ScfOutputParser"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ScfOutputParser</span></code></a>([print_output, read_callback])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.outputs.readers.scf.ScfOutputParser.html#ase2sprkkr.outputs.readers.scf.ScfOutputParser" title="ase2sprkkr.outputs.readers.scf.ScfOutputParser"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ScfOutputParser</span></code></a>([print_output])</p></td>
 <td><p>This class reads and parses the output of the SCF task of the SPR-KKR.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.outputs.readers.scf.ScfOutputReader.html#ase2sprkkr.outputs.readers.scf.ScfOutputReader" title="ase2sprkkr.outputs.readers.scf.ScfOutputReader"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ScfOutputReader</span></code></a>(input_parameters, ...[, ...])</p></td>

@@ -1,0 +1,6 @@
+ase2sprkkr.outputs.persistent.PersistentResultUnavailableError
+==============================================================
+
+.. currentmodule:: ase2sprkkr.outputs.persistent
+
+.. autoexception:: PersistentResultUnavailableError

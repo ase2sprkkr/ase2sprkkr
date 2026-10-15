@@ -1,0 +1,76 @@
+bsf
+===
+
+Full name: **ase2sprkkr.input\_parameters.definitions.bsf**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.input_parameters.definitions.bsf.BSFInputParametersDefinition  ase2sprkkr.input_parameters.definitions.bsf.BSFTaskSection 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.input_parameters.definitions.bsf
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      _ek_item
+      _ek_vectors_item
+      _emax_default
+      _emaxev_default
+      _emin_default
+      _energy_definition
+      _ka_item
+      _ka_numbered
+      _kk_item
+      _mode_hint
+      _ne_default
+      _root
+      _task_definition
+      _validate_bsf
+      bsf_definition
+      bsf_mode
+      input_parameters_definition
+      kpaths_for_atoms
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      BSFInputParametersDefinition
+      BSFTaskSection
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

@@ -16,8 +16,8 @@
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
-      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -81,6 +81,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../ase2sprkkr.html">ase2sprkkr</a></li>
       <li class="breadcrumb-item active">ase2sprkkr.ase.pbc</li>
       <li class="wy-breadcrumbs-aside">
       </li>
@@ -94,7 +95,7 @@
 <div class="viewcode-block" id="check_symmetry">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.ase.pbc.check_symmetry.html#ase2sprkkr.ase.pbc.check_symmetry">[docs]</a>
 <span></span><span class="k">def</span><span class="w"> </span><span class="nf">check_symmetry</span><span class="p">(</span><span class="n">pbc</span><span class="p">,</span> <span class="n">symmetry</span><span class="p">,</span> <span class="n">error</span><span class="p">,</span> <span class="n">err_class</span><span class="o">=</span><span class="ne">ValueError</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check the symmetry of the PCB, raise an exception, if they not satisfy the requirements&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Check the symmetry of the PCB, raise an exception, if they not satisfy the requirements"""</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">pbc</span> <span class="o">==</span> <span class="n">symmetry</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>
         <span class="k">if</span> <span class="nb">callable</span><span class="p">(</span><span class="n">error</span><span class="p">):</span>
             <span class="n">error</span> <span class="o">=</span> <span class="n">error</span><span class="p">()</span>

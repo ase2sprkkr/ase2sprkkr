@@ -17,8 +17,8 @@
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../_static/documentation_options.js?v=5929fcd5"></script>
-      <script src="../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -68,14 +68,18 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.promote_ase_atoms.html">promote_ase_atoms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.__getattr__.html">__getattr__</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.common.html">common</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration.html">configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration_migration.html">configuration_migration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration_yaml.html">configuration_yaml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.conftest.html">conftest</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.examples.html">examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.execution.html">execution</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.gui.html">gui</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.input_parameters.html">input_parameters</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.output_files.html">output_files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.outputs.html">outputs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.physics.html">physics</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="ase2sprkkr.potentials.html">potentials</a><ul class="current">
@@ -90,6 +94,8 @@
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.potentials.potentials.html">potentials</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.profiles.html">profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.result_files.html">result_files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.sprkkr.html">sprkkr</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.tools.html">tools</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.version.html">version</a></li>
@@ -130,22 +136,39 @@
 <h1>TypesSection<a class="headerlink" href="#typessection" title="Link to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="ase2sprkkr.potentials.definitions.sections.types.TypesSection">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.potentials.definitions.sections.types.</span></span><span class="sig-name descname"><span class="pre">TypesSection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">definition</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">container</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/potentials/definitions/sections/types.html#TypesSection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.potentials.definitions.sections.types.TypesSection" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.potentials.definitions.sections.types.</span></span><span class="sig-name descname"><span class="pre">TypesSection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">definition</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">container</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/potentials/definitions/sections/types.html#TypesSection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.potentials.definitions.sections.types.TypesSection" title="Link to this definition"></a></dt>
 <dd><p class="rubric">Class hierarchy</p>
-<div class="graphviz"><img src="../_images/inheritance-272e30c26e6bd725a11822aa759a328ebec38b44.png" alt="Inheritance diagram of ase2sprkkr.potentials.definitions.sections.types.TypesSection" usemap="#inheritance4871474c5c" class="inheritance graphviz" /></div>
-<map id="inheritance4871474c5c" name="inheritance4871474c5c">
-<area shape="rect" id="node1" href="ase2sprkkr.common.configuration.Configuration.html#ase2sprkkr.common.configuration.Configuration" target="_top" title="The common base class for all configurations values and containers. I.e." alt="" coords="2,2,74,12"/>
-<area shape="rect" id="node5" href="ase2sprkkr.common.configuration_containers.BaseConfigurationContainer.html#ase2sprkkr.common.configuration_containers.BaseConfigurationContainer" target="_top" title="Configuration container, that holds members, either in classical way" alt="" coords="85,2,220,12"/>
-<area shape="rect" id="node2" href="ase2sprkkr.sprkkr.configuration.ConfigurationSection.html#ase2sprkkr.sprkkr.configuration.ConfigurationSection" target="_top" title="Configuration section to be used in SPRKKR configuration files" alt="" coords="589,11,679,21"/>
-<area shape="rect" id="node8" href="ase2sprkkr.potentials.potential_sections.PotentialSection.html#ase2sprkkr.potentials.potential_sections.PotentialSection" target="_top" title="A base class for all potential sections" alt="" coords="695,21,787,31"/>
-<area shape="rect" id="node3" href="ase2sprkkr.common.configuration_containers.Section.html#ase2sprkkr.common.configuration_containers.Section" target="_top" title="A standard section of a task or potential (whose content is predefinded by SectionDefinition)" alt="" coords="479,2,565,12"/>
-<area shape="rect" id="node4" href="ase2sprkkr.sprkkr.configuration.ConfigurationSectionTrait.html#ase2sprkkr.sprkkr.configuration.ConfigurationSectionTrait" target="_top" title="configuration.ConfigurationSectionTrait" alt="" coords="472,21,572,31"/>
-<area shape="rect" id="node7" href="ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.configuration_containers.ConfigurationContainer" target="_top" title="A container for configuration (problem&#45;definition) options and/or sections." alt="" coords="230,2,353,12"/>
-<area shape="rect" id="node6" href="ase2sprkkr.common.configuration_containers.BaseSection.html#ase2sprkkr.common.configuration_containers.BaseSection" target="_top" title="A section of SPRKKR configuration &#45; i.e. part of the configuration file." alt="" coords="364,2,461,12"/>
-<area shape="rect" id="node10" href="ase2sprkkr.potentials.potential_sections.UniqueListSection.html#ase2sprkkr.potentials.potential_sections.UniqueListSection" target="_top" title="The section, whose data is list of something," alt="" coords="798,21,894,31"/>
-<area shape="rect" id="node9" href="ase2sprkkr.potentials.potential_sections.PotentialSectionTrait.html#ase2sprkkr.potentials.potential_sections.PotentialSectionTrait" target="_top" title="A trait class for a section in a potential" alt="" coords="583,30,685,40"/>
-<area shape="rect" id="node11" href="#ase2sprkkr.potentials.definitions.sections.types.TypesSection" target="_top" title="types.TypesSection" alt="" coords="904,21,958,31"/>
-</map><div class="line-block">
+digraph inheritance4871474c5c {
+bgcolor=transparent;
+fontsize=14;
+rankdir=LR;
+ranksep=0.3;
+size=&quot;10.0, 10.0&quot;;
+  &quot;abc.ABC&quot; [fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,tooltip=&quot;Helper class that provides a standard way to create an ABC using&quot;];
+  &quot;configuration.Configuration&quot; [URL=&quot;ase2sprkkr.common.configuration.Configuration.html#ase2sprkkr.common.configuration.Configuration&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;The common base class for all configurations values and containers. I.e.&quot;];
+  &quot;configuration.ConfigurationSection&quot; [URL=&quot;ase2sprkkr.sprkkr.configuration.ConfigurationSection.html#ase2sprkkr.sprkkr.configuration.ConfigurationSection&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;Configuration section to be used in SPRKKR configuration files&quot;];
+  &quot;configuration_containers.Section&quot; -&gt; &quot;configuration.ConfigurationSection&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;configuration.ConfigurationSectionTrait&quot; -&gt; &quot;configuration.ConfigurationSection&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;configuration.ConfigurationSectionTrait&quot; [URL=&quot;ase2sprkkr.sprkkr.configuration.ConfigurationSectionTrait.html#ase2sprkkr.sprkkr.configuration.ConfigurationSectionTrait&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;];
+  &quot;configuration_containers.BaseConfigurationContainer&quot; [URL=&quot;ase2sprkkr.common.configuration_containers.BaseConfigurationContainer.html#ase2sprkkr.common.configuration_containers.BaseConfigurationContainer&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;Configuration container, that holds members, either in classical way&quot;];
+  &quot;configuration.Configuration&quot; -&gt; &quot;configuration_containers.BaseConfigurationContainer&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;abc.ABC&quot; -&gt; &quot;configuration_containers.BaseConfigurationContainer&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;configuration_containers.BaseSection&quot; [URL=&quot;ase2sprkkr.common.configuration_containers.BaseSection.html#ase2sprkkr.common.configuration_containers.BaseSection&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;A section of SPRKKR configuration - i.e. part of the configuration file.&quot;];
+  &quot;configuration_containers.ConfigurationContainer&quot; -&gt; &quot;configuration_containers.BaseSection&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;configuration_containers.ConfigurationContainer&quot; [URL=&quot;ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.configuration_containers.ConfigurationContainer&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;A container for configuration (problem-definition) options and/or sections.&quot;];
+  &quot;configuration_containers.BaseConfigurationContainer&quot; -&gt; &quot;configuration_containers.ConfigurationContainer&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;configuration_containers.Section&quot; [URL=&quot;ase2sprkkr.common.configuration_containers.Section.html#ase2sprkkr.common.configuration_containers.Section&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;A standard section of a task or potential (whose content is predefinded by SectionDefinition)&quot;];
+  &quot;configuration_containers.BaseSection&quot; -&gt; &quot;configuration_containers.Section&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;potential_sections.PotentialSection&quot; [URL=&quot;ase2sprkkr.potentials.potential_sections.PotentialSection.html#ase2sprkkr.potentials.potential_sections.PotentialSection&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;A base class for all potential sections&quot;];
+  &quot;potential_sections.PotentialSectionTrait&quot; -&gt; &quot;potential_sections.PotentialSection&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;configuration.ConfigurationSection&quot; -&gt; &quot;potential_sections.PotentialSection&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;potential_sections.PotentialSectionTrait&quot; [URL=&quot;ase2sprkkr.potentials.potential_sections.PotentialSectionTrait.html#ase2sprkkr.potentials.potential_sections.PotentialSectionTrait&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;A trait class for a section in a potential&quot;];
+  &quot;potential_sections.UniqueListSection&quot; [URL=&quot;ase2sprkkr.potentials.potential_sections.UniqueListSection.html#ase2sprkkr.potentials.potential_sections.UniqueListSection&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;The section, whose data is list of something,&quot;];
+  &quot;potential_sections.PotentialSection&quot; -&gt; &quot;potential_sections.UniqueListSection&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;types.TypesSection&quot; [URL=&quot;#ase2sprkkr.potentials.definitions.sections.types.TypesSection&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;];
+  &quot;potential_sections.UniqueListSection&quot; -&gt; &quot;types.TypesSection&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+}
+<div class="line-block">
 <div class="line"><br /></div>
 </div>
 <p class="rubric">Constructor</p>
@@ -157,7 +180,7 @@
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ase2sprkkr.potentials.definitions.sections.types.TypesSection._value_name">
-<span class="sig-name descname"><span class="pre">_value_name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'types'</span></em><a class="headerlink" href="#ase2sprkkr.potentials.definitions.sections.types.TypesSection._value_name" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">_value_name</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'types'</span></span><a class="headerlink" href="#ase2sprkkr.potentials.definitions.sections.types.TypesSection._value_name" title="Link to this definition"></a></dt>
 <dd><p>The name of the property of write_io_data to store the list of data</p>
 </dd></dl>
 
@@ -166,6 +189,11 @@
 <span class="sig-name descname"><span class="pre">_value_class</span></span><a class="headerlink" href="#ase2sprkkr.potentials.definitions.sections.types.TypesSection._value_class" title="Link to this definition"></a></dt>
 <dd><p>alias of <a class="reference internal" href="ase2sprkkr.sprkkr.atomic_types.AtomicType.html#ase2sprkkr.sprkkr.atomic_types.AtomicType" title="ase2sprkkr.sprkkr.atomic_types.AtomicType"><code class="xref py py-class docutils literal notranslate"><span class="pre">AtomicType</span></code></a></p>
 </dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ase2sprkkr.potentials.definitions.sections.types.TypesSection._abc_impl">
+<span class="sig-name descname"><span class="pre">_abc_impl</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;_abc._abc_data</span> <span class="pre">object&gt;</span></span><a class="headerlink" href="#ase2sprkkr.potentials.definitions.sections.types.TypesSection._abc_impl" title="Link to this definition"></a></dt>
+<dd></dd></dl>
 
 </dd></dl>
 

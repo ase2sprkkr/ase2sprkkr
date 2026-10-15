@@ -17,8 +17,8 @@
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../_static/documentation_options.js?v=5929fcd5"></script>
-      <script src="../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -68,14 +68,18 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.promote_ase_atoms.html">promote_ase_atoms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.__getattr__.html">__getattr__</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.common.html">common</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration.html">configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration_migration.html">configuration_migration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration_yaml.html">configuration_yaml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.conftest.html">conftest</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.examples.html">examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.execution.html">execution</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.gui.html">gui</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.input_parameters.html">input_parameters</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.output_files.html">output_files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.outputs.html">outputs</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="ase2sprkkr.physics.html">physics</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.physics.atomic_data.html">atomic_data</a></li>
@@ -85,15 +89,19 @@
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.physics.lattice_data.international_numbers_to_AP.html">international_numbers_to_AP</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.physics.lattice_data.hall_numbers_to_AP.html">hall_numbers_to_AP</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.physics.lattice_data.ap_number_from_spacegroup.html">ap_number_from_spacegroup</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.physics.lattice_data.bravais_number.html">bravais_number</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.physics.lattice_data.reorder_matrix.html">reorder_matrix</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.physics.lattice_data.LatticeData.html">LatticeData</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.physics.lattice_data.Pearson.html">Pearson</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.physics.test_broadening.html">test_broadening</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.physics.winger_seitz_radii.html">winger_seitz_radii</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.potentials.html">potentials</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.profiles.html">profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.result_files.html">result_files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.sprkkr.html">sprkkr</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.tools.html">tools</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.version.html">version</a></li>
@@ -131,11 +139,18 @@
 <h1>lattice_data<a class="headerlink" href="#lattice-data" title="Link to this heading"></a></h1>
 <p>Full name: <strong>ase2sprkkr.physics.lattice_data</strong></p>
 <p class="rubric">Module class hierarchy</p>
-<div class="graphviz"><img src="../_images/inheritance-6b074be38da144faaa7ebc4defb15eebb90eb281.png" alt="Inheritance diagram of ase2sprkkr.physics.lattice_data.LatticeData, ase2sprkkr.physics.lattice_data.Pearson" usemap="#inheritanced874d6442a" class="inheritance graphviz" /></div>
-<map id="inheritanced874d6442a" name="inheritanced874d6442a">
-<area shape="rect" id="node1" href="ase2sprkkr.physics.lattice_data.LatticeData.html#ase2sprkkr.physics.lattice_data.LatticeData" target="_top" title="LatticeData" alt="" coords="5,81,102,109"/>
-<area shape="rect" id="node2" href="ase2sprkkr.physics.lattice_data.Pearson.html#ase2sprkkr.physics.lattice_data.Pearson" target="_top" title="This class holds informations about translation symmetry of a lattice with a given" alt="" coords="17,29,90,57"/>
-</map><div class="line-block">
+digraph inheritanced874d6442a {
+bgcolor=transparent;
+fontsize=14;
+rankdir=LR;
+ranksep=0.3;
+size=&quot;10.0, 10.0&quot;;
+  &quot;LatticeData&quot; [URL=&quot;ase2sprkkr.physics.lattice_data.LatticeData.html#ase2sprkkr.physics.lattice_data.LatticeData&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;];
+  &quot;Pearson&quot; [URL=&quot;ase2sprkkr.physics.lattice_data.Pearson.html#ase2sprkkr.physics.lattice_data.Pearson&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;Pearson(pearson_symbol, bravais_number, family, centering_type, herman_mauguin, shoenflies)&quot;];
+  &quot;Pearson&quot; [URL=&quot;ase2sprkkr.physics.lattice_data.Pearson.html#ase2sprkkr.physics.lattice_data.Pearson&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;This class holds informations about translation symmetry of a lattice with a given&quot;];
+  &quot;Pearson&quot; -&gt; &quot;Pearson&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+}
+<div class="line-block">
 <div class="line"><br /></div>
 </div>
 <p class="rubric">Description</p>
@@ -158,7 +173,10 @@ and the LatticeData object, that provides various informations about a lattice.<
 <tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.physics.lattice_data.ap_number_from_spacegroup.html#ase2sprkkr.physics.lattice_data.ap_number_from_spacegroup" title="ase2sprkkr.physics.lattice_data.ap_number_from_spacegroup"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ap_number_from_spacegroup</span></code></a>(spacegroup_number)</p></td>
 <td><p>Return the Xband A.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.physics.lattice_data.reorder_matrix.html#ase2sprkkr.physics.lattice_data.reorder_matrix" title="ase2sprkkr.physics.lattice_data.reorder_matrix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">reorder_matrix</span></code></a>(target, source)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.physics.lattice_data.bravais_number.html#ase2sprkkr.physics.lattice_data.bravais_number" title="ase2sprkkr.physics.lattice_data.bravais_number"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bravais_number</span></code></a>(atoms_or_bravais)</p></td>
+<td><p>Return the Bravais-lattice number.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.physics.lattice_data.reorder_matrix.html#ase2sprkkr.physics.lattice_data.reorder_matrix" title="ase2sprkkr.physics.lattice_data.reorder_matrix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">reorder_matrix</span></code></a>(target, source)</p></td>
 <td><p></p></td>
 </tr>
 </tbody>

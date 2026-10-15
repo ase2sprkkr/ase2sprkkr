@@ -17,8 +17,8 @@
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../_static/documentation_options.js?v=5929fcd5"></script>
-      <script src="../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -68,6 +68,7 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.promote_ase_atoms.html">promote_ase_atoms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.__getattr__.html">__getattr__</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="ase2sprkkr.common.html">common</a><ul class="current">
@@ -79,24 +80,29 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.configuration_containers.html">configuration_containers</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.configuration_definitions.html">configuration_definitions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.configuration_transaction.html">configuration_transaction</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.container_definitions.html">container_definitions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.dangerous_values.html">dangerous_values</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.debug.html">debug</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.decorators.html">decorators</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.dependencies.html">dependencies</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.doc.html">doc</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.file_fingerprints.html">file_fingerprints</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.file_locks.html">file_locks</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.file_utils.html">file_utils</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.formats.html">formats</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.generated_configuration_definitions.html">generated_configuration_definitions</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.grammar.html">grammar</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.grammar_types.html">grammar_types</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.init_tests.html">init_tests</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.lazy_string.html">lazy_string</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.misc.html">misc</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.module_registry.html">module_registry</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.no_output.html">no_output</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.options.html">options</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.parsing_results.html">parsing_results</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.process_output_reader.html">process_output_reader</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.repeated_configuration_containers.html">repeated_configuration_containers</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.section_adaptors.html">section_adaptors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.repetition.html">repetition</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.subprocess.html">subprocess</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.tools.html">tools</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.unique_values.html">unique_values</a></li>
@@ -106,13 +112,18 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration.html">configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration_migration.html">configuration_migration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration_yaml.html">configuration_yaml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.conftest.html">conftest</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.examples.html">examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.execution.html">execution</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.gui.html">gui</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.input_parameters.html">input_parameters</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.output_files.html">output_files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.outputs.html">outputs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.physics.html">physics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.potentials.html">potentials</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.profiles.html">profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.result_files.html">result_files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.sprkkr.html">sprkkr</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.tools.html">tools</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.version.html">version</a></li>
@@ -151,14 +162,19 @@
 <h1>Configuration<a class="headerlink" href="#configuration" title="Link to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="ase2sprkkr.common.configuration.Configuration">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.common.configuration.</span></span><span class="sig-name descname"><span class="pre">Configuration</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">definition</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">container</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/configuration.html#Configuration"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.configuration.Configuration" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.common.configuration.</span></span><span class="sig-name descname"><span class="pre">Configuration</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">definition</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">container</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/configuration.html#Configuration"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.configuration.Configuration" title="Link to this definition"></a></dt>
 <dd><p>The common base class for all configurations values and containers. I.e.
 for <a class="reference internal" href="ase2sprkkr.common.options.Option.html#ase2sprkkr.common.options.Option" title="ase2sprkkr.common.options.Option"><code class="xref py py-class docutils literal notranslate"><span class="pre">Options</span></code></a> and <a class="reference internal" href="ase2sprkkr.common.configuration_containers.Section.html#ase2sprkkr.common.configuration_containers.Section" title="ase2sprkkr.common.configuration_containers.Section"><code class="xref py py-class docutils literal notranslate"><span class="pre">Sections</span></code></a>.</p>
 <p class="rubric">Class hierarchy</p>
-<div class="graphviz"><img src="../_images/inheritance-795296dbb8e80c0f9cb1bf41de0a08e5d732fe0c.png" alt="Inheritance diagram of ase2sprkkr.common.configuration.Configuration" usemap="#inheritancebd00defe67" class="inheritance graphviz" /></div>
-<map id="inheritancebd00defe67" name="inheritancebd00defe67">
-<area shape="rect" id="node1" href="#ase2sprkkr.common.configuration.Configuration" target="_top" title="The common base class for all configurations values and containers. I.e." alt="" coords="5,5,203,33"/>
-</map><div class="line-block">
+digraph inheritancebd00defe67 {
+bgcolor=transparent;
+fontsize=14;
+rankdir=LR;
+ranksep=0.3;
+size=&quot;10.0, 10.0&quot;;
+  &quot;configuration.Configuration&quot; [URL=&quot;#ase2sprkkr.common.configuration.Configuration&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;The common base class for all configurations values and containers. I.e.&quot;];
+}
+<div class="line-block">
 <div class="line"><br /></div>
 </div>
 <p class="rubric">Constructor</p>
@@ -207,9 +223,20 @@ Instance of <a class="reference internal" href="ase2sprkkr.common.configuration_
 <p>I.E. the object, that represents the whole configuration or problem-definition file</p>
 </dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.common.configuration.Configuration.clear">
+<span class="sig-name descname"><span class="pre">clear</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/configuration.html#Configuration.clear"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.configuration.Configuration.clear" title="Link to this definition"></a></dt>
+<dd><p>Transactionally clear this item and validate the resulting tree.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py property">
 <dt class="sig sig-object py" id="ase2sprkkr.common.configuration.Configuration.name">
-<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#ase2sprkkr.common.configuration.Configuration.name" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#ase2sprkkr.common.configuration.Configuration.name" title="Link to this definition"></a></dt>
 <dd><p>Return the name of the option/section. The name is defined by the definition
 of the object.</p>
 <dl class="field-list simple">
@@ -230,7 +257,7 @@ of the object.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.common.configuration.Configuration.as_dict_getter">
-<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">as_dict_getter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">only_changed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'default'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">generated</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">copy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/configuration.html#Configuration.as_dict_getter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.configuration.Configuration.as_dict_getter" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">as_dict_getter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">only_changed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'default'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">generated</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">copy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/configuration.html#Configuration.as_dict_getter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.configuration.Configuration.as_dict_getter" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>only_changed</strong> (<em>bool</em><em> | </em><em>str</em>)</p>
@@ -280,12 +307,12 @@ if they are the same as the default value)</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="ase2sprkkr.common.configuration.Configuration.info">
-<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">info</span></span><a class="headerlink" href="#ase2sprkkr.common.configuration.Configuration.info" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">info</span></span><a class="headerlink" href="#ase2sprkkr.common.configuration.Configuration.info" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="ase2sprkkr.common.configuration.Configuration.doc">
-<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">doc</span></span><a class="headerlink" href="#ase2sprkkr.common.configuration.Configuration.doc" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">doc</span></span><a class="headerlink" href="#ase2sprkkr.common.configuration.Configuration.doc" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -295,13 +322,59 @@ if they are the same as the default value)</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.common.configuration.Configuration.check_for_errors">
-<span class="sig-name descname"><span class="pre">check_for_errors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">validate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'save'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">print</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/configuration.html#Configuration.check_for_errors"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.configuration.Configuration.check_for_errors" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<span class="sig-name descname"><span class="pre">check_for_errors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">why</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'save'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">print</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/configuration.html#Configuration.check_for_errors"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.configuration.Configuration.check_for_errors" title="Link to this definition"></a></dt>
+<dd><p>Return validation warnings for phase <code class="docutils literal notranslate"><span class="pre">why</span></code> and optionally print them.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>why</strong> (<em>str</em>)</p></li>
+<li><p><strong>print</strong> (<em>bool</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>List</em>[<em>WarningMessage</em>]</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.common.configuration.Configuration.validate">
-<span class="sig-name descname"><span class="pre">validate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">why</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'save'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/configuration.html#Configuration.validate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.configuration.Configuration.validate" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<span class="sig-name descname"><span class="pre">validate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">why</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'save'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">report_invalid</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/configuration.html#Configuration.validate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.configuration.Configuration.validate" title="Link to this definition"></a></dt>
+<dd><p>Validate this configuration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>why</strong> (<em>Literal</em><em>[</em><em>'set'</em><em>, </em><em>'parse'</em><em>, </em><em>'save'</em><em>]</em>) – Validation phase: <code class="docutils literal notranslate"><span class="pre">set</span></code>, <code class="docutils literal notranslate"><span class="pre">parse</span></code> or <code class="docutils literal notranslate"><span class="pre">save</span></code>.</p></li>
+<li><p><strong>report_invalid</strong> (<em>Literal</em><em>[</em><em>'raise'</em><em>, </em><em>'warn'</em><em>, </em><em>'ignore'</em><em>] </em><em>| </em><em>None</em>) – <code class="docutils literal notranslate"><span class="pre">&quot;raise&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;warn&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">&quot;ignore&quot;</span></code>. By default, errors
+warn after parsing and raise while setting or saving.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>List</em>[<a class="reference internal" href="ase2sprkkr.common.warnings.ValidationResult.html#ase2sprkkr.common.warnings.ValidationResult" title="ase2sprkkr.common.warnings.ValidationResult"><em>ValidationResult</em></a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.common.configuration.Configuration._mutation">
+<span class="sig-name descname"><span class="pre">_mutation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">why</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">retain_invalid</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">report_invalid</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/configuration.html#Configuration._mutation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.configuration.Configuration._mutation" title="Link to this definition"></a></dt>
+<dd><p>Stage, validate and finish one policy-controlled mutation.</p>
+<p><code class="docutils literal notranslate"><span class="pre">why</span></code> is the validation phase. <code class="docutils literal notranslate"><span class="pre">retain_invalid</span></code> and
+<code class="docutils literal notranslate"><span class="pre">report_invalid</span></code> have the values documented by
+<code class="xref py py-class docutils literal notranslate"><span class="pre">InvalidValuePolicy</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>why</strong> (<em>Literal</em><em>[</em><em>'set'</em><em>, </em><em>'parse'</em><em>, </em><em>'save'</em><em>]</em>)</p></li>
+<li><p><strong>retain_invalid</strong> (<em>Literal</em><em>[</em><em>'none'</em><em>, </em><em>'typed'</em><em>, </em><em>'all'</em><em>] </em><em>| </em><em>None</em>)</p></li>
+<li><p><strong>report_invalid</strong> (<em>Literal</em><em>[</em><em>'raise'</em><em>, </em><em>'warn'</em><em>, </em><em>'ignore'</em><em>] </em><em>| </em><em>None</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>Generator</em>[<em>Tuple</em>[<a class="reference internal" href="ase2sprkkr.common.configuration_transaction.ConfigurationTransaction.html#ase2sprkkr.common.configuration_transaction.ConfigurationTransaction" title="ase2sprkkr.common.configuration_transaction.ConfigurationTransaction"><em>ConfigurationTransaction</em></a>, <a class="reference internal" href="ase2sprkkr.common.warnings.InvalidValuePolicy.html#ase2sprkkr.common.warnings.InvalidValuePolicy" title="ase2sprkkr.common.warnings.InvalidValuePolicy"><em>InvalidValuePolicy</em></a>], None, None]</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.common.configuration.Configuration.save_to_file">
@@ -314,11 +387,11 @@ configuration container/value.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>file</strong> (<em>str</em><em> or </em><em>file</em>) – File to read the data from</p></li>
-<li><p><strong>validate</strong> (<em>str</em><em> | </em><em>bool</em>) – Validate the data in the container first and raise an exception,
-if there is an error (e.g. the the data are not complete).
-The string value can be used to select the type of validation
-<code class="docutils literal notranslate"><span class="pre">save</span></code> means the full check (same as the default value <code class="docutils literal notranslate"><span class="pre">True</span></code>),
-use <code class="docutils literal notranslate"><span class="pre">set</span></code> to allow some missing values.</p></li>
+<li><p><strong>validate</strong> (<em>str</em><em> | </em><em>bool</em>) – Validation mode. <code class="docutils literal notranslate"><span class="pre">True</span></code> and <code class="docutils literal notranslate"><span class="pre">&quot;save&quot;</span></code> perform strict save
+validation, <code class="docutils literal notranslate"><span class="pre">False</span></code> skips validation, and <code class="docutils literal notranslate"><span class="pre">&quot;warning&quot;</span></code> performs
+save validation without raising <code class="xref py py-class docutils literal notranslate"><span class="pre">DataValidityError</span></code> results.
+<code class="docutils literal notranslate"><span class="pre">&quot;set&quot;</span></code> can be used to allow values that are only required when
+saving.</p></li>
 </ul>
 </dd>
 </dl>
@@ -344,16 +417,6 @@ use <code class="docutils literal notranslate"><span class="pre">set</span></cod
 <li><p><em>The configuration, as it should be saved in a configuration/problem definition file.</em></p></li>
 </ul>
 </p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.common.configuration.Configuration._find_member">
-<span class="sig-name descname"><span class="pre">_find_member</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lower_case</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_option</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/configuration.html#Configuration._find_member"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.configuration.Configuration._find_member" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>lower_case</strong> (<em>bool</em>)</p>
 </dd>
 </dl>
 </dd></dl>

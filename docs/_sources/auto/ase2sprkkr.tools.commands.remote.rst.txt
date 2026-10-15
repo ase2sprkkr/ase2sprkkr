@@ -1,0 +1,46 @@
+remote
+======
+
+Full name: **ase2sprkkr.tools.commands.remote**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.tools.commands.remote
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      _duration
+      _finalize_failed_worker_start
+      _print_json
+      parser
+      run
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

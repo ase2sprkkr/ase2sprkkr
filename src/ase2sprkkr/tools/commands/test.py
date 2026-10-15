@@ -53,8 +53,6 @@ def run(args, global_args):
         "-m",
         "pytest",
         "--doctest-modules",
-        "--ignore",
-        os.path.join(a2s_path, "output_files"),
         "--rootdir",
         root_path,
         a2s_path,

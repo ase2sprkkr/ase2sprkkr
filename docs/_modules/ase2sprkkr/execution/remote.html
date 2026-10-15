@@ -1,0 +1,1031 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ase2sprkkr.execution.remote &mdash; ASE2SPRKKR  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/mods.css?v=26f6988d" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            ASE2SPRKKR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage.html">How to use the package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../how-to-install.html">More about the package installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../philosophy.html">Philosophy of the package (for developers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../authors.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Examples</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../auto/ase2sprkkr.html">ase2sprkkr</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">ASE2SPRKKR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../ase2sprkkr.html">ase2sprkkr</a></li>
+      <li class="breadcrumb-item active">ase2sprkkr.execution.remote</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for ase2sprkkr.execution.remote</h1><div class="highlight"><pre>
+<span></span><span class="sd">"""Remote execution through a small ASE2SPRKKR helper on another machine."""</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">posixpath</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">asdict</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">Enum</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">threading</span><span class="w"> </span><span class="kn">import</span> <span class="n">Event</span><span class="p">,</span> <span class="n">Lock</span><span class="p">,</span> <span class="n">Thread</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">uuid</span><span class="w"> </span><span class="kn">import</span> <span class="n">uuid4</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.base</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">OutputObservers</span><span class="p">,</span>
+    <span class="n">RunReference</span><span class="p">,</span>
+    <span class="n">RunState</span><span class="p">,</span>
+    <span class="n">SubmissionNotStarted</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.detached</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">_FINAL_STATES</span><span class="p">,</span>
+    <span class="n">_METADATA_DIR</span><span class="p">,</span>
+    <span class="n">_REQUEST_FILE</span><span class="p">,</span>
+    <span class="n">_RUNS_DIR</span><span class="p">,</span>
+    <span class="n">_STATE_FILE</span><span class="p">,</span>
+    <span class="n">_STATE_LOCK_FILE</span><span class="p">,</span>
+    <span class="n">_DETACHED_EXECUTORS</span> <span class="k">as</span> <span class="n">_REMOTE_EXECUTORS</span><span class="p">,</span>
+    <span class="n">_read_state</span><span class="p">,</span>
+    <span class="n">_read_state_unlocked</span><span class="p">,</span>
+    <span class="n">_request_path</span><span class="p">,</span>
+    <span class="n">_request_spec</span><span class="p">,</span>
+    <span class="n">_run_directory</span><span class="p">,</span>
+    <span class="n">_state_lock</span><span class="p">,</span>
+    <span class="n">_state_lock_path</span><span class="p">,</span>
+    <span class="n">_state_path</span><span class="p">,</span>
+    <span class="n">_timestamp</span><span class="p">,</span>
+    <span class="n">_write_state</span><span class="p">,</span>
+    <span class="n">_write_state_unlocked</span><span class="p">,</span>
+    <span class="n">cancel_detached</span> <span class="k">as</span> <span class="n">cancel_remote</span><span class="p">,</span>
+    <span class="n">clean_detached_runs</span> <span class="k">as</span> <span class="n">clean_remote_runs</span><span class="p">,</span>
+    <span class="n">follow_detached</span> <span class="k">as</span> <span class="n">follow_remote</span><span class="p">,</span>
+    <span class="n">list_detached_runs</span> <span class="k">as</span> <span class="n">list_remote_runs</span><span class="p">,</span>
+    <span class="n">resolve_detached_mpi</span> <span class="k">as</span> <span class="n">resolve_remote_mpi</span><span class="p">,</span>
+    <span class="n">run_detached_worker</span> <span class="k">as</span> <span class="n">run_remote_worker</span><span class="p">,</span>
+    <span class="n">status_detached</span> <span class="k">as</span> <span class="n">status_remote</span><span class="p">,</span>
+    <span class="n">submit_detached</span> <span class="k">as</span> <span class="n">submit_remote</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.transport</span><span class="w"> </span><span class="kn">import</span> <span class="n">expand_local_files</span><span class="p">,</span> <span class="n">has_file_magic</span><span class="p">,</span> <span class="n">local_file_digest</span>
+
+
+<div class="viewcode-block" id="FileSyncPolicy">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.remote.FileSyncPolicy.html#ase2sprkkr.execution.remote.FileSyncPolicy">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">FileSyncPolicy</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Enum</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Policy controlling transfers between local and remote workspaces."""</span>
+
+    <span class="n">CHANGED</span> <span class="o">=</span> <span class="s2">"changed"</span>
+    <span class="n">ALWAYS</span> <span class="o">=</span> <span class="s2">"always"</span>
+    <span class="n">MISSING</span> <span class="o">=</span> <span class="s2">"missing"</span>
+    <span class="n">NEVER</span> <span class="o">=</span> <span class="s2">"never"</span></div>
+
+
+
+<div class="viewcode-block" id="_run_sync">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.remote._run_sync.html#ase2sprkkr.execution.remote._run_sync">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_run_sync</span><span class="p">(</span><span class="n">coro</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Run one transport coroutine from the synchronous executor facade."""</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">asyncio</span><span class="o">.</span><span class="n">get_running_loop</span><span class="p">()</span>
+    <span class="k">except</span> <span class="ne">RuntimeError</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">coro</span><span class="p">)</span>
+
+    <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">error</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">worker</span><span class="p">():</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">coro</span><span class="p">))</span>
+        <span class="k">except</span> <span class="ne">BaseException</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+            <span class="n">error</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">exc</span><span class="p">)</span>
+
+    <span class="n">thread</span> <span class="o">=</span> <span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">worker</span><span class="p">)</span>
+    <span class="n">thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+    <span class="n">thread</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">error</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">error</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span></div>
+
+
+
+<div class="viewcode-block" id="RemoteRunner">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.remote.RemoteRunner.html#ase2sprkkr.execution.remote.RemoteRunner">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">RemoteRunner</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""A local proxy for one run controlled by a remote ASE2SPRKKR helper."""</span>
+
+<div class="viewcode-block" id="RemoteRunner.__init__">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.remote.RemoteRunner.html#ase2sprkkr.execution.remote.RemoteRunner.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">executor</span><span class="p">,</span>
+        <span class="n">reader</span><span class="p">,</span>
+        <span class="n">spec</span><span class="p">,</span>
+        <span class="n">callback</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">output_listener</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">start</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">reference</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">state</span><span class="o">=</span><span class="n">RunState</span><span class="o">.</span><span class="n">NEW</span><span class="p">,</span>
+        <span class="n">output_targets</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">cache_targets</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">output_patterns</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">cache_patterns</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">cache_before</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">executor</span> <span class="o">=</span> <span class="n">executor</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reader</span> <span class="o">=</span> <span class="n">reader</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">spec</span> <span class="o">=</span> <span class="n">spec</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">callback</span> <span class="o">=</span> <span class="n">callback</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">result</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="n">create_result</span><span class="p">(</span><span class="n">spec</span><span class="o">.</span><span class="n">output_file</span><span class="p">,</span> <span class="n">spec</span><span class="o">.</span><span class="n">input_file</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_state</span> <span class="o">=</span> <span class="n">RunState</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_reference</span> <span class="o">=</span> <span class="n">reference</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_output_observers</span> <span class="o">=</span> <span class="n">OutputObservers</span><span class="p">(</span><span class="n">output_listener</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span> <span class="o">=</span> <span class="n">Lock</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_done</span> <span class="o">=</span> <span class="n">Event</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_exception</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_callback_exception</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_return_code</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_file_retrieval_state</span> <span class="o">=</span> <span class="s2">"pending"</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_file_retrieval_message</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_follow_process</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_output_targets</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">output_targets</span> <span class="ow">or</span> <span class="p">{})</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_cache_targets</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">cache_targets</span> <span class="ow">or</span> <span class="p">{})</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_output_patterns</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">output_patterns</span> <span class="ow">or</span> <span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_cache_patterns</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">cache_patterns</span> <span class="ow">or</span> <span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_cache_before</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">cache_before</span> <span class="ow">or</span> <span class="p">{})</span>
+
+        <span class="k">if</span> <span class="n">start</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">start</span><span class="p">()</span></div>
+
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">reference</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reference</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">state</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reference</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state</span> <span class="ow">in</span> <span class="p">(</span>
+            <span class="n">RunState</span><span class="o">.</span><span class="n">NEW</span><span class="p">,</span>
+            <span class="n">RunState</span><span class="o">.</span><span class="n">FINISHED</span><span class="p">,</span>
+            <span class="n">RunState</span><span class="o">.</span><span class="n">FAILED</span><span class="p">,</span>
+            <span class="n">RunState</span><span class="o">.</span><span class="n">CANCELLED</span><span class="p">,</span>
+        <span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state</span>
+        <span class="n">status</span> <span class="o">=</span> <span class="n">_run_sync</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">executor</span><span class="o">.</span><span class="n">_status</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_reference</span><span class="o">.</span><span class="n">directory</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reference</span><span class="o">.</span><span class="n">native_id</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_state</span> <span class="o">=</span> <span class="n">RunState</span><span class="p">(</span><span class="n">status</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"state"</span><span class="p">,</span> <span class="s2">"unknown"</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">status</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"return_code"</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_return_code</span> <span class="o">=</span> <span class="n">status</span><span class="p">[</span><span class="s2">"return_code"</span><span class="p">]</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">exception</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_exception</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">return_code</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_return_code</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">file_retrieval_state</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_file_retrieval_state</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">file_retrieval_message</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_file_retrieval_message</span>
+
+<div class="viewcode-block" id="RemoteRunner.add_output_listener">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.remote.RemoteRunner.html#ase2sprkkr.execution.remote.RemoteRunner.add_output_listener">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_output_listener</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">callback</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_output_observers</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">callback</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="RemoteRunner.add_output_error_listener">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.remote.RemoteRunner.html#ase2sprkkr.execution.remote.RemoteRunner.add_output_error_listener">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_output_error_listener</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">callback</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_output_observers</span><span class="o">.</span><span class="n">add_error_listener</span><span class="p">(</span><span class="n">callback</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="RemoteRunner._emit_output">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.remote.RemoteRunner.html#ase2sprkkr.execution.remote.RemoteRunner._emit_output">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_emit_output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">kind</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">data</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">"utf8"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">reader</span><span class="o">.</span><span class="n">print_output</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s2">""</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span> <span class="k">if</span> <span class="n">kind</span> <span class="o">==</span> <span class="s2">"err"</span> <span class="k">else</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_output_observers</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">kind</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="RemoteRunner._write_output">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.remote.RemoteRunner.html#ase2sprkkr.execution.remote.RemoteRunner._write_output">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_write_output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">kind</span><span class="p">):</span>
+        <span class="n">target</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">error_file</span>
+            <span class="k">if</span> <span class="n">kind</span> <span class="o">==</span> <span class="s2">"err"</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">error_file</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">output_file</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">target</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">target</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+            <span class="n">target</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="RemoteRunner._file_name">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.remote.RemoteRunner.html#ase2sprkkr.execution.remote.RemoteRunner._file_name">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_file_name</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="s2">"flush"</span><span class="p">):</span>
+            <span class="n">value</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="s2">"name"</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">fspath</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">TypeError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Remote execution requires named files"</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span></div>
+
+
+<div class="viewcode-block" id="RemoteRunner._local_path">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.remote.RemoteRunner.html#ase2sprkkr.execution.remote.RemoteRunner._local_path">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_local_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_file_name</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Remote execution requires named files"</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">name</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="RemoteRunner._stage_file">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.remote.RemoteRunner.html#ase2sprkkr.execution.remote.RemoteRunner._stage_file">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_stage_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">used</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">uploads</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="n">source</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_local_path</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">source</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="n">target</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">executor</span><span class="o">.</span><span class="n">map_path</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
+        <span class="n">previous</span> <span class="o">=</span> <span class="n">used</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">previous</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">previous</span> <span class="o">!=</span> <span class="n">source</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Remote input target collision: </span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">previous</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">target</span>
+
+        <span class="n">policy</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">executor</span><span class="o">.</span><span class="n">input_files</span>
+        <span class="k">if</span> <span class="n">policy</span> <span class="o">==</span> <span class="n">FileSyncPolicy</span><span class="o">.</span><span class="n">NEVER</span><span class="p">:</span>
+            <span class="n">used</span><span class="p">[</span><span class="n">target</span><span class="p">]</span> <span class="o">=</span> <span class="n">source</span>
+            <span class="k">return</span> <span class="n">target</span>
+
+        <span class="n">local_digest</span> <span class="o">=</span> <span class="n">local_file_digest</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
+        <span class="n">remote_digest</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">executor</span><span class="o">.</span><span class="n">transport</span><span class="o">.</span><span class="n">file_digest</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
+        <span class="n">transfer</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="k">if</span> <span class="n">policy</span> <span class="o">==</span> <span class="n">FileSyncPolicy</span><span class="o">.</span><span class="n">ALWAYS</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">local_digest</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">required</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">"Local input file does not exist: </span><span class="si">{</span><span class="n">source</span><span class="si">}</span><span class="s2">"</span>
+                    <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">transfer</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">elif</span> <span class="n">policy</span> <span class="o">==</span> <span class="n">FileSyncPolicy</span><span class="o">.</span><span class="n">MISSING</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">remote_digest</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">local_digest</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">required</span><span class="p">:</span>
+                        <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span>
+                            <span class="sa">f</span><span class="s2">"Input file exists neither locally nor remotely: </span><span class="si">{</span><span class="n">source</span><span class="si">}</span><span class="s2">"</span>
+                        <span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">transfer</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">elif</span> <span class="n">local_digest</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">remote_digest</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">required</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">"Input file exists neither locally nor remotely: </span><span class="si">{</span><span class="n">source</span><span class="si">}</span><span class="s2">"</span>
+                <span class="p">)</span>
+        <span class="k">elif</span> <span class="n">local_digest</span> <span class="o">!=</span> <span class="n">remote_digest</span><span class="p">:</span>
+            <span class="n">transfer</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="k">if</span> <span class="n">transfer</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">uploads</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">executor</span><span class="o">.</span><span class="n">transport</span><span class="o">.</span><span class="n">put_file</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">uploads</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
+
+        <span class="n">used</span><span class="p">[</span><span class="n">target</span><span class="p">]</span> <span class="o">=</span> <span class="n">source</span>
+        <span class="k">return</span> <span class="n">target</span></div>
+
+
+<div class="viewcode-block" id="RemoteRunner._stage_input_pattern">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.remote.RemoteRunner.html#ase2sprkkr.execution.remote.RemoteRunner._stage_input_pattern">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_stage_input_pattern</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">used</span><span class="p">):</span>
+        <span class="n">source</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_local_path</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="n">matches</span> <span class="o">=</span> <span class="n">expand_local_files</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">executor</span><span class="o">.</span><span class="n">local_root</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">matches</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"Local input pattern did not match any files: </span><span class="si">{</span><span class="n">source</span><span class="si">}</span><span class="s2">"</span>
+            <span class="p">)</span>
+
+        <span class="n">uploads</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">match</span> <span class="ow">in</span> <span class="n">matches</span><span class="p">:</span>
+            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stage_file</span><span class="p">(</span><span class="n">match</span><span class="p">,</span> <span class="n">used</span><span class="p">,</span> <span class="n">uploads</span><span class="o">=</span><span class="n">uploads</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">uploads</span><span class="p">:</span>
+            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">executor</span><span class="o">.</span><span class="n">transport</span><span class="o">.</span><span class="n">put_files</span><span class="p">(</span>
+                <span class="n">uploads</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">executor</span><span class="o">.</span><span class="n">local_root</span><span class="p">,</span>
+                <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">executor</span><span class="o">.</span><span class="n">_resolved_remote_root</span><span class="p">(),</span>
+            <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="RemoteRunner._prepare_cache_files">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.remote.RemoteRunner.html#ase2sprkkr.execution.remote.RemoteRunner._prepare_cache_files">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_prepare_cache_files</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">used</span><span class="p">):</span>
+        <span class="n">targets</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">patterns</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">pattern_before</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">input_policy</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">executor</span><span class="o">.</span><span class="n">input_files</span>
+        <span class="n">output_policy</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">executor</span><span class="o">.</span><span class="n">output_files</span>
+        <span class="n">remote_root</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">executor</span><span class="o">.</span><span class="n">_resolved_remote_root</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">cache_files</span><span class="p">:</span>
+            <span class="n">local</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_local_path</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">local</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+            <span class="k">if</span> <span class="n">has_file_magic</span><span class="p">(</span><span class="n">local</span><span class="p">):</span>
+                <span class="n">remote_pattern</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">executor</span><span class="o">.</span><span class="n">map_path</span><span class="p">(</span><span class="n">local</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">remote_pattern</span> <span class="ow">in</span> <span class="n">patterns</span><span class="p">:</span>
+                    <span class="k">continue</span>
+                <span class="n">patterns</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">remote_pattern</span><span class="p">)</span>
+
+                <span class="n">uploads</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="k">for</span> <span class="n">match</span> <span class="ow">in</span> <span class="n">expand_local_files</span><span class="p">(</span><span class="n">local</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">executor</span><span class="o">.</span><span class="n">local_root</span><span class="p">):</span>
+                    <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stage_file</span><span class="p">(</span>
+                        <span class="n">match</span><span class="p">,</span>
+                        <span class="n">used</span><span class="p">,</span>
+                        <span class="n">uploads</span><span class="o">=</span><span class="n">uploads</span><span class="p">,</span>
+                        <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                    <span class="p">)</span>
+                <span class="k">if</span> <span class="n">uploads</span><span class="p">:</span>
+                    <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">executor</span><span class="o">.</span><span class="n">transport</span><span class="o">.</span><span class="n">put_files</span><span class="p">(</span>
+                        <span class="n">uploads</span><span class="p">,</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">executor</span><span class="o">.</span><span class="n">local_root</span><span class="p">,</span>
+                        <span class="n">remote_root</span><span class="p">,</span>
+                    <span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">output_policy</span> <span class="o">!=</span> <span class="n">FileSyncPolicy</span><span class="o">.</span><span class="n">NEVER</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">remote</span> <span class="ow">in</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">executor</span><span class="o">.</span><span class="n">transport</span><span class="o">.</span><span class="n">expand_files</span><span class="p">(</span>
+                        <span class="n">remote_pattern</span><span class="p">,</span> <span class="n">remote_root</span>
+                    <span class="p">):</span>
+                        <span class="n">pattern_before</span><span class="p">[</span><span class="n">remote</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+                            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">executor</span><span class="o">.</span><span class="n">transport</span><span class="o">.</span><span class="n">file_signature</span><span class="p">(</span><span class="n">remote</span><span class="p">)</span>
+                        <span class="p">)</span>
+                <span class="k">continue</span>
+
+            <span class="k">if</span> <span class="n">local</span> <span class="ow">in</span> <span class="n">targets</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">remote</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">executor</span><span class="o">.</span><span class="n">map_path</span><span class="p">(</span><span class="n">local</span><span class="p">)</span>
+            <span class="n">previous</span> <span class="o">=</span> <span class="n">used</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">remote</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">previous</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">previous</span> <span class="o">!=</span> <span class="n">local</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Remote cache target collision: </span><span class="si">{</span><span class="n">remote</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">previous</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">input_policy</span> <span class="o">!=</span> <span class="n">FileSyncPolicy</span><span class="o">.</span><span class="n">NEVER</span><span class="p">:</span>
+                    <span class="n">local_digest</span> <span class="o">=</span> <span class="n">local_file_digest</span><span class="p">(</span><span class="n">local</span><span class="p">)</span>
+                    <span class="n">remote_digest</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">executor</span><span class="o">.</span><span class="n">transport</span><span class="o">.</span><span class="n">file_digest</span><span class="p">(</span><span class="n">remote</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">input_policy</span> <span class="o">==</span> <span class="n">FileSyncPolicy</span><span class="o">.</span><span class="n">ALWAYS</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">local_digest</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">executor</span><span class="o">.</span><span class="n">transport</span><span class="o">.</span><span class="n">put_file</span><span class="p">(</span><span class="n">local</span><span class="p">,</span> <span class="n">remote</span><span class="p">)</span>
+                    <span class="k">elif</span> <span class="n">input_policy</span> <span class="o">==</span> <span class="n">FileSyncPolicy</span><span class="o">.</span><span class="n">MISSING</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">remote_digest</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">local_digest</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">executor</span><span class="o">.</span><span class="n">transport</span><span class="o">.</span><span class="n">put_file</span><span class="p">(</span><span class="n">local</span><span class="p">,</span> <span class="n">remote</span><span class="p">)</span>
+                    <span class="k">elif</span> <span class="n">local_digest</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">local_digest</span> <span class="o">!=</span> <span class="n">remote_digest</span><span class="p">:</span>
+                        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">executor</span><span class="o">.</span><span class="n">transport</span><span class="o">.</span><span class="n">put_file</span><span class="p">(</span><span class="n">local</span><span class="p">,</span> <span class="n">remote</span><span class="p">)</span>
+                <span class="n">used</span><span class="p">[</span><span class="n">remote</span><span class="p">]</span> <span class="o">=</span> <span class="n">local</span>
+
+            <span class="n">before</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">if</span> <span class="n">output_policy</span> <span class="o">!=</span> <span class="n">FileSyncPolicy</span><span class="o">.</span><span class="n">NEVER</span><span class="p">:</span>
+                <span class="n">before</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">executor</span><span class="o">.</span><span class="n">transport</span><span class="o">.</span><span class="n">file_signature</span><span class="p">(</span><span class="n">remote</span><span class="p">)</span>
+            <span class="n">targets</span><span class="p">[</span><span class="n">local</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">remote</span><span class="p">,</span> <span class="n">before</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_cache_targets</span> <span class="o">=</span> <span class="n">targets</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_cache_patterns</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">patterns</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_cache_before</span> <span class="o">=</span> <span class="n">pattern_before</span></div>
+
+
+<div class="viewcode-block" id="RemoteRunner._prepare_output_files">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.remote.RemoteRunner.html#ase2sprkkr.execution.remote.RemoteRunner._prepare_output_files">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_prepare_output_files</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_targets</span><span class="p">):</span>
+        <span class="n">primary</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">path</span>
+            <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_local_path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">output_file</span><span class="p">),</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_local_path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">error_file</span><span class="p">),</span>
+            <span class="p">)</span>
+            <span class="k">if</span> <span class="n">path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="p">}</span>
+        <span class="n">targets</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">patterns</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">remote_root</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">executor</span><span class="o">.</span><span class="n">_resolved_remote_root</span><span class="p">()</span>
+        <span class="n">removable</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">output_files</span><span class="p">:</span>
+            <span class="n">local</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_local_path</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">local</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">local</span> <span class="ow">in</span> <span class="n">primary</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+            <span class="n">remote</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">executor</span><span class="o">.</span><span class="n">map_path</span><span class="p">(</span><span class="n">local</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">has_file_magic</span><span class="p">(</span><span class="n">local</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">remote</span> <span class="ow">in</span> <span class="n">patterns</span><span class="p">:</span>
+                    <span class="k">continue</span>
+                <span class="n">patterns</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">remote</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">match</span> <span class="ow">in</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">executor</span><span class="o">.</span><span class="n">transport</span><span class="o">.</span><span class="n">expand_files</span><span class="p">(</span>
+                    <span class="n">remote</span><span class="p">,</span> <span class="n">remote_root</span>
+                <span class="p">):</span>
+                    <span class="k">if</span> <span class="n">match</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">input_targets</span><span class="p">:</span>
+                        <span class="n">removable</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">match</span><span class="p">)</span>
+                <span class="k">continue</span>
+
+            <span class="k">if</span> <span class="n">local</span> <span class="ow">in</span> <span class="n">targets</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">targets</span><span class="p">[</span><span class="n">local</span><span class="p">]</span> <span class="o">=</span> <span class="n">remote</span>
+            <span class="k">if</span> <span class="n">remote</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">input_targets</span><span class="p">:</span>
+                <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">executor</span><span class="o">.</span><span class="n">transport</span><span class="o">.</span><span class="n">run</span><span class="p">((</span><span class="s2">"rm"</span><span class="p">,</span> <span class="s2">"-f"</span><span class="p">,</span> <span class="s2">"--"</span><span class="p">,</span> <span class="n">remote</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="n">removable</span><span class="p">:</span>
+            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">executor</span><span class="o">.</span><span class="n">transport</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
+                <span class="p">(</span><span class="s2">"rm"</span><span class="p">,</span> <span class="s2">"-f"</span><span class="p">,</span> <span class="s2">"--"</span><span class="p">,</span> <span class="o">*</span><span class="nb">sorted</span><span class="p">(</span><span class="n">removable</span><span class="p">))</span>
+            <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_output_targets</span> <span class="o">=</span> <span class="n">targets</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_output_patterns</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">patterns</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="RemoteRunner._sync_output_files">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.remote.RemoteRunner.html#ase2sprkkr.execution.remote.RemoteRunner._sync_output_files">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_sync_output_files</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">required</span><span class="p">):</span>
+        <span class="n">policy</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">executor</span><span class="o">.</span><span class="n">output_files</span>
+        <span class="k">if</span> <span class="n">policy</span> <span class="o">==</span> <span class="n">FileSyncPolicy</span><span class="o">.</span><span class="n">NEVER</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="k">for</span> <span class="n">local</span><span class="p">,</span> <span class="n">remote</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_output_targets</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">remote_digest</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">executor</span><span class="o">.</span><span class="n">transport</span><span class="o">.</span><span class="n">file_digest</span><span class="p">(</span><span class="n">remote</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">remote_digest</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">required</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">"Declared remote output file was not created: </span><span class="si">{</span><span class="n">remote</span><span class="si">}</span><span class="s2">"</span>
+                    <span class="p">)</span>
+                <span class="k">continue</span>
+
+            <span class="k">if</span> <span class="n">policy</span> <span class="o">==</span> <span class="n">FileSyncPolicy</span><span class="o">.</span><span class="n">ALWAYS</span><span class="p">:</span>
+                <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">executor</span><span class="o">.</span><span class="n">transport</span><span class="o">.</span><span class="n">get_file</span><span class="p">(</span><span class="n">remote</span><span class="p">,</span> <span class="n">local</span><span class="p">)</span>
+                <span class="k">continue</span>
+            <span class="n">local_digest</span> <span class="o">=</span> <span class="n">local_file_digest</span><span class="p">(</span><span class="n">local</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">policy</span> <span class="o">==</span> <span class="n">FileSyncPolicy</span><span class="o">.</span><span class="n">MISSING</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">local_digest</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">executor</span><span class="o">.</span><span class="n">transport</span><span class="o">.</span><span class="n">get_file</span><span class="p">(</span><span class="n">remote</span><span class="p">,</span> <span class="n">local</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">local_digest</span> <span class="o">!=</span> <span class="n">remote_digest</span><span class="p">:</span>
+                <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">executor</span><span class="o">.</span><span class="n">transport</span><span class="o">.</span><span class="n">get_file</span><span class="p">(</span><span class="n">remote</span><span class="p">,</span> <span class="n">local</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_output_patterns</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="n">remote_root</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">executor</span><span class="o">.</span><span class="n">_resolved_remote_root</span><span class="p">()</span>
+        <span class="n">primary</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">path</span>
+            <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_local_path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">output_file</span><span class="p">),</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_local_path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">error_file</span><span class="p">),</span>
+            <span class="p">)</span>
+            <span class="k">if</span> <span class="n">path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="p">}</span>
+        <span class="n">downloads</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">selected</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">pattern</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_output_patterns</span><span class="p">:</span>
+            <span class="n">matches</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">executor</span><span class="o">.</span><span class="n">transport</span><span class="o">.</span><span class="n">expand_files</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">remote_root</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">matches</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">required</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">"Declared remote output pattern did not match any files: </span><span class="si">{</span><span class="n">pattern</span><span class="si">}</span><span class="s2">"</span>
+                    <span class="p">)</span>
+                <span class="k">continue</span>
+
+            <span class="k">for</span> <span class="n">remote</span> <span class="ow">in</span> <span class="n">matches</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">remote</span> <span class="ow">in</span> <span class="n">selected</span><span class="p">:</span>
+                    <span class="k">continue</span>
+                <span class="n">local</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">fspath</span><span class="p">(</span><span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">executor</span><span class="o">.</span><span class="n">unmap_path</span><span class="p">(</span><span class="n">remote</span><span class="p">))</span>
+                <span class="k">if</span> <span class="n">local</span> <span class="ow">in</span> <span class="n">primary</span><span class="p">:</span>
+                    <span class="n">selected</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">remote</span><span class="p">)</span>
+                    <span class="k">continue</span>
+
+                <span class="n">download</span> <span class="o">=</span> <span class="n">policy</span> <span class="o">==</span> <span class="n">FileSyncPolicy</span><span class="o">.</span><span class="n">ALWAYS</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">download</span><span class="p">:</span>
+                    <span class="n">local_digest</span> <span class="o">=</span> <span class="n">local_file_digest</span><span class="p">(</span><span class="n">local</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">policy</span> <span class="o">==</span> <span class="n">FileSyncPolicy</span><span class="o">.</span><span class="n">MISSING</span><span class="p">:</span>
+                        <span class="n">download</span> <span class="o">=</span> <span class="n">local_digest</span> <span class="ow">is</span> <span class="kc">None</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">remote_digest</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">executor</span><span class="o">.</span><span class="n">transport</span><span class="o">.</span><span class="n">file_digest</span><span class="p">(</span><span class="n">remote</span><span class="p">)</span>
+                        <span class="n">download</span> <span class="o">=</span> <span class="n">local_digest</span> <span class="o">!=</span> <span class="n">remote_digest</span>
+                <span class="k">if</span> <span class="n">download</span><span class="p">:</span>
+                    <span class="n">downloads</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">remote</span><span class="p">)</span>
+                <span class="n">selected</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">remote</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">downloads</span><span class="p">:</span>
+            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">executor</span><span class="o">.</span><span class="n">transport</span><span class="o">.</span><span class="n">get_files</span><span class="p">(</span>
+                <span class="n">downloads</span><span class="p">,</span>
+                <span class="n">remote_root</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">executor</span><span class="o">.</span><span class="n">local_root</span><span class="p">,</span>
+            <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="RemoteRunner._sync_cache_files">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.remote.RemoteRunner.html#ase2sprkkr.execution.remote.RemoteRunner._sync_cache_files">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_sync_cache_files</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">policy</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">executor</span><span class="o">.</span><span class="n">output_files</span>
+        <span class="k">if</span> <span class="n">policy</span> <span class="o">==</span> <span class="n">FileSyncPolicy</span><span class="o">.</span><span class="n">NEVER</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="k">for</span> <span class="n">local</span><span class="p">,</span> <span class="p">(</span><span class="n">remote</span><span class="p">,</span> <span class="n">before</span><span class="p">)</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cache_targets</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">after</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">executor</span><span class="o">.</span><span class="n">transport</span><span class="o">.</span><span class="n">file_signature</span><span class="p">(</span><span class="n">remote</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">after</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">after</span> <span class="o">==</span> <span class="n">before</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="k">if</span> <span class="n">policy</span> <span class="o">==</span> <span class="n">FileSyncPolicy</span><span class="o">.</span><span class="n">MISSING</span> <span class="ow">and</span> <span class="n">local_file_digest</span><span class="p">(</span><span class="n">local</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">executor</span><span class="o">.</span><span class="n">transport</span><span class="o">.</span><span class="n">get_file</span><span class="p">(</span><span class="n">remote</span><span class="p">,</span> <span class="n">local</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cache_patterns</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="n">remote_root</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">executor</span><span class="o">.</span><span class="n">_resolved_remote_root</span><span class="p">()</span>
+        <span class="n">downloads</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">selected</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="n">exact</span> <span class="o">=</span> <span class="p">{</span><span class="n">remote</span> <span class="k">for</span> <span class="n">remote</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cache_targets</span><span class="o">.</span><span class="n">values</span><span class="p">()}</span>
+        <span class="k">for</span> <span class="n">pattern</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cache_patterns</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">remote</span> <span class="ow">in</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">executor</span><span class="o">.</span><span class="n">transport</span><span class="o">.</span><span class="n">expand_files</span><span class="p">(</span>
+                <span class="n">pattern</span><span class="p">,</span> <span class="n">remote_root</span>
+            <span class="p">):</span>
+                <span class="k">if</span> <span class="n">remote</span> <span class="ow">in</span> <span class="n">selected</span> <span class="ow">or</span> <span class="n">remote</span> <span class="ow">in</span> <span class="n">exact</span><span class="p">:</span>
+                    <span class="k">continue</span>
+                <span class="n">selected</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">remote</span><span class="p">)</span>
+                <span class="n">after</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">executor</span><span class="o">.</span><span class="n">transport</span><span class="o">.</span><span class="n">file_signature</span><span class="p">(</span><span class="n">remote</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">after</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">after</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cache_before</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">remote</span><span class="p">):</span>
+                    <span class="k">continue</span>
+                <span class="n">local</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">fspath</span><span class="p">(</span><span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">executor</span><span class="o">.</span><span class="n">unmap_path</span><span class="p">(</span><span class="n">remote</span><span class="p">))</span>
+                <span class="k">if</span> <span class="n">policy</span> <span class="o">==</span> <span class="n">FileSyncPolicy</span><span class="o">.</span><span class="n">MISSING</span> <span class="ow">and</span> <span class="n">local_file_digest</span><span class="p">(</span><span class="n">local</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="k">continue</span>
+                <span class="n">downloads</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">remote</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">downloads</span><span class="p">:</span>
+            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">executor</span><span class="o">.</span><span class="n">transport</span><span class="o">.</span><span class="n">get_files</span><span class="p">(</span>
+                <span class="n">downloads</span><span class="p">,</span>
+                <span class="n">remote_root</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">executor</span><span class="o">.</span><span class="n">local_root</span><span class="p">,</span>
+            <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="RemoteRunner._remote_argv">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.remote.RemoteRunner.html#ase2sprkkr.execution.remote.RemoteRunner._remote_argv">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_remote_argv</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">argv</span><span class="p">,</span> <span class="n">staged</span><span class="p">):</span>
+        <span class="n">directory</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">directory</span><span class="p">)</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">argv</span><span class="p">:</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">fspath</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">path</span> <span class="o">=</span> <span class="n">value</span> <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isabs</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="k">else</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+                <span class="n">replacement</span> <span class="o">=</span> <span class="n">staged</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">path</span><span class="p">))</span>
+            <span class="k">except</span> <span class="p">(</span><span class="ne">TypeError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">):</span>
+                <span class="n">replacement</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">replacement</span> <span class="ow">or</span> <span class="n">value</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">out</span></div>
+
+
+<div class="viewcode-block" id="RemoteRunner._prepare_request">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.remote.RemoteRunner.html#ase2sprkkr.execution.remote.RemoteRunner._prepare_request">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_prepare_request</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">run_id</span><span class="p">,</span> <span class="n">remote_directory</span><span class="p">):</span>
+        <span class="n">used</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">input_files</span><span class="p">:</span>
+            <span class="n">source</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_local_path</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">source</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">has_file_magic</span><span class="p">(</span><span class="n">source</span><span class="p">):</span>
+                <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stage_input_pattern</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">used</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stage_file</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">used</span><span class="p">)</span>
+        <span class="n">staged</span> <span class="o">=</span> <span class="p">{</span><span class="n">source</span><span class="p">:</span> <span class="n">target</span> <span class="k">for</span> <span class="n">target</span><span class="p">,</span> <span class="n">source</span> <span class="ow">in</span> <span class="n">used</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+
+        <span class="n">input_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_file_name</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">input_file</span><span class="p">)</span>
+        <span class="n">input_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">input_name</span><span class="p">)</span> <span class="k">if</span> <span class="n">input_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="n">input_target</span> <span class="o">=</span> <span class="n">staged</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">input_path</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">input_target</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">input_target</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stage_file</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">input_file</span><span class="p">,</span> <span class="n">used</span><span class="p">)</span>
+            <span class="n">staged</span> <span class="o">=</span> <span class="p">{</span><span class="n">source</span><span class="p">:</span> <span class="n">target</span> <span class="k">for</span> <span class="n">target</span><span class="p">,</span> <span class="n">source</span> <span class="ow">in</span> <span class="n">used</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+
+        <span class="n">stdin_target</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">stdin</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">stdin_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_file_name</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">stdin</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">stdin_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">stdin_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">stdin_name</span><span class="p">)</span>
+                <span class="n">stdin_target</span> <span class="o">=</span> <span class="n">staged</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">stdin_path</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">stdin_target</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">stdin_target</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stage_file</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">stdin</span><span class="p">,</span> <span class="n">used</span><span class="p">)</span>
+                    <span class="n">staged</span> <span class="o">=</span> <span class="p">{</span><span class="n">source</span><span class="p">:</span> <span class="n">target</span> <span class="k">for</span> <span class="n">target</span><span class="p">,</span> <span class="n">source</span> <span class="ow">in</span> <span class="n">used</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prepare_cache_files</span><span class="p">(</span><span class="n">used</span><span class="p">)</span>
+        <span class="n">staged</span> <span class="o">=</span> <span class="p">{</span><span class="n">source</span><span class="p">:</span> <span class="n">target</span> <span class="k">for</span> <span class="n">target</span><span class="p">,</span> <span class="n">source</span> <span class="ow">in</span> <span class="n">used</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prepare_output_files</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">used</span><span class="p">))</span>
+        <span class="n">output_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_file_name</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">output_file</span><span class="p">)</span>
+        <span class="n">error_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_file_name</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">error_file</span><span class="p">)</span>
+        <span class="n">output_target</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">executor</span><span class="o">.</span><span class="n">map_path</span><span class="p">(</span><span class="n">output_name</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">output_name</span>
+            <span class="k">else</span> <span class="n">posixpath</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">remote_directory</span><span class="p">,</span> <span class="s2">"stdout"</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">error_target</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">executor</span><span class="o">.</span><span class="n">map_path</span><span class="p">(</span><span class="n">error_name</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">error_name</span>
+            <span class="k">else</span> <span class="n">output_target</span> <span class="o">+</span> <span class="s2">".err"</span>
+        <span class="p">)</span>
+        <span class="n">client_sync</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">"output_file"</span><span class="p">:</span> <span class="n">output_target</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">output_file</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="s2">"error_file"</span><span class="p">:</span> <span class="n">error_target</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">error_file</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="s2">"output_files"</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_output_targets</span><span class="o">.</span><span class="n">values</span><span class="p">()),</span>
+            <span class="s2">"cache_files"</span><span class="p">:</span> <span class="p">[</span>
+                <span class="p">{</span><span class="s2">"path"</span><span class="p">:</span> <span class="n">remote</span><span class="p">,</span> <span class="s2">"before"</span><span class="p">:</span> <span class="n">before</span><span class="p">}</span>
+                <span class="k">for</span> <span class="n">remote</span><span class="p">,</span> <span class="n">before</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cache_targets</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+            <span class="p">],</span>
+            <span class="s2">"output_patterns"</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_output_patterns</span><span class="p">),</span>
+            <span class="s2">"cache_patterns"</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_cache_patterns</span><span class="p">),</span>
+            <span class="s2">"cache_before"</span><span class="p">:</span> <span class="p">[</span>
+                <span class="p">{</span><span class="s2">"path"</span><span class="p">:</span> <span class="n">remote</span><span class="p">,</span> <span class="s2">"signature"</span><span class="p">:</span> <span class="n">before</span><span class="p">}</span>
+                <span class="k">for</span> <span class="n">remote</span><span class="p">,</span> <span class="n">before</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cache_before</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+            <span class="p">],</span>
+        <span class="p">}</span>
+
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">"id"</span><span class="p">:</span> <span class="n">run_id</span><span class="p">,</span>
+            <span class="s2">"executor"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">executor</span><span class="o">.</span><span class="n">backend</span><span class="p">,</span>
+            <span class="s2">"executor_options"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">executor</span><span class="o">.</span><span class="n">backend_options</span><span class="p">,</span>
+            <span class="s2">"directory"</span><span class="p">:</span> <span class="n">remote_directory</span><span class="p">,</span>
+            <span class="s2">"argv"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_remote_argv</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">argv</span><span class="p">,</span> <span class="n">staged</span><span class="p">),</span>
+            <span class="s2">"mpi_argv"</span><span class="p">:</span> <span class="kc">None</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">mpi_argv</span> <span class="ow">is</span> <span class="kc">None</span>
+            <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_remote_argv</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">mpi_argv</span><span class="p">,</span> <span class="n">staged</span><span class="p">),</span>
+            <span class="s2">"launch"</span><span class="p">:</span> <span class="n">asdict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">launch</span><span class="p">),</span>
+            <span class="s2">"input_file"</span><span class="p">:</span> <span class="n">input_target</span><span class="p">,</span>
+            <span class="s2">"stdin"</span><span class="p">:</span> <span class="n">stdin_target</span><span class="p">,</span>
+            <span class="s2">"output_file"</span><span class="p">:</span> <span class="n">output_target</span><span class="p">,</span>
+            <span class="s2">"error_file"</span><span class="p">:</span> <span class="n">error_target</span><span class="p">,</span>
+            <span class="s2">"client_sync"</span><span class="p">:</span> <span class="n">client_sync</span><span class="p">,</span>
+        <span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="RemoteRunner._pump">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.remote.RemoteRunner.html#ase2sprkkr.execution.remote.RemoteRunner._pump">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_pump</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">kind</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="k">await</span> <span class="n">source</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">65536</span><span class="p">)</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">data</span><span class="p">:</span>
+                    <span class="k">break</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_write_output</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">kind</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_emit_output</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">kind</span><span class="p">)</span>
+                <span class="n">target</span><span class="o">.</span><span class="n">feed_data</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="n">target</span><span class="o">.</span><span class="n">feed_eof</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="RemoteRunner._monitor">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.remote.RemoteRunner.html#ase2sprkkr.execution.remote.RemoteRunner._monitor">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_monitor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">stdout</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">StreamReader</span><span class="p">()</span>
+        <span class="n">stderr</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">StreamReader</span><span class="p">()</span>
+        <span class="n">parse_task</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">reader</span><span class="o">.</span><span class="n">parse_streams</span><span class="p">(</span><span class="n">stdout</span><span class="p">,</span> <span class="n">stderr</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">result</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">stdout_task</span> <span class="o">=</span> <span class="n">stderr_task</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">outputs_committed</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_follow_process</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">executor</span><span class="o">.</span><span class="n">_follow</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_reference</span><span class="o">.</span><span class="n">directory</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reference</span><span class="o">.</span><span class="n">native_id</span>
+                <span class="p">)</span>
+                <span class="n">stdout_task</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_pump</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_follow_process</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span> <span class="n">stdout</span><span class="p">,</span> <span class="s2">"out"</span><span class="p">)</span>
+                <span class="p">)</span>
+                <span class="n">stderr_task</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_pump</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_follow_process</span><span class="o">.</span><span class="n">stderr</span><span class="p">,</span> <span class="n">stderr</span><span class="p">,</span> <span class="s2">"err"</span><span class="p">)</span>
+                <span class="p">)</span>
+                <span class="n">follow_return_code</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_follow_process</span><span class="o">.</span><span class="n">wait</span><span class="p">(),</span> <span class="n">stdout_task</span><span class="p">,</span> <span class="n">stderr_task</span>
+                <span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_file_retrieval_state</span> <span class="o">=</span> <span class="s2">"failed"</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_file_retrieval_message</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">exc</span><span class="p">)</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">status</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">executor</span><span class="o">.</span><span class="n">_status</span><span class="p">(</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_reference</span><span class="o">.</span><span class="n">directory</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reference</span><span class="o">.</span><span class="n">native_id</span>
+                    <span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_state</span> <span class="o">=</span> <span class="n">RunState</span><span class="p">(</span><span class="n">status</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"state"</span><span class="p">,</span> <span class="s2">"unknown"</span><span class="p">))</span>
+                    <span class="k">if</span> <span class="n">status</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"return_code"</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_return_code</span> <span class="o">=</span> <span class="n">status</span><span class="p">[</span><span class="s2">"return_code"</span><span class="p">]</span>
+                <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                    <span class="k">pass</span>
+                <span class="k">raise</span>
+
+            <span class="n">status</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">executor</span><span class="o">.</span><span class="n">_status</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_reference</span><span class="o">.</span><span class="n">directory</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reference</span><span class="o">.</span><span class="n">native_id</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_state</span> <span class="o">=</span> <span class="n">RunState</span><span class="p">(</span><span class="n">status</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"state"</span><span class="p">,</span> <span class="s2">"unknown"</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">follow_return_code</span> <span class="o">!=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span>
+                <span class="n">RunState</span><span class="o">.</span><span class="n">FINISHED</span><span class="p">,</span>
+                <span class="n">RunState</span><span class="o">.</span><span class="n">FAILED</span><span class="p">,</span>
+                <span class="n">RunState</span><span class="o">.</span><span class="n">CANCELLED</span><span class="p">,</span>
+            <span class="p">):</span>
+                <span class="n">exc</span> <span class="o">=</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+                    <span class="s2">"Remote output stream ended before the remote run finished"</span>
+                <span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_file_retrieval_state</span> <span class="o">=</span> <span class="s2">"failed"</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_file_retrieval_message</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">exc</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="n">exc</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_return_code</span> <span class="o">=</span> <span class="n">status</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"return_code"</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_return_code</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_return_code</span> <span class="o">=</span> <span class="mi">0</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state</span> <span class="o">==</span> <span class="n">RunState</span><span class="o">.</span><span class="n">FINISHED</span> <span class="k">else</span> <span class="mi">1</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sync_output_files</span><span class="p">(</span><span class="n">required</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_state</span> <span class="o">==</span> <span class="n">RunState</span><span class="o">.</span><span class="n">FINISHED</span><span class="p">)</span>
+                <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sync_cache_files</span><span class="p">()</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_file_retrieval_state</span> <span class="o">=</span> <span class="s2">"failed"</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_file_retrieval_message</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">exc</span><span class="p">)</span>
+                <span class="k">raise</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_file_retrieval_state</span> <span class="o">=</span> <span class="s2">"available"</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_file_retrieval_message</span> <span class="o">=</span> <span class="kc">None</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_finish_output_files</span><span class="p">(</span><span class="n">commit</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">outputs_committed</span> <span class="o">=</span> <span class="kc">True</span>
+
+            <span class="n">output</span><span class="p">,</span> <span class="n">error</span> <span class="o">=</span> <span class="k">await</span> <span class="n">parse_task</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">reader</span><span class="o">.</span><span class="n">complete_result</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">result</span><span class="p">,</span> <span class="n">output</span><span class="p">,</span> <span class="n">error</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_return_code</span>
+            <span class="p">)</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="n">tasks</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span>
+                <span class="n">task</span>
+                <span class="k">for</span> <span class="n">task</span> <span class="ow">in</span> <span class="p">(</span><span class="n">stdout_task</span><span class="p">,</span> <span class="n">stderr_task</span><span class="p">,</span> <span class="n">parse_task</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">task</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="p">)</span>
+            <span class="k">for</span> <span class="n">task</span> <span class="ow">in</span> <span class="n">tasks</span><span class="p">:</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">task</span><span class="o">.</span><span class="n">done</span><span class="p">():</span>
+                    <span class="n">task</span><span class="o">.</span><span class="n">cancel</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">tasks</span><span class="p">:</span>
+                <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="o">*</span><span class="n">tasks</span><span class="p">,</span> <span class="n">return_exceptions</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">outputs_committed</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_finish_output_files</span><span class="p">(</span><span class="n">commit</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="RemoteRunner._finish_output_files">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.remote.RemoteRunner.html#ase2sprkkr.execution.remote.RemoteRunner._finish_output_files">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_finish_output_files</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">commit</span><span class="p">):</span>
+        <span class="n">closed</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">output_file</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">error_file</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">file</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="nb">id</span><span class="p">(</span><span class="n">file</span><span class="p">)</span> <span class="ow">in</span> <span class="n">closed</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">closed</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="nb">id</span><span class="p">(</span><span class="n">file</span><span class="p">))</span>
+            <span class="n">method</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="s2">"commit"</span> <span class="k">if</span> <span class="n">commit</span> <span class="k">else</span> <span class="s2">"discard"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">method</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">method</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="s2">"close"</span><span class="p">):</span>
+                <span class="n">file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="RemoteRunner._close_output_files">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.remote.RemoteRunner.html#ase2sprkkr.execution.remote.RemoteRunner._close_output_files">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_close_output_files</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_finish_output_files</span><span class="p">(</span><span class="n">commit</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="RemoteRunner._thread_main">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.remote.RemoteRunner.html#ase2sprkkr.execution.remote.RemoteRunner._thread_main">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_thread_main</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_monitor</span><span class="p">())</span>
+        <span class="k">except</span> <span class="ne">BaseException</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_exception</span> <span class="o">=</span> <span class="n">exc</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_close_output_files</span><span class="p">()</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">callback</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">callback</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">result</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">BaseException</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_callback_exception</span> <span class="o">=</span> <span class="n">exc</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_done</span><span class="o">.</span><span class="n">set</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="RemoteRunner._start_monitor">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.remote.RemoteRunner.html#ase2sprkkr.execution.remote.RemoteRunner._start_monitor">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_start_monitor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">return</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reference</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">"Run has no backend reference"</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span> <span class="o">=</span> <span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_thread_main</span><span class="p">,</span> <span class="n">daemon</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="RemoteRunner.start">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.remote.RemoteRunner.html#ase2sprkkr.execution.remote.RemoteRunner.start">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Start submission or monitoring, depending on runner state."""</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reference</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">submit</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_start_monitor</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="RemoteRunner._submit_async">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.remote.RemoteRunner.html#ase2sprkkr.execution.remote.RemoteRunner._submit_async">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_submit_async</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">run_id</span> <span class="o">=</span> <span class="n">uuid4</span><span class="p">()</span><span class="o">.</span><span class="n">hex</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">remote_directory</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">executor</span><span class="o">.</span><span class="n">map_directory</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">directory</span><span class="p">)</span>
+            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">executor</span><span class="o">.</span><span class="n">transport</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
+                <span class="p">(</span><span class="s2">"mkdir"</span><span class="p">,</span> <span class="s2">"-p"</span><span class="p">,</span> <span class="s2">"--"</span><span class="p">,</span> <span class="n">remote_directory</span><span class="p">)</span>
+            <span class="p">)</span>
+            <span class="n">request</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prepare_request</span><span class="p">(</span><span class="n">run_id</span><span class="p">,</span> <span class="n">remote_directory</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">SubmissionNotStarted</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">exc</span><span class="p">))</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span>
+        <span class="n">status</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">executor</span><span class="o">.</span><span class="n">_submit</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">run_id</span><span class="p">,</span> <span class="n">status</span></div>
+
+
+<div class="viewcode-block" id="RemoteRunner.submit">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.remote.RemoteRunner.html#ase2sprkkr.execution.remote.RemoteRunner.submit">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">submit</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state</span> <span class="o">!=</span> <span class="n">RunState</span><span class="o">.</span><span class="n">NEW</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Run is already </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="o">.</span><span class="n">value</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+            <span class="n">run_id</span><span class="p">,</span> <span class="n">status</span> <span class="o">=</span> <span class="n">_run_sync</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_submit_async</span><span class="p">())</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_state</span> <span class="o">=</span> <span class="n">RunState</span><span class="p">(</span><span class="n">status</span><span class="p">[</span><span class="s2">"state"</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_return_code</span> <span class="o">=</span> <span class="n">status</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"return_code"</span><span class="p">)</span>
+            <span class="n">directory</span> <span class="o">=</span> <span class="n">status</span><span class="p">[</span><span class="s2">"directory"</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_reference</span> <span class="o">=</span> <span class="n">RunReference</span><span class="p">(</span>
+                <span class="n">executor</span><span class="o">=</span><span class="sa">f</span><span class="s2">"remote:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">executor</span><span class="o">.</span><span class="n">backend</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
+                <span class="n">native_id</span><span class="o">=</span><span class="n">run_id</span><span class="p">,</span>
+                <span class="n">computer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">executor</span><span class="o">.</span><span class="n">computer</span><span class="p">,</span>
+                <span class="n">directory</span><span class="o">=</span><span class="n">directory</span><span class="p">,</span>
+                <span class="n">input_file</span><span class="o">=</span><span class="n">status</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"input_file"</span><span class="p">),</span>
+                <span class="n">output_file</span><span class="o">=</span><span class="n">status</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"output_file"</span><span class="p">),</span>
+                <span class="n">error_file</span><span class="o">=</span><span class="n">status</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"error_file"</span><span class="p">),</span>
+            <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_start_monitor</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="RemoteRunner.wait">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.remote.RemoteRunner.html#ase2sprkkr.execution.remote.RemoteRunner.wait">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">wait</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state</span> <span class="o">==</span> <span class="n">RunState</span><span class="o">.</span><span class="n">NEW</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">"Run has not been submitted"</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">"Attached run has not been started"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_done</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_exception</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="bp">self</span><span class="o">.</span><span class="n">_exception</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_callback_exception</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="bp">self</span><span class="o">.</span><span class="n">_callback_exception</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">result</span></div>
+
+
+<div class="viewcode-block" id="RemoteRunner.run">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.remote.RemoteRunner.html#ase2sprkkr.execution.remote.RemoteRunner.run">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="RemoteRunner.run_async">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.remote.RemoteRunner.html#ase2sprkkr.execution.remote.RemoteRunner.run_async">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">run_async</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">loop</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">get_running_loop</span><span class="p">()</span>
+        <span class="k">return</span> <span class="k">await</span> <span class="n">loop</span><span class="o">.</span><span class="n">run_in_executor</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">run</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="RemoteRunner.cancel">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.execution.remote.RemoteRunner.html#ase2sprkkr.execution.remote.RemoteRunner.cancel">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">cancel</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reference</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">"Run has not been submitted"</span><span class="p">)</span>
+        <span class="n">status</span> <span class="o">=</span> <span class="n">_run_sync</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">executor</span><span class="o">.</span><span class="n">_cancel</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_reference</span><span class="o">.</span><span class="n">directory</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reference</span><span class="o">.</span><span class="n">native_id</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_state</span> <span class="o">=</span> <span class="n">RunState</span><span class="p">(</span><span class="n">status</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"state"</span><span class="p">,</span> <span class="s2">"cancelled"</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">status</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"return_code"</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_return_code</span> <span class="o">=</span> <span class="n">status</span><span class="p">[</span><span class="s2">"return_code"</span><span class="p">]</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Matyáš Novák &amp; Jano Minár.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

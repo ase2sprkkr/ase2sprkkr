@@ -16,8 +16,8 @@
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
-      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -81,6 +81,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../ase2sprkkr.html">ase2sprkkr</a></li>
       <li class="breadcrumb-item active">ase2sprkkr.sprkkr.sprkkr_atoms</li>
       <li class="wy-breadcrumbs-aside">
       </li>
@@ -91,8 +92,8 @@
            <div itemprop="articleBody">
              
   <h1>Source code for ase2sprkkr.sprkkr.sprkkr_atoms</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;This file contains SPRKKRAtoms - an enhanced version of Atoms to be used</span>
-<span class="sd">with SPRKKR&quot;&quot;&quot;</span>
+<span></span><span class="sd">"""This file contains SPRKKRAtoms - an enhanced version of Atoms to be used</span>
+<span class="sd">with SPRKKR"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">ase</span><span class="w"> </span><span class="kn">import</span> <span class="n">Atoms</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
@@ -104,15 +105,15 @@
 <div class="viewcode-block" id="SPRKKRAtoms">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms.html#ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">SPRKKRAtoms</span><span class="p">(</span><span class="n">Atoms</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;ASE Atoms object extended by the data necessary for SPR-KKR calculations&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""ASE Atoms object extended by the data necessary for SPR-KKR calculations"""</span>
 
-    <span class="n">sites_array_name</span> <span class="o">=</span> <span class="s2">&quot;sprkkr_sites_data&quot;</span>
+    <span class="n">sites_array_name</span> <span class="o">=</span> <span class="s2">"sprkkr_sites_data"</span>
 
 <div class="viewcode-block" id="SPRKKRAtoms.promote_ase_atoms">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms.html#ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms.promote_ase_atoms">[docs]</a>
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">promote_ase_atoms</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">symmetry</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">update_info</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert ASE Atoms object to the one usable by SPRKKR.</span>
+<span class="w">        </span><span class="sd">"""Convert ASE Atoms object to the one usable by SPRKKR.</span>
 <span class="sd">        For the case of the usability it is a bit ugly hack: The __class__ attribute</span>
 <span class="sd">        is replaced so the extra methods and properties of the objects will</span>
 <span class="sd">        be available.</span>
@@ -134,7 +135,7 @@
 <span class="sd">         If None, update it, if it seems to be inited, since it can be messed up by the</span>
 <span class="sd">                  Atoms-manipulating routines</span>
 
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="n">obj</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">SPRKKRAtoms</span><span class="p">):</span>
@@ -147,7 +148,7 @@
                 <span class="n">obj</span><span class="o">.</span><span class="vm">__class__</span> <span class="o">=</span> <span class="n">SPRKKRAtoms</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">Atoms</span><span class="p">):</span>
-                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Can not promote class </span><span class="si">{</span><span class="n">obj</span><span class="si">}</span><span class="s2"> of class </span><span class="si">{</span><span class="n">obj</span><span class="o">.</span><span class="vm">__class__</span><span class="si">}</span><span class="s2"> to </span><span class="si">{</span><span class="n">SPRKKRAtoms</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Can not promote class </span><span class="si">{</span><span class="n">obj</span><span class="si">}</span><span class="s2"> of class </span><span class="si">{</span><span class="n">obj</span><span class="o">.</span><span class="vm">__class__</span><span class="si">}</span><span class="s2"> to </span><span class="si">{</span><span class="n">SPRKKRAtoms</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
                 <span class="k">class</span><span class="w"> </span><span class="nc">SprKKrAtomsEx</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="vm">__class__</span><span class="p">,</span> <span class="n">SPRKKRAtoms</span><span class="p">):</span>
                     <span class="k">pass</span>
@@ -166,7 +167,7 @@
 <div class="viewcode-block" id="SPRKKRAtoms.__init__">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms.html#ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">potential</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">symmetry</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Creates SPRKKRAtoms atoms</span>
 
 <span class="sd">        Parameters</span>
@@ -178,7 +179,7 @@
 <span class="sd">           I.e., the by-symmetry-equal atomic sites will share the same sites object.</span>
 <span class="sd">        **kwargs: dict</span>
 <span class="sd">           The named arguments of ase.Atoms.__init__</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_init</span><span class="p">(</span><span class="n">symmetry</span><span class="p">,</span> <span class="n">potential</span><span class="p">)</span></div>
 
@@ -186,11 +187,11 @@
 <div class="viewcode-block" id="SPRKKRAtoms._init">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms.html#ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms._init">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">_init</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">symmetry</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">potential</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;The initialization of the additional (not-in-ASE) properties. To be used</span>
-<span class="sd">        by constructor and by promote_ase_atoms&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""The initialization of the additional (not-in-ASE) properties. To be used</span>
+<span class="sd">        by constructor and by promote_ase_atoms"""</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_potential</span> <span class="o">=</span> <span class="n">potential</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_regions</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s2">&quot;spacegroup_info&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">SpacegroupInfo</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">symmetry</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s2">"spacegroup_info"</span><span class="p">]</span> <span class="o">=</span> <span class="n">SpacegroupInfo</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">symmetry</span><span class="p">)</span></div>
 
 
     <span class="nd">@property</span>
@@ -200,12 +201,12 @@
 <div class="viewcode-block" id="SPRKKRAtoms.add_region">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms.html#ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms.add_region">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">add_region</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">region</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Add a region of a given name</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_regions</span><span class="p">[</span><span class="n">region</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">region</span>
         <span class="n">region</span><span class="o">.</span><span class="n">set_atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s2">&quot;spacegroup_info&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">recompute</span><span class="p">()</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s2">"spacegroup_info"</span><span class="p">]</span><span class="o">.</span><span class="n">recompute</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="SPRKKRAtoms.remove_region">
@@ -217,7 +218,7 @@
 <div class="viewcode-block" id="SPRKKRAtoms.set_regions">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms.html#ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms.set_regions">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">set_regions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">regions</span><span class="p">:</span> <span class="n">List</span><span class="p">):</span>
-        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s2">&quot;spacegroup_info&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">block_updating</span><span class="p">():</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s2">"spacegroup_info"</span><span class="p">]</span><span class="o">.</span><span class="n">block_updating</span><span class="p">():</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_regions</span> <span class="o">=</span> <span class="p">{</span><span class="n">r</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="n">r</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">regions</span><span class="p">}</span>
             <span class="k">for</span> <span class="n">region</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_regions</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
                 <span class="n">region</span><span class="o">.</span><span class="n">set_atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
@@ -225,19 +226,19 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">symmetry</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Whether the sites property is/will be generated using symmetry, i.e.</span>
 <span class="sd">        whether the Sites objects in the sites property will be shared among</span>
 <span class="sd">        symmetric atomic sites.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s2">&quot;spacegroup_info&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">symmetry</span>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s2">"spacegroup_info"</span><span class="p">]</span><span class="o">.</span><span class="n">symmetry</span>
 
     <span class="nd">@symmetry</span><span class="o">.</span><span class="n">setter</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">symmetry</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Recomputes the sites with enabled/disabled symmetry if the value of the property</span>
 <span class="sd">        has changed.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">spacegroup_info</span><span class="o">.</span><span class="n">symmetry</span> <span class="o">!=</span> <span class="n">value</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">compute_sites_symmetry</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
 
@@ -253,9 +254,9 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">compute_sites_symmetry</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">symmetry</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">consider_old</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">symmetry_precision</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">,</span> <span class="n">angular_precision</span><span class="o">=</span><span class="mf">1e-5</span>
     <span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;SPRKKR has some properties shared by all by-symmetry-equal sites.</span>
+<span class="w">        </span><span class="sd">"""SPRKKR has some properties shared by all by-symmetry-equal sites.</span>
 <span class="sd">        This method can be called to recompute the equivalent sites.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">spacegroup_info</span><span class="o">.</span><span class="n">recompute</span><span class="p">(</span><span class="n">symmetry</span><span class="p">,</span> <span class="n">consider_old</span><span class="p">,</span> <span class="n">symmetry_precision</span><span class="p">,</span> <span class="n">angular_precision</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">spacegroup_info</span><span class="o">.</span><span class="n">update_spacegroup_kinds</span><span class="p">()</span></div>
 
@@ -263,20 +264,20 @@
 <div class="viewcode-block" id="SPRKKRAtoms.breaks_sites_symmetry">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms.html#ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms.breaks_sites_symmetry">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">breaks_sites_symmetry</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Cancel the use of symmetry in the structure, i.e., makes the Site object</span>
+<span class="w">        </span><span class="sd">"""Cancel the use of symmetry in the structure, i.e., makes the Site object</span>
 <span class="sd">        uniqe (not shared) for each atomic site.</span>
 
 <span class="sd">        Calling this method is nearly equivalent to setting the symmetry property</span>
 <span class="sd">        to False, however, this method always recompute the sites object, while</span>
 <span class="sd">        setting symmetry=False recomputes the sites property only if it was previously</span>
 <span class="sd">        set to True.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">compute_sites_symmetry</span><span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">sites</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;The sites property holds all the information for the SPR-KKR package:</span>
+<span class="w">        </span><span class="sd">"""The sites property holds all the information for the SPR-KKR package:</span>
 <span class="sd">        atomic types (including number of semicore and valence electrons),</span>
 <span class="sd">        occupancy, symmetries, meshes...</span>
 <span class="sd">        Some of the properties are stored in the ASE atoms properties</span>
@@ -287,15 +288,15 @@
 <span class="sd">        The changes made on this array are reflected (as is possible)</span>
 <span class="sd">        to the ASE properties, but the opposite does not hold - to reflect the changes</span>
 <span class="sd">        in these properties please create a new Atoms object with given properties.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="n">SPRKKRAtoms</span><span class="o">.</span><span class="n">sites_array_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">arrays</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">spacegroup_info</span><span class="o">.</span><span class="n">recompute</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">arrays</span><span class="p">[</span><span class="n">SPRKKRAtoms</span><span class="o">.</span><span class="n">sites_array_name</span><span class="p">]</span>
 
     <span class="nd">@sites</span><span class="o">.</span><span class="n">setter</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">sites</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the sites property and updatei/clear all the other dependent</span>
-<span class="sd">        properties (symbols, occupancy, spacegroup_info) according to the sites.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Set the sites property and updatei/clear all the other dependent</span>
+<span class="sd">        properties (symbols, occupancy, spacegroup_info) according to the sites."""</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">set_sites</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
 
     <span class="nd">@sites</span><span class="o">.</span><span class="n">deleter</span>
@@ -313,7 +314,7 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">set_sites</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">sites</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">spacegroup_info</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">SpacegroupInfo</span><span class="p">,</span> <span class="nb">bool</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">update</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
     <span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the sites property and update all other dependent</span>
+<span class="w">        </span><span class="sd">"""Set the sites property and update all other dependent</span>
 <span class="sd">        properties (symbols, occupancy) according to the sites.</span>
 
 <span class="sd">        Unlike ``sites`` setter, this method  allow also set the spacegoup_info</span>
@@ -332,7 +333,7 @@
 
 <span class="sd">        update</span>
 <span class="sd">         Pass False to prevent updating spacegroup_kinds and occupancy</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">an</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sites</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">sites</span><span class="p">):</span>
             <span class="n">an</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">j</span><span class="o">.</span><span class="n">occupation</span><span class="o">.</span><span class="n">primary_atomic_number</span>
@@ -342,9 +343,9 @@
             <span class="c1"># retain the current symmetry</span>
             <span class="k">pass</span>
         <span class="k">elif</span> <span class="n">spacegroup_info</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s2">&quot;spacegroup_info&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">SpacegroupInfo</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">symmetry</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s2">"spacegroup_info"</span><span class="p">]</span> <span class="o">=</span> <span class="n">SpacegroupInfo</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">symmetry</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">spacegroup_info</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s2">&quot;spacegroup_info&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">spacegroup_info</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s2">"spacegroup_info"</span><span class="p">]</span> <span class="o">=</span> <span class="n">spacegroup_info</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">set_array</span><span class="p">(</span><span class="n">SPRKKRAtoms</span><span class="o">.</span><span class="n">sites_array_name</span><span class="p">,</span> <span class="n">sites</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">update</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">spacegroup_info</span><span class="o">.</span><span class="n">update_spacegroup_kinds</span><span class="p">()</span></div>
@@ -352,14 +353,14 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">spacegroup_info</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s2">&quot;spacegroup_info&quot;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s2">"spacegroup_info"</span><span class="p">]</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i</span><span class="p">):</span>
         <span class="n">out</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__getitem__</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="n">Atoms</span><span class="p">)</span> <span class="ow">and</span> <span class="s2">&quot;spacegroup_info&quot;</span> <span class="ow">in</span> <span class="n">out</span><span class="o">.</span><span class="n">info</span><span class="p">:</span>
-            <span class="n">out</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s2">&quot;spacegroup_info&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s2">&quot;spacegroup_info&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">copy_for</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="n">Atoms</span><span class="p">)</span> <span class="ow">and</span> <span class="s2">"spacegroup_info"</span> <span class="ow">in</span> <span class="n">out</span><span class="o">.</span><span class="n">info</span><span class="p">:</span>
+            <span class="n">out</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s2">"spacegroup_info"</span><span class="p">]</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s2">"spacegroup_info"</span><span class="p">]</span><span class="o">.</span><span class="n">copy_for</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">are_sites_inited</span><span class="p">():</span>
-                <span class="n">out</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s2">&quot;spacegroup_info&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">recompute</span><span class="p">(</span><span class="n">copy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                <span class="n">out</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s2">"spacegroup_info"</span><span class="p">]</span><span class="o">.</span><span class="n">recompute</span><span class="p">(</span><span class="n">copy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">out</span>
 
     <span class="nd">@property</span>
@@ -374,9 +375,37 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_potential</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span></div>
 
 
-<div class="viewcode-block" id="SPRKKRAtoms.reset_sprkkr_potential">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms.html#ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms.reset_sprkkr_potential">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">reset_sprkkr_potential</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="SPRKKRAtoms.sprkkr_has_converged_data">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms.html#ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms.sprkkr_has_converged_data">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sprkkr_has_converged_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Return whether all atomic types contain restartable SCF data."""</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">are_sites_inited</span><span class="p">():</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">return</span> <span class="nb">all</span><span class="p">(</span>
+            <span class="n">atomic_type</span><span class="o">.</span><span class="n">has_converged_data</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">site</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">sites</span>
+            <span class="k">for</span> <span class="n">atomic_type</span> <span class="ow">in</span> <span class="n">site</span><span class="o">.</span><span class="n">occupation</span><span class="o">.</span><span class="n">atomic_types</span><span class="p">()</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SPRKKRAtoms.sprkkr_is_scf_converged">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms.html#ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms.sprkkr_is_scf_converged">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sprkkr_is_scf_converged</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Return whether the SPR-KKR SCF state represented by these atoms is converged.</span>
+
+<span class="sd">        If a Potential is attached, its SCF status is authoritative. Without an</span>
+<span class="sd">        attached Potential, convergence is inferred from restartable data stored</span>
+<span class="sd">        in the atomic types. The check does not create a Potential as a side effect.</span>
+<span class="sd">        """</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_potential</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_potential</span><span class="o">.</span><span class="n">is_scf_converged</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">sprkkr_has_converged_data</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="SPRKKRAtoms.sprkkr_reset_potential">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms.html#ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms.sprkkr_reset_potential">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sprkkr_reset_potential</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Reset all SPR-KKR potential data stored in the atoms."""</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">sites</span><span class="p">:</span>
             <span class="n">i</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_potential</span><span class="p">:</span>
@@ -416,18 +445,18 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_promote_if_other</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
         <span class="n">ln</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
-        <span class="k">if</span> <span class="s2">&quot;spacegroup_kinds&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">arrays</span><span class="p">:</span>
-            <span class="n">sk</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">arrays</span><span class="p">[</span><span class="s2">&quot;spacegroup_kinds&quot;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="s2">"spacegroup_kinds"</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">arrays</span><span class="p">:</span>
+            <span class="n">sk</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">arrays</span><span class="p">[</span><span class="s2">"spacegroup_kinds"</span><span class="p">]</span>
             <span class="c1"># There is no existing kind to shift by when extending an empty</span>
             <span class="c1"># promoted Atoms object (for example for a zero-repeat region).</span>
-            <span class="n">shift</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">sk</span><span class="p">[:</span><span class="n">ln</span><span class="p">])</span> <span class="k">if</span> <span class="n">ln</span> <span class="k">else</span> <span class="mi">0</span>
+            <span class="n">shift</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">sk</span><span class="p">[:</span><span class="n">ln</span><span class="p">])</span> <span class="o">+</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">ln</span> <span class="k">else</span> <span class="mi">0</span>
             <span class="n">sk</span><span class="p">[</span><span class="n">ln</span><span class="p">:]</span> <span class="o">+=</span> <span class="n">shift</span>
-            <span class="k">if</span> <span class="s2">&quot;occupancy&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">info</span> <span class="ow">or</span> <span class="s2">&quot;occupancy&quot;</span> <span class="ow">in</span> <span class="n">other</span><span class="o">.</span><span class="n">info</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;occupancy&quot;</span><span class="p">,</span> <span class="p">{})</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s2">&quot;occupancy&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
-                    <span class="p">{</span><span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">+</span> <span class="n">shift</span><span class="p">):</span> <span class="n">v</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">other</span><span class="o">.</span><span class="n">info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;occupancy&quot;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+            <span class="k">if</span> <span class="s2">"occupancy"</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">info</span> <span class="ow">or</span> <span class="s2">"occupancy"</span> <span class="ow">in</span> <span class="n">other</span><span class="o">.</span><span class="n">info</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">"occupancy"</span><span class="p">,</span> <span class="p">{})</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s2">"occupancy"</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+                    <span class="p">{</span><span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">+</span> <span class="n">shift</span><span class="p">):</span> <span class="n">v</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">other</span><span class="o">.</span><span class="n">info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"occupancy"</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
                 <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s2">&quot;spacegroup_info&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">_dataset</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s2">"spacegroup_info"</span><span class="p">]</span><span class="o">.</span><span class="n">_dataset</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">are_sites_inited</span><span class="p">():</span>
             <span class="n">sites</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sites</span>
             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ln</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)):</span>

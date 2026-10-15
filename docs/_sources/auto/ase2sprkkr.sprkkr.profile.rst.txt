@@ -1,0 +1,66 @@
+profile
+=======
+
+Full name: **ase2sprkkr.sprkkr.profile**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.sprkkr.profile.LaunchParameters  ase2sprkkr.sprkkr.profile.SPRKKRProfile 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.sprkkr.profile
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      _configured_profile
+      _normalize_mpi
+      _profile_value
+      _shell_argv
+      create_executor_from_profile
+      executor_from_profile
+      profile_from_ase_command
+      resolve_sprkkr_profile
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      LaunchParameters
+      SPRKKRProfile
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

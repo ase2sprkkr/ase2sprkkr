@@ -1,0 +1,36 @@
+\_RemoteResult
+==============
+
+
+.. currentmodule:: ase2sprkkr.execution.remote_psij
+
+.. autoclass:: _RemoteResult
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.execution.remote_psij._RemoteResult
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

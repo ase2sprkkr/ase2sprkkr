@@ -1,0 +1,36 @@
+\_RemoteRun
+===========
+
+
+.. currentmodule:: ase2sprkkr.execution.remote_endpoint
+
+.. autoclass:: _RemoteRun
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.execution.remote_endpoint._RemoteRun
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

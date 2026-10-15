@@ -16,8 +16,8 @@
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
-      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -81,6 +81,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../ase2sprkkr.html">ase2sprkkr</a></li>
       <li class="breadcrumb-item active">ase2sprkkr.ase.symbols</li>
       <li class="wy-breadcrumbs-aside">
       </li>
@@ -91,7 +92,7 @@
            <div itemprop="articleBody">
              
   <h1>Source code for ase2sprkkr.ase.symbols</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Routines for dealing with symbols&quot;&quot;&quot;</span>
+<span></span><span class="sd">"""Routines for dealing with symbols"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">ase.atoms</span><span class="w"> </span><span class="kn">import</span> <span class="n">Symbols</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
@@ -100,29 +101,29 @@
 <div class="viewcode-block" id="filename_from_symbols">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.ase.symbols.filename_from_symbols.html#ase2sprkkr.ase.symbols.filename_from_symbols">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">filename_from_symbols</span><span class="p">(</span><span class="n">symbols</span><span class="p">,</span> <span class="n">max_len</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Choose a best short representation of given Symbols.</span>
 
-<span class="sd">    &gt;&gt;&gt; filename_from_symbols(&quot;GeXTeXGeXTeXGeXTeXGeXTeX9&quot;, max_len=12)</span>
-<span class="sd">    &#39;{GeXTeX}4X8&#39;</span>
-<span class="sd">    &gt;&gt;&gt; filename_from_symbols(&quot;GeXTeXGeXTeXGeXTeXGeXTeX9&quot;)</span>
-<span class="sd">    &#39;Ge4Te4X16&#39;</span>
-<span class="sd">    &gt;&gt;&gt; filename_from_symbols(&quot;GeXTeXGeXTeXH&quot;)</span>
-<span class="sd">    &#39;{GeXTeX}2H&#39;</span>
-<span class="sd">    &gt;&gt;&gt; filename_from_symbols(&quot;GeXTeXGeXTeX&quot;)</span>
-<span class="sd">    &#39;GeXTeX&#39;</span>
-<span class="sd">    &gt;&gt;&gt; filename_from_symbols(&quot;C4H4OC4H4OC2C4H4OC4H4OC2&quot;)</span>
-<span class="sd">    &#39;C20H16O4&#39;</span>
-<span class="sd">    &gt;&gt;&gt; filename_from_symbols(&quot;CO2&quot;)</span>
-<span class="sd">    &#39;CO2&#39;</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    &gt;&gt;&gt; filename_from_symbols("GeXTeXGeXTeXGeXTeXGeXTeX9", max_len=12)</span>
+<span class="sd">    '{GeXTeX}4X8'</span>
+<span class="sd">    &gt;&gt;&gt; filename_from_symbols("GeXTeXGeXTeXGeXTeXGeXTeX9")</span>
+<span class="sd">    'Ge4Te4X16'</span>
+<span class="sd">    &gt;&gt;&gt; filename_from_symbols("GeXTeXGeXTeXH")</span>
+<span class="sd">    '{GeXTeX}2H'</span>
+<span class="sd">    &gt;&gt;&gt; filename_from_symbols("GeXTeXGeXTeX")</span>
+<span class="sd">    'GeXTeX'</span>
+<span class="sd">    &gt;&gt;&gt; filename_from_symbols("C4H4OC4H4OC2C4H4OC4H4OC2")</span>
+<span class="sd">    'C20H16O4'</span>
+<span class="sd">    &gt;&gt;&gt; filename_from_symbols("CO2")</span>
+<span class="sd">    'CO2'</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">symbols</span><span class="p">,</span> <span class="n">Symbols</span><span class="p">):</span>
         <span class="n">symbols</span> <span class="o">=</span> <span class="n">Symbols</span><span class="o">.</span><span class="n">fromsymbols</span><span class="p">(</span><span class="n">symbols</span><span class="p">)</span>
-    <span class="n">out</span> <span class="o">=</span> <span class="n">symbols</span><span class="o">.</span><span class="n">get_chemical_formula</span><span class="p">(</span><span class="s2">&quot;reduce&quot;</span><span class="p">)</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">symbols</span><span class="o">.</span><span class="n">get_chemical_formula</span><span class="p">(</span><span class="s2">"reduce"</span><span class="p">)</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">out</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">max_len</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">out</span>
     <span class="n">out</span> <span class="o">=</span> <span class="n">pretty_symbols</span><span class="p">(</span><span class="n">symbols</span><span class="p">)</span>
-    <span class="n">out</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^\{([^}]*)\}[0-9]+$&quot;</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;\1&quot;</span><span class="p">,</span> <span class="n">out</span><span class="p">)</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">"^\{([^}]*)\}[0-9]+$"</span><span class="p">,</span> <span class="sa">r</span><span class="s2">"\1"</span><span class="p">,</span> <span class="n">out</span><span class="p">)</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">out</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">max_len</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">out</span>
     <span class="n">out</span> <span class="o">=</span> <span class="n">symbols</span><span class="o">.</span><span class="n">get_chemical_formula</span><span class="p">()</span>
@@ -135,19 +136,19 @@
 <div class="viewcode-block" id="pretty_symbols">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.ase.symbols.pretty_symbols.html#ase2sprkkr.ase.symbols.pretty_symbols">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">pretty_symbols</span><span class="p">(</span><span class="n">symbols</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Make a symbols string more pretty. Especially suitable for a long 2D semiinfinite bulks.</span>
 
-<span class="sd">    &gt;&gt;&gt; pretty_symbols(&quot;GeXTeXGeXTeXGeXTeXGeXTeX9&quot;)</span>
-<span class="sd">    &#39;{GeXTeX}4X8&#39;</span>
-<span class="sd">    &gt;&gt;&gt; pretty_symbols(&quot;CO2&quot;)</span>
-<span class="sd">    &#39;CO2&#39;</span>
+<span class="sd">    &gt;&gt;&gt; pretty_symbols("GeXTeXGeXTeXGeXTeXGeXTeX9")</span>
+<span class="sd">    '{GeXTeX}4X8'</span>
+<span class="sd">    &gt;&gt;&gt; pretty_symbols("CO2")</span>
+<span class="sd">    'CO2'</span>
 
 <span class="sd">    #TODO - this test does not work yet:</span>
-<span class="sd">    &gt; &gt;&gt; pretty_symbols(&quot;C4H4OC4H4OC2C4H4OC4H4OC2&quot;)</span>
-<span class="sd">    &#39;{{C4H4O}2C2}2&#39;</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">symbols</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">&quot;([A-Z][a-z]*)([0-9]+)&quot;</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">m</span><span class="p">:</span> <span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="nb">int</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">2</span><span class="p">)),</span> <span class="nb">str</span><span class="p">(</span><span class="n">symbols</span><span class="p">))</span>
+<span class="sd">    &gt; &gt;&gt; pretty_symbols("C4H4OC4H4OC2C4H4OC4H4OC2")</span>
+<span class="sd">    '{{C4H4O}2C2}2'</span>
+<span class="sd">    """</span>
+    <span class="n">symbols</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">"([A-Z][a-z]*)([0-9]+)"</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">m</span><span class="p">:</span> <span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="nb">int</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">2</span><span class="p">)),</span> <span class="nb">str</span><span class="p">(</span><span class="n">symbols</span><span class="p">))</span>
 
     <span class="n">prev</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
@@ -162,11 +163,11 @@
                     <span class="n">k</span> <span class="o">+=</span> <span class="n">lt</span>
                 <span class="n">repeat</span> <span class="o">=</span> <span class="p">(</span><span class="n">j</span> <span class="o">-</span> <span class="n">i</span><span class="p">)</span> <span class="o">//</span> <span class="n">lt</span> <span class="o">+</span> <span class="mi">1</span>
                 <span class="n">t</span> <span class="o">=</span> <span class="n">pretty_symbols</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
-                <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="s2">&quot;^[A-Z][a-z]*$&quot;</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
-                    <span class="n">sub</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">t</span><span class="si">}{</span><span class="n">repeat</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="s2">"^[A-Z][a-z]*$"</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
+                    <span class="n">sub</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">t</span><span class="si">}{</span><span class="n">repeat</span><span class="si">}</span><span class="s2">"</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="n">sub</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="se">{{</span><span class="si">{</span><span class="n">t</span><span class="si">}</span><span class="se">}}</span><span class="si">{</span><span class="n">repeat</span><span class="si">}</span><span class="s2">&quot;</span>
-                <span class="n">symbols</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">symbols</span><span class="p">[:</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">lt</span><span class="p">]</span><span class="si">}{</span><span class="n">sub</span><span class="si">}{</span><span class="n">symbols</span><span class="p">[</span><span class="n">j</span><span class="p">:]</span><span class="si">}</span><span class="s2">&quot;</span>
+                    <span class="n">sub</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="se">{{</span><span class="si">{</span><span class="n">t</span><span class="si">}</span><span class="se">}}</span><span class="si">{</span><span class="n">repeat</span><span class="si">}</span><span class="s2">"</span>
+                <span class="n">symbols</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">symbols</span><span class="p">[:</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">lt</span><span class="p">]</span><span class="si">}{</span><span class="n">sub</span><span class="si">}{</span><span class="n">symbols</span><span class="p">[</span><span class="n">j</span><span class="p">:]</span><span class="si">}</span><span class="s2">"</span>
                 <span class="n">i</span> <span class="o">=</span> <span class="n">i</span> <span class="o">-</span> <span class="n">lt</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">sub</span><span class="p">)</span>
                 <span class="n">prev</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span><span class="p">[:</span><span class="o">-</span><span class="n">lt</span><span class="p">]</span> <span class="o">+</span> <span class="n">sub</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">prev</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">lt</span><span class="p">]</span>
                 <span class="k">break</span>

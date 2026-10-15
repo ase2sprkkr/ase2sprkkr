@@ -1,0 +1,59 @@
+endpoint
+========
+
+Full name: **ase2sprkkr.execution.endpoint**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.execution.endpoint.ExecutorEndpoint 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.execution.endpoint
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      create_executor_from_endpoint
+      endpoint_for_executor
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      ExecutorEndpoint
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

@@ -17,13 +17,13 @@
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../_static/documentation_options.js?v=5929fcd5"></script>
-      <script src="../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="InputParameters" href="ase2sprkkr.input_parameters.input_parameters.InputParameters.html" />
-    <link rel="prev" title="input_parameters" href="ase2sprkkr.input_parameters.definitions.marpes.input_parameters.html" /> 
+    <link rel="prev" title="input_parameters_definition" href="ase2sprkkr.input_parameters.definitions.xas.input_parameters_definition.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -68,11 +68,16 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.promote_ase_atoms.html">promote_ase_atoms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.__getattr__.html">__getattr__</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.common.html">common</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration.html">configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration_migration.html">configuration_migration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration_yaml.html">configuration_yaml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.conftest.html">conftest</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.examples.html">examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.execution.html">execution</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.gui.html">gui</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="ase2sprkkr.input_parameters.html">input_parameters</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.html">definitions</a></li>
@@ -82,12 +87,15 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.input_parameters.input_parameters_definitions.html">input_parameters_definitions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.input_parameters.task_definition.html">task_definition</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.input_parameters.tasks.html">tasks</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.output_files.html">output_files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.outputs.html">outputs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.physics.html">physics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.potentials.html">potentials</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.profiles.html">profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.result_files.html">result_files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.sprkkr.html">sprkkr</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.tools.html">tools</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.version.html">version</a></li>
@@ -125,35 +133,50 @@
 <h1>input_parameters<a class="headerlink" href="#input-parameters" title="Link to this heading"></a></h1>
 <p>Full name: <strong>ase2sprkkr.input_parameters.input_parameters</strong></p>
 <p class="rubric">Module class hierarchy</p>
-<div class="graphviz"><img src="../_images/inheritance-8f79accdbd847941bedd445de2a49e39d173aad6.png" alt="Inheritance diagram of ase2sprkkr.input_parameters.input_parameters.InputParameters, ase2sprkkr.input_parameters.input_parameters.InputSection" usemap="#inheritance3ca2e97862" class="inheritance graphviz" /></div>
-<map id="inheritance3ca2e97862" name="inheritance3ca2e97862">
-<area shape="rect" id="node1" href="ase2sprkkr.common.configuration_containers.BaseConfigurationContainer.html#ase2sprkkr.common.configuration_containers.BaseConfigurationContainer" target="_top" title="Configuration container, that holds members, either in classical way" alt="" coords="109,44,264,65"/>
-<area shape="rect" id="node4" href="ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.configuration_containers.ConfigurationContainer" target="_top" title="A container for configuration (problem&#45;definition) options and/or sections." alt="" coords="286,44,416,65"/>
-<area shape="rect" id="node2" href="ase2sprkkr.common.configuration.Configuration.html#ase2sprkkr.common.configuration.Configuration" target="_top" title="The common base class for all configurations values and containers. I.e." alt="" coords="4,44,87,65"/>
-<area shape="rect" id="node3" href="ase2sprkkr.common.configuration_containers.BaseSection.html#ase2sprkkr.common.configuration_containers.BaseSection" target="_top" title="A section of SPRKKR configuration &#45; i.e. part of the configuration file." alt="" coords="477,83,554,104"/>
-<area shape="rect" id="node9" href="ase2sprkkr.common.configuration_containers.Section.html#ase2sprkkr.common.configuration_containers.Section" target="_top" title="A standard section of a task or potential (whose content is predefinded by SectionDefinition)" alt="" coords="637,83,692,104"/>
-<area shape="rect" id="node6" href="ase2sprkkr.common.configuration_containers.RootConfigurationContainer.html#ase2sprkkr.common.configuration_containers.RootConfigurationContainer" target="_top" title="Base class for data of configuration/problem&#45;definition files" alt="" coords="439,4,592,25"/>
-<area shape="rect" id="node5" href="ase2sprkkr.sprkkr.configuration.ConfigurationFile.html#ase2sprkkr.sprkkr.configuration.ConfigurationFile" target="_top" title="&#39;Root&#39; configuration container for SPRKKR configuration file" alt="" coords="614,5,714,26"/>
-<area shape="rect" id="node10" href="ase2sprkkr.input_parameters.input_parameters.InputParameters.html#ase2sprkkr.input_parameters.input_parameters.InputParameters" target="_top" title="It holds the configuration values for a SPR&#45;KKR task and run the task" alt="" coords="747,5,845,26"/>
-<area shape="rect" id="node7" href="ase2sprkkr.sprkkr.configuration.ConfigurationSectionTrait.html#ase2sprkkr.sprkkr.configuration.ConfigurationSectionTrait" target="_top" title="ConfigurationSectionTrait" alt="" coords="445,44,586,65"/>
-<area shape="rect" id="node8" href="ase2sprkkr.sprkkr.configuration.ConfigurationSection.html#ase2sprkkr.sprkkr.configuration.ConfigurationSection" target="_top" title="Configuration section to be used in SPRKKR configuration files" alt="" coords="737,63,856,84"/>
-<area shape="rect" id="node11" href="ase2sprkkr.input_parameters.input_parameters.InputSection.html#ase2sprkkr.input_parameters.input_parameters.InputSection" target="_top" title="Input parameters sections has nothing special, yet." alt="" coords="878,63,956,84"/>
-</map><div class="line-block">
+digraph inheritance3ca2e97862 {
+bgcolor=transparent;
+fontsize=14;
+rankdir=LR;
+ranksep=0.3;
+size=&quot;10.0, 10.0&quot;;
+  &quot;ABC&quot; [fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,tooltip=&quot;Helper class that provides a standard way to create an ABC using&quot;];
+  &quot;BaseConfigurationContainer&quot; [URL=&quot;ase2sprkkr.common.configuration_containers.BaseConfigurationContainer.html#ase2sprkkr.common.configuration_containers.BaseConfigurationContainer&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;Configuration container, that holds members, either in classical way&quot;];
+  &quot;Configuration&quot; -&gt; &quot;BaseConfigurationContainer&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;ABC&quot; -&gt; &quot;BaseConfigurationContainer&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;BaseSection&quot; [URL=&quot;ase2sprkkr.common.configuration_containers.BaseSection.html#ase2sprkkr.common.configuration_containers.BaseSection&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;A section of SPRKKR configuration - i.e. part of the configuration file.&quot;];
+  &quot;ConfigurationContainer&quot; -&gt; &quot;BaseSection&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;Configuration&quot; [URL=&quot;ase2sprkkr.common.configuration.Configuration.html#ase2sprkkr.common.configuration.Configuration&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;The common base class for all configurations values and containers. I.e.&quot;];
+  &quot;ConfigurationContainer&quot; [URL=&quot;ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.configuration_containers.ConfigurationContainer&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;A container for configuration (problem-definition) options and/or sections.&quot;];
+  &quot;BaseConfigurationContainer&quot; -&gt; &quot;ConfigurationContainer&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;ConfigurationFile&quot; [URL=&quot;ase2sprkkr.sprkkr.configuration.ConfigurationFile.html#ase2sprkkr.sprkkr.configuration.ConfigurationFile&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;'Root' configuration container for SPRKKR configuration file&quot;];
+  &quot;RootConfigurationContainer&quot; -&gt; &quot;ConfigurationFile&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;ConfigurationSectionTrait&quot; -&gt; &quot;ConfigurationFile&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;ConfigurationSection&quot; [URL=&quot;ase2sprkkr.sprkkr.configuration.ConfigurationSection.html#ase2sprkkr.sprkkr.configuration.ConfigurationSection&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;Configuration section to be used in SPRKKR configuration files&quot;];
+  &quot;Section&quot; -&gt; &quot;ConfigurationSection&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;ConfigurationSectionTrait&quot; -&gt; &quot;ConfigurationSection&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;ConfigurationSectionTrait&quot; [URL=&quot;ase2sprkkr.sprkkr.configuration.ConfigurationSectionTrait.html#ase2sprkkr.sprkkr.configuration.ConfigurationSectionTrait&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;];
+  &quot;InputParameters&quot; [URL=&quot;ase2sprkkr.input_parameters.input_parameters.InputParameters.html#ase2sprkkr.input_parameters.input_parameters.InputParameters&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;Concrete values of an SPR-KKR input file.&quot;];
+  &quot;ConfigurationFile&quot; -&gt; &quot;InputParameters&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;InputSection&quot; [URL=&quot;ase2sprkkr.input_parameters.input_parameters.InputSection.html#ase2sprkkr.input_parameters.input_parameters.InputSection&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;Input parameters sections have nothing special yet.&quot;];
+  &quot;ConfigurationSection&quot; -&gt; &quot;InputSection&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;RootConfigurationContainer&quot; [URL=&quot;ase2sprkkr.common.configuration_containers.RootConfigurationContainer.html#ase2sprkkr.common.configuration_containers.RootConfigurationContainer&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;Base class for data of configuration/problem-definition files&quot;];
+  &quot;ConfigurationContainer&quot; -&gt; &quot;RootConfigurationContainer&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;Section&quot; [URL=&quot;ase2sprkkr.common.configuration_containers.Section.html#ase2sprkkr.common.configuration_containers.Section&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;A standard section of a task or potential (whose content is predefinded by SectionDefinition)&quot;];
+  &quot;BaseSection&quot; -&gt; &quot;Section&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+}
+<div class="line-block">
 <div class="line"><br /></div>
 </div>
 <p class="rubric">Description</p>
-<p id="module-ase2sprkkr.input_parameters.input_parameters">Containers for configuration parameters of SPR-KKR task.</p>
-<p>These configuration parameters are supplied to SPR-KKR executables as input files.
-The containers are also the objects, that take care about executing the SPR-KKR
-executables.</p>
+<p id="module-ase2sprkkr.input_parameters.input_parameters">Containers for configuration parameters of SPR-KKR tasks.</p>
 <p class="rubric">Classes</p>
 <table class="autosummary longtable docutils align-default">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.input_parameters.InputParameters.html#ase2sprkkr.input_parameters.input_parameters.InputParameters" title="ase2sprkkr.input_parameters.input_parameters.InputParameters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">InputParameters</span></code></a>(definition[, inputfile, ...])</p></td>
-<td><p>It holds the configuration values for a SPR-KKR task and run the task</p></td>
+<td><p>Concrete values of an SPR-KKR input file.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.input_parameters.InputSection.html#ase2sprkkr.input_parameters.input_parameters.InputSection" title="ase2sprkkr.input_parameters.input_parameters.InputSection"><code class="xref py py-obj docutils literal notranslate"><span class="pre">InputSection</span></code></a>(definition[, container])</p></td>
-<td><p>Input parameters sections has nothing special, yet.</p></td>
+<td><p>Input parameters sections have nothing special yet.</p></td>
 </tr>
 </tbody>
 </table>
@@ -163,7 +186,7 @@ executables.</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="ase2sprkkr.input_parameters.definitions.marpes.input_parameters.html" class="btn btn-neutral float-left" title="input_parameters" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="ase2sprkkr.input_parameters.definitions.xas.input_parameters_definition.html" class="btn btn-neutral float-left" title="input_parameters_definition" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="ase2sprkkr.input_parameters.input_parameters.InputParameters.html" class="btn btn-neutral float-right" title="InputParameters" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

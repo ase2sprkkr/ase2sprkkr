@@ -16,8 +16,8 @@
       <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
-      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
@@ -81,6 +81,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../../ase2sprkkr.html">ase2sprkkr</a></li>
       <li class="breadcrumb-item active">ase2sprkkr.outputs.readers.spec</li>
       <li class="wy-breadcrumbs-aside">
       </li>
@@ -91,9 +92,9 @@
            <div itemprop="articleBody">
              
   <h1>Source code for ase2sprkkr.outputs.readers.spec</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span></span><span class="sd">"""</span>
 <span class="sd">Parser for spec.out files containing spectral function calculations.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
@@ -107,98 +108,86 @@
 <div class="viewcode-block" id="SpecResult">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.readers.spec.SpecResult.html#ase2sprkkr.outputs.readers.spec.SpecResult">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">SpecResult</span><span class="p">(</span><span class="n">TaskResult</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Class representing the results of a spectral function calculation.</span>
 <span class="sd">    Provides access to the parsed data from spec.out files.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
-<div class="viewcode-block" id="SpecResult.potential_barrier">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.readers.spec.SpecResult.html#ase2sprkkr.outputs.readers.spec.SpecResult.potential_barrier">[docs]</a>
     <span class="nd">@cached_property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">potential_barrier</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Extract potential barrier parameters from the output.&quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;_potential_barrier&quot;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Extract potential barrier parameters from the output."""</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">"_potential_barrier"</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_parse_potential_barrier</span><span class="p">()</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_potential_barrier</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_potential_barrier</span>
 
-
-<div class="viewcode-block" id="SpecResult.lattice_constants">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.readers.spec.SpecResult.html#ase2sprkkr.outputs.readers.spec.SpecResult.lattice_constants">[docs]</a>
     <span class="nd">@cached_property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">lattice_constants</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Extract lattice constants from the output.&quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;_lattice_constants&quot;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Extract lattice constants from the output."""</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">"_lattice_constants"</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_parse_lattice_info</span><span class="p">()</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lattice_constants</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lattice_constants</span>
 
-
-<div class="viewcode-block" id="SpecResult.basis_vectors">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.readers.spec.SpecResult.html#ase2sprkkr.outputs.readers.spec.SpecResult.basis_vectors">[docs]</a>
     <span class="nd">@cached_property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">basis_vectors</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Extract basis vectors from the output.&quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;_basis_vectors&quot;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Extract basis vectors from the output."""</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">"_basis_vectors"</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_parse_lattice_info</span><span class="p">()</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_basis_vectors</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_basis_vectors</span>
 
-
-<div class="viewcode-block" id="SpecResult.spectral_data">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.readers.spec.SpecResult.html#ase2sprkkr.outputs.readers.spec.SpecResult.spectral_data">[docs]</a>
     <span class="nd">@cached_property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">spectral_data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Extract the main spectral data table.&quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;_spectral_data&quot;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Extract the main spectral data table."""</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">"_spectral_data"</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_parse_spectral_data</span><span class="p">()</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_spectral_data</span></div>
-
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_spectral_data</span>
 
 <div class="viewcode-block" id="SpecResult._parse_potential_barrier">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.readers.spec.SpecResult.html#ase2sprkkr.outputs.readers.spec.SpecResult._parse_potential_barrier">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">_parse_potential_barrier</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Parse the potential barrier section of the output.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Parse the potential barrier section of the output."""</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_potential_barrier</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="n">content</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_file_content</span><span class="p">()</span>
 
         <span class="c1"># Parse potential barrier parameters</span>
-        <span class="n">ibar_match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;#\s*ibar:\s*(\d+)&quot;</span><span class="p">,</span> <span class="n">content</span><span class="p">)</span>
+        <span class="n">ibar_match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s2">"#\s*ibar:\s*(\d+)"</span><span class="p">,</span> <span class="n">content</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">ibar_match</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_potential_barrier</span><span class="p">[</span><span class="s2">&quot;ibar&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">ibar_match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_potential_barrier</span><span class="p">[</span><span class="s2">"ibar"</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">ibar_match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
 
-        <span class="n">epsx_match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;#\s*epsx:\s*([\d.E+-]+)&quot;</span><span class="p">,</span> <span class="n">content</span><span class="p">)</span>
+        <span class="n">epsx_match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s2">"#\s*epsx:\s*([\d.E+-]+)"</span><span class="p">,</span> <span class="n">content</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">epsx_match</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_potential_barrier</span><span class="p">[</span><span class="s2">&quot;epsx&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">epsx_match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_potential_barrier</span><span class="p">[</span><span class="s2">"epsx"</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">epsx_match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
 
         <span class="c1"># Parse zparup and zpardn (these appear to be arrays)</span>
-        <span class="n">zpar_match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;#\s*zparup:\s*([\d.E+-]+)\s+([\d.E+-]+)\s+([\d.E+-]+)&quot;</span><span class="p">,</span> <span class="n">content</span><span class="p">)</span>
+        <span class="n">zpar_match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s2">"#\s*zparup:\s*([\d.E+-]+)\s+([\d.E+-]+)\s+([\d.E+-]+)"</span><span class="p">,</span> <span class="n">content</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">zpar_match</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_potential_barrier</span><span class="p">[</span><span class="s2">&quot;zparup&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">zpar_match</span><span class="o">.</span><span class="n">groups</span><span class="p">()]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_potential_barrier</span><span class="p">[</span><span class="s2">"zparup"</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">zpar_match</span><span class="o">.</span><span class="n">groups</span><span class="p">()]</span>
 
-        <span class="n">zpardn_match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;#\s*zpardn:\s*([\d.E+-]+)\s+([\d.E+-]+)\s+([\d.E+-]+)&quot;</span><span class="p">,</span> <span class="n">content</span><span class="p">)</span>
+        <span class="n">zpardn_match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s2">"#\s*zpardn:\s*([\d.E+-]+)\s+([\d.E+-]+)\s+([\d.E+-]+)"</span><span class="p">,</span> <span class="n">content</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">zpardn_match</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_potential_barrier</span><span class="p">[</span><span class="s2">&quot;zpardn&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">zpardn_match</span><span class="o">.</span><span class="n">groups</span><span class="p">()]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_potential_barrier</span><span class="p">[</span><span class="s2">"zpardn"</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">zpardn_match</span><span class="o">.</span><span class="n">groups</span><span class="p">()]</span>
 
         <span class="c1"># Parse bparp</span>
-        <span class="n">bparp_match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;#\s*bparp:\s*([\d.E+-]+)\s+([\d.E+-]+)\s+([\d.E+-]+)&quot;</span><span class="p">,</span> <span class="n">content</span><span class="p">)</span>
+        <span class="n">bparp_match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s2">"#\s*bparp:\s*([\d.E+-]+)\s+([\d.E+-]+)\s+([\d.E+-]+)"</span><span class="p">,</span> <span class="n">content</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">bparp_match</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_potential_barrier</span><span class="p">[</span><span class="s2">&quot;bparp&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">bparp_match</span><span class="o">.</span><span class="n">groups</span><span class="p">()]</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_potential_barrier</span><span class="p">[</span><span class="s2">"bparp"</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">bparp_match</span><span class="o">.</span><span class="n">groups</span><span class="p">()]</span></div>
 
 
 <div class="viewcode-block" id="SpecResult._parse_lattice_info">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.readers.spec.SpecResult.html#ase2sprkkr.outputs.readers.spec.SpecResult._parse_lattice_info">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">_parse_lattice_info</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Parse lattice constants and basis vectors from the output.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Parse lattice constants and basis vectors from the output."""</span>
         <span class="n">content</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_file_content</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_lattice_constants</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_basis_vectors</span> <span class="o">=</span> <span class="p">{}</span>
 
         <span class="c1"># Parse lattice constant</span>
-        <span class="n">lat_match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;lattice constant\s*:\s*([\d.]+)&quot;</span><span class="p">,</span> <span class="n">content</span><span class="p">)</span>
+        <span class="n">lat_match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s2">"lattice constant\s*:\s*([\d.]+)"</span><span class="p">,</span> <span class="n">content</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">lat_match</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_lattice_constants</span><span class="p">[</span><span class="s2">&quot;a&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">lat_match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_lattice_constants</span><span class="p">[</span><span class="s2">"a"</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">lat_match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">_basis_vectors</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;real&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)),</span> <span class="s2">&quot;reciprocal&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">))}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_basis_vectors</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"real"</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)),</span> <span class="s2">"reciprocal"</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">))}</span>
         <span class="c1"># Parse real basis vectors</span>
-        <span class="n">matches</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">finditer</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;(real|reciprocal) basis\s+(\d+)\s*:\s*([\d.-]+)\s+([\d.-]+)&quot;</span><span class="p">,</span> <span class="n">content</span><span class="p">)</span>
+        <span class="n">matches</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">finditer</span><span class="p">(</span><span class="sa">r</span><span class="s2">"(real|reciprocal) basis\s+(\d+)\s*:\s*([\d.-]+)\s+([\d.-]+)"</span><span class="p">,</span> <span class="n">content</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">match</span> <span class="ow">in</span> <span class="n">matches</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_basis_vectors</span><span class="p">[</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)][</span><span class="nb">int</span><span class="p">(</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">4</span><span class="p">)]</span></div>
 
@@ -206,23 +195,23 @@
 <div class="viewcode-block" id="SpecResult._parse_spectral_data">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.readers.spec.SpecResult.html#ase2sprkkr.outputs.readers.spec.SpecResult._parse_spectral_data">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">_parse_spectral_data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Parse the main spectral data table.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Parse the main spectral data table."""</span>
         <span class="n">content</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_file_content</span><span class="p">()</span>
 
         <span class="c1"># Find the start of the data section (after the header)</span>
-        <span class="n">header_end</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;stookes-vector\s+of the photonfield&quot;</span><span class="p">,</span> <span class="n">content</span><span class="p">)</span>
+        <span class="n">header_end</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s2">"stookes-vector\s+of the photonfield"</span><span class="p">,</span> <span class="n">content</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">header_end</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_spectral_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
             <span class="k">return</span>
 
         <span class="n">data_start</span> <span class="o">=</span> <span class="n">header_end</span><span class="o">.</span><span class="n">end</span><span class="p">()</span>
-        <span class="n">data_lines</span> <span class="o">=</span> <span class="n">content</span><span class="p">[</span><span class="n">data_start</span><span class="p">:]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">data_lines</span> <span class="o">=</span> <span class="n">content</span><span class="p">[</span><span class="n">data_start</span><span class="p">:]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
 
         <span class="c1"># Parse the data lines</span>
         <span class="n">data</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">data_lines</span><span class="p">:</span>
             <span class="c1"># Match lines with numbers in scientific notation</span>
-            <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^\s*[\d.E+-]+\s+[\d.E+-]+\s+[\d.E+-]+\s+[\d.E+-]+\s+[\d.E+-]+\s+[\d.E-]+$&quot;</span><span class="p">,</span> <span class="n">line</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s2">"^\s*[\d.E+-]+\s+[\d.E+-]+\s+[\d.E+-]+\s+[\d.E+-]+\s+[\d.E+-]+\s+[\d.E-]+$"</span><span class="p">,</span> <span class="n">line</span><span class="p">):</span>
                 <span class="n">values</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()]</span>
                 <span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
 
@@ -232,13 +221,13 @@
 <div class="viewcode-block" id="SpecResult._get_file_content">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.readers.spec.SpecResult.html#ase2sprkkr.outputs.readers.spec.SpecResult._get_file_content">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">_get_file_content</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the content of the output file.&quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;_file_content&quot;</span><span class="p">):</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;output_file&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_file</span><span class="p">:</span>
-                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output_file</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Get the content of the output file."""</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">"_file_content"</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">"output_file"</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_file</span><span class="p">:</span>
+                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output_file</span><span class="p">,</span> <span class="s2">"r"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">_file_content</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_file_content</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_file_content</span> <span class="o">=</span> <span class="s2">""</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_file_content</span></div>
 </div>
 
@@ -247,17 +236,17 @@
 <div class="viewcode-block" id="SpecOutputParser">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.readers.spec.SpecOutputParser.html#ase2sprkkr.outputs.readers.spec.SpecOutputParser">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">SpecOutputParser</span><span class="p">(</span><span class="n">DefaultOutputParser</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Reader for spec.out files.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Reader for spec.out files."""</span>
 
 <div class="viewcode-block" id="SpecOutputParser.read_output">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.readers.spec.SpecOutputParser.html#ase2sprkkr.outputs.readers.spec.SpecOutputParser.read_output">[docs]</a>
     <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">read_output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stdout</span><span class="p">,</span> <span class="n">result</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Read and parse the output from the spec.out file.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Read and parse the output from the spec.out file."""</span>
         <span class="k">await</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">read_output</span><span class="p">(</span><span class="n">stdout</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span>
 
         <span class="c1"># Additional parsing specific to spec.out</span>
-        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="s2">&quot;output_lines&quot;</span><span class="p">):</span>
-            <span class="n">result</span><span class="o">.</span><span class="n">output_content</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">output_lines</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="s2">"output_lines"</span><span class="p">):</span>
+            <span class="n">result</span><span class="o">.</span><span class="n">output_content</span> <span class="o">=</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">output_lines</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">result</span></div>
 </div>
@@ -267,7 +256,7 @@
 <div class="viewcode-block" id="SpecOutputReader">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.readers.spec.SpecOutputReader.html#ase2sprkkr.outputs.readers.spec.SpecOutputReader">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">SpecOutputReader</span><span class="p">(</span><span class="n">KkrOutputReader</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Process class for spectral function calculations.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Process class for spectral function calculations."""</span>
 
     <span class="n">result_class</span> <span class="o">=</span> <span class="n">SpecResult</span>
     <span class="n">parser_class</span> <span class="o">=</span> <span class="n">SpecOutputParser</span></div>

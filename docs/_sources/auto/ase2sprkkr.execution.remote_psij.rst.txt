@@ -1,0 +1,70 @@
+remote\_psij
+============
+
+Full name: **ase2sprkkr.execution.remote\_psij**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.execution.remote_psij._ActiveRun  ase2sprkkr.execution.remote_psij._RemotePsijAgent  ase2sprkkr.execution.remote_psij._RemoteReader  ase2sprkkr.execution.remote_psij._RemoteResult 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.execution.remote_psij
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      _agent_is_running
+      _agent_lock_path
+      _execution_spec
+      _executor
+      _executor_key
+      _spawn_agent
+      _try_agent_lock
+      cancel_remote_psij
+      ensure_remote_psij_agent
+      run_remote_psij_worker
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      _ActiveRun
+      _RemotePsijAgent
+      _RemoteReader
+      _RemoteResult
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

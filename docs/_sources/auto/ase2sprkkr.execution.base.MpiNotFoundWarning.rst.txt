@@ -1,0 +1,6 @@
+ase2sprkkr.execution.base.MpiNotFoundWarning
+============================================
+
+.. currentmodule:: ase2sprkkr.execution.base
+
+.. autoexception:: MpiNotFoundWarning

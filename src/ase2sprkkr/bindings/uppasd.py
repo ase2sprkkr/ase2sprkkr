@@ -4,7 +4,7 @@ import warnings
 import numpy as np
 from ase import Atoms
 from ..sprkkr.sprkkr_atoms import SPRKKRAtoms
-from ..result_files.definitions.jxc import JXCOutputFile, Coordinates
+from ..result_files.definitions.jxc import JXCResultFile, Coordinates
 
 POSFILE_FORMAT = "{:5.0f} {:5.0f} {: 4.10f} {: 4.10f} {: 4.10f}\n"
 MOMFILE_FORMAT = "{:5.0f} {:5.0f} {: 4.10f} {: 4.10f} {: 4.10f} {: 4.10f}\n"
@@ -53,7 +53,7 @@ Sym   {sym}    Symmetry of exchange bonding vectors (0 for no, 1 for cubic, 2 fo
 
 
 def write_jfile(
-    jxc_ouput_file: JXCOutputFile,
+    jxc_ouput_file: JXCResultFile,
     file_name=None,
     directory=None,
     selector=None,
@@ -92,7 +92,7 @@ def write_jfile(
 
 
 def write_dmfile(
-    jxc_ouput_file: JXCOutputFile,
+    jxc_ouput_file: JXCResultFile,
     file_name="dmfile.dat",
     directory=None,
     selector=None,
@@ -140,11 +140,11 @@ def write_pos_file(
     it=None,
     exclude_it=None,
     exclude_vc=True,
-    jxc_ouput_file: Optional[JXCOutputFile] = None,
+    jxc_ouput_file: Optional[JXCResultFile] = None,
 ):
     atoms = SPRKKRAtoms.promote_ase_atoms(atoms)
     if not jxc_ouput_file:
-        jxc_ouput_file = JXCOutputFile.from_atoms(atoms)
+        jxc_ouput_file = JXCResultFile.from_atoms(atoms)
     positions = atoms.get_scaled_positions(wrap=False)
     selected_iqs = jxc_ouput_file.iq_selector(
         selector=selector, iq=iq, it=it, exclude_it=exclude_it, exclude_vc=exclude_vc
@@ -183,11 +183,11 @@ def write_mom_file(
     it=None,
     exclude_it=None,
     exclude_vc=True,
-    jxc_ouput_file: Optional[JXCOutputFile] = None,
+    jxc_ouput_file: Optional[JXCResultFile] = None,
 ):
     atoms = SPRKKRAtoms.promote_ase_atoms(atoms)
     if not jxc_ouput_file:
-        jxc_ouput_file = JXCOutputFile.from_atoms(atoms)
+        jxc_ouput_file = JXCResultFile.from_atoms(atoms)
 
     out = []
     warned = False

@@ -1,0 +1,6 @@
+ase2sprkkr.execution.manager.DuplicateSubmissionError
+=====================================================
+
+.. currentmodule:: ase2sprkkr.execution.manager
+
+.. autoexception:: DuplicateSubmissionError

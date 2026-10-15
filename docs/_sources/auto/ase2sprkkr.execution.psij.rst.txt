@@ -1,0 +1,68 @@
+psij
+====
+
+Full name: **ase2sprkkr.execution.psij**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.execution.psij.PsijExecutor  ase2sprkkr.execution.psij.PsijRunner 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.execution.psij
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      _load_psij
+      _path
+      _scheduler_output
+      _slurm_accounting_matches
+      _slurm_accounting_stores_comments
+      _slurm_current_matches
+      _slurm_details
+      _slurm_exit_code
+      _slurm_state
+      _slurm_time
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      PsijExecutor
+      PsijRunner
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

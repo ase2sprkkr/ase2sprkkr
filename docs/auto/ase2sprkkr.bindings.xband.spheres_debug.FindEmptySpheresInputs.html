@@ -17,12 +17,12 @@
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../_static/documentation_options.js?v=5929fcd5"></script>
-      <script src="../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="spheres" href="ase2sprkkr.bindings.xband.spheres.html" />
+    <link rel="next" title="common" href="ase2sprkkr.common.html" />
     <link rel="prev" title="print_find_empty_spheres_program" href="ase2sprkkr.bindings.xband.spheres_debug.print_find_empty_spheres_program.html" /> 
 </head>
 
@@ -68,6 +68,7 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.promote_ase_atoms.html">promote_ase_atoms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.__getattr__.html">__getattr__</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.bindings.empty_spheres.html">empty_spheres</a></li>
@@ -77,21 +78,24 @@
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.bindings.uppasd.html">uppasd</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="ase2sprkkr.bindings.xband.html">xband</a><ul class="current">
 <li class="toctree-l4 current"><a class="reference internal" href="ase2sprkkr.bindings.xband.spheres_debug.html">spheres_debug</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.bindings.xband.spheres.html">spheres</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.bindings.xband.symmetry.html">symmetry</a></li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.common.html">common</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration.html">configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration_migration.html">configuration_migration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration_yaml.html">configuration_yaml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.conftest.html">conftest</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.examples.html">examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.execution.html">execution</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.gui.html">gui</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.input_parameters.html">input_parameters</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.output_files.html">output_files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.outputs.html">outputs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.physics.html">physics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.potentials.html">potentials</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.profiles.html">profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.result_files.html">result_files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.sprkkr.html">sprkkr</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.tools.html">tools</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.version.html">version</a></li>
@@ -131,12 +135,17 @@
 <h1>FindEmptySpheresInputs<a class="headerlink" href="#findemptyspheresinputs" title="Link to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="ase2sprkkr.bindings.xband.spheres_debug.FindEmptySpheresInputs">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.bindings.xband.spheres_debug.</span></span><span class="sig-name descname"><span class="pre">FindEmptySpheresInputs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">max_spheres</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="s"><span class="pre">'int'</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_radius_bohr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="s"><span class="pre">'float'</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_radius_bohr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="s"><span class="pre">'float'</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alat_bohr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="s"><span class="pre">'float'</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cell_scaled</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="s"><span class="pre">'np.ndarray'</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">positions_scaled</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="s"><span class="pre">'np.ndarray'</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mapping</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="s"><span class="pre">'np.ndarray'</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_classes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="s"><span class="pre">'int'</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_types</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="s"><span class="pre">'int'</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">symbols4</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="s"><span class="pre">'list[str]'</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atomic_numbers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="s"><span class="pre">'np.ndarray'</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">occupations</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="s"><span class="pre">'np.ndarray'</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type_eq_class</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="s"><span class="pre">'np.ndarray'</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mesh</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="s"><span class="pre">'np.ndarray'</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_symmetry_ops</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="s"><span class="pre">'int'</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotations</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="s"><span class="pre">'np.ndarray</span> <span class="pre">|</span> <span class="pre">None'</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">translations</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="s"><span class="pre">'np.ndarray</span> <span class="pre">|</span> <span class="pre">None'</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="s"><span class="pre">'int'</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/bindings/xband/spheres_debug.html#FindEmptySpheresInputs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.bindings.xband.spheres_debug.FindEmptySpheresInputs" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.bindings.xband.spheres_debug.</span></span><span class="sig-name descname"><span class="pre">FindEmptySpheresInputs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">max_spheres</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="s"><span class="pre">'int'</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_radius_bohr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="s"><span class="pre">'float'</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_radius_bohr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="s"><span class="pre">'float'</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alat_bohr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="s"><span class="pre">'float'</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cell_scaled</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="s"><span class="pre">'np.ndarray'</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">positions_scaled</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="s"><span class="pre">'np.ndarray'</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mapping</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="s"><span class="pre">'np.ndarray'</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_classes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="s"><span class="pre">'int'</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_types</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="s"><span class="pre">'int'</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">symbols4</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="s"><span class="pre">'list[str]'</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atomic_numbers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="s"><span class="pre">'np.ndarray'</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">occupations</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="s"><span class="pre">'np.ndarray'</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type_eq_class</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="s"><span class="pre">'np.ndarray'</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mesh</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="s"><span class="pre">'np.ndarray'</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_symmetry_ops</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="s"><span class="pre">'int'</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotations</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="s"><span class="pre">'np.ndarray</span> <span class="pre">|</span> <span class="pre">None'</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">translations</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="s"><span class="pre">'np.ndarray</span> <span class="pre">|</span> <span class="pre">None'</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="s"><span class="pre">'int'</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/bindings/xband/spheres_debug.html#FindEmptySpheresInputs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.bindings.xband.spheres_debug.FindEmptySpheresInputs" title="Link to this definition"></a></dt>
 <dd><p class="rubric">Class hierarchy</p>
-<div class="graphviz"><img src="../_images/inheritance-1c774530223a9b48a18ccab3b9d7e312ea388ca7.png" alt="Inheritance diagram of ase2sprkkr.bindings.xband.spheres_debug.FindEmptySpheresInputs" usemap="#inheritance3ca270b26c" class="inheritance graphviz" /></div>
-<map id="inheritance3ca270b26c" name="inheritance3ca270b26c">
-<area shape="rect" id="node1" href="#ase2sprkkr.bindings.xband.spheres_debug.FindEmptySpheresInputs" target="_top" title="FindEmptySpheresInputs(max_spheres: &#39;int&#39;, min_radius_bohr: &#39;float&#39;, max_radius_bohr: &#39;float&#39;, alat_bohr: &#39;float&#39;, cell_scaled: &#39;np.ndarray&#39;, positions_scaled: &#39;np.ndarray&#39;, mapping: &#39;np.ndarray&#39;, n_classes: &#39;int&#39;, n_types: &#39;int&#39;, symbols4: &#39;list[str]&#39;, atomic_numbers: &#39;np.ndarray&#39;, occupations: &#39;np.ndarray&#39;, type_eq_class: &#39;np.ndarray&#39;, mesh: &#39;np.ndarray&#39;, n_symmetry_ops: &#39;int&#39;, rotations: &#39;np.ndarray | None&#39;, translations: &#39;np.ndarray | None&#39;, verbose: &#39;int&#39;)" alt="" coords="5,5,290,33"/>
-</map><div class="line-block">
+digraph inheritance3ca270b26c {
+bgcolor=transparent;
+fontsize=14;
+rankdir=LR;
+ranksep=0.3;
+size=&quot;10.0, 10.0&quot;;
+  &quot;spheres_debug.FindEmptySpheresInputs&quot; [URL=&quot;#ase2sprkkr.bindings.xband.spheres_debug.FindEmptySpheresInputs&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;FindEmptySpheresInputs(max_spheres: 'int', min_radius_bohr: 'float', max_radius_bohr: 'float', alat_bohr: 'float', cell_scaled: 'np.ndarray', positions_scaled: 'np.ndarray', mapping: 'np.ndarray', n_classes: 'int', n_types: 'int', symbols4: 'list[str]', atomic_numbers: 'np.ndarray', occupations: 'np.ndarray', type_eq_class: 'np.ndarray', mesh: 'np.ndarray', n_symmetry_ops: 'int', rotations: 'np.ndarray | None', translations: 'np.ndarray | None', verbose: 'int')&quot;];
+}
+<div class="line-block">
 <div class="line"><br /></div>
 </div>
 <p class="rubric">Constructor</p>
@@ -198,92 +207,92 @@
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ase2sprkkr.bindings.xband.spheres_debug.FindEmptySpheresInputs.max_spheres">
-<span class="sig-name descname"><span class="pre">max_spheres</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#ase2sprkkr.bindings.xband.spheres_debug.FindEmptySpheresInputs.max_spheres" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">max_spheres</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></span><a class="headerlink" href="#ase2sprkkr.bindings.xband.spheres_debug.FindEmptySpheresInputs.max_spheres" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ase2sprkkr.bindings.xband.spheres_debug.FindEmptySpheresInputs.min_radius_bohr">
-<span class="sig-name descname"><span class="pre">min_radius_bohr</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#ase2sprkkr.bindings.xband.spheres_debug.FindEmptySpheresInputs.min_radius_bohr" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">min_radius_bohr</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></span><a class="headerlink" href="#ase2sprkkr.bindings.xband.spheres_debug.FindEmptySpheresInputs.min_radius_bohr" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ase2sprkkr.bindings.xband.spheres_debug.FindEmptySpheresInputs.max_radius_bohr">
-<span class="sig-name descname"><span class="pre">max_radius_bohr</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#ase2sprkkr.bindings.xband.spheres_debug.FindEmptySpheresInputs.max_radius_bohr" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">max_radius_bohr</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></span><a class="headerlink" href="#ase2sprkkr.bindings.xband.spheres_debug.FindEmptySpheresInputs.max_radius_bohr" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ase2sprkkr.bindings.xband.spheres_debug.FindEmptySpheresInputs.alat_bohr">
-<span class="sig-name descname"><span class="pre">alat_bohr</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#ase2sprkkr.bindings.xband.spheres_debug.FindEmptySpheresInputs.alat_bohr" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">alat_bohr</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></span><a class="headerlink" href="#ase2sprkkr.bindings.xband.spheres_debug.FindEmptySpheresInputs.alat_bohr" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ase2sprkkr.bindings.xband.spheres_debug.FindEmptySpheresInputs.cell_scaled">
-<span class="sig-name descname"><span class="pre">cell_scaled</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></em><a class="headerlink" href="#ase2sprkkr.bindings.xband.spheres_debug.FindEmptySpheresInputs.cell_scaled" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">cell_scaled</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></span><a class="headerlink" href="#ase2sprkkr.bindings.xband.spheres_debug.FindEmptySpheresInputs.cell_scaled" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ase2sprkkr.bindings.xband.spheres_debug.FindEmptySpheresInputs.positions_scaled">
-<span class="sig-name descname"><span class="pre">positions_scaled</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></em><a class="headerlink" href="#ase2sprkkr.bindings.xband.spheres_debug.FindEmptySpheresInputs.positions_scaled" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">positions_scaled</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></span><a class="headerlink" href="#ase2sprkkr.bindings.xband.spheres_debug.FindEmptySpheresInputs.positions_scaled" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ase2sprkkr.bindings.xband.spheres_debug.FindEmptySpheresInputs.mapping">
-<span class="sig-name descname"><span class="pre">mapping</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></em><a class="headerlink" href="#ase2sprkkr.bindings.xband.spheres_debug.FindEmptySpheresInputs.mapping" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">mapping</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></span><a class="headerlink" href="#ase2sprkkr.bindings.xband.spheres_debug.FindEmptySpheresInputs.mapping" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ase2sprkkr.bindings.xband.spheres_debug.FindEmptySpheresInputs.n_classes">
-<span class="sig-name descname"><span class="pre">n_classes</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#ase2sprkkr.bindings.xband.spheres_debug.FindEmptySpheresInputs.n_classes" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">n_classes</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></span><a class="headerlink" href="#ase2sprkkr.bindings.xband.spheres_debug.FindEmptySpheresInputs.n_classes" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ase2sprkkr.bindings.xband.spheres_debug.FindEmptySpheresInputs.n_types">
-<span class="sig-name descname"><span class="pre">n_types</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#ase2sprkkr.bindings.xband.spheres_debug.FindEmptySpheresInputs.n_types" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">n_types</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></span><a class="headerlink" href="#ase2sprkkr.bindings.xband.spheres_debug.FindEmptySpheresInputs.n_types" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ase2sprkkr.bindings.xband.spheres_debug.FindEmptySpheresInputs.symbols4">
-<span class="sig-name descname"><span class="pre">symbols4</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#ase2sprkkr.bindings.xband.spheres_debug.FindEmptySpheresInputs.symbols4" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">symbols4</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#ase2sprkkr.bindings.xband.spheres_debug.FindEmptySpheresInputs.symbols4" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ase2sprkkr.bindings.xband.spheres_debug.FindEmptySpheresInputs.atomic_numbers">
-<span class="sig-name descname"><span class="pre">atomic_numbers</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></em><a class="headerlink" href="#ase2sprkkr.bindings.xband.spheres_debug.FindEmptySpheresInputs.atomic_numbers" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">atomic_numbers</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></span><a class="headerlink" href="#ase2sprkkr.bindings.xband.spheres_debug.FindEmptySpheresInputs.atomic_numbers" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ase2sprkkr.bindings.xband.spheres_debug.FindEmptySpheresInputs.occupations">
-<span class="sig-name descname"><span class="pre">occupations</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></em><a class="headerlink" href="#ase2sprkkr.bindings.xband.spheres_debug.FindEmptySpheresInputs.occupations" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">occupations</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></span><a class="headerlink" href="#ase2sprkkr.bindings.xband.spheres_debug.FindEmptySpheresInputs.occupations" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ase2sprkkr.bindings.xband.spheres_debug.FindEmptySpheresInputs.type_eq_class">
-<span class="sig-name descname"><span class="pre">type_eq_class</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></em><a class="headerlink" href="#ase2sprkkr.bindings.xband.spheres_debug.FindEmptySpheresInputs.type_eq_class" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">type_eq_class</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></span><a class="headerlink" href="#ase2sprkkr.bindings.xband.spheres_debug.FindEmptySpheresInputs.type_eq_class" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ase2sprkkr.bindings.xband.spheres_debug.FindEmptySpheresInputs.mesh">
-<span class="sig-name descname"><span class="pre">mesh</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></em><a class="headerlink" href="#ase2sprkkr.bindings.xband.spheres_debug.FindEmptySpheresInputs.mesh" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">mesh</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></span><a class="headerlink" href="#ase2sprkkr.bindings.xband.spheres_debug.FindEmptySpheresInputs.mesh" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ase2sprkkr.bindings.xband.spheres_debug.FindEmptySpheresInputs.n_symmetry_ops">
-<span class="sig-name descname"><span class="pre">n_symmetry_ops</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#ase2sprkkr.bindings.xband.spheres_debug.FindEmptySpheresInputs.n_symmetry_ops" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">n_symmetry_ops</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></span><a class="headerlink" href="#ase2sprkkr.bindings.xband.spheres_debug.FindEmptySpheresInputs.n_symmetry_ops" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ase2sprkkr.bindings.xband.spheres_debug.FindEmptySpheresInputs.rotations">
-<span class="sig-name descname"><span class="pre">rotations</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#ase2sprkkr.bindings.xband.spheres_debug.FindEmptySpheresInputs.rotations" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">rotations</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#ase2sprkkr.bindings.xband.spheres_debug.FindEmptySpheresInputs.rotations" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ase2sprkkr.bindings.xband.spheres_debug.FindEmptySpheresInputs.translations">
-<span class="sig-name descname"><span class="pre">translations</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#ase2sprkkr.bindings.xband.spheres_debug.FindEmptySpheresInputs.translations" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">translations</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#ase2sprkkr.bindings.xband.spheres_debug.FindEmptySpheresInputs.translations" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ase2sprkkr.bindings.xband.spheres_debug.FindEmptySpheresInputs.verbose">
-<span class="sig-name descname"><span class="pre">verbose</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#ase2sprkkr.bindings.xband.spheres_debug.FindEmptySpheresInputs.verbose" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">verbose</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></span><a class="headerlink" href="#ase2sprkkr.bindings.xband.spheres_debug.FindEmptySpheresInputs.verbose" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -295,7 +304,7 @@
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="ase2sprkkr.bindings.xband.spheres_debug.print_find_empty_spheres_program.html" class="btn btn-neutral float-left" title="print_find_empty_spheres_program" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="ase2sprkkr.bindings.xband.spheres.html" class="btn btn-neutral float-right" title="spheres" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="ase2sprkkr.common.html" class="btn btn-neutral float-right" title="common" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

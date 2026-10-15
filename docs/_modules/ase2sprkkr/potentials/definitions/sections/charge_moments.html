@@ -16,8 +16,8 @@
       <script src="../../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../../../../../_static/documentation_options.js?v=5929fcd5"></script>
-      <script src="../../../../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../../search.html" /> 
@@ -81,6 +81,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../../../ase2sprkkr.html">ase2sprkkr</a></li>
           <li class="breadcrumb-item"><a href="../sections.html">ase2sprkkr.potentials.definitions.sections</a></li>
       <li class="breadcrumb-item active">ase2sprkkr.potentials.definitions.sections.charge_moments</li>
       <li class="wy-breadcrumbs-aside">
@@ -108,22 +109,22 @@
 <div class="viewcode-block" id="ChargeMomentsSectionDefinition">
 <a class="viewcode-back" href="../../../../../auto/ase2sprkkr.potentials.definitions.sections.charge_moments.ChargeMomentsSectionDefinition.html#ase2sprkkr.potentials.definitions.sections.charge_moments.ChargeMomentsSectionDefinition">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">ChargeMomentsSectionDefinition</span><span class="p">(</span><span class="n">PotSectionDefinition</span><span class="p">):</span>
-    <span class="n">array_name</span> <span class="o">=</span> <span class="s2">&quot;charge_moments&quot;</span>
+    <span class="n">array_name</span> <span class="o">=</span> <span class="s2">"charge_moments"</span>
 
 <div class="viewcode-block" id="ChargeMomentsSectionDefinition.__init__">
 <a class="viewcode-back" href="../../../../../auto/ase2sprkkr.potentials.definitions.sections.charge_moments.ChargeMomentsSectionDefinition.html#ase2sprkkr.potentials.definitions.sections.charge_moments.ChargeMomentsSectionDefinition.__init__">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;CHARGE MOMENTS&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"CHARGE MOMENTS"</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="n">V</span> <span class="o">=</span> <span class="n">PotValueDefinition</span>
         <span class="n">members</span> <span class="o">=</span> <span class="p">[</span>
             <span class="n">V</span><span class="p">(</span>
-                <span class="s2">&quot;DATA&quot;</span><span class="p">,</span>
+                <span class="s2">"DATA"</span><span class="p">,</span>
                 <span class="n">Table</span><span class="p">(</span>
-                    <span class="n">numbering</span><span class="o">=</span><span class="s2">&quot;IQ&quot;</span><span class="p">,</span>
+                    <span class="n">numbering</span><span class="o">=</span><span class="s2">"IQ"</span><span class="p">,</span>
                     <span class="n">grouping</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                    <span class="n">group_size</span><span class="o">=</span><span class="s2">&quot;NLMTOP-CHR&quot;</span><span class="p">,</span>
+                    <span class="n">group_size</span><span class="o">=</span><span class="s2">"NLMTOP-CHR"</span><span class="p">,</span>
                     <span class="n">CMNTQ</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span>
-                    <span class="n">numbering_format</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">{:&gt;10}</span><span class="s2">&quot;</span><span class="p">,</span>
-                    <span class="n">grouping_format</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">{:&gt;3}</span><span class="s2">&quot;</span><span class="p">,</span>
+                    <span class="n">numbering_format</span><span class="o">=</span><span class="s2">"</span><span class="si">{:&gt;10}</span><span class="s2">"</span><span class="p">,</span>
+                    <span class="n">grouping_format</span><span class="o">=</span><span class="s2">"</span><span class="si">{:&gt;3}</span><span class="s2">"</span><span class="p">,</span>
                     <span class="n">flatten</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                 <span class="p">),</span>
                 <span class="n">name_in_grammar</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>

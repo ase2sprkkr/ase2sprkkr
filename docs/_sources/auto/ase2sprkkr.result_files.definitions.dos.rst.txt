@@ -1,0 +1,60 @@
+dos
+===
+
+Full name: **ase2sprkkr.result\_files.definitions.dos**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.result_files.definitions.dos.DOS  ase2sprkkr.result_files.definitions.dos.DOSDefinition  ase2sprkkr.result_files.definitions.dos.DOSResultFile 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.result_files.definitions.dos
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      create_definition
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      DOS
+      DOSDefinition
+      DOSResultFile
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

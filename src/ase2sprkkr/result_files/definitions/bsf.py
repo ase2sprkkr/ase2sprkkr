@@ -1,13 +1,13 @@
-from ..output_files_definitions import (
-    OutputFileValueDefinition as V,
-    create_output_file_definition,
-    OutputFileDefinition,
+from ..result_files_definitions import (
+    ResultFileValueDefinition as V,
+    create_result_file_definition,
+    ResultFileDefinition,
     Separator,
 )
 from typing import Optional
 import numpy as np
 
-from ..output_files import Arithmetic, CommonOutputFile
+from ..result_files import Arithmetic, CommonResultFile
 from ...common.grammar_types import Array, NumpyArray, Keyword
 from ...common.generated_configuration_definitions import NumpyViewDefinition as NV
 from ...common.configuration_definitions import gather, switch
@@ -18,11 +18,11 @@ from ase.units import Rydberg
 from ...gui.plot import colormesh, Multiplot
 
 
-class BSFOutputFile(CommonOutputFile, Arithmetic):
+class BSFResultFile(CommonResultFile, Arithmetic):
     plot_parameters = {"sites", "fermi", "seperate_plots"}
 
     """
-    Output file for Bloch spectral functions
+    Result file for Bloch spectral functions
     """
 
     def plot(
@@ -77,8 +77,8 @@ class BSFOutputFile(CommonOutputFile, Arithmetic):
             assert np.allclose(self.VECK2(), other.VECK2())
 
 
-class BSFDefinition(OutputFileDefinition):
-    result_class = BSFOutputFile
+class BSFDefinition(ResultFileDefinition):
+    result_class = BSFResultFile
 
 
 def create_definition():
@@ -226,7 +226,7 @@ def create_definition():
 
         return index
 
-    definition = create_output_file_definition(
+    definition = create_result_file_definition(
         Keyword("BSF-SPOL", "BSF-SPN", "BSF"),
         [
             Separator(),
@@ -334,7 +334,7 @@ def create_definition():
         ],
         cls=BSFDefinition,
         name="BSF",
-        info="BSF output file",
+        info="BSF result file",
     )
 
     return definition

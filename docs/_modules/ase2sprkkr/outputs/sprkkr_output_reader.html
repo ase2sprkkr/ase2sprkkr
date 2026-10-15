@@ -16,8 +16,8 @@
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
-      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -81,6 +81,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../ase2sprkkr.html">ase2sprkkr</a></li>
       <li class="breadcrumb-item active">ase2sprkkr.outputs.sprkkr_output_reader</li>
       <li class="wy-breadcrumbs-aside">
       </li>
@@ -101,6 +102,26 @@
 <div class="viewcode-block" id="SprKkrOutputParser">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.sprkkr_output_reader.SprKkrOutputParser.html#ase2sprkkr.outputs.sprkkr_output_reader.SprKkrOutputParser">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">SprKkrOutputParser</span><span class="p">(</span><span class="n">ProcessOutputParser</span><span class="p">):</span>
+    <span class="n">_common_output_line</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span>
+        <span class="sa">rb</span><span class="s2">"VERSION|programm execution|^\s*from file:|"</span>
+        <span class="sa">rb</span><span class="s2">"shape function file not available:|^\s*FILES:\s*$"</span>
+    <span class="p">)</span>
+    <span class="n">_sfn_file</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">"^\s*from file:\s*(.*?)\s*$"</span><span class="p">)</span>
+    <span class="n">_missing_sfn_file</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span>
+        <span class="sa">r</span><span class="s2">"^\s*shape function file not available:\s*(.*?)\s*$"</span>
+    <span class="p">)</span>
+
+<div class="viewcode-block" id="SprKkrOutputParser._register_sfn">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.sprkkr_output_reader.SprKkrOutputParser.html#ase2sprkkr.outputs.sprkkr_output_reader.SprKkrOutputParser._register_sfn">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_register_sfn</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">generated</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Register an SFN file and whether this run had to generate it."""</span>
+
+        <span class="n">result</span><span class="o">.</span><span class="n">files</span><span class="o">.</span><span class="n">add_file</span><span class="p">(</span><span class="s2">"SFN"</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="s2">"sfn"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">generated</span> <span class="ow">or</span> <span class="n">result</span><span class="o">.</span><span class="n">sfn_generated</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">result</span><span class="o">.</span><span class="n">sfn_generated</span> <span class="o">=</span> <span class="n">generated</span></div>
+
+
 <div class="viewcode-block" id="SprKkrOutputParser.read_commons">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.sprkkr_output_reader.SprKkrOutputParser.html#ase2sprkkr.outputs.sprkkr_output_reader.SprKkrOutputParser.read_commons">[docs]</a>
     <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">read_commons</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stdout</span><span class="p">,</span> <span class="n">result</span><span class="p">):</span>
@@ -113,51 +134,50 @@
     <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">parse_files</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stdout</span><span class="p">,</span> <span class="n">result</span><span class="p">):</span>
         <span class="c1"># Read version info</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="n">version</span> <span class="o">=</span> <span class="k">await</span> <span class="n">readline_until</span><span class="p">(</span><span class="n">stdout</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">line</span><span class="p">:</span> <span class="sa">b</span><span class="s2">&quot;VERSION&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">,</span> <span class="n">can_end</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-            <span class="n">version</span> <span class="o">=</span> <span class="n">version</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
-            <span class="n">result</span><span class="o">.</span><span class="n">program_info</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;version&quot;</span><span class="p">:</span> <span class="n">version</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="s2">&quot;executable&quot;</span><span class="p">:</span> <span class="n">version</span><span class="p">[</span><span class="mi">1</span><span class="p">]}</span>
+            <span class="n">result</span><span class="o">.</span><span class="n">program_info</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+                <span class="n">line</span> <span class="o">=</span> <span class="k">await</span> <span class="n">readline_until</span><span class="p">(</span><span class="n">stdout</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_common_output_line</span><span class="o">.</span><span class="n">search</span><span class="p">,</span> <span class="n">can_end</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
-            <span class="c1"># Read start time</span>
-            <span class="n">started</span> <span class="o">=</span> <span class="k">await</span> <span class="n">readline_until</span><span class="p">(</span><span class="n">stdout</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">line</span><span class="p">:</span> <span class="sa">b</span><span class="s2">&quot;programm execution&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">,</span> <span class="n">can_end</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-            <span class="n">started</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">&quot;[a-z]&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">started</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
-            <span class="n">result</span><span class="o">.</span><span class="n">program_info</span><span class="p">[</span><span class="s2">&quot;start_time&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">started</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">%d</span><span class="s2">/%m/%Y %H:%M:%S&quot;</span><span class="p">)</span>
-
-            <span class="c1"># Wait until the file marker line</span>
-            <span class="k">await</span> <span class="n">readline_until</span><span class="p">(</span><span class="n">stdout</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">line</span><span class="p">:</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot; ffffffffff&quot;</span><span class="p">),</span> <span class="n">can_end</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-            <span class="k">await</span> <span class="n">stdout</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
-            <span class="n">out</span> <span class="o">=</span> <span class="k">await</span> <span class="n">stdout</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
-            <span class="k">if</span> <span class="n">out</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf8&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">!=</span> <span class="s2">&quot;FILES:&quot;</span><span class="p">:</span>
-                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
-                    <span class="nb">print</span><span class="p">(</span><span class="k">await</span> <span class="n">stdout</span><span class="o">.</span><span class="n">readline</span><span class="p">())</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unexpected line: </span><span class="si">{</span><span class="n">out</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="s2">"version"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">program_info</span> <span class="ow">and</span> <span class="s2">"VERSION"</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                    <span class="n">version</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+                    <span class="n">result</span><span class="o">.</span><span class="n">program_info</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">version</span><span class="o">=</span><span class="n">version</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">executable</span><span class="o">=</span><span class="n">version</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+                <span class="k">elif</span> <span class="s2">"programm execution"</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                    <span class="n">started</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">"[a-z]"</span><span class="p">,</span> <span class="s2">""</span><span class="p">,</span> <span class="n">line</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                    <span class="n">result</span><span class="o">.</span><span class="n">program_info</span><span class="p">[</span><span class="s2">"start_time"</span><span class="p">]</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">started</span><span class="p">,</span> <span class="s2">"</span><span class="si">%d</span><span class="s2">/%m/%Y %H:%M:%S"</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="n">match</span> <span class="o">:=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_missing_sfn_file</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">line</span><span class="p">):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_register_sfn</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="kc">True</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="n">match</span> <span class="o">:=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sfn_file</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">line</span><span class="p">):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_register_sfn</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="kc">False</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">==</span> <span class="s2">"FILES:"</span><span class="p">:</span>
+                    <span class="k">break</span>
 
             <span class="k">await</span> <span class="n">stdout</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>  <span class="c1"># skip empty line</span>
 
             <span class="c1"># Parse files</span>
-            <span class="n">line</span> <span class="o">=</span> <span class="p">(</span><span class="k">await</span> <span class="n">stdout</span><span class="o">.</span><span class="n">readline</span><span class="p">())</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf8&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+            <span class="n">line</span> <span class="o">=</span> <span class="p">(</span><span class="k">await</span> <span class="n">stdout</span><span class="o">.</span><span class="n">readline</span><span class="p">())</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">"utf8"</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
             <span class="k">while</span> <span class="n">line</span><span class="p">:</span>
-                <span class="k">if</span> <span class="s2">&quot;:&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
-                    <span class="n">name</span><span class="p">,</span> <span class="n">rhs</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+                <span class="k">if</span> <span class="s2">":"</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                    <span class="n">name</span><span class="p">,</span> <span class="n">rhs</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">":"</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
                     <span class="n">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
                     <span class="n">rhs</span> <span class="o">=</span> <span class="n">rhs</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
 
                     <span class="c1"># Remove (number) if present</span>
-                    <span class="k">if</span> <span class="n">rhs</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;(&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="s2">&quot;)&quot;</span> <span class="ow">in</span> <span class="n">rhs</span><span class="p">:</span>
-                        <span class="n">rhs</span> <span class="o">=</span> <span class="n">rhs</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;)&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                    <span class="k">if</span> <span class="n">rhs</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"("</span><span class="p">)</span> <span class="ow">and</span> <span class="s2">")"</span> <span class="ow">in</span> <span class="n">rhs</span><span class="p">:</span>
+                        <span class="n">rhs</span> <span class="o">=</span> <span class="n">rhs</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">")"</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
 
                     <span class="n">result</span><span class="o">.</span><span class="n">files</span><span class="o">.</span><span class="n">add_file</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">rhs</span><span class="p">)</span>
 
-                <span class="n">line</span> <span class="o">=</span> <span class="p">(</span><span class="k">await</span> <span class="n">stdout</span><span class="o">.</span><span class="n">readline</span><span class="p">())</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf8&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                <span class="n">line</span> <span class="o">=</span> <span class="p">(</span><span class="k">await</span> <span class="n">stdout</span><span class="o">.</span><span class="n">readline</span><span class="p">())</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">"utf8"</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
 
             <span class="c1"># Fallback for input file</span>
-            <span class="k">if</span> <span class="s2">&quot;input&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">files</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s2">"input"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">files</span><span class="p">:</span>
                 <span class="n">filename</span> <span class="o">=</span> <span class="n">filename_from_file</span><span class="p">(</span><span class="n">stdout</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">filename</span><span class="p">:</span>
-                    <span class="k">if</span> <span class="n">filename</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.out&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">filename</span><span class="p">[:</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;.inp&quot;</span><span class="p">):</span>
-                        <span class="n">result</span><span class="o">.</span><span class="n">files</span><span class="o">.</span><span class="n">add_file</span><span class="p">(</span><span class="s2">&quot;input&quot;</span><span class="p">,</span> <span class="n">filename</span><span class="p">[:</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;.inp&quot;</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">filename</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">".out"</span><span class="p">)</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">filename</span><span class="p">[:</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span> <span class="o">+</span> <span class="s2">".inp"</span><span class="p">):</span>
+                        <span class="n">result</span><span class="o">.</span><span class="n">files</span><span class="o">.</span><span class="n">add_file</span><span class="p">(</span><span class="s2">"input"</span><span class="p">,</span> <span class="n">filename</span><span class="p">[:</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span> <span class="o">+</span> <span class="s2">".inp"</span><span class="p">)</span>
 
         <span class="k">except</span> <span class="ne">EOFError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">EOFError</span><span class="p">(</span><span class="s2">&quot;Unexpected end of output -- the program exited prematurely.&quot;</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span></div>
+            <span class="k">raise</span> <span class="ne">EOFError</span><span class="p">(</span><span class="s2">"Unexpected end of output -- the program exited prematurely."</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span></div>
 </div>
 
 </pre></div>

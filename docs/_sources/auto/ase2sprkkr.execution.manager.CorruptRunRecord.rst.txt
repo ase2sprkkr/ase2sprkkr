@@ -1,0 +1,6 @@
+ase2sprkkr.execution.manager.CorruptRunRecord
+=============================================
+
+.. currentmodule:: ase2sprkkr.execution.manager
+
+.. autoexception:: CorruptRunRecord

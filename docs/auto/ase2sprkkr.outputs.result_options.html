@@ -17,8 +17,8 @@
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../_static/documentation_options.js?v=5929fcd5"></script>
-      <script src="../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -68,26 +68,32 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.promote_ase_atoms.html">promote_ase_atoms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.__getattr__.html">__getattr__</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.common.html">common</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration.html">configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration_migration.html">configuration_migration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration_yaml.html">configuration_yaml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.conftest.html">conftest</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.examples.html">examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.execution.html">execution</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.gui.html">gui</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.input_parameters.html">input_parameters</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.output_files.html">output_files</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="ase2sprkkr.outputs.html">outputs</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.outputs.output_definitions.html">output_definitions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.outputs.persistent.html">persistent</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.outputs.reader_registry.html">reader_registry</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.outputs.readers.html">readers</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">result_options</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.outputs.result_options.create_files_section.html">create_files_section</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.outputs.result_options.create_output_section.html">create_output_section</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.outputs.result_options.generated_output.html">generated_output</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.outputs.result_options.DataOutputOption.html">DataOutputOption</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.outputs.result_options.OutputFileDefinition.html">OutputFileDefinition</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.outputs.result_options.OutputFileOption.html">OutputFileOption</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.outputs.result_options.OutputFilesSection.html">OutputFilesSection</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.outputs.result_options.OutputOption.html">OutputOption</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.outputs.result_options.ResultFileDefinition.html">ResultFileDefinition</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.outputs.sprkkr_output_reader.html">sprkkr_output_reader</a></li>
@@ -96,6 +102,8 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.physics.html">physics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.potentials.html">potentials</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.profiles.html">profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.result_files.html">result_files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.sprkkr.html">sprkkr</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.tools.html">tools</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.version.html">version</a></li>
@@ -133,24 +141,44 @@
 <h1>result_options<a class="headerlink" href="#result-options" title="Link to this heading"></a></h1>
 <p>Full name: <strong>ase2sprkkr.outputs.result_options</strong></p>
 <p class="rubric">Module class hierarchy</p>
-<div class="graphviz"><img src="../_images/inheritance-4b9263cf9b02c34fc992f16b8b73ecd28984c08e.png" alt="Inheritance diagram of ase2sprkkr.outputs.result_options.DataOutputOption, ase2sprkkr.outputs.result_options.OutputFileDefinition, ase2sprkkr.outputs.result_options.OutputFileOption, ase2sprkkr.outputs.result_options.OutputFilesSection, ase2sprkkr.outputs.result_options.OutputOption" usemap="#inheritance30aa3fd67c" class="inheritance graphviz" /></div>
-<map id="inheritance30aa3fd67c" name="inheritance30aa3fd67c">
-<area shape="rect" id="node1" href="ase2sprkkr.common.configuration_containers.BaseConfigurationContainer.html#ase2sprkkr.common.configuration_containers.BaseConfigurationContainer" target="_top" title="Configuration container, that holds members, either in classical way" alt="" coords="134,51,314,75"/>
-<area shape="rect" id="node6" href="ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.configuration_containers.ConfigurationContainer" target="_top" title="A container for configuration (problem&#45;definition) options and/or sections." alt="" coords="340,51,492,75"/>
-<area shape="rect" id="node2" href="ase2sprkkr.common.configuration.Configuration.html#ase2sprkkr.common.configuration.Configuration" target="_top" title="The common base class for all configurations values and containers. I.e." alt="" coords="8,73,104,98"/>
-<area shape="rect" id="node4" href="ase2sprkkr.common.options.BaseOption.html#ase2sprkkr.common.options.BaseOption" target="_top" title="A base placeholder for a leaf element of a grammar file," alt="" coords="181,97,267,122"/>
-<area shape="rect" id="node3" href="ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.common.configuration_definitions.BaseDefinition" target="_top" title="This class is a member of definition of configuration, that can be both" alt="" coords="5,5,108,29"/>
-<area shape="rect" id="node15" href="ase2sprkkr.common.configuration_definitions.RealItemDefinition.html#ase2sprkkr.common.configuration_definitions.RealItemDefinition" target="_top" title="A base class for a configuration definition, either of an option, or of a container." alt="" coords="161,5,288,29"/>
-<area shape="rect" id="node9" href="ase2sprkkr.common.options.Option.html#ase2sprkkr.common.options.Option" target="_top" title="Class for one option (a configuration value) of SPRKKR &#45; either to" alt="" coords="384,97,448,122"/>
-<area shape="rect" id="node5" href="ase2sprkkr.common.configuration_containers.BaseSection.html#ase2sprkkr.common.configuration_containers.BaseSection" target="_top" title="A section of SPRKKR configuration &#45; i.e. part of the configuration file." alt="" coords="540,51,630,75"/>
-<area shape="rect" id="node14" href="ase2sprkkr.common.configuration_containers.Section.html#ase2sprkkr.common.configuration_containers.Section" target="_top" title="A standard section of a task or potential (whose content is predefinded by SectionDefinition)" alt="" coords="708,51,772,75"/>
-<area shape="rect" id="node7" href="ase2sprkkr.outputs.result_options.DataOutputOption.html#ase2sprkkr.outputs.result_options.DataOutputOption" target="_top" title="DataOutputOption" alt="" coords="679,97,802,122"/>
-<area shape="rect" id="node8" href="ase2sprkkr.outputs.result_options.OutputOption.html#ase2sprkkr.outputs.result_options.OutputOption" target="_top" title="OutputOption" alt="" coords="537,97,633,122"/>
-<area shape="rect" id="node12" href="ase2sprkkr.outputs.result_options.OutputFileOption.html#ase2sprkkr.outputs.result_options.OutputFileOption" target="_top" title="OutputFileOption" alt="" coords="682,143,799,168"/>
-<area shape="rect" id="node10" href="ase2sprkkr.outputs.result_options.OutputFileDefinition.html#ase2sprkkr.outputs.result_options.OutputFileDefinition" target="_top" title="OutputFileDefinition" alt="" coords="518,5,653,29"/>
-<area shape="rect" id="node11" href="ase2sprkkr.common.value_definitions.ValueDefinition.html#ase2sprkkr.common.value_definitions.ValueDefinition" target="_top" title="ValueDefinition" alt="" coords="363,5,470,29"/>
-<area shape="rect" id="node13" href="ase2sprkkr.outputs.result_options.OutputFilesSection.html#ase2sprkkr.outputs.result_options.OutputFilesSection" target="_top" title="OutputFilesSection" alt="" coords="828,51,955,75"/>
-</map><div class="line-block">
+digraph inheritance61c4173fdb {
+bgcolor=transparent;
+fontsize=14;
+rankdir=LR;
+ranksep=0.3;
+size=&quot;10.0, 10.0&quot;;
+  &quot;ABC&quot; [fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,tooltip=&quot;Helper class that provides a standard way to create an ABC using&quot;];
+  &quot;BaseConfigurationContainer&quot; [URL=&quot;ase2sprkkr.common.configuration_containers.BaseConfigurationContainer.html#ase2sprkkr.common.configuration_containers.BaseConfigurationContainer&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;Configuration container, that holds members, either in classical way&quot;];
+  &quot;Configuration&quot; -&gt; &quot;BaseConfigurationContainer&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;ABC&quot; -&gt; &quot;BaseConfigurationContainer&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;BaseDefinition&quot; [URL=&quot;ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.common.configuration_definitions.BaseDefinition&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;This class is a member of definition of configuration, that can be both&quot;];
+  &quot;BaseOption&quot; [URL=&quot;ase2sprkkr.common.options.BaseOption.html#ase2sprkkr.common.options.BaseOption&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;A base placeholder for a leaf element of a grammar file,&quot;];
+  &quot;Configuration&quot; -&gt; &quot;BaseOption&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;BaseSection&quot; [URL=&quot;ase2sprkkr.common.configuration_containers.BaseSection.html#ase2sprkkr.common.configuration_containers.BaseSection&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;A section of SPRKKR configuration - i.e. part of the configuration file.&quot;];
+  &quot;ConfigurationContainer&quot; -&gt; &quot;BaseSection&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;Configuration&quot; [URL=&quot;ase2sprkkr.common.configuration.Configuration.html#ase2sprkkr.common.configuration.Configuration&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;The common base class for all configurations values and containers. I.e.&quot;];
+  &quot;ConfigurationContainer&quot; [URL=&quot;ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.configuration_containers.ConfigurationContainer&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;A container for configuration (problem-definition) options and/or sections.&quot;];
+  &quot;BaseConfigurationContainer&quot; -&gt; &quot;ConfigurationContainer&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;DataOutputOption&quot; [URL=&quot;ase2sprkkr.outputs.result_options.DataOutputOption.html#ase2sprkkr.outputs.result_options.DataOutputOption&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;];
+  &quot;OutputOption&quot; -&gt; &quot;DataOutputOption&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;Option&quot; [URL=&quot;ase2sprkkr.common.options.Option.html#ase2sprkkr.common.options.Option&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;Class for one option (a configuration value) of SPRKKR - either to&quot;];
+  &quot;BaseOption&quot; -&gt; &quot;Option&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;OutputFileOption&quot; [URL=&quot;ase2sprkkr.outputs.result_options.OutputFileOption.html#ase2sprkkr.outputs.result_options.OutputFileOption&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;];
+  &quot;OutputOption&quot; -&gt; &quot;OutputFileOption&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;OutputFilesSection&quot; [URL=&quot;ase2sprkkr.outputs.result_options.OutputFilesSection.html#ase2sprkkr.outputs.result_options.OutputFilesSection&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;];
+  &quot;Section&quot; -&gt; &quot;OutputFilesSection&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;OutputOption&quot; [URL=&quot;ase2sprkkr.outputs.result_options.OutputOption.html#ase2sprkkr.outputs.result_options.OutputOption&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;];
+  &quot;Option&quot; -&gt; &quot;OutputOption&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;RealItemDefinition&quot; [URL=&quot;ase2sprkkr.common.configuration_definitions.RealItemDefinition.html#ase2sprkkr.common.configuration_definitions.RealItemDefinition&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;A base class for a configuration definition, either of an option, or of a container.&quot;];
+  &quot;BaseDefinition&quot; -&gt; &quot;RealItemDefinition&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;ResultFileDefinition&quot; [URL=&quot;ase2sprkkr.outputs.result_options.ResultFileDefinition.html#ase2sprkkr.outputs.result_options.ResultFileDefinition&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;];
+  &quot;ValueDefinition&quot; -&gt; &quot;ResultFileDefinition&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;Section&quot; [URL=&quot;ase2sprkkr.common.configuration_containers.Section.html#ase2sprkkr.common.configuration_containers.Section&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;A standard section of a task or potential (whose content is predefinded by SectionDefinition)&quot;];
+  &quot;BaseSection&quot; -&gt; &quot;Section&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;ValueDefinition&quot; [URL=&quot;ase2sprkkr.common.value_definitions.ValueDefinition.html#ase2sprkkr.common.value_definitions.ValueDefinition&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;];
+  &quot;RealItemDefinition&quot; -&gt; &quot;ValueDefinition&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+}
+<div class="line-block">
 <div class="line"><br /></div>
 </div>
 <p class="rubric">Description</p>
@@ -175,16 +203,16 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.outputs.result_options.DataOutputOption.html#ase2sprkkr.outputs.result_options.DataOutputOption" title="ase2sprkkr.outputs.result_options.DataOutputOption"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DataOutputOption</span></code></a>(definition[, container, value])</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.outputs.result_options.OutputFileDefinition.html#ase2sprkkr.outputs.result_options.OutputFileDefinition" title="ase2sprkkr.outputs.result_options.OutputFileDefinition"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OutputFileDefinition</span></code></a>(name[, file_type])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.outputs.result_options.OutputFileOption.html#ase2sprkkr.outputs.result_options.OutputFileOption" title="ase2sprkkr.outputs.result_options.OutputFileOption"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OutputFileOption</span></code></a>(definition[, container, value])</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.outputs.result_options.OutputFileOption.html#ase2sprkkr.outputs.result_options.OutputFileOption" title="ase2sprkkr.outputs.result_options.OutputFileOption"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OutputFileOption</span></code></a>(definition[, container, value])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.outputs.result_options.OutputFilesSection.html#ase2sprkkr.outputs.result_options.OutputFilesSection" title="ase2sprkkr.outputs.result_options.OutputFilesSection"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OutputFilesSection</span></code></a>(definition[, container])</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.outputs.result_options.OutputFilesSection.html#ase2sprkkr.outputs.result_options.OutputFilesSection" title="ase2sprkkr.outputs.result_options.OutputFilesSection"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OutputFilesSection</span></code></a>(definition[, container])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.outputs.result_options.OutputOption.html#ase2sprkkr.outputs.result_options.OutputOption" title="ase2sprkkr.outputs.result_options.OutputOption"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OutputOption</span></code></a>(definition[, container, value])</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.outputs.result_options.OutputOption.html#ase2sprkkr.outputs.result_options.OutputOption" title="ase2sprkkr.outputs.result_options.OutputOption"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OutputOption</span></code></a>(definition[, container, value])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.outputs.result_options.ResultFileDefinition.html#ase2sprkkr.outputs.result_options.ResultFileDefinition" title="ase2sprkkr.outputs.result_options.ResultFileDefinition"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ResultFileDefinition</span></code></a>(name[, file_type])</p></td>
 <td><p></p></td>
 </tr>
 </tbody>

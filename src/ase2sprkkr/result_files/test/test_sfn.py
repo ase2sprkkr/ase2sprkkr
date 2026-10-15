@@ -7,7 +7,7 @@ import numpy as np
 import pytest
 from ase.build import bulk
 
-from ..definitions.sfn import SFNOutputFile, definition
+from ..definitions.sfn import SFNResultFile, definition
 from .. import ResultFile
 from ...potentials.potentials import Potential
 from ...sprkkr.calculator import SPRKKR
@@ -164,13 +164,13 @@ def test_sfn_is_registered(tmp_path):
 
     output = ResultFile.from_file(path, unknown=False)
 
-    assert isinstance(output, SFNOutputFile)
+    assert isinstance(output, SFNResultFile)
     assert output.NM() == 2
 
 
 def test_output_file_read_from_file_accepts_potential():
     potential = synthetic_potential()
-    output = SFNOutputFile(definition=definition)
+    output = SFNResultFile(definition=definition)
 
     output.read_from_file(StringIO(SFN), potential=potential)
 
@@ -301,7 +301,7 @@ def test_sfn_potential_cell_and_periodic_plots(tmp_path, monkeypatch):
     plt.close(figure)
 
     without_potential = ResultFile.from_file(path, try_only="sfn")
-    assert repr(without_potential) == "SFNOutputFile(nm=2, alat=unknown)"
+    assert repr(without_potential) == "SFNResultFile(nm=2, alat=unknown)"
     with pytest.raises(ValueError, match="potential is required"):
         without_potential.plot_cell(mesh=0, show=False)
 
@@ -352,7 +352,7 @@ def test_sfn_mesh_overlay_accepts_faces_with_different_vertex_counts():
         ((0, 0, 1), (1, 0, 1), (1, 1, 1), (0, 1, 1))
     )
 
-    SFNOutputFile._draw_polygon_edges(
+    SFNResultFile._draw_polygon_edges(
         axis, (triangle, quadrilateral), "black", 0.8
     )
 

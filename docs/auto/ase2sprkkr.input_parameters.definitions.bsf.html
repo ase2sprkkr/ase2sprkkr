@@ -1,0 +1,520 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>bsf &mdash; ASE2SPRKKR  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/mods.css?v=26f6988d" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="_ek_item" href="ase2sprkkr.input_parameters.definitions.bsf._ek_item.html" />
+    <link rel="prev" title="ArpesInputParametersDefinition" href="ase2sprkkr.input_parameters.definitions.arpes.ArpesInputParametersDefinition.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            ASE2SPRKKR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">How to use the package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../how-to-install.html">More about the package installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../philosophy.html">Philosophy of the package (for developers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.promote_ase_atoms.html">promote_ase_atoms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.__getattr__.html">__getattr__</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.common.html">common</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration.html">configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration_migration.html">configuration_migration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration_yaml.html">configuration_yaml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.conftest.html">conftest</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.examples.html">examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.execution.html">execution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.gui.html">gui</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="ase2sprkkr.input_parameters.html">input_parameters</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.html">definitions</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.arpes.html">arpes</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">bsf</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.dos.html">dos</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.gilbert.html">gilbert</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.jxc.html">jxc</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.phagen.html">phagen</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.scf.html">scf</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.sections.html">sections</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.torque.html">torque</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.xas.html">xas</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.input_parameters.input_parameters.html">input_parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.input_parameters.input_parameters_definitions.html">input_parameters_definitions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.input_parameters.task_definition.html">task_definition</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.input_parameters.tasks.html">tasks</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.outputs.html">outputs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.physics.html">physics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.potentials.html">potentials</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.profiles.html">profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.result_files.html">result_files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.sprkkr.html">sprkkr</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.tools.html">tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.version.html">version</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">ASE2SPRKKR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="ase2sprkkr.html">ase2sprkkr</a></li>
+          <li class="breadcrumb-item"><a href="ase2sprkkr.input_parameters.html">input_parameters</a></li>
+          <li class="breadcrumb-item"><a href="ase2sprkkr.input_parameters.definitions.html">definitions</a></li>
+      <li class="breadcrumb-item active">bsf</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/auto/ase2sprkkr.input_parameters.definitions.bsf.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="bsf">
+<h1>bsf<a class="headerlink" href="#bsf" title="Link to this heading"></a></h1>
+<p>Full name: <strong>ase2sprkkr.input_parameters.definitions.bsf</strong></p>
+<p class="rubric">Module class hierarchy</p>
+digraph inheritance4f122d0df4 {
+bgcolor=transparent;
+fontsize=14;
+rankdir=LR;
+ranksep=0.3;
+size=&quot;10.0, 10.0&quot;;
+  &quot;ABC&quot; [fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,tooltip=&quot;Helper class that provides a standard way to create an ABC using&quot;];
+  &quot;BSFInputParametersDefinition&quot; [URL=&quot;ase2sprkkr.input_parameters.definitions.bsf.BSFInputParametersDefinition.html#ase2sprkkr.input_parameters.definitions.bsf.BSFInputParametersDefinition&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;];
+  &quot;InputParametersDefinition&quot; -&gt; &quot;BSFInputParametersDefinition&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;BSFTaskSection&quot; [URL=&quot;ase2sprkkr.input_parameters.definitions.bsf.BSFTaskSection.html#ase2sprkkr.input_parameters.definitions.bsf.BSFTaskSection&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;];
+  &quot;InputSection&quot; -&gt; &quot;BSFTaskSection&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;BaseConfigurationContainer&quot; [URL=&quot;ase2sprkkr.common.configuration_containers.BaseConfigurationContainer.html#ase2sprkkr.common.configuration_containers.BaseConfigurationContainer&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;Configuration container, that holds members, either in classical way&quot;];
+  &quot;Configuration&quot; -&gt; &quot;BaseConfigurationContainer&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;ABC&quot; -&gt; &quot;BaseConfigurationContainer&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;BaseDefinition&quot; [URL=&quot;ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.common.configuration_definitions.BaseDefinition&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;This class is a member of definition of configuration, that can be both&quot;];
+  &quot;BaseSection&quot; [URL=&quot;ase2sprkkr.common.configuration_containers.BaseSection.html#ase2sprkkr.common.configuration_containers.BaseSection&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;A section of SPRKKR configuration - i.e. part of the configuration file.&quot;];
+  &quot;ConfigurationContainer&quot; -&gt; &quot;BaseSection&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;Configuration&quot; [URL=&quot;ase2sprkkr.common.configuration.Configuration.html#ase2sprkkr.common.configuration.Configuration&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;The common base class for all configurations values and containers. I.e.&quot;];
+  &quot;ConfigurationContainer&quot; [URL=&quot;ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.configuration_containers.ConfigurationContainer&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;A container for configuration (problem-definition) options and/or sections.&quot;];
+  &quot;BaseConfigurationContainer&quot; -&gt; &quot;ConfigurationContainer&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;ConfigurationFileDefinition&quot; [URL=&quot;ase2sprkkr.sprkkr.configuration.ConfigurationFileDefinition.html#ase2sprkkr.sprkkr.configuration.ConfigurationFileDefinition&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;The class for the configuration files (the root nodes of the configuration).&quot;];
+  &quot;ConfigurationRootDefinition&quot; -&gt; &quot;ConfigurationFileDefinition&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;ConfigurationRootDefinition&quot; [URL=&quot;ase2sprkkr.common.container_definitions.ConfigurationRootDefinition.html#ase2sprkkr.common.container_definitions.ConfigurationRootDefinition&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;From this class, the definition of the format of a whole configuration file should be derived.&quot;];
+  &quot;ContainerDefinition&quot; -&gt; &quot;ConfigurationRootDefinition&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;ConfigurationSection&quot; [URL=&quot;ase2sprkkr.sprkkr.configuration.ConfigurationSection.html#ase2sprkkr.sprkkr.configuration.ConfigurationSection&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;Configuration section to be used in SPRKKR configuration files&quot;];
+  &quot;Section&quot; -&gt; &quot;ConfigurationSection&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;ConfigurationSectionTrait&quot; -&gt; &quot;ConfigurationSection&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;ConfigurationSectionTrait&quot; [URL=&quot;ase2sprkkr.sprkkr.configuration.ConfigurationSectionTrait.html#ase2sprkkr.sprkkr.configuration.ConfigurationSectionTrait&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;];
+  &quot;ContainerDefinition&quot; [URL=&quot;ase2sprkkr.common.container_definitions.ContainerDefinition.html#ase2sprkkr.common.container_definitions.ContainerDefinition&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;Base class for a definition (of contained data, format, etc)&quot;];
+  &quot;RealItemDefinition&quot; -&gt; &quot;ContainerDefinition&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;InputParametersDefinition&quot; [URL=&quot;ase2sprkkr.input_parameters.input_parameters_definitions.InputParametersDefinition.html#ase2sprkkr.input_parameters.input_parameters_definitions.InputParametersDefinition&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;Syntax and parameter semantics of one SPR-KKR input-file schema.&quot;];
+  &quot;ConfigurationFileDefinition&quot; -&gt; &quot;InputParametersDefinition&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;InputSection&quot; [URL=&quot;ase2sprkkr.input_parameters.input_parameters.InputSection.html#ase2sprkkr.input_parameters.input_parameters.InputSection&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;Input parameters sections have nothing special yet.&quot;];
+  &quot;ConfigurationSection&quot; -&gt; &quot;InputSection&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;RealItemDefinition&quot; [URL=&quot;ase2sprkkr.common.configuration_definitions.RealItemDefinition.html#ase2sprkkr.common.configuration_definitions.RealItemDefinition&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;A base class for a configuration definition, either of an option, or of a container.&quot;];
+  &quot;BaseDefinition&quot; -&gt; &quot;RealItemDefinition&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;Section&quot; [URL=&quot;ase2sprkkr.common.configuration_containers.Section.html#ase2sprkkr.common.configuration_containers.Section&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;A standard section of a task or potential (whose content is predefinded by SectionDefinition)&quot;];
+  &quot;BaseSection&quot; -&gt; &quot;Section&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+}
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p class="rubric">Description</p>
+<p id="module-ase2sprkkr.input_parameters.definitions.bsf">BSF input-parameters definition.</p>
+<p><strong>Description of the sections and parameters</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>BSF - Bloch spectral functions in the E-K or K-K plane
+
+INPUT PARAMETERS bsf contains:
+------------------------------
+        SECTION CONTROL contains:
+    -----------------------------
+        DATASET : String                  The custom field for the description of the problem - the output files will been called 'DATASET.&lt;ext&gt;'.
+        SFNFIL : String  (optional, add non-default)  Shape-function file used for full-potential calculations.
+        ADSI : FixedValue(BLOCHSF) ≝ BLOCHSF  Type of the computation.
+        POTFIL : String                   The potential file (see SPRKKR documentation for its format). It isn't necessary to set it, it will be set by the calculator.
+        KRWS : Integer ≝ 1  (optional)    If it is 0, RWS is taken from the potential file and scaled. If 1, RWS is calculated by scaling the muffin-tin radii by a common scaling factor. (This setting is forced in the case of FULLPOT.)
+        KRMT : AnyOf(0,1,2,3,4,5,6)  (optional)
+
+            Possible values:
+              0                RMT is taken from the potential file
+              1                RMT = min( x*RWS )
+              2                RMT = min( d_ij / 2 )
+              3                RMT from atomic charge density (=&gt; KRWS=1)
+              4                RMT from atomic Hartree potential (=&gt; KRWS=1)
+              5                RMT from total atomic potential (=&gt; KRWS=1)
+              6                take average of 3 and 4 (=&gt; KRWS=1)
+
+            It controls how the muffin-tin radii are calculated.
+
+        PRINT : Integer ≝ 0  (optional)   Verbosity of the output (0-5). Do not affect the results in any way, just the amount of the printed output.
+        NONMAG : Flag ≝ False  (optional)  The system considered is non-magnetic. This leads to a higher symmetry and a faster calculation.
+        NOSYM : Flag ≝ False  (optional)  Set this flag, if you want to supress all symetry consideration. This leads to a slower calculation.
+        NOHFF : Flag ≝ False  (optional)  Disable hyper-fine-field calculation. It's disabled by default for SCF task. TASK.HFF takes precedence.
+        FSOHFF : Flag ≝ False  (optional)  Calculate the relativistic decomposition of the hyperfine field into Fermi-contact, spin-dipolar, and orbital contributions. Sets SPLITSS automatically.
+        SPLITSS : Flag ≝ False  (optional)  Evaluate single-site contributions on a separate energy contour. GRID and NE must each contain two values.
+
+
+
+        SECTION TAU contains:
+    -------------------------
+        BZINT : AnyOf(POINTS,WEYL,CLUSTER)  (optional)
+
+            Possible values:
+              POINTS           special points method
+              WEYL             Weyl method
+              CLUSTER          Cluster method
+
+
+            The Weyl method (BZINT=WEYL) is a point sampling method using more or less ran-
+            dom points. The number of k-points used for the integration varies quadratically be-
+            tween 0.0 and ImE according to the imaginary part of the energy.
+
+            The special point method (BZINT=POINTS) uses a regular k-point grid with NKTAB
+            points. It is the standard method and gives a good compromise concerning accuracy
+            and efficiency. For BZINT=POINTS the parameter NKTAB will be adjusted to allow a
+            regular mesh.
+
+
+            The mode of BZ-integration used for calculation of the scattering  path operator τ
+
+        NKTAB : Integer ≝ 250  (optional)  Number of points for the special points method
+        NKTAB2D : Integer  (optional)     Number of points for the special points method for 2D region of 2D problem
+        NKTAB3D : Integer  (optional)     Number of points for the special points method for 3D region of 2D problem
+        NKMIN : Integer ≝ 300  (optional)  Minimal number of k-points used for Weyl integration
+        NKMAX : Integer ≝ 500  (optional)  Maximal number of k-points used for Weyl integration
+        KKRMODE : AnyOf(STANDARD,TB,IMPURITY)  (optional)
+
+        Expert options:
+        --------------
+            CLUSTER : Flag ≝ False  (optional, expert)  Do cluster type calculation.
+            NSHLCLU : Integer  (optional, expert)  Number of atomic shells around the central atom of a cluster
+            CLURAD : Real  (optional, expert)  Radius of the cluster in multiples of ALAT.
+            IQCNTR : Site  (optional, expert)  The center of the cluster is set at the site position with number IQCNTR of the specified basis.
+            ITCNTR : AtomicType  (optional, expert)  The center of the cluster is set at one of the site positions that is occupied by the atomic type ITCNTR.
+            NLOUT : Integer ≝ 3  (optional, expert)  The calculated τ -matrix is printed up to lmax=NLOUT.
+            MOL : Flag ≝ False  (optional, expert)  Cluster type calculation but for a molecular system. The system is specified as for CLUSTER.
+
+
+
+        SECTION TASK contains:
+    --------------------------
+        TASK : FixedValue(BSF) ≝ BSF  (optional)
+        HFF : Flag ≝ False  (optional)    Enable the hyperfine-field calculation. It is disabled by default for SCF calculations. This option takes precedence over CONTROL.NOHFF.
+        NK : Integer ≝ 300  (optional)    total number of k-points
+        KPATH : AnyOf(0,1,2,3,4,5,6,7,10)  (optional)
+
+            Possible values:
+              0                Default short path: Γ-X / Γ-H (Bravais 13, 14)
+              1                Full standard high-symmetry path (4, 11, 12, 13, 14)
+              2                Reduced standard high-symmetry path (4, 11, 12, 13, 14)
+              3                Short standard high-symmetry path (4, 11, 12, 13, 14)
+              4                Short path: Γ-Y-T-Z / Γ-M / Γ-X-M / Γ-X / Γ-H-N-Γ (4, 11, 12, 13, 14)
+              5                Selected path: Γ-X / K-Γ / Γ-X,Y,Z / Γ-L / Γ-H (4, 11, 12, 13, 14)
+              6                Selected directions: Γ-Y / Γ-X,Y,Z (4, 13, 14)
+              7                Selected paths: X-Γ + Γ-Y (4)
+              10               Alternative FCC path with L-K branch (13)
+
+            Predefined path in k-space
+
+        NKDIR : Integer                   Number of directions treated in k-spaces
+        KA : Array(of Real of length 3)  (array)  First k-vector segment in k-space in multiples of 2π/a and rectangular coordinates with * = 1, ...,NKDIR
+        KE : Array(of Real of length 3)  (array)  Last k-vector segment in k-space in multiples of 2π/a and rectangular coordinates with * = 1, ...,NKDIR
+        NK1 : Integer  (optional)         number of k-points along k1
+        NK2 : Integer  (optional)         number of k-points along k2
+        K1 : Array(of Real of length 3)  (optional)  first k-vector to span a two-dimensional region in k-space
+        K2 : Array(of Real of length 3)  (optional)  second k-vector to span a two-dimensional region in k-space
+
+
+
+        SECTION ENERGY contains:
+    ----------------------------
+        GRID : Array(of AnyOf(0,1,2,3,4,5,6,7,8,9,10,11) with length 1&lt;=n&lt;=2) ≝ ['3']
+
+            Possible values (aliases in parentheses):
+              0                only real energies -- Gauss integration mesh
+              1 (REAL)         only real energies -- equidistant path
+              2 (RECTANG)      rectangular complex path
+              3 (STRAIGHT)     straight complex path parallel to real axis
+              4 (RECT-LOG)     rectangular complex grid, return to real axis on log scale
+              5 (ARC)          arc in the complex plain
+              6 (XAS)          standard X-ray mesh from E_Fermi to 3.5 Ry
+              7 (XMOD)         X-ray mesh
+              8                arc in the complex plane (logarithim)
+              9                arc in the complex plane (Akai's scheme)
+              10               ellipse in the complex plain
+              11               semi circle (5) plus straight line (3)
+
+            Type of the grid for the energy-mesh
+
+        NE : Array(of Integer with length 1&lt;=n&lt;=2)  Number of points in energy-mesh
+        ImE : Energy (&lt;Real&gt; [Ry|eV]) ≝ 0.001 Ry  (optional)
+        SPLITSS : Flag ≝ False  (optional)  Evaluate single-site contributions on a separate energy contour. GRID and NE must each contain two values.
+        EMIN : Real ≝ Suppress an absolute fallback when the relative representation is active.  (optional)  The energy at which the BSF mesh starts
+        EMINEV : Real ≝ Suppress a relative fallback when an absolute value was explicitly set.
+
+    Check storage with is_set(), not the absolute getter: that getter already
+    depends on this relative value, and calling it would recurse.
+      (optional)
+
+            EMIN, given in eV with respect to the Fermi level
+
+        EMAX : Real ≝ Suppress an absolute fallback when the relative representation is active.  (optional)  The energy at which the BSF mesh ends
+        EMAXEV : Real ≝ Suppress a relative fallback when an absolute value was explicitly set.
+
+    Check storage with is_set(), not the absolute getter: that getter already
+    depends on this relative value, and calling it would recurse.
+      (optional)
+
+            EMAX, given in eV with respect to the Fermi level
+
+
+
+
+        SECTION SITES (optional) contains:
+    --------------------------------------
+        NL : Array(of Integer)  (optional)  Angula momentum cutoff (the first discarded l-space)
+
+
+
+
+    Expert options:
+    --------------
+                SECTION MODE (optional, expert) contains:
+        -------------------------------------------------
+            MODE : AnyOf(NREL,SREL,SP-SREL)  (optional)
+
+                Possible values (aliases in parentheses):
+                  NREL             work in the nonrelativistic mode
+                  SREL             work in the scalar-relativistic mode
+                  SP-SREL          work in the spin-polarized scalar-relativistic mode
+
+                Using this option you can switch on the spin polarization and relativistic mode. If its not set (or set to FREL), the full relativity mode is used.
+
+            LLOYD : Flag ≝ False  (optional)  Use LLoyd formula for scattering operator. It can improve the accuracy of the Fermi energy.
+            MDIR : Array(of Real of length 3)  (optional, add non-default, array)  Common magnetisation direction vector with x, y and z in Cartesian coordinates. The normalisation is arbitrary.
+            MALF : Real  (optional)       the (first) angle characterizing the orientation  of the magnetic moment direction n.
+            MBET : Real  (optional)       the (second) angle characterizing the orientation of the magnetic moment direction n.
+            MGAM : Real  (optional)       the (third) angle characterizing the orientation of the magnetic moment direction n.
+            C : Real ≝ 1.0  (optional, add non-default, array)  Scale the speed of light for a given atom type.
+            SOC : Real ≝ 1.0  (optional, add non-default, array)  Scale the strength of the spin-orbit coupling for atom type.
+            OP : AnyOf(NONE,DMFT,LDA+U,BROOKS,SIGMA) ≝ NONE  (optional, add non-default)
+
+                Possible values:
+                  NONE             Use just DFT approach.
+                  DMFT             Density mean field theory
+                  LDA+U            Hubbard correction
+                  BROOKS           Brooks orbital polarization correction
+                  SIGMA            Self-energy–based many-body approach
+
+                Beyond-DFT methods
+
+            LOPT : Array(of AnyOf(D,F,N))  (optional, add non-default)  Correlated orbital manifold (d or f shell) where the Hubbard U correction is applied
+            IEREF : AnyOf(0,1,2,-1) ≝ 0  (optional, add non-default)
+
+                Possible values:
+                  0                EREF = EBAND_LOP/NOS_LOP, e.g. centre of mass for LOP band (Don't work well for f-states)
+                  1                EREF = resonance energy of the phase shift.
+                  2                EREF = energy where the single-site DOS shows a maximum for the desired d or f states
+                  -1               EREF taken from input
+
+                How is the reference energy EREF defined for the Hubbard correction?
+
+            EREF : Real ≝ 0.7  (optional, add non-default)  The default value for the Hubbard correction reference energy, used if IEREF = -1
+            UMODE : AnyOf(ROTI,DUDA) ≝ ROTI  (optional, add non-default)
+
+                Possible values:
+                  ROTI             Fully rotational invariant(Lichtenstein et al.)
+                  DUDA             Spherically averaged (Dudarev et al.) (U_eff = U - J)
+
+                Choice of DFT+U formulation
+
+            UEFF : Array(of Real)  (optional, add non-default)  Array of U parameter (on-site Coulomb repulsions) for each atomic type
+            JEFF : Array(of Real)  (optional, add non-default)  Array of J parameter (Hund’s exchange interaction) for each atomic type
+
+            This section contains options that describe, how to consider relativity and/or spin. If the MODE is not specified otherwise the programs of the SPRKKR-package assume that a magnetic system should be treated in a fully relativistic way. By setting the parameter SP-SREL a slightly faster scalar relativistic calculation can be done instead for a magnetic system.
+
+                SECTION STRCONST (optional, expert) contains:
+        -----------------------------------------------------
+            ETA : Real  (optional)        Ewald parameter
+            RMAX : Real  (optional)       Convergency radius in real space
+            GMAX : Real  (optional)       Convergency radius in reciprocal space
+
+            The calculation of the ~k-dependent KKR structure constant matrix G(~k, E) is controlled by three convergence parameters. ETA determines the relative weight of the real and reciprocal space lattice sums, that are determined by the convergence radii RMAX and GMAX, respectively. These convergence parameters have to be optimised anew if the lattice structure, the lattice parameter or the energy or ~k-range used is changed. This is done by the program if no values are applied via the input file. In some cases, in particular if one works at high energies, it might be necessery to set the convergence by hand. For this purpose one can start from the values set by kkrgen or kkrscf (see the output file).
+
+                SECTION CPA (optional, expert) contains:
+        ------------------------------------------------
+            NITER : Integer ≝ 20  (optional)  Maximum number of CPA iterations
+            TOL : Real ≝ 0.0001  (optional)  Threshold for stopping CPA-cycle
+
+            For a system with substitutional disorder, the CPA is used. The listed variables control the CPA cycle
+</pre></div>
+</div>
+<p class="rubric">Functions</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.bsf._ek_item.html#ase2sprkkr.input_parameters.definitions.bsf._ek_item" title="ase2sprkkr.input_parameters.definitions.bsf._ek_item"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_ek_item</span></code></a>(_definition, container)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.bsf._ek_vectors_item.html#ase2sprkkr.input_parameters.definitions.bsf._ek_vectors_item" title="ase2sprkkr.input_parameters.definitions.bsf._ek_vectors_item"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_ek_vectors_item</span></code></a>(_definition, container)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.bsf._emax_default.html#ase2sprkkr.input_parameters.definitions.bsf._emax_default" title="ase2sprkkr.input_parameters.definitions.bsf._emax_default"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_emax_default</span></code></a>(option)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.bsf._emaxev_default.html#ase2sprkkr.input_parameters.definitions.bsf._emaxev_default" title="ase2sprkkr.input_parameters.definitions.bsf._emaxev_default"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_emaxev_default</span></code></a>(option)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.bsf._emin_default.html#ase2sprkkr.input_parameters.definitions.bsf._emin_default" title="ase2sprkkr.input_parameters.definitions.bsf._emin_default"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_emin_default</span></code></a>(option)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.bsf._energy_definition.html#ase2sprkkr.input_parameters.definitions.bsf._energy_definition" title="ase2sprkkr.input_parameters.definitions.bsf._energy_definition"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_energy_definition</span></code></a>()</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.bsf._ka_item.html#ase2sprkkr.input_parameters.definitions.bsf._ka_item" title="ase2sprkkr.input_parameters.definitions.bsf._ka_item"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_ka_item</span></code></a>(definition, container)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.bsf._ka_numbered.html#ase2sprkkr.input_parameters.definitions.bsf._ka_numbered" title="ase2sprkkr.input_parameters.definitions.bsf._ka_numbered"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_ka_numbered</span></code></a>(option)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.bsf._kk_item.html#ase2sprkkr.input_parameters.definitions.bsf._kk_item" title="ase2sprkkr.input_parameters.definitions.bsf._kk_item"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_kk_item</span></code></a>(_definition, container)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.bsf._mode_hint.html#ase2sprkkr.input_parameters.definitions.bsf._mode_hint" title="ase2sprkkr.input_parameters.definitions.bsf._mode_hint"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_mode_hint</span></code></a>(parameters)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.bsf._ne_default.html#ase2sprkkr.input_parameters.definitions.bsf._ne_default" title="ase2sprkkr.input_parameters.definitions.bsf._ne_default"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_ne_default</span></code></a>(option)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.bsf._root.html#ase2sprkkr.input_parameters.definitions.bsf._root" title="ase2sprkkr.input_parameters.definitions.bsf._root"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_root</span></code></a>(container)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.bsf._task_definition.html#ase2sprkkr.input_parameters.definitions.bsf._task_definition" title="ase2sprkkr.input_parameters.definitions.bsf._task_definition"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_task_definition</span></code></a>()</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.bsf._validate_bsf.html#ase2sprkkr.input_parameters.definitions.bsf._validate_bsf" title="ase2sprkkr.input_parameters.definitions.bsf._validate_bsf"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_validate_bsf</span></code></a>(parameters, _values, why)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.bsf.bsf_definition.html#ase2sprkkr.input_parameters.definitions.bsf.bsf_definition" title="ase2sprkkr.input_parameters.definitions.bsf.bsf_definition"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bsf_definition</span></code></a>()</p></td>
+<td><p>Return the single definition shared by BSF task views.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.bsf.bsf_mode.html#ase2sprkkr.input_parameters.definitions.bsf.bsf_mode" title="ase2sprkkr.input_parameters.definitions.bsf.bsf_mode"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bsf_mode</span></code></a>(parameters)</p></td>
+<td><p>Return the BSF mode selected by the number of energy points.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.bsf.input_parameters_definition.html#ase2sprkkr.input_parameters.definitions.bsf.input_parameters_definition" title="ase2sprkkr.input_parameters.definitions.bsf.input_parameters_definition"><code class="xref py py-obj docutils literal notranslate"><span class="pre">input_parameters_definition</span></code></a>()</p></td>
+<td><p>Return the single definition shared by BSF task views.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.bsf.kpaths_for_atoms.html#ase2sprkkr.input_parameters.definitions.bsf.kpaths_for_atoms" title="ase2sprkkr.input_parameters.definitions.bsf.kpaths_for_atoms"><code class="xref py py-obj docutils literal notranslate"><span class="pre">kpaths_for_atoms</span></code></a>(atoms_or_bravais)</p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Classes</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.bsf.BSFInputParametersDefinition.html#ase2sprkkr.input_parameters.definitions.bsf.BSFInputParametersDefinition" title="ase2sprkkr.input_parameters.definitions.bsf.BSFInputParametersDefinition"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BSFInputParametersDefinition</span></code></a>(name[, ...])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.bsf.BSFTaskSection.html#ase2sprkkr.input_parameters.definitions.bsf.BSFTaskSection" title="ase2sprkkr.input_parameters.definitions.bsf.BSFTaskSection"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BSFTaskSection</span></code></a>(definition[, container])</p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="ase2sprkkr.input_parameters.definitions.arpes.ArpesInputParametersDefinition.html" class="btn btn-neutral float-left" title="ArpesInputParametersDefinition" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="ase2sprkkr.input_parameters.definitions.bsf._ek_item.html" class="btn btn-neutral float-right" title="_ek_item" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Matyáš Novák &amp; Jano Minár.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

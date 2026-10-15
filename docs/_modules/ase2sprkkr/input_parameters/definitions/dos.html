@@ -16,8 +16,8 @@
       <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
-      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
@@ -81,6 +81,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../../ase2sprkkr.html">ase2sprkkr</a></li>
       <li class="breadcrumb-item active">ase2sprkkr.input_parameters.definitions.dos</li>
       <li class="wy-breadcrumbs-aside">
       </li>
@@ -91,32 +92,39 @@
            <div itemprop="articleBody">
              
   <h1>Source code for ase2sprkkr.input_parameters.definitions.dos</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;DOS task input parameters definition&quot;&quot;&quot;</span>
+<span></span><span class="sd">"""DOS input-parameter definition."""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">.sections</span><span class="w"> </span><span class="kn">import</span> <span class="n">CONTROL</span><span class="p">,</span> <span class="n">TAU</span><span class="p">,</span> <span class="n">ENERGY</span><span class="p">,</span> <span class="n">TASK</span><span class="p">,</span> <span class="n">SITES</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">..input_parameters_definitions</span><span class="w"> </span><span class="kn">import</span> <span class="n">InputParametersDefinition</span> <span class="k">as</span> <span class="n">InputParameters</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..input_parameters_definitions</span><span class="w"> </span><span class="kn">import</span> <span class="n">InputParametersDefinition</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..task_definition</span><span class="w"> </span><span class="kn">import</span> <span class="n">TaskDefinition</span>
 
 
-<div class="viewcode-block" id="input_parameters">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.definitions.dos.input_parameters.html#ase2sprkkr.input_parameters.definitions.dos.input_parameters">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">input_parameters</span><span class="p">():</span>
-    <span class="k">return</span> <span class="n">InputParameters</span><span class="p">(</span>
-        <span class="s2">&quot;dos&quot;</span><span class="p">,</span>
+<div class="viewcode-block" id="input_parameters_definition">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.definitions.dos.input_parameters_definition.html#ase2sprkkr.input_parameters.definitions.dos.input_parameters_definition">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">input_parameters_definition</span><span class="p">():</span>
+    <span class="n">schema</span> <span class="o">=</span> <span class="n">InputParametersDefinition</span><span class="p">(</span>
+        <span class="s2">"dos"</span><span class="p">,</span>
         <span class="p">[</span>
-            <span class="n">CONTROL</span><span class="p">(</span><span class="s2">&quot;DOS&quot;</span><span class="p">),</span>
+            <span class="n">CONTROL</span><span class="p">(</span><span class="s2">"DOS"</span><span class="p">),</span>
             <span class="n">TAU</span><span class="p">,</span>
-            <span class="n">ENERGY</span><span class="p">(</span><span class="n">emax</span><span class="o">=</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="s2">&quot;value of the highest energy&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span> <span class="n">defaults</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;GRID&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;NE&quot;</span><span class="p">:</span> <span class="mi">300</span><span class="p">,</span> <span class="s2">&quot;ImE&quot;</span><span class="p">:</span> <span class="mf">0.01</span><span class="p">}),</span>
-            <span class="n">TASK</span><span class="p">(</span><span class="s2">&quot;DOS&quot;</span><span class="p">),</span>
+            <span class="n">ENERGY</span><span class="p">(</span>
+                <span class="n">emax</span><span class="o">=</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="s2">"value of the highest energy"</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+                <span class="n">defaults</span><span class="o">=</span><span class="p">{</span><span class="s2">"GRID"</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s2">"NE"</span><span class="p">:</span> <span class="mi">300</span><span class="p">,</span> <span class="s2">"ImE"</span><span class="p">:</span> <span class="mf">0.01</span><span class="p">},</span>
+            <span class="p">),</span>
+            <span class="n">TASK</span><span class="p">(</span><span class="s2">"DOS"</span><span class="p">),</span>
             <span class="n">SITES</span><span class="p">,</span>
         <span class="p">],</span>
-        <span class="n">executable</span><span class="o">=</span><span class="s2">&quot;kkrgen&quot;</span><span class="p">,</span>
+        <span class="n">info</span><span class="o">=</span><span class="s2">"DOS - The density of states computation"</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">schema</span><span class="o">.</span><span class="n">_task_definition</span> <span class="o">=</span> <span class="n">TaskDefinition</span><span class="p">(</span>
+        <span class="s2">"DOS"</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">"DOS"</span><span class="p">,</span>
+        <span class="n">executable</span><span class="o">=</span><span class="s2">"kkrgen"</span><span class="p">,</span>
         <span class="n">mpi</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="n">info</span><span class="o">=</span><span class="s2">&quot;DOS - The density of states computation&quot;</span><span class="p">,</span>
-    <span class="p">)</span></div>
+        <span class="n">output_file_templates</span><span class="o">=</span><span class="p">(</span><span class="s2">"</span><span class="si">{dataset}</span><span class="s2">.dos"</span><span class="p">,),</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">schema</span></div>
 
-
-
-<span class="sd">&quot;&quot;&quot; DOS - density of states input parameters definition&quot;&quot;&quot;</span>
 </pre></div>
 
            </div>

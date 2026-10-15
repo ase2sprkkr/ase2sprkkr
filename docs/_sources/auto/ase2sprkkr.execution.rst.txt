@@ -1,0 +1,88 @@
+execution
+=========
+
+Full name: **ase2sprkkr.execution**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.execution
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  .. rubric:: Modules
+
+  .. autosummary::
+     :toctree:
+     :template: custom-module-template.rst
+     :recursive:
+  
+  
+     base
+  
+  
+     detached
+  
+  
+     endpoint
+  
+  
+     local
+  
+  
+     local_persistent
+  
+  
+     manager
+  
+  
+     mpi
+  
+  
+     persistence
+  
+  
+     pool
+  
+  
+     psij
+  
+  
+     remote
+  
+  
+     remote_endpoint
+  
+  
+     remote_psij
+  
+  
+     remote_worker
+  
+  
+  
+     transport
+  
+  
+  

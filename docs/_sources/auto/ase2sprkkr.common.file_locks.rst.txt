@@ -1,0 +1,50 @@
+file\_locks
+===========
+
+Full name: **ase2sprkkr.common.file\_locks**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.common.file_locks.FileLock 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.common.file_locks
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      FileLock
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

@@ -1,0 +1,60 @@
+tasks
+=====
+
+Full name: **ase2sprkkr.input\_parameters.tasks**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.input_parameters.tasks
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  .. rubric:: Modules
+
+  .. autosummary::
+     :toctree:
+     :template: custom-module-template.rst
+     :recursive:
+  
+  
+     aipes
+  
+  
+     arpes
+  
+  
+     band
+  
+  
+     bsfek
+  
+  
+     bsfkk
+  
+  
+     spleed
+  
+  
+  

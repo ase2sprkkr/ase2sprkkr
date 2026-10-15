@@ -17,12 +17,12 @@
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../_static/documentation_options.js?v=5929fcd5"></script>
-      <script src="../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="default_content" href="ase2sprkkr.tools.commands.config.default_content.html" />
+    <link rel="next" title="_edit" href="ase2sprkkr.tools.commands.config._edit.html" />
     <link rel="prev" title="commands" href="ase2sprkkr.tools.commands.html" /> 
 </head>
 
@@ -68,17 +68,23 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.promote_ase_atoms.html">promote_ase_atoms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.__getattr__.html">__getattr__</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.common.html">common</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration.html">configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration_migration.html">configuration_migration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration_yaml.html">configuration_yaml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.conftest.html">conftest</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.examples.html">examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.execution.html">execution</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.gui.html">gui</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.input_parameters.html">input_parameters</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.output_files.html">output_files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.outputs.html">outputs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.physics.html">physics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.potentials.html">potentials</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.profiles.html">profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.result_files.html">result_files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.sprkkr.html">sprkkr</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="ase2sprkkr.tools.html">tools</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.tools.ase2sprkkr.html">ase2sprkkr</a></li>
@@ -89,6 +95,7 @@
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.tools.commands.k_path.html">k_path</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.tools.commands.nomad.html">nomad</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.tools.commands.plot.html">plot</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.tools.commands.remote.html">remote</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.tools.commands.run.html">run</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.tools.commands.shell.html">shell</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.tools.commands.show_structure.html">show_structure</a></li>
@@ -134,17 +141,38 @@
 <h1>config<a class="headerlink" href="#config" title="Link to this heading"></a></h1>
 <p>Full name: <strong>ase2sprkkr.tools.commands.config</strong></p>
 <p class="rubric">Description</p>
-<p id="module-ase2sprkkr.tools.commands.config">Tool to configuration of ASE2SPRKKR</p>
+<p id="module-ase2sprkkr.tools.commands.config">Tool for ASE2SPRKKR user configuration.</p>
 <p class="rubric">Functions</p>
 <table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.tools.commands.config.default_content.html#ase2sprkkr.tools.commands.config.default_content" title="ase2sprkkr.tools.commands.config.default_content"><code class="xref py py-obj docutils literal notranslate"><span class="pre">default_content</span></code></a>(file)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.tools.commands.config._edit.html#ase2sprkkr.tools.commands.config._edit" title="ase2sprkkr.tools.commands.config._edit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_edit</span></code></a>(file, *[, create])</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.tools.commands.config.parser.html#ase2sprkkr.tools.commands.config.parser" title="ase2sprkkr.tools.commands.config.parser"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parser</span></code></a>(parser)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.tools.commands.config._migrate.html#ase2sprkkr.tools.commands.config._migrate" title="ase2sprkkr.tools.commands.config._migrate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_migrate</span></code></a>(args, legacy_file, file)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.tools.commands.config.run.html#ase2sprkkr.tools.commands.config.run" title="ase2sprkkr.tools.commands.config.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run</span></code></a>(args, global_args)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.tools.commands.config._parse_set_value.html#ase2sprkkr.tools.commands.config._parse_set_value" title="ase2sprkkr.tools.commands.config._parse_set_value"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_parse_set_value</span></code></a>(text)</p></td>
+<td><p>Parse a command-line value using YAML scalar/flow syntax.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.tools.commands.config._print_profiles.html#ase2sprkkr.tools.commands.config._print_profiles" title="ase2sprkkr.tools.commands.config._print_profiles"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_print_profiles</span></code></a>(config)</p></td>
+<td><p>Print public execution profiles, marking an explicitly selected default.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.tools.commands.config._requested_cleanup.html#ase2sprkkr.tools.commands.config._requested_cleanup" title="ase2sprkkr.tools.commands.config._requested_cleanup"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_requested_cleanup</span></code></a>(args)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.tools.commands.config._set_configuration_value.html#ase2sprkkr.tools.commands.config._set_configuration_value" title="ase2sprkkr.tools.commands.config._set_configuration_value"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_set_configuration_value</span></code></a>(config, name, value)</p></td>
+<td><p>Set one CLI value, creating a named profile when necessary.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.tools.commands.config._unset_configuration_value.html#ase2sprkkr.tools.commands.config._unset_configuration_value" title="ase2sprkkr.tools.commands.config._unset_configuration_value"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_unset_configuration_value</span></code></a>(config, name)</p></td>
+<td><p>Unset one CLI value, or remove one complete named profile.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.tools.commands.config.default_content.html#ase2sprkkr.tools.commands.config.default_content" title="ase2sprkkr.tools.commands.config.default_content"><code class="xref py py-obj docutils literal notranslate"><span class="pre">default_content</span></code></a>(file)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.tools.commands.config.parser.html#ase2sprkkr.tools.commands.config.parser" title="ase2sprkkr.tools.commands.config.parser"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parser</span></code></a>(parser)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.tools.commands.config.run.html#ase2sprkkr.tools.commands.config.run" title="ase2sprkkr.tools.commands.config.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run</span></code></a>(args, global_args)</p></td>
 <td><p></p></td>
 </tr>
 </tbody>
@@ -156,7 +184,7 @@
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="ase2sprkkr.tools.commands.html" class="btn btn-neutral float-left" title="commands" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="ase2sprkkr.tools.commands.config.default_content.html" class="btn btn-neutral float-right" title="default_content" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="ase2sprkkr.tools.commands.config._edit.html" class="btn btn-neutral float-right" title="_edit" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

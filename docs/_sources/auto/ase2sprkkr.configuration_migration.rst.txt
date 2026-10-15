@@ -1,0 +1,51 @@
+configuration\_migration
+========================
+
+Full name: **ase2sprkkr.configuration\_migration**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.configuration_migration
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      _collapse_blank_lines
+      _config_attribute
+      _config_import_lines
+      _convert_legacy_execution_profile
+      _is_config_assignment
+      _is_config_import
+      _migrated_profile_name
+      clean_legacy_configuration
+      load_legacy_configuration
+      migrate_legacy_configuration
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

@@ -1,0 +1,8 @@
+test\_gaussian\_rejects\_wrong\_energy\_axis\_length
+====================================================
+
+Full name: **ase2sprkkr.physics.test\_broadening.test\_gaussian\_rejects\_wrong\_energy\_axis\_length**
+
+.. currentmodule:: ase2sprkkr.physics.test_broadening
+
+.. autofunction:: test_gaussian_rejects_wrong_energy_axis_length

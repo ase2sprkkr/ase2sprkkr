@@ -1,0 +1,8 @@
+clean\_legacy\_configuration
+============================
+
+Full name: **ase2sprkkr.configuration\_migration.clean\_legacy\_configuration**
+
+.. currentmodule:: ase2sprkkr.configuration_migration
+
+.. autofunction:: clean_legacy_configuration

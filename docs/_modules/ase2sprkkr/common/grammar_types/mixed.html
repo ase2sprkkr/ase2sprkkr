@@ -16,8 +16,8 @@
       <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
-      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
@@ -81,6 +81,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../../ase2sprkkr.html">ase2sprkkr</a></li>
       <li class="breadcrumb-item active">ase2sprkkr.common.grammar_types.mixed</li>
       <li class="wy-breadcrumbs-aside">
       </li>
@@ -91,8 +92,8 @@
            <div itemprop="articleBody">
              
   <h1>Source code for ase2sprkkr.common.grammar_types.mixed</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Grammar types for variant types (that can accepts values of more types) and the types derived from it (e.g. the Range type is in fact</span>
-<span class="sd">Variant type that can accepts either number or two-item array)&quot;&quot;&quot;</span>
+<span></span><span class="sd">"""Grammar types for variant types (that can accepts values of more types) and the types derived from it (e.g. the Range type is in fact</span>
+<span class="sd">Variant type that can accepts either number or two-item array)"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">pyparsing</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pp</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">copy</span>
@@ -105,43 +106,43 @@
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">BaseMixed</span><span class="p">(</span><span class="n">GrammarType</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    A variant type - it can hold &quot;anything&quot;.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    A variant type - it can hold "anything".</span>
+<span class="sd">    """</span>
 
     <span class="nb">type</span> <span class="o">=</span> <span class="kc">None</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; The types, that the value can hold. To be redefined in the descendants. &quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">""" The types, that the value can hold. To be redefined in the descendants. """</span>
 
     <span class="n">string_type</span> <span class="o">=</span> <span class="kc">None</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; Type of string grammar_type to be used.  To be redefined in the descendants. &quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">""" Type of string grammar_type to be used.  To be redefined in the descendants. """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_grammar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">param_name</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">pp</span><span class="o">.</span><span class="n">Or</span><span class="p">((</span><span class="n">i</span><span class="o">.</span><span class="n">grammar</span><span class="p">(</span><span class="n">param_name</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">types</span><span class="p">))</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">get_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the type of the value.</span>
+<span class="w">        </span><span class="sd">"""Return the type of the value.</span>
 <span class="sd">        Actualy, this implementation is a simple implementation that suits for the common</span>
 <span class="sd">        Mixed types, so if you make a custom Mixed type, redefine it.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">string_type</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">else</span> <span class="n">type_from_value</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">why</span><span class="o">=</span><span class="s2">&quot;set&quot;</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">why</span><span class="o">=</span><span class="s2">"set"</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">True</span>
         <span class="nb">type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_type</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">type</span> <span class="ow">is</span> <span class="n">value</span><span class="p">:</span>
-            <span class="k">return</span> <span class="s2">&quot;Can not determine the type of value </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+            <span class="k">return</span> <span class="s2">"Can not determine the type of value </span><span class="si">{}</span><span class="s2">"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
         <span class="k">return</span> <span class="nb">type</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">why</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Output the value to the stream (in the propper format).&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Output the value to the stream (in the propper format)."""</span>
         <span class="nb">type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_type</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">type</span> <span class="ow">is</span> <span class="n">val</span><span class="p">:</span>
             <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span>
         <span class="nb">type</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">grammar_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s2">&quot;&lt;mixed&gt;&quot;</span>
+        <span class="k">return</span> <span class="s2">"&lt;mixed&gt;"</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">convert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -153,7 +154,7 @@
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">Range</span><span class="p">(</span><span class="n">BaseMixed</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;A range type - it accepts either one value or range of two values of a given type.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""A range type - it accepts either one value or range of two values of a given type."""</span>
 
     <span class="nd">@add_to_signature</span><span class="p">(</span><span class="n">BaseMixed</span><span class="o">.</span><span class="fm">__init__</span><span class="p">,</span> <span class="n">prepend</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">type</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -184,41 +185,79 @@
         <span class="n">name</span><span class="p">,</span>
         <span class="p">(</span><span class="n">BaseMixed</span><span class="p">,),</span>
         <span class="p">{</span>
-            <span class="s2">&quot;string_type&quot;</span><span class="p">:</span> <span class="n">string_type</span><span class="p">,</span>
-            <span class="s2">&quot;is_the_same_value&quot;</span><span class="p">:</span> <span class="nb">staticmethod</span><span class="p">(</span><span class="n">compare_numpy_values</span><span class="p">),</span>
-            <span class="s2">&quot;types&quot;</span><span class="p">:</span> <span class="n">base_types</span><span class="p">,</span>
-            <span class="s2">&quot;_string&quot;</span><span class="p">:</span> <span class="n">_string</span><span class="p">,</span>
-            <span class="s2">&quot;__doc__&quot;</span><span class="p">:</span> <span class="n">doc</span><span class="p">,</span>
+            <span class="s2">"string_type"</span><span class="p">:</span> <span class="n">string_type</span><span class="p">,</span>
+            <span class="s2">"is_the_same_value"</span><span class="p">:</span> <span class="nb">staticmethod</span><span class="p">(</span><span class="n">compare_numpy_values</span><span class="p">),</span>
+            <span class="s2">"types"</span><span class="p">:</span> <span class="n">base_types</span><span class="p">,</span>
+            <span class="s2">"_string"</span><span class="p">:</span> <span class="n">_string</span><span class="p">,</span>
+            <span class="s2">"__doc__"</span><span class="p">:</span> <span class="n">doc</span><span class="p">,</span>
         <span class="p">},</span>
     <span class="p">)</span>
 
 
 <span class="n">Mixed</span> <span class="o">=</span> <span class="n">VariantGenerator</span><span class="p">(</span>
-    <span class="s2">&quot;Mixed&quot;</span><span class="p">,</span> <span class="n">Flag</span><span class="o">.</span><span class="n">I</span><span class="p">,</span> <span class="n">QString</span><span class="o">.</span><span class="n">I</span><span class="p">,</span> <span class="n">doc</span><span class="o">=</span><span class="s2">&quot;&quot;&quot; A variant value to be used in input files (in unknown - custom - options) &quot;&quot;&quot;</span>
+    <span class="s2">"Mixed"</span><span class="p">,</span> <span class="n">Flag</span><span class="o">.</span><span class="n">I</span><span class="p">,</span> <span class="n">QString</span><span class="o">.</span><span class="n">I</span><span class="p">,</span> <span class="n">doc</span><span class="o">=</span><span class="s2">""" A variant value to be used in input files (in unknown - custom - options) """</span>
 <span class="p">)</span>
 <span class="n">Mixed</span><span class="o">.</span><span class="n">missing_value</span> <span class="o">=</span> <span class="k">lambda</span> <span class="bp">self</span><span class="p">:</span> <span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
 
 <span class="n">PotMixed</span> <span class="o">=</span> <span class="n">VariantGenerator</span><span class="p">(</span>
-    <span class="s2">&quot;PotMixed&quot;</span><span class="p">,</span>
+    <span class="s2">"PotMixed"</span><span class="p">,</span>
     <span class="n">Bool</span><span class="o">.</span><span class="n">I</span><span class="p">,</span>
     <span class="n">LineString</span><span class="o">.</span><span class="n">I</span><span class="p">,</span>
-    <span class="n">doc</span><span class="o">=</span><span class="s2">&quot;&quot;&quot; A variant value to be used in potential files (in unknown - custom - options) &quot;&quot;&quot;</span><span class="p">,</span>
+    <span class="n">doc</span><span class="o">=</span><span class="s2">""" A variant value to be used in potential files (in unknown - custom - options) """</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="n">Variant</span> <span class="o">=</span> <span class="n">VariantGenerator</span><span class="p">(</span><span class="s2">&quot;PotMixed&quot;</span><span class="p">,</span> <span class="n">Boolean</span><span class="o">.</span><span class="n">I</span><span class="p">,</span> <span class="n">QString</span><span class="o">.</span><span class="n">I</span><span class="p">,</span> <span class="n">doc</span><span class="o">=</span><span class="s2">&quot;&quot;&quot; Variant type for configuration &quot;&quot;&quot;</span><span class="p">)</span>
+<span class="n">Variant</span> <span class="o">=</span> <span class="n">VariantGenerator</span><span class="p">(</span><span class="s2">"PotMixed"</span><span class="p">,</span> <span class="n">Boolean</span><span class="o">.</span><span class="n">I</span><span class="p">,</span> <span class="n">QString</span><span class="o">.</span><span class="n">I</span><span class="p">,</span> <span class="n">doc</span><span class="o">=</span><span class="s2">""" Variant type for configuration """</span><span class="p">)</span>
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">CustomMixed</span><span class="p">(</span><span class="n">BaseMixed</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Mixed type restricted to an explicit set of grammar types.</span>
+
+<span class="sd">    Unlike :class:`BaseMixed`, Python values must be dispatched only to one of</span>
+<span class="sd">    the configured alternatives. In particular, the string alternative is</span>
+<span class="sd">    used only for actual strings; it must not silently stringify mappings or</span>
+<span class="sd">    other unsupported objects.</span>
+<span class="sd">    """</span>
+
+    <span class="n">is_the_same_value</span> <span class="o">=</span> <span class="nb">staticmethod</span><span class="p">(</span><span class="n">compare_numpy_values</span><span class="p">)</span>
+
     <span class="nd">@add_to_signature</span><span class="p">(</span><span class="n">BaseMixed</span><span class="o">.</span><span class="fm">__init__</span><span class="p">,</span> <span class="n">prepend</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">types</span><span class="p">,</span> <span class="n">string_type</span><span class="o">=</span><span class="n">LineString</span><span class="o">.</span><span class="n">I</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">types</span> <span class="o">=</span> <span class="n">types</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">types</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">types</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">string_type</span> <span class="o">=</span> <span class="n">string_type</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">string_type</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">types</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"String values are not allowed for </span><span class="si">{</span><span class="bp">self</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">string_type</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">recognized_set_types</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">candidate</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">types</span><span class="p">:</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">candidate</span><span class="p">,</span> <span class="s2">"array_access"</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
+                    <span class="k">continue</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">converted</span> <span class="o">=</span> <span class="n">candidate</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+                    <span class="n">candidate</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">converted</span><span class="p">)</span>
+                <span class="k">except</span> <span class="p">(</span><span class="ne">TypeError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">,</span> <span class="ne">KeyError</span><span class="p">):</span>
+                    <span class="k">continue</span>
+                <span class="k">return</span> <span class="n">candidate</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Unsupported sequence value </span><span class="si">{</span><span class="n">value</span><span class="si">!r}</span><span class="s2"> for </span><span class="si">{</span><span class="bp">self</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">inferred</span> <span class="o">=</span> <span class="n">type_from_value</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">except</span> <span class="p">(</span><span class="ne">TypeError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">,</span> <span class="ne">KeyError</span><span class="p">)</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Unsupported value </span><span class="si">{</span><span class="n">value</span><span class="si">!r}</span><span class="s2"> for </span><span class="si">{</span><span class="bp">self</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span>
+
+        <span class="k">for</span> <span class="n">candidate</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">types</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">candidate</span> <span class="ow">is</span> <span class="n">inferred</span> <span class="ow">or</span> <span class="n">candidate</span><span class="o">.</span><span class="vm">__class__</span> <span class="ow">is</span> <span class="n">inferred</span><span class="o">.</span><span class="vm">__class__</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">candidate</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Value </span><span class="si">{</span><span class="n">value</span><span class="si">!r}</span><span class="s2"> has a type not allowed for </span><span class="si">{</span><span class="bp">self</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
 
 <span class="n">mixed</span> <span class="o">=</span> <span class="n">Mixed</span><span class="o">.</span><span class="n">I</span> <span class="o">=</span> <span class="n">Mixed</span><span class="p">()</span>  <span class="c1"># NOQA: E741</span>
-<span class="sd">&quot;&quot;&quot; A standard grammar type instance for variant (mixed) in input files &quot;&quot;&quot;</span>
+<span class="sd">""" A standard grammar type instance for variant (mixed) in input files """</span>
 <span class="n">pot_mixed</span> <span class="o">=</span> <span class="n">PotMixed</span><span class="o">.</span><span class="n">I</span> <span class="o">=</span> <span class="n">PotMixed</span><span class="p">()</span>  <span class="c1"># NOQA: E741</span>
-<span class="sd">&quot;&quot;&quot; A standard grammar type instance for variant (mixed) values in potential files &quot;&quot;&quot;</span>
+<span class="sd">""" A standard grammar type instance for variant (mixed) values in potential files """</span>
 </pre></div>
 
            </div>

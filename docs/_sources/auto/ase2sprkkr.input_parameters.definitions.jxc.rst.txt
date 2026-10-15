@@ -5,6 +5,14 @@ Full name: **ase2sprkkr.input\_parameters.definitions.jxc**
 
 
 
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.input_parameters.definitions.jxc.JxcTaskDefinition 
+      :parts: 1
+
+|
+
+
 .. rubric:: Description
 
 .. automodule:: ase2sprkkr.input_parameters.definitions.jxc
@@ -24,12 +32,21 @@ Full name: **ase2sprkkr.input\_parameters.definitions.jxc**
    
       _jxc_mode_warning_condition
       _jxc_nonmag_warning_condition
-      input_parameters
+      _prepare_from_result
+      input_parameters_definition
    
    
 
 
    
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      JxcTaskDefinition
    
    
 

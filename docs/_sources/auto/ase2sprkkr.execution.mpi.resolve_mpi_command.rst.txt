@@ -1,0 +1,8 @@
+resolve\_mpi\_command
+=====================
+
+Full name: **ase2sprkkr.execution.mpi.resolve\_mpi\_command**
+
+.. currentmodule:: ase2sprkkr.execution.mpi
+
+.. autofunction:: resolve_mpi_command

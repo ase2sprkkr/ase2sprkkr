@@ -17,12 +17,12 @@
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../_static/documentation_options.js?v=5929fcd5"></script>
-      <script src="../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Section" href="ase2sprkkr.configuration.Section.html" />
+    <link rel="next" title="ExecutionProfile" href="ase2sprkkr.configuration.ExecutionProfile.html" />
     <link rel="prev" title="Configuration" href="ase2sprkkr.configuration.Configuration.html" /> 
 </head>
 
@@ -68,16 +68,28 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.promote_ase_atoms.html">promote_ase_atoms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.__getattr__.html">__getattr__</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.common.html">common</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="ase2sprkkr.configuration.html">configuration</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.configuration.V.html">V</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.configuration.EXECUTOR.html">EXECUTOR</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.configuration._get_suffix.html">_get_suffix</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.configuration.find_default_mpi_runner.html">find_default_mpi_runner</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.configuration.get_default_mpi_runner.html">get_default_mpi_runner</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.configuration._legacy_executable_dir.html">_legacy_executable_dir</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.configuration._legacy_executable_suffix.html">_legacy_executable_suffix</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.configuration._legacy_mpi.html">_legacy_mpi</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.configuration._legacy_mpi_warning.html">_legacy_mpi_warning</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.configuration._legacy_value.html">_legacy_value</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.configuration._load_legacy_user_preferences.html">_load_legacy_user_preferences</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.configuration._profile_overlay_values.html">_profile_overlay_values</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.configuration._set_legacy_executable_dir.html">_set_legacy_executable_dir</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.configuration._set_legacy_executable_suffix.html">_set_legacy_executable_suffix</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.configuration._set_legacy_mpi.html">_set_legacy_mpi</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.configuration._set_legacy_mpi_warning.html">_set_legacy_mpi_warning</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.configuration._set_legacy_value.html">_set_legacy_value</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.configuration.legacy_user_preferences_file.html">legacy_user_preferences_file</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.configuration.load_user_preferences.html">load_user_preferences</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.configuration.mpi_runner.html">mpi_runner</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.configuration.user_preferences_directory.html">user_preferences_directory</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.configuration.user_preferences_file.html">user_preferences_file</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.configuration.ConfigFileDefinition.html">ConfigFileDefinition</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.configuration.ConfigValueDefinition.html">ConfigValueDefinition</a></li>
@@ -86,17 +98,27 @@
 <li class="toctree-l4"><a class="reference internal" href="#ase2sprkkr.configuration.ConfigurationOption"><code class="docutils literal notranslate"><span class="pre">ConfigurationOption</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.configuration.ExecutionProfile.html">ExecutionProfile</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.configuration.G.html">G</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.configuration.GeneratedConfigValueDefinition.html">GeneratedConfigValueDefinition</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.configuration.GeneratedConfigurationOption.html">GeneratedConfigurationOption</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.configuration.ProfilesSection.html">ProfilesSection</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.configuration.Section.html">Section</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.configuration.V.html">V</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration_migration.html">configuration_migration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration_yaml.html">configuration_yaml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.conftest.html">conftest</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.examples.html">examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.execution.html">execution</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.gui.html">gui</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.input_parameters.html">input_parameters</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.output_files.html">output_files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.outputs.html">outputs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.physics.html">physics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.potentials.html">potentials</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.profiles.html">profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.result_files.html">result_files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.sprkkr.html">sprkkr</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.tools.html">tools</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.version.html">version</a></li>
@@ -134,15 +156,23 @@
 <h1>ConfigurationOption<a class="headerlink" href="#configurationoption" title="Link to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="ase2sprkkr.configuration.ConfigurationOption">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.configuration.</span></span><span class="sig-name descname"><span class="pre">ConfigurationOption</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">definition</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">container</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/configuration.html#ConfigurationOption"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.configuration.ConfigurationOption" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.configuration.</span></span><span class="sig-name descname"><span class="pre">ConfigurationOption</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">definition</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">container</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/configuration.html#ConfigurationOption"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.configuration.ConfigurationOption" title="Link to this definition"></a></dt>
 <dd><p class="rubric">Class hierarchy</p>
-<div class="graphviz"><img src="../_images/inheritance-ad7a52b48eaab76077a7d392153b80cecf4aa347.png" alt="Inheritance diagram of ase2sprkkr.configuration.ConfigurationOption" usemap="#inheritance4948e565b4" class="inheritance graphviz" /></div>
-<map id="inheritance4948e565b4" name="inheritance4948e565b4">
-<area shape="rect" id="node1" href="ase2sprkkr.common.configuration.Configuration.html#ase2sprkkr.common.configuration.Configuration" target="_top" title="The common base class for all configurations values and containers. I.e." alt="" coords="5,5,203,33"/>
-<area shape="rect" id="node4" href="ase2sprkkr.common.options.BaseOption.html#ase2sprkkr.common.options.BaseOption" target="_top" title="A base placeholder for a leaf element of a grammar file," alt="" coords="232,5,380,33"/>
-<area shape="rect" id="node2" href="#ase2sprkkr.configuration.ConfigurationOption" target="_top" title="configuration.ConfigurationOption" alt="" coords="555,5,796,33"/>
-<area shape="rect" id="node3" href="ase2sprkkr.common.options.Option.html#ase2sprkkr.common.options.Option" target="_top" title="Class for one option (a configuration value) of SPRKKR &#45; either to" alt="" coords="410,5,526,33"/>
-</map><div class="line-block">
+digraph inheritance4948e565b4 {
+bgcolor=transparent;
+fontsize=14;
+rankdir=LR;
+ranksep=0.3;
+size=&quot;10.0, 10.0&quot;;
+  &quot;configuration.Configuration&quot; [URL=&quot;ase2sprkkr.common.configuration.Configuration.html#ase2sprkkr.common.configuration.Configuration&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;The common base class for all configurations values and containers. I.e.&quot;];
+  &quot;configuration.ConfigurationOption&quot; [URL=&quot;#ase2sprkkr.configuration.ConfigurationOption&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;];
+  &quot;options.Option&quot; -&gt; &quot;configuration.ConfigurationOption&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;options.BaseOption&quot; [URL=&quot;ase2sprkkr.common.options.BaseOption.html#ase2sprkkr.common.options.BaseOption&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;A base placeholder for a leaf element of a grammar file,&quot;];
+  &quot;configuration.Configuration&quot; -&gt; &quot;options.BaseOption&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;options.Option&quot; [URL=&quot;ase2sprkkr.common.options.Option.html#ase2sprkkr.common.options.Option&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;Class for one option (a configuration value) of SPRKKR - either to&quot;];
+  &quot;options.BaseOption&quot; -&gt; &quot;options.Option&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+}
+<div class="line-block">
 <div class="line"><br /></div>
 </div>
 <p class="rubric">Constructor</p>
@@ -160,25 +190,13 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.configuration.ConfigurationOption.set_permanent">
 <span class="sig-name descname"><span class="pre">set_permanent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">doc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">doc_regex</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/configuration.html#ConfigurationOption.set_permanent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.configuration.ConfigurationOption.set_permanent" title="Link to this definition"></a></dt>
-<dd><p>Set the value and store it in the config file</p>
-<p>See <code class="xref py py-meth docutils literal notranslate"><span class="pre">Configuration.store_value_permament()</span></code> for the meaning of the parameters</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>doc_regex</strong> (<em>bool</em><em> | </em><em>str</em>)</p>
-</dd>
-</dl>
+<dd><p>Set the value and persist the complete user configuration.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.configuration.ConfigurationOption.store_permanent">
 <span class="sig-name descname"><span class="pre">store_permanent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">doc_regex</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/configuration.html#ConfigurationOption.store_permanent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.configuration.ConfigurationOption.store_permanent" title="Link to this definition"></a></dt>
-<dd><p>Store the actual value in the config file</p>
-<p>See <code class="xref py py-meth docutils literal notranslate"><span class="pre">Configuration.store_value_permament()</span></code> for the meaning of the parameters</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>doc_regex</strong> (<em>bool</em><em> | </em><em>str</em>)</p>
-</dd>
-</dl>
+<dd><p>Persist the current configuration to the YAML user config.</p>
 </dd></dl>
 
 </dd></dl>
@@ -190,7 +208,7 @@
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="ase2sprkkr.configuration.Configuration.html" class="btn btn-neutral float-left" title="Configuration" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="ase2sprkkr.configuration.Section.html" class="btn btn-neutral float-right" title="Section" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="ase2sprkkr.configuration.ExecutionProfile.html" class="btn btn-neutral float-right" title="ExecutionProfile" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

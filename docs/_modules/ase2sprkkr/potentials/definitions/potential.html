@@ -16,8 +16,8 @@
       <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
-      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
@@ -81,6 +81,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../../ase2sprkkr.html">ase2sprkkr</a></li>
       <li class="breadcrumb-item active">ase2sprkkr.potentials.definitions.potential</li>
       <li class="wy-breadcrumbs-aside">
       </li>
@@ -91,7 +92,7 @@
            <div itemprop="articleBody">
              
   <h1>Source code for ase2sprkkr.potentials.definitions.potential</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Here, the format of the potential_file is defined&quot;&quot;&quot;</span>
+<span></span><span class="sd">"""Here, the format of the potential_file is defined"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">datetime</span>
 
@@ -116,14 +117,14 @@
 <div class="viewcode-block" id="_potential_header_default_value">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.potentials.definitions.potential._potential_header_default_value.html#ase2sprkkr.potentials.definitions.potential._potential_header_default_value">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">_potential_header_default_value</span><span class="p">(</span><span class="n">_</span><span class="p">):</span>
-    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;SPR-KKR potential file, created at </span><span class="si">{</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span></div>
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">"SPR-KKR potential file, created at </span><span class="si">{</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="si">}</span><span class="s2">"</span></div>
 
 
 
 <div class="viewcode-block" id="_potential_system_default_value">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.potentials.definitions.potential._potential_system_default_value.html#ase2sprkkr.potentials.definitions.potential._potential_system_default_value">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">_potential_system_default_value</span><span class="p">(</span><span class="n">option</span><span class="p">):</span>
-    <span class="k">return</span> <span class="s2">&quot;System: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">option</span><span class="o">.</span><span class="n">_get_root_container</span><span class="p">()</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">symbols</span> <span class="k">if</span> <span class="n">option</span> <span class="k">else</span> <span class="s2">&quot;&lt;UNKNOWN&gt;&quot;</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="s2">"System: </span><span class="si">{}</span><span class="s2">"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">option</span><span class="o">.</span><span class="n">_get_root_container</span><span class="p">()</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">symbols</span> <span class="k">if</span> <span class="n">option</span> <span class="k">else</span> <span class="s2">"&lt;UNKNOWN&gt;"</span><span class="p">)</span></div>
 
 
 
@@ -151,44 +152,44 @@
         <span class="k">return</span> <span class="n">factory</span>
 
     <span class="n">Section</span><span class="p">(</span>
-        <span class="s2">&quot;HEADER&quot;</span><span class="p">,</span>
+        <span class="s2">"HEADER"</span><span class="p">,</span>
         <span class="p">[</span>
             <span class="n">Separator</span><span class="p">(),</span>
-            <span class="n">V</span><span class="p">(</span><span class="s2">&quot;HEADER&quot;</span><span class="p">,</span> <span class="n">line_string</span><span class="p">,</span> <span class="n">_potential_header_default_value</span><span class="p">),</span>
+            <span class="n">V</span><span class="p">(</span><span class="s2">"HEADER"</span><span class="p">,</span> <span class="n">line_string</span><span class="p">,</span> <span class="n">_potential_header_default_value</span><span class="p">),</span>
             <span class="n">Separator</span><span class="p">(),</span>
-            <span class="n">V</span><span class="p">(</span><span class="s2">&quot;TITLE&quot;</span><span class="p">,</span> <span class="n">line_string</span><span class="p">,</span> <span class="s2">&quot;Created by ASE-SPR-KKR wrapper&quot;</span><span class="p">),</span>
-            <span class="n">V</span><span class="p">(</span><span class="s2">&quot;SYSTEM&quot;</span><span class="p">,</span> <span class="n">line_string</span><span class="p">,</span> <span class="n">_potential_system_default_value</span><span class="p">),</span>
-            <span class="n">V</span><span class="p">(</span><span class="s2">&quot;PACKAGE&quot;</span><span class="p">,</span> <span class="n">line_string</span><span class="p">,</span> <span class="s2">&quot;SPR-KKR&quot;</span><span class="p">),</span>
+            <span class="n">V</span><span class="p">(</span><span class="s2">"TITLE"</span><span class="p">,</span> <span class="n">line_string</span><span class="p">,</span> <span class="s2">"Created by ASE-SPR-KKR wrapper"</span><span class="p">),</span>
+            <span class="n">V</span><span class="p">(</span><span class="s2">"SYSTEM"</span><span class="p">,</span> <span class="n">line_string</span><span class="p">,</span> <span class="n">_potential_system_default_value</span><span class="p">),</span>
+            <span class="n">V</span><span class="p">(</span><span class="s2">"PACKAGE"</span><span class="p">,</span> <span class="n">line_string</span><span class="p">,</span> <span class="s2">"SPR-KKR"</span><span class="p">),</span>
             <span class="n">V</span><span class="p">(</span>
-                <span class="s2">&quot;FORMAT&quot;</span><span class="p">,</span>
-                <span class="n">Sequence</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">Date</span><span class="p">(</span><span class="n">prefix</span><span class="o">=</span><span class="s2">&quot;(&quot;</span><span class="p">,</span> <span class="n">postfix</span><span class="o">=</span><span class="s2">&quot;)&quot;</span><span class="p">),</span> <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;VERSION&quot;</span><span class="p">,</span> <span class="s2">&quot;DATE&quot;</span><span class="p">]),</span>
+                <span class="s2">"FORMAT"</span><span class="p">,</span>
+                <span class="n">Sequence</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">Date</span><span class="p">(</span><span class="n">prefix</span><span class="o">=</span><span class="s2">"("</span><span class="p">,</span> <span class="n">postfix</span><span class="o">=</span><span class="s2">")"</span><span class="p">),</span> <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s2">"VERSION"</span><span class="p">,</span> <span class="s2">"DATE"</span><span class="p">]),</span>
                 <span class="n">default_value</span><span class="o">=</span><span class="p">[</span><span class="mi">9</span><span class="p">,</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2019</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">18</span><span class="p">)],</span>
             <span class="p">),</span>
         <span class="p">],</span>
         <span class="n">name_in_grammar</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
     <span class="p">)</span>
 
-    <span class="n">Section</span><span class="p">(</span><span class="s2">&quot;GLOBAL SYSTEM PARAMETER&quot;</span><span class="p">,</span> <span class="bp">cls</span><span class="o">=</span><span class="n">GlobalSystemParameterDefinition</span><span class="p">)</span>
-    <span class="n">Section</span><span class="p">(</span><span class="s2">&quot;SCF-INFO&quot;</span><span class="p">,</span> <span class="bp">cls</span><span class="o">=</span><span class="n">ScfInfoSectionDefinition</span><span class="p">)</span>
-    <span class="n">Section</span><span class="p">(</span><span class="s2">&quot;LATTICE&quot;</span><span class="p">,</span> <span class="bp">cls</span><span class="o">=</span><span class="n">LatticeSectionDefinition</span><span class="p">)</span>
-    <span class="n">Section</span><span class="p">(</span><span class="s2">&quot;SITES&quot;</span><span class="p">,</span> <span class="bp">cls</span><span class="o">=</span><span class="n">SitesSectionDefinition</span><span class="p">)</span>
-    <span class="n">Section</span><span class="p">(</span><span class="s2">&quot;OCCUPATION&quot;</span><span class="p">,</span> <span class="bp">cls</span><span class="o">=</span><span class="n">OccupationSectionDefinition</span><span class="p">)</span>
-    <span class="n">Section</span><span class="p">(</span><span class="s2">&quot;REFERENCE SYSTEM&quot;</span><span class="p">,</span> <span class="bp">cls</span><span class="o">=</span><span class="n">ReferenceSystemSectionDefinition</span><span class="p">)</span>
-    <span class="n">Section</span><span class="p">(</span><span class="s2">&quot;HOST MADELUNG POTENTIAL&quot;</span><span class="p">,</span> <span class="bp">cls</span><span class="o">=</span><span class="n">HostMadelungPotentialSectionDefinition</span><span class="p">)</span>
-    <span class="n">Section</span><span class="p">(</span><span class="s2">&quot;CHARGE MOMENTS&quot;</span><span class="p">,</span> <span class="bp">cls</span><span class="o">=</span><span class="n">ChargeMomentsSectionDefinition</span><span class="p">)</span>
-    <span class="n">Section</span><span class="p">(</span><span class="s2">&quot;MAGNETISATION DIRECTION&quot;</span><span class="p">,</span> <span class="bp">cls</span><span class="o">=</span><span class="n">MagnetisationDirectionSectionDefinition</span><span class="p">)</span>
-    <span class="n">Section</span><span class="p">(</span><span class="s2">&quot;MESH INFORMATION&quot;</span><span class="p">,</span> <span class="bp">cls</span><span class="o">=</span><span class="n">MeshInformationSectionDefinition</span><span class="p">)</span>
-    <span class="n">Section</span><span class="p">(</span><span class="s2">&quot;OCCUPATION&quot;</span><span class="p">,</span> <span class="bp">cls</span><span class="o">=</span><span class="n">OccupationSectionDefinition</span><span class="p">)</span>
-    <span class="n">Section</span><span class="p">(</span><span class="s2">&quot;TYPES&quot;</span><span class="p">,</span> <span class="bp">cls</span><span class="o">=</span><span class="n">TypesSectionDefinition</span><span class="p">)</span>
-    <span class="n">Section</span><span class="p">(</span><span class="s2">&quot;POTENTIAL&quot;</span><span class="p">,</span> <span class="bp">cls</span><span class="o">=</span><span class="n">PotentialSectionDefinition</span><span class="p">)</span>
-    <span class="n">Section</span><span class="p">(</span><span class="s2">&quot;CHARGE&quot;</span><span class="p">,</span> <span class="bp">cls</span><span class="o">=</span><span class="n">ChargeSectionDefinition</span><span class="p">)</span>
-    <span class="n">Section</span><span class="p">(</span><span class="s2">&quot;MOMENTS&quot;</span><span class="p">,</span> <span class="bp">cls</span><span class="o">=</span><span class="n">MomentsSectionDefinition</span><span class="p">)</span>
+    <span class="n">Section</span><span class="p">(</span><span class="s2">"GLOBAL SYSTEM PARAMETER"</span><span class="p">,</span> <span class="bp">cls</span><span class="o">=</span><span class="n">GlobalSystemParameterDefinition</span><span class="p">)</span>
+    <span class="n">Section</span><span class="p">(</span><span class="s2">"SCF-INFO"</span><span class="p">,</span> <span class="bp">cls</span><span class="o">=</span><span class="n">ScfInfoSectionDefinition</span><span class="p">)</span>
+    <span class="n">Section</span><span class="p">(</span><span class="s2">"LATTICE"</span><span class="p">,</span> <span class="bp">cls</span><span class="o">=</span><span class="n">LatticeSectionDefinition</span><span class="p">)</span>
+    <span class="n">Section</span><span class="p">(</span><span class="s2">"SITES"</span><span class="p">,</span> <span class="bp">cls</span><span class="o">=</span><span class="n">SitesSectionDefinition</span><span class="p">)</span>
+    <span class="n">Section</span><span class="p">(</span><span class="s2">"OCCUPATION"</span><span class="p">,</span> <span class="bp">cls</span><span class="o">=</span><span class="n">OccupationSectionDefinition</span><span class="p">)</span>
+    <span class="n">Section</span><span class="p">(</span><span class="s2">"REFERENCE SYSTEM"</span><span class="p">,</span> <span class="bp">cls</span><span class="o">=</span><span class="n">ReferenceSystemSectionDefinition</span><span class="p">)</span>
+    <span class="n">Section</span><span class="p">(</span><span class="s2">"HOST MADELUNG POTENTIAL"</span><span class="p">,</span> <span class="bp">cls</span><span class="o">=</span><span class="n">HostMadelungPotentialSectionDefinition</span><span class="p">)</span>
+    <span class="n">Section</span><span class="p">(</span><span class="s2">"CHARGE MOMENTS"</span><span class="p">,</span> <span class="bp">cls</span><span class="o">=</span><span class="n">ChargeMomentsSectionDefinition</span><span class="p">)</span>
+    <span class="n">Section</span><span class="p">(</span><span class="s2">"MAGNETISATION DIRECTION"</span><span class="p">,</span> <span class="bp">cls</span><span class="o">=</span><span class="n">MagnetisationDirectionSectionDefinition</span><span class="p">)</span>
+    <span class="n">Section</span><span class="p">(</span><span class="s2">"MESH INFORMATION"</span><span class="p">,</span> <span class="bp">cls</span><span class="o">=</span><span class="n">MeshInformationSectionDefinition</span><span class="p">)</span>
+    <span class="n">Section</span><span class="p">(</span><span class="s2">"OCCUPATION"</span><span class="p">,</span> <span class="bp">cls</span><span class="o">=</span><span class="n">OccupationSectionDefinition</span><span class="p">)</span>
+    <span class="n">Section</span><span class="p">(</span><span class="s2">"TYPES"</span><span class="p">,</span> <span class="bp">cls</span><span class="o">=</span><span class="n">TypesSectionDefinition</span><span class="p">)</span>
+    <span class="n">Section</span><span class="p">(</span><span class="s2">"POTENTIAL"</span><span class="p">,</span> <span class="bp">cls</span><span class="o">=</span><span class="n">PotentialSectionDefinition</span><span class="p">)</span>
+    <span class="n">Section</span><span class="p">(</span><span class="s2">"CHARGE"</span><span class="p">,</span> <span class="bp">cls</span><span class="o">=</span><span class="n">ChargeSectionDefinition</span><span class="p">)</span>
+    <span class="n">Section</span><span class="p">(</span><span class="s2">"MOMENTS"</span><span class="p">,</span> <span class="bp">cls</span><span class="o">=</span><span class="n">MomentsSectionDefinition</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">PotentialDefinition</span><span class="p">(</span><span class="n">sections</span><span class="p">)</span>
 
 
 <span class="n">potential_definition</span> <span class="o">=</span> <span class="n">fce</span><span class="p">()</span>
-<span class="sd">&quot;&quot;&quot; Potential file format definition &quot;&quot;&quot;</span>
+<span class="sd">""" Potential file format definition """</span>
 
 <span class="k">del</span> <span class="n">fce</span>
 </pre></div>

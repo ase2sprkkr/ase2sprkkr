@@ -1,0 +1,45 @@
+mpi
+===
+
+Full name: **ase2sprkkr.execution.mpi**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.execution.mpi
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      _single_cpu_available
+      _with_process_count
+      find_default_mpi_launcher
+      resolve_mpi_command
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

@@ -1,0 +1,36 @@
+JXCResultFile
+=============
+
+
+.. currentmodule:: ase2sprkkr.result_files.definitions.jxc
+
+.. autoclass:: JXCResultFile
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.result_files.definitions.jxc.JXCResultFile
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

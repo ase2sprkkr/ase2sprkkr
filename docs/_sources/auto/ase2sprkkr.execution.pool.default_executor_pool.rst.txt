@@ -1,0 +1,8 @@
+default\_executor\_pool
+=======================
+
+Full name: **ase2sprkkr.execution.pool.default\_executor\_pool**
+
+.. currentmodule:: ase2sprkkr.execution.pool
+
+.. autofunction:: default_executor_pool

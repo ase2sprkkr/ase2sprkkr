@@ -24,9 +24,9 @@ from .result_files import ResultFile
 from ..common.grammar import generate_grammar
 
 
-class OutputFileValueDefinition(ConfigurationValueDefinition):
+class ResultFileValueDefinition(ConfigurationValueDefinition):
     """This class describes the format of one value of
-    a header of an output file"""
+    a header of an result file"""
 
     @cached_class_property
     def delimiter():
@@ -39,11 +39,11 @@ class OutputFileValueDefinition(ConfigurationValueDefinition):
     type_of_dangerous = pot_mixed
 
 
-class OutputFileSection(ConfigurationSection):
+class ResultFileSection(ConfigurationSection):
     pass
 
 
-class OutputFileSectionDefinition(ConfigurationSectionDefinition):
+class ResultFileSectionDefinition(ConfigurationSectionDefinition):
     @cached_class_property
     def delimiter():
         with generate_grammar():
@@ -54,7 +54,7 @@ class OutputFileSectionDefinition(ConfigurationSectionDefinition):
 
 class BlankSeparator(SeparatorDefinition):
     """
-    A special (hidden) value, that appears in a output file header
+    A special (hidden) value, that appears in a result file header
 
     The separator is a blank line
     """
@@ -64,26 +64,26 @@ class BlankSeparator(SeparatorDefinition):
 
 class Separator(SeparatorDefinition):
     """
-    A special (hidden) value, that appears in a output file header
+    A special (hidden) value, that appears in a result file header
     """
 
     separator_type = SeparatorType(char="#", length=80)
 
 
-class OutputFileDefinition(ConfigurationFileDefinition):
+class ResultFileDefinition(ConfigurationFileDefinition):
     """This class describes the format of one
     value of a standard potential section"""
 
     force_order = True
-    """ The order of items in an output file is fixed """
+    """ The order of items in an result file is fixed """
 
     value_name_format = "{:<12}"
 
-    child_class = OutputFileValueDefinition
+    child_class = ResultFileValueDefinition
     """ standard child class """
 
     custom_class = None
-    """ No custom members in the output files """
+    """ No custom members in the result files """
 
     delimiter = line_end
     """ options are delimited by newline in ouptut. """
@@ -93,7 +93,7 @@ class OutputFileDefinition(ConfigurationFileDefinition):
     configuration_type_name = "RESULT FILE"
 
     def add_ignored(self, out):
-        """In the output files, do not ignore doublecrossed lines"""
+        """In the result files, do not ignore doublecrossed lines"""
         return out
 
     @property
@@ -103,10 +103,10 @@ class OutputFileDefinition(ConfigurationFileDefinition):
 
 
 @cache
-def output_file_header():
-    """Return the members of the common output file header, up to
-    the first ``KEYWORD`` value (which differs for each output file)"""
-    V = OutputFileValueDefinition
+def result_file_header():
+    """Return the members of the common result file header, up to
+    the first ``KEYWORD`` value (which differs for each result file)"""
+    V = ResultFileValueDefinition
     return [
         V("TITLE", str, info="Name of the calculation"),
         V("SYSTEM", str, info="Description of the calculated system"),
@@ -127,11 +127,11 @@ def output_file_header():
     ]
 
 
-def create_output_file_definition(keyword, add, name=None, cls=OutputFileDefinition, **kwargs):
-    """Create a definition of an output file. One should supply the additional values
+def create_result_file_definition(keyword, add, name=None, cls=ResultFileDefinition, **kwargs):
+    """Create a definition of an result file. One should supply the additional values
     containing the actual data.
     """
-    V = OutputFileValueDefinition
+    V = ResultFileValueDefinition
     if isinstance(keyword, str):
         if name is None:
             name = keyword
@@ -139,7 +139,7 @@ def create_output_file_definition(keyword, add, name=None, cls=OutputFileDefinit
     elif isinstance(keyword, GrammarType):
         keyword = V("KEYWORD", keyword)
     fields = [keyword]
-    fields.extend(output_file_header())
+    fields.extend(result_file_header())
     if add:
         fields.extend(add)
     return cls(f"{name}", fields, **kwargs)

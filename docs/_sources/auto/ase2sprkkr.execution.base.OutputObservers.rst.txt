@@ -1,0 +1,36 @@
+OutputObservers
+===============
+
+
+.. currentmodule:: ase2sprkkr.execution.base
+
+.. autoclass:: OutputObservers
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.execution.base.OutputObservers
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

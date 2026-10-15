@@ -16,8 +16,8 @@
       <script src="../../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../../../../../_static/documentation_options.js?v=5929fcd5"></script>
-      <script src="../../../../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../../search.html" /> 
@@ -81,6 +81,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../../../ase2sprkkr.html">ase2sprkkr</a></li>
           <li class="breadcrumb-item"><a href="../sections.html">ase2sprkkr.potentials.definitions.sections</a></li>
       <li class="breadcrumb-item active">ase2sprkkr.potentials.definitions.sections.types</li>
       <li class="wy-breadcrumbs-aside">
@@ -101,7 +102,7 @@
 <div class="viewcode-block" id="TypesSection">
 <a class="viewcode-back" href="../../../../../auto/ase2sprkkr.potentials.definitions.sections.types.TypesSection.html#ase2sprkkr.potentials.definitions.sections.types.TypesSection">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">TypesSection</span><span class="p">(</span><span class="n">UniqueListSection</span><span class="p">):</span>
-    <span class="n">_value_name</span> <span class="o">=</span> <span class="s2">&quot;types&quot;</span>
+    <span class="n">_value_name</span> <span class="o">=</span> <span class="s2">"types"</span>
     <span class="n">_value_class</span> <span class="o">=</span> <span class="n">AtomicType</span></div>
 
 
@@ -111,14 +112,14 @@
 <span class="k">class</span><span class="w"> </span><span class="nc">TypesSectionDefinition</span><span class="p">(</span><span class="n">PotSectionDefinition</span><span class="p">):</span>
 <div class="viewcode-block" id="TypesSectionDefinition.__init__">
 <a class="viewcode-back" href="../../../../../auto/ase2sprkkr.potentials.definitions.sections.types.TypesSectionDefinition.html#ase2sprkkr.potentials.definitions.sections.types.TypesSectionDefinition.__init__">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;TYPES&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"TYPES"</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="n">V</span> <span class="o">=</span> <span class="n">PotValueDefinition</span>
         <span class="n">members</span> <span class="o">=</span> <span class="p">[</span>
             <span class="n">V</span><span class="p">(</span>
-                <span class="s2">&quot;DATA&quot;</span><span class="p">,</span>
+                <span class="s2">"DATA"</span><span class="p">,</span>
                 <span class="n">Table</span><span class="p">(</span>
-                    <span class="p">{</span><span class="s2">&quot;TXT&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="s2">&quot;ZT&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="s2">&quot;NCORT&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="s2">&quot;NVALT&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="s2">&quot;NSEMCORSHLT&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">},</span>
-                    <span class="n">numbering</span><span class="o">=</span><span class="s2">&quot;IT&quot;</span><span class="p">,</span>
+                    <span class="p">{</span><span class="s2">"TXT"</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="s2">"ZT"</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="s2">"NCORT"</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="s2">"NVALT"</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="s2">"NSEMCORSHLT"</span><span class="p">:</span> <span class="nb">int</span><span class="p">},</span>
+                    <span class="n">numbering</span><span class="o">=</span><span class="s2">"IT"</span><span class="p">,</span>
                     <span class="n">free_header</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                 <span class="p">),</span>
             <span class="p">)</span>

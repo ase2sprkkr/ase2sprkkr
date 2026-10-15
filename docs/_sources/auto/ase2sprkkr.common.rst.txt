@@ -54,7 +54,13 @@ Full name: **ase2sprkkr.common**
      configuration_definitions
   
   
+     configuration_transaction
+  
+  
      container_definitions
+  
+  
+     dangerous_values
   
   
      debug
@@ -63,7 +69,16 @@ Full name: **ase2sprkkr.common**
      decorators
   
   
+     dependencies
+  
+  
      doc
+  
+  
+     file_fingerprints
+  
+  
+     file_locks
   
   
      file_utils
@@ -81,13 +96,13 @@ Full name: **ase2sprkkr.common**
      grammar_types
   
   
-     init_tests
-  
-  
      lazy_string
   
   
      misc
+  
+  
+     module_registry
   
   
      no_output
@@ -105,7 +120,7 @@ Full name: **ase2sprkkr.common**
      repeated_configuration_containers
   
   
-     section_adaptors
+     repetition
   
   
      subprocess

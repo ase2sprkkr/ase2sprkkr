@@ -1,0 +1,36 @@
+LocalTransport
+==============
+
+
+.. currentmodule:: ase2sprkkr.execution.transport
+
+.. autoclass:: LocalTransport
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.execution.transport.LocalTransport
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

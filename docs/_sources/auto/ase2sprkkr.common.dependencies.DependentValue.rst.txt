@@ -1,0 +1,36 @@
+DependentValue
+==============
+
+
+.. currentmodule:: ase2sprkkr.common.dependencies
+
+.. autoclass:: DependentValue
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.common.dependencies.DependentValue
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

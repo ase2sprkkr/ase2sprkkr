@@ -42,6 +42,13 @@ Full name: **ase2sprkkr.potentials.potentials**
 
    
    
+   .. rubric:: Exceptions
+
+   .. autosummary::
+      :toctree:
+   
+      PotentialFileChanged
+   
    
 
 

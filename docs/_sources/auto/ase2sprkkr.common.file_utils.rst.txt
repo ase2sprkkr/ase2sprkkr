@@ -7,7 +7,7 @@ Full name: **ase2sprkkr.common.file\_utils**
 
 .. rubric:: Module class hierarchy
 
-.. inheritance-diagram::  ase2sprkkr.common.file_utils.Directory 
+.. inheritance-diagram::  ase2sprkkr.common.file_utils.Directory  ase2sprkkr.common.file_utils.FilePath 
       :parts: 1
 
 |
@@ -44,6 +44,7 @@ Full name: **ase2sprkkr.common.file\_utils**
       :template: custom-class-template.rst
    
       Directory
+      FilePath
    
    
 

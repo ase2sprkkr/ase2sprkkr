@@ -17,8 +17,8 @@
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../_static/documentation_options.js?v=5929fcd5"></script>
-      <script src="../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -68,11 +68,16 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.promote_ase_atoms.html">promote_ase_atoms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.__getattr__.html">__getattr__</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.common.html">common</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration.html">configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration_migration.html">configuration_migration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration_yaml.html">configuration_yaml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.conftest.html">conftest</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.examples.html">examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.execution.html">execution</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="ase2sprkkr.gui.html">gui</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.gui.examples.html">examples</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.gui.k_path.html">k_path</a></li>
@@ -95,10 +100,11 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.input_parameters.html">input_parameters</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.output_files.html">output_files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.outputs.html">outputs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.physics.html">physics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.potentials.html">potentials</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.profiles.html">profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.result_files.html">result_files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.sprkkr.html">sprkkr</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.tools.html">tools</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.version.html">version</a></li>
@@ -136,10 +142,15 @@
 <h1>plot<a class="headerlink" href="#plot" title="Link to this heading"></a></h1>
 <p>Full name: <strong>ase2sprkkr.gui.plot</strong></p>
 <p class="rubric">Module class hierarchy</p>
-<div class="graphviz"><img src="../_images/inheritance-5322047ee403a218a209b3cb5071420f2cb93bf1.png" alt="Inheritance diagram of ase2sprkkr.gui.plot.Multiplot" usemap="#inheritance159bb2c198" class="inheritance graphviz" /></div>
-<map id="inheritance159bb2c198" name="inheritance159bb2c198">
-<area shape="rect" id="node1" href="ase2sprkkr.gui.plot.Multiplot.html#ase2sprkkr.gui.plot.Multiplot" target="_top" title="This class can be used for plotting more plots into one resulting image/window." alt="" coords="5,5,85,33"/>
-</map><div class="line-block">
+digraph inheritance159bb2c198 {
+bgcolor=transparent;
+fontsize=14;
+rankdir=LR;
+ranksep=0.3;
+size=&quot;10.0, 10.0&quot;;
+  &quot;Multiplot&quot; [URL=&quot;ase2sprkkr.gui.plot.Multiplot.html#ase2sprkkr.gui.plot.Multiplot&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;This class can be used for plotting more plots into one resulting image/window.&quot;];
+}
+<div class="line-block">
 <div class="line"><br /></div>
 </div>
 <p class="rubric">Description</p>
@@ -185,7 +196,7 @@
 <p class="rubric">Classes</p>
 <table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.gui.plot.Multiplot.html#ase2sprkkr.gui.plot.Multiplot" title="ase2sprkkr.gui.plot.Multiplot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Multiplot</span></code></a>(layout[, figsize, latex, ...])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.gui.plot.Multiplot.html#ase2sprkkr.gui.plot.Multiplot" title="ase2sprkkr.gui.plot.Multiplot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Multiplot</span></code></a>([layout, figsize, latex, ...])</p></td>
 <td><p>This class can be used for plotting more plots into one resulting image/window.</p></td>
 </tr>
 </tbody>

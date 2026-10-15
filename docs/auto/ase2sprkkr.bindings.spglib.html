@@ -17,8 +17,8 @@
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../_static/documentation_options.js?v=5929fcd5"></script>
-      <script src="../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -68,6 +68,7 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.promote_ase_atoms.html">promote_ase_atoms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.__getattr__.html">__getattr__</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.bindings.empty_spheres.html">empty_spheres</a></li>
@@ -75,8 +76,8 @@
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.bindings.nomad.html">nomad</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">spglib</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.bindings.spglib.spglib_dataset.html">spglib_dataset</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.bindings.spglib.spglib_dataset_wrapper.html">spglib_dataset_wrapper</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.bindings.spglib.tag_sites.html">tag_sites</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.bindings.spglib._SpglibCompatibilityWrapper.html">_SpglibCompatibilityWrapper</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.bindings.uppasd.html">uppasd</a></li>
@@ -85,13 +86,18 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.common.html">common</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration.html">configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration_migration.html">configuration_migration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration_yaml.html">configuration_yaml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.conftest.html">conftest</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.examples.html">examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.execution.html">execution</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.gui.html">gui</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.input_parameters.html">input_parameters</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.output_files.html">output_files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.outputs.html">outputs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.physics.html">physics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.potentials.html">potentials</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.profiles.html">profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.result_files.html">result_files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.sprkkr.html">sprkkr</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.tools.html">tools</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.version.html">version</a></li>
@@ -128,6 +134,10 @@
   <section id="spglib">
 <h1>spglib<a class="headerlink" href="#spglib" title="Link to this heading"></a></h1>
 <p>Full name: <strong>ase2sprkkr.bindings.spglib</strong></p>
+<p class="rubric">Module class hierarchy</p>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
 <p class="rubric">Description</p>
 <p id="module-ase2sprkkr.bindings.spglib">Wrapper for spglib for computing symmetry of a primitive cell</p>
 <p class="rubric">Functions</p>
@@ -136,11 +146,16 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.bindings.spglib.spglib_dataset.html#ase2sprkkr.bindings.spglib.spglib_dataset" title="ase2sprkkr.bindings.spglib.spglib_dataset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">spglib_dataset</span></code></a>(atoms[, atomic_numbers, ...])</p></td>
 <td><p>Return the object that describe equivalence classes of the atoms from the given Atoms object (i.e. in one equivalence class will be the atoms with the same atomic number, occupation, etc.).</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.bindings.spglib.spglib_dataset_wrapper.html#ase2sprkkr.bindings.spglib.spglib_dataset_wrapper" title="ase2sprkkr.bindings.spglib.spglib_dataset_wrapper"><code class="xref py py-obj docutils literal notranslate"><span class="pre">spglib_dataset_wrapper</span></code></a>(dataset)</p></td>
-<td><p>Backward compatibility</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.bindings.spglib.tag_sites.html#ase2sprkkr.bindings.spglib.tag_sites" title="ase2sprkkr.bindings.spglib.tag_sites"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tag_sites</span></code></a>(atoms, consider_old, return_mapping)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.bindings.spglib.tag_sites.html#ase2sprkkr.bindings.spglib.tag_sites" title="ase2sprkkr.bindings.spglib.tag_sites"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tag_sites</span></code></a>(atoms, consider_old, return_mapping)</p></td>
 <td><p>Return array of class-equivalence-numbers of sites of a given Atoms object</p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Classes</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.bindings.spglib._SpglibCompatibilityWrapper.html#ase2sprkkr.bindings.spglib._SpglibCompatibilityWrapper" title="ase2sprkkr.bindings.spglib._SpglibCompatibilityWrapper"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_SpglibCompatibilityWrapper</span></code></a>(dataset)</p></td>
+<td><p>Backward compatibility</p></td>
 </tr>
 </tbody>
 </table>

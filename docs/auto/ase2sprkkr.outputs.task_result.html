@@ -17,8 +17,8 @@
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../_static/documentation_options.js?v=5929fcd5"></script>
-      <script src="../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -68,22 +68,27 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.promote_ase_atoms.html">promote_ase_atoms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.__getattr__.html">__getattr__</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.common.html">common</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration.html">configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration_migration.html">configuration_migration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration_yaml.html">configuration_yaml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.conftest.html">conftest</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.examples.html">examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.execution.html">execution</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.gui.html">gui</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.input_parameters.html">input_parameters</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.output_files.html">output_files</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="ase2sprkkr.outputs.html">outputs</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.outputs.output_definitions.html">output_definitions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.outputs.persistent.html">persistent</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.outputs.reader_registry.html">reader_registry</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.outputs.readers.html">readers</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.outputs.result_options.html">result_options</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.outputs.sprkkr_output_reader.html">sprkkr_output_reader</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">task_result</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.outputs.task_result.KkrOutputReader.html">KkrOutputReader</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.outputs.task_result.KkrProcess.html">KkrProcess</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.outputs.task_result.TaskResult.html">TaskResult</a></li>
 </ul>
 </li>
@@ -91,6 +96,8 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.physics.html">physics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.potentials.html">potentials</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.profiles.html">profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.result_files.html">result_files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.sprkkr.html">sprkkr</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.tools.html">tools</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.version.html">version</a></li>
@@ -128,26 +135,27 @@
 <h1>task_result<a class="headerlink" href="#task-result" title="Link to this heading"></a></h1>
 <p>Full name: <strong>ase2sprkkr.outputs.task_result</strong></p>
 <p class="rubric">Module class hierarchy</p>
-<div class="graphviz"><img src="../_images/inheritance-efdb4107c65954b175c1177b35ee86535aca0267.png" alt="Inheritance diagram of ase2sprkkr.outputs.task_result.KkrOutputReader, ase2sprkkr.outputs.task_result.KkrProcess, ase2sprkkr.outputs.task_result.TaskResult" usemap="#inheritance15de54d4bb" class="inheritance graphviz" /></div>
-<map id="inheritance15de54d4bb" name="inheritance15de54d4bb">
-<area shape="rect" id="node1" href="ase2sprkkr.outputs.task_result.KkrOutputReader.html#ase2sprkkr.outputs.task_result.KkrOutputReader" target="_top" title="Class, that runs a process and reads its output using the underlying" alt="" coords="5,109,139,137"/>
-<area shape="rect" id="node2" href="ase2sprkkr.outputs.task_result.KkrProcess.html#ase2sprkkr.outputs.task_result.KkrProcess" target="_top" title="KkrProcess" alt="" coords="25,57,119,85"/>
-<area shape="rect" id="node3" href="ase2sprkkr.outputs.task_result.TaskResult.html#ase2sprkkr.outputs.task_result.TaskResult" target="_top" title="A base class for a result of a runned task (kkrscf executable)" alt="" coords="26,5,118,33"/>
-</map><div class="line-block">
+digraph inheritance85b27b7980 {
+bgcolor=transparent;
+fontsize=14;
+rankdir=LR;
+ranksep=0.3;
+size=&quot;10.0, 10.0&quot;;
+  &quot;KkrOutputReader&quot; [URL=&quot;ase2sprkkr.outputs.task_result.KkrOutputReader.html#ase2sprkkr.outputs.task_result.KkrOutputReader&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;Parse SPR-KKR output streams into a TaskResult.&quot;];
+  &quot;TaskResult&quot; [URL=&quot;ase2sprkkr.outputs.task_result.TaskResult.html#ase2sprkkr.outputs.task_result.TaskResult&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;A base class for a result of a runned task (kkrscf executable)&quot;];
+}
+<div class="line-block">
 <div class="line"><br /></div>
 </div>
 <p class="rubric">Description</p>
-<p id="module-ase2sprkkr.outputs.task_result">This module contains classes, used by parsers of the output files</p>
+<p id="module-ase2sprkkr.outputs.task_result">This module contains classes used by parsers of SPR-KKR output files.</p>
 <p class="rubric">Classes</p>
 <table class="autosummary longtable docutils align-default">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.outputs.task_result.KkrOutputReader.html#ase2sprkkr.outputs.task_result.KkrOutputReader" title="ase2sprkkr.outputs.task_result.KkrOutputReader"><code class="xref py py-obj docutils literal notranslate"><span class="pre">KkrOutputReader</span></code></a>(input_parameters, ...[, ...])</p></td>
-<td><p>Class, that runs a process and reads its output using the underlying output parser (see <a class="reference internal" href="ase2sprkkr.common.process_output_reader.ProcessOutputParser.html#ase2sprkkr.common.process_output_reader.ProcessOutputParser" title="ase2sprkkr.common.process_output_reader.ProcessOutputParser"><code class="xref py py-class docutils literal notranslate"><span class="pre">ase2sprkkr.common.process_output_reader.ProcessOutputParser</span></code></a>) and return the appropriate TaskResult.</p></td>
+<td><p>Parse SPR-KKR output streams into a TaskResult.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.outputs.task_result.KkrProcess.html#ase2sprkkr.outputs.task_result.KkrProcess" title="ase2sprkkr.outputs.task_result.KkrProcess"><code class="xref py py-obj docutils literal notranslate"><span class="pre">KkrProcess</span></code></a>(reader, output_parser, coroutine, ...)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.outputs.task_result.TaskResult.html#ase2sprkkr.outputs.task_result.TaskResult" title="ase2sprkkr.outputs.task_result.TaskResult"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TaskResult</span></code></a>(input_parameters, calculator, ...)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.outputs.task_result.TaskResult.html#ase2sprkkr.outputs.task_result.TaskResult" title="ase2sprkkr.outputs.task_result.TaskResult"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TaskResult</span></code></a>(input_parameters, calculator, ...)</p></td>
 <td><p>A base class for a result of a runned task (kkrscf executable)</p></td>
 </tr>
 </tbody>

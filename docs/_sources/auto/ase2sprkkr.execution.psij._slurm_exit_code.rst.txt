@@ -1,0 +1,8 @@
+\_slurm\_exit\_code
+===================
+
+Full name: **ase2sprkkr.execution.psij.\_slurm\_exit\_code**
+
+.. currentmodule:: ase2sprkkr.execution.psij
+
+.. autofunction:: _slurm_exit_code

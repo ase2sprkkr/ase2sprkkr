@@ -16,8 +16,8 @@
       <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
-      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
@@ -81,6 +81,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../../ase2sprkkr.html">ase2sprkkr</a></li>
       <li class="breadcrumb-item active">ase2sprkkr.input_parameters.definitions.scf</li>
       <li class="wy-breadcrumbs-aside">
       </li>
@@ -91,28 +92,67 @@
            <div itemprop="articleBody">
              
   <h1>Source code for ase2sprkkr.input_parameters.definitions.scf</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;SCF task input parameters definition&quot;&quot;&quot;</span>
+<span></span><span class="sd">"""SCF input-parameter definition."""</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">.sections</span><span class="w"> </span><span class="kn">import</span> <span class="n">CONTROL</span><span class="p">,</span> <span class="n">TAU</span><span class="p">,</span> <span class="n">ENERGY</span><span class="p">,</span> <span class="n">SCF</span><span class="p">,</span> <span class="n">SITES</span><span class="p">,</span> <span class="n">STRCONST</span><span class="p">,</span> <span class="n">CPA</span><span class="p">,</span> <span class="n">MODE</span><span class="p">,</span> <span class="n">TASK</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">..input_parameters_definitions</span><span class="w"> </span><span class="kn">import</span> <span class="n">InputParametersDefinition</span> <span class="k">as</span> <span class="n">InputParameters</span>
-<span class="c1">#   ,InputValueDefinition as V</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..input_parameters_definitions</span><span class="w"> </span><span class="kn">import</span> <span class="n">InputParametersDefinition</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..task_definition</span><span class="w"> </span><span class="kn">import</span> <span class="n">TaskDefinition</span>
 
 
-<div class="viewcode-block" id="input_parameters">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.definitions.scf.input_parameters.html#ase2sprkkr.input_parameters.definitions.scf.input_parameters">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">input_parameters</span><span class="p">():</span>
-    <span class="k">return</span> <span class="n">InputParameters</span><span class="p">(</span>
-        <span class="s2">&quot;scf&quot;</span><span class="p">,</span>
-        <span class="p">[</span><span class="n">CONTROL</span><span class="p">(</span><span class="s2">&quot;SCF&quot;</span><span class="p">),</span> <span class="n">TASK</span><span class="p">(</span><span class="s2">&quot;SCF&quot;</span><span class="p">),</span> <span class="n">TAU</span><span class="p">,</span> <span class="n">ENERGY</span><span class="p">(),</span> <span class="n">SCF</span><span class="p">,</span> <span class="n">SITES</span><span class="p">,</span> <span class="n">STRCONST</span><span class="p">,</span> <span class="n">CPA</span><span class="p">,</span> <span class="n">MODE</span><span class="p">],</span>
-        <span class="n">info</span><span class="o">=</span><span class="s2">&quot;SCF - Calculate a self-consistent potential&quot;</span><span class="p">,</span>
-        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
-        <span class="n">executable</span><span class="o">=</span><span class="s2">&quot;kkrscf&quot;</span><span class="p">,</span>
+<div class="viewcode-block" id="SCFTaskDefinition">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.definitions.scf.SCFTaskDefinition.html#ase2sprkkr.input_parameters.definitions.scf.SCFTaskDefinition">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">SCFTaskDefinition</span><span class="p">(</span><span class="n">TaskDefinition</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""SCF task with files depending on the concrete parameters."""</span>
+
+<div class="viewcode-block" id="SCFTaskDefinition._path">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.definitions.scf.SCFTaskDefinition.html#ase2sprkkr.input_parameters.definitions.scf.SCFTaskDefinition._path">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_path</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">filename</span> <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isabs</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span> <span class="k">else</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SCFTaskDefinition.cache_files">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.definitions.scf.SCFTaskDefinition.html#ase2sprkkr.input_parameters.definitions.scf.SCFTaskDefinition.cache_files">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">cache_files</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parameters</span><span class="p">,</span> <span class="n">directory</span><span class="p">):</span>
+        <span class="n">files</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">cache_files</span><span class="p">(</span><span class="n">parameters</span><span class="p">,</span> <span class="n">directory</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">parameters</span><span class="o">.</span><span class="n">SCF</span><span class="o">.</span><span class="n">FULLPOT</span><span class="p">():</span>
+            <span class="n">sfnfil</span> <span class="o">=</span> <span class="n">parameters</span><span class="o">.</span><span class="n">CONTROL</span><span class="o">.</span><span class="n">SFNFIL</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">sfnfil</span><span class="p">:</span>
+                <span class="n">files</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_path</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">sfnfil</span><span class="p">))</span>
+        <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">files</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SCFTaskDefinition.output_files">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.definitions.scf.SCFTaskDefinition.html#ase2sprkkr.input_parameters.definitions.scf.SCFTaskDefinition.output_files">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">output_files</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parameters</span><span class="p">,</span> <span class="n">directory</span><span class="p">):</span>
+        <span class="n">files</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">output_files</span><span class="p">(</span><span class="n">parameters</span><span class="p">,</span> <span class="n">directory</span><span class="p">))</span>
+        <span class="n">potfil</span> <span class="o">=</span> <span class="n">parameters</span><span class="o">.</span><span class="n">CONTROL</span><span class="o">.</span><span class="n">POTFIL</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">potfil</span><span class="p">:</span>
+            <span class="n">files</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_path</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">potfil</span><span class="si">}</span><span class="s2">_new"</span><span class="p">))</span>
+        <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">files</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="input_parameters_definition">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.definitions.scf.input_parameters_definition.html#ase2sprkkr.input_parameters.definitions.scf.input_parameters_definition">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">input_parameters_definition</span><span class="p">():</span>
+    <span class="n">schema</span> <span class="o">=</span> <span class="n">InputParametersDefinition</span><span class="p">(</span>
+        <span class="s2">"scf"</span><span class="p">,</span>
+        <span class="p">[</span><span class="n">CONTROL</span><span class="p">(</span><span class="s2">"SCF"</span><span class="p">),</span> <span class="n">TASK</span><span class="p">(</span><span class="s2">"SCF"</span><span class="p">),</span> <span class="n">TAU</span><span class="p">,</span> <span class="n">ENERGY</span><span class="p">(),</span> <span class="n">SCF</span><span class="p">,</span> <span class="n">SITES</span><span class="p">,</span> <span class="n">STRCONST</span><span class="p">,</span> <span class="n">CPA</span><span class="p">,</span> <span class="n">MODE</span><span class="p">],</span>
+        <span class="n">info</span><span class="o">=</span><span class="s2">"SCF - Calculate a self-consistent potential"</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">""</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">schema</span><span class="o">.</span><span class="n">_task_definition</span> <span class="o">=</span> <span class="n">SCFTaskDefinition</span><span class="p">(</span>
+        <span class="s2">"SCF"</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">"SCF"</span><span class="p">,</span>
+        <span class="n">executable</span><span class="o">=</span><span class="s2">"kkrscf"</span><span class="p">,</span>
         <span class="n">mpi</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-    <span class="p">)</span></div>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">schema</span></div>
 
-
-
-<span class="sd">&quot;&quot;&quot; SCF task input parameters definition&quot;&quot;&quot;</span>
 </pre></div>
 
            </div>

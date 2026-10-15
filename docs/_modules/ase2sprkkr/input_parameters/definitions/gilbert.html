@@ -16,8 +16,8 @@
       <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
-      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
@@ -81,6 +81,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../../ase2sprkkr.html">ase2sprkkr</a></li>
       <li class="breadcrumb-item active">ase2sprkkr.input_parameters.definitions.gilbert</li>
       <li class="wy-breadcrumbs-aside">
       </li>
@@ -91,69 +92,90 @@
            <div itemprop="articleBody">
              
   <h1>Source code for ase2sprkkr.input_parameters.definitions.gilbert</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Gilbert task input parameters definition&quot;&quot;&quot;</span>
+<span></span><span class="sd">"""Gilbert task input parameters definition"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">...common.grammar_types</span><span class="w"> </span><span class="kn">import</span> <span class="n">real</span><span class="p">,</span> <span class="n">Keyword</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">._file_manifests</span><span class="w"> </span><span class="kn">import</span> <span class="n">resolve_file</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.sections</span><span class="w"> </span><span class="kn">import</span> <span class="n">CONTROL</span><span class="p">,</span> <span class="n">TAU</span><span class="p">,</span> <span class="n">ENERGY</span><span class="p">,</span> <span class="n">SITES</span><span class="p">,</span> <span class="n">TASK</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">..input_parameters_definitions</span><span class="w"> </span><span class="kn">import</span> <span class="n">InputParametersDefinition</span> <span class="k">as</span> <span class="n">InputParameters</span><span class="p">,</span> <span class="n">InputValueDefinition</span> <span class="k">as</span> <span class="n">V</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..input_parameters_definitions</span><span class="w"> </span><span class="kn">import</span> <span class="n">InputParametersDefinition</span><span class="p">,</span> <span class="n">InputValueDefinition</span> <span class="k">as</span> <span class="n">V</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..task_definition</span><span class="w"> </span><span class="kn">import</span> <span class="n">TaskDefinition</span>
 
 
-<div class="viewcode-block" id="input_parameters">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.definitions.gilbert.input_parameters.html#ase2sprkkr.input_parameters.definitions.gilbert.input_parameters">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">input_parameters</span><span class="p">():</span>
-    <span class="k">return</span> <span class="n">InputParameters</span><span class="p">(</span>
-        <span class="s2">&quot;gilbert&quot;</span><span class="p">,</span>
+<div class="viewcode-block" id="GilbertTaskDefinition">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.definitions.gilbert.GilbertTaskDefinition.html#ase2sprkkr.input_parameters.definitions.gilbert.GilbertTaskDefinition">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">GilbertTaskDefinition</span><span class="p">(</span><span class="n">TaskDefinition</span><span class="p">):</span>
+<div class="viewcode-block" id="GilbertTaskDefinition.input_files">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.definitions.gilbert.GilbertTaskDefinition.html#ase2sprkkr.input_parameters.definitions.gilbert.GilbertTaskDefinition.input_files">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">input_files</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parameters</span><span class="p">,</span> <span class="n">directory</span><span class="p">):</span>
+        <span class="n">files</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">input_files</span><span class="p">(</span><span class="n">parameters</span><span class="p">,</span> <span class="n">directory</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">parameters</span><span class="o">.</span><span class="n">TASK</span><span class="o">.</span><span class="n">SETFLUCT</span><span class="p">()</span> <span class="o">==</span> <span class="s2">"M_T"</span> <span class="ow">and</span> <span class="n">parameters</span><span class="o">.</span><span class="n">TASK</span><span class="o">.</span><span class="n">FLUCTFIL</span><span class="p">():</span>
+            <span class="n">files</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">resolve_file</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">parameters</span><span class="o">.</span><span class="n">TASK</span><span class="o">.</span><span class="n">FLUCTFIL</span><span class="p">()))</span>
+        <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">files</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="input_parameters_definition">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.definitions.gilbert.input_parameters_definition.html#ase2sprkkr.input_parameters.definitions.gilbert.input_parameters_definition">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">input_parameters_definition</span><span class="p">():</span>
+    <span class="n">schema</span> <span class="o">=</span> <span class="n">InputParametersDefinition</span><span class="p">(</span>
+        <span class="s2">"gilbert"</span><span class="p">,</span>
         <span class="p">[</span>
-            <span class="n">CONTROL</span><span class="p">(</span><span class="s2">&quot;GILBERT&quot;</span><span class="p">),</span>
+            <span class="n">CONTROL</span><span class="p">(</span><span class="s2">"GILBERT"</span><span class="p">),</span>
             <span class="n">TAU</span><span class="p">,</span>
-            <span class="n">ENERGY</span><span class="p">(</span><span class="n">emin</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">emax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">defaults</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;GRID&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;NE&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">}),</span>
-            <span class="n">SITES</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">defaults</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;NL&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">}),</span>
-            <span class="n">TASK</span><span class="p">(</span><span class="s2">&quot;Gilbert&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span>
+            <span class="n">ENERGY</span><span class="p">(</span><span class="n">emin</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">emax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">defaults</span><span class="o">=</span><span class="p">{</span><span class="s2">"GRID"</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s2">"NE"</span><span class="p">:</span> <span class="mi">1</span><span class="p">}),</span>
+            <span class="n">SITES</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">defaults</span><span class="o">=</span><span class="p">{</span><span class="s2">"NL"</span><span class="p">:</span> <span class="mi">4</span><span class="p">}),</span>
+            <span class="n">TASK</span><span class="p">(</span><span class="s2">"Gilbert"</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span>
                 <span class="p">[</span>
-                    <span class="n">V</span><span class="p">(</span><span class="s2">&quot;NTMP&quot;</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="n">is_required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s2">&quot;Number of temperature points used for α(T)&quot;</span><span class="p">),</span>
+                    <span class="n">V</span><span class="p">(</span><span class="s2">"NTMP"</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="n">is_required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s2">"Number of temperature points used for α(T)"</span><span class="p">),</span>
                     <span class="n">V</span><span class="p">(</span>
-                        <span class="s2">&quot;SETFLUCT&quot;</span><span class="p">,</span>
+                        <span class="s2">"SETFLUCT"</span><span class="p">,</span>
                         <span class="n">Keyword</span><span class="p">(</span>
                             <span class="p">{</span>
-                                <span class="s2">&quot;MLIN&quot;</span><span class="p">:</span> <span class="s2">&quot;Use linear temperature grid. Takes account only the electron scattering due to lattice vibrations.&quot;</span><span class="p">,</span>
-                                <span class="s2">&quot;M_T&quot;</span><span class="p">:</span> <span class="s2">&quot;If NFTET = 1 and NFPHI = 1 but NVIBRA is bigger than 1, &quot;</span>
-                                <span class="s2">&quot;only lattice vibrations are taken into account. If NVIBRA = 1 but &quot;</span>
-                                <span class="s2">&quot;NFTET is bigger than 1 and NFPHI is bigger than 1, only spin &quot;</span>
-                                <span class="s2">&quot;fluctuations are taken into account.&quot;</span><span class="p">,</span>
+                                <span class="s2">"MLIN"</span><span class="p">:</span> <span class="s2">"Use linear temperature grid. Takes account only the electron scattering due to lattice vibrations."</span><span class="p">,</span>
+                                <span class="s2">"M_T"</span><span class="p">:</span> <span class="s2">"If NFTET = 1 and NFPHI = 1 but NVIBRA is bigger than 1, "</span>
+                                <span class="s2">"only lattice vibrations are taken into account. If NVIBRA = 1 but "</span>
+                                <span class="s2">"NFTET is bigger than 1 and NFPHI is bigger than 1, only spin "</span>
+                                <span class="s2">"fluctuations are taken into account."</span><span class="p">,</span>
                             <span class="p">}</span>
                         <span class="p">),</span>
                         <span class="n">default_value</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                         <span class="n">is_required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-                        <span class="n">info</span><span class="o">=</span><span class="s2">&quot;Finite temperature calculation mode&quot;</span><span class="p">,</span>
+                        <span class="n">info</span><span class="o">=</span><span class="s2">"Finite temperature calculation mode"</span><span class="p">,</span>
                     <span class="p">),</span>
                     <span class="n">V</span><span class="p">(</span>
-                        <span class="s2">&quot;NVIBRA&quot;</span><span class="p">,</span>
+                        <span class="s2">"NVIBRA"</span><span class="p">,</span>
                         <span class="nb">int</span><span class="p">,</span>
                         <span class="n">is_required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-                        <span class="n">info</span><span class="o">=</span><span class="s2">&quot;Number of directions for atomic displacements representing thermal lattice vibrations&quot;</span><span class="p">,</span>
+                        <span class="n">info</span><span class="o">=</span><span class="s2">"Number of directions for atomic displacements representing thermal lattice vibrations"</span><span class="p">,</span>
                     <span class="p">),</span>
-                    <span class="n">V</span><span class="p">(</span><span class="s2">&quot;TMPMIN&quot;</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">is_required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s2">&quot;Lower limit of the temperature region (SETLFUNC=MLIN).&quot;</span><span class="p">),</span>
-                    <span class="n">V</span><span class="p">(</span><span class="s2">&quot;TMPMAX&quot;</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">is_required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s2">&quot;Upper limit of the temperature region (SETLFUNC=MLIN)&quot;</span><span class="p">),</span>
+                    <span class="n">V</span><span class="p">(</span><span class="s2">"TMPMIN"</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">is_required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s2">"Lower limit of the temperature region (SETLFUNC=MLIN)."</span><span class="p">),</span>
+                    <span class="n">V</span><span class="p">(</span><span class="s2">"TMPMAX"</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">is_required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s2">"Upper limit of the temperature region (SETLFUNC=MLIN)"</span><span class="p">),</span>
                     <span class="n">V</span><span class="p">(</span>
-                        <span class="s2">&quot;FLUCTFIL&quot;</span><span class="p">,</span>
+                        <span class="s2">"FLUCTFIL"</span><span class="p">,</span>
                         <span class="nb">str</span><span class="p">,</span>
                         <span class="n">is_required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-                        <span class="n">info</span><span class="o">=</span><span class="s2">&quot;Data ﬁle which contains the information about &quot;</span>
-                        <span class="s2">&quot;temperature dependent magnetizstion, taken from the &quot;</span>
-                        <span class="s2">&quot;experiment or Monte Carlo simulations&quot;</span><span class="p">,</span>
+                        <span class="n">info</span><span class="o">=</span><span class="s2">"Data ﬁle which contains the information about "</span>
+                        <span class="s2">"temperature dependent magnetizstion, taken from the "</span>
+                        <span class="s2">"experiment or Monte Carlo simulations"</span><span class="p">,</span>
                     <span class="p">),</span>
-                    <span class="n">V</span><span class="p">(</span><span class="s2">&quot;NFTET&quot;</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="n">is_required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s2">&quot;Number of grid points specifying θ angle (SETLFUNC=M_T)&quot;</span><span class="p">),</span>
-                    <span class="n">V</span><span class="p">(</span><span class="s2">&quot;NFPHI&quot;</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="n">is_required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s2">&quot;Number of grid points specifying φ angle (SETLFUNC=M_T)&quot;</span><span class="p">),</span>
+                    <span class="n">V</span><span class="p">(</span><span class="s2">"NFTET"</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="n">is_required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s2">"Number of grid points specifying θ angle (SETLFUNC=M_T)"</span><span class="p">),</span>
+                    <span class="n">V</span><span class="p">(</span><span class="s2">"NFPHI"</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="n">is_required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s2">"Number of grid points specifying φ angle (SETLFUNC=M_T)"</span><span class="p">),</span>
                 <span class="p">]</span>
             <span class="p">),</span>
         <span class="p">],</span>
-        <span class="n">executable</span><span class="o">=</span><span class="s2">&quot;kkrchi&quot;</span><span class="p">,</span>
-        <span class="n">info</span><span class="o">=</span><span class="s2">&quot;GILBERT - The Gilbert damping parameter calculation&quot;</span><span class="p">,</span>
-    <span class="p">)</span></div>
+        <span class="n">info</span><span class="o">=</span><span class="s2">"GILBERT - The Gilbert damping parameter calculation"</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">schema</span><span class="o">.</span><span class="n">_task_definition</span> <span class="o">=</span> <span class="n">GilbertTaskDefinition</span><span class="p">(</span>
+        <span class="s2">"GILBERT"</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">"GILBERT"</span><span class="p">,</span>
+        <span class="n">executable</span><span class="o">=</span><span class="s2">"kkrchi"</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">schema</span></div>
 
 
 
-<span class="sd">&quot;&quot;&quot; The Gilbert damping input parameters definition&quot;&quot;&quot;</span>
+<span class="sd">""" The Gilbert damping input parameters definition"""</span>
 </pre></div>
 
            </div>

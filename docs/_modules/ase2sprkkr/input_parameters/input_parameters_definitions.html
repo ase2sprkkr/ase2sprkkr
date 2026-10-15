@@ -16,8 +16,8 @@
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
-      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -81,6 +81,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../ase2sprkkr.html">ase2sprkkr</a></li>
       <li class="breadcrumb-item active">ase2sprkkr.input_parameters.input_parameters_definitions</li>
       <li class="wy-breadcrumbs-aside">
       </li>
@@ -91,13 +92,7 @@
            <div itemprop="articleBody">
              
   <h1>Source code for ase2sprkkr.input_parameters.input_parameters_definitions</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">This file contains the classes for definitions of InputParameterss:</span>
-<span class="sd">the list of sections and their allowed (or standard) options</span>
-<span class="sd">and their value formats. InputParameterss and potentials have a simlilar</span>
-<span class="sd">structure, so they share common functionalities from</span>
-<span class="sd">sprkkr.common.configuration_definitions</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span></span><span class="sd">"""Definitions of SPR-KKR input-parameter file formats."""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">pyparsing</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pp</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">..common.container_definitions</span><span class="w"> </span><span class="kn">import</span> <span class="n">dict_from_parsed</span>
@@ -114,49 +109,46 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">.input_parameters</span><span class="w"> </span><span class="kn">import</span> <span class="n">InputParameters</span><span class="p">,</span> <span class="n">InputSection</span>
 
 <span class="k">with</span> <span class="n">generate_grammar</span><span class="p">():</span>
-    <span class="n">section_line_ends</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">Regex</span><span class="p">(</span><span class="s2">&quot;(</span><span class="se">\n</span><span class="s2">[ </span><span class="se">\t</span><span class="s2">]*)*[ </span><span class="se">\t</span><span class="s2">]&quot;</span><span class="p">)</span>
+    <span class="n">section_line_ends</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">Regex</span><span class="p">(</span><span class="s2">"(</span><span class="se">\n</span><span class="s2">[ </span><span class="se">\t</span><span class="s2">]*)*[ </span><span class="se">\t</span><span class="s2">]"</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="InputValueDefinition">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.input_parameters.input_parameters_definitions.InputValueDefinition.html#ase2sprkkr.input_parameters.definitions.sections.InputValueDefinition">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">InputValueDefinition</span><span class="p">(</span><span class="n">ConfigurationValueDefinition</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;This class describes the format of one value of</span>
-<span class="sd">    a task configuration&quot;&quot;&quot;</span>
-
     <span class="nd">@cached_class_property</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">grammar_of_delimiter</span><span class="p">():</span>
-        <span class="k">return</span> <span class="n">pp</span><span class="o">.</span><span class="n">Suppress</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">set_name</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">delimiter</span><span class="p">():</span>
+        <span class="k">with</span> <span class="n">generate_grammar</span><span class="p">():</span>
+            <span class="k">return</span> <span class="n">pp</span><span class="o">.</span><span class="n">Suppress</span><span class="p">(</span><span class="s2">"="</span><span class="p">)</span><span class="o">.</span><span class="n">set_name</span><span class="p">(</span><span class="s2">"="</span><span class="p">)</span>
 
-    <span class="n">prefix</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span>
-    <span class="n">name_value_delimiter</span> <span class="o">=</span> <span class="s2">&quot;=&quot;</span>
-
+    <span class="n">prefix</span> <span class="o">=</span> <span class="s2">"</span><span class="se">\t</span><span class="s2">"</span>
     <span class="n">type_from_type_map</span> <span class="o">=</span> <span class="p">{</span><span class="nb">bool</span><span class="p">:</span> <span class="n">flag</span><span class="p">}</span>
-    <span class="n">type_of_dangerous</span> <span class="o">=</span> <span class="n">mixed</span></div>
+    <span class="n">type_of_dangerous</span> <span class="o">=</span> <span class="n">mixed</span>
+
+<div class="viewcode-block" id="InputValueDefinition.copy">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.input_parameters.input_parameters_definitions.InputValueDefinition.html#ase2sprkkr.input_parameters.definitions.sections.InputValueDefinition.copy">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">copied</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">"_energy_default_value"</span><span class="p">):</span>
+            <span class="n">copied</span><span class="o">.</span><span class="n">_energy_default_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_energy_default_value</span>
+        <span class="k">return</span> <span class="n">copied</span></div>
+</div>
 
 
 
 <div class="viewcode-block" id="InputSectionDefinition">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.input_parameters.input_parameters_definitions.InputSectionDefinition.html#ase2sprkkr.input_parameters.definitions.sections.InputSectionDefinition">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">InputSectionDefinition</span><span class="p">(</span><span class="n">ConfigurationSectionDefinition</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;This class describes the format of one</span>
-<span class="sd">    value of a task section&quot;&quot;&quot;</span>
-
     <span class="n">child_class</span> <span class="o">=</span> <span class="n">InputValueDefinition</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; standard child class &quot;&quot;&quot;</span>
-
     <span class="n">result_class</span> <span class="o">=</span> <span class="n">InputSection</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; The standard class for InputParameters section &quot;&quot;&quot;</span>
-
-    <span class="n">custom_class</span> <span class="o">=</span> <span class="nb">staticmethod</span><span class="p">(</span><span class="n">CustomConfigurationValue</span><span class="o">.</span><span class="n">factory</span><span class="p">(</span><span class="n">InputValueDefinition</span><span class="p">,</span> <span class="n">mixed</span><span class="p">))</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; Factory for custom values in the input sections. &quot;&quot;&quot;</span>
-
-    <span class="n">delimiter</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; options are delimited by newline in ouptut. &quot;&quot;&quot;</span>
+    <span class="n">custom_class</span> <span class="o">=</span> <span class="nb">staticmethod</span><span class="p">(</span>
+        <span class="n">CustomConfigurationValue</span><span class="o">.</span><span class="n">factory</span><span class="p">(</span><span class="n">InputValueDefinition</span><span class="p">,</span> <span class="n">mixed</span><span class="p">)</span>
+    <span class="p">)</span>
 
     <span class="nd">@cached_class_property</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">grammar_of_delimiter</span><span class="p">():</span>
-        <span class="n">out</span> <span class="o">=</span> <span class="p">(</span><span class="n">pp</span><span class="o">.</span><span class="n">Optional</span><span class="p">(</span><span class="n">section_line_ends</span><span class="p">)</span> <span class="o">+</span> <span class="n">pp</span><span class="o">.</span><span class="n">WordStart</span><span class="p">())</span><span class="o">.</span><span class="n">suppress</span><span class="p">()</span>
-        <span class="k">return</span> <span class="n">out</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">delimiter</span><span class="p">():</span>
+        <span class="k">with</span> <span class="n">generate_grammar</span><span class="p">():</span>
+            <span class="n">out</span> <span class="o">=</span> <span class="p">(</span><span class="n">pp</span><span class="o">.</span><span class="n">Optional</span><span class="p">(</span><span class="n">section_line_ends</span><span class="p">)</span> <span class="o">+</span> <span class="n">pp</span><span class="o">.</span><span class="n">WordStart</span><span class="p">())</span><span class="o">.</span><span class="n">suppress</span><span class="p">()</span>
+            <span class="k">return</span> <span class="n">out</span><span class="o">.</span><span class="n">set_name</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
 
     <span class="n">do_not_skip_whitespaces_before_name</span> <span class="o">=</span> <span class="kc">True</span></div>
 
@@ -165,37 +157,65 @@
 <div class="viewcode-block" id="InputParametersDefinition">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.input_parameters.input_parameters_definitions.InputParametersDefinition.html#ase2sprkkr.input_parameters.definitions.sections.InputParametersDefinition">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">InputParametersDefinition</span><span class="p">(</span><span class="n">ConfigurationFileDefinition</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;This class describes the format of a task file.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Syntax and parameter semantics of one SPR-KKR input-file schema."""</span>
+
+    <span class="n">_task_definition</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="w">    </span><span class="sd">"""Canonical 1:1 task, or None for schemas shared by multiple tasks."""</span>
 
     <span class="n">save_hook</span> <span class="o">=</span> <span class="kc">None</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; Input parameters can have a save_hook defined, which is executed before saving the</span>
-<span class="sd">  parameters. The arguments of the hook are ``filename, atoms, self``. &quot;&quot;&quot;</span>
-
     <span class="n">child_class</span> <span class="o">=</span> <span class="n">InputSectionDefinition</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; Sections of the :class:`InputParameters` are defined by :class:`InputSectionDefinition` &quot;&quot;&quot;</span>
-
     <span class="n">result_class</span> <span class="o">=</span> <span class="n">InputParameters</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; The parsing of a potential file results in an instance of :class:`InputParameters` &quot;&quot;&quot;</span>
+    <span class="n">custom_class</span> <span class="o">=</span> <span class="nb">staticmethod</span><span class="p">(</span>
+        <span class="n">CustomConfigurationSection</span><span class="o">.</span><span class="n">factory</span><span class="p">(</span><span class="n">InputSectionDefinition</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="n">configuration_type_name</span> <span class="o">=</span> <span class="s2">"INPUT PARAMETERS"</span>
 
-    <span class="n">custom_class</span> <span class="o">=</span> <span class="nb">staticmethod</span><span class="p">(</span><span class="n">CustomConfigurationSection</span><span class="o">.</span><span class="n">factory</span><span class="p">(</span><span class="n">InputSectionDefinition</span><span class="p">))</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; The class factory for custom sections in the container &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="InputParametersDefinition.task_definition_name">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.input_parameters.input_parameters_definitions.InputParametersDefinition.html#ase2sprkkr.input_parameters.definitions.sections.InputParametersDefinition.task_definition_name">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">task_definition_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parameters</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Return the task represented by *parameters*, if the schema encodes one.</span>
 
-    <span class="n">configuration_type_name</span> <span class="o">=</span> <span class="s2">&quot;INPUT PARAMETERS&quot;</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; Name of the container type in the runtime documentation &quot;&quot;&quot;</span>
+<span class="sd">        Schemas shared by multiple tasks override this method. A plain schema is</span>
+<span class="sd">        deliberately detached from execution semantics unless a canonical task</span>
+<span class="sd">        is attached through ``_task_definition``.</span>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
 
-    <span class="n">delimiter</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; Sections are delimited by newline in the output &quot;&quot;&quot;</span>
 
-    <span class="nd">@cached_class_property</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">grammar_of_delimiter</span><span class="p">():</span>
-        <span class="k">def</span><span class="w"> </span><span class="nf">ws</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
-            <span class="k">return</span> <span class="n">x</span><span class="o">.</span><span class="n">set_whitespace_chars</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+<div class="viewcode-block" id="InputParametersDefinition.task_definition">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.input_parameters.input_parameters_definitions.InputParametersDefinition.html#ase2sprkkr.input_parameters.definitions.sections.InputParametersDefinition.task_definition">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">task_definition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parameters</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Resolve the task represented by concrete parameter values."""</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_task_definition</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_task_definition</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">task_definition_name</span><span class="p">(</span><span class="n">parameters</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="n">parameters</span><span class="o">.</span><span class="n">task_registry</span><span class="p">[</span><span class="n">name</span><span class="p">]</span></div>
 
-        <span class="n">out</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="n">pp</span><span class="o">.</span><span class="n">Optional</span><span class="p">(</span><span class="n">section_line_ends</span><span class="p">)</span> <span class="o">+</span> <span class="n">pp</span><span class="o">.</span><span class="n">OneOrMore</span><span class="p">(</span><span class="n">ws</span><span class="p">(</span><span class="n">pp</span><span class="o">.</span><span class="n">LineEnd</span><span class="p">()))</span> <span class="o">+</span> <span class="n">pp</span><span class="o">.</span><span class="n">FollowedBy</span><span class="p">(</span><span class="n">ws</span><span class="p">(</span><span class="n">pp</span><span class="o">.</span><span class="n">Regex</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;[^\s]&quot;</span><span class="p">)))</span>
-        <span class="p">)</span><span class="o">.</span><span class="n">suppress</span><span class="p">()</span>
-        <span class="n">out</span><span class="o">.</span><span class="n">set_name</span><span class="p">(</span><span class="s2">&quot;&lt;newline&gt;&lt;printable&gt;&quot;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">out</span>
+
+<div class="viewcode-block" id="InputParametersDefinition.initialize_for_task">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.input_parameters.input_parameters_definitions.InputParametersDefinition.html#ase2sprkkr.input_parameters.definitions.sections.InputParametersDefinition.initialize_for_task">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">initialize_for_task</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parameters</span><span class="p">,</span> <span class="n">task_name</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Initialize an explicit task discriminator when the schema has one.</span>
+
+<span class="sd">        Shared schemas commonly encode their concrete task in ``TASK.TASK``.</span>
+<span class="sd">        When that option accepts the requested task, make the requested task an</span>
+<span class="sd">        explicit value. Schemas using another discriminator (for example BSF)</span>
+<span class="sd">        keep their own task-dependent defaults and may override this hook.</span>
+<span class="sd">        """</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_task_definition</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">option</span> <span class="o">=</span> <span class="n">parameters</span><span class="p">[</span><span class="s2">"TASK"</span><span class="p">][</span><span class="s2">"TASK"</span><span class="p">]</span>
+            <span class="n">grammar_type</span> <span class="o">=</span> <span class="n">option</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">type</span>
+            <span class="n">keywords</span> <span class="o">=</span> <span class="n">grammar_type</span><span class="o">.</span><span class="n">keywords</span>
+        <span class="k">except</span> <span class="p">(</span><span class="ne">KeyError</span><span class="p">,</span> <span class="ne">AttributeError</span><span class="p">):</span>
+            <span class="k">return</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="n">grammar_type</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="n">task_name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">keywords</span><span class="p">:</span>
+            <span class="n">option</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">value</span><span class="p">)</span></div>
+
 
 <div class="viewcode-block" id="InputParametersDefinition.custom_value_grammar">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.input_parameters.input_parameters_definitions.InputParametersDefinition.html#ase2sprkkr.input_parameters.definitions.sections.InputParametersDefinition.custom_value_grammar">[docs]</a>
@@ -203,48 +223,35 @@
     <span class="nd">@cache</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">custom_value_grammar</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
         <span class="n">value</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">child_class</span><span class="o">.</span><span class="n">custom_member_grammar</span><span class="p">()</span>
-        <span class="n">delim</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">child_class</span><span class="o">.</span><span class="n">grammar_of_delimiter</span><span class="p">()</span>
-        <span class="k">return</span> <span class="n">delimitedList</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">delim</span><span class="p">)</span><span class="o">.</span><span class="n">set_parse_action</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">dict_from_parsed</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">asList</span><span class="p">()))</span></div>
+        <span class="n">delim</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">child_class</span><span class="o">.</span><span class="n">delimiter</span>
+        <span class="k">return</span> <span class="n">delimitedList</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">delim</span><span class="p">)</span><span class="o">.</span><span class="n">set_parse_action</span><span class="p">(</span>
+            <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">dict_from_parsed</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">asList</span><span class="p">())</span>
+        <span class="p">)</span></div>
 
+
+    <span class="nd">@cached_class_property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">delimiter</span><span class="p">():</span>
+        <span class="k">with</span> <span class="n">generate_grammar</span><span class="p">():</span>
+            <span class="k">def</span><span class="w"> </span><span class="nf">ws</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+                <span class="k">return</span> <span class="n">x</span><span class="o">.</span><span class="n">set_whitespace_chars</span><span class="p">(</span><span class="s2">""</span><span class="p">)</span>
+
+            <span class="n">after_consumed_line_end</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">Empty</span><span class="p">()</span><span class="o">.</span><span class="n">add_condition</span><span class="p">(</span>
+                <span class="k">lambda</span> <span class="n">s</span><span class="p">,</span> <span class="n">loc</span><span class="p">,</span> <span class="n">_t</span><span class="p">:</span> <span class="n">loc</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">s</span><span class="p">[:</span><span class="n">loc</span><span class="p">]</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s2">" </span><span class="se">\t\r</span><span class="s2">"</span><span class="p">)</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
+            <span class="p">)</span>
+            <span class="n">out</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">pp</span><span class="o">.</span><span class="n">Optional</span><span class="p">(</span><span class="n">section_line_ends</span><span class="p">)</span>
+                <span class="o">+</span> <span class="n">pp</span><span class="o">.</span><span class="n">OneOrMore</span><span class="p">(</span><span class="n">ws</span><span class="p">(</span><span class="n">pp</span><span class="o">.</span><span class="n">LineEnd</span><span class="p">()))</span>
+                <span class="o">+</span> <span class="n">pp</span><span class="o">.</span><span class="n">FollowedBy</span><span class="p">(</span><span class="n">ws</span><span class="p">(</span><span class="n">pp</span><span class="o">.</span><span class="n">Regex</span><span class="p">(</span><span class="sa">r</span><span class="s2">"[^\s]"</span><span class="p">)))</span>
+                <span class="o">|</span> <span class="n">after_consumed_line_end</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">suppress</span><span class="p">()</span>
+            <span class="k">return</span> <span class="n">out</span><span class="o">.</span><span class="n">set_name</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
 
 <div class="viewcode-block" id="InputParametersDefinition._generic_info">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.input_parameters.input_parameters_definitions.InputParametersDefinition.html#ase2sprkkr.input_parameters.definitions.sections.InputParametersDefinition._generic_info">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">_generic_info</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Input parameters for task </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span></div>
-
-
-<div class="viewcode-block" id="InputParametersDefinition.__init__">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.input_parameters.input_parameters_definitions.InputParametersDefinition.html#ase2sprkkr.input_parameters.definitions.sections.InputParametersDefinition.__init__">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">members</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">executable</span><span class="o">=</span><span class="s2">&quot;kkrscf&quot;</span><span class="p">,</span> <span class="n">mpi</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">result_reader</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Parameters</span>
-<span class="sd">        ---------</span>
-<span class="sd">        others:</span>
-<span class="sd">          For the meaning of the others parameters please see :class:`ConfigurationRootDefinition`</span>
-
-<span class="sd">        executable: str</span>
-<span class="sd">          Executable to run</span>
-
-<span class="sd">        mpi: bool</span>
-<span class="sd">          Whether to run MPI version of the executable</span>
-
-<span class="sd">        result_reader: common.process_output_reader.ProcessOutputParser</span>
-<span class="sd">          Class, that runs the process and read the results. Default NONE</span>
-<span class="sd">          means, that the class is determined from the TASK name</span>
-<span class="sd">          (see InputParameters.result_reader)</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">executable</span> <span class="o">=</span> <span class="n">executable</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">mpi</span> <span class="o">=</span> <span class="n">mpi</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">result_reader</span> <span class="o">=</span> <span class="n">result_reader</span>
-
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">members</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">"Input parameters format </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">"</span></div>
 </div>
 
-        <span class="c1"># if not &#39;TASK&#39; in self:</span>
-        <span class="c1">#    breakpoint()</span>
-        <span class="c1">#    self[&#39;TASK&#39;] = InputSectionDefinition(&#39;TASK&#39;, [ InputValueDefinition(&#39;TASK&#39;, DefKeyword(self.name), name_in_grammar=False) ] )</span>
-        <span class="c1"># elif not &#39;TASK&#39; in self[&#39;TASK&#39;]:</span>
-        <span class="c1">#    self[&#39;TASK&#39;][&#39;TASK&#39;] = InputValueDefinition(DefKeyword(self.name), name_in_grammar=False)</span>
 </pre></div>
 
            </div>

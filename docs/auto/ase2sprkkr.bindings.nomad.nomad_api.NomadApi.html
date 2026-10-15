@@ -17,8 +17,8 @@
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../_static/documentation_options.js?v=5929fcd5"></script>
-      <script src="../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -68,6 +68,7 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.promote_ase_atoms.html">promote_ase_atoms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.__getattr__.html">__getattr__</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.bindings.empty_spheres.html">empty_spheres</a></li>
@@ -84,13 +85,18 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.common.html">common</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration.html">configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration_migration.html">configuration_migration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration_yaml.html">configuration_yaml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.conftest.html">conftest</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.examples.html">examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.execution.html">execution</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.gui.html">gui</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.input_parameters.html">input_parameters</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.output_files.html">output_files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.outputs.html">outputs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.physics.html">physics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.potentials.html">potentials</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.profiles.html">profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.result_files.html">result_files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.sprkkr.html">sprkkr</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.tools.html">tools</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.version.html">version</a></li>
@@ -130,12 +136,17 @@
 <h1>NomadApi<a class="headerlink" href="#nomadapi" title="Link to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="ase2sprkkr.bindings.nomad.nomad_api.NomadApi">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.bindings.nomad.nomad_api.</span></span><span class="sig-name descname"><span class="pre">NomadApi</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nomad_url</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/bindings/nomad/nomad_api.html#NomadApi"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.bindings.nomad.nomad_api.NomadApi" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.bindings.nomad.nomad_api.</span></span><span class="sig-name descname"><span class="pre">NomadApi</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nomad_url</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/bindings/nomad/nomad_api.html#NomadApi"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.bindings.nomad.nomad_api.NomadApi" title="Link to this definition"></a></dt>
 <dd><p class="rubric">Class hierarchy</p>
-<div class="graphviz"><img src="../_images/inheritance-16bfcb60ca044d6893db1604eeeff1a4ef43edca.png" alt="Inheritance diagram of ase2sprkkr.bindings.nomad.nomad_api.NomadApi" usemap="#inheritanced70829cff0" class="inheritance graphviz" /></div>
-<map id="inheritanced70829cff0" name="inheritanced70829cff0">
-<area shape="rect" id="node1" href="#ase2sprkkr.bindings.nomad.nomad_api.NomadApi" target="_top" title="nomad_api.NomadApi" alt="" coords="5,5,171,33"/>
-</map><div class="line-block">
+digraph inheritanced70829cff0 {
+bgcolor=transparent;
+fontsize=14;
+rankdir=LR;
+ranksep=0.3;
+size=&quot;10.0, 10.0&quot;;
+  &quot;nomad_api.NomadApi&quot; [URL=&quot;#ase2sprkkr.bindings.nomad.nomad_api.NomadApi&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;];
+}
+<div class="line-block">
 <div class="line"><br /></div>
 </div>
 <p class="rubric">Constructor</p>
@@ -146,12 +157,12 @@
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ase2sprkkr.bindings.nomad.nomad_api.NomadApi.default_api_url">
-<span class="sig-name descname"><span class="pre">default_api_url</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'https://nomad-lab.eu/prod/v1/api/v1/'</span></em><a class="headerlink" href="#ase2sprkkr.bindings.nomad.nomad_api.NomadApi.default_api_url" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">default_api_url</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'https://nomad-lab.eu/prod/v1/api/v1/'</span></span><a class="headerlink" href="#ase2sprkkr.bindings.nomad.nomad_api.NomadApi.default_api_url" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ase2sprkkr.bindings.nomad.nomad_api.NomadApi.requests">
-<span class="sig-name descname"><span class="pre">requests</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;module</span> <span class="pre">'requests'</span> <span class="pre">from</span> <span class="pre">'/usr/lib/python3/dist-packages/requests/__init__.py'&gt;</span></em><a class="headerlink" href="#ase2sprkkr.bindings.nomad.nomad_api.NomadApi.requests" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">requests</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;module</span> <span class="pre">'requests'</span> <span class="pre">from</span> <span class="pre">'/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/requests/__init__.py'&gt;</span></span><a class="headerlink" href="#ase2sprkkr.bindings.nomad.nomad_api.NomadApi.requests" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">

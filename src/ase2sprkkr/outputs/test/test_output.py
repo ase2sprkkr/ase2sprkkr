@@ -9,7 +9,7 @@ from ase.build import bulk
 from ...common.file_utils import FilePath, filename_from_file
 from ...common.options import Option
 from ...input_parameters.input_parameters import InputParameters
-from ...result_files.definitions.sfn import SFNOutputFile
+from ...result_files.definitions.sfn import SFNResultFile
 from ...result_files import ResultFile
 from ...potentials.potentials import Potential
 from ..readers.bsf import BsfResult
@@ -226,7 +226,7 @@ dipole moment   1      0.0000000000000000      0.0000000000000000      0.0000000
         assert result.sfn_filename == os.path.join(directory, "Fe2Al_SCF.sfn")
         assert result.files["SFN"].file_type == "sfn"
         assert result.sfn_generated is True
-        assert isinstance(result.sfn, SFNOutputFile)
+        assert isinstance(result.sfn, SFNResultFile)
         assert result.sfn.nm == 2
 
     def test_scf_parser_registers_sfn_reported_before_files(self, tmp_path):

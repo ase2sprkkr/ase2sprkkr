@@ -16,8 +16,8 @@
       <script src="../../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../../../../../_static/documentation_options.js?v=5929fcd5"></script>
-      <script src="../../../../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../../search.html" /> 
@@ -81,6 +81,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../../../ase2sprkkr.html">ase2sprkkr</a></li>
           <li class="breadcrumb-item"><a href="../sections.html">ase2sprkkr.potentials.definitions.sections</a></li>
       <li class="breadcrumb-item active">ase2sprkkr.potentials.definitions.sections.sites</li>
       <li class="wy-breadcrumbs-aside">
@@ -113,7 +114,7 @@
     <span class="k">return</span> <span class="p">(</span>
         <span class="kc">True</span>
         <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">value</span> <span class="o">!=</span> <span class="mf">0.0</span><span class="p">)</span>
-        <span class="k">else</span> <span class="s2">&quot;BASSCALE values should not be zero (with the exception that [0,0,0] is considered as valid and replaced by [1,1,1]&quot;</span>
+        <span class="k">else</span> <span class="s2">"BASSCALE values should not be zero (with the exception that [0,0,0] is considered as valid and replaced by [1,1,1]"</span>
     <span class="p">)</span></div>
 
 
@@ -121,27 +122,27 @@
 <div class="viewcode-block" id="SitesSection">
 <a class="viewcode-back" href="../../../../../auto/ase2sprkkr.potentials.definitions.sections.sites.SitesSection.html#ase2sprkkr.potentials.definitions.sections.sites.SitesSection">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">SitesSection</span><span class="p">(</span><span class="n">PotentialSection</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;This section retrieves the atomic positions and</span>
-<span class="sd">    it creates (during reading) the ASE Atoms object&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""This section retrieves the atomic positions and</span>
+<span class="sd">    it creates (during reading) the ASE Atoms object"""</span>
 
 <div class="viewcode-block" id="SitesSection._depends_on">
 <a class="viewcode-back" href="../../../../../auto/ase2sprkkr.potentials.definitions.sections.sites.SitesSection.html#ase2sprkkr.potentials.definitions.sections.sites.SitesSection._depends_on">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">_depends_on</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="p">[</span><span class="s2">&quot;LATTICE&quot;</span><span class="p">]</span></div>
+        <span class="k">return</span> <span class="p">[</span><span class="s2">"LATTICE"</span><span class="p">]</span></div>
 
 
 <div class="viewcode-block" id="SitesSection._set_from_atoms">
 <a class="viewcode-back" href="../../../../../auto/ase2sprkkr.potentials.definitions.sections.sites.SitesSection.html#ase2sprkkr.potentials.definitions.sections.sites.SitesSection._set_from_atoms">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">_set_from_atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">,</span> <span class="n">write_io_data</span><span class="p">):</span>
-        <span class="bp">self</span><span class="p">[</span><span class="s2">&quot;SCALED_ATOMIC_POSITIONS&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">set</span><span class="p">(</span>
-            <span class="n">atoms</span><span class="o">.</span><span class="n">positions</span><span class="p">[</span><span class="n">write_io_data</span><span class="p">[</span><span class="s2">&quot;sites_order&quot;</span><span class="p">]]</span> <span class="o">/</span> <span class="p">(</span><span class="n">write_io_data</span><span class="p">[</span><span class="s2">&quot;lattice.alat&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="p">[</span><span class="s2">&quot;BASSCALE&quot;</span><span class="p">]())</span>
+        <span class="bp">self</span><span class="p">[</span><span class="s2">"SCALED_ATOMIC_POSITIONS"</span><span class="p">]</span><span class="o">.</span><span class="n">set</span><span class="p">(</span>
+            <span class="n">atoms</span><span class="o">.</span><span class="n">positions</span><span class="p">[</span><span class="n">write_io_data</span><span class="p">[</span><span class="s2">"sites_order"</span><span class="p">]]</span> <span class="o">/</span> <span class="p">(</span><span class="n">write_io_data</span><span class="p">[</span><span class="s2">"lattice.alat"</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="p">[</span><span class="s2">"BASSCALE"</span><span class="p">]())</span>
         <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="SitesSection._update_atoms">
 <a class="viewcode-back" href="../../../../../auto/ase2sprkkr.potentials.definitions.sections.sites.SitesSection.html#ase2sprkkr.potentials.definitions.sections.sites.SitesSection._update_atoms">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">_update_atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">,</span> <span class="n">read_io_data</span><span class="p">):</span>
-        <span class="n">positions</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="s2">&quot;SCALED_ATOMIC_POSITIONS&quot;</span><span class="p">]()</span> <span class="o">*</span> <span class="p">(</span><span class="n">read_io_data</span><span class="p">[</span><span class="s2">&quot;lattice.alat&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="p">[</span><span class="s2">&quot;BASSCALE&quot;</span><span class="p">]())</span>
+        <span class="n">positions</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="s2">"SCALED_ATOMIC_POSITIONS"</span><span class="p">]()</span> <span class="o">*</span> <span class="p">(</span><span class="n">read_io_data</span><span class="p">[</span><span class="s2">"lattice.alat"</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="p">[</span><span class="s2">"BASSCALE"</span><span class="p">]())</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">atoms</span><span class="p">:</span>
                 <span class="n">atoms</span><span class="o">.</span><span class="n">set_positions</span><span class="p">(</span><span class="n">positions</span><span class="p">)</span>
@@ -160,13 +161,13 @@
 <span class="k">class</span><span class="w"> </span><span class="nc">SitesSectionDefinition</span><span class="p">(</span><span class="n">PotSectionDefinition</span><span class="p">):</span>
 <div class="viewcode-block" id="SitesSectionDefinition.__init__">
 <a class="viewcode-back" href="../../../../../auto/ase2sprkkr.potentials.definitions.sections.sites.SitesSectionDefinition.html#ase2sprkkr.potentials.definitions.sections.sites.SitesSectionDefinition.__init__">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;SITES&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"SITES"</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="n">V</span> <span class="o">=</span> <span class="n">PotValueDefinition</span>
         <span class="n">members</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="n">V</span><span class="p">(</span><span class="s2">&quot;CARTESIAN&quot;</span><span class="p">,</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">fixed_value</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
-            <span class="c1"># V(&#39;BASSCALE&#39;, Array(float, length=3), fixed_value=[1.,1.,1.]),</span>
+            <span class="n">V</span><span class="p">(</span><span class="s2">"CARTESIAN"</span><span class="p">,</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">fixed_value</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+            <span class="c1"># V('BASSCALE', Array(float, length=3), fixed_value=[1.,1.,1.]),</span>
             <span class="n">V</span><span class="p">(</span>
-                <span class="s2">&quot;BASSCALE&quot;</span><span class="p">,</span>
+                <span class="s2">"BASSCALE"</span><span class="p">,</span>
                 <span class="n">default_value</span><span class="o">=</span><span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span>
                 <span class="nb">type</span><span class="o">=</span><span class="n">Array</span><span class="p">(</span>
                     <span class="nb">float</span><span class="p">,</span>
@@ -176,13 +177,13 @@
                 <span class="p">),</span>
             <span class="p">),</span>
             <span class="n">V</span><span class="p">(</span>
-                <span class="s2">&quot;SCALED_ATOMIC_POSITIONS&quot;</span><span class="p">,</span>
+                <span class="s2">"SCALED_ATOMIC_POSITIONS"</span><span class="p">,</span>
                 <span class="n">Table</span><span class="p">(</span>
-                    <span class="p">{</span><span class="s2">&quot;QBAS(X)&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="s2">&quot;QBAS(Y)&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="s2">&quot;QBAS(Z)&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">},</span>
-                    <span class="n">numbering</span><span class="o">=</span><span class="s2">&quot;IQ&quot;</span><span class="p">,</span>
+                    <span class="p">{</span><span class="s2">"QBAS(X)"</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="s2">"QBAS(Y)"</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="s2">"QBAS(Z)"</span><span class="p">:</span> <span class="nb">float</span><span class="p">},</span>
+                    <span class="n">numbering</span><span class="o">=</span><span class="s2">"IQ"</span><span class="p">,</span>
                     <span class="n">free_header</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                    <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;&gt;22.14f&quot;</span><span class="p">,</span>
-                    <span class="n">numbering_format</span><span class="o">=</span><span class="s2">&quot;&gt;5&quot;</span><span class="p">,</span>
+                    <span class="nb">format</span><span class="o">=</span><span class="s2">"&gt;22.14f"</span><span class="p">,</span>
+                    <span class="n">numbering_format</span><span class="o">=</span><span class="s2">"&gt;5"</span><span class="p">,</span>
                 <span class="p">),</span>
             <span class="p">),</span>
         <span class="p">]</span>

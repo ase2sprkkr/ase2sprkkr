@@ -14,7 +14,7 @@ from ..uppasd import (
     write_mom_file,
     write_pos_file,
 )
-from ...result_files.definitions.jxc import Coordinates, JXCOutputFile, Selector
+from ...result_files.definitions.jxc import Coordinates, JXCResultFile, Selector
 
 
 class FakeMoments:
@@ -194,7 +194,7 @@ def test_jxc_output_file_selector_excludes_vacuum_sites(monkeypatch):
     atoms.sites = [FakeSite(fe), FakeSite(vc), FakeSite(ni)]
     monkeypatch.setattr(uppasd_bindings.SPRKKRAtoms, "promote_ase_atoms", staticmethod(lambda atoms: atoms))
 
-    jxc_output = JXCOutputFile.from_atoms(atoms)
+    jxc_output = JXCResultFile.from_atoms(atoms)
     selector = jxc_output.create_selector(it=[1, 2, 3], exclude_it=set(), exclude_vc=True)
 
     assert selector.it == {1, 3}

@@ -1,0 +1,36 @@
+ExecutorEndpoint
+================
+
+
+.. currentmodule:: ase2sprkkr.execution.endpoint
+
+.. autoclass:: ExecutorEndpoint
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.execution.endpoint.ExecutorEndpoint
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

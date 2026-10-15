@@ -17,8 +17,8 @@
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../_static/documentation_options.js?v=5929fcd5"></script>
-      <script src="../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -68,14 +68,18 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.promote_ase_atoms.html">promote_ase_atoms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.__getattr__.html">__getattr__</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.common.html">common</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration.html">configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration_migration.html">configuration_migration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration_yaml.html">configuration_yaml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.conftest.html">conftest</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.examples.html">examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.execution.html">execution</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.gui.html">gui</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.input_parameters.html">input_parameters</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.output_files.html">output_files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.outputs.html">outputs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.physics.html">physics</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="ase2sprkkr.potentials.html">potentials</a><ul class="current">
@@ -92,6 +96,8 @@
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.potentials.potentials.html">potentials</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.profiles.html">profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.result_files.html">result_files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.sprkkr.html">sprkkr</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.tools.html">tools</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.version.html">version</a></li>
@@ -129,23 +135,44 @@
 <h1>custom_potential_section<a class="headerlink" href="#custom-potential-section" title="Link to this heading"></a></h1>
 <p>Full name: <strong>ase2sprkkr.potentials.custom_potential_section</strong></p>
 <p class="rubric">Module class hierarchy</p>
-<div class="graphviz"><img src="../_images/inheritance-8efb00f75608fcf5ded778eedb125c16dc36fb25.png" alt="Inheritance diagram of ase2sprkkr.potentials.custom_potential_section.CustomPotentialSection, ase2sprkkr.potentials.custom_potential_section.CustomPotentialSectionDefinition, ase2sprkkr.potentials.custom_potential_section.CustomSectionToken, ase2sprkkr.potentials.custom_potential_section.SectionString" usemap="#inheritance03fdc56e32" class="inheritance graphviz" /></div>
-<map id="inheritance03fdc56e32" name="inheritance03fdc56e32">
-<area shape="rect" id="node2" href="ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.common.configuration_definitions.BaseDefinition" target="_top" title="This class is a member of definition of configuration, that can be both" alt="" coords="4,90,100,113"/>
-<area shape="rect" id="node16" href="ase2sprkkr.common.configuration_definitions.RealItemDefinition.html#ase2sprkkr.common.configuration_definitions.RealItemDefinition" target="_top" title="A base class for a configuration definition, either of an option, or of a container." alt="" coords="125,90,243,113"/>
-<area shape="rect" id="node3" href="ase2sprkkr.common.options.BaseOption.html#ase2sprkkr.common.options.BaseOption" target="_top" title="A base placeholder for a leaf element of a grammar file," alt="" coords="144,47,224,70"/>
-<area shape="rect" id="node9" href="ase2sprkkr.common.options.Option.html#ase2sprkkr.common.options.Option" target="_top" title="Class for one option (a configuration value) of SPRKKR &#45; either to" alt="" coords="287,47,347,70"/>
-<area shape="rect" id="node4" href="ase2sprkkr.common.configuration.Configuration.html#ase2sprkkr.common.configuration.Configuration" target="_top" title="The common base class for all configurations values and containers. I.e." alt="" coords="8,47,97,70"/>
-<area shape="rect" id="node5" href="ase2sprkkr.sprkkr.configuration.ConfigurationValueDefinition.html#ase2sprkkr.sprkkr.configuration.ConfigurationValueDefinition" target="_top" title="Definition o a configuration value, used in SPRKKR configuration file." alt="" coords="391,90,562,113"/>
-<area shape="rect" id="node11" href="ase2sprkkr.potentials.custom_potential_section.CustomPotentialSectionDefinition.html#ase2sprkkr.potentials.custom_potential_section.CustomPotentialSectionDefinition" target="_top" title="The custom sections are in fact values &#45; their content can be" alt="" coords="586,90,785,113"/>
-<area shape="rect" id="node6" href="ase2sprkkr.common.value_definitions.ValueDefinition.html#ase2sprkkr.common.value_definitions.ValueDefinition" target="_top" title="ValueDefinition" alt="" coords="267,90,367,113"/>
-<area shape="rect" id="node7" href="ase2sprkkr.sprkkr.configuration.CustomConfigurationValue.html#ase2sprkkr.sprkkr.configuration.CustomConfigurationValue" target="_top" title="Custom value (option) in a SPRKKR configuration file." alt="" coords="605,47,766,70"/>
-<area shape="rect" id="node10" href="ase2sprkkr.potentials.custom_potential_section.CustomPotentialSection.html#ase2sprkkr.potentials.custom_potential_section.CustomPotentialSection" target="_top" title="Unknown sections of the potential file are mapped to a &quot;section&quot;" alt="" coords="809,47,956,70"/>
-<area shape="rect" id="node8" href="ase2sprkkr.common.options.CustomOption.html#ase2sprkkr.common.options.CustomOption" target="_top" title="An user&#45;added option (configuration value). It can be removed from the section." alt="" coords="429,47,524,70"/>
-<area shape="rect" id="node12" href="ase2sprkkr.potentials.custom_potential_section.CustomSectionToken.html#ase2sprkkr.potentials.custom_potential_section.CustomSectionToken" target="_top" title="The grammar for a custom section &#45; i.e. for unknown section, whose" alt="" coords="412,133,541,156"/>
-<area shape="rect" id="node14" href="ase2sprkkr.common.grammar_types.grammar_type.GrammarType.html#ase2sprkkr.common.grammar_types.grammar_type.GrammarType" target="_top" title="Base class for definition of configuration option types" alt="" coords="6,4,99,27"/>
-<area shape="rect" id="node17" href="ase2sprkkr.potentials.custom_potential_section.SectionString.html#ase2sprkkr.potentials.custom_potential_section.SectionString" target="_top" title="The grammar_type of a custom section &#45; i.e. string, that" alt="" coords="140,4,228,27"/>
-</map><div class="line-block">
+digraph inheritance03fdc56e32 {
+bgcolor=transparent;
+fontsize=14;
+rankdir=LR;
+ranksep=0.3;
+size=&quot;10.0, 10.0&quot;;
+  &quot;ABC&quot; [fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,tooltip=&quot;Helper class that provides a standard way to create an ABC using&quot;];
+  &quot;BaseDefinition&quot; [URL=&quot;ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.common.configuration_definitions.BaseDefinition&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;This class is a member of definition of configuration, that can be both&quot;];
+  &quot;BaseOption&quot; [URL=&quot;ase2sprkkr.common.options.BaseOption.html#ase2sprkkr.common.options.BaseOption&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;A base placeholder for a leaf element of a grammar file,&quot;];
+  &quot;Configuration&quot; -&gt; &quot;BaseOption&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;Configuration&quot; [URL=&quot;ase2sprkkr.common.configuration.Configuration.html#ase2sprkkr.common.configuration.Configuration&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;The common base class for all configurations values and containers. I.e.&quot;];
+  &quot;ConfigurationValueDefinition&quot; [URL=&quot;ase2sprkkr.sprkkr.configuration.ConfigurationValueDefinition.html#ase2sprkkr.sprkkr.configuration.ConfigurationValueDefinition&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;Definition o a configuration value, used in SPRKKR configuration file.&quot;];
+  &quot;ValueDefinition&quot; -&gt; &quot;ConfigurationValueDefinition&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;CustomConfigurationValue&quot; [URL=&quot;ase2sprkkr.sprkkr.configuration.CustomConfigurationValue.html#ase2sprkkr.sprkkr.configuration.CustomConfigurationValue&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;Custom value (option) in a SPRKKR configuration file.&quot;];
+  &quot;CustomOption&quot; -&gt; &quot;CustomConfigurationValue&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;CustomOption&quot; [URL=&quot;ase2sprkkr.common.options.CustomOption.html#ase2sprkkr.common.options.CustomOption&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;An user-added option (configuration value). It can be removed from the section.&quot;];
+  &quot;Option&quot; -&gt; &quot;CustomOption&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;CustomPotentialSection&quot; [URL=&quot;ase2sprkkr.potentials.custom_potential_section.CustomPotentialSection.html#ase2sprkkr.potentials.custom_potential_section.CustomPotentialSection&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;Unknown sections of the potential file are mapped to a \&quot;section\&quot;&quot;];
+  &quot;CustomConfigurationValue&quot; -&gt; &quot;CustomPotentialSection&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;CustomPotentialSectionDefinition&quot; [URL=&quot;ase2sprkkr.potentials.custom_potential_section.CustomPotentialSectionDefinition.html#ase2sprkkr.potentials.custom_potential_section.CustomPotentialSectionDefinition&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;The custom sections are in fact values - their content can be&quot;];
+  &quot;ConfigurationValueDefinition&quot; -&gt; &quot;CustomPotentialSectionDefinition&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;CustomSectionToken&quot; [URL=&quot;ase2sprkkr.potentials.custom_potential_section.CustomSectionToken.html#ase2sprkkr.potentials.custom_potential_section.CustomSectionToken&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;The grammar for a custom section - i.e. for unknown section, whose&quot;];
+  &quot;Token&quot; -&gt; &quot;CustomSectionToken&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;GrammarType&quot; [URL=&quot;ase2sprkkr.common.grammar_types.grammar_type.GrammarType.html#ase2sprkkr.common.grammar_types.grammar_type.GrammarType&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;Base class for definition of configuration option types&quot;];
+  &quot;Option&quot; [URL=&quot;ase2sprkkr.common.options.Option.html#ase2sprkkr.common.options.Option&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;Class for one option (a configuration value) of SPRKKR - either to&quot;];
+  &quot;BaseOption&quot; -&gt; &quot;Option&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;ParserElement&quot; [fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,tooltip=&quot;Abstract base level parser element class.&quot;];
+  &quot;ABC&quot; -&gt; &quot;ParserElement&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;RealItemDefinition&quot; [URL=&quot;ase2sprkkr.common.configuration_definitions.RealItemDefinition.html#ase2sprkkr.common.configuration_definitions.RealItemDefinition&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;A base class for a configuration definition, either of an option, or of a container.&quot;];
+  &quot;BaseDefinition&quot; -&gt; &quot;RealItemDefinition&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;SectionString&quot; [URL=&quot;ase2sprkkr.potentials.custom_potential_section.SectionString.html#ase2sprkkr.potentials.custom_potential_section.SectionString&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;The grammar_type of a custom section - i.e. string, that&quot;];
+  &quot;GrammarType&quot; -&gt; &quot;SectionString&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;Token&quot; [fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,tooltip=&quot;Abstract :class:`ParserElement` subclass, for defining atomic&quot;];
+  &quot;ParserElement&quot; -&gt; &quot;Token&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;ValueDefinition&quot; [URL=&quot;ase2sprkkr.common.value_definitions.ValueDefinition.html#ase2sprkkr.common.value_definitions.ValueDefinition&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;];
+  &quot;RealItemDefinition&quot; -&gt; &quot;ValueDefinition&quot; [arrowsize=0.7,style=&quot;setlinewidth(0.5)&quot;];
+}
+<div class="line-block">
 <div class="line"><br /></div>
 </div>
 <p class="rubric">Description</p>

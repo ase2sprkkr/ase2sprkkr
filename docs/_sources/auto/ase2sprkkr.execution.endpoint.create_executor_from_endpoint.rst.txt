@@ -1,0 +1,8 @@
+create\_executor\_from\_endpoint
+================================
+
+Full name: **ase2sprkkr.execution.endpoint.create\_executor\_from\_endpoint**
+
+.. currentmodule:: ase2sprkkr.execution.endpoint
+
+.. autofunction:: create_executor_from_endpoint

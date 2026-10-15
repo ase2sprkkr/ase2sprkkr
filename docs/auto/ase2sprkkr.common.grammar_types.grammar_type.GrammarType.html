@@ -17,8 +17,8 @@
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../_static/documentation_options.js?v=5929fcd5"></script>
-      <script src="../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -68,6 +68,7 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.promote_ase_atoms.html">promote_ase_atoms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.__getattr__.html">__getattr__</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="ase2sprkkr.common.html">common</a><ul class="current">
@@ -76,10 +77,15 @@
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.configuration.html">configuration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.configuration_containers.html">configuration_containers</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.configuration_definitions.html">configuration_definitions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.configuration_transaction.html">configuration_transaction</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.container_definitions.html">container_definitions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.dangerous_values.html">dangerous_values</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.debug.html">debug</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.decorators.html">decorators</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.dependencies.html">dependencies</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.doc.html">doc</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.file_fingerprints.html">file_fingerprints</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.file_locks.html">file_locks</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.file_utils.html">file_utils</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.formats.html">formats</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.generated_configuration_definitions.html">generated_configuration_definitions</a></li>
@@ -96,15 +102,15 @@
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.warnings.html">warnings</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.init_tests.html">init_tests</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.lazy_string.html">lazy_string</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.misc.html">misc</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.module_registry.html">module_registry</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.no_output.html">no_output</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.options.html">options</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.parsing_results.html">parsing_results</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.process_output_reader.html">process_output_reader</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.repeated_configuration_containers.html">repeated_configuration_containers</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.section_adaptors.html">section_adaptors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.repetition.html">repetition</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.subprocess.html">subprocess</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.tools.html">tools</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.unique_values.html">unique_values</a></li>
@@ -114,13 +120,18 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration.html">configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration_migration.html">configuration_migration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration_yaml.html">configuration_yaml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.conftest.html">conftest</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.examples.html">examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.execution.html">execution</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.gui.html">gui</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.input_parameters.html">input_parameters</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.output_files.html">output_files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.outputs.html">outputs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.physics.html">physics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.potentials.html">potentials</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.profiles.html">profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.result_files.html">result_files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.sprkkr.html">sprkkr</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.tools.html">tools</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.version.html">version</a></li>
@@ -160,7 +171,7 @@
 <h1>GrammarType<a class="headerlink" href="#grammartype" title="Link to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.grammar_type.GrammarType">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.common.grammar_types.grammar_type.</span></span><span class="sig-name descname"><span class="pre">GrammarType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">postfix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">after_format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">after_convert</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types/grammar_type.html#GrammarType"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.grammar_type.GrammarType" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.common.grammar_types.grammar_type.</span></span><span class="sig-name descname"><span class="pre">GrammarType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">postfix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">after_format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">after_convert</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types/grammar_type.html#GrammarType"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.grammar_type.GrammarType" title="Link to this definition"></a></dt>
 <dd><p>Base class for definition of configuration option types</p>
 <p>A type without value (e.g. Separator) are just syntactical
 elements in the potentials file, that do not carry an information.
@@ -176,14 +187,19 @@ not in the result.</p>
 
 <span class="n">Output</span><span class="p">:</span> <span class="n">string</span> <span class="o">-&gt;</span> <span class="n">_string</span>
 
-<span class="n">Parsing</span><span class="p">:</span> <span class="n">parse</span> <span class="o">-&gt;</span> <span class="p">(</span> <span class="o">&lt;</span><span class="n">_grammar</span> <span class="n">parse</span> <span class="n">actions</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">validate</span><span class="p">(</span><span class="n">why</span><span class="o">=</span><span class="s1">&#39;parse&#39;</span><span class="p">)</span> <span class="p">)</span>
+<span class="n">Parsing</span><span class="p">:</span> <span class="n">parse</span> <span class="o">-&gt;</span> <span class="p">(</span> <span class="o">&lt;</span><span class="n">_grammar</span> <span class="n">parse</span> <span class="n">actions</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">validate</span><span class="p">(</span><span class="n">why</span><span class="o">=</span><span class="s1">'parse'</span><span class="p">)</span> <span class="p">)</span>
 </pre></div>
 </div>
 <p class="rubric">Class hierarchy</p>
-<div class="graphviz"><img src="../_images/inheritance-30bd65939fb53b8ef4d0884259cf3cbc010e519e.png" alt="Inheritance diagram of ase2sprkkr.common.grammar_types.grammar_type.GrammarType" usemap="#inheritancecd3aa60b22" class="inheritance graphviz" /></div>
-<map id="inheritancecd3aa60b22" name="inheritancecd3aa60b22">
-<area shape="rect" id="node1" href="#ase2sprkkr.common.grammar_types.grammar_type.GrammarType" target="_top" title="Base class for definition of configuration option types" alt="" coords="5,5,219,33"/>
-</map><div class="line-block">
+digraph inheritancecd3aa60b22 {
+bgcolor=transparent;
+fontsize=14;
+rankdir=LR;
+ranksep=0.3;
+size=&quot;10.0, 10.0&quot;;
+  &quot;grammar_type.GrammarType&quot; [URL=&quot;#ase2sprkkr.common.grammar_types.grammar_type.GrammarType&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;Base class for definition of configuration option types&quot;];
+}
+<div class="line-block">
 <div class="line"><br /></div>
 </div>
 <p class="rubric">Constructor</p>
@@ -227,12 +243,12 @@ is applied on the result of the
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.grammar_type.GrammarType.has_value">
-<span class="sig-name descname"><span class="pre">has_value</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#ase2sprkkr.common.grammar_types.grammar_type.GrammarType.has_value" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">has_value</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></span><a class="headerlink" href="#ase2sprkkr.common.grammar_types.grammar_type.GrammarType.has_value" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.grammar_type.GrammarType.name_in_grammar">
-<span class="sig-name descname"><span class="pre">name_in_grammar</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#ase2sprkkr.common.grammar_types.grammar_type.GrammarType.name_in_grammar" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">name_in_grammar</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></span><a class="headerlink" href="#ase2sprkkr.common.grammar_types.grammar_type.GrammarType.name_in_grammar" title="Link to this definition"></a></dt>
 <dd><p>Default value for ValueDefinition.name_in_grammar.
 Some types (e.g. Tables) commonly have no name (are identified
 by its position in the potential file) – such type could redefine
@@ -249,13 +265,13 @@ The default type <code class="docutils literal notranslate"><span class="pre">ob
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.grammar_type.GrammarType.array_access">
-<span class="sig-name descname"><span class="pre">array_access</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#ase2sprkkr.common.grammar_types.grammar_type.GrammarType.array_access" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">array_access</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></span><a class="headerlink" href="#ase2sprkkr.common.grammar_types.grammar_type.GrammarType.array_access" title="Link to this definition"></a></dt>
 <dd><p>The value of this type can be accessed as array</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.grammar_type.GrammarType.is_independent_on_the_predecessor">
-<span class="sig-name descname"><span class="pre">is_independent_on_the_predecessor</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#ase2sprkkr.common.grammar_types.grammar_type.GrammarType.is_independent_on_the_predecessor" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">is_independent_on_the_predecessor</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></span><a class="headerlink" href="#ase2sprkkr.common.grammar_types.grammar_type.GrammarType.is_independent_on_the_predecessor" title="Link to this definition"></a></dt>
 <dd><p>Options of most grammar types do not identify themselves, so they have to be either identified by their names, or if name is not given, by their predecessors. Hoewever, e.g. keyword arguments can be identified just by their value.</p>
 </dd></dl>
 
@@ -280,20 +296,20 @@ The format is passed as format argument to <code class="docutils literal notrans
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.grammar_type.GrammarType.default_value">
-<span class="sig-name descname"><span class="pre">default_value</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#ase2sprkkr.common.grammar_types.grammar_type.GrammarType.default_value" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">default_value</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#ase2sprkkr.common.grammar_types.grammar_type.GrammarType.default_value" title="Link to this definition"></a></dt>
 <dd><p>Default value for the given type. It can be overriden for particular instances
 in the constructor (or just by setting the attribute of an instantiated object).</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.grammar_type.GrammarType.format">
-<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">format</span></span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types/grammar_type.html#GrammarType.format"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.grammar_type.GrammarType.format" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">format</span></span><a class="headerlink" href="#ase2sprkkr.common.grammar_types.grammar_type.GrammarType.format" title="Link to this definition"></a></dt>
 <dd><p>Return the resulting format string, applying the prefix and postfix</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.grammar_type.GrammarType.is_the_same_value">
-<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">is_the_same_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types/grammar_type.html#GrammarType.is_the_same_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.grammar_type.GrammarType.is_the_same_value" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">is_the_same_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types/grammar_type.html#GrammarType.is_the_same_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.grammar_type.GrammarType.is_the_same_value" title="Link to this definition"></a></dt>
 <dd><p>Comparison function for the values of “this type”.</p>
 <p>Not all values (e.g. numpy arrays) can be compared by equal sign,
 so this function has to be used for comparison of the values.</p>
@@ -318,7 +334,7 @@ so this function has to be used for comparison of the values.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.grammar_type.GrammarType.parse_from_stream">
-<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">parse_from_stream</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stream</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">up_to</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">whole_string</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types/grammar_type.html#GrammarType.parse_from_stream"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.grammar_type.GrammarType.parse_from_stream" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">parse_from_stream</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stream</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">up_to</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">whole_string</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types/grammar_type.html#GrammarType.parse_from_stream"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.grammar_type.GrammarType.parse_from_stream" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -354,16 +370,19 @@ in the configuration?</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.grammar_type.GrammarType.validate">
-<span class="sig-name descname"><span class="pre">validate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">param_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'&lt;Unknown&gt;'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">why</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'set'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types/grammar_type.html#GrammarType.validate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.grammar_type.GrammarType.validate" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">validate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">param_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'&lt;Unknown&gt;'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">why</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'set'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">option</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types/grammar_type.html#GrammarType.validate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.grammar_type.GrammarType.validate" title="Link to this definition"></a></dt>
 <dd><p>Validate either the pyparsing result or a user given value.</p>
-<p>Do not override this method in subclasses for the validation implementation,
-this method calls <a class="reference internal" href="#ase2sprkkr.common.grammar_types.grammar_type.GrammarType._validate" title="ase2sprkkr.common.grammar_types.grammar_type.GrammarType._validate"><code class="xref py py-meth docutils literal notranslate"><span class="pre">_validate()</span></code></a>, which should contain the actual validation</p>
+<p>Subclasses should normally implement <a class="reference internal" href="#ase2sprkkr.common.grammar_types.grammar_type.GrammarType._validate" title="ase2sprkkr.common.grammar_types.grammar_type.GrammarType._validate"><code class="xref py py-meth docutils literal notranslate"><span class="pre">_validate()</span></code></a>. They may extend
+this method when validation requires the runtime <code class="docutils literal notranslate"><span class="pre">option</span></code>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>value</strong> (<em>mixed</em>) – Value to be validated.</p></li>
 <li><p><strong>param_name</strong> (<em>str</em><em> or </em><em>callable</em>) – Parameter name to be used in possible throwed exception (Optional).
-If it is callable, it should be a function that returns the param_name.</p></li>
+If it is callable, it should be a function that returns the param_name.
+When <code class="docutils literal notranslate"><span class="pre">option</span></code> is supplied, its runtime path is used instead.</p></li>
+<li><p><strong>option</strong> – Runtime option containing <code class="docutils literal notranslate"><span class="pre">value</span></code>. It is unavailable during the
+grammar’s parse action, where <code class="docutils literal notranslate"><span class="pre">param_name</span></code> remains necessary.</p></li>
 <li><p><strong>why</strong> (<em>str</em>) – <p>Possible values are:</p>
 <dl class="simple">
 <dt><code class="docutils literal notranslate"><span class="pre">set</span></code></dt><dd><p>validation value setted by user (in rare cases, such value can be incomplete
@@ -449,11 +468,27 @@ For complex types it may not give a reasonable results.</p>
 <dd></dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.grammar_type.GrammarType.get_option_index">
+<span class="sig-name descname"><span class="pre">get_option_index</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">option</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types/grammar_type.html#GrammarType.get_option_index"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.grammar_type.GrammarType.get_option_index" title="Link to this definition"></a></dt>
+<dd><p>Return one indexed value from an option of this type.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.grammar_type.GrammarType.set_option_index">
+<span class="sig-name descname"><span class="pre">set_option_index</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">option</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types/grammar_type.html#GrammarType.set_option_index"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.grammar_type.GrammarType.set_option_index" title="Link to this definition"></a></dt>
+<dd><p>Set one indexed value on an option of this type.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.grammar_type.GrammarType.option_attribute_index">
+<span class="sig-name descname"><span class="pre">option_attribute_index</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types/grammar_type.html#GrammarType.option_attribute_index"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.grammar_type.GrammarType.option_attribute_index" title="Link to this definition"></a></dt>
+<dd><p>Return the index exposed as <code class="docutils literal notranslate"><span class="pre">option.&lt;name&gt;</span></code>, or <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.grammar_type.GrammarType.enrich">
 <span class="sig-name descname"><span class="pre">enrich</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">option</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types/grammar_type.html#GrammarType.enrich"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.grammar_type.GrammarType.enrich" title="Link to this definition"></a></dt>
-<dd><p>Some types can add properties to the options that have
-the type, e.g. see Sequence.enrich, which adds the ability to
-access the items of the sequence using []</p>
+<dd><p>Allow a grammar type to customize an option instance.</p>
 </dd></dl>
 
 <dl class="py method">

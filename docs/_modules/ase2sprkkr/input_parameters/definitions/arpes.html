@@ -16,8 +16,8 @@
       <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
-      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
@@ -81,6 +81,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../../ase2sprkkr.html">ase2sprkkr</a></li>
       <li class="breadcrumb-item active">ase2sprkkr.input_parameters.definitions.arpes</li>
       <li class="wy-breadcrumbs-aside">
       </li>
@@ -91,7 +92,7 @@
            <div itemprop="articleBody">
              
   <h1>Source code for ase2sprkkr.input_parameters.definitions.arpes</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;ARPES task input parameters definition&quot;&quot;&quot;</span>
+<span></span><span class="sd">"""ARPES task input parameters definition"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">...common.grammar_types</span><span class="w"> </span><span class="kn">import</span> <span class="n">SetOf</span><span class="p">,</span> <span class="n">DefKeyword</span><span class="p">,</span> <span class="n">Keyword</span><span class="p">,</span> <span class="n">Range</span><span class="p">,</span> <span class="n">Array</span><span class="p">,</span> <span class="n">flag</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.sections</span><span class="w"> </span><span class="kn">import</span> <span class="n">CONTROL</span><span class="p">,</span> <span class="n">TAU</span><span class="p">,</span> <span class="n">ENERGY</span><span class="p">,</span> <span class="n">SITES</span>
@@ -101,243 +102,303 @@
     <span class="n">InputSectionDefinition</span> <span class="k">as</span> <span class="n">Section</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">...sprkkr.sprkkr_grammar_types</span><span class="w"> </span><span class="kn">import</span> <span class="n">Site</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">...common.warnings</span><span class="w"> </span><span class="kn">import</span> <span class="n">DataValidityError</span>
 
 
-<div class="viewcode-block" id="input_parameters">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.definitions.arpes.input_parameters.html#ase2sprkkr.input_parameters.definitions.arpes.input_parameters">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">input_parameters</span><span class="p">():</span>
-    <span class="k">return</span> <span class="n">InputParameters</span><span class="p">(</span>
-        <span class="s2">&quot;arpes&quot;</span><span class="p">,</span>
+<div class="viewcode-block" id="ArpesInputParametersDefinition">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.definitions.arpes.ArpesInputParametersDefinition.html#ase2sprkkr.input_parameters.definitions.arpes.ArpesInputParametersDefinition">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ArpesInputParametersDefinition</span><span class="p">(</span><span class="n">InputParameters</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Shared SPEC_INPUT schema for ARPES-family tasks."""</span>
+
+<div class="viewcode-block" id="ArpesInputParametersDefinition.task_definition_name">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.definitions.arpes.ArpesInputParametersDefinition.html#ase2sprkkr.input_parameters.definitions.arpes.ArpesInputParametersDefinition.task_definition_name">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">task_definition_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parameters</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">parameters</span><span class="o">.</span><span class="n">TASK</span><span class="o">.</span><span class="n">TASK</span><span class="p">()</span> <span class="ow">or</span> <span class="s2">"ARPES"</span><span class="p">)</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="_electron_angle_default">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.definitions.arpes._electron_angle_default.html#ase2sprkkr.input_parameters.definitions.arpes._electron_angle_default">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_electron_angle_default</span><span class="p">(</span><span class="n">option</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""SPEC_INPUT defaults differ for photoemission and SPLEED."""</span>
+    <span class="n">angle</span> <span class="o">=</span> <span class="p">(</span><span class="mf">45.0</span> <span class="k">if</span> <span class="n">option</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s1">'THETA'</span> <span class="k">else</span> <span class="mf">270.0</span><span class="p">)</span> <span class="k">if</span> <span class="n">option</span><span class="o">.</span><span class="n">_container</span><span class="o">.</span><span class="n">_container</span><span class="o">.</span><span class="n">TASK</span><span class="o">.</span><span class="n">TASK</span><span class="p">()</span> <span class="o">==</span> <span class="s1">'SPLEED'</span> <span class="k">else</span> <span class="mf">0.0</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">angle</span><span class="p">,</span> <span class="n">angle</span><span class="p">]</span></div>
+
+
+
+<div class="viewcode-block" id="_electron_spol_default">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.definitions.arpes._electron_spol_default.html#ase2sprkkr.input_parameters.definitions.arpes._electron_spol_default">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_electron_spol_default</span><span class="p">(</span><span class="n">option</span><span class="p">):</span>
+    <span class="k">return</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">option</span><span class="o">.</span><span class="n">_container</span><span class="o">.</span><span class="n">_container</span><span class="o">.</span><span class="n">TASK</span><span class="o">.</span><span class="n">TASK</span><span class="p">()</span> <span class="o">==</span> <span class="s1">'SPLEED'</span> <span class="k">else</span> <span class="mi">2</span></div>
+
+
+
+<div class="viewcode-block" id="angular_scan_errors">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.definitions.arpes.angular_scan_errors.html#ase2sprkkr.input_parameters.definitions.arpes.angular_scan_errors">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">angular_scan_errors</span><span class="p">(</span><span class="n">parameters</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Return inconsistencies rejected by SPEC_INPUT, using its unset defaults."""</span>
+    <span class="n">task</span><span class="p">,</span> <span class="n">electron</span> <span class="o">=</span> <span class="n">parameters</span><span class="o">.</span><span class="n">TASK</span><span class="p">,</span> <span class="n">parameters</span><span class="o">.</span><span class="n">SPEC_EL</span>
+    <span class="k">if</span> <span class="n">task</span><span class="o">.</span><span class="n">INPVER</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">task</span><span class="o">.</span><span class="n">TASK</span><span class="p">()</span> <span class="o">!=</span> <span class="s1">'ARPES'</span> <span class="ow">or</span> <span class="n">electron</span><span class="o">.</span><span class="n">K1</span><span class="p">()</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">[]</span>
+    <span class="n">errors</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">angle</span><span class="p">,</span> <span class="n">count</span> <span class="ow">in</span> <span class="p">((</span><span class="s1">'THETA'</span><span class="p">,</span> <span class="s1">'NT'</span><span class="p">),</span> <span class="p">(</span><span class="s1">'PHI'</span><span class="p">,</span> <span class="s1">'NP'</span><span class="p">)):</span>
+        <span class="n">bounds</span> <span class="o">=</span> <span class="n">electron</span><span class="p">[</span><span class="n">angle</span><span class="p">]()</span>
+        <span class="n">span</span> <span class="o">=</span> <span class="mf">0.</span> <span class="k">if</span> <span class="n">bounds</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="nb">abs</span><span class="p">(</span><span class="n">bounds</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">bounds</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">points</span> <span class="o">=</span> <span class="n">electron</span><span class="p">[</span><span class="n">count</span><span class="p">]()</span>
+        <span class="n">points</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">points</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">points</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">span</span> <span class="o">&gt;</span> <span class="mf">1e-5</span><span class="p">)</span> <span class="o">!=</span> <span class="p">(</span><span class="n">points</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">angle</span> <span class="o">==</span> <span class="s1">'PHI'</span> <span class="ow">and</span> <span class="n">span</span> <span class="o">&lt;=</span> <span class="mf">1e-5</span> <span class="ow">and</span> <span class="s1">'BETA1'</span> <span class="ow">in</span> <span class="n">electron</span> <span class="ow">and</span> <span class="n">electron</span><span class="o">.</span><span class="n">BETA1</span><span class="p">()</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s1">'SPEC_EL.</span><span class="si">{</span><span class="n">angle</span><span class="si">}</span><span class="s1"> and SPEC_EL.</span><span class="si">{</span><span class="n">count</span><span class="si">}</span><span class="s1"> must specify a consistent angular scan: '</span>
+                          <span class="s1">'a nonzero range requires more than one point, and vice versa.'</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">errors</span></div>
+
+
+
+<div class="viewcode-block" id="_validate_angular_scan">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.definitions.arpes._validate_angular_scan.html#ase2sprkkr.input_parameters.definitions.arpes._validate_angular_scan">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_validate_angular_scan</span><span class="p">(</span><span class="n">parameters</span><span class="p">,</span> <span class="n">_container</span><span class="p">,</span> <span class="n">why</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">why</span> <span class="o">!=</span> <span class="s1">'set'</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">DataValidityError</span><span class="p">(</span><span class="n">message</span><span class="p">)</span> <span class="k">for</span> <span class="n">message</span> <span class="ow">in</span> <span class="n">angular_scan_errors</span><span class="p">(</span><span class="n">parameters</span><span class="p">)]</span></div>
+
+
+
+<div class="viewcode-block" id="input_parameters_definition">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.definitions.arpes.input_parameters_definition.html#ase2sprkkr.input_parameters.definitions.arpes.input_parameters_definition">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">input_parameters_definition</span><span class="p">():</span>
+    <span class="k">return</span> <span class="n">ArpesInputParametersDefinition</span><span class="p">(</span>
+        <span class="s2">"arpes"</span><span class="p">,</span>
         <span class="p">[</span>
-            <span class="n">CONTROL</span><span class="p">(</span><span class="s2">&quot;ARPES&quot;</span><span class="p">),</span>
+            <span class="n">CONTROL</span><span class="p">(</span><span class="s2">"ARPES"</span><span class="p">),</span>
             <span class="n">TAU</span><span class="p">,</span>
             <span class="n">ENERGY</span><span class="p">(</span>
-                <span class="n">emin</span><span class="o">=</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;Minimum of the energy window in eV with respect to the Fermi level&quot;</span><span class="p">,</span> <span class="o">-</span><span class="mf">8.0</span><span class="p">),</span>
-                <span class="n">emax</span><span class="o">=</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;Maximum of the energy window in eV with respect to the Fermi level&quot;</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">),</span>
+                <span class="n">emin</span><span class="o">=</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s2">"Minimum of the energy window in Ry (absolute energy)"</span><span class="p">,</span> <span class="o">-</span><span class="mf">8.0</span><span class="p">),</span>
+                <span class="n">emax</span><span class="o">=</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s2">"Maximum of the energy window in Ry (absolute energy)"</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">),</span>
                 <span class="n">add</span><span class="o">=</span><span class="p">[</span>
-                    <span class="n">V</span><span class="p">(</span><span class="s2">&quot;EWORK_EV&quot;</span><span class="p">,</span> <span class="mf">4.2</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s2">&quot;Inner potential of the bulk crystal in eV&quot;</span><span class="p">),</span>
+                    <span class="n">V</span><span class="p">(</span><span class="s2">"EWORK_EV"</span><span class="p">,</span> <span class="mf">4.2</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s2">"Inner potential of the bulk crystal in eV"</span><span class="p">),</span>
                     <span class="n">V</span><span class="p">(</span>
-                        <span class="s2">&quot;IMV_INI_EV&quot;</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s2">&quot;Imaginary part of the potential in eV (initial state)&quot;</span>
-                    <span class="p">),</span>  <span class="c1"># alternatively you can use VIL (in eV) or IMV_INI (in Ry)&#39;),</span>
+                        <span class="s2">"IMV_INI_EV"</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s2">"Imaginary part of the potential in eV (initial state)"</span>
+                    <span class="p">),</span>
                     <span class="n">V</span><span class="p">(</span>
-                        <span class="s2">&quot;IMV_FIN_EV&quot;</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s2">&quot;Imaginary part of the potential in eV (final state)&quot;</span>
-                    <span class="p">),</span>  <span class="c1"># alternatively you can use VIH (in eV) or IMV_FIN (in Ry)&#39;),</span>
+                        <span class="s2">"IMV_FIN_EV"</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s2">"Imaginary part of the potential in eV (final state)"</span>
+                    <span class="p">),</span>
                 <span class="p">],</span>
-                <span class="n">defaults</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;GRID&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;NE&quot;</span><span class="p">:</span> <span class="mi">300</span><span class="p">},</span>
+                <span class="n">defaults</span><span class="o">=</span><span class="p">{</span><span class="s2">"GRID"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">"NE"</span><span class="p">:</span> <span class="mi">300</span><span class="p">},</span>
             <span class="p">),</span>
-            <span class="n">SITES</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">defaults</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;NL&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">}),</span>
+            <span class="n">SITES</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">defaults</span><span class="o">=</span><span class="p">{</span><span class="s2">"NL"</span><span class="p">:</span> <span class="mi">4</span><span class="p">}),</span>
             <span class="n">Section</span><span class="p">(</span>
-                <span class="s2">&quot;TASK&quot;</span><span class="p">,</span>
+                <span class="s2">"TASK"</span><span class="p">,</span>
                 <span class="p">[</span>
                     <span class="n">V</span><span class="p">(</span>
-                        <span class="s2">&quot;TASK&quot;</span><span class="p">,</span>
+                        <span class="s2">"TASK"</span><span class="p">,</span>
                         <span class="n">DefKeyword</span><span class="p">(</span>
                             <span class="p">{</span>
-                                <span class="s2">&quot;ARPES&quot;</span><span class="p">:</span> <span class="s2">&quot;Angle resolved photoemission spectroscopy&quot;</span><span class="p">,</span>
-                                <span class="s2">&quot;AIPES&quot;</span><span class="p">:</span> <span class="s2">&quot;Angle integrated photoemission spectroscopy&quot;</span><span class="p">,</span>
-                                <span class="s2">&quot;SPLEED&quot;</span><span class="p">:</span> <span class="s2">&quot;Spin polarized LEED (experimental feature)&quot;</span><span class="p">,</span>
-                                <span class="s2">&quot;BAND&quot;</span><span class="p">:</span> <span class="s2">&quot;band structure calculations (experimental feature)&quot;</span><span class="p">,</span>
+                                <span class="s2">"ARPES"</span><span class="p">:</span> <span class="s2">"Angle resolved photoemission spectroscopy"</span><span class="p">,</span>
+                                <span class="s2">"AIPES"</span><span class="p">:</span> <span class="s2">"Angle integrated photoemission spectroscopy"</span><span class="p">,</span>
+                                <span class="s2">"SPLEED"</span><span class="p">:</span> <span class="s2">"Spin polarized LEED (experimental feature)"</span><span class="p">,</span>
+                                <span class="s2">"BAND"</span><span class="p">:</span> <span class="s2">"band structure calculations (experimental feature)"</span><span class="p">,</span>
                             <span class="p">}</span>
                         <span class="p">),</span>
                         <span class="n">name_in_grammar</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-                        <span class="n">info</span><span class="o">=</span><span class="s2">&quot;Type of the calculation&quot;</span><span class="p">,</span>
+                        <span class="n">info</span><span class="o">=</span><span class="s2">"Type of the calculation"</span><span class="p">,</span>
                     <span class="p">),</span>
-                    <span class="n">V</span><span class="p">(</span><span class="s2">&quot;IQ_AT_SURF&quot;</span><span class="p">,</span> <span class="n">Site</span><span class="o">.</span><span class="n">I</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
-                    <span class="n">V</span><span class="p">(</span><span class="s2">&quot;MILLER_HKL&quot;</span><span class="p">,</span> <span class="n">SetOf</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mi">3</span><span class="p">),</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]),</span>
-                    <span class="n">V</span><span class="p">(</span><span class="s2">&quot;CRYS_VEC&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s2">&quot;Miller indices with respect to crystalographic primitive vectors&quot;</span><span class="p">),</span>
+                    <span class="n">V</span><span class="p">(</span><span class="s2">"IQ_AT_SURF"</span><span class="p">,</span> <span class="n">Site</span><span class="o">.</span><span class="n">I</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+                    <span class="n">V</span><span class="p">(</span><span class="s2">"MILLER_HKL"</span><span class="p">,</span> <span class="n">SetOf</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mi">3</span><span class="p">),</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]),</span>
+                    <span class="n">V</span><span class="p">(</span><span class="s2">"CRYS_VEC"</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s2">"Miller indices with respect to crystalographic primitive vectors"</span><span class="p">),</span>
                     <span class="n">V</span><span class="p">(</span>
-                        <span class="s2">&quot;STRVER&quot;</span><span class="p">,</span>
+                        <span class="s2">"STRVER"</span><span class="p">,</span>
                         <span class="mi">1</span><span class="p">,</span>
                         <span class="n">is_expert</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                         <span class="n">is_always_added</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                        <span class="n">info</span><span class="o">=</span><span class="s2">&quot;Set to 0 to supply the ARPES input file &#39;struc.inp&#39; manually (and do not generate it).&quot;</span><span class="p">,</span>
+                        <span class="n">info</span><span class="o">=</span><span class="s2">"Set to 0 to supply the ARPES input file 'struc.inp' manually (and do not generate it)."</span><span class="p">,</span>
                     <span class="p">),</span>
                     <span class="n">V</span><span class="p">(</span>
-                        <span class="s2">&quot;INPVER&quot;</span><span class="p">,</span>
+                        <span class="s2">"INPVER"</span><span class="p">,</span>
                         <span class="mi">1</span><span class="p">,</span>
                         <span class="n">is_expert</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                         <span class="n">is_always_added</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                        <span class="n">info</span><span class="o">=</span><span class="s2">&quot;Set to 0 to use an old input.inp from old rslab&quot;</span><span class="p">,</span>
+                        <span class="n">info</span><span class="o">=</span><span class="s2">"Set to 0 to use an old input.inp from old rslab"</span><span class="p">,</span>
                     <span class="p">),</span>
                 <span class="p">],</span>
             <span class="p">),</span>
             <span class="n">Section</span><span class="p">(</span>
-                <span class="s2">&quot;SPEC_PH&quot;</span><span class="p">,</span>
+                <span class="s2">"SPEC_PH"</span><span class="p">,</span>
                 <span class="p">[</span>
-                    <span class="n">V</span><span class="p">(</span><span class="s2">&quot;THETA&quot;</span><span class="p">,</span> <span class="mf">45.0</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s2">&quot;Direction of the photon (the polar coordinate)&quot;</span><span class="p">),</span>
-                    <span class="n">V</span><span class="p">(</span><span class="s2">&quot;PHI&quot;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s2">&quot;Direction of the photon (the azimuth coordinate)&quot;</span><span class="p">),</span>
-                    <span class="n">V</span><span class="p">(</span><span class="s2">&quot;POL_P&quot;</span><span class="p">,</span> <span class="n">DefKeyword</span><span class="p">(</span><span class="s2">&quot;P&quot;</span><span class="p">,</span> <span class="s2">&quot;S&quot;</span><span class="p">,</span> <span class="s2">&quot;C+&quot;</span><span class="p">,</span> <span class="s2">&quot;C-&quot;</span><span class="p">),</span> <span class="n">info</span><span class="o">=</span><span class="s2">&quot;Polarization of the light&quot;</span><span class="p">),</span>
-                    <span class="n">V</span><span class="p">(</span><span class="s2">&quot;EPHOT&quot;</span><span class="p">,</span> <span class="mf">25.0</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s2">&quot;Photon energy in eV&quot;</span><span class="p">),</span>
-                    <span class="c1"># Expert</span>
-                    <span class="n">V</span><span class="p">(</span><span class="s2">&quot;ALQ&quot;</span><span class="p">,</span> <span class="n">expert</span><span class="o">=</span><span class="mf">45.0</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s2">&quot;Alignment of polarization vector or pol.ellipsis&quot;</span><span class="p">),</span>
+                    <span class="n">V</span><span class="p">(</span><span class="s2">"THETA"</span><span class="p">,</span> <span class="mf">45.0</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s2">"Direction of the photon (the polar coordinate)"</span><span class="p">),</span>
+                    <span class="n">V</span><span class="p">(</span><span class="s2">"PHI"</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s2">"Direction of the photon (the azimuth coordinate)"</span><span class="p">),</span>
+                    <span class="n">V</span><span class="p">(</span><span class="s2">"POL_P"</span><span class="p">,</span> <span class="n">DefKeyword</span><span class="p">(</span><span class="s2">"P"</span><span class="p">,</span> <span class="s2">"S"</span><span class="p">,</span> <span class="s2">"C+"</span><span class="p">,</span> <span class="s2">"C-"</span><span class="p">),</span> <span class="n">info</span><span class="o">=</span><span class="s2">"Polarization of the light"</span><span class="p">),</span>
+                    <span class="n">V</span><span class="p">(</span><span class="s2">"EPHOT"</span><span class="p">,</span> <span class="mf">25.0</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s2">"Photon energy in eV"</span><span class="p">),</span>
+                    <span class="n">V</span><span class="p">(</span><span class="s2">"ALQ"</span><span class="p">,</span> <span class="n">expert</span><span class="o">=</span><span class="mf">45.0</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s2">"Alignment of polarization vector or pol.ellipsis"</span><span class="p">),</span>
                     <span class="n">V</span><span class="p">(</span>
-                        <span class="s2">&quot;DELQ&quot;</span><span class="p">,</span>
+                        <span class="s2">"DELQ"</span><span class="p">,</span>
                         <span class="n">expert</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
-                        <span class="n">info</span><span class="o">=</span><span class="s2">&quot;Phase shift between real and imaginary part of e-vector, delq=90 for circular polarized light&quot;</span><span class="p">,</span>
+                        <span class="n">info</span><span class="o">=</span><span class="s2">"Phase shift between real and imaginary part of e-vector, delq=90 for circular polarized light"</span><span class="p">,</span>
                     <span class="p">),</span>
                     <span class="n">V</span><span class="p">(</span>
-                        <span class="s2">&quot;NPOL&quot;</span><span class="p">,</span>
+                        <span class="s2">"NPOL"</span><span class="p">,</span>
                         <span class="n">Keyword</span><span class="p">(</span>
                             <span class="p">{</span>
-                                <span class="mi">0</span><span class="p">:</span> <span class="s2">&quot;unpolarized and p-s dichroism for the calculation&quot;</span><span class="p">,</span>
-                                <span class="mi">1</span><span class="p">:</span> <span class="s2">&quot;p-pol or rcp or elliptical (depends on icirc, etc.)&quot;</span><span class="p">,</span>
-                                <span class="mi">2</span><span class="p">:</span> <span class="s2">&quot;s-pol or lcp or elliptical (depends on icirc, etc.)&quot;</span><span class="p">,</span>
-                                <span class="mi">3</span><span class="p">:</span> <span class="s2">&quot;dichroism (ddad, ldad)&quot;</span><span class="p">,</span>
+                                <span class="mi">0</span><span class="p">:</span> <span class="s2">"unpolarized and p-s dichroism for the calculation"</span><span class="p">,</span>
+                                <span class="mi">1</span><span class="p">:</span> <span class="s2">"p-pol or rcp or elliptical (depends on icirc, etc.)"</span><span class="p">,</span>
+                                <span class="mi">2</span><span class="p">:</span> <span class="s2">"s-pol or lcp or elliptical (depends on icirc, etc.)"</span><span class="p">,</span>
+                                <span class="mi">3</span><span class="p">:</span> <span class="s2">"dichroism (ddad, ldad)"</span><span class="p">,</span>
                             <span class="p">}</span>
                         <span class="p">),</span>
                         <span class="n">expert</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-                        <span class="n">info</span><span class="o">=</span><span class="s2">&quot;Controls the polarization and dichroism&quot;</span><span class="p">,</span>
+                        <span class="n">info</span><span class="o">=</span><span class="s2">"Controls the polarization and dichroism"</span><span class="p">,</span>
                     <span class="p">),</span>
                     <span class="n">V</span><span class="p">(</span>
-                        <span class="s2">&quot;ICIRC&quot;</span><span class="p">,</span>
+                        <span class="s2">"ICIRC"</span><span class="p">,</span>
                         <span class="n">Keyword</span><span class="p">(</span>
                             <span class="p">{</span>
-                                <span class="mi">0</span><span class="p">:</span> <span class="s2">&quot;elliptically pol. light: alq, delq arbitrary&quot;</span><span class="p">,</span>
-                                <span class="mi">1</span><span class="p">:</span> <span class="s2">&quot;linear pol. light: alq arbitrary, delq=0&quot;</span><span class="p">,</span>
-                                <span class="mi">2</span><span class="p">:</span> <span class="s2">&quot;circular pol. light: alq=45, delq = 90&quot;</span><span class="p">,</span>
+                                <span class="mi">0</span><span class="p">:</span> <span class="s2">"elliptically pol. light: alq, delq arbitrary"</span><span class="p">,</span>
+                                <span class="mi">1</span><span class="p">:</span> <span class="s2">"linear pol. light: alq arbitrary, delq=0"</span><span class="p">,</span>
+                                <span class="mi">2</span><span class="p">:</span> <span class="s2">"circular pol. light: alq=45, delq = 90"</span><span class="p">,</span>
                             <span class="p">}</span>
                         <span class="p">),</span>
                         <span class="n">expert</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-                        <span class="n">info</span><span class="o">=</span><span class="s2">&quot;controls the polarization and dichroism&quot;</span><span class="p">,</span>
+                        <span class="n">info</span><span class="o">=</span><span class="s2">"controls the polarization and dichroism"</span><span class="p">,</span>
                     <span class="p">),</span>
                     <span class="n">V</span><span class="p">(</span>
-                        <span class="s2">&quot;IDREH&quot;</span><span class="p">,</span>
+                        <span class="s2">"IDREH"</span><span class="p">,</span>
                         <span class="n">Keyword</span><span class="p">(</span>
                             <span class="p">{</span>
-                                <span class="mi">0</span><span class="p">:</span> <span class="s2">&quot;linearly polarized (equals icirc=1)&quot;</span><span class="p">,</span>
-                                <span class="mi">1</span><span class="p">:</span> <span class="s2">&quot;right circular polarization&quot;</span><span class="p">,</span>
-                                <span class="o">-</span><span class="mi">1</span><span class="p">:</span> <span class="s2">&quot;left circular polarization&quot;</span><span class="p">,</span>
+                                <span class="mi">0</span><span class="p">:</span> <span class="s2">"linearly polarized (equals icirc=1)"</span><span class="p">,</span>
+                                <span class="mi">1</span><span class="p">:</span> <span class="s2">"right circular polarization"</span><span class="p">,</span>
+                                <span class="o">-</span><span class="mi">1</span><span class="p">:</span> <span class="s2">"left circular polarization"</span><span class="p">,</span>
                             <span class="p">}</span>
                         <span class="p">),</span>
                         <span class="n">expert</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-                        <span class="n">info</span><span class="o">=</span><span class="s2">&quot;Helicity of the photons&quot;</span><span class="p">,</span>
+                        <span class="n">info</span><span class="o">=</span><span class="s2">"Helicity of the photons"</span><span class="p">,</span>
                     <span class="p">),</span>
                     <span class="n">V</span><span class="p">(</span>
-                        <span class="s2">&quot;IFSP&quot;</span><span class="p">,</span>
-                        <span class="n">Keyword</span><span class="p">({</span><span class="mi">0</span><span class="p">:</span> <span class="s2">&quot;fixed&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span> <span class="s2">&quot;variable&quot;</span><span class="p">}),</span>
+                        <span class="s2">"IFSP"</span><span class="p">,</span>
+                        <span class="n">Keyword</span><span class="p">({</span><span class="mi">0</span><span class="p">:</span> <span class="s2">"fixed"</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span> <span class="s2">"variable"</span><span class="p">}),</span>
                         <span class="n">is_expert</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                         <span class="n">is_required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-                        <span class="n">info</span><span class="o">=</span><span class="s2">&quot;Photon azimuth angle type&quot;</span><span class="p">,</span>
+                        <span class="n">info</span><span class="o">=</span><span class="s2">"Photon azimuth angle type"</span><span class="p">,</span>
                     <span class="p">),</span>
-                    <span class="n">V</span><span class="p">(</span><span class="s2">&quot;THETA_FIX&quot;</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="n">is_expert</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s2">&quot;Light and electrons are at fixed polarization angle&quot;</span><span class="p">),</span>
+                    <span class="n">V</span><span class="p">(</span><span class="s2">"THETA_FIX"</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="n">is_expert</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s2">"Light and electrons are at fixed polarization angle"</span><span class="p">),</span>
                 <span class="p">],</span>
-                <span class="n">info</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+                <span class="n">info</span><span class="o">=</span><span class="s2">""</span><span class="p">,</span>
             <span class="p">),</span>
             <span class="n">Section</span><span class="p">(</span>
-                <span class="s2">&quot;SPEC_EL&quot;</span><span class="p">,</span>
+                <span class="s2">"SPEC_EL"</span><span class="p">,</span>
                 <span class="p">[</span>
-                    <span class="n">V</span><span class="p">(</span><span class="s2">&quot;THETA&quot;</span><span class="p">,</span> <span class="n">Range</span><span class="p">(</span><span class="nb">float</span><span class="p">),</span> <span class="n">info</span><span class="o">=</span><span class="s2">&quot;Scattering angle&quot;</span><span class="p">,</span> <span class="n">is_required</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
-                    <span class="n">V</span><span class="p">(</span><span class="s2">&quot;PHI&quot;</span><span class="p">,</span> <span class="n">Range</span><span class="p">(</span><span class="nb">float</span><span class="p">),</span> <span class="n">info</span><span class="o">=</span><span class="s2">&quot;Scattering angle&quot;</span><span class="p">,</span> <span class="n">is_required</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+                    <span class="n">V</span><span class="p">(</span><span class="s2">"THETA"</span><span class="p">,</span> <span class="n">Range</span><span class="p">(</span><span class="nb">float</span><span class="p">),</span> <span class="n">_electron_angle_default</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s2">"Scattering angle"</span><span class="p">,</span> <span class="n">is_required</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+                    <span class="n">V</span><span class="p">(</span><span class="s2">"PHI"</span><span class="p">,</span> <span class="n">Range</span><span class="p">(</span><span class="nb">float</span><span class="p">),</span> <span class="n">_electron_angle_default</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s2">"Scattering angle"</span><span class="p">,</span> <span class="n">is_required</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
                     <span class="n">V</span><span class="p">(</span>
-                        <span class="s2">&quot;NT&quot;</span><span class="p">,</span>
+                        <span class="s2">"NT"</span><span class="p">,</span>
                         <span class="nb">int</span><span class="p">,</span>
-                        <span class="n">info</span><span class="o">=</span><span class="s2">&quot;Number of angular values for a rotation in polar coordinate.&quot;</span><span class="p">,</span>
+                        <span class="mi">1</span><span class="p">,</span>
+                        <span class="n">info</span><span class="o">=</span><span class="s2">"Number of angular values for a rotation in polar coordinate."</span><span class="p">,</span>
                         <span class="n">is_required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                     <span class="p">),</span>
                     <span class="n">V</span><span class="p">(</span>
-                        <span class="s2">&quot;NP&quot;</span><span class="p">,</span>
+                        <span class="s2">"NP"</span><span class="p">,</span>
                         <span class="nb">int</span><span class="p">,</span>
-                        <span class="n">info</span><span class="o">=</span><span class="s2">&quot;Number of angular values for a rotation in azimuth coordinate.&quot;</span><span class="p">,</span>
+                        <span class="mi">1</span><span class="p">,</span>
+                        <span class="n">info</span><span class="o">=</span><span class="s2">"Number of angular values for a rotation in azimuth coordinate."</span><span class="p">,</span>
                         <span class="n">is_required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                     <span class="p">),</span>
-                    <span class="n">V</span><span class="p">(</span><span class="s2">&quot;KA&quot;</span><span class="p">,</span> <span class="n">Range</span><span class="p">(</span><span class="nb">float</span><span class="p">),</span> <span class="n">info</span><span class="o">=</span><span class="s2">&quot;Scatering in momentum space &quot;</span><span class="p">,</span> <span class="n">is_required</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+                    <span class="n">V</span><span class="p">(</span><span class="s2">"KA"</span><span class="p">,</span> <span class="n">Range</span><span class="p">(</span><span class="nb">float</span><span class="p">),</span> <span class="n">info</span><span class="o">=</span><span class="s2">"Scatering in momentum space "</span><span class="p">,</span> <span class="n">is_required</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
                     <span class="n">V</span><span class="p">(</span>
-                        <span class="s2">&quot;K1&quot;</span><span class="p">,</span>
+                        <span class="s2">"K1"</span><span class="p">,</span>
                         <span class="n">Range</span><span class="p">(</span><span class="nb">float</span><span class="p">),</span>
-                        <span class="n">info</span><span class="o">=</span><span class="s2">&quot;Translating vector of the scatering in momentum space &quot;</span><span class="p">,</span>
+                        <span class="n">info</span><span class="o">=</span><span class="s2">"Translating vector of the scatering in momentum space "</span><span class="p">,</span>
                         <span class="n">is_required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                     <span class="p">),</span>
-                    <span class="n">V</span><span class="p">(</span><span class="s2">&quot;NK1&quot;</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s2">&quot;Number of momentum steps for the integration&quot;</span><span class="p">,</span> <span class="n">is_required</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+                    <span class="n">V</span><span class="p">(</span><span class="s2">"NK1"</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s2">"Number of momentum steps for the integration"</span><span class="p">,</span> <span class="n">is_required</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
                     <span class="n">V</span><span class="p">(</span>
-                        <span class="s2">&quot;K2&quot;</span><span class="p">,</span>
+                        <span class="s2">"K2"</span><span class="p">,</span>
                         <span class="n">Range</span><span class="p">(</span><span class="nb">float</span><span class="p">),</span>
-                        <span class="n">info</span><span class="o">=</span><span class="s2">&quot;Translating vector 2 of the scatering in momentum space &quot;</span><span class="p">,</span>
+                        <span class="n">info</span><span class="o">=</span><span class="s2">"Translating vector 2 of the scatering in momentum space "</span><span class="p">,</span>
                         <span class="n">is_required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                     <span class="p">),</span>
-                    <span class="n">V</span><span class="p">(</span><span class="s2">&quot;NK2&quot;</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s2">&quot;Number of momentum steps 2 for the integration&quot;</span><span class="p">,</span> <span class="n">is_required</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+                    <span class="n">V</span><span class="p">(</span><span class="s2">"NK2"</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s2">"Number of momentum steps 2 for the integration"</span><span class="p">,</span> <span class="n">is_required</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
                     <span class="n">V</span><span class="p">(</span>
-                        <span class="s2">&quot;K3&quot;</span><span class="p">,</span>
+                        <span class="s2">"K3"</span><span class="p">,</span>
                         <span class="n">Range</span><span class="p">(</span><span class="nb">float</span><span class="p">),</span>
-                        <span class="n">info</span><span class="o">=</span><span class="s2">&quot;Translating vector 3 of the scatering in momentum space &quot;</span><span class="p">,</span>
+                        <span class="n">info</span><span class="o">=</span><span class="s2">"Translating vector 3 of the scatering in momentum space "</span><span class="p">,</span>
                         <span class="n">is_required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                     <span class="p">),</span>
-                    <span class="n">V</span><span class="p">(</span><span class="s2">&quot;NK3&quot;</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s2">&quot;Number of momentum steps 3 for the integration&quot;</span><span class="p">,</span> <span class="n">is_required</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+                    <span class="n">V</span><span class="p">(</span><span class="s2">"NK3"</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s2">"Number of momentum steps 3 for the integration"</span><span class="p">,</span> <span class="n">is_required</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
                     <span class="n">V</span><span class="p">(</span>
-                        <span class="s2">&quot;K4&quot;</span><span class="p">,</span>
+                        <span class="s2">"K4"</span><span class="p">,</span>
                         <span class="n">Range</span><span class="p">(</span><span class="nb">float</span><span class="p">),</span>
-                        <span class="n">info</span><span class="o">=</span><span class="s2">&quot;Translating vector 4 of the scatering in momentum space &quot;</span><span class="p">,</span>
+                        <span class="n">info</span><span class="o">=</span><span class="s2">"Translating vector 4 of the scatering in momentum space "</span><span class="p">,</span>
                         <span class="n">is_required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                     <span class="p">),</span>
-                    <span class="n">V</span><span class="p">(</span><span class="s2">&quot;NK4&quot;</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s2">&quot;Number of momentum steps 4 for the integration&quot;</span><span class="p">,</span> <span class="n">is_required</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
-                    <span class="n">V</span><span class="p">(</span><span class="s2">&quot;POL_E&quot;</span><span class="p">,</span> <span class="n">DefKeyword</span><span class="p">(</span><span class="s2">&quot;PZ&quot;</span><span class="p">)),</span>
-                    <span class="n">V</span><span class="p">(</span><span class="s2">&quot;SPOL&quot;</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="n">is_required</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
-                    <span class="n">V</span><span class="p">(</span><span class="s2">&quot;PSPIN&quot;</span><span class="p">,</span> <span class="n">SetOf</span><span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mi">3</span><span class="p">),</span> <span class="n">is_required</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
-                    <span class="n">V</span><span class="p">(</span><span class="s2">&quot;BETA1&quot;</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="n">is_required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s2">&quot;Begin of the rotation&quot;</span><span class="p">),</span>
-                    <span class="n">V</span><span class="p">(</span><span class="s2">&quot;BETA2&quot;</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="n">is_required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s2">&quot;End of the rotation&quot;</span><span class="p">),</span>
-                    <span class="n">V</span><span class="p">(</span><span class="s2">&quot;ROTAXIS&quot;</span><span class="p">,</span> <span class="n">SetOf</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mi">3</span><span class="p">),</span> <span class="n">is_required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s2">&quot;Axis of the rotation&quot;</span><span class="p">),</span>
-                    <span class="c1"># expert</span>
+                    <span class="n">V</span><span class="p">(</span><span class="s2">"NK4"</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s2">"Number of momentum steps 4 for the integration"</span><span class="p">,</span> <span class="n">is_required</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+                    <span class="n">V</span><span class="p">(</span><span class="s2">"POL_E"</span><span class="p">,</span> <span class="n">DefKeyword</span><span class="p">(</span><span class="s2">"PZ"</span><span class="p">)),</span>
+                    <span class="n">V</span><span class="p">(</span><span class="s2">"SPOL"</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="n">_electron_spol_default</span><span class="p">,</span> <span class="n">is_required</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+                    <span class="n">V</span><span class="p">(</span><span class="s2">"PSPIN"</span><span class="p">,</span> <span class="n">SetOf</span><span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mi">3</span><span class="p">),</span> <span class="n">is_required</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+                    <span class="n">V</span><span class="p">(</span><span class="s2">"BETA1"</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="n">is_required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s2">"Begin of the rotation"</span><span class="p">),</span>
+                    <span class="n">V</span><span class="p">(</span><span class="s2">"BETA2"</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="n">is_required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s2">"End of the rotation"</span><span class="p">),</span>
+                    <span class="n">V</span><span class="p">(</span><span class="s2">"ROTAXIS"</span><span class="p">,</span> <span class="n">SetOf</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mi">3</span><span class="p">),</span> <span class="n">is_required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s2">"Axis of the rotation"</span><span class="p">),</span>
                     <span class="n">V</span><span class="p">(</span>
-                        <span class="s2">&quot;TYP&quot;</span><span class="p">,</span>
+                        <span class="s2">"TYP"</span><span class="p">,</span>
                         <span class="n">Keyword</span><span class="p">(</span>
                             <span class="p">{</span>
-                                <span class="mi">0</span><span class="p">:</span> <span class="s2">&quot;i(e) diagram&quot;</span><span class="p">,</span>
-                                <span class="mi">1</span><span class="p">:</span> <span class="s2">&quot;rotation diagram -&gt; phi scan&quot;</span><span class="p">,</span>
-                                <span class="mi">2</span><span class="p">:</span> <span class="s2">&quot;scattering-angle diagram -&gt; theta scan&quot;</span><span class="p">,</span>
-                                <span class="mi">3</span><span class="p">:</span> <span class="s2">&quot;orthonormal projection&quot;</span><span class="p">,</span>
-                                <span class="mi">4</span><span class="p">:</span> <span class="s2">&quot;stereographic projection&quot;</span><span class="p">,</span>
+                                <span class="mi">0</span><span class="p">:</span> <span class="s2">"i(e) diagram"</span><span class="p">,</span>
+                                <span class="mi">1</span><span class="p">:</span> <span class="s2">"rotation diagram -&gt; phi scan"</span><span class="p">,</span>
+                                <span class="mi">2</span><span class="p">:</span> <span class="s2">"scattering-angle diagram -&gt; theta scan"</span><span class="p">,</span>
+                                <span class="mi">3</span><span class="p">:</span> <span class="s2">"orthonormal projection"</span><span class="p">,</span>
+                                <span class="mi">4</span><span class="p">:</span> <span class="s2">"stereographic projection"</span><span class="p">,</span>
                             <span class="p">},</span>
-                            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;3,4 only for angular resolved</span><span class="se">\n</span><span class="s2">pe (ups, xps) note: nt=np-&gt; nx,ny&quot;</span><span class="p">,</span>
+                            <span class="n">description</span><span class="o">=</span><span class="s2">"3,4 only for angular resolved</span><span class="se">\n</span><span class="s2">pe (ups, xps) note: nt=np-&gt; nx,ny"</span><span class="p">,</span>
                         <span class="p">),</span>
                         <span class="n">expert</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-                        <span class="n">info</span><span class="o">=</span><span class="s2">&quot;Crystal coordinats in splout, xpsrun, or upsrun&quot;</span><span class="p">,</span>
+                        <span class="n">info</span><span class="o">=</span><span class="s2">"Crystal coordinats in splout, xpsrun, or upsrun"</span><span class="p">,</span>
                     <span class="p">),</span>
-                    <span class="n">V</span><span class="p">(</span><span class="s2">&quot;ISTR&quot;</span><span class="p">,</span> <span class="n">Array</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span> <span class="n">expert</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">info</span><span class="o">=</span><span class="s2">&quot;beam number (h,k)&quot;</span><span class="p">),</span>
-                    <span class="n">V</span><span class="p">(</span><span class="s2">&quot;POL0&quot;</span><span class="p">,</span> <span class="n">Array</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mi">3</span><span class="p">),</span> <span class="n">expert</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">info</span><span class="o">=</span><span class="s2">&quot;initial pol.&quot;</span><span class="p">),</span>
-                    <span class="n">V</span><span class="p">(</span><span class="s2">&quot;POL0L&quot;</span><span class="p">,</span> <span class="n">Array</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mi">3</span><span class="p">),</span> <span class="n">expert</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">info</span><span class="o">=</span><span class="s2">&quot;initial pol. in the laboratory system&quot;</span><span class="p">),</span>
+                    <span class="n">V</span><span class="p">(</span><span class="s2">"ISTR"</span><span class="p">,</span> <span class="n">SetOf</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span> <span class="n">expert</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">info</span><span class="o">=</span><span class="s2">"beam number (h,k)"</span><span class="p">),</span>
+                    <span class="n">V</span><span class="p">(</span><span class="s2">"POL0"</span><span class="p">,</span> <span class="n">SetOf</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mi">3</span><span class="p">),</span> <span class="n">expert</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">info</span><span class="o">=</span><span class="s2">"initial pol."</span><span class="p">),</span>
+                    <span class="n">V</span><span class="p">(</span><span class="s2">"POL0L"</span><span class="p">,</span> <span class="n">SetOf</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mi">3</span><span class="p">),</span> <span class="n">expert</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">info</span><span class="o">=</span><span class="s2">"initial pol. in the laboratory system"</span><span class="p">),</span>
                     <span class="n">V</span><span class="p">(</span>
-                        <span class="s2">&quot;Q1&quot;</span><span class="p">,</span>
+                        <span class="s2">"Q1"</span><span class="p">,</span>
                         <span class="nb">complex</span><span class="p">,</span>
                         <span class="n">expert</span><span class="o">=</span><span class="mf">1.0</span> <span class="o">+</span> <span class="mf">0.0</span><span class="n">j</span><span class="p">,</span>
-                        <span class="n">info</span><span class="o">=</span><span class="s2">&quot;Amplitude 1 of the photoelectron used in spin polarized calculations&quot;</span><span class="p">,</span>
+                        <span class="n">info</span><span class="o">=</span><span class="s2">"Amplitude 1 of the photoelectron used in spin polarized calculations"</span><span class="p">,</span>
                     <span class="p">),</span>
                     <span class="n">V</span><span class="p">(</span>
-                        <span class="s2">&quot;Q2&quot;</span><span class="p">,</span>
+                        <span class="s2">"Q2"</span><span class="p">,</span>
                         <span class="nb">complex</span><span class="p">,</span>
                         <span class="n">expert</span><span class="o">=</span><span class="mf">0.0</span> <span class="o">+</span> <span class="mf">0.0</span><span class="n">j</span><span class="p">,</span>
-                        <span class="n">info</span><span class="o">=</span><span class="s2">&quot;Amplitude 2 of the photoelectron used in spin polarized calculations&quot;</span><span class="p">,</span>
+                        <span class="n">info</span><span class="o">=</span><span class="s2">"Amplitude 2 of the photoelectron used in spin polarized calculations"</span><span class="p">,</span>
                     <span class="p">),</span>
                     <span class="n">V</span><span class="p">(</span>
-                        <span class="s2">&quot;Q3&quot;</span><span class="p">,</span>
+                        <span class="s2">"Q3"</span><span class="p">,</span>
                         <span class="nb">complex</span><span class="p">,</span>
                         <span class="n">expert</span><span class="o">=</span><span class="mf">0.0</span> <span class="o">+</span> <span class="mf">0.0</span><span class="n">j</span><span class="p">,</span>
-                        <span class="n">info</span><span class="o">=</span><span class="s2">&quot;Amplitude 3 of the photoelectron used in spin polarized calculations&quot;</span><span class="p">,</span>
+                        <span class="n">info</span><span class="o">=</span><span class="s2">"Amplitude 3 of the photoelectron used in spin polarized calculations"</span><span class="p">,</span>
                     <span class="p">),</span>
                     <span class="n">V</span><span class="p">(</span>
-                        <span class="s2">&quot;Q4&quot;</span><span class="p">,</span>
+                        <span class="s2">"Q4"</span><span class="p">,</span>
                         <span class="nb">complex</span><span class="p">,</span>
                         <span class="n">expert</span><span class="o">=</span><span class="mf">1.0</span> <span class="o">+</span> <span class="mf">0.0</span><span class="n">j</span><span class="p">,</span>
-                        <span class="n">info</span><span class="o">=</span><span class="s2">&quot;Amplitude 4 of the photoelectron used in spin polarized calculations&quot;</span><span class="p">,</span>
+                        <span class="n">info</span><span class="o">=</span><span class="s2">"Amplitude 4 of the photoelectron used in spin polarized calculations"</span><span class="p">,</span>
                     <span class="p">),</span>
                 <span class="p">],</span>
             <span class="p">),</span>
             <span class="n">Section</span><span class="p">(</span>
-                <span class="s2">&quot;SPEC_STR&quot;</span><span class="p">,</span>
+                <span class="s2">"SPEC_STR"</span><span class="p">,</span>
                 <span class="p">[</span>
-                    <span class="n">V</span><span class="p">(</span><span class="s2">&quot;N_LAYDBL&quot;</span><span class="p">,</span> <span class="n">SetOf</span><span class="p">(</span><span class="nb">int</span><span class="p">),</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">]),</span>
-                    <span class="n">V</span><span class="p">(</span><span class="s2">&quot;NLAT_G_VEC&quot;</span><span class="p">,</span> <span class="mi">57</span><span class="p">),</span>
-                    <span class="n">V</span><span class="p">(</span><span class="s2">&quot;N_LAYER&quot;</span><span class="p">,</span> <span class="mi">50</span><span class="p">),</span>
-                    <span class="n">V</span><span class="p">(</span><span class="s2">&quot;SURF_BAR&quot;</span><span class="p">,</span> <span class="n">SetOf</span><span class="p">(</span><span class="nb">float</span><span class="p">),</span> <span class="p">[</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">]),</span>
-                    <span class="n">V</span><span class="p">(</span><span class="s2">&quot;TRANSP_BAR&quot;</span><span class="p">,</span> <span class="n">flag</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span>
+                    <span class="n">V</span><span class="p">(</span><span class="s2">"N_LAYDBL"</span><span class="p">,</span> <span class="n">SetOf</span><span class="p">(</span><span class="nb">int</span><span class="p">),</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">]),</span>
+                    <span class="n">V</span><span class="p">(</span><span class="s2">"NLAT_G_VEC"</span><span class="p">,</span> <span class="mi">57</span><span class="p">),</span>
+                    <span class="n">V</span><span class="p">(</span><span class="s2">"N_LAYER"</span><span class="p">,</span> <span class="mi">50</span><span class="p">),</span>
+                    <span class="n">V</span><span class="p">(</span><span class="s2">"SURF_BAR"</span><span class="p">,</span> <span class="n">SetOf</span><span class="p">(</span><span class="nb">float</span><span class="p">),</span> <span class="p">[</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">]),</span>
+                    <span class="n">V</span><span class="p">(</span><span class="s2">"TRANSP_BAR"</span><span class="p">,</span> <span class="n">flag</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span>
                 <span class="p">],</span>
             <span class="p">),</span>
         <span class="p">],</span>
-        <span class="n">executable</span><span class="o">=</span><span class="s2">&quot;kkrspec&quot;</span><span class="p">,</span>
-        <span class="n">info</span><span class="o">=</span><span class="s2">&quot;ARPES - Angle resolved photoemission spectroscopy&quot;</span><span class="p">,</span>
+        <span class="n">validators</span><span class="o">=</span><span class="n">_validate_angular_scan</span><span class="p">,</span>
+        <span class="n">info</span><span class="o">=</span><span class="s2">"ARPES - Angle resolved photoemission spectroscopy"</span><span class="p">,</span>
     <span class="p">)</span></div>
 
 
 
-<span class="sd">&quot;&quot;&quot; ARPES task input parameters definition&quot;&quot;&quot;</span>
+<span class="sd">""" ARPES task input parameters definition"""</span>
 </pre></div>
 
            </div>

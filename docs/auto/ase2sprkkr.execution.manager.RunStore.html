@@ -1,0 +1,305 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RunStore &mdash; ASE2SPRKKR  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/mods.css?v=26f6988d" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="SubmissionKey" href="ase2sprkkr.execution.manager.SubmissionKey.html" />
+    <link rel="prev" title="RunRecord" href="ase2sprkkr.execution.manager.RunRecord.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            ASE2SPRKKR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">How to use the package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../how-to-install.html">More about the package installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../philosophy.html">Philosophy of the package (for developers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.promote_ase_atoms.html">promote_ase_atoms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.__getattr__.html">__getattr__</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.common.html">common</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration.html">configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration_migration.html">configuration_migration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration_yaml.html">configuration_yaml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.conftest.html">conftest</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.examples.html">examples</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="ase2sprkkr.execution.html">execution</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.execution.base.html">base</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.execution.detached.html">detached</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.execution.endpoint.html">endpoint</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.execution.local.html">local</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.execution.local_persistent.html">local_persistent</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="ase2sprkkr.execution.manager.html">manager</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.manager._now.html">_now</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.manager._processing_state.html">_processing_state</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.manager._result_file_path.html">_result_file_path</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.manager._timestamp.html">_timestamp</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.manager._unique.html">_unique</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.manager.ExecutionManager.html">ExecutionManager</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.manager.FileFingerprint.html">FileFingerprint</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.manager.FileRetrievalState.html">FileRetrievalState</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.manager.PersistentRunner.html">PersistentRunner</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.manager.ResultFilesRecord.html">ResultFilesRecord</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.manager.ResultFilesState.html">ResultFilesState</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.manager.RunRecord.html">RunRecord</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">RunStore</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.manager.SubmissionKey.html">SubmissionKey</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.manager.CorruptRunRecord.html">ase2sprkkr.execution.manager.CorruptRunRecord</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.execution.manager.DuplicateSubmissionError.html">ase2sprkkr.execution.manager.DuplicateSubmissionError</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.execution.mpi.html">mpi</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.execution.persistence.html">persistence</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.execution.pool.html">pool</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.execution.psij.html">psij</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.execution.remote.html">remote</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.execution.remote_endpoint.html">remote_endpoint</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.execution.remote_psij.html">remote_psij</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.execution.remote_worker.html">remote_worker</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.execution.transport.html">transport</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.gui.html">gui</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.input_parameters.html">input_parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.outputs.html">outputs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.physics.html">physics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.potentials.html">potentials</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.profiles.html">profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.result_files.html">result_files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.sprkkr.html">sprkkr</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.tools.html">tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.version.html">version</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">ASE2SPRKKR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="ase2sprkkr.html">ase2sprkkr</a></li>
+          <li class="breadcrumb-item"><a href="ase2sprkkr.execution.html">execution</a></li>
+          <li class="breadcrumb-item"><a href="ase2sprkkr.execution.manager.html">manager</a></li>
+      <li class="breadcrumb-item active">RunStore</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/auto/ase2sprkkr.execution.manager.RunStore.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="runstore">
+<h1>RunStore<a class="headerlink" href="#runstore" title="Link to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="ase2sprkkr.execution.manager.RunStore">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.execution.manager.</span></span><span class="sig-name descname"><span class="pre">RunStore</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">directory</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/execution/manager.html#RunStore"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.execution.manager.RunStore" title="Link to this definition"></a></dt>
+<dd><p>Persistent run history stored as date-sharded atomic JSON files.</p>
+<p class="rubric">Class hierarchy</p>
+digraph inheritance0a3e7c0edb {
+bgcolor=transparent;
+fontsize=14;
+rankdir=LR;
+ranksep=0.3;
+size=&quot;10.0, 10.0&quot;;
+  &quot;manager.RunStore&quot; [URL=&quot;#ase2sprkkr.execution.manager.RunStore&quot;,fillcolor=lightgray,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;filled&quot;,target=&quot;_top&quot;,tooltip=&quot;Persistent run history stored as date-sharded atomic JSON files.&quot;];
+}
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p class="rubric">Constructor</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.execution.manager.RunStore.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">directory</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/execution/manager.html#RunStore.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.execution.manager.RunStore.__init__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.execution.manager.RunStore._bucket">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">_bucket</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">created_at</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/execution/manager.html#RunStore._bucket"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.execution.manager.RunStore._bucket" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.execution.manager.RunStore._path">
+<span class="sig-name descname"><span class="pre">_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">record</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/execution/manager.html#RunStore._path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.execution.manager.RunStore._path" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.execution.manager.RunStore._run_lock_path">
+<span class="sig-name descname"><span class="pre">_run_lock_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">record</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/execution/manager.html#RunStore._run_lock_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.execution.manager.RunStore._run_lock_path" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.execution.manager.RunStore._path_for_id">
+<span class="sig-name descname"><span class="pre">_path_for_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">run_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/execution/manager.html#RunStore._path_for_id"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.execution.manager.RunStore._path_for_id" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.execution.manager.RunStore._migrate_result_files">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">_migrate_result_files</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/execution/manager.html#RunStore._migrate_result_files"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.execution.manager.RunStore._migrate_result_files" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.execution.manager.RunStore._decode">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">_decode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/execution/manager.html#RunStore._decode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.execution.manager.RunStore._decode" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.execution.manager.RunStore._warn_corrupt">
+<span class="sig-name descname"><span class="pre">_warn_corrupt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">exc</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/execution/manager.html#RunStore._warn_corrupt"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.execution.manager.RunStore._warn_corrupt" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.execution.manager.RunStore._write_unlocked">
+<span class="sig-name descname"><span class="pre">_write_unlocked</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">record</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/execution/manager.html#RunStore._write_unlocked"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.execution.manager.RunStore._write_unlocked" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.execution.manager.RunStore.submission_lock">
+<span class="sig-name descname"><span class="pre">submission_lock</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/execution/manager.html#RunStore.submission_lock"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.execution.manager.RunStore.submission_lock" title="Link to this definition"></a></dt>
+<dd><p>Serialize duplicate checking and the SUBMITTING record creation.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.execution.manager.RunStore.save">
+<span class="sig-name descname"><span class="pre">save</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">record</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/execution/manager.html#RunStore.save"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.execution.manager.RunStore.save" title="Link to this definition"></a></dt>
+<dd><p>Atomically store a complete record supplied by the caller.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>record</strong> (<a class="reference internal" href="ase2sprkkr.execution.manager.RunRecord.html#ase2sprkkr.execution.manager.RunRecord" title="ase2sprkkr.execution.manager.RunRecord"><em>RunRecord</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.execution.manager.RunStore.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">record</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">updater</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/execution/manager.html#RunStore.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.execution.manager.RunStore.update" title="Link to this definition"></a></dt>
+<dd><p>Read latest, merge under a per-run lock, and atomically replace it.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>record</strong> (<a class="reference internal" href="ase2sprkkr.execution.manager.RunRecord.html#ase2sprkkr.execution.manager.RunRecord" title="ase2sprkkr.execution.manager.RunRecord"><em>RunRecord</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.execution.manager.RunStore.get">
+<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">run_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/execution/manager.html#RunStore.get"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.execution.manager.RunStore.get" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.execution.manager.RunStore._day_directories">
+<span class="sig-name descname"><span class="pre">_day_directories</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">newest</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/execution/manager.html#RunStore._day_directories"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.execution.manager.RunStore._day_directories" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.execution.manager.RunStore._records_in_directory">
+<span class="sig-name descname"><span class="pre">_records_in_directory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">directory</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">newest</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/execution/manager.html#RunStore._records_in_directory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.execution.manager.RunStore._records_in_directory" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.execution.manager.RunStore.runs">
+<span class="sig-name descname"><span class="pre">runs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">active</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">newest</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/execution/manager.html#RunStore.runs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.execution.manager.RunStore.runs" title="Link to this definition"></a></dt>
+<dd><p>Return stored runs without querying backends or touching result files.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="ase2sprkkr.execution.manager.RunRecord.html" class="btn btn-neutral float-left" title="RunRecord" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="ase2sprkkr.execution.manager.SubmissionKey.html" class="btn btn-neutral float-right" title="SubmissionKey" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Matyáš Novák &amp; Jano Minár.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

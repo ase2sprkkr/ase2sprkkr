@@ -7,7 +7,7 @@ Full name: **ase2sprkkr.common.parsing\_results**
 
 .. rubric:: Module class hierarchy
 
-.. inheritance-diagram::  ase2sprkkr.common.parsing_results.ArrayKey  ase2sprkkr.common.parsing_results.DefDictKey  ase2sprkkr.common.parsing_results.DictKey  ase2sprkkr.common.parsing_results.IgnoredKey  ase2sprkkr.common.parsing_results.Key  ase2sprkkr.common.parsing_results.RepeatedKey  ase2sprkkr.common.parsing_results.Result  ase2sprkkr.common.parsing_results.SubKey  ase2sprkkr.common.parsing_results.ValidateKey  ase2sprkkr.common.parsing_results.Values 
+.. inheritance-diagram::  ase2sprkkr.common.parsing_results.ArrayKey  ase2sprkkr.common.parsing_results.DefArrayKey  ase2sprkkr.common.parsing_results.DefDictKey  ase2sprkkr.common.parsing_results.DictKey  ase2sprkkr.common.parsing_results.IgnoredKey  ase2sprkkr.common.parsing_results.Key  ase2sprkkr.common.parsing_results.KeyType  ase2sprkkr.common.parsing_results.RepeatedKey  ase2sprkkr.common.parsing_results.Result  ase2sprkkr.common.parsing_results.SubKey  ase2sprkkr.common.parsing_results.ValidateKey  ase2sprkkr.common.parsing_results.Values 
       :parts: 1
 
 |
@@ -44,10 +44,12 @@ Full name: **ase2sprkkr.common.parsing\_results**
       :template: custom-class-template.rst
    
       ArrayKey
+      DefArrayKey
       DefDictKey
       DictKey
       IgnoredKey
       Key
+      KeyType
       RepeatedKey
       Result
       SubKey

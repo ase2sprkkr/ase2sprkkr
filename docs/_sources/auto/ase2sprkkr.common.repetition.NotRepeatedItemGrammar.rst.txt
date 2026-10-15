@@ -1,0 +1,36 @@
+NotRepeatedItemGrammar
+======================
+
+
+.. currentmodule:: ase2sprkkr.common.repetition
+
+.. autoclass:: NotRepeatedItemGrammar
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.common.repetition.NotRepeatedItemGrammar
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
