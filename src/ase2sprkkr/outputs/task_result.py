@@ -283,6 +283,3 @@ class KkrOutputReader:
         from .reader_registry import reader_registry
 
         return reader_registry.class_for_task(task)
-
-
-from ..outputs.readers.default import DefaultOutputReader  # NOQA

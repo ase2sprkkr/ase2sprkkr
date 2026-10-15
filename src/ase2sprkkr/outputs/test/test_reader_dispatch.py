@@ -1,4 +1,5 @@
 import importlib
+import subprocess
 import sys
 from types import SimpleNamespace
 
@@ -56,6 +57,18 @@ def test_reader_registry_is_lazy_for_discovered_modules(tmp_path, monkeypatch):
 
     assert module_name in sys.modules
     assert reader.__name__ == "AlphaOutputReader"
+
+
+def test_task_definition_can_select_default_reader_in_fresh_interpreter():
+    code = """
+from types import SimpleNamespace
+from ase2sprkkr.input_parameters.task_definition import TaskDefinition
+
+task = TaskDefinition(SimpleNamespace(name='DEFINITELY_MISSING_READER'))
+reader = task.output_reader_class()
+assert reader.__name__ == 'DefaultOutputReader'
+"""
+    subprocess.run([sys.executable, "-c", code], check=True)
 
 
 def test_malformed_reader_module_does_not_fall_back(tmp_path, monkeypatch):
