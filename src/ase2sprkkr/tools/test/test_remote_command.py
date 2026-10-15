@@ -1,4 +1,8 @@
+import io
+from types import SimpleNamespace
+
 from ase2sprkkr.execution.remote import _write_state, status_remote
+from ase2sprkkr.tools.commands import remote as remote_command
 from ase2sprkkr.tools.commands.remote import _finalize_failed_worker_start
 
 
@@ -50,3 +54,17 @@ def test_failed_worker_start_does_not_overwrite_started_run(tmp_path):
     assert state["state"] == "running"
     assert state["pid"] == 1234
     assert state.get("error") is None
+
+
+def test_resolve_mpi_command_preserves_integer_process_count(monkeypatch):
+    monkeypatch.setattr(
+        "ase2sprkkr.execution.mpi.find_default_mpi_launcher",
+        lambda: ("mpirun",),
+    )
+    monkeypatch.setattr(remote_command.sys, "stdin", io.StringIO('{"mpi": 4}'))
+    output = []
+    monkeypatch.setattr(remote_command, "_print_json", output.append)
+
+    remote_command.run(SimpleNamespace(remote_action="resolve-mpi"), None)
+
+    assert output == [{"mpi": ("mpirun", "-np", "4")}]

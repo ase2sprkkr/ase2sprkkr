@@ -291,7 +291,13 @@ class RemoteEndpointExecutor(Executor):
 
     async def _submit(self, request):
         launch = request.get("launch") or {}
-        if self.backend == "local" and launch.get("mpi") == "auto" and launch.get("mpi_warning", True):
+        mpi = launch.get("mpi") or {}
+        if (
+            self.backend == "local"
+            and mpi.get("autodetect")
+            and not mpi.get("required")
+            and mpi.get("warning", True)
+        ):
             resolved = await self._json_request("resolve-mpi", payload={"mpi": "auto"})
             if not resolved.get("mpi"):
                 warnings.warn(

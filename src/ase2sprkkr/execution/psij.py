@@ -243,13 +243,14 @@ class PsijRunner:
         if not launch or self.spec.mpi_argv is None:
             return tuple(self.spec.argv), None, None
 
-        if isinstance(launch.mpi, tuple):
-            return (*launch.mpi, *self.spec.mpi_argv), None, None
+        mpi = launch.mpi
+        if mpi.launcher:
+            return (*mpi.launcher, *self.spec.mpi_argv), None, None
 
         resources = None
-        if launch.process_count is not None:
+        if mpi.process_count is not None:
             resources = self._psij.ResourceSpecV1(
-                process_count=launch.process_count
+                process_count=mpi.process_count
             )
         return tuple(self.spec.mpi_argv), resources, self._mpi_launcher()
 

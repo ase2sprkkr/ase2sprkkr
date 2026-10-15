@@ -25,10 +25,11 @@ from .mpi import resolve_mpi_command
 
 def _mpi_command(launch):
     """Materialize portable MPI intent for this machine."""
-    command = resolve_mpi_command(launch.mpi)
+    mpi = launch.mpi
+    command = resolve_mpi_command(mpi)
     if not command:
-        if launch.mpi == "auto":
-            if launch.mpi_warning:
+        if mpi.allows_serial_fallback:
+            if mpi.warning:
                 warnings.warn(
                     "MPI autodetection did not find an MPI launcher; "
                     "the calculation will run without MPI.",
@@ -40,13 +41,7 @@ def _mpi_command(launch):
             errno.ENOENT,
             "MPI was requested but no MPI launcher was found",
         )
-
-    command = list(command)
-    if launch.process_count is not None:
-        launcher = os.path.basename(os.fspath(command[0]))
-        count_option = "-n" if launcher == "srun" else "-np"
-        command.extend((count_option, str(launch.process_count)))
-    return tuple(command)
+    return command
 
 
 def materialize_local_spec(spec: ExecutionSpec) -> ExecutionSpec:

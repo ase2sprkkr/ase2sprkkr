@@ -9,6 +9,7 @@ from ...execution import (
     LaunchSpec,
     LocalExecutor,
     MpiNotFoundWarning,
+    MpiSpec,
     RemoteEndpointExecutor,
     RunState,
 )
@@ -62,26 +63,26 @@ def test_input_parameters_preserve_mpi_launch_intent(tmp_path, monkeypatch):
         assert seen["executor_mpi"] == "auto"
         assert seen["spec"].argv == ("kkrscf",)
         assert seen["spec"].mpi_argv == ("kkrscfMPI", input_file.name)
-        assert seen["spec"].launch == LaunchSpec(mpi="auto")
+        assert seen["spec"].launch == LaunchSpec.from_mpi("auto")
         assert seen["spec"].stdin is input_file
 
 
 def test_mpi_process_count_is_portable_launch_intent():
     assert LocalExecutor().resolve_mpi(16) == LaunchSpec(
-        mpi=True, process_count=16
+        mpi=MpiSpec(required=True, autodetect=True, process_count=16)
     )
 
 
 def test_local_executor_materializes_mpi_on_execution_host(monkeypatch, tmp_path):
     monkeypatch.setattr(
-        "ase2sprkkr.execution.local.resolve_mpi_command",
-        lambda mpi: ("srun",) if mpi is True else None,
+        "ase2sprkkr.execution.mpi.find_default_mpi_launcher",
+        lambda: ("srun",),
     )
     input_file = (tmp_path / "run.inp").open("w+")
     spec = ExecutionSpec(
         argv=("kkrscf",),
         mpi_argv=("kkrscfMPI", input_file.name),
-        launch=LaunchSpec(mpi=True, process_count=16),
+        launch=LaunchSpec.from_mpi(16),
         input_file=input_file,
         output_file=None,
         directory=str(tmp_path),
@@ -95,6 +96,26 @@ def test_local_executor_materializes_mpi_on_execution_host(monkeypatch, tmp_path
     input_file.close()
 
 
+def test_required_local_mpi_without_launcher_fails(monkeypatch, tmp_path):
+    monkeypatch.setattr(
+        "ase2sprkkr.execution.mpi.find_default_mpi_launcher", lambda: None
+    )
+    input_file = (tmp_path / "run.inp").open("w+")
+    spec = ExecutionSpec(
+        argv=("kkrscf",),
+        mpi_argv=("kkrscfMPI", input_file.name),
+        launch=LaunchSpec.from_mpi(True),
+        input_file=input_file,
+        output_file=None,
+        directory=str(tmp_path),
+        stdin=input_file,
+    )
+
+    with pytest.raises(FileNotFoundError, match="no MPI launcher"):
+        materialize_local_spec(spec)
+    input_file.close()
+
+
 def test_local_auto_warns_and_falls_back_to_serial(monkeypatch, tmp_path):
     monkeypatch.setattr(
         "ase2sprkkr.execution.local.resolve_mpi_command", lambda mpi: None
@@ -103,7 +124,7 @@ def test_local_auto_warns_and_falls_back_to_serial(monkeypatch, tmp_path):
     spec = ExecutionSpec(
         argv=("kkrscf",),
         mpi_argv=("kkrscfMPI", input_file.name),
-        launch=LaunchSpec(mpi="auto", mpi_warning=True),
+        launch=LaunchSpec.from_mpi("auto"),
         input_file=input_file,
         output_file=None,
         directory=str(tmp_path),
@@ -126,7 +147,9 @@ def test_local_auto_can_disable_missing_mpi_warning(monkeypatch, tmp_path):
     spec = ExecutionSpec(
         argv=("kkrscf",),
         mpi_argv=("kkrscfMPI", input_file.name),
-        launch=LaunchSpec(mpi="auto", mpi_warning=False),
+        launch=LaunchSpec(
+            mpi=MpiSpec(autodetect=True, warning=False)
+        ),
         input_file=input_file,
         output_file=None,
         directory=str(tmp_path),
@@ -157,7 +180,15 @@ def test_remote_endpoint_warns_from_remote_autodetection(monkeypatch):
     monkeypatch.setattr(endpoint, "_json_request", request)
     payload = {
         "directory": "/remote/run",
-        "launch": {"mpi": "auto", "mpi_warning": True},
+        "launch": {
+            "mpi": {
+                "required": False,
+                "autodetect": True,
+                "launcher": [],
+                "process_count": None,
+                "warning": True,
+            }
+        },
     }
 
     with pytest.warns(MpiNotFoundWarning, match="remote host"):
@@ -178,7 +209,15 @@ def test_remote_endpoint_skips_warning_probe_when_disabled(monkeypatch):
     monkeypatch.setattr(endpoint, "_json_request", request)
     payload = {
         "directory": "/remote/run",
-        "launch": {"mpi": "auto", "mpi_warning": False},
+        "launch": {
+            "mpi": {
+                "required": False,
+                "autodetect": True,
+                "launcher": [],
+                "process_count": None,
+                "warning": False,
+            }
+        },
     }
 
     asyncio.run(endpoint._submit(payload))

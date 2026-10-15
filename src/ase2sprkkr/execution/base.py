@@ -290,34 +290,115 @@ class RunStatus:
 
 
 @dataclass(frozen=True)
+class MpiSpec:
+    """Portable MPI launch semantics independent of the execution host.
+
+    ``autodetect`` requests host-specific launcher discovery. ``required``
+    distinguishes mandatory MPI from ``auto`` mode, which may fall back to
+    serial execution. An explicit ``launcher`` disables autodetection.
+    ``process_count`` is kept portable until the launcher is materialized.
+    """
+
+    required: bool = False
+    autodetect: bool = False
+    launcher: Tuple[str, ...] = ()
+    process_count: Optional[int] = None
+    warning: bool = True
+
+    def __post_init__(self):
+        object.__setattr__(
+            self, "launcher", tuple(os.fspath(part) for part in self.launcher)
+        )
+        if self.process_count is not None and self.process_count < 1:
+            raise ValueError("process_count must be positive")
+        if self.launcher and self.autodetect:
+            raise ValueError("explicit MPI launcher cannot be combined with autodetection")
+        if self.launcher and not self.required:
+            raise ValueError("explicit MPI launcher must be required")
+        if self.required and not self.autodetect and not self.launcher:
+            raise ValueError("required MPI needs autodetection or an explicit launcher")
+        if not self.requested and self.process_count is not None:
+            raise ValueError("process_count requires MPI")
+
+    @classmethod
+    def from_value(cls, mpi, *, process_count=None, warning=True):
+        """Translate public ``mpi`` syntax into normalized portable semantics."""
+        if isinstance(mpi, cls):
+            if process_count is not None or warning is not True:
+                raise ValueError("MPI options cannot override an existing MpiSpec")
+            return mpi
+        if mpi is None or mpi is False:
+            if process_count is not None:
+                raise ValueError("process_count requires MPI")
+            return cls(warning=warning)
+        if isinstance(mpi, bool):
+            return cls(
+                required=True,
+                autodetect=True,
+                process_count=process_count,
+                warning=warning,
+            )
+        if isinstance(mpi, int):
+            if process_count is not None:
+                raise ValueError("MPI process count was specified twice")
+            return cls(
+                required=True,
+                autodetect=True,
+                process_count=mpi,
+                warning=warning,
+            )
+        if mpi == "auto":
+            return cls(
+                autodetect=True,
+                process_count=process_count,
+                warning=warning,
+            )
+        if isinstance(mpi, str):
+            launcher = (mpi,)
+        else:
+            launcher = tuple(os.fspath(part) for part in mpi)
+        return cls(
+            required=True,
+            launcher=launcher,
+            process_count=process_count,
+            warning=warning,
+        )
+
+    @property
+    def requested(self) -> bool:
+        """Whether the calculation requests an MPI launch."""
+        return self.required or self.autodetect or bool(self.launcher)
+
+    @property
+    def allows_serial_fallback(self) -> bool:
+        """Whether failure to find MPI may fall back to serial execution."""
+        return self.autodetect and not self.required
+
+
+@dataclass(frozen=True)
 class LaunchSpec:
     """Portable launch and staging parameters for one concrete run.
 
-    ``mpi`` is ``False`` for serial execution, ``True`` when MPI is required,
-    ``"auto"`` when a local executor may fall back to serial execution, or an
-    explicit launcher argv tuple. ``process_count`` is an optional requested
-    number of MPI ranks. ``mpi_warning`` controls whether failed MPI
-    autodetection emits :class:`MpiNotFoundWarning`.
-
-    The remaining fields describe remote filesystem mapping and synchronization
-    for this run. They intentionally belong to the run rather than to an
-    executor so executors can be shared by profiles that use the same endpoint
-    but different launch/staging parameters.
+    MPI semantics are represented by :class:`MpiSpec`; host-independent MPI
+    intent therefore stays grouped instead of being spread over parallel launch
+    fields. The remaining fields describe remote filesystem mapping and
+    synchronization for this run.
     """
 
-    mpi: Any = False
-    process_count: Optional[int] = None
-    mpi_warning: bool = True
+    mpi: MpiSpec = MpiSpec()
     local_root: Optional[str] = None
     remote_root: Optional[str] = None
     input_sync: str = "changed"
     output_sync: str = "changed"
 
     def __post_init__(self):
-        if isinstance(self.mpi, list):
-            object.__setattr__(self, "mpi", tuple(self.mpi))
-        if self.process_count is not None and self.process_count < 1:
-            raise ValueError("process_count must be positive")
+        mpi = self.mpi
+        if isinstance(mpi, dict):
+            mpi = MpiSpec(**mpi)
+        elif not isinstance(mpi, MpiSpec):
+            raise TypeError("LaunchSpec.mpi must be an MpiSpec")
+        object.__setattr__(self, "mpi", mpi)
+
         for name in ("local_root", "remote_root"):
             value = getattr(self, name)
             if value is not None:
@@ -328,24 +409,14 @@ class LaunchSpec:
 
     def __bool__(self):
         """Whether this run requests MPI."""
-        return self.mpi is not False and self.mpi is not None
+        return self.mpi.requested
 
     @classmethod
     def from_mpi(cls, mpi):
-        """Translate the existing ``mpi`` profile syntax without probing a host."""
+        """Translate public ``mpi`` syntax without probing an execution host."""
         if isinstance(mpi, cls):
             return mpi
-        if mpi is None or mpi is False:
-            return cls()
-        if isinstance(mpi, bool):
-            return cls(mpi=mpi)
-        if isinstance(mpi, int):
-            if mpi < 1:
-                raise ValueError("MPI process count must be positive")
-            return cls(mpi=True, process_count=mpi)
-        if isinstance(mpi, str):
-            return cls(mpi="auto" if mpi == "auto" else (mpi,))
-        return cls(mpi=tuple(mpi))
+        return cls(mpi=MpiSpec.from_value(mpi))
 
 
 def _pathlike(value):
