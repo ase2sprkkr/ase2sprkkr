@@ -17,6 +17,7 @@ from ase2sprkkr.outputs.persistent import (
     PersistentResultUnavailableError,
     load_persistent_result,
 )
+from ase2sprkkr.outputs.task_result import TaskResult
 
 
 class _Runner:
@@ -144,6 +145,32 @@ def test_load_persistent_result_restores_exact_missing_historical_output(tmp_pat
     assert result.run_record.state == RunState.FINISHED
     assert result.run_record.result_files.state == ResultFilesState.CURRENT
     assert result.run_record.result_files.retrieval_state == FileRetrievalState.AVAILABLE
+
+
+def test_loaded_persistent_result_can_start_continuation_without_calculator(tmp_path):
+    manager, _, run = _finished_run(tmp_path)
+    input_parameters = SimpleNamespace(
+        CONTROL=SimpleNamespace(POTFIL=lambda: "Fe.pot")
+    )
+
+    class Reader:
+        def read_from_file(self, output, **kwargs):
+            result = TaskResult(
+                input_parameters,
+                None,
+                tmp_path,
+                output_file=output,
+                task_name="SCF",
+            )
+            result.complete(None, kwargs["return_code"])
+            return result
+
+    result = load_persistent_result(manager, run.id, reader=Reader())
+
+    assert result._calculator is None
+    continuation = result.new_task("DOS")
+    assert continuation._potential == os.path.join(os.fspath(tmp_path), "Fe.pot")
+    assert continuation.input_parameters.task_definition.name == "DOS"
 
 
 def test_restored_changed_content_is_rejected_as_overwritten(tmp_path):

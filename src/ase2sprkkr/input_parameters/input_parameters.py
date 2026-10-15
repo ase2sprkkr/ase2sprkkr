@@ -14,9 +14,6 @@ from ..common.decorators import cached_class_property
 from ..common.warnings import DataValidityError
 from ..configuration import config
 from ..potentials.potentials import Potential
-from ..sprkkr.profile import SPRKKRProfile, executor_from_profile
-from ..execution.base import ExecutionResources, ResourceOwnedRunner
-from ..execution.persistence import resolve_execution_manager
 
 
 class InputSection(ConfigurationSection):
@@ -90,6 +87,21 @@ class InputParameters(ConfigurationFile):
         """Task name originally requested when these parameters were created."""
         return self._task_name
 
+    @property
+    def executable(self):
+        """Executable basename declared by the effective task."""
+        return self._require_task_definition().executable
+
+    @property
+    def mpi_supported(self):
+        """Whether the effective task has an MPI executable."""
+        return self._require_task_definition().mpi
+
+    @property
+    def execution_task_name(self):
+        """Execution identity represented by the concrete parameter values."""
+        return self._require_task_definition().execution_task_name(self)
+
     def uses_separate_single_site_contour(self):
         switches = (
             ("ENERGY", "SPLITSS"),
@@ -116,130 +128,11 @@ class InputParameters(ConfigurationFile):
     def cache_files(self, directory):
         return self._require_task_definition().cache_files(self, directory)
 
-    def run_process(
-        self,
-        calculator,
-        input_file,
-        output_file,
-        directory=".",
-        print_output=None,
-        read_callback=None,
-        run_async=False,
-        callback=None,
-        gdb=False,
-        profile=None,
-        executor=None,
-        persistent=None,
-    ):
-        """Run the SPR-KKR task described by these input parameters."""
-        task = self._require_task_definition()
-        resources = ExecutionResources(input_file, output_file)
-        handed_off = False
-
-        try:
-            print_output = calculator.value_or_default("print_output", print_output)
-            reader = self.output_reader(calculator, print_output, directory)
-            explicit_profile = profile is not None
-            profile = profile or getattr(calculator, "profile", None) or SPRKKRProfile()
-            if executor is None and not explicit_profile:
-                executor = getattr(calculator, "executor", None)
-            if executor is None:
-                executor = executor_from_profile(profile)
-            if persistent is None:
-                persistent = calculator.persistent
-            manager = resolve_execution_manager(persistent)
-
-            execution_profile = profile
-            if task.mpi:
-                execution_profile = profile.with_overrides(
-                    mpi=executor.resolve_mpi(profile.mpi)
-                )
-        except BaseException:
-            resources.close(suppress_errors=True)
-            raise
-
-        try:
-            def completed(out):
-                resources.close(suppress_errors=True)
-                if callback:
-                    callback(out)
-
-            potential_file = self.CONTROL.POTFIL.result
-            if potential_file and not os.path.isabs(potential_file):
-                potential_file = os.path.join(directory, potential_file)
-
-            input_files = tuple(
-                file
-                for file in (
-                    input_file,
-                    potential_file,
-                    *self.input_files(directory),
-                )
-                if file is not None
-            )
-            output_files = tuple(
-                file
-                for file in (
-                    output_file,
-                    *self.output_files(directory),
-                )
-                if file is not None
-            )
-            cache_files = tuple(
-                file for file in self.cache_files(directory) if file is not None
-            )
-
-            spec = execution_profile.create_execution(
-                task.executable,
-                input_file,
-                output_file,
-                directory,
-                input_files=input_files,
-                output_files=output_files,
-                cache_files=cache_files,
-                mpi_supported=task.mpi,
-                gdb=gdb,
-            )
-            if manager is None:
-                runner = executor.create_run(reader, spec, callback=completed)
-            else:
-                runner = manager.create_run(
-                    executor,
-                    reader,
-                    spec,
-                    task=task.name,
-                    dataset=self.CONTROL.DATASET.result,
-                    callback=completed,
-                )
-            if read_callback:
-                runner.add_output_listener(read_callback)
-
-            runner = ResourceOwnedRunner(runner, resources)
-            handed_off = True
-            if run_async:
-                return runner
-            return runner.run()
-        except FileNotFoundError as e:
-            add = (
-                "Cannot find SPRKKR executable. Check executable_dir and executable_suffix "
-                "in the selected SPR-KKR profile.\n"
-            )
-            if execution_profile.mpi:
-                add += (
-                    "Also, please check the MPI setting in the selected profile, or explicitly "
-                    "disable MPI with mpi=False in SPRKKR.calculate().\n\n"
-                )
-            e.strerror = add + "SPRKKR cannot be run due to the following error: \n" + e.strerror
-            raise
-        finally:
-            if not handed_off:
-                resources.close(suppress_errors=True)
-
     def output_reader(self, calculator=None, print_output=False, directory=None):
         if not directory and calculator and calculator.directory:
             directory = calculator.directory
 
-        cls = self._require_task_definition().output_reader_class(self)
+        cls = self._require_task_definition().output_reader_class()
         return cls(self, calculator, directory, print_output)
 
     def read_output_from_file(self, filename, directory=None):
@@ -264,7 +157,7 @@ class InputParameters(ConfigurationFile):
         name = cls.input_parameters_registry.normalize_name(name)
         if name in cls.input_parameters_registry:
             return cls.input_parameters_registry[name]
-        return cls.task_registry[name].input_parameters_definition
+        return cls.task_registry.input_parameters_definition(name)
 
     @cached_class_property
     def definitions(cls):
@@ -292,7 +185,7 @@ class InputParameters(ConfigurationFile):
     @classmethod
     def create(cls, name):
         requested = cls.task_registry.normalize_name(name)
-        return cls.task_registry[requested].create_input_parameters()
+        return cls.task_registry.create_input_parameters(requested)
 
     @classmethod
     def default_parameters(cls):
@@ -324,8 +217,7 @@ class InputParameters(ConfigurationFile):
             vals = self.to_dict(only_changed=True)
 
         requested = self.task_registry.normalize_name(task)
-        task_definition = self.task_registry[requested]
-        self._definition = task_definition.input_parameters_definition
+        self._definition = self.task_registry.input_parameters_definition(requested)
         self._task_name = requested
         self._init_members_from_the_definition()
 

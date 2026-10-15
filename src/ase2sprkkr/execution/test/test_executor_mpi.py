@@ -15,7 +15,26 @@ from ...execution import (
 )
 from ...execution.local import materialize_local_spec
 from ...input_parameters.input_parameters import InputParameters
+from ...sprkkr import calculation as calculation_module
+from ...sprkkr.calculation import create_sprkkr_run
 from ...sprkkr.profile import SPRKKRProfile
+
+
+class _Prepared:
+    def __init__(self, parameters, input_file, output_file, directory):
+        self.input_parameters = parameters
+        self.input_file = input_file
+        self.potential_file = None
+        self.output_file = output_file
+        self.directory = str(directory)
+        self.closed = False
+
+    def close(self):
+        if self.closed:
+            return
+        self.closed = True
+        self.input_file.close()
+        self.output_file.close()
 
 
 def test_input_parameters_preserve_mpi_launch_intent(tmp_path, monkeypatch):
@@ -28,7 +47,12 @@ def test_input_parameters_preserve_mpi_launch_intent(tmp_path, monkeypatch):
     )
 
     seen = {}
-    runner = SimpleNamespace(state=RunState.NEW, result=object())
+    runner = SimpleNamespace(
+        state=RunState.NEW,
+        result=object(),
+        reference=None,
+        exception=None,
+    )
 
     class Executor:
         def resolve_mpi(self, mpi):
@@ -41,20 +65,14 @@ def test_input_parameters_preserve_mpi_launch_intent(tmp_path, monkeypatch):
             return runner
 
     profile = SPRKKRProfile(mpi="auto")
-    calculator = SimpleNamespace(
-        value_or_default=lambda name, value: value,
-        persistent=False,
-    )
+    calculator = SimpleNamespace(directory=str(tmp_path))
 
     with (tmp_path / "run.inp").open("w+") as input_file, (
         tmp_path / "run.out"
     ).open("wb") as output_file:
-        created = parameters.run_process(
-            calculator,
-            input_file,
-            output_file,
-            directory=str(tmp_path),
-            run_async=True,
+        created = create_sprkkr_run(
+            _Prepared(parameters, input_file, output_file, tmp_path),
+            result_context=calculator,
             profile=profile,
             executor=Executor(),
         )
@@ -65,6 +83,7 @@ def test_input_parameters_preserve_mpi_launch_intent(tmp_path, monkeypatch):
         assert seen["spec"].mpi_argv == ("kkrscfMPI", input_file.name)
         assert seen["spec"].launch == LaunchSpec.from_mpi("auto")
         assert seen["spec"].stdin is input_file
+        created.close()
 
 
 def test_mpi_process_count_is_portable_launch_intent():
@@ -234,7 +253,12 @@ def test_explicit_local_executor_overrides_remote_profile(tmp_path, monkeypatch)
         lambda self, calculator, print_output, directory: reader,
     )
 
-    runner = SimpleNamespace(state=RunState.NEW, result=object())
+    runner = SimpleNamespace(
+        state=RunState.NEW,
+        result=object(),
+        reference=None,
+        exception=None,
+    )
     seen = {}
 
     class ExplicitLocalExecutor(LocalExecutor):
@@ -250,28 +274,18 @@ def test_explicit_local_executor_overrides_remote_profile(tmp_path, monkeypatch)
     def must_not_resolve_profile(profile):
         raise AssertionError("explicit executor was replaced by the profile backend")
 
-    monkeypatch.setattr(
-        "ase2sprkkr.input_parameters.input_parameters.executor_from_profile",
-        must_not_resolve_profile,
-    )
+    monkeypatch.setattr(calculation_module, "executor_from_profile", must_not_resolve_profile)
 
     profile = SPRKKRProfile(executor="ssh", host="cluster", mpi="auto")
     executor = ExplicitLocalExecutor()
-    calculator = SimpleNamespace(
-        value_or_default=lambda name, value: value,
-        executor=None,
-        persistent=False,
-    )
+    calculator = SimpleNamespace(directory=str(tmp_path))
 
     with (tmp_path / "run.inp").open("w+") as input_file, (
         tmp_path / "run.out"
     ).open("wb") as output_file:
-        created = parameters.run_process(
-            calculator,
-            input_file,
-            output_file,
-            directory=str(tmp_path),
-            run_async=True,
+        created = create_sprkkr_run(
+            _Prepared(parameters, input_file, output_file, tmp_path),
+            result_context=calculator,
             profile=profile,
             executor=executor,
         )
@@ -281,3 +295,4 @@ def test_explicit_local_executor_overrides_remote_profile(tmp_path, monkeypatch)
         assert seen["spec"].argv == ("kkrscf",)
         assert seen["spec"].mpi_argv is None
         assert seen["spec"].launch == LaunchSpec()
+        created.close()

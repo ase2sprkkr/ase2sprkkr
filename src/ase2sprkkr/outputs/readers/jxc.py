@@ -165,3 +165,8 @@ class JxcOutputParser(SprKkrOutputParser):
 class JxcOutputReader(KkrOutputReader):
     result_class = JxcResult
     parser_class = JxcOutputParser
+
+    @classmethod
+    def matches_output(cls, output):
+        """Recognize legacy JXC output that predates a useful task marker."""
+        return b"Components of Dzyaloshinski-Moriya vector Dij" in output

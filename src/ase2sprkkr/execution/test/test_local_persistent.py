@@ -1,3 +1,4 @@
+import asyncio
 import os
 import sys
 from types import SimpleNamespace
@@ -106,3 +107,17 @@ def test_persistent_local_submission_can_be_recovered_by_run_id(tmp_path):
         RunState.FINISHED,
     }
     runner.wait()
+
+
+def test_persistent_local_run_async_does_not_require_asyncio_to_thread(
+    tmp_path, monkeypatch
+):
+    runner = LocalExecutor().create_persistent_run(
+        _Reader(), _spec(tmp_path), run_id="local-persistent-async"
+    )
+    monkeypatch.delattr(asyncio, "to_thread", raising=False)
+
+    result = asyncio.run(runner.run_async())
+
+    assert result.return_code == 0
+    assert result.stdout == b"before\nafter\n"

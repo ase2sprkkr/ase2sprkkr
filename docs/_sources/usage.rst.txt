@@ -166,6 +166,18 @@ potential).
    potential = out.potential
    print(potential.CHARGE())
 
+Structured result files
+~~~~~~~~~~~~~~~~~~~~~~~
+
+Structured SPR-KKR result files such as DOS, BSF, SPC, RAT, JXC and SFN
+can be parsed directly through
+:class:`ResultFile <ase2sprkkr.result_files.ResultFile>`::
+
+   from ase2sprkkr import ResultFile
+   result = ResultFile.from_file("calculation.dos")
+
+The historical top-level ``OutputFile`` name is deprecated.
+
 Setting the task type and input parameters
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -270,16 +282,15 @@ sections, if there is a need.
    input_parameters.add('MY_CUSTOM_SECTION')
    input_parameters.MY_CUSTOM_SECTION.add('MY_CUSTOM_VALUE', 17)
 
-If you work with input parameters readed from an already created input
-file, you can use the
-:meth:`calculate<ase2sprkkr.input_parameters.input_parameters.InputParameters.calculate>`
-method to avoid the necessity to
-create the calculator (manually):
+``InputParameters`` represents configuration and does not launch a process.
+If you read parameters from an existing file, pass the resulting object to an
+``SPRKKR`` calculator explicitly:
 
 ::
 
    input_parameters = InputParameters.from_file('input.inp')
-   input_parameters.calculate()
+   calculator = SPRKKR(input_parameters=input_parameters)
+   calculator.calculate()
 
 The input parameters can be set or reset (to the task-predefined values,
 to the values provided in a :class:`InputParameters<ase2sprkkr.sprkkr.input_parameters.input_parameters.InputParameters>` object or to the values contained
@@ -321,19 +332,18 @@ result:
 Reading the input file
 ^^^^^^^^^^^^^^^^^^^^^^
 
-If you want to repeat a calculation, you can read (and modify) the input
-parameters from an existing input file. In this case, it may be useful
-to use the method
-:meth:`calculate<ase2sprkkr.input_parameters.input_parameters.InputParameters.calculate>`
-of InputParameters object to avoid the
-necessity to create the calculator.
+If you want to repeat a calculation, read the ``InputParameters`` from the
+existing input file and use them as calculator input. Execution remains the
+responsibility of ``SPRKKR``:
 
 ::
 
    input_parameters = InputParameters.from_file('an_input_file.inp')
-   input_parameters.calculate(potential='a_potential_file.pot')
+   SPRKKR(input_parameters=input_parameters).calculate(
+       potential='a_potential_file.pot'
+   )
 
-or you can of course just set the calculator
+Alternatively, set the calculator
 :meth:`input_parameters<ase2sprkkr.sprkkr.calculator.SPRKKR.input_parameters>`
 property to the filename, or pass the filename as ``input_parameters``
 argument to its
@@ -371,8 +381,8 @@ Generating the input files
 If you just want to generate the input files (the input and potential ones)
 and not to run the calculation, you can use method
 :meth:`save_input<ase2sprkkr.sprkkr.calculator.SPRKKR.save_input>`.
-It acceps, same as the method
-:meth:`calculate<ase2sprkkr.sprkkr.calculator.SPRKKR.calculate>`
+It accepts, same as the method
+:meth:`calculate<ase2sprkkr.sprkkr.calculator.SPRKKR.calculate>`,
 the arguments to specify the filenames of the task and potential (and,
 for the
 :meth:`calculate<ase2sprkkr.sprkkr.calculator.SPRKKR.calculate>`
@@ -380,12 +390,14 @@ method, output) file.
 
 ::
 
-   calculator.calculate(input_file = ..., potential_file = ..., output_file = ....)
+   calculator.save_input(input_file = ..., potential_file = ...)
 
-If you pass ``None`` to any of the arguments above, the temp file will
-be used. String argument will be interpreted as filename where to store
-the input and output files. However, these strings are interpereted as
-templates, where the following placeholders can be used:
+``None`` means to use the corresponding calculator default. ``False`` for an
+input or potential filename requests a managed named temporary artifact where
+the calling API can own its lifetime; ``output_file=False`` disables the output
+file. A string argument is interpreted as a filename template. Relative paths
+are resolved against the calculation working directory. The following
+placeholders can be used:
 
 +----+----------------------------------------------------------------+
 | %d | Current date and time                                          |
@@ -424,31 +436,12 @@ The input parameters can be given either by a filename (containing the
 (which creates the
 :class:`InputParameters<ase2sprkkr.input_parameters.input_parameters.InputParameters>`
 object containing the predefined
-values). If the parameters are given by object, the input file is
-created. If it is given by filename, the file is readed and modified
-only if it is required: that is either if the potential argument of
-:meth:`save_input<ase2sprkkr.sprkkr.calculator.SPRKKR.save_input>`,
-:meth:`run<ase2sprkkr.sprkkr.calculator.SPRKKR.run>` or,
-:meth:`calculate<ase2sprkkr.sprkkr.calculator.SPRKKR.calculate>`,
-methods is not False - which indicates that the content of the file should
-be replaced by the new potential - or if the non-empty options argument is specified -
-which leads to the modification of the potential in the file according to the options.
-
-Note, that:
-
-  -  If the potential is set to an SPRKKR calculator (either by the
-       :meth:`potential<ase2sprkkr.sprkkr.calculator.SPRKKR.potential>`,
-       property setter or in the
-       :meth:`constructor<ase2sprkkr.sprkkr.calculator.SPRKKR.__init__>`,
-       ), the atoms
-       object is created from the potential (and stored in the
-       :meth:`atoms<ase2sprkkr.sprkkr.calculator.SPRKKR.atoms>`,
-       property). However, this object does not reflect
-       the changes made to the potential thereafter.
-  -  After the computation of the SCF task, the result provide a new
-       potential (in the
-       :meth:`result.potential<ase2sprkkr.outputs.readers.scf.ScfResult.potential>`
-       property), the old one is not updated, nor the calculator potential property.
+values). Preparation creates a snapshot of the selected parameters, so one-shot
+``task``/``options`` overrides and generated ``POTFIL``/``DATASET`` values do
+not mutate the calculator defaults or a caller-owned ``InputParameters`` object.
+If the parameters are given by an input filename and no change is required, the
+existing file is reused directly; otherwise the parsed values are materialized
+into a new input file while preserving the original potential-file reference.
 
 MPI calculations
 ~~~~~~~~~~~~~~~~
@@ -519,4 +512,3 @@ Please feel free to make a pullrequest or post an issue at our `GitHub
 repository <https://github.com/ase2sprkkr/ase2sprkkr>`__. Any form of
 contributing, error reporting and/or feature request posting will be
 highly appreciated.
-

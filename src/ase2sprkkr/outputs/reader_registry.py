@@ -1,5 +1,8 @@
 """Discovery and selection of task-specific SPR-KKR output readers."""
 
+import os
+import re
+
 from ..common.module_registry import (
     ModuleRegistry,
     RegistryDefinitionError,
@@ -8,8 +11,11 @@ from ..common.module_registry import (
 from . import readers
 
 
+_TASK_PATTERN = re.compile(rb"(?m)^\s*TASK\s*=\s*([A-Z]+)\s*$")
+
+
 class OutputReaderRegistry(ModuleRegistry):
-    """Load and select ``<Task>OutputReader`` classes from reader modules."""
+    """Load, select and detect ``<Task>OutputReader`` classes."""
 
     def __init__(self, package=readers):
         super().__init__(package)
@@ -44,6 +50,34 @@ class OutputReaderRegistry(ModuleRegistry):
             return self[task]
         except RegistryEntryNotFound:
             return DefaultOutputReader
+
+    def detect(self, file):
+        """Detect the task represented by a standalone SPR-KKR output file.
+
+        Modern outputs identify their task explicitly. Older outputs that do
+        not do so are offered to task-specific reader fingerprints, keeping
+        legacy format knowledge beside the reader that understands it.
+        """
+        with open(os.fspath(file), "rb") as output:
+            raw_output = output.read()
+
+        match = _TASK_PATTERN.search(raw_output)
+        if match is not None:
+            task = match.group(1).decode("ascii")
+            if task != "NONE":
+                return task
+
+        detected = [
+            task
+            for task in self.names(include_aliases=False)
+            if self[task].matches_output(raw_output)
+        ]
+        if len(detected) > 1:
+            raise RegistryDefinitionError(
+                "Output matches multiple task-specific readers: "
+                + ", ".join(detected)
+            )
+        return detected[0] if detected else None
 
 
 reader_registry = OutputReaderRegistry()

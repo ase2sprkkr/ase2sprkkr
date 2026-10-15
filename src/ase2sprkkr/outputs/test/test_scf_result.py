@@ -34,6 +34,30 @@ def test_scf_result_calculator_without_original_calculator(monkeypatch, tmp_path
     assert result.calculator is marker
 
 
+def test_new_task_without_original_calculator_creates_continuation(tmp_path):
+    result = TaskResult(None, None, tmp_path)
+    result.files.add_file("potential", "Fe.pot")
+
+    calculator = result.new_task("DOS")
+
+    assert calculator._potential == os.path.join(os.fspath(tmp_path), "Fe.pot")
+    assert calculator.input_parameters.task_definition.name == "DOS"
+
+
+def test_new_task_does_not_depend_on_original_calculator(tmp_path):
+    class OriginalCalculator:
+        def copy_with_potential(self, potential):
+            raise AssertionError("continuation must not copy the original calculator")
+
+    result = TaskResult(None, OriginalCalculator(), tmp_path)
+    result.files.add_file("potential", "Fe.pot")
+
+    calculator = result.new_task("DOS")
+
+    assert calculator._potential == os.path.join(os.fspath(tmp_path), "Fe.pot")
+    assert calculator.input_parameters.task_definition.name == "DOS"
+
+
 def test_scf_info_output_includes_final_status(capsys):
     output = Path(__file__).parent.parent / "examples" / "scf.out"
     parser = ScfOutputParser("info")

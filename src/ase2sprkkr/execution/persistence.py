@@ -4,7 +4,8 @@ from __future__ import annotations
 
 from threading import RLock
 
-from .manager import ExecutionManager
+from .manager import ExecutionManager as BaseExecutionManager
+from .project_manager import ExecutionManager
 
 
 _DEFAULT_MANAGER = None
@@ -24,13 +25,13 @@ def resolve_execution_manager(persistent):
     """Resolve the public ``persistent`` option to an execution manager.
 
     ``False`` and ``None`` disable persistence, ``True`` selects the process-wide
-    default manager, and an explicit :class:`ExecutionManager` is used as-is.
+    default manager, and an explicit execution manager is used as-is.
     """
     if persistent is None or persistent is False:
         return None
     if persistent is True:
         return default_execution_manager()
-    if isinstance(persistent, ExecutionManager):
+    if isinstance(persistent, BaseExecutionManager):
         return persistent
     raise TypeError(
         "persistent must be False, True, None, or an ExecutionManager instance"
