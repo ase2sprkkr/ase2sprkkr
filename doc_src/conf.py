@@ -13,7 +13,7 @@
 import os
 import sys
 sys.path.insert(0, os.path.abspath('../src/'))
-from ase2sprkkr import InputParameters  # NOQA E402
+from ase2sprkkr import InputParameters, Potential  # NOQA E402
 InputParameters.definitions
 
 # -- Project information -----------------------------------------------------
@@ -78,8 +78,14 @@ html_css_files = [
     'mods.css',
 ]
 
+
 def skip_member(app, what, name, obj, skip, options):
     if skip:
+       return True
+    if what == 'class' and (
+        (name == 'InputParameters' and obj is InputParameters)
+        or (name == 'Potential' and obj is Potential)
+    ):
        return True
     if what=='module' or what=='package':
        if name == 'test':
