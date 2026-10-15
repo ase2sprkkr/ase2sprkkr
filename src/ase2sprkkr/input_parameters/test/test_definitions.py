@@ -56,8 +56,9 @@ class TestDefinitions:
         )
 
     def test_task_definitions_do_not_own_registries_and_are_pickleable(self):
-        for name in ("SCF", "BSFEK"):
-            task = InputParameters.task_registry[name]
+        registry = InputParameters.task_registry
+        for name in registry.names():
+            task = registry[name]
             assert not hasattr(task, "_input_parameters_registry")
 
             restored = pickle.loads(pickle.dumps(task))
@@ -65,6 +66,16 @@ class TestDefinitions:
             assert (
                 restored.input_parameters_definition_name
                 == task.input_parameters_definition_name
+            )
+            assert (
+                registry.input_parameters_definition(restored)
+                is registry.input_parameters_definition(task)
+            )
+            restored_parameters = registry.create_input_parameters(restored)
+            assert restored_parameters.task_name == task.name
+            assert (
+                restored_parameters._definition
+                is registry.input_parameters_definition(task)
             )
 
     def test_input_parameters_delegate_file_manifests(self, tmp_path, monkeypatch):
