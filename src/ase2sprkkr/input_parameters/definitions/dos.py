@@ -5,8 +5,8 @@ from ..input_parameters_definitions import InputParametersDefinition
 from ..task_definition import TaskDefinition
 
 
-def task_definition():
-    schema = InputParametersDefinition(
+def input_parameters_definition():
+    return InputParametersDefinition(
         "dos",
         [
             CONTROL("DOS"),
@@ -20,8 +20,11 @@ def task_definition():
         ],
         info="DOS - The density of states computation",
     )
+
+
+def task_definition():
     return TaskDefinition(
-        schema,
+        input_parameters_definition,
         name="DOS",
         executable="kkrgen",
         mpi=True,
