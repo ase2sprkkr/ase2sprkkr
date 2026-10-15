@@ -227,8 +227,7 @@ class InputParameters(ConfigurationFile):
                     executor,
                     reader,
                     spec,
-                    task=task._execution_task_name(self),
-                    task_definition=task.name,
+                    task=self.task_name,
                     dataset=self.CONTROL.DATASET.result,
                     callback=completed,
                 )

@@ -6,6 +6,7 @@ from ase2sprkkr.execution import RunReference, RunState
 from ase2sprkkr.input_parameters.input_parameters import InputParameters
 from ase2sprkkr.outputs.persistent import attach_persistent_run
 from ase2sprkkr.outputs.readers.bsf import BsfOutputReader
+from ase2sprkkr.outputs.readers.default import DefaultOutputReader
 
 
 class _Store:
@@ -37,11 +38,10 @@ class _Manager:
         return SimpleNamespace(record=record, reader=reader)
 
 
-def _record(tmp_path, task, *, task_definition=None, input_file=None):
+def _record(tmp_path, task, *, input_file=None):
     return SimpleNamespace(
         id="run",
         task=task,
-        task_definition=task_definition,
         directory=str(tmp_path),
         reference=RunReference(executor="test", native_id="1"),
         state=RunState.RUNNING,
@@ -53,7 +53,7 @@ def _record(tmp_path, task, *, task_definition=None, input_file=None):
     )
 
 
-def test_persistent_attach_uses_legacy_task_alias_when_definition_not_persisted(tmp_path):
+def test_persistent_attach_uses_requested_task_alias(tmp_path):
     record = _record(tmp_path, "BSFEK")
 
     attached = attach_persistent_run(_Manager(record), record.id)
@@ -62,9 +62,7 @@ def test_persistent_attach_uses_legacy_task_alias_when_definition_not_persisted(
     assert attached.reader.task_name == "BSFEK"
 
 
-def test_persistent_attach_uses_bound_task_definition_when_native_task_differs(
-    monkeypatch, tmp_path
-):
+def test_persistent_attach_uses_task_definition_reader(monkeypatch, tmp_path):
     class SelectedReader:
         def __init__(self, input_parameters, calculator, directory, task_name=None):
             self.input_parameters = input_parameters
@@ -72,13 +70,13 @@ def test_persistent_attach_uses_bound_task_definition_when_native_task_differs(
 
     task = InputParameters.task_registry["DOS"]
     monkeypatch.setattr(task, "result_reader", SelectedReader)
-    record = _record(tmp_path, "SPLEED", task_definition="DOS")
+    record = _record(tmp_path, "DOS")
 
     attached = attach_persistent_run(_Manager(record), record.id)
 
     assert isinstance(attached.reader, SelectedReader)
     assert attached.reader.input_parameters is None
-    assert attached.reader.task_name == "SPLEED"
+    assert attached.reader.task_name == "DOS"
 
 
 def test_persistent_attach_reconstructs_input_parameters_when_available(
@@ -95,12 +93,7 @@ def test_persistent_attach_reconstructs_input_parameters_when_available(
     input_file.write_text("historical input")
     monkeypatch.setattr(task, "result_reader", SelectedReader)
     monkeypatch.setattr(task, "read_input_parameters", lambda file: parameters)
-    record = _record(
-        tmp_path,
-        "DOS",
-        task_definition="DOS",
-        input_file=input_file,
-    )
+    record = _record(tmp_path, "DOS", input_file=input_file)
 
     attached = attach_persistent_run(_Manager(record), record.id)
 
@@ -125,12 +118,7 @@ def test_persistent_attach_degrades_when_input_is_stale(monkeypatch, tmp_path):
             AssertionError("stale input must not be parsed")
         ),
     )
-    record = _record(
-        tmp_path,
-        "DOS",
-        task_definition="DOS",
-        input_file=input_file,
-    )
+    record = _record(tmp_path, "DOS", input_file=input_file)
 
     attached = attach_persistent_run(
         _Manager(record, input_current=False),
@@ -141,6 +129,15 @@ def test_persistent_attach_degrades_when_input_is_stale(monkeypatch, tmp_path):
     assert attached.reader.input_parameters is None
 
 
+def test_persistent_attach_falls_back_for_unknown_requested_task(tmp_path):
+    record = _record(tmp_path, "UNKNOWN_TASK")
+
+    attached = attach_persistent_run(_Manager(record), record.id)
+
+    assert isinstance(attached.reader, DefaultOutputReader)
+    assert attached.reader.task_name == "UNKNOWN_TASK"
+
+
 def test_persistent_attach_does_not_hide_task_registry_programming_errors(
     monkeypatch, tmp_path
 ):
@@ -149,7 +146,7 @@ def test_persistent_attach_does_not_hide_task_registry_programming_errors(
             raise KeyError(f"broken task definition for {name}")
 
     monkeypatch.setattr(InputParameters, "task_registry", BrokenRegistry())
-    record = _record(tmp_path, "DOS", task_definition="DOS")
+    record = _record(tmp_path, "DOS")
 
     with pytest.raises(KeyError, match="broken task definition"):
         attach_persistent_run(_Manager(record), record.id)

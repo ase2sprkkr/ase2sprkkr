@@ -82,7 +82,7 @@ def test_reader_discovery_uses_registry_and_default_fallback():
     assert KkrOutputReader.class_for_task("unknown") is DefaultOutputReader
 
 
-def test_task_reader_respects_concrete_execution_task():
+def test_task_reader_respects_concrete_execution_task_when_parameters_exist():
     parameters = InputParameters.create("ARPES")
     task = parameters.task_definition
     assert task._execution_task_name(parameters) == "ARPES"
@@ -91,4 +91,9 @@ def test_task_reader_respects_concrete_execution_task():
     parameters.TASK.TASK = "SPLEED"
     assert task._execution_task_name(parameters) == "SPLEED"
     assert task.output_reader_class(parameters) is DefaultOutputReader
-    assert task.output_reader_class(execution_task="SPLEED") is DefaultOutputReader
+
+
+def test_task_reader_degrades_to_task_definition_without_parameters():
+    task = InputParameters.task_registry["ARPES"]
+
+    assert task.output_reader_class().__name__ == "ArpesOutputReader"

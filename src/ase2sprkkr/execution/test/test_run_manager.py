@@ -100,8 +100,7 @@ def test_persistent_run_is_first_saved_as_submitting(tmp_path):
         executor,
         reader=object(),
         spec=_spec(tmp_path),
-        task="SPLEED",
-        task_definition="ARPES",
+        task="ARPES",
         dataset="case",
     )
     backend = executor.runners[0]
@@ -115,8 +114,7 @@ def test_persistent_run_is_first_saved_as_submitting(tmp_path):
     assert stored.state == RunState.QUEUED
     assert stored.finished_at is None
     assert stored.reference == backend.reference
-    assert stored.task == "SPLEED"
-    assert stored.task_definition == "ARPES"
+    assert stored.task == "ARPES"
     assert stored.dataset == "case"
 
 
@@ -234,6 +232,41 @@ def test_missing_captured_glob_member_counts_as_missing(tmp_path):
     second.unlink()
 
     assert manager._missing_result_files(stored.result_files) == (str(second),)
+
+
+def test_new_glob_member_does_not_change_historical_snapshot(tmp_path):
+    store = RunStore(tmp_path / "runs")
+    manager = ExecutionManager(store)
+    executor = _FakeExecutor()
+    input_file = tmp_path / "run.inp"
+    output_file = tmp_path / "run.out"
+    pattern = tmp_path / "case-*.dat"
+    input_file.write_text("input")
+    spec = SimpleNamespace(
+        directory=str(tmp_path),
+        input_file=str(input_file),
+        output_file=str(output_file),
+        input_files=(str(input_file),),
+        output_files=(str(output_file), str(pattern)),
+        cache_files=(),
+    )
+    run = manager.create_run(executor, object(), spec, task="DOS")
+
+    run.submit()
+    output_file.write_text("output")
+    historical = tmp_path / "case-1.dat"
+    historical.write_text("one")
+    executor.runners[0].finish()
+    later = tmp_path / "case-2.dat"
+    later.write_text("from another calculation")
+
+    updated = manager.check_result_files(run.id)
+
+    assert updated.result_files.state == ResultFilesState.CURRENT
+    assert {item.path for item in updated.result_files.fingerprints} == {
+        str(output_file),
+        str(historical),
+    }
 
 
 def test_changed_result_file_marks_overwritten_without_changing_outcome(tmp_path):
@@ -433,11 +466,7 @@ def test_refresh_batches_referenced_runs(tmp_path):
 def test_run_store_shards_records_and_marks_schema(tmp_path):
     store = RunStore(tmp_path / "runs")
     manager = ExecutionManager(store)
-    record = manager.new_record(
-        task="SPLEED",
-        task_definition="ARPES",
-        directory=tmp_path,
-    )
+    record = manager.new_record(task="ARPES", directory=tmp_path)
     record = manager.transition(record, state=RunState.SUBMITTING, reference=None)
 
     path = tmp_path / "runs" / record.created_at[:10] / f"{record.id}.json"
@@ -445,20 +474,17 @@ def test_run_store_shards_records_and_marks_schema(tmp_path):
 
     assert path.is_file()
     assert data["schema_version"] == 2
-    assert data["task"] == "SPLEED"
-    assert data["task_definition"] == "ARPES"
+    assert data["task"] == "ARPES"
+    assert "task_definition" not in data
     assert data["finished_at"] is None
 
 
-def test_run_store_migrates_schema_one_records_without_inventing_task_definition(
-    tmp_path,
-):
+def test_run_store_migrates_schema_one_records(tmp_path):
     store = RunStore(tmp_path / "runs")
     manager = ExecutionManager(store)
     spec = _result_files_spec(tmp_path)
     record = manager.new_record(
         task="DOS",
-        task_definition="DOS",
         directory=tmp_path,
         result_files=manager._result_files_for_spec(spec),
     )
@@ -467,7 +493,6 @@ def test_run_store_migrates_schema_one_records_without_inventing_task_definition
     path = tmp_path / "runs" / record.created_at[:10] / f"{record.id}.json"
     data = json.loads(path.read_text())
     data["schema_version"] = 1
-    data.pop("task_definition")
     result_files = data["result_files"]
     result_files["fingerprints"] = [
         *result_files.pop("input_fingerprints"),
@@ -479,13 +504,29 @@ def test_run_store_migrates_schema_one_records_without_inventing_task_definition
 
     assert migrated.schema_version == 2
     assert migrated.task == "DOS"
-    assert migrated.task_definition is None
     assert {item.path for item in migrated.result_files.input_fingerprints} == {
         str(tmp_path / "run.inp")
     }
     assert str(tmp_path / "run.inp") not in {
         item.path for item in migrated.result_files.fingerprints
     }
+
+
+def test_development_dual_task_schema_is_migrated_to_requested_task(tmp_path):
+    store = RunStore(tmp_path / "runs")
+    manager = ExecutionManager(store)
+    record = manager.new_record(task="ARPES", directory=tmp_path)
+    store.save(record)
+    path = tmp_path / "runs" / record.created_at[:10] / f"{record.id}.json"
+    data = json.loads(path.read_text())
+    data["task"] = "SPLEED"
+    data["task_definition"] = "ARPES"
+    path.write_text(json.dumps(data))
+
+    migrated = store.get(record.id)
+
+    assert migrated.task == "ARPES"
+    assert not hasattr(migrated, "task_definition")
 
 
 def test_schema_two_development_digest_is_ignored(tmp_path):

@@ -233,10 +233,9 @@ class DuplicateSubmissionError(RuntimeError):
 class RunRecord:
     """Persistent identity and last known lifecycle state of one run.
 
-    ``task`` is the concrete native execution task. ``task_definition`` is the
-    bound ASE2SPRKKR task identity when it was known at submission time. Keeping
-    both allows result reconstruction without conflating task policy with a
-    concrete ``TASK.TASK`` submode.
+    ``task`` is the requested ASE2SPRKKR task registry name used to create the
+    calculation. The execution layer stores that name as opaque identity; task
+    aliases and their semantics remain owned by the task registry.
 
     ``state`` is the public run lifecycle, including result finalization. A
     terminal backend outcome is therefore represented as ``FINISHING`` until
@@ -256,7 +255,6 @@ class RunRecord:
     updated_at: str
     task: str
     directory: str
-    task_definition: Optional[str] = None
     finished_at: Optional[str] = None
     dataset: Optional[str] = None
     endpoint: Optional[ExecutorEndpoint] = None
@@ -270,10 +268,6 @@ class RunRecord:
 
     def __post_init__(self):
         object.__setattr__(self, "task", str(self.task).upper())
-        if self.task_definition is not None:
-            object.__setattr__(
-                self, "task_definition", str(self.task_definition).upper()
-            )
         if isinstance(self.endpoint, dict):
             object.__setattr__(self, "endpoint", ExecutorEndpoint(**self.endpoint))
         if isinstance(self.submission, dict):
@@ -373,9 +367,19 @@ class RunStore:
             version = data.get("schema_version", 1)
             if version == 1:
                 data["schema_version"] = _RUN_RECORD_SCHEMA_VERSION
-                data.setdefault("task_definition", None)
-            elif version == _RUN_RECORD_SCHEMA_VERSION:
-                data.setdefault("task_definition", None)
+            elif version != _RUN_RECORD_SCHEMA_VERSION:
+                raise ValueError(
+                    f"unsupported schema version {version}; "
+                    f"expected {_RUN_RECORD_SCHEMA_VERSION}"
+                )
+
+            # A short-lived development schema stored the native execution task
+            # in ``task`` and the requested ASE2SPRKKR identity separately.
+            # Promote the latter when present, then discard the superseded field.
+            task_definition = data.pop("task_definition", None)
+            if task_definition is not None:
+                data["task"] = task_definition
+
             RunStore._migrate_result_files(data)
             return RunRecord(**data)
         except CorruptRunRecord:
@@ -587,24 +591,38 @@ class ExecutionManager:
             and stat.st_mtime_ns == fingerprint.mtime_ns
         )
 
+    @classmethod
+    def _file_is_current(cls, result_files, path, fingerprints):
+        if result_files is None or path is None:
+            return False
+        path = os.path.abspath(path)
+        if result_files.captured_at is None:
+            return os.path.isfile(path)
+        for fingerprint in fingerprints:
+            if os.path.abspath(fingerprint.path) == path:
+                return cls._fingerprint_current(fingerprint)
+        return False
+
     @staticmethod
     def _missing_result_files(result_files):
         """Return the concrete historical files that should be restored."""
         if result_files is None:
             return ()
-        missing = [
-            item.path
-            for item in result_files.all_fingerprints
-            if not os.path.isfile(item.path)
-        ]
+
+        if result_files.captured_at is not None:
+            # After finalization the concrete snapshot is authoritative. Do not
+            # rediscover manifests: a later calculation may create new files
+            # matching the same exact name or wildcard.
+            return tuple(
+                item.path
+                for item in result_files.all_fingerprints
+                if not os.path.isfile(item.path)
+            )
+
+        missing = []
         for manifest in result_files.manifests:
             if glob.has_magic(manifest):
-                # Once a snapshot exists, concrete fingerprint paths are the
-                # historical authority. Re-expanding a wildcard later could
-                # pull files produced by another calculation.
-                if result_files.captured_at is None and not glob.glob(
-                    manifest, recursive=True
-                ):
+                if not glob.glob(manifest, recursive=True):
                     missing.append(manifest)
             elif not os.path.isfile(manifest):
                 missing.append(manifest)
@@ -633,22 +651,31 @@ class ExecutionManager:
             else self.store.get(run.id)
         )
         result_files = record.result_files
-        if result_files is None or result_files.input_file is None:
-            return False
-        path = os.path.abspath(result_files.input_file)
-        if result_files.captured_at is None:
-            return os.path.isfile(path)
-        for fingerprint in result_files.input_fingerprints:
-            if os.path.abspath(fingerprint.path) == path:
-                return self._fingerprint_current(fingerprint)
-        return False
+        return self._file_is_current(
+            result_files,
+            None if result_files is None else result_files.input_file,
+            () if result_files is None else result_files.input_fingerprints,
+        )
+
+    def output_file_is_current(self, run):
+        """Whether the primary historical output belongs to the captured run."""
+        record = (
+            self.store.get(run)
+            if isinstance(run, str)
+            else self.store.get(run.id)
+        )
+        result_files = record.result_files
+        return self._file_is_current(
+            result_files,
+            None if result_files is None else result_files.output_file,
+            () if result_files is None else result_files.fingerprints,
+        )
 
     def new_record(
         self,
         *,
         task,
         directory,
-        task_definition=None,
         dataset=None,
         endpoint=None,
         submission=None,
@@ -664,9 +691,6 @@ class ExecutionManager:
             updated_at=now,
             finished_at=None,
             task=str(task).upper(),
-            task_definition=(
-                None if task_definition is None else str(task_definition).upper()
-            ),
             dataset=None if dataset is None else str(dataset),
             directory=os.path.abspath(os.fspath(directory)),
             endpoint=endpoint,
@@ -910,9 +934,9 @@ class ExecutionManager:
                 or result_files.state == ResultFilesState.OVERWRITTEN
             ):
                 return latest
-            if (
-                self._result_files_snapshot(result_files.output_files)
-                == result_files.fingerprints
+            if all(
+                self._fingerprint_current(fingerprint)
+                for fingerprint in result_files.fingerprints
             ):
                 return latest
             return replace(
@@ -955,7 +979,7 @@ class ExecutionManager:
             return self.update_file_retrieval(
                 refreshed,
                 FileRetrievalState.FAILED,
-                "Declared remote files are still missing: " + ", ".join(remaining),
+                "Captured remote files are still missing: " + ", ".join(remaining),
             )
         return refreshed
 
@@ -995,7 +1019,6 @@ class ExecutionManager:
         spec,
         *,
         task,
-        task_definition=None,
         dataset=None,
         callback=None,
         run_id=None,
@@ -1010,7 +1033,6 @@ class ExecutionManager:
         )
         record = self.new_record(
             task=task,
-            task_definition=task_definition,
             dataset=dataset,
             directory=spec.directory,
             endpoint=endpoint,

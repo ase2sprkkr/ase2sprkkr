@@ -2,8 +2,6 @@
 
 from __future__ import annotations
 
-import os
-
 from ..common.module_registry import RegistryEntryNotFound
 from ..execution import ResultFilesState, RunState
 from ..input_parameters.input_parameters import InputParameters
@@ -24,16 +22,9 @@ def _record(manager, run):
 
 
 def _task_definition_for_record(record):
-    """Return the best reconstructable bound task definition.
-
-    Schema-2 records persist the bound task explicitly. Older records only have
-    ``task``; that value is still worth trying because historically it was often
-    a normal task name or alias. A concrete native submode simply misses the
-    task registry and falls through to native reader discovery.
-    """
-    name = record.task_definition or record.task
+    """Return the task definition identified by the persisted requested task."""
     try:
-        return InputParameters.task_registry[name]
+        return InputParameters.task_registry[record.task]
     except RegistryEntryNotFound:
         return None
 
@@ -57,15 +48,7 @@ def _reader_for_record(manager, record):
         task_definition = parameters.task_definition
 
     if task_definition is not None:
-        # Only schema-2 records distinguish bound TaskDefinition identity from
-        # the concrete native execution task. In schema-1 records ``task`` may
-        # itself be a TaskDefinition alias such as BSFEK/BSFKK, so treating it
-        # as a native reader key would lose the alias's BSF reader semantics.
-        execution_task = record.task if record.task_definition is not None else None
-        reader_class = task_definition.output_reader_class(
-            parameters,
-            execution_task=execution_task,
-        )
+        reader_class = task_definition.output_reader_class(parameters)
     else:
         try:
             reader_class = reader_registry[record.task]
@@ -108,9 +91,8 @@ def load_persistent_result(manager, run, *, reader=None):
     Result-file retrieval and freshness remain responsibilities of the execution
     layer. When the historical input file is still current, reader creation
     receives reconstructed task-bound input parameters. If that context is
-    unavailable or stale, reconstruction degrades to the persisted
-    task-definition/native-task identities instead of making the output result
-    unavailable.
+    unavailable or stale, reconstruction degrades to the persisted requested
+    task identity instead of making the output result unavailable.
     """
     record = manager.retrieve_result_files(run)
     record = manager.check_result_files(record)
@@ -126,8 +108,8 @@ def load_persistent_result(manager, run, *, reader=None):
         )
 
     output_file = result_files.output_file
-    output_exists = os.path.isfile(output_file)
-    if not output_exists and record.state == RunState.FINISHED:
+    output_available = manager.output_file_is_current(record)
+    if not output_available and record.state == RunState.FINISHED:
         raise PersistentResultUnavailableError(
             record, "output result file is unavailable"
         )
@@ -144,7 +126,7 @@ def load_persistent_result(manager, run, *, reader=None):
         if manager.input_file_is_current(record)
         else None
     )
-    if output_exists:
+    if output_available:
         result = reader.read_from_file(
             output_file,
             return_code=return_code,
@@ -152,9 +134,6 @@ def load_persistent_result(manager, run, *, reader=None):
             directory=record.directory,
         )
     else:
-        # Failed/cancelled runs may have no parseable output at all. A shell
-        # result still conveys their terminal outcome without pretending that a
-        # successful calculation was reconstructed.
         result = reader.create_result(output_file, input_file)
         result.complete(None, return_code)
 

@@ -104,13 +104,13 @@ class TaskDefinition:
             value = None
         return str(value or self.name).upper()
 
-    def output_reader_class(self, parameters=None, *, execution_task=None):
-        """Return the reader class used for the concrete task output.
+    def output_reader_class(self, parameters=None):
+        """Return the reader class used for this task output.
 
-        An explicitly configured reader belongs to the task definition. The
-        default reader is selected from the concrete native execution task. Live
-        parameters are authoritative when available; a persisted execution-task
-        identity provides the lossless fallback after restart.
+        An explicitly configured reader belongs to the task definition. When
+        concrete input parameters are available, the default reader follows the
+        native ``TASK.TASK`` selected by those parameters. Without them, the
+        task definition itself is the best available reconstruction context.
         """
         if self.result_reader is not None:
             return self.result_reader
@@ -118,12 +118,11 @@ class TaskDefinition:
         from ..outputs.reader_registry import reader_registry
         from ..outputs.readers.default import DefaultOutputReader
 
-        if parameters is not None:
-            task_name = self._execution_task_name(parameters)
-        elif execution_task is not None:
-            task_name = str(execution_task).upper()
-        else:
-            task_name = self.input_parameters_definition.name
+        task_name = (
+            self._execution_task_name(parameters)
+            if parameters is not None
+            else self.input_parameters_definition.name
+        )
         try:
             return reader_registry[task_name]
         except RegistryEntryNotFound:
