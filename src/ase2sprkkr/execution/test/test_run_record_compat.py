@@ -5,8 +5,8 @@ import pytest
 from ase2sprkkr.execution import CorruptRunRecord, RunRecord, RunState, RunStore
 
 
-@pytest.mark.parametrize("schema_version", [1, 2, 3])
-def test_legacy_run_record_schema_is_not_supported(tmp_path, schema_version):
+@pytest.mark.parametrize("schema_version", [0, 2, 3, 4, 5])
+def test_other_run_record_schemas_are_not_supported(tmp_path, schema_version):
     store = RunStore(tmp_path / "runs")
     created_at = "2026-10-12T12:34:56+00:00"
     directory = store.directory / "2026-10-12"
@@ -45,4 +45,5 @@ def test_run_record_constructor_does_not_require_finished_at(tmp_path):
     assert record.task == "DOS"
     assert record.directory == str(tmp_path)
     assert record.finished_at is None
-    assert record.schema_version == 4
+    assert record.schema_version == 1
+    assert not hasattr(record, "backend_state")

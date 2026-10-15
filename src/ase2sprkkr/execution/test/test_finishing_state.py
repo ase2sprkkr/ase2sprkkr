@@ -85,19 +85,19 @@ def _run(tmp_path):
     return manager, executor, run
 
 
-def test_live_terminal_backend_state_is_finishing_until_callback(tmp_path):
+def test_live_terminal_backend_state_is_finalizing_until_callback(tmp_path):
     manager, executor, run = _run(tmp_path)
     executor.runner.backend_finished()
 
-    assert run.state == RunState.FINISHING
+    assert run.state == RunState.FINALIZING
     stored = manager.store.get(run.id)
-    assert stored.state == RunState.FINISHING
+    assert stored.state == RunState.FINALIZING
 
     executor.runner.finalize()
 
     stored = manager.store.get(run.id)
     assert stored.state == RunState.FINISHED
-    assert stored.backend_state == RunState.FINISHED
+    assert not hasattr(stored, "backend_state")
 
 
 def test_refresh_keeps_backend_finished_run_active_until_finalization(tmp_path):
@@ -106,18 +106,17 @@ def test_refresh_keeps_backend_finished_run_active_until_finalization(tmp_path):
 
     (refreshed,) = manager.refresh((run.record,))
 
-    assert refreshed.state == RunState.FINISHING
-    assert refreshed.backend_state == RunState.FINISHED
+    assert refreshed.state == RunState.FINALIZING
     assert refreshed.return_code == 0
     assert refreshed in manager.store.runs(active=True)
 
 
-def test_refresh_remembers_failed_backend_outcome_while_finishing(tmp_path):
+def test_refresh_keeps_failed_backend_run_active_until_finalization(tmp_path):
     manager, executor, run = _run(tmp_path)
-    executor.status_value = RunState.FAILED
+    executor.status_value = RunState.EXECUTION_FAILED
 
     (refreshed,) = manager.refresh((run.record,))
 
-    assert refreshed.state == RunState.FINISHING
-    assert refreshed.backend_state == RunState.FAILED
+    assert refreshed.state == RunState.FINALIZING
     assert refreshed.return_code == 1
+    assert refreshed in manager.store.runs(active=True)

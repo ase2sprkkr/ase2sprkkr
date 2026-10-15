@@ -48,7 +48,9 @@ class _FakeRunner:
 
     def finish(self, return_code=0):
         self.result.return_code = return_code
-        self.state = RunState.FINISHED if return_code == 0 else RunState.FAILED
+        self.state = (
+            RunState.FINISHED if return_code == 0 else RunState.EXECUTION_FAILED
+        )
         if self.callback:
             self.callback(self.result)
 
@@ -159,7 +161,13 @@ def test_completion_callback_persists_final_result(tmp_path):
 
 
 @pytest.mark.parametrize(
-    "state", (RunState.FINISHED, RunState.FAILED, RunState.CANCELLED)
+    "state",
+    (
+        RunState.FINISHED,
+        RunState.EXECUTION_FAILED,
+        RunState.FINALIZATION_FAILED,
+        RunState.CANCELLED,
+    ),
 )
 def test_first_terminal_transition_sets_immutable_finished_at(tmp_path, state):
     manager = ExecutionManager(RunStore(tmp_path / "runs"))
@@ -167,7 +175,7 @@ def test_first_terminal_transition_sets_immutable_finished_at(tmp_path, state):
     record = manager.transition(record, state=RunState.RUNNING)
     assert record.finished_at is None
 
-    record = manager.transition(record, state=RunState.FINISHING)
+    record = manager.transition(record, state=RunState.FINALIZING)
     assert record.finished_at is None
 
     record = manager.transition(record, state=state)
@@ -495,11 +503,12 @@ def test_run_store_shards_records_and_marks_schema(tmp_path):
     data = json.loads(path.read_text())
 
     assert path.is_file()
-    assert data["schema_version"] == 4
+    assert data["schema_version"] == 1
     assert data["task"] == "ARPES"
     assert data["input_definition"] is None
     assert data["requested_task"] is None
     assert "task_definition" not in data
+    assert "backend_state" not in data
     assert data["finished_at"] is None
 
 
@@ -528,8 +537,8 @@ def test_run_store_persists_file_digests(tmp_path):
     assert "state" not in data["result_files"]
 
 
-@pytest.mark.parametrize("schema_version", [1, 2, 3])
-def test_run_store_rejects_older_schema_versions(tmp_path, schema_version):
+@pytest.mark.parametrize("schema_version", [0, 2, 3, 4, 5])
+def test_run_store_rejects_other_schema_versions(tmp_path, schema_version):
     store = RunStore(tmp_path / "runs")
     manager = ExecutionManager(store)
     record = manager.new_record(task="DOS", directory=tmp_path)
