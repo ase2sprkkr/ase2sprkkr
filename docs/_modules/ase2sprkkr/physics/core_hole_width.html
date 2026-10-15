@@ -1,0 +1,2366 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ase2sprkkr.physics.core_hole_width &mdash; ASE2SPRKKR  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/mods.css?v=26f6988d" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            ASE2SPRKKR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage.html">How to use the package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../how-to-install.html">More about the package installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../philosophy.html">Philosophy of the package (for developers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../authors.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Examples</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../auto/ase2sprkkr.html">ase2sprkkr</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">ASE2SPRKKR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">ase2sprkkr.physics.core_hole_width</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for ase2sprkkr.physics.core_hole_width</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="c1"># The data for all shells is organized in dictionaries keyed by (NC, LC, IK).</span>
+<span class="c1"># For shells where IK is not relevant (LC=0), IK=1 is used as a consistent key.</span>
+<span class="c1">#</span>
+<span class="c1"># Two datasets are available:</span>
+<span class="c1">#   &#39;campbell-papp&#39;      — J. L. Campbell &amp; T. Papp, At. Data Nucl. Data Tables 77, 1 (2001)</span>
+<span class="c1">#   &#39;fuggle-inglesfield&#39; — J. C. Fuggle &amp; J. E. Inglesfield, Topics in Applied Physics</span>
+<span class="c1">#                          vol. 69, Springer (1992), Appendix B; as used in xband/wcorehole.f.</span>
+<span class="c1">#                          Only K and L shells are tabulated; M and higher return 0.</span>
+
+<span class="c1"># Fuggle &amp; Inglesfield (1992) dataset — from xband 6.3 wcorehole.f</span>
+<span class="n">core_hole_width_data_fuggle_inglesfield</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+        <span class="p">[</span>  <span class="c1"># K-shell</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.24</span><span class="p">,</span>
+            <span class="mf">0.30</span><span class="p">,</span>
+            <span class="mf">0.36</span><span class="p">,</span>
+            <span class="mf">0.42</span><span class="p">,</span>
+            <span class="mf">0.48</span><span class="p">,</span>
+            <span class="mf">0.53</span><span class="p">,</span>
+            <span class="mf">0.59</span><span class="p">,</span>
+            <span class="mf">0.64</span><span class="p">,</span>
+            <span class="mf">0.68</span><span class="p">,</span>
+            <span class="mf">0.74</span><span class="p">,</span>
+            <span class="mf">0.81</span><span class="p">,</span>
+            <span class="mf">0.86</span><span class="p">,</span>
+            <span class="mf">0.94</span><span class="p">,</span>
+            <span class="mf">1.01</span><span class="p">,</span>
+            <span class="mf">1.08</span><span class="p">,</span>
+            <span class="mf">1.16</span><span class="p">,</span>
+            <span class="mf">1.25</span><span class="p">,</span>
+            <span class="mf">1.33</span><span class="p">,</span>
+            <span class="mf">1.44</span><span class="p">,</span>
+            <span class="mf">1.55</span><span class="p">,</span>
+            <span class="mf">1.67</span><span class="p">,</span>
+            <span class="mf">1.82</span><span class="p">,</span>
+            <span class="mf">1.96</span><span class="p">,</span>
+            <span class="mf">2.14</span><span class="p">,</span>
+            <span class="mf">2.33</span><span class="p">,</span>
+            <span class="mf">2.52</span><span class="p">,</span>
+            <span class="mf">2.75</span><span class="p">,</span>
+            <span class="mf">2.99</span><span class="p">,</span>
+            <span class="mf">3.25</span><span class="p">,</span>
+            <span class="mf">3.52</span><span class="p">,</span>
+            <span class="mf">3.84</span><span class="p">,</span>
+            <span class="mf">4.14</span><span class="p">,</span>
+            <span class="mf">4.52</span><span class="p">,</span>
+            <span class="mf">4.91</span><span class="p">,</span>
+            <span class="mf">5.33</span><span class="p">,</span>
+            <span class="mf">5.77</span><span class="p">,</span>
+            <span class="mf">6.24</span><span class="p">,</span>
+            <span class="mf">6.75</span><span class="p">,</span>
+            <span class="mf">7.28</span><span class="p">,</span>
+            <span class="mf">7.91</span><span class="p">,</span>
+            <span class="mf">8.49</span><span class="p">,</span>
+            <span class="mf">9.19</span><span class="p">,</span>
+            <span class="mf">9.89</span><span class="p">,</span>
+            <span class="mf">10.60</span><span class="p">,</span>
+            <span class="mf">11.40</span><span class="p">,</span>
+            <span class="mf">12.30</span><span class="p">,</span>
+            <span class="mf">13.20</span><span class="p">,</span>
+            <span class="mf">14.10</span><span class="p">,</span>
+            <span class="mf">15.10</span><span class="p">,</span>
+            <span class="mf">16.20</span><span class="p">,</span>
+            <span class="mf">17.30</span><span class="p">,</span>
+            <span class="mf">18.50</span><span class="p">,</span>
+            <span class="mf">19.70</span><span class="p">,</span>
+            <span class="mf">21.00</span><span class="p">,</span>
+            <span class="mf">22.30</span><span class="p">,</span>
+            <span class="mf">23.90</span><span class="p">,</span>
+            <span class="mf">25.20</span><span class="p">,</span>
+            <span class="mf">26.80</span><span class="p">,</span>
+            <span class="mf">28.40</span><span class="p">,</span>
+            <span class="mf">30.10</span><span class="p">,</span>
+            <span class="mf">31.90</span><span class="p">,</span>
+            <span class="mf">33.70</span><span class="p">,</span>
+            <span class="mf">35.70</span><span class="p">,</span>
+            <span class="mf">37.70</span><span class="p">,</span>
+            <span class="mf">39.90</span><span class="p">,</span>
+            <span class="mf">24.10</span><span class="p">,</span>
+            <span class="mf">44.40</span><span class="p">,</span>
+            <span class="mf">46.80</span><span class="p">,</span>
+            <span class="mf">49.30</span><span class="p">,</span>
+            <span class="mf">52.00</span><span class="p">,</span>
+            <span class="mf">54.60</span><span class="p">,</span>
+            <span class="mf">57.40</span><span class="p">,</span>
+            <span class="mf">60.40</span><span class="p">,</span>
+            <span class="mf">63.40</span><span class="p">,</span>
+            <span class="mf">66.60</span><span class="p">,</span>
+            <span class="mf">69.80</span><span class="p">,</span>
+            <span class="mf">73.30</span><span class="p">,</span>
+            <span class="mf">76.80</span><span class="p">,</span>
+            <span class="mf">80.40</span><span class="p">,</span>
+            <span class="mf">84.10</span><span class="p">,</span>
+            <span class="mf">88.00</span><span class="p">,</span>
+            <span class="mf">91.90</span><span class="p">,</span>
+            <span class="mf">96.10</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+        <span class="p">]</span>
+    <span class="p">),</span>
+    <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+        <span class="p">[</span>  <span class="c1"># L1-shell</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.10</span><span class="p">,</span>
+            <span class="mf">0.20</span><span class="p">,</span>
+            <span class="mf">0.40</span><span class="p">,</span>
+            <span class="mf">0.70</span><span class="p">,</span>
+            <span class="mf">1.03</span><span class="p">,</span>
+            <span class="mf">1.26</span><span class="p">,</span>
+            <span class="mf">1.49</span><span class="p">,</span>
+            <span class="mf">1.20</span><span class="p">,</span>
+            <span class="mf">1.03</span><span class="p">,</span>
+            <span class="mf">1.40</span><span class="p">,</span>
+            <span class="mf">1.83</span><span class="p">,</span>
+            <span class="mf">2.21</span><span class="p">,</span>
+            <span class="mf">2.34</span><span class="p">,</span>
+            <span class="mf">2.41</span><span class="p">,</span>
+            <span class="mf">2.54</span><span class="p">,</span>
+            <span class="mf">2.62</span><span class="p">,</span>
+            <span class="mf">2.76</span><span class="p">,</span>
+            <span class="mf">2.79</span><span class="p">,</span>
+            <span class="mf">2.89</span><span class="p">,</span>
+            <span class="mf">3.06</span><span class="p">,</span>
+            <span class="mf">3.28</span><span class="p">,</span>
+            <span class="mf">2.80</span><span class="p">,</span>
+            <span class="mf">3.53</span><span class="p">,</span>
+            <span class="mf">3.79</span><span class="p">,</span>
+            <span class="mf">3.94</span><span class="p">,</span>
+            <span class="mf">4.11</span><span class="p">,</span>
+            <span class="mf">4.28</span><span class="p">,</span>
+            <span class="mf">4.44</span><span class="p">,</span>
+            <span class="mf">4.67</span><span class="p">,</span>
+            <span class="mf">4.71</span><span class="p">,</span>
+            <span class="mf">4.78</span><span class="p">,</span>
+            <span class="mf">4.94</span><span class="p">,</span>
+            <span class="mf">4.25</span><span class="p">,</span>
+            <span class="mf">4.36</span><span class="p">,</span>
+            <span class="mf">4.58</span><span class="p">,</span>
+            <span class="mf">4.73</span><span class="p">,</span>
+            <span class="mf">4.93</span><span class="p">,</span>
+            <span class="mf">4.88</span><span class="p">,</span>
+            <span class="mf">4.87</span><span class="p">,</span>
+            <span class="mf">5.00</span><span class="p">,</span>
+            <span class="mf">2.97</span><span class="p">,</span>
+            <span class="mf">3.13</span><span class="p">,</span>
+            <span class="mf">3.32</span><span class="p">,</span>
+            <span class="mf">3.46</span><span class="p">,</span>
+            <span class="mf">3.64</span><span class="p">,</span>
+            <span class="mf">3.78</span><span class="p">,</span>
+            <span class="mf">3.92</span><span class="p">,</span>
+            <span class="mf">4.06</span><span class="p">,</span>
+            <span class="mf">4.21</span><span class="p">,</span>
+            <span class="mf">4.34</span><span class="p">,</span>
+            <span class="mf">4.52</span><span class="p">,</span>
+            <span class="mf">4.67</span><span class="p">,</span>
+            <span class="mf">4.80</span><span class="p">,</span>
+            <span class="mf">4.91</span><span class="p">,</span>
+            <span class="mf">5.05</span><span class="p">,</span>
+            <span class="mf">5.19</span><span class="p">,</span>
+            <span class="mf">5.25</span><span class="p">,</span>
+            <span class="mf">5.33</span><span class="p">,</span>
+            <span class="mf">5.43</span><span class="p">,</span>
+            <span class="mf">5.47</span><span class="p">,</span>
+            <span class="mf">5.53</span><span class="p">,</span>
+            <span class="mf">5.54</span><span class="p">,</span>
+            <span class="mf">5.63</span><span class="p">,</span>
+            <span class="mf">5.58</span><span class="p">,</span>
+            <span class="mf">5.61</span><span class="p">,</span>
+            <span class="mf">6.18</span><span class="p">,</span>
+            <span class="mf">7.25</span><span class="p">,</span>
+            <span class="mf">8.30</span><span class="p">,</span>
+            <span class="mf">9.39</span><span class="p">,</span>
+            <span class="mf">10.50</span><span class="p">,</span>
+            <span class="mf">11.30</span><span class="p">,</span>
+            <span class="mf">12.00</span><span class="p">,</span>
+            <span class="mf">12.20</span><span class="p">,</span>
+            <span class="mf">12.40</span><span class="p">,</span>
+            <span class="mf">12.60</span><span class="p">,</span>
+            <span class="mf">12.80</span><span class="p">,</span>
+            <span class="mf">13.10</span><span class="p">,</span>
+            <span class="mf">13.30</span><span class="p">,</span>
+            <span class="mf">13.40</span><span class="p">,</span>
+            <span class="mf">13.60</span><span class="p">,</span>
+            <span class="mf">13.70</span><span class="p">,</span>
+            <span class="mf">14.30</span><span class="p">,</span>
+            <span class="mf">14.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+        <span class="p">]</span>
+    <span class="p">),</span>
+    <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+        <span class="p">[</span>  <span class="c1"># L2-shell</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.02</span><span class="p">,</span>
+            <span class="mf">0.03</span><span class="p">,</span>
+            <span class="mf">0.05</span><span class="p">,</span>
+            <span class="mf">0.08</span><span class="p">,</span>
+            <span class="mf">0.13</span><span class="p">,</span>
+            <span class="mf">0.15</span><span class="p">,</span>
+            <span class="mf">0.17</span><span class="p">,</span>
+            <span class="mf">0.19</span><span class="p">,</span>
+            <span class="mf">0.24</span><span class="p">,</span>
+            <span class="mf">0.26</span><span class="p">,</span>
+            <span class="mf">0.29</span><span class="p">,</span>
+            <span class="mf">0.34</span><span class="p">,</span>
+            <span class="mf">0.37</span><span class="p">,</span>
+            <span class="mf">0.43</span><span class="p">,</span>
+            <span class="mf">0.52</span><span class="p">,</span>
+            <span class="mf">0.62</span><span class="p">,</span>
+            <span class="mf">0.72</span><span class="p">,</span>
+            <span class="mf">0.83</span><span class="p">,</span>
+            <span class="mf">0.95</span><span class="p">,</span>
+            <span class="mf">1.03</span><span class="p">,</span>
+            <span class="mf">1.13</span><span class="p">,</span>
+            <span class="mf">1.21</span><span class="p">,</span>
+            <span class="mf">1.31</span><span class="p">,</span>
+            <span class="mf">1.43</span><span class="p">,</span>
+            <span class="mf">1.54</span><span class="p">,</span>
+            <span class="mf">1.65</span><span class="p">,</span>
+            <span class="mf">1.78</span><span class="p">,</span>
+            <span class="mf">1.87</span><span class="p">,</span>
+            <span class="mf">1.97</span><span class="p">,</span>
+            <span class="mf">2.08</span><span class="p">,</span>
+            <span class="mf">2.23</span><span class="p">,</span>
+            <span class="mf">2.35</span><span class="p">,</span>
+            <span class="mf">2.43</span><span class="p">,</span>
+            <span class="mf">2.57</span><span class="p">,</span>
+            <span class="mf">2.62</span><span class="p">,</span>
+            <span class="mf">2.72</span><span class="p">,</span>
+            <span class="mf">2.84</span><span class="p">,</span>
+            <span class="mf">3.00</span><span class="p">,</span>
+            <span class="mf">3.12</span><span class="p">,</span>
+            <span class="mf">3.25</span><span class="p">,</span>
+            <span class="mf">3.40</span><span class="p">,</span>
+            <span class="mf">3.51</span><span class="p">,</span>
+            <span class="mf">3.57</span><span class="p">,</span>
+            <span class="mf">3.68</span><span class="p">,</span>
+            <span class="mf">3.80</span><span class="p">,</span>
+            <span class="mf">3.89</span><span class="p">,</span>
+            <span class="mf">3.97</span><span class="p">,</span>
+            <span class="mf">4.06</span><span class="p">,</span>
+            <span class="mf">4.15</span><span class="p">,</span>
+            <span class="mf">4.23</span><span class="p">,</span>
+            <span class="mf">4.32</span><span class="p">,</span>
+            <span class="mf">4.43</span><span class="p">,</span>
+            <span class="mf">4.55</span><span class="p">,</span>
+            <span class="mf">4.66</span><span class="p">,</span>
+            <span class="mf">4.73</span><span class="p">,</span>
+            <span class="mf">4.79</span><span class="p">,</span>
+            <span class="mf">4.82</span><span class="p">,</span>
+            <span class="mf">4.92</span><span class="p">,</span>
+            <span class="mf">5.02</span><span class="p">,</span>
+            <span class="mf">5.15</span><span class="p">,</span>
+            <span class="mf">5.33</span><span class="p">,</span>
+            <span class="mf">5.48</span><span class="p">,</span>
+            <span class="mf">5.59</span><span class="p">,</span>
+            <span class="mf">5.69</span><span class="p">,</span>
+            <span class="mf">5.86</span><span class="p">,</span>
+            <span class="mf">6.00</span><span class="p">,</span>
+            <span class="mf">6.17</span><span class="p">,</span>
+            <span class="mf">6.32</span><span class="p">,</span>
+            <span class="mf">6.48</span><span class="p">,</span>
+            <span class="mf">6.67</span><span class="p">,</span>
+            <span class="mf">6.83</span><span class="p">,</span>
+            <span class="mf">7.01</span><span class="p">,</span>
+            <span class="mf">7.20</span><span class="p">,</span>
+            <span class="mf">7.47</span><span class="p">,</span>
+            <span class="mf">7.68</span><span class="p">,</span>
+            <span class="mf">7.95</span><span class="p">,</span>
+            <span class="mf">8.18</span><span class="p">,</span>
+            <span class="mf">8.75</span><span class="p">,</span>
+            <span class="mf">9.32</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+        <span class="p">]</span>
+    <span class="p">),</span>
+    <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">):</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+        <span class="p">[</span>  <span class="c1"># L3-shell</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.02</span><span class="p">,</span>
+            <span class="mf">0.03</span><span class="p">,</span>
+            <span class="mf">0.05</span><span class="p">,</span>
+            <span class="mf">0.09</span><span class="p">,</span>
+            <span class="mf">0.13</span><span class="p">,</span>
+            <span class="mf">0.16</span><span class="p">,</span>
+            <span class="mf">0.17</span><span class="p">,</span>
+            <span class="mf">0.19</span><span class="p">,</span>
+            <span class="mf">0.10</span><span class="p">,</span>
+            <span class="mf">0.20</span><span class="p">,</span>
+            <span class="mf">0.20</span><span class="p">,</span>
+            <span class="mf">0.20</span><span class="p">,</span>
+            <span class="mf">0.20</span><span class="p">,</span>
+            <span class="mf">0.30</span><span class="p">,</span>
+            <span class="mf">0.30</span><span class="p">,</span>
+            <span class="mf">0.40</span><span class="p">,</span>
+            <span class="mf">0.66</span><span class="p">,</span>
+            <span class="mf">0.76</span><span class="p">,</span>
+            <span class="mf">0.82</span><span class="p">,</span>
+            <span class="mf">0.94</span><span class="p">,</span>
+            <span class="mf">1.00</span><span class="p">,</span>
+            <span class="mf">1.08</span><span class="p">,</span>
+            <span class="mf">1.17</span><span class="p">,</span>
+            <span class="mf">1.27</span><span class="p">,</span>
+            <span class="mf">1.39</span><span class="p">,</span>
+            <span class="mf">1.50</span><span class="p">,</span>
+            <span class="mf">1.57</span><span class="p">,</span>
+            <span class="mf">1.66</span><span class="p">,</span>
+            <span class="mf">1.78</span><span class="p">,</span>
+            <span class="mf">1.91</span><span class="p">,</span>
+            <span class="mf">2.00</span><span class="p">,</span>
+            <span class="mf">2.13</span><span class="p">,</span>
+            <span class="mf">2.25</span><span class="p">,</span>
+            <span class="mf">2.40</span><span class="p">,</span>
+            <span class="mf">2.50</span><span class="p">,</span>
+            <span class="mf">2.65</span><span class="p">,</span>
+            <span class="mf">2.75</span><span class="p">,</span>
+            <span class="mf">2.87</span><span class="p">,</span>
+            <span class="mf">2.95</span><span class="p">,</span>
+            <span class="mf">3.08</span><span class="p">,</span>
+            <span class="mf">3.13</span><span class="p">,</span>
+            <span class="mf">3.25</span><span class="p">,</span>
+            <span class="mf">3.32</span><span class="p">,</span>
+            <span class="mf">3.41</span><span class="p">,</span>
+            <span class="mf">3.48</span><span class="p">,</span>
+            <span class="mf">3.60</span><span class="p">,</span>
+            <span class="mf">3.65</span><span class="p">,</span>
+            <span class="mf">3.75</span><span class="p">,</span>
+            <span class="mf">3.86</span><span class="p">,</span>
+            <span class="mf">3.91</span><span class="p">,</span>
+            <span class="mf">4.01</span><span class="p">,</span>
+            <span class="mf">4.12</span><span class="p">,</span>
+            <span class="mf">4.17</span><span class="p">,</span>
+            <span class="mf">4.26</span><span class="p">,</span>
+            <span class="mf">4.35</span><span class="p">,</span>
+            <span class="mf">4.48</span><span class="p">,</span>
+            <span class="mf">4.60</span><span class="p">,</span>
+            <span class="mf">4.68</span><span class="p">,</span>
+            <span class="mf">4.80</span><span class="p">,</span>
+            <span class="mf">4.88</span><span class="p">,</span>
+            <span class="mf">4.98</span><span class="p">,</span>
+            <span class="mf">5.04</span><span class="p">,</span>
+            <span class="mf">5.16</span><span class="p">,</span>
+            <span class="mf">5.25</span><span class="p">,</span>
+            <span class="mf">5.31</span><span class="p">,</span>
+            <span class="mf">5.41</span><span class="p">,</span>
+            <span class="mf">5.50</span><span class="p">,</span>
+            <span class="mf">5.65</span><span class="p">,</span>
+            <span class="mf">5.81</span><span class="p">,</span>
+            <span class="mf">5.98</span><span class="p">,</span>
+            <span class="mf">6.13</span><span class="p">,</span>
+            <span class="mf">6.29</span><span class="p">,</span>
+            <span class="mf">6.41</span><span class="p">,</span>
+            <span class="mf">6.65</span><span class="p">,</span>
+            <span class="mf">6.82</span><span class="p">,</span>
+            <span class="mf">6.98</span><span class="p">,</span>
+            <span class="mf">7.13</span><span class="p">,</span>
+            <span class="mf">7.33</span><span class="p">,</span>
+            <span class="mf">7.43</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+        <span class="p">]</span>
+    <span class="p">),</span>
+<span class="p">}</span>
+
+<span class="c1"># Campbell &amp; Papp (2001) dataset — the default, covers K through N7 shells</span>
+<span class="n">core_hole_width_data_campbell_papp</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+        <span class="p">[</span>  <span class="c1"># K-shell, (NC=1, LC=0)</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.24</span><span class="p">,</span>
+            <span class="mf">0.28</span><span class="p">,</span>
+            <span class="mf">0.33</span><span class="p">,</span>
+            <span class="mf">0.37</span><span class="p">,</span>
+            <span class="mf">0.43</span><span class="p">,</span>
+            <span class="mf">0.47</span><span class="p">,</span>
+            <span class="mf">0.52</span><span class="p">,</span>
+            <span class="mf">0.57</span><span class="p">,</span>
+            <span class="mf">0.66</span><span class="p">,</span>
+            <span class="mf">0.71</span><span class="p">,</span>
+            <span class="mf">0.77</span><span class="p">,</span>
+            <span class="mf">0.83</span><span class="p">,</span>
+            <span class="mf">0.89</span><span class="p">,</span>
+            <span class="mf">0.96</span><span class="p">,</span>
+            <span class="mf">1.02</span><span class="p">,</span>
+            <span class="mf">1.11</span><span class="p">,</span>
+            <span class="mf">1.19</span><span class="p">,</span>
+            <span class="mf">1.28</span><span class="p">,</span>
+            <span class="mf">1.39</span><span class="p">,</span>
+            <span class="mf">1.49</span><span class="p">,</span>
+            <span class="mf">1.62</span><span class="p">,</span>
+            <span class="mf">1.76</span><span class="p">,</span>
+            <span class="mf">1.92</span><span class="p">,</span>
+            <span class="mf">2.09</span><span class="p">,</span>
+            <span class="mf">2.28</span><span class="p">,</span>
+            <span class="mf">2.49</span><span class="p">,</span>
+            <span class="mf">2.71</span><span class="p">,</span>
+            <span class="mf">2.96</span><span class="p">,</span>
+            <span class="mf">3.23</span><span class="p">,</span>
+            <span class="mf">3.51</span><span class="p">,</span>
+            <span class="mf">3.83</span><span class="p">,</span>
+            <span class="mf">4.16</span><span class="p">,</span>
+            <span class="mf">4.52</span><span class="p">,</span>
+            <span class="mf">4.91</span><span class="p">,</span>
+            <span class="mf">5.33</span><span class="p">,</span>
+            <span class="mf">5.77</span><span class="p">,</span>
+            <span class="mf">6.25</span><span class="p">,</span>
+            <span class="mf">6.76</span><span class="p">,</span>
+            <span class="mf">7.32</span><span class="p">,</span>
+            <span class="mf">7.90</span><span class="p">,</span>
+            <span class="mf">8.53</span><span class="p">,</span>
+            <span class="mf">9.20</span><span class="p">,</span>
+            <span class="mf">9.91</span><span class="p">,</span>
+            <span class="mf">10.70</span><span class="p">,</span>
+            <span class="mf">11.50</span><span class="p">,</span>
+            <span class="mf">12.30</span><span class="p">,</span>
+            <span class="mf">13.20</span><span class="p">,</span>
+            <span class="mf">14.20</span><span class="p">,</span>
+            <span class="mf">15.20</span><span class="p">,</span>
+            <span class="mf">16.20</span><span class="p">,</span>
+            <span class="mf">17.40</span><span class="p">,</span>
+            <span class="mf">18.50</span><span class="p">,</span>
+            <span class="mf">19.80</span><span class="p">,</span>
+            <span class="mf">21.10</span><span class="p">,</span>
+            <span class="mf">22.40</span><span class="p">,</span>
+            <span class="mf">23.80</span><span class="p">,</span>
+            <span class="mf">25.30</span><span class="p">,</span>
+            <span class="mf">26.90</span><span class="p">,</span>
+            <span class="mf">28.50</span><span class="p">,</span>
+            <span class="mf">30.20</span><span class="p">,</span>
+            <span class="mf">32.00</span><span class="p">,</span>
+            <span class="mf">33.90</span><span class="p">,</span>
+            <span class="mf">35.90</span><span class="p">,</span>
+            <span class="mf">37.90</span><span class="p">,</span>
+            <span class="mf">40.10</span><span class="p">,</span>
+            <span class="mf">42.20</span><span class="p">,</span>
+            <span class="mf">44.60</span><span class="p">,</span>
+            <span class="mf">47.00</span><span class="p">,</span>
+            <span class="mf">49.50</span><span class="p">,</span>
+            <span class="mf">52.10</span><span class="p">,</span>
+            <span class="mf">54.80</span><span class="p">,</span>
+            <span class="mf">57.60</span><span class="p">,</span>
+            <span class="mf">60.60</span><span class="p">,</span>
+            <span class="mf">63.60</span><span class="p">,</span>
+            <span class="mf">66.80</span><span class="p">,</span>
+            <span class="mf">70.00</span><span class="p">,</span>
+            <span class="mf">73.40</span><span class="p">,</span>
+            <span class="mf">76.90</span><span class="p">,</span>
+            <span class="mf">80.60</span><span class="p">,</span>
+            <span class="mf">84.40</span><span class="p">,</span>
+            <span class="mf">88.20</span><span class="p">,</span>
+            <span class="mf">92.10</span><span class="p">,</span>
+            <span class="mf">96.30</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+        <span class="p">]</span>
+    <span class="p">),</span>
+    <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+        <span class="p">[</span>  <span class="c1"># L1-shell, (NC=2, LC=0)</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.28</span><span class="p">,</span>
+            <span class="mf">0.46</span><span class="p">,</span>
+            <span class="mf">0.78</span><span class="p">,</span>
+            <span class="mf">0.90</span><span class="p">,</span>
+            <span class="mf">1.10</span><span class="p">,</span>
+            <span class="mf">1.30</span><span class="p">,</span>
+            <span class="mf">1.50</span><span class="p">,</span>
+            <span class="mf">1.80</span><span class="p">,</span>
+            <span class="mf">2.10</span><span class="p">,</span>
+            <span class="mf">2.50</span><span class="p">,</span>
+            <span class="mf">3.30</span><span class="p">,</span>
+            <span class="mf">3.90</span><span class="p">,</span>
+            <span class="mf">4.60</span><span class="p">,</span>
+            <span class="mf">5.20</span><span class="p">,</span>
+            <span class="mf">6.20</span><span class="p">,</span>
+            <span class="mf">7.00</span><span class="p">,</span>
+            <span class="mf">7.20</span><span class="p">,</span>
+            <span class="mf">6.40</span><span class="p">,</span>
+            <span class="mf">5.50</span><span class="p">,</span>
+            <span class="mf">4.80</span><span class="p">,</span>
+            <span class="mf">4.10</span><span class="p">,</span>
+            <span class="mf">3.80</span><span class="p">,</span>
+            <span class="mf">3.80</span><span class="p">,</span>
+            <span class="mf">3.80</span><span class="p">,</span>
+            <span class="mf">3.80</span><span class="p">,</span>
+            <span class="mf">3.75</span><span class="p">,</span>
+            <span class="mf">3.75</span><span class="p">,</span>
+            <span class="mf">3.75</span><span class="p">,</span>
+            <span class="mf">3.75</span><span class="p">,</span>
+            <span class="mf">3.75</span><span class="p">,</span>
+            <span class="mf">3.80</span><span class="p">,</span>
+            <span class="mf">3.80</span><span class="p">,</span>
+            <span class="mf">3.80</span><span class="p">,</span>
+            <span class="mf">3.90</span><span class="p">,</span>
+            <span class="mf">4.00</span><span class="p">,</span>
+            <span class="mf">3.90</span><span class="p">,</span>
+            <span class="mf">3.80</span><span class="p">,</span>
+            <span class="mf">3.50</span><span class="p">,</span>
+            <span class="mf">3.00</span><span class="p">,</span>
+            <span class="mf">2.40</span><span class="p">,</span>
+            <span class="mf">2.30</span><span class="p">,</span>
+            <span class="mf">2.20</span><span class="p">,</span>
+            <span class="mf">2.10</span><span class="p">,</span>
+            <span class="mf">2.00</span><span class="p">,</span>
+            <span class="mf">2.00</span><span class="p">,</span>
+            <span class="mf">2.10</span><span class="p">,</span>
+            <span class="mf">2.20</span><span class="p">,</span>
+            <span class="mf">2.50</span><span class="p">,</span>
+            <span class="mf">2.70</span><span class="p">,</span>
+            <span class="mf">2.90</span><span class="p">,</span>
+            <span class="mf">3.10</span><span class="p">,</span>
+            <span class="mf">3.30</span><span class="p">,</span>
+            <span class="mf">3.60</span><span class="p">,</span>
+            <span class="mf">3.80</span><span class="p">,</span>
+            <span class="mf">4.00</span><span class="p">,</span>
+            <span class="mf">4.30</span><span class="p">,</span>
+            <span class="mf">4.50</span><span class="p">,</span>
+            <span class="mf">4.70</span><span class="p">,</span>
+            <span class="mf">4.90</span><span class="p">,</span>
+            <span class="mf">5.20</span><span class="p">,</span>
+            <span class="mf">5.40</span><span class="p">,</span>
+            <span class="mf">5.70</span><span class="p">,</span>
+            <span class="mf">6.00</span><span class="p">,</span>
+            <span class="mf">6.30</span><span class="p">,</span>
+            <span class="mf">6.70</span><span class="p">,</span>
+            <span class="mf">7.20</span><span class="p">,</span>
+            <span class="mf">7.90</span><span class="p">,</span>
+            <span class="mf">8.80</span><span class="p">,</span>
+            <span class="mf">9.80</span><span class="p">,</span>
+            <span class="mf">10.50</span><span class="p">,</span>
+            <span class="mf">11.10</span><span class="p">,</span>
+            <span class="mf">11.80</span><span class="p">,</span>
+            <span class="mf">12.30</span><span class="p">,</span>
+            <span class="mf">12.70</span><span class="p">,</span>
+            <span class="mf">13.00</span><span class="p">,</span>
+            <span class="mf">13.20</span><span class="p">,</span>
+            <span class="mf">13.50</span><span class="p">,</span>
+            <span class="mf">13.70</span><span class="p">,</span>
+            <span class="mf">14.00</span><span class="p">,</span>
+            <span class="mf">14.30</span><span class="p">,</span>
+            <span class="mf">14.70</span><span class="p">,</span>
+            <span class="mf">16.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+        <span class="p">]</span>
+    <span class="p">),</span>
+    <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+        <span class="p">[</span>  <span class="c1"># L2-shell, (NC=2, LC=1, IK=1)</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.01</span><span class="p">,</span>
+            <span class="mf">0.02</span><span class="p">,</span>
+            <span class="mf">0.03</span><span class="p">,</span>
+            <span class="mf">0.04</span><span class="p">,</span>
+            <span class="mf">0.05</span><span class="p">,</span>
+            <span class="mf">0.07</span><span class="p">,</span>
+            <span class="mf">0.09</span><span class="p">,</span>
+            <span class="mf">0.11</span><span class="p">,</span>
+            <span class="mf">0.13</span><span class="p">,</span>
+            <span class="mf">0.18</span><span class="p">,</span>
+            <span class="mf">0.21</span><span class="p">,</span>
+            <span class="mf">0.36</span><span class="p">,</span>
+            <span class="mf">0.52</span><span class="p">,</span>
+            <span class="mf">0.78</span><span class="p">,</span>
+            <span class="mf">0.76</span><span class="p">,</span>
+            <span class="mf">0.97</span><span class="p">,</span>
+            <span class="mf">1.14</span><span class="p">,</span>
+            <span class="mf">1.13</span><span class="p">,</span>
+            <span class="mf">0.98</span><span class="p">,</span>
+            <span class="mf">1.04</span><span class="p">,</span>
+            <span class="mf">1.06</span><span class="p">,</span>
+            <span class="mf">0.77</span><span class="p">,</span>
+            <span class="mf">0.86</span><span class="p">,</span>
+            <span class="mf">0.95</span><span class="p">,</span>
+            <span class="mf">1.05</span><span class="p">,</span>
+            <span class="mf">1.14</span><span class="p">,</span>
+            <span class="mf">1.25</span><span class="p">,</span>
+            <span class="mf">1.34</span><span class="p">,</span>
+            <span class="mf">1.43</span><span class="p">,</span>
+            <span class="mf">1.53</span><span class="p">,</span>
+            <span class="mf">1.63</span><span class="p">,</span>
+            <span class="mf">1.73</span><span class="p">,</span>
+            <span class="mf">1.83</span><span class="p">,</span>
+            <span class="mf">1.93</span><span class="p">,</span>
+            <span class="mf">2.03</span><span class="p">,</span>
+            <span class="mf">2.13</span><span class="p">,</span>
+            <span class="mf">2.23</span><span class="p">,</span>
+            <span class="mf">2.32</span><span class="p">,</span>
+            <span class="mf">2.42</span><span class="p">,</span>
+            <span class="mf">2.53</span><span class="p">,</span>
+            <span class="mf">2.64</span><span class="p">,</span>
+            <span class="mf">2.74</span><span class="p">,</span>
+            <span class="mf">2.84</span><span class="p">,</span>
+            <span class="mf">2.95</span><span class="p">,</span>
+            <span class="mf">3.05</span><span class="p">,</span>
+            <span class="mf">3.15</span><span class="p">,</span>
+            <span class="mf">3.25</span><span class="p">,</span>
+            <span class="mf">3.35</span><span class="p">,</span>
+            <span class="mf">3.41</span><span class="p">,</span>
+            <span class="mf">3.48</span><span class="p">,</span>
+            <span class="mf">3.55</span><span class="p">,</span>
+            <span class="mf">3.63</span><span class="p">,</span>
+            <span class="mf">3.70</span><span class="p">,</span>
+            <span class="mf">3.77</span><span class="p">,</span>
+            <span class="mf">3.87</span><span class="p">,</span>
+            <span class="mf">3.93</span><span class="p">,</span>
+            <span class="mf">4.01</span><span class="p">,</span>
+            <span class="mf">4.09</span><span class="p">,</span>
+            <span class="mf">4.18</span><span class="p">,</span>
+            <span class="mf">4.26</span><span class="p">,</span>
+            <span class="mf">4.36</span><span class="p">,</span>
+            <span class="mf">4.46</span><span class="p">,</span>
+            <span class="mf">4.57</span><span class="p">,</span>
+            <span class="mf">4.69</span><span class="p">,</span>
+            <span class="mf">4.82</span><span class="p">,</span>
+            <span class="mf">4.95</span><span class="p">,</span>
+            <span class="mf">5.09</span><span class="p">,</span>
+            <span class="mf">5.23</span><span class="p">,</span>
+            <span class="mf">5.38</span><span class="p">,</span>
+            <span class="mf">5.53</span><span class="p">,</span>
+            <span class="mf">5.69</span><span class="p">,</span>
+            <span class="mf">5.87</span><span class="p">,</span>
+            <span class="mf">6.04</span><span class="p">,</span>
+            <span class="mf">6.22</span><span class="p">,</span>
+            <span class="mf">6.41</span><span class="p">,</span>
+            <span class="mf">6.60</span><span class="p">,</span>
+            <span class="mf">6.81</span><span class="p">,</span>
+            <span class="mf">7.02</span><span class="p">,</span>
+            <span class="mf">7.50</span><span class="p">,</span>
+            <span class="mf">8.00</span><span class="p">,</span>
+            <span class="mf">8.50</span><span class="p">,</span>
+            <span class="mf">9.10</span><span class="p">,</span>
+            <span class="mf">10.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+        <span class="p">]</span>
+    <span class="p">),</span>
+    <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">):</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+        <span class="p">[</span>  <span class="c1"># L3-shell, (NC=2, LC=1, IK=2)</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.01</span><span class="p">,</span>
+            <span class="mf">0.02</span><span class="p">,</span>
+            <span class="mf">0.03</span><span class="p">,</span>
+            <span class="mf">0.04</span><span class="p">,</span>
+            <span class="mf">0.05</span><span class="p">,</span>
+            <span class="mf">0.07</span><span class="p">,</span>
+            <span class="mf">0.09</span><span class="p">,</span>
+            <span class="mf">0.11</span><span class="p">,</span>
+            <span class="mf">0.13</span><span class="p">,</span>
+            <span class="mf">0.18</span><span class="p">,</span>
+            <span class="mf">0.21</span><span class="p">,</span>
+            <span class="mf">0.23</span><span class="p">,</span>
+            <span class="mf">0.25</span><span class="p">,</span>
+            <span class="mf">0.28</span><span class="p">,</span>
+            <span class="mf">0.32</span><span class="p">,</span>
+            <span class="mf">0.36</span><span class="p">,</span>
+            <span class="mf">0.41</span><span class="p">,</span>
+            <span class="mf">0.47</span><span class="p">,</span>
+            <span class="mf">0.53</span><span class="p">,</span>
+            <span class="mf">0.61</span><span class="p">,</span>
+            <span class="mf">0.68</span><span class="p">,</span>
+            <span class="mf">0.77</span><span class="p">,</span>
+            <span class="mf">0.86</span><span class="p">,</span>
+            <span class="mf">0.94</span><span class="p">,</span>
+            <span class="mf">1.02</span><span class="p">,</span>
+            <span class="mf">1.11</span><span class="p">,</span>
+            <span class="mf">1.19</span><span class="p">,</span>
+            <span class="mf">1.27</span><span class="p">,</span>
+            <span class="mf">1.35</span><span class="p">,</span>
+            <span class="mf">1.43</span><span class="p">,</span>
+            <span class="mf">1.51</span><span class="p">,</span>
+            <span class="mf">1.60</span><span class="p">,</span>
+            <span class="mf">1.69</span><span class="p">,</span>
+            <span class="mf">1.78</span><span class="p">,</span>
+            <span class="mf">1.87</span><span class="p">,</span>
+            <span class="mf">1.96</span><span class="p">,</span>
+            <span class="mf">2.05</span><span class="p">,</span>
+            <span class="mf">2.15</span><span class="p">,</span>
+            <span class="mf">2.24</span><span class="p">,</span>
+            <span class="mf">2.34</span><span class="p">,</span>
+            <span class="mf">2.43</span><span class="p">,</span>
+            <span class="mf">2.53</span><span class="p">,</span>
+            <span class="mf">2.62</span><span class="p">,</span>
+            <span class="mf">2.72</span><span class="p">,</span>
+            <span class="mf">2.82</span><span class="p">,</span>
+            <span class="mf">2.92</span><span class="p">,</span>
+            <span class="mf">3.02</span><span class="p">,</span>
+            <span class="mf">3.12</span><span class="p">,</span>
+            <span class="mf">3.19</span><span class="p">,</span>
+            <span class="mf">3.27</span><span class="p">,</span>
+            <span class="mf">3.36</span><span class="p">,</span>
+            <span class="mf">3.44</span><span class="p">,</span>
+            <span class="mf">3.53</span><span class="p">,</span>
+            <span class="mf">3.62</span><span class="p">,</span>
+            <span class="mf">3.72</span><span class="p">,</span>
+            <span class="mf">3.80</span><span class="p">,</span>
+            <span class="mf">3.90</span><span class="p">,</span>
+            <span class="mf">4.00</span><span class="p">,</span>
+            <span class="mf">4.10</span><span class="p">,</span>
+            <span class="mf">4.20</span><span class="p">,</span>
+            <span class="mf">4.31</span><span class="p">,</span>
+            <span class="mf">4.43</span><span class="p">,</span>
+            <span class="mf">4.55</span><span class="p">,</span>
+            <span class="mf">4.68</span><span class="p">,</span>
+            <span class="mf">4.81</span><span class="p">,</span>
+            <span class="mf">4.95</span><span class="p">,</span>
+            <span class="mf">5.09</span><span class="p">,</span>
+            <span class="mf">5.24</span><span class="p">,</span>
+            <span class="mf">5.39</span><span class="p">,</span>
+            <span class="mf">5.54</span><span class="p">,</span>
+            <span class="mf">5.71</span><span class="p">,</span>
+            <span class="mf">5.89</span><span class="p">,</span>
+            <span class="mf">6.07</span><span class="p">,</span>
+            <span class="mf">6.27</span><span class="p">,</span>
+            <span class="mf">6.46</span><span class="p">,</span>
+            <span class="mf">6.66</span><span class="p">,</span>
+            <span class="mf">6.87</span><span class="p">,</span>
+            <span class="mf">7.08</span><span class="p">,</span>
+            <span class="mf">7.29</span><span class="p">,</span>
+            <span class="mf">7.51</span><span class="p">,</span>
+            <span class="mf">7.74</span><span class="p">,</span>
+            <span class="mf">7.97</span><span class="p">,</span>
+            <span class="mf">8.20</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+        <span class="p">]</span>
+    <span class="p">),</span>
+    <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+        <span class="p">[</span>  <span class="c1"># M1-shell (NC=3, LC=0)</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.14</span><span class="p">,</span>
+            <span class="mf">0.70</span><span class="p">,</span>
+            <span class="mf">1.10</span><span class="p">,</span>
+            <span class="mf">1.70</span><span class="p">,</span>
+            <span class="mf">2.10</span><span class="p">,</span>
+            <span class="mf">2.20</span><span class="p">,</span>
+            <span class="mf">2.30</span><span class="p">,</span>
+            <span class="mf">2.40</span><span class="p">,</span>
+            <span class="mf">2.40</span><span class="p">,</span>
+            <span class="mf">2.40</span><span class="p">,</span>
+            <span class="mf">2.30</span><span class="p">,</span>
+            <span class="mf">2.20</span><span class="p">,</span>
+            <span class="mf">2.10</span><span class="p">,</span>
+            <span class="mf">2.00</span><span class="p">,</span>
+            <span class="mf">2.10</span><span class="p">,</span>
+            <span class="mf">2.40</span><span class="p">,</span>
+            <span class="mf">2.80</span><span class="p">,</span>
+            <span class="mf">3.20</span><span class="p">,</span>
+            <span class="mf">3.50</span><span class="p">,</span>
+            <span class="mf">4.00</span><span class="p">,</span>
+            <span class="mf">4.40</span><span class="p">,</span>
+            <span class="mf">4.90</span><span class="p">,</span>
+            <span class="mf">5.40</span><span class="p">,</span>
+            <span class="mf">5.80</span><span class="p">,</span>
+            <span class="mf">6.30</span><span class="p">,</span>
+            <span class="mf">6.70</span><span class="p">,</span>
+            <span class="mf">7.20</span><span class="p">,</span>
+            <span class="mf">7.60</span><span class="p">,</span>
+            <span class="mf">8.00</span><span class="p">,</span>
+            <span class="mf">8.40</span><span class="p">,</span>
+            <span class="mf">8.80</span><span class="p">,</span>
+            <span class="mf">9.20</span><span class="p">,</span>
+            <span class="mf">9.60</span><span class="p">,</span>
+            <span class="mf">10.00</span><span class="p">,</span>
+            <span class="mf">10.20</span><span class="p">,</span>
+            <span class="mf">10.40</span><span class="p">,</span>
+            <span class="mf">10.60</span><span class="p">,</span>
+            <span class="mf">10.80</span><span class="p">,</span>
+            <span class="mf">11.10</span><span class="p">,</span>
+            <span class="mf">11.40</span><span class="p">,</span>
+            <span class="mf">11.60</span><span class="p">,</span>
+            <span class="mf">11.80</span><span class="p">,</span>
+            <span class="mf">12.00</span><span class="p">,</span>
+            <span class="mf">12.20</span><span class="p">,</span>
+            <span class="mf">12.40</span><span class="p">,</span>
+            <span class="mf">12.60</span><span class="p">,</span>
+            <span class="mf">12.80</span><span class="p">,</span>
+            <span class="mf">13.00</span><span class="p">,</span>
+            <span class="mf">13.20</span><span class="p">,</span>
+            <span class="mf">13.40</span><span class="p">,</span>
+            <span class="mf">13.60</span><span class="p">,</span>
+            <span class="mf">13.80</span><span class="p">,</span>
+            <span class="mf">13.90</span><span class="p">,</span>
+            <span class="mf">14.10</span><span class="p">,</span>
+            <span class="mf">14.20</span><span class="p">,</span>
+            <span class="mf">14.30</span><span class="p">,</span>
+            <span class="mf">14.50</span><span class="p">,</span>
+            <span class="mf">14.60</span><span class="p">,</span>
+            <span class="mf">14.70</span><span class="p">,</span>
+            <span class="mf">14.80</span><span class="p">,</span>
+            <span class="mf">14.90</span><span class="p">,</span>
+            <span class="mf">15.00</span><span class="p">,</span>
+            <span class="mf">15.10</span><span class="p">,</span>
+            <span class="mf">15.10</span><span class="p">,</span>
+            <span class="mf">15.20</span><span class="p">,</span>
+            <span class="mf">15.20</span><span class="p">,</span>
+            <span class="mf">15.30</span><span class="p">,</span>
+            <span class="mf">15.30</span><span class="p">,</span>
+            <span class="mf">15.30</span><span class="p">,</span>
+            <span class="mf">15.40</span><span class="p">,</span>
+            <span class="mf">15.40</span><span class="p">,</span>
+            <span class="mf">15.40</span><span class="p">,</span>
+            <span class="mf">15.50</span><span class="p">,</span>
+            <span class="mf">15.50</span><span class="p">,</span>
+            <span class="mf">15.50</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+        <span class="p">]</span>
+    <span class="p">),</span>
+    <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+        <span class="p">[</span>  <span class="c1"># M2-shell (NC=3, LC=1, IK=1)</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">1.20</span><span class="p">,</span>
+            <span class="mf">1.20</span><span class="p">,</span>
+            <span class="mf">1.20</span><span class="p">,</span>
+            <span class="mf">1.20</span><span class="p">,</span>
+            <span class="mf">1.20</span><span class="p">,</span>
+            <span class="mf">1.20</span><span class="p">,</span>
+            <span class="mf">1.23</span><span class="p">,</span>
+            <span class="mf">1.25</span><span class="p">,</span>
+            <span class="mf">1.30</span><span class="p">,</span>
+            <span class="mf">1.90</span><span class="p">,</span>
+            <span class="mf">2.10</span><span class="p">,</span>
+            <span class="mf">2.25</span><span class="p">,</span>
+            <span class="mf">2.30</span><span class="p">,</span>
+            <span class="mf">2.25</span><span class="p">,</span>
+            <span class="mf">2.20</span><span class="p">,</span>
+            <span class="mf">2.10</span><span class="p">,</span>
+            <span class="mf">1.60</span><span class="p">,</span>
+            <span class="mf">1.90</span><span class="p">,</span>
+            <span class="mf">1.90</span><span class="p">,</span>
+            <span class="mf">1.95</span><span class="p">,</span>
+            <span class="mf">2.00</span><span class="p">,</span>
+            <span class="mf">2.05</span><span class="p">,</span>
+            <span class="mf">2.10</span><span class="p">,</span>
+            <span class="mf">2.15</span><span class="p">,</span>
+            <span class="mf">2.20</span><span class="p">,</span>
+            <span class="mf">2.25</span><span class="p">,</span>
+            <span class="mf">2.35</span><span class="p">,</span>
+            <span class="mf">2.45</span><span class="p">,</span>
+            <span class="mf">2.55</span><span class="p">,</span>
+            <span class="mf">2.70</span><span class="p">,</span>
+            <span class="mf">2.85</span><span class="p">,</span>
+            <span class="mf">3.00</span><span class="p">,</span>
+            <span class="mf">3.20</span><span class="p">,</span>
+            <span class="mf">3.35</span><span class="p">,</span>
+            <span class="mf">3.50</span><span class="p">,</span>
+            <span class="mf">3.70</span><span class="p">,</span>
+            <span class="mf">3.90</span><span class="p">,</span>
+            <span class="mf">4.10</span><span class="p">,</span>
+            <span class="mf">4.30</span><span class="p">,</span>
+            <span class="mf">4.50</span><span class="p">,</span>
+            <span class="mf">4.70</span><span class="p">,</span>
+            <span class="mf">5.00</span><span class="p">,</span>
+            <span class="mf">5.20</span><span class="p">,</span>
+            <span class="mf">5.40</span><span class="p">,</span>
+            <span class="mf">5.60</span><span class="p">,</span>
+            <span class="mf">5.80</span><span class="p">,</span>
+            <span class="mf">6.00</span><span class="p">,</span>
+            <span class="mf">6.30</span><span class="p">,</span>
+            <span class="mf">6.60</span><span class="p">,</span>
+            <span class="mf">6.85</span><span class="p">,</span>
+            <span class="mf">7.10</span><span class="p">,</span>
+            <span class="mf">7.30</span><span class="p">,</span>
+            <span class="mf">7.50</span><span class="p">,</span>
+            <span class="mf">7.80</span><span class="p">,</span>
+            <span class="mf">8.10</span><span class="p">,</span>
+            <span class="mf">8.40</span><span class="p">,</span>
+            <span class="mf">8.60</span><span class="p">,</span>
+            <span class="mf">8.90</span><span class="p">,</span>
+            <span class="mf">9.20</span><span class="p">,</span>
+            <span class="mf">9.50</span><span class="p">,</span>
+            <span class="mf">9.80</span><span class="p">,</span>
+            <span class="mf">10.10</span><span class="p">,</span>
+            <span class="mf">10.40</span><span class="p">,</span>
+            <span class="mf">10.70</span><span class="p">,</span>
+            <span class="mf">11.10</span><span class="p">,</span>
+            <span class="mf">11.40</span><span class="p">,</span>
+            <span class="mf">11.70</span><span class="p">,</span>
+            <span class="mf">12.10</span><span class="p">,</span>
+            <span class="mf">12.50</span><span class="p">,</span>
+            <span class="mf">12.90</span><span class="p">,</span>
+            <span class="mf">13.20</span><span class="p">,</span>
+            <span class="mf">13.60</span><span class="p">,</span>
+            <span class="mf">14.10</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+        <span class="p">]</span>
+    <span class="p">),</span>
+    <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">):</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+        <span class="p">[</span>  <span class="c1"># M3-shell (NC=3, LC=1, IK=2)</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">1.20</span><span class="p">,</span>
+            <span class="mf">1.20</span><span class="p">,</span>
+            <span class="mf">1.20</span><span class="p">,</span>
+            <span class="mf">1.20</span><span class="p">,</span>
+            <span class="mf">1.20</span><span class="p">,</span>
+            <span class="mf">1.20</span><span class="p">,</span>
+            <span class="mf">1.23</span><span class="p">,</span>
+            <span class="mf">1.27</span><span class="p">,</span>
+            <span class="mf">1.30</span><span class="p">,</span>
+            <span class="mf">1.80</span><span class="p">,</span>
+            <span class="mf">2.15</span><span class="p">,</span>
+            <span class="mf">2.30</span><span class="p">,</span>
+            <span class="mf">2.30</span><span class="p">,</span>
+            <span class="mf">2.25</span><span class="p">,</span>
+            <span class="mf">2.20</span><span class="p">,</span>
+            <span class="mf">2.15</span><span class="p">,</span>
+            <span class="mf">1.10</span><span class="p">,</span>
+            <span class="mf">1.95</span><span class="p">,</span>
+            <span class="mf">1.90</span><span class="p">,</span>
+            <span class="mf">1.95</span><span class="p">,</span>
+            <span class="mf">2.00</span><span class="p">,</span>
+            <span class="mf">2.05</span><span class="p">,</span>
+            <span class="mf">2.10</span><span class="p">,</span>
+            <span class="mf">2.15</span><span class="p">,</span>
+            <span class="mf">2.20</span><span class="p">,</span>
+            <span class="mf">2.25</span><span class="p">,</span>
+            <span class="mf">2.35</span><span class="p">,</span>
+            <span class="mf">2.55</span><span class="p">,</span>
+            <span class="mf">2.80</span><span class="p">,</span>
+            <span class="mf">3.05</span><span class="p">,</span>
+            <span class="mf">3.30</span><span class="p">,</span>
+            <span class="mf">3.60</span><span class="p">,</span>
+            <span class="mf">3.90</span><span class="p">,</span>
+            <span class="mf">4.30</span><span class="p">,</span>
+            <span class="mf">4.70</span><span class="p">,</span>
+            <span class="mf">5.00</span><span class="p">,</span>
+            <span class="mf">5.40</span><span class="p">,</span>
+            <span class="mf">5.80</span><span class="p">,</span>
+            <span class="mf">6.20</span><span class="p">,</span>
+            <span class="mf">6.70</span><span class="p">,</span>
+            <span class="mf">7.30</span><span class="p">,</span>
+            <span class="mf">7.80</span><span class="p">,</span>
+            <span class="mf">8.10</span><span class="p">,</span>
+            <span class="mf">8.20</span><span class="p">,</span>
+            <span class="mf">8.30</span><span class="p">,</span>
+            <span class="mf">8.20</span><span class="p">,</span>
+            <span class="mf">8.00</span><span class="p">,</span>
+            <span class="mf">7.80</span><span class="p">,</span>
+            <span class="mf">7.50</span><span class="p">,</span>
+            <span class="mf">7.10</span><span class="p">,</span>
+            <span class="mf">6.70</span><span class="p">,</span>
+            <span class="mf">6.00</span><span class="p">,</span>
+            <span class="mf">5.60</span><span class="p">,</span>
+            <span class="mf">5.70</span><span class="p">,</span>
+            <span class="mf">6.40</span><span class="p">,</span>
+            <span class="mf">6.90</span><span class="p">,</span>
+            <span class="mf">7.50</span><span class="p">,</span>
+            <span class="mf">8.00</span><span class="p">,</span>
+            <span class="mf">8.30</span><span class="p">,</span>
+            <span class="mf">8.50</span><span class="p">,</span>
+            <span class="mf">8.60</span><span class="p">,</span>
+            <span class="mf">8.70</span><span class="p">,</span>
+            <span class="mf">8.70</span><span class="p">,</span>
+            <span class="mf">8.60</span><span class="p">,</span>
+            <span class="mf">8.50</span><span class="p">,</span>
+            <span class="mf">8.40</span><span class="p">,</span>
+            <span class="mf">8.30</span><span class="p">,</span>
+            <span class="mf">8.20</span><span class="p">,</span>
+            <span class="mf">8.20</span><span class="p">,</span>
+            <span class="mf">8.00</span><span class="p">,</span>
+            <span class="mf">8.00</span><span class="p">,</span>
+            <span class="mf">7.90</span><span class="p">,</span>
+            <span class="mf">7.90</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+        <span class="p">]</span>
+    <span class="p">),</span>
+    <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+        <span class="p">[</span>  <span class="c1"># M4-shell (NC=3, LC=2, IK=1)</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.01</span><span class="p">,</span>
+            <span class="mf">0.04</span><span class="p">,</span>
+            <span class="mf">0.06</span><span class="p">,</span>
+            <span class="mf">0.07</span><span class="p">,</span>
+            <span class="mf">0.07</span><span class="p">,</span>
+            <span class="mf">0.07</span><span class="p">,</span>
+            <span class="mf">0.07</span><span class="p">,</span>
+            <span class="mf">0.06</span><span class="p">,</span>
+            <span class="mf">0.06</span><span class="p">,</span>
+            <span class="mf">0.07</span><span class="p">,</span>
+            <span class="mf">0.09</span><span class="p">,</span>
+            <span class="mf">0.22</span><span class="p">,</span>
+            <span class="mf">0.50</span><span class="p">,</span>
+            <span class="mf">0.59</span><span class="p">,</span>
+            <span class="mf">0.61</span><span class="p">,</span>
+            <span class="mf">0.26</span><span class="p">,</span>
+            <span class="mf">0.30</span><span class="p">,</span>
+            <span class="mf">0.34</span><span class="p">,</span>
+            <span class="mf">0.38</span><span class="p">,</span>
+            <span class="mf">0.43</span><span class="p">,</span>
+            <span class="mf">0.47</span><span class="p">,</span>
+            <span class="mf">0.52</span><span class="p">,</span>
+            <span class="mf">0.56</span><span class="p">,</span>
+            <span class="mf">0.60</span><span class="p">,</span>
+            <span class="mf">0.63</span><span class="p">,</span>
+            <span class="mf">0.67</span><span class="p">,</span>
+            <span class="mf">0.70</span><span class="p">,</span>
+            <span class="mf">0.72</span><span class="p">,</span>
+            <span class="mf">0.75</span><span class="p">,</span>
+            <span class="mf">0.78</span><span class="p">,</span>
+            <span class="mf">0.82</span><span class="p">,</span>
+            <span class="mf">0.86</span><span class="p">,</span>
+            <span class="mf">0.90</span><span class="p">,</span>
+            <span class="mf">0.95</span><span class="p">,</span>
+            <span class="mf">1.01</span><span class="p">,</span>
+            <span class="mf">1.06</span><span class="p">,</span>
+            <span class="mf">1.13</span><span class="p">,</span>
+            <span class="mf">1.20</span><span class="p">,</span>
+            <span class="mf">1.27</span><span class="p">,</span>
+            <span class="mf">1.35</span><span class="p">,</span>
+            <span class="mf">1.43</span><span class="p">,</span>
+            <span class="mf">1.52</span><span class="p">,</span>
+            <span class="mf">1.61</span><span class="p">,</span>
+            <span class="mf">1.70</span><span class="p">,</span>
+            <span class="mf">1.79</span><span class="p">,</span>
+            <span class="mf">1.89</span><span class="p">,</span>
+            <span class="mf">1.99</span><span class="p">,</span>
+            <span class="mf">2.08</span><span class="p">,</span>
+            <span class="mf">2.18</span><span class="p">,</span>
+            <span class="mf">2.28</span><span class="p">,</span>
+            <span class="mf">2.38</span><span class="p">,</span>
+            <span class="mf">2.48</span><span class="p">,</span>
+            <span class="mf">2.58</span><span class="p">,</span>
+            <span class="mf">2.68</span><span class="p">,</span>
+            <span class="mf">2.78</span><span class="p">,</span>
+            <span class="mf">2.88</span><span class="p">,</span>
+            <span class="mf">2.98</span><span class="p">,</span>
+            <span class="mf">3.08</span><span class="p">,</span>
+            <span class="mf">3.18</span><span class="p">,</span>
+            <span class="mf">3.28</span><span class="p">,</span>
+            <span class="mf">3.39</span><span class="p">,</span>
+            <span class="mf">3.50</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+        <span class="p">]</span>
+    <span class="p">),</span>
+    <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">):</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+        <span class="p">[</span>  <span class="c1"># M5-shell (NC=3, LC=2, IK=2)</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.04</span><span class="p">,</span>
+            <span class="mf">0.06</span><span class="p">,</span>
+            <span class="mf">0.07</span><span class="p">,</span>
+            <span class="mf">0.07</span><span class="p">,</span>
+            <span class="mf">0.07</span><span class="p">,</span>
+            <span class="mf">0.07</span><span class="p">,</span>
+            <span class="mf">0.06</span><span class="p">,</span>
+            <span class="mf">0.07</span><span class="p">,</span>
+            <span class="mf">0.07</span><span class="p">,</span>
+            <span class="mf">0.10</span><span class="p">,</span>
+            <span class="mf">0.12</span><span class="p">,</span>
+            <span class="mf">0.14</span><span class="p">,</span>
+            <span class="mf">0.17</span><span class="p">,</span>
+            <span class="mf">0.21</span><span class="p">,</span>
+            <span class="mf">0.26</span><span class="p">,</span>
+            <span class="mf">0.31</span><span class="p">,</span>
+            <span class="mf">0.35</span><span class="p">,</span>
+            <span class="mf">0.39</span><span class="p">,</span>
+            <span class="mf">0.44</span><span class="p">,</span>
+            <span class="mf">0.48</span><span class="p">,</span>
+            <span class="mf">0.52</span><span class="p">,</span>
+            <span class="mf">0.56</span><span class="p">,</span>
+            <span class="mf">0.60</span><span class="p">,</span>
+            <span class="mf">0.63</span><span class="p">,</span>
+            <span class="mf">0.67</span><span class="p">,</span>
+            <span class="mf">0.70</span><span class="p">,</span>
+            <span class="mf">0.72</span><span class="p">,</span>
+            <span class="mf">0.75</span><span class="p">,</span>
+            <span class="mf">0.78</span><span class="p">,</span>
+            <span class="mf">0.82</span><span class="p">,</span>
+            <span class="mf">0.86</span><span class="p">,</span>
+            <span class="mf">0.90</span><span class="p">,</span>
+            <span class="mf">0.95</span><span class="p">,</span>
+            <span class="mf">1.01</span><span class="p">,</span>
+            <span class="mf">1.06</span><span class="p">,</span>
+            <span class="mf">1.13</span><span class="p">,</span>
+            <span class="mf">1.20</span><span class="p">,</span>
+            <span class="mf">1.27</span><span class="p">,</span>
+            <span class="mf">1.35</span><span class="p">,</span>
+            <span class="mf">1.43</span><span class="p">,</span>
+            <span class="mf">1.52</span><span class="p">,</span>
+            <span class="mf">1.61</span><span class="p">,</span>
+            <span class="mf">1.70</span><span class="p">,</span>
+            <span class="mf">1.79</span><span class="p">,</span>
+            <span class="mf">1.89</span><span class="p">,</span>
+            <span class="mf">1.99</span><span class="p">,</span>
+            <span class="mf">2.08</span><span class="p">,</span>
+            <span class="mf">2.18</span><span class="p">,</span>
+            <span class="mf">2.28</span><span class="p">,</span>
+            <span class="mf">2.38</span><span class="p">,</span>
+            <span class="mf">2.48</span><span class="p">,</span>
+            <span class="mf">2.58</span><span class="p">,</span>
+            <span class="mf">2.68</span><span class="p">,</span>
+            <span class="mf">2.78</span><span class="p">,</span>
+            <span class="mf">2.88</span><span class="p">,</span>
+            <span class="mf">2.98</span><span class="p">,</span>
+            <span class="mf">3.08</span><span class="p">,</span>
+            <span class="mf">3.18</span><span class="p">,</span>
+            <span class="mf">3.28</span><span class="p">,</span>
+            <span class="mf">3.39</span><span class="p">,</span>
+            <span class="mf">3.50</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+        <span class="p">]</span>
+    <span class="p">),</span>
+    <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+        <span class="p">[</span>  <span class="c1"># N1-shell (NC=4, LC=0)</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.40</span><span class="p">,</span>
+            <span class="mf">1.20</span><span class="p">,</span>
+            <span class="mf">1.60</span><span class="p">,</span>
+            <span class="mf">2.00</span><span class="p">,</span>
+            <span class="mf">2.40</span><span class="p">,</span>
+            <span class="mf">2.80</span><span class="p">,</span>
+            <span class="mf">3.20</span><span class="p">,</span>
+            <span class="mf">3.50</span><span class="p">,</span>
+            <span class="mf">3.90</span><span class="p">,</span>
+            <span class="mf">4.20</span><span class="p">,</span>
+            <span class="mf">4.35</span><span class="p">,</span>
+            <span class="mf">4.40</span><span class="p">,</span>
+            <span class="mf">4.40</span><span class="p">,</span>
+            <span class="mf">4.20</span><span class="p">,</span>
+            <span class="mf">3.40</span><span class="p">,</span>
+            <span class="mf">2.60</span><span class="p">,</span>
+            <span class="mf">2.40</span><span class="p">,</span>
+            <span class="mf">2.40</span><span class="p">,</span>
+            <span class="mf">2.60</span><span class="p">,</span>
+            <span class="mf">2.80</span><span class="p">,</span>
+            <span class="mf">3.10</span><span class="p">,</span>
+            <span class="mf">3.30</span><span class="p">,</span>
+            <span class="mf">3.50</span><span class="p">,</span>
+            <span class="mf">3.70</span><span class="p">,</span>
+            <span class="mf">4.00</span><span class="p">,</span>
+            <span class="mf">4.20</span><span class="p">,</span>
+            <span class="mf">4.40</span><span class="p">,</span>
+            <span class="mf">4.60</span><span class="p">,</span>
+            <span class="mf">4.90</span><span class="p">,</span>
+            <span class="mf">5.10</span><span class="p">,</span>
+            <span class="mf">5.40</span><span class="p">,</span>
+            <span class="mf">5.60</span><span class="p">,</span>
+            <span class="mf">5.80</span><span class="p">,</span>
+            <span class="mf">6.10</span><span class="p">,</span>
+            <span class="mf">6.30</span><span class="p">,</span>
+            <span class="mf">6.60</span><span class="p">,</span>
+            <span class="mf">6.80</span><span class="p">,</span>
+            <span class="mf">7.00</span><span class="p">,</span>
+            <span class="mf">7.30</span><span class="p">,</span>
+            <span class="mf">7.50</span><span class="p">,</span>
+            <span class="mf">7.70</span><span class="p">,</span>
+            <span class="mf">8.00</span><span class="p">,</span>
+            <span class="mf">8.25</span><span class="p">,</span>
+            <span class="mf">8.50</span><span class="p">,</span>
+            <span class="mf">8.80</span><span class="p">,</span>
+            <span class="mf">9.10</span><span class="p">,</span>
+            <span class="mf">9.35</span><span class="p">,</span>
+            <span class="mf">9.60</span><span class="p">,</span>
+            <span class="mf">9.90</span><span class="p">,</span>
+            <span class="mf">10.10</span><span class="p">,</span>
+            <span class="mf">10.40</span><span class="p">,</span>
+            <span class="mf">10.70</span><span class="p">,</span>
+            <span class="mf">10.95</span><span class="p">,</span>
+            <span class="mf">11.20</span><span class="p">,</span>
+            <span class="mf">11.50</span><span class="p">,</span>
+            <span class="mf">11.60</span><span class="p">,</span>
+            <span class="mf">12.20</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+        <span class="p">]</span>
+    <span class="p">),</span>
+    <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+        <span class="p">[</span>  <span class="c1"># N2-shell (NC=4, LC=1, IK=1)</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.40</span><span class="p">,</span>
+            <span class="mf">0.80</span><span class="p">,</span>
+            <span class="mf">1.20</span><span class="p">,</span>
+            <span class="mf">1.50</span><span class="p">,</span>
+            <span class="mf">2.20</span><span class="p">,</span>
+            <span class="mf">2.70</span><span class="p">,</span>
+            <span class="mf">3.20</span><span class="p">,</span>
+            <span class="mf">4.20</span><span class="p">,</span>
+            <span class="mf">6.40</span><span class="p">,</span>
+            <span class="mf">8.40</span><span class="p">,</span>
+            <span class="mf">10.80</span><span class="p">,</span>
+            <span class="mf">13.20</span><span class="p">,</span>
+            <span class="mf">17.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">5.00</span><span class="p">,</span>
+            <span class="mf">5.03</span><span class="p">,</span>
+            <span class="mf">5.06</span><span class="p">,</span>
+            <span class="mf">5.08</span><span class="p">,</span>
+            <span class="mf">5.10</span><span class="p">,</span>
+            <span class="mf">5.13</span><span class="p">,</span>
+            <span class="mf">5.16</span><span class="p">,</span>
+            <span class="mf">5.20</span><span class="p">,</span>
+            <span class="mf">5.23</span><span class="p">,</span>
+            <span class="mf">5.26</span><span class="p">,</span>
+            <span class="mf">5.30</span><span class="p">,</span>
+            <span class="mf">5.33</span><span class="p">,</span>
+            <span class="mf">5.36</span><span class="p">,</span>
+            <span class="mf">5.40</span><span class="p">,</span>
+            <span class="mf">5.50</span><span class="p">,</span>
+            <span class="mf">5.50</span><span class="p">,</span>
+            <span class="mf">5.60</span><span class="p">,</span>
+            <span class="mf">5.70</span><span class="p">,</span>
+            <span class="mf">5.80</span><span class="p">,</span>
+            <span class="mf">5.90</span><span class="p">,</span>
+            <span class="mf">6.00</span><span class="p">,</span>
+            <span class="mf">6.10</span><span class="p">,</span>
+            <span class="mf">6.25</span><span class="p">,</span>
+            <span class="mf">6.40</span><span class="p">,</span>
+            <span class="mf">6.55</span><span class="p">,</span>
+            <span class="mf">6.70</span><span class="p">,</span>
+            <span class="mf">6.90</span><span class="p">,</span>
+            <span class="mf">7.20</span><span class="p">,</span>
+            <span class="mf">7.35</span><span class="p">,</span>
+            <span class="mf">7.60</span><span class="p">,</span>
+            <span class="mf">7.80</span><span class="p">,</span>
+            <span class="mf">8.10</span><span class="p">,</span>
+            <span class="mf">8.30</span><span class="p">,</span>
+            <span class="mf">8.50</span><span class="p">,</span>
+            <span class="mf">8.75</span><span class="p">,</span>
+            <span class="mf">9.20</span><span class="p">,</span>
+            <span class="mf">9.60</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+        <span class="p">]</span>
+    <span class="p">),</span>
+    <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">):</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+        <span class="p">[</span>  <span class="c1"># N3-shell (NC=4, LC=1, IK=2)</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.30</span><span class="p">,</span>
+            <span class="mf">0.60</span><span class="p">,</span>
+            <span class="mf">1.00</span><span class="p">,</span>
+            <span class="mf">1.60</span><span class="p">,</span>
+            <span class="mf">2.20</span><span class="p">,</span>
+            <span class="mf">2.80</span><span class="p">,</span>
+            <span class="mf">3.80</span><span class="p">,</span>
+            <span class="mf">5.60</span><span class="p">,</span>
+            <span class="mf">8.00</span><span class="p">,</span>
+            <span class="mf">10.50</span><span class="p">,</span>
+            <span class="mf">14.00</span><span class="p">,</span>
+            <span class="mf">17.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">1.30</span><span class="p">,</span>
+            <span class="mf">1.45</span><span class="p">,</span>
+            <span class="mf">1.60</span><span class="p">,</span>
+            <span class="mf">1.75</span><span class="p">,</span>
+            <span class="mf">1.90</span><span class="p">,</span>
+            <span class="mf">2.05</span><span class="p">,</span>
+            <span class="mf">2.20</span><span class="p">,</span>
+            <span class="mf">2.35</span><span class="p">,</span>
+            <span class="mf">2.50</span><span class="p">,</span>
+            <span class="mf">2.65</span><span class="p">,</span>
+            <span class="mf">2.80</span><span class="p">,</span>
+            <span class="mf">2.95</span><span class="p">,</span>
+            <span class="mf">3.15</span><span class="p">,</span>
+            <span class="mf">3.30</span><span class="p">,</span>
+            <span class="mf">3.50</span><span class="p">,</span>
+            <span class="mf">3.65</span><span class="p">,</span>
+            <span class="mf">3.85</span><span class="p">,</span>
+            <span class="mf">4.00</span><span class="p">,</span>
+            <span class="mf">4.20</span><span class="p">,</span>
+            <span class="mf">4.40</span><span class="p">,</span>
+            <span class="mf">4.60</span><span class="p">,</span>
+            <span class="mf">4.75</span><span class="p">,</span>
+            <span class="mf">4.90</span><span class="p">,</span>
+            <span class="mf">5.05</span><span class="p">,</span>
+            <span class="mf">5.30</span><span class="p">,</span>
+            <span class="mf">5.60</span><span class="p">,</span>
+            <span class="mf">5.80</span><span class="p">,</span>
+            <span class="mf">5.95</span><span class="p">,</span>
+            <span class="mf">6.20</span><span class="p">,</span>
+            <span class="mf">6.40</span><span class="p">,</span>
+            <span class="mf">6.60</span><span class="p">,</span>
+            <span class="mf">6.80</span><span class="p">,</span>
+            <span class="mf">7.00</span><span class="p">,</span>
+            <span class="mf">7.25</span><span class="p">,</span>
+            <span class="mf">7.50</span><span class="p">,</span>
+            <span class="mf">7.75</span><span class="p">,</span>
+            <span class="mf">8.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+        <span class="p">]</span>
+    <span class="p">),</span>
+    <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+        <span class="p">[</span>  <span class="c1"># N4-shell (NC=4, LC=2, IK=1)</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.08</span><span class="p">,</span>
+            <span class="mf">0.14</span><span class="p">,</span>
+            <span class="mf">0.17</span><span class="p">,</span>
+            <span class="mf">0.11</span><span class="p">,</span>
+            <span class="mf">0.10</span><span class="p">,</span>
+            <span class="mf">0.08</span><span class="p">,</span>
+            <span class="mf">0.08</span><span class="p">,</span>
+            <span class="mf">0.09</span><span class="p">,</span>
+            <span class="mf">0.61</span><span class="p">,</span>
+            <span class="mf">0.78</span><span class="p">,</span>
+            <span class="mf">1.05</span><span class="p">,</span>
+            <span class="mf">1.38</span><span class="p">,</span>
+            <span class="mf">1.78</span><span class="p">,</span>
+            <span class="mf">2.20</span><span class="p">,</span>
+            <span class="mf">2.45</span><span class="p">,</span>
+            <span class="mf">2.70</span><span class="p">,</span>
+            <span class="mf">2.95</span><span class="p">,</span>
+            <span class="mf">3.15</span><span class="p">,</span>
+            <span class="mf">3.35</span><span class="p">,</span>
+            <span class="mf">3.55</span><span class="p">,</span>
+            <span class="mf">3.70</span><span class="p">,</span>
+            <span class="mf">3.80</span><span class="p">,</span>
+            <span class="mf">3.90</span><span class="p">,</span>
+            <span class="mf">4.00</span><span class="p">,</span>
+            <span class="mf">4.10</span><span class="p">,</span>
+            <span class="mf">4.10</span><span class="p">,</span>
+            <span class="mf">4.10</span><span class="p">,</span>
+            <span class="mf">4.10</span><span class="p">,</span>
+            <span class="mf">4.10</span><span class="p">,</span>
+            <span class="mf">4.10</span><span class="p">,</span>
+            <span class="mf">4.00</span><span class="p">,</span>
+            <span class="mf">3.90</span><span class="p">,</span>
+            <span class="mf">3.80</span><span class="p">,</span>
+            <span class="mf">3.80</span><span class="p">,</span>
+            <span class="mf">3.90</span><span class="p">,</span>
+            <span class="mf">3.90</span><span class="p">,</span>
+            <span class="mf">4.00</span><span class="p">,</span>
+            <span class="mf">4.10</span><span class="p">,</span>
+            <span class="mf">4.15</span><span class="p">,</span>
+            <span class="mf">4.20</span><span class="p">,</span>
+            <span class="mf">4.30</span><span class="p">,</span>
+            <span class="mf">4.40</span><span class="p">,</span>
+            <span class="mf">4.50</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+        <span class="p">]</span>
+    <span class="p">),</span>
+    <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">):</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+        <span class="p">[</span>  <span class="c1"># N5-shell (NC=4, LC=2, IK=2)</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.08</span><span class="p">,</span>
+            <span class="mf">0.14</span><span class="p">,</span>
+            <span class="mf">0.20</span><span class="p">,</span>
+            <span class="mf">0.12</span><span class="p">,</span>
+            <span class="mf">0.08</span><span class="p">,</span>
+            <span class="mf">0.08</span><span class="p">,</span>
+            <span class="mf">0.08</span><span class="p">,</span>
+            <span class="mf">0.10</span><span class="p">,</span>
+            <span class="mf">0.32</span><span class="p">,</span>
+            <span class="mf">0.53</span><span class="p">,</span>
+            <span class="mf">0.80</span><span class="p">,</span>
+            <span class="mf">1.11</span><span class="p">,</span>
+            <span class="mf">1.48</span><span class="p">,</span>
+            <span class="mf">1.90</span><span class="p">,</span>
+            <span class="mf">2.20</span><span class="p">,</span>
+            <span class="mf">2.40</span><span class="p">,</span>
+            <span class="mf">2.60</span><span class="p">,</span>
+            <span class="mf">2.80</span><span class="p">,</span>
+            <span class="mf">2.95</span><span class="p">,</span>
+            <span class="mf">3.10</span><span class="p">,</span>
+            <span class="mf">3.20</span><span class="p">,</span>
+            <span class="mf">3.30</span><span class="p">,</span>
+            <span class="mf">3.50</span><span class="p">,</span>
+            <span class="mf">3.65</span><span class="p">,</span>
+            <span class="mf">3.80</span><span class="p">,</span>
+            <span class="mf">3.90</span><span class="p">,</span>
+            <span class="mf">3.90</span><span class="p">,</span>
+            <span class="mf">4.00</span><span class="p">,</span>
+            <span class="mf">3.95</span><span class="p">,</span>
+            <span class="mf">3.90</span><span class="p">,</span>
+            <span class="mf">3.85</span><span class="p">,</span>
+            <span class="mf">3.80</span><span class="p">,</span>
+            <span class="mf">3.80</span><span class="p">,</span>
+            <span class="mf">3.80</span><span class="p">,</span>
+            <span class="mf">3.80</span><span class="p">,</span>
+            <span class="mf">3.85</span><span class="p">,</span>
+            <span class="mf">3.90</span><span class="p">,</span>
+            <span class="mf">3.95</span><span class="p">,</span>
+            <span class="mf">4.00</span><span class="p">,</span>
+            <span class="mf">4.05</span><span class="p">,</span>
+            <span class="mf">4.10</span><span class="p">,</span>
+            <span class="mf">4.20</span><span class="p">,</span>
+            <span class="mf">4.25</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+        <span class="p">]</span>
+    <span class="p">),</span>
+    <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+        <span class="p">[</span>  <span class="c1"># N6-shell (NC=4, LC=3, IK=1)</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.03</span><span class="p">,</span>
+            <span class="mf">0.03</span><span class="p">,</span>
+            <span class="mf">0.07</span><span class="p">,</span>
+            <span class="mf">0.08</span><span class="p">,</span>
+            <span class="mf">0.10</span><span class="p">,</span>
+            <span class="mf">0.15</span><span class="p">,</span>
+            <span class="mf">0.22</span><span class="p">,</span>
+            <span class="mf">0.31</span><span class="p">,</span>
+            <span class="mf">0.35</span><span class="p">,</span>
+            <span class="mf">0.37</span><span class="p">,</span>
+            <span class="mf">0.33</span><span class="p">,</span>
+            <span class="mf">0.29</span><span class="p">,</span>
+            <span class="mf">0.26</span><span class="p">,</span>
+            <span class="mf">0.22</span><span class="p">,</span>
+            <span class="mf">0.19</span><span class="p">,</span>
+            <span class="mf">0.17</span><span class="p">,</span>
+            <span class="mf">0.16</span><span class="p">,</span>
+            <span class="mf">0.15</span><span class="p">,</span>
+            <span class="mf">0.15</span><span class="p">,</span>
+            <span class="mf">0.15</span><span class="p">,</span>
+            <span class="mf">0.15</span><span class="p">,</span>
+            <span class="mf">0.29</span><span class="p">,</span>
+            <span class="mf">0.37</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+        <span class="p">]</span>
+    <span class="p">),</span>
+    <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">):</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+        <span class="p">[</span>  <span class="c1"># N7-shell (NC=4, LC=3, IK=2)</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.03</span><span class="p">,</span>
+            <span class="mf">0.03</span><span class="p">,</span>
+            <span class="mf">0.03</span><span class="p">,</span>
+            <span class="mf">0.04</span><span class="p">,</span>
+            <span class="mf">0.06</span><span class="p">,</span>
+            <span class="mf">0.11</span><span class="p">,</span>
+            <span class="mf">0.18</span><span class="p">,</span>
+            <span class="mf">0.27</span><span class="p">,</span>
+            <span class="mf">0.31</span><span class="p">,</span>
+            <span class="mf">0.33</span><span class="p">,</span>
+            <span class="mf">0.31</span><span class="p">,</span>
+            <span class="mf">0.27</span><span class="p">,</span>
+            <span class="mf">0.23</span><span class="p">,</span>
+            <span class="mf">0.20</span><span class="p">,</span>
+            <span class="mf">0.18</span><span class="p">,</span>
+            <span class="mf">0.16</span><span class="p">,</span>
+            <span class="mf">0.16</span><span class="p">,</span>
+            <span class="mf">0.15</span><span class="p">,</span>
+            <span class="mf">0.16</span><span class="p">,</span>
+            <span class="mf">0.17</span><span class="p">,</span>
+            <span class="mf">0.18</span><span class="p">,</span>
+            <span class="mf">0.25</span><span class="p">,</span>
+            <span class="mf">0.31</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+            <span class="mf">0.00</span><span class="p">,</span>
+        <span class="p">]</span>
+    <span class="p">),</span>
+    <span class="c1"># The remaining shells (O1-O5, P1-P3) were in the Fortran header but had no data.</span>
+    <span class="c1"># They are omitted here as per the original source code&#39;s data section.</span>
+<span class="p">}</span>
+
+<span class="c1"># Backward-compatible alias</span>
+<span class="n">core_hole_width_data</span> <span class="o">=</span> <span class="n">core_hole_width_data_campbell_papp</span>
+
+<span class="n">_CORE_HOLE_WIDTH_SOURCES</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;campbell-papp&quot;</span><span class="p">:</span> <span class="n">core_hole_width_data_campbell_papp</span><span class="p">,</span>
+    <span class="s2">&quot;fuggle-inglesfield&quot;</span><span class="p">:</span> <span class="n">core_hole_width_data_fuggle_inglesfield</span><span class="p">,</span>
+    <span class="s2">&quot;xband6&quot;</span><span class="p">:</span> <span class="n">core_hole_width_data_fuggle_inglesfield</span><span class="p">,</span>
+    <span class="s2">&quot;xband8&quot;</span><span class="p">:</span> <span class="n">core_hole_width_data_campbell_papp</span><span class="p">,</span>
+<span class="p">}</span>
+
+
+<div class="viewcode-block" id="core_hole_width">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.physics.core_hole_width.core_hole_width.html#ase2sprkkr.physics.core_hole_width.core_hole_width">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">core_hole_width</span><span class="p">(</span><span class="n">Z</span><span class="p">,</span> <span class="n">NC</span><span class="p">,</span> <span class="n">LC</span><span class="p">,</span> <span class="n">IK</span><span class="p">,</span> <span class="n">source</span><span class="o">=</span><span class="s2">&quot;campbell-papp&quot;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculates the Lorentzian core-hole life time (width) in [eV] based on</span>
+<span class="sd">    atomic number and quantum numbers of the core shell.</span>
+
+<span class="sd">    This function is a refactored Python translation of the WCOREHOLE Fortran</span>
+<span class="sd">    function. It uses a dictionary lookup with a key derived from the quantum</span>
+<span class="sd">    numbers to avoid a long if/else chain.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        Z (int): Atomic number (1-104).</span>
+<span class="sd">        NC (int): Principal quantum number of core shell.</span>
+<span class="sd">        LC (int): Angular momentum quantum number of core shell.</span>
+<span class="sd">        IK (int): Selects SOC-split subshell (1: j=l-1/2, 2: j=l+1/2).</span>
+<span class="sd">                  For shells without SOC splitting (LC=0), this is not used.</span>
+<span class="sd">        source (str): Dataset to use. One of &#39;campbell-papp&#39; (default, Campbell &amp;</span>
+<span class="sd">                      Papp 2001, covers K–N7) or &#39;fuggle-inglesfield&#39; (Fuggle &amp;</span>
+<span class="sd">                      Inglesfield 1992, K and L shells only; returns 0 for higher).</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        float: Lorentzian core-hole width in eV.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Check if the atomic number is within the valid range</span>
+    <span class="k">if</span> <span class="n">Z</span> <span class="o">&lt;</span> <span class="mi">1</span> <span class="ow">or</span> <span class="n">Z</span> <span class="o">&gt;</span> <span class="mi">104</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error in core_hole_width: Z=</span><span class="si">{</span><span class="n">Z</span><span class="si">}</span><span class="s2"> is out of the valid range [1, 104].&quot;</span><span class="p">)</span>
+
+    <span class="n">dataset</span> <span class="o">=</span> <span class="n">_CORE_HOLE_WIDTH_SOURCES</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">dataset</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Unknown core-hole width source &#39;</span><span class="si">{</span><span class="n">source</span><span class="si">}</span><span class="s2">&#39;. Valid options are: </span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="n">_CORE_HOLE_WIDTH_SOURCES</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+
+    <span class="c1"># Fortran uses 1-based indexing for arrays, so we convert the atomic number Z.</span>
+    <span class="n">z_index</span> <span class="o">=</span> <span class="n">Z</span> <span class="o">-</span> <span class="mi">1</span>
+
+    <span class="c1"># Construct a key tuple to directly look up the data array.</span>
+    <span class="n">key_tuple</span> <span class="o">=</span> <span class="p">(</span><span class="n">NC</span><span class="p">,</span> <span class="n">LC</span><span class="p">,</span> <span class="n">IK</span> <span class="k">if</span> <span class="n">LC</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">arr</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key_tuple</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">arr</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># Shell not tabulated in this dataset (e.g. M/N shells in fuggle-inglesfield)</span>
+        <span class="k">return</span> <span class="mf">0.0</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">arr</span><span class="p">[</span><span class="n">z_index</span><span class="p">]</span>
+    <span class="k">except</span> <span class="p">(</span><span class="ne">IndexError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown data for lorentzian core hole for Z=</span><span class="si">{</span><span class="n">Z</span><span class="si">}</span><span class="s2">, NC=</span><span class="si">{</span><span class="n">NC</span><span class="si">}</span><span class="s2">, LC=</span><span class="si">{</span><span class="n">LC</span><span class="si">}</span><span class="s2">, IK=</span><span class="si">{</span><span class="n">IK</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Matyáš Novák &amp; Jano Minár.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

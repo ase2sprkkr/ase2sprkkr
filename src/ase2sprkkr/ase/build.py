@@ -1,18 +1,24 @@
-""" This module contains routines for building materials.
+"""This module contains routines for building materials.
 Unlike ``ase2sprkkr.sprkkr.build``, this module contains generic
 routines, possible usable with plain ASE (with any calculator).
 """
-
+from fractions import Fraction
+import numbers
 import numpy as np
 import ase
-from typing import List, Union, Optional, Tuple
+from typing import Iterable, List, Union, Optional, Tuple
 from ase.build import surface
 
+from ..common import backward_compatibility
+#now you can import lcm
+from math import gcd, lcm
 
-def aperiodic_times(atoms:ase.Atoms,
-                    times:Union[int, float, List[Union[int,float]]],
-                    axis:Optional[int]=None,
-                    direction:Union[List[int], int]=[1,1,1]):
+def aperiodic_times(
+    atoms: ase.Atoms,
+    times: Union[int, float, List[Union[int, float]]],
+    axis: Optional[int] = None,
+    direction: Union[List[int], int] = [1, 1, 1],
+):
     """
     Multiply (repeat) the atoms in the same way as
     atoms __mult__ operator.
@@ -40,58 +46,59 @@ def aperiodic_times(atoms:ase.Atoms,
      given axis. Otherwise, the partial cell
 
     """
-    if isinstance(times, (int, float)):
-       if axis is None:
-          times = np.ones(3) * times
-       else:
-          t = np.ones(3)
-          t[axis] = times
-          times = t
+    if isinstance(times, numbers.Real):
+        if axis is None:
+            times = np.ones(3) * times
+        else:
+            t = np.ones(3)
+            t[axis] = times
+            times = t
     else:
-       if axis is not None:
-          raise ValueError("If axis is specified, only a scalar value have to "
-                           "be supplied to the times argument.")
+        if axis is not None:
+            raise ValueError("If axis is specified, only a scalar value have to be supplied to the times argument.")
 
     if isinstance(direction, int):
-       direction = [direction, direction, direction]
+        direction = [direction, direction, direction]
 
     assert len(times) == 3
 
-    for i,(num, direction) in enumerate(zip(times, direction)):
+    for i, (num, direction) in enumerate(zip(times, direction)):
         if times[i] == 1:
-           continue
+            continue
         inum = int(num)
         mlt = np.ones(3, dtype=int)
         mlt[i] = inum
         natoms = atoms * mlt
-        fnum=num - inum
-        if fnum>0:
-           pos=atoms.get_scaled_positions(False)
-           if direction > 0:
-               add = atoms[pos[:,i] < fnum].copy()
-               add.positions += atoms.cell[i] * inum
-               natoms += add
-           else:
-               add = atoms[pos[:,i] > 1. - fnum].copy()
-               add.positions -= atoms.cell[i]
-               add += natoms
-               natoms = add
-               natoms.positions+= atoms.cell[i] * fnum
+        fnum = num - inum
+        if fnum > 0 and not np.isclose(fnum, 0):
+            pos = atoms.get_scaled_positions(False)
+            if direction > 0:
+                add = atoms[pos[:, i] < fnum].copy()
+                add.positions += atoms.cell[i] * inum
+                natoms += add
+            else:
+                add = atoms[pos[:, i] > 1.0 - fnum].copy()
+                add.positions -= atoms.cell[i]
+                add += natoms
+                natoms = add
+                natoms.positions += atoms.cell[i] * fnum
+            natoms.pbc[i] = False
         natoms.cell[i] = atoms.cell[i] * num
-        natoms.pbc[i]=False
         atoms = natoms
     return atoms
 
 
-def stack(atomses:List[ase.Atoms],
-          axis:int,
-          at:Optional[List[Optional[List[int]]]]=None,
-          relative:bool=False,
-          scale='pbc',
-          check_strain='auto',
-          max_strain=1e-10,
-          check_pbc=True,
-          periodic=False):
+def stack(
+    atomses: Iterable[ase.Atoms],
+    axis: int,
+    at: Optional[List[Optional[List[int]]]] = None,
+    relative: bool = False,
+    scale="pbc",
+    check_strain="auto",
+    max_strain=1e-10,
+    check_pbc=True,
+    periodic=False,
+):
     """
     Stack (concatenate) the atoms objects along given axis
 
@@ -158,57 +165,62 @@ def stack(atomses:List[ase.Atoms],
     periodic
       The pbc of the resulting object along the axis.
     """
-    try:
-      atoms0 = atomses[0]
-      remains = atomses[1:]
-    except TypeError:
-      iterator = iter(atomses)
-      atoms0 = next(iterator)
-      remains = [i for i in iterator]
+    atomses = list(atomses)
+    if not atomses:
+        raise ValueError("At least one Atoms object has to be supplied.")
+    atoms0 = atomses[0]
+    remains = atomses[1:]
 
     out = atoms0.copy()
 
     # first, define a function to retrieve the shifts
     if at is None:
-       valid_at = lambda n: False
+
+        def valid_at(n):
+            return False
     else:
-       atlen = len(at)
-       valid_at = lambda n: n<atlen and at[n] is not None and not np.equal(at[n],[0,0,0]).all()
+        atlen = len(at)
+
+        def valid_at(n):
+            return n < atlen and at[n] is not None and not np.equal(at[n], [0, 0, 0]).all()
 
     def get_at(i):
         if not valid_at(i):
             return None
         a = at[i]
-        if isinstance(a, (int, float)):
-           o = out.cell[axis]
-           o *= a / np.linalg.norm(out)
+        if isinstance(a, numbers.Real):
+            o = np.asarray(out.cell[axis], dtype=float).copy()
+            norm = np.linalg.norm(o)
+            if np.isclose(norm, 0.0):
+                raise ValueError("A scalar 'at' value requires a non-zero stacking cell vector.")
+            o *= a / norm
         else:
-           o = a
+            o = a
         return o
 
     def update_origin(i):
-       nonlocal origin
-       a = get_at(i)
-       if a is None:
-          origin+=shift
-       elif relative:
-          origin+=a
-       else:
-          origin=a
+        nonlocal origin
+        a = get_at(i)
+        if a is None:
+            origin += shift
+        elif relative:
+            origin += a
+        else:
+            origin = a
 
     # set the initial origin and shift
     at0 = get_at(0)
     if at0 is None:
-       origin = np.array([0.,0.,0.])
+        origin = np.array([0.0, 0.0, 0.0])
     else:
-       out.positions+=at0
-       origin = at0
+        out.positions += at0
+        origin = at0
     shift = out.cell[axis]
 
     # resolve resulting pbc
-    cell_index = [ i for i in range(3) if i!=axis ]
-    if check_strain == 'auto':
-       check_strain = scale
+    cell_index = [i for i in range(3) if i != axis]
+    if check_strain == "auto":
+        check_strain = scale
 
     if not check_pbc:
         for a in remains:
@@ -216,46 +228,130 @@ def stack(atomses:List[ase.Atoms],
     else:
         for a in remains:
             if (out.pbc != a.pbc)[cell_index].any():
-                 raise ValueError("The stacked atoms has incompatibile pbc. Check the check_pbc argument.")
+                raise ValueError("The stacked atoms has incompatibile pbc. Check the check_pbc argument.")
     out.pbc[axis] = periodic
 
     # and finally, stack the atoms
     a0cell = atoms0.cell.complete()
-    for i,a in enumerate(remains, start=1):
-       update_origin(i)
-       out+=a
-       out.pbc *= a.pbc
-       positions = out.positions[-len(a):]
+    for i, a in enumerate(remains, start=1):
+        update_origin(i)
+        out += a
+        # ``-0`` is ``0`` in Python, so slicing with ``[-len(a):]`` for an
+        # empty Atoms object selects every position already in ``out``.  The
+        # origin shift below would then move all previously stacked atoms.
+        positions = out.positions[-len(a) :] if len(a) else out.positions[0:0]
 
-       # scaling of the incompatibile cells
-       do_scale = []
-       for c in cell_index:
-          if (a.cell[c] != atoms0.cell[c]).any():
-             if out.pbc[c] if check_strain == 'pbc' else check_strain:
-                strain = np.linalg.norm(a.cell[c] - a0cell[c]) / np.linalg.norm(a0cell[c])
-                if strain > max_strain:
-                   raise ValueError("The {i}th stacked Atoms object {a.symbols} has incompatibile cell, check the max_strain argument.")
-             if out.pbc[c] if scale == 'pbc' else scale:
-                do_scale.append(c)
-       if do_scale:
-          cell = a.cell.complete()
-          ncell = cell.copy()
-          for c in do_scale:
-              # copied from atoms.set_cell(scale_atoms=True)
-              ncell[c] = a0cell[c]
-          m = np.linalg.solve(cell, ncell)
-          positions[:] = np.dot(positions, m)
+        # scaling of the incompatibile cells
+        do_scale = []
+        for c in cell_index:
+            if (a.cell[c] != atoms0.cell[c]).any():
+                if out.pbc[c] if check_strain == "pbc" else check_strain:
+                    strain = np.linalg.norm(a.cell[c] - a0cell[c]) / np.linalg.norm(a0cell[c])
+                    if strain > max_strain:
+                        raise ValueError(
+                            "The {i}th stacked Atoms object {a.symbols} has incompatibile cell, check the max_strain argument."
+                        )
+                if out.pbc[c] if scale == "pbc" else scale:
+                    do_scale.append(c)
+        if do_scale:
+            cell = a.cell.complete()
+            ncell = cell.copy()
+            for c in do_scale:
+                # copied from atoms.set_cell(scale_atoms=True)
+                ncell[c] = a0cell[c]
+            m = np.linalg.solve(cell, ncell)
+            positions[:] = np.dot(positions, m)
 
-       positions += origin
-       shift=a.cell[axis]
+        positions += origin
+        shift = a.cell[axis]
 
     # update the cell of the resulting atoms
     update_origin(len(atomses))
     out.cell[axis] = origin
     return out
 
-def rotate(atoms:ase.Atoms,
-           hkl:Tuple[float]):
+
+def _surface_basis(cell, indices, tol=1e-10):
+    indices = np.asarray(indices)
+    if indices.shape != (3,) or not indices.any():
+        raise ValueError(f"{indices} is an invalid surface type")
+    if not np.allclose(indices, np.rint(indices), atol=tol):
+        raise ValueError(f"{indices} is an invalid surface type")
+
+    indices = np.rint(indices).astype(int)
+    h, k, l = indices
+    h0, k0, l0 = indices == 0
+
+    if h0 and k0 or h0 and l0 or k0 and l0:
+        if not h0:
+            c1, c2, c3 = [(0, 1, 0), (0, 0, 1), (1, 0, 0)]
+        if not k0:
+            c1, c2, c3 = [(0, 0, 1), (1, 0, 0), (0, 1, 0)]
+        if not l0:
+            c1, c2, c3 = [(1, 0, 0), (0, 1, 0), (0, 0, 1)]
+    else:
+        p, q = _ext_gcd(k, l)
+        a1, a2, a3 = np.asarray(cell)
+
+        k1 = np.dot(p * (k * a1 - h * a2) + q * (l * a1 - h * a3), l * a2 - k * a3)
+        k2 = np.dot(l * (k * a1 - h * a2) - k * (l * a1 - h * a3), l * a2 - k * a3)
+
+        if abs(k2) > tol:
+            i = -int(round(k1 / k2))
+            p, q = p + i * l, q - i * k
+
+        a, b = _ext_gcd(p * k + q * l, h)
+
+        c1 = (p * k + q * l, -p * h, -q * h)
+        c2 = np.array((0, l, -k)) // abs(gcd(l, k))
+        c3 = (b, a * p, a * q)
+
+    return np.array([c1, c2, c3], dtype=float)
+
+
+def _ext_gcd(a, b):
+    if b == 0:
+        return 1, 0
+    if a % b == 0:
+        return 0, 1
+    x, y = _ext_gcd(b, a % b)
+    return y, x - y * (a // b)
+
+
+def _fractional_inplane_period(shift: np.ndarray, tol: float = 1e-10, max_denominator: int = 256) -> Optional[int]:
+    period = 1
+    for value in np.asarray(shift, dtype=float):
+        fraction = value - np.floor(value)
+        if np.isclose(fraction, 0.0, atol=tol) or np.isclose(fraction, 1.0, atol=tol):
+            continue
+        rational = Fraction(fraction).limit_denominator(max_denominator)
+        if abs(float(rational) - fraction) > tol:
+            return None
+        period = lcm(period, rational.denominator)
+    return period
+
+
+def _minimal_surface_layers(atoms: ase.Atoms, hkl: Tuple[float], tol: float = 1e-10, max_layers: int = 256) -> int:
+    basis = _surface_basis(atoms.cell, hkl, tol=tol)
+    cell = np.dot(basis, np.asarray(atoms.cell))
+    a1, a2, a3 = cell
+
+    metric = np.array([[np.dot(a1, a1), np.dot(a1, a2)], [np.dot(a2, a1), np.dot(a2, a2)]])
+    rhs = np.array([np.dot(a1, a3), np.dot(a2, a3)])
+    shift = np.linalg.solve(metric, rhs)
+
+    period = _fractional_inplane_period(shift, tol=tol, max_denominator=max_layers)
+    if period is not None:
+        return period
+
+    for layers in range(1, max_layers + 1):
+        if np.allclose(layers * shift, np.rint(layers * shift), atol=tol):
+            return layers
+
+    raise ValueError(f"Unable to determine a periodic slab thickness for Miller indices {tuple(hkl)}.")
+
+
+def rotate(atoms: ase.Atoms, hkl: Tuple[float]):
     """
     Rotate the atoms according the given Miller coordinates.
 
@@ -267,10 +363,11 @@ def rotate(atoms:ase.Atoms,
       Miller indices. The atoms will be rotated so that the last axis will be perpendicular
       to the plane and the other will be parallel.
     """
-    return surface(atoms, hkl, 1, periodic=True)
+    layers = _minimal_surface_layers(atoms, hkl)
+    return surface(atoms, np.rint(hkl).astype(int), layers, periodic=True)
 
 
-def shift(atoms:ase.Atoms, shift:Optional[Union[float,int,tuple,list,np.ndarray]], axis=2, wrap=True):
+def shift(atoms: ase.Atoms, shift: Optional[Union[float, int, tuple, list, np.ndarray]], axis=2, wrap=True):
     """
     Shift the atoms (to get the desired atom to the top/bottom of the cell).
 
@@ -293,6 +390,7 @@ def shift(atoms:ase.Atoms, shift:Optional[Union[float,int,tuple,list,np.ndarray]
         atoms.wrap()
     return atoms
 
+
 def flip_around(atoms, around, axis=2, wrap=True):
     """
     Flip the atoms in given axis around given point (or site)
@@ -301,10 +399,9 @@ def flip_around(atoms, around, axis=2, wrap=True):
     shift(atoms, -around, wrap=False)
     flip(atoms, axis, wrap=False)
     sp = atoms.get_scaled_positions()
-    aid = np.argmax(sp[:,axis] % 1.0)
-    return shift(atoms,
-          sp[aid, axis],
-          wrap=wrap)
+    aid = np.argmax(sp[:, axis] % 1.0)
+    return shift(atoms, sp[aid, axis], wrap=wrap)
+
 
 def flip(atoms, plane=2, wrap=True):
     """
@@ -315,8 +412,8 @@ def flip(atoms, plane=2, wrap=True):
         vc = atoms.cell[plane]
     else:
         vc = plane
-    vc = vc/np.linalg.norm(vc)
-    reflect = np.eye(3) - 2 * np.outer(vc,vc)
+    vc = vc / np.linalg.norm(vc)
+    reflect = np.eye(3) - 2 * np.outer(vc, vc)
     atoms.positions = np.dot(atoms.positions, reflect.T)
 
     if wrap:

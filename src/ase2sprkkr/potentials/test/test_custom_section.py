@@ -1,52 +1,55 @@
 import re
 
-if __package__:
-   from .init_tests import TestCase, patch_package
-else:
-   from init_tests import TestCase, patch_package
-__package__, __name__ = patch_package(__package__, __name__)
-
-from ..potential_definitions import PotentialDefinition    # NOQA: E402
-from ..custom_potential_section import SectionString       # NOQA: E402
-from ...common.grammar import generate_grammar             # NOQA: E402
-from ...common.grammar import delimitedList                # NOQA: E402
+from ...common.grammar import delimitedList, generate_grammar
+from ..custom_potential_section import SectionString
+from ..potential_definitions import PotentialDefinition
 
 
-class TestCustomSection(TestCase):
+def test_section_delimiter_pattern():
+    pattern = re.compile(SectionString.delimiter_pattern)
 
-  def assertNone(self, val):
-      return self.assertEqual(None, val)
+    for text in (
+        "\n****************\n",
+        "    \n****************\n",
+        " \n \n   \n****************\n",
+        "\n****************\n   \n    \n",
+    ):
+        assert pattern.fullmatch(text) is not None
 
-  def test_custom_section(self):
+    for text in (
+        "a\n****************\n",
+        "\n****************\na",
+        "\n******* *********\na",
+    ):
+        assert pattern.fullmatch(text) is None
 
+
+def test_custom_member_grammar():
     with generate_grammar():
-      self.assertTrue(re.compile(SectionString.delimiter_pattern).fullmatch('\n****************\n'))
-      self.assertTrue(re.compile(SectionString.delimiter_pattern).fullmatch('    \n****************\n'))
-      self.assertTrue(re.compile(SectionString.delimiter_pattern).fullmatch(' \n \n   \n****************\n'))
-      self.assertTrue(re.compile(SectionString.delimiter_pattern).fullmatch('\n****************\n   \n    \n'))
-      self.assertNone(re.compile(SectionString.delimiter_pattern).fullmatch('a\n****************\n'))
-      self.assertNone(re.compile(SectionString.delimiter_pattern).fullmatch('\n****************\na'))
-      self.assertNone(re.compile(SectionString.delimiter_pattern).fullmatch('\n******* *********\na'))
+        grammar = PotentialDefinition.custom_member_grammar()
 
-      cmg = PotentialDefinition.custom_member_grammar()
-
-    sec = """HOST MADELUNG POTENTIAL
+    section = """HOST MADELUNG POTENTIAL
         IQ      VLMMAD
 NLMTOP-POT         4
          1   1 -2.34816691089662E-01
          1   2  0.00000000000000E+00to je konec"""
 
-    cmg.parseString(sec, True)
-    self.assertTrue(cmg.parseString(sec + '\n')[0][1].endswith('to je konec'))
+    grammar.parse_string(section, True)
+    assert grammar.parse_string(section + "\n")[0][1].endswith("to je konec")
 
     with generate_grammar():
-      cmgs = delimitedList(cmg, SectionString.grammar_of_delimiter())
-    out = cmgs.parseString(sec + "\n************************\n" + sec, True)
-    self.assertEqual(2, len(out))
+        sections = delimitedList(grammar, SectionString.delimiter())
 
-    out = cmgs.parseString(sec +
-                          "\n************************\n" +
-                          sec + "     \n****************************       \n   \n" +
-                          sec + sec,
-                            True)
-    self.assertEqual(3, len(out))
+    parsed = sections.parse_string(section + "\n************************\n" + section, True)
+    assert len(parsed) == 2
+
+    parsed = sections.parse_string(
+        section
+        + "\n************************\n"
+        + section
+        + "     \n****************************       \n   \n"
+        + section
+        + section,
+        True,
+    )
+    assert len(parsed) == 3

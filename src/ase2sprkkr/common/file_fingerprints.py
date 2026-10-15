@@ -1,13 +1,15 @@
 """Cheap filesystem fingerprints for detecting replaced or rewritten files."""
 
+from __future__ import annotations
+
 from pathlib import Path
-from typing import NamedTuple, Union
+from typing import NamedTuple
 
 
 class FileFingerprint(NamedTuple):
     """Metadata identity of one filesystem object at one point in time.
 
-    This intentionally avoids reading file contents. It is suitable for detecting
+    This intentionally avoids reading file contents.  It is suitable for detecting
     ordinary replacement or rewrite races around potentially large SPR-KKR files,
     not for cryptographic content identity.
     """
@@ -20,7 +22,7 @@ class FileFingerprint(NamedTuple):
     ctime_ns: int
 
 
-def file_fingerprint(path: Union[str, Path]) -> FileFingerprint:
+def file_fingerprint(path: str | Path) -> FileFingerprint:
     """Return a cheap fingerprint for ``path`` based on one ``stat()`` call."""
     info = Path(path).stat()
     return FileFingerprint(

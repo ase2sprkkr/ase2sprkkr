@@ -1,0 +1,8 @@
+\_array\_dtype\_condition\_not\_object\_and\_scalar
+===================================================
+
+Full name: **ase2sprkkr.common.grammar\_types.arrays.\_array\_dtype\_condition\_not\_object\_and\_scalar**
+
+.. currentmodule:: ase2sprkkr.common.grammar_types.arrays
+
+.. autofunction:: _array_dtype_condition_not_object_and_scalar

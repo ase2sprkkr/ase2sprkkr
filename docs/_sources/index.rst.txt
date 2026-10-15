@@ -11,6 +11,7 @@ ASE2SPRKKR software package
    More about the package installation <how-to-install.rst>
    Philosophy of the package (for developers) <philosophy.rst>
    Changelog <changelog.rst>
+   Authors <authors.rst>
    Hastily written ASE2SPRKKR slides <_static/slides.pdf#http://>
    Examples <examples.rst>
 

@@ -1,0 +1,36 @@
+SitePropertyProxy
+=================
+
+
+.. currentmodule:: ase2sprkkr.sprkkr.sites
+
+.. autoclass:: SitePropertyProxy
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.sprkkr.sites.SitePropertyProxy
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

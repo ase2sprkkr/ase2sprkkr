@@ -1,0 +1,36 @@
+BaseSpacegroupInfo
+==================
+
+
+.. currentmodule:: ase2sprkkr.sprkkr.spacegroup_info
+
+.. autoclass:: BaseSpacegroupInfo
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.sprkkr.spacegroup_info.BaseSpacegroupInfo
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

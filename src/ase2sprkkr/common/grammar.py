@@ -11,137 +11,181 @@ from typing import Optional
 
 @contextmanager
 def generate_grammar():
-    """ Set the pyparsing newline handling
-        and then restore to the original state """
+    """Set the pyparsing newline handling
+    and then restore to the original state"""
     try:
-      old = None
-      kchars = None
-      pe = pp.ParserElement
-      if hasattr(pe, "DEFAULT_WHITE_CHARS"):
-          old = pe.DEFAULT_WHITE_CHARS
-      if hasattr(pp.Keyword, "DEFAULT_KEYWORD_CHARS"):
-          kchars = pp.Keyword.DEFAULT_KEYWORD_CHARS + '-'
-      pe.setDefaultWhitespaceChars(' \t\r')
-      yield
+        old = None
+        kchars = None
+        pe = pp.ParserElement
+        if hasattr(pe, "DEFAULT_WHITE_CHARS"):
+            old = pe.DEFAULT_WHITE_CHARS
+        if hasattr(pp.Keyword, "DEFAULT_KEYWORD_CHARS"):
+            kchars = pp.Keyword.DEFAULT_KEYWORD_CHARS + "-"
+        pe.set_default_whitespace_chars(" \t\r")
+        yield
     finally:
-      if old is not None:
-        pe.setDefaultWhitespaceChars(old)
-      if kchars is not None:
-        pp.Keyword.DEFAULT_KEYWORD_CHARS = kchars
+        if old is not None:
+            pe.set_default_whitespace_chars(old)
+        if kchars is not None:
+            pp.Keyword.DEFAULT_KEYWORD_CHARS = kchars
 
 
 def replace_whitechars(expr):
     expr = expr.copy()
-    expr.setWhitespaceChars(' \t\r')
+    expr.set_whitespace_chars(" \t\r")
     return expr
 
 
 with generate_grammar():
-  optional_line_end = pp.Suppress(pp.LineEnd() | pp.WordStart() ).setName(' ')
-  """ Grammar for an optinal newline """
-  line_end = pp.Suppress(pp.LineEnd()).setName('\n')
-  """ Grammar for a required newline """
-  end_of_file = (pp.Regex(r'[\s]*') + pp.StringEnd()).suppress().setName('<EOF>')
-  """ Grammar for an end of file (ending whitespaces are allowed) """
+    optional_line_end = pp.Suppress(pp.LineEnd() | pp.WordStart()).set_name(" ")
+    """ Grammar for an optinal newline """
+    line_end = pp.Suppress(pp.LineEnd()).set_name("\n")
+    """ Grammar for a required newline """
+    end_of_file = (pp.Regex(r"[\s]*") + pp.StringEnd()).suppress().set_name("<EOF>")
+    """ Grammar for an end of file (ending whitespaces are allowed) """
 
-  optional_quote = pp.Optional("'").suppress()
-  """ Grammar for an optional quote """
+    optional_quote = pp.Optional("'").suppress()
+    """ Grammar for an optional quote """
+
+
+def as_delimiter(grammar, written=None):
+    """Return a suppressed delimiter grammar named by its written form."""
+    if isinstance(grammar, str):
+        if written is None:
+            written = grammar
+        grammar = pp.Suppress(grammar) if grammar else pp.Empty()
+    if written is not None:
+        grammar = grammar.set_name(written)
+    return grammar
 
 
 def separator_pattern(char):
-  return f'[{char}]' * 11 + '*'
+    return f"[{char}]" * 11 + "*"
 
 
 @cache
 def separator_grammar(char):
-  """ Pattern for separating sections in an input file """
-  separator = pp.Regex(separator_pattern(char)).setName(f"{char*10}[{char*4}....]").suppress()
-  return separator
+    """Pattern for separating sections in an input file"""
+    separator = pp.Regex(separator_pattern(char)).set_name(f"{char * 10}[{char * 4}....]").suppress()
+    return separator
 
 
 def delimitedList(expr, delim):
-  """ Delimited list with already suppressed delimiter (or with a in-results-wanted one) """
-  return expr + pp.ZeroOrMore(delim + expr)
+    """Delimited list with already suppressed delimiter (or with a in-results-wanted one)"""
+    return expr + pp.ZeroOrMore(delim + expr)
 
 
-def addConditionEx(self, condition, message):
-  """ Add check condition to the pyparsing ParseElement,
-  that, if it failed, raise a parse exception with a given message. """
+def add_condition_ex(self, condition, message):
+    """Add check condition to the pyparsing ParseElement,
+    that, if it failed, raise a parse exception with a given message."""
 
-  def check_condition(s, loc, tocs):
-      m = message
-      if condition(tocs):
-         return tocs
-      if not isinstance(m, str):
-         m = m(tocs)
-      raise pp.ParseException(s, loc, m)
-  self.addParseAction(check_condition)
-  return self
+    def check_condition(s, loc, tocs):
+        m = message
+        if condition(tocs):
+            return tocs
+        if not isinstance(m, str):
+            m = m(tocs)
+        raise pp.ParseException(s, loc, m)
+
+    self.add_parse_action(check_condition)
+    return self
 
 
-def addParseActionEx(self, pa, message = None):
-  """
-  Add parse action to a given pyparsing ParseElemenet,
-  that, if it raise an exception, fail with a given message
-  """
+def add_parse_action_ex(self, pa, message=None):
+    """
+    Add parse action to a given pyparsing ParseElemenet,
+    that, if it raise an exception, fail with a given message
+    """
 
-  def parse_action(s, loc, x):
-      try:
-        return pa(x)
-      except Exception as e:
-        if message:
-           msg = f'{message}\n{e}'
-        else:
-           msg = str(e)
-        raise pp.ParseException(s, loc, msg).with_traceback(e.__traceback__) from e
+    def parse_action(s, loc, x):
+        try:
+            return pa(x)
+        except Exception as e:
+            if message:
+                msg = f"{message}\n{e}"
+            else:
+                msg = str(e)
+            raise pp.ParseException(s, loc, msg).with_traceback(e.__traceback__) from e
 
-  self.addParseAction(parse_action)
+    self.add_parse_action(parse_action)
 
 
 class White(pp.White):
-  """ Fix for whitechars in pp.White
+    """Fix for whitechars in pp.White
 
-      In Python 3.10, pyparsing.White do not respect default_white_chars.
-      This class fixes this.
-  """
+    In Python 3.10, pyparsing.White do not respect default_white_chars.
+    This class fixes this.
+    """
 
-  def __init__(self, white):
-      super().__init__(white)
-      self.setWhitespaceChars('')
+    def __init__(self, white):
+        super().__init__(white)
+        self.set_whitespace_chars("")
 
 
 class SkipToRegex(pp.Token):
-   """ Skip to given regex """
+    """Skip to given regex"""
 
-   def __init__(self, pattern, include_pattern:Optional[bool]=None,
-                               parse_pattern:bool=False):
-       if not isinstance(pattern, re.Pattern):
-           pattern = re.compile(pattern)
-       self.pattern = pattern
-       if include_pattern is None:
-           include_pattern = parse_pattern
-       self.include_pattern = include_pattern
-       self.parse_pattern = parse_pattern
-       super().__init__()
+    def __init__(self, pattern, include_pattern: Optional[bool] = None, parse_pattern: bool = False):
+        if not isinstance(pattern, re.Pattern):
+            pattern = re.compile(pattern)
+        self.pattern = pattern
+        if include_pattern is None:
+            include_pattern = parse_pattern
+        self.include_pattern = include_pattern
+        self.parse_pattern = parse_pattern
+        super().__init__()
 
-   @property
-   def custom_name(self):
-       self.customName="skipTo{self.pattern}"
+    @property
+    def custom_name(self):
+        self.customName = "skipTo{self.pattern}"
 
-   def parseImpl(self, instr, loc, doActions = True):
-       result = self.pattern.search(instr,loc)
-       if result:
-           start = result.start()
-           out = instr[loc:start]
-           if self.parse_pattern:
-               out = (out, instr[start:result.end()])
-           if self.include_pattern:
-               loc = result.end()
-           else:
-               loc = result.start()
-           return loc, pp.ParseResults(out)
-       raise pp.ParseException(instr, loc, "Pattern {self.pattern} not found", self)
+    def parseImpl(self, instr, loc, doActions=True):
+        result = self.pattern.search(instr, loc)
+        if result:
+            start = result.start()
+            out = instr[loc:start]
+            if self.parse_pattern:
+                out = (out, instr[start : result.end()])
+            if self.include_pattern:
+                loc = result.end()
+            else:
+                loc = result.start()
+            return loc, pp.ParseResults(out)
+        raise pp.ParseException(instr, loc, "Pattern {self.pattern} not found", self)
+
+class Transparent(pp.ParseElementEnhance):
+    """ Pyparsing ParseElementEnhance wrongly takes care about whitespaces, if there is
+    nested Forward with whitespaces not already set. So we have to use out own lightweight
+    replacement.
+    """
+
+    def preParse(self, instring, loc):
+        return loc
+
+    def parseImpl(self, instring, loc, do_actions=True):
+        return self.expr._parse(instring, loc, do_actions)
+
+    def __str__(self):
+        return f"{self.__class__.__name__}({self.expr})"
+
+class Suppress(Transparent):
+
+    def __init__(self, expr):
+        super().__init__(expr)
+        self.add_parse_action(lambda x:[])
+        self.set_name('Suppress')
+
+class TokenConverter(Transparent):
+    pass
+
+class Forward(Transparent):
+
+    def __init__(self, expr=None):
+        super().__init__(expr)
+
+    def __lshift__(self, other):
+        self.expr = other
 
 
-pp.ParserElement.addConditionEx = addConditionEx
-pp.ParserElement.addParseActionEx = addParseActionEx
+pp.ParserElement.add_condition_ex = add_condition_ex
+pp.ParserElement.add_parse_action_ex = add_parse_action_ex

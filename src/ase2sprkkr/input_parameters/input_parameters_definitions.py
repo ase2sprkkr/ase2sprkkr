@@ -1,131 +1,129 @@
-"""
-This file contains the classes for definitions of InputParameterss:
-the list of sections and their allowed (or standard) options
-and their value formats. InputParameterss and potentials have a simlilar
-structure, so they share common functionalities from
-sprkkr.common.configuration_definitions
-"""
+"""Definitions of SPR-KKR input-parameter file formats."""
 
 import pyparsing as pp
 from ..common.container_definitions import dict_from_parsed
-from ..sprkkr.configuration import \
-         ConfigurationValueDefinition, ConfigurationSectionDefinition, ConfigurationFileDefinition, \
-         CustomConfigurationValue, CustomConfigurationSection
+from ..sprkkr.configuration import (
+    ConfigurationValueDefinition,
+    ConfigurationSectionDefinition,
+    ConfigurationFileDefinition,
+    CustomConfigurationValue,
+    CustomConfigurationSection,
+)
 from ..common.grammar_types import mixed, flag
 from ..common.grammar import generate_grammar, delimitedList
 from ..common.decorators import cached_class_property, cache
 from .input_parameters import InputParameters, InputSection
 
 with generate_grammar():
-  section_line_ends = pp.ZeroOrMore(pp.ZeroOrMore(pp.LineEnd().setWhitespaceChars('')) + pp.White(' \t'))
+    section_line_ends = pp.Regex("(\n[ \t]*)*[ \t]")
 
 
 class InputValueDefinition(ConfigurationValueDefinition):
-  """ This class describes the format of one value of
-  a task configuration """
-  @cached_class_property
-  def grammar_of_delimiter():
-    return pp.Suppress("=").setName('=')
+    @cached_class_property
+    def delimiter():
+        with generate_grammar():
+            return pp.Suppress("=").set_name("=")
 
-  prefix = "\t"
-  name_value_delimiter = '='
+    prefix = "\t"
+    type_from_type_map = {bool: flag}
+    type_of_dangerous = mixed
 
-  type_from_type_map = { bool : flag }
-  type_of_dangerous = mixed
+    def copy(self, **kwargs):
+        copied = super().copy(**kwargs)
+        if hasattr(self, "_energy_default_value"):
+            copied._energy_default_value = self._energy_default_value
+        return copied
 
 
 class InputSectionDefinition(ConfigurationSectionDefinition):
-  """ This class describes the format of one
-  value of a task section """
+    child_class = InputValueDefinition
+    result_class = InputSection
+    custom_class = staticmethod(
+        CustomConfigurationValue.factory(InputValueDefinition, mixed)
+    )
 
-  child_class = InputValueDefinition
-  """ standard child class """
+    @cached_class_property
+    def delimiter():
+        with generate_grammar():
+            out = (pp.Optional(section_line_ends) + pp.WordStart()).suppress()
+            return out.set_name("\n")
 
-  result_class = InputSection
-  """ The standard class for InputParameters section """
-
-  custom_class = staticmethod(CustomConfigurationValue.factory(InputValueDefinition, mixed))
-  """ Factory for custom values in the input sections. """
-
-  delimiter = '\n'
-  """ options are delimited by newline in ouptut. """
-
-  @cached_class_property
-  def grammar_of_delimiter():
-      out = (pp.Optional(section_line_ends) + pp.WordStart()).suppress()
-      return out
-
-  do_not_skip_whitespaces_before_name = True
+    do_not_skip_whitespaces_before_name = True
 
 
 class InputParametersDefinition(ConfigurationFileDefinition):
-  """ This class describes the format of a task file. """
+    """Syntax and parameter semantics of one SPR-KKR input-file schema."""
 
-  save_hook = None
-  """ Input parameters can have a save_hook defined, which is executed before saving the
-  parameters. The arguments of the hook are ``filename, atoms, self``. """
+    _task_definition = None
+    """Canonical 1:1 task, or None for schemas shared by multiple tasks."""
 
-  child_class = InputSectionDefinition
-  """ Sections of the :class:`InputParameters` are defined by :class:`InputSectionDefinition` """
+    save_hook = None
+    child_class = InputSectionDefinition
+    result_class = InputParameters
+    custom_class = staticmethod(
+        CustomConfigurationSection.factory(InputSectionDefinition)
+    )
+    configuration_type_name = "INPUT PARAMETERS"
 
-  result_class = InputParameters
-  """ The parsing of a potential file results in an instance of :class:`InputParameters` """
+    def task_definition_name(self, parameters):
+        """Return the task name represented by *parameters*.
 
-  custom_class = staticmethod(CustomConfigurationSection.factory(InputSectionDefinition))
-  """ The class factory for custom sections in the container """
+        Shared schemas override this method. For standard schemas it is normally
+        unused because ``_task_definition`` is set directly.
+        """
+        return str(self.name).upper()
 
-  configuration_type_name = 'INPUT PARAMETERS'
-  """ Name of the container type in the runtime documentation """
+    def task_definition(self, parameters):
+        """Resolve the task represented by concrete parameter values."""
+        if self._task_definition is not None:
+            return self._task_definition
+        return parameters.task_registry[self.task_definition_name(parameters)]
 
-  delimiter = "\n"
-  """ Sections are delimited by newline in the output """
+    def initialize_for_task(self, parameters, task_name):
+        """Initialize an explicit task discriminator when the schema has one.
 
-  @cached_class_property
-  def grammar_of_delimiter():
-      def ws(x):
-          return x.setWhitespaceChars('')
-      out = (pp.Optional(section_line_ends) + pp.OneOrMore(ws(pp.LineEnd())) + pp.FollowedBy(ws(pp.Regex(r'[^\s]'))) ).suppress()
-      out.setName('<newline><printable>')
-      return out
+        Shared schemas commonly encode their concrete task in ``TASK.TASK``.
+        When that option accepts the requested task, make the requested task an
+        explicit value. Schemas using another discriminator (for example BSF)
+        keep their own task-dependent defaults and may override this hook.
+        """
+        if self._task_definition is not None:
+            return
+        try:
+            option = parameters["TASK"]["TASK"]
+            grammar_type = option._definition.type
+            keywords = grammar_type.keywords
+        except (KeyError, AttributeError):
+            return
+        value = grammar_type.convert(task_name)
+        if value in keywords:
+            option.set(value)
 
-  @classmethod
-  @cache
-  def custom_value_grammar(cls):
-      value = cls.child_class.custom_member_grammar()
-      delim = cls.child_class.grammar_of_delimiter()
-      return delimitedList(value, delim).\
-            setParseAction(lambda x: dict_from_parsed(x.asList()))
+    @classmethod
+    @cache
+    def custom_value_grammar(cls):
+        value = cls.child_class.custom_member_grammar()
+        delim = cls.child_class.delimiter
+        return delimitedList(value, delim).set_parse_action(
+            lambda x: dict_from_parsed(x.asList())
+        )
 
-  def _generic_info(self):
-      return f"Input parameters for task {self.name}"
+    @cached_class_property
+    def delimiter():
+        with generate_grammar():
+            def ws(x):
+                return x.set_whitespace_chars("")
 
-  def __init__(self, name, members=None,
-               executable='kkrscf', mpi=True, result_reader=None,
-               **kwargs):
-      """
-      Parameters
-      ---------
-      others:
-        For the meaning of the others parameters please see :class:`ConfigurationRootDefinition`
+            after_consumed_line_end = pp.Empty().add_condition(
+                lambda s, loc, _t: loc > 0 and s[:loc].rstrip(" \t\r").endswith("\n")
+            )
+            out = (
+                pp.Optional(section_line_ends)
+                + pp.OneOrMore(ws(pp.LineEnd()))
+                + pp.FollowedBy(ws(pp.Regex(r"[^\s]")))
+                | after_consumed_line_end
+            ).suppress()
+            return out.set_name("\n")
 
-      executable: str
-        Executable to run
-
-      mpi: bool
-        Whether to run MPI version of the executable
-
-      result_reader: common.process_output_reader.ProcessOutputReader
-        Class, that runs the process and read the results. Default NONE
-        means, that the class is determined from the TASK name
-        (see InputParameters.result_reader)
-      """
-      self.executable = executable
-      self.mpi = mpi
-      self.result_reader = result_reader
-
-      super().__init__(name, members, **kwargs)
-      # if not 'TASK' in self:
-      #    breakpoint()
-      #    self['TASK'] = InputSectionDefinition('TASK', [ InputValueDefinition('TASK', DefKeyword(self.name), name_in_grammar=False) ] )
-      # elif not 'TASK' in self['TASK']:
-      #    self['TASK']['TASK'] = InputValueDefinition(DefKeyword(self.name), name_in_grammar=False)
+    def _generic_info(self):
+        return f"Input parameters format {self.name}"

@@ -1,0 +1,46 @@
+uppasd
+======
+
+Full name: **ase2sprkkr.bindings.uppasd**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.bindings.uppasd
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      write_dmfile
+      write_inpsd_file
+      write_jfile
+      write_mom_file
+      write_pos_file
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

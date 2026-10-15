@@ -1,0 +1,36 @@
+OutputFileSection
+=================
+
+
+.. currentmodule:: ase2sprkkr.output_files.output_files_definitions
+
+.. autoclass:: OutputFileSection
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.output_files.output_files_definitions.OutputFileSection
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

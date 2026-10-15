@@ -7,9 +7,10 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SiteType &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="../_static/mods.css?v=26f6988d" />
 
   
@@ -22,7 +23,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="spacegroup_info" href="ase2sprkkr.sprkkr.spacegroup_info.html" />
-    <link rel="prev" title="Site" href="ase2sprkkr.sprkkr.sites.Site.html" /> 
+    <link rel="prev" title="SitePropertyProxy" href="ase2sprkkr.sprkkr.sites.SitePropertyProxy.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -50,6 +51,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../how-to-install.html">More about the package installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../philosophy.html">Philosophy of the package (for developers)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html">Authors</a></li>
 <li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
 </ul>
@@ -65,12 +67,13 @@
 <p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.promote_ase_atoms.html">promote_ase_atoms</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.asr.html">asr</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.common.html">common</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration.html">configuration</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.examples.html">examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.gui.html">gui</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.input_parameters.html">input_parameters</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.output_files.html">output_files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.outputs.html">outputs</a></li>
@@ -90,6 +93,7 @@
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.reference_systems.html">reference_systems</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="ase2sprkkr.sprkkr.sites.html">sites</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.sprkkr.sites.Site.html">Site</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.sprkkr.sites.SitePropertyProxy.html">SitePropertyProxy</a></li>
 <li class="toctree-l4 current"><a class="current reference internal" href="#">SiteType</a></li>
 </ul>
 </li>
@@ -98,12 +102,10 @@
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.sprkkr_grammar_types.html">sprkkr_grammar_types</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.structure.html">structure</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.sysfile.html">sysfile</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.test.html">test</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.tools.html">tools</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.version.html">version</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.visualise.html">visualise</a></li>
 </ul>
 </li>
 </ul>
@@ -139,16 +141,16 @@
 <h1>SiteType<a class="headerlink" href="#sitetype" title="Link to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="ase2sprkkr.sprkkr.sites.SiteType">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.sprkkr.sites.</span></span><span class="sig-name descname"><span class="pre">SiteType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">atoms</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">occupation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reference_system</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mesh</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/sites.html#SiteType"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.sites.SiteType" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.sprkkr.sites.</span></span><span class="sig-name descname"><span class="pre">SiteType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">atoms</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">occupation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reference_system</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mesh</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/sites.html#SiteType"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.sites.SiteType" title="Link to this definition"></a></dt>
 <dd><p>Definition of an atomic site.
 (By symmetry) equivalent sites should share the same definition.
 However, two same (by their atomic number) atoms in a spatially
 different positions (i.e. not by symmetry equal) should not share
 the same property.</p>
 <p class="rubric">Class hierarchy</p>
-<div class="graphviz"><img src="../_images/inheritance-868df2ebfb571caf8a80276c6b44bb83c6bfed44.png" alt="Inheritance diagram of ase2sprkkr.sprkkr.sites.SiteType" usemap="#inheritancee7ffe5fd30" class="inheritance graphviz" /></div>
+<div class="graphviz"><img src="../_images/inheritance-b86cc6d3e27e3fc19d6345ac9cc218c70f53c853.png" alt="Inheritance diagram of ase2sprkkr.sprkkr.sites.SiteType" usemap="#inheritancee7ffe5fd30" class="inheritance graphviz" /></div>
 <map id="inheritancee7ffe5fd30" name="inheritancee7ffe5fd30">
-<area shape="rect" id="node1" href="#ase2sprkkr.sprkkr.sites.SiteType" target="_top" title="Definition of an atomic site." alt="" coords="5,5,117,31"/>
+<area shape="rect" id="node1" href="#ase2sprkkr.sprkkr.sites.SiteType" target="_top" title="Definition of an atomic site." alt="" coords="5,5,117,33"/>
 </map><div class="line-block">
 <div class="line"><br /></div>
 </div>
@@ -175,7 +177,7 @@ corresponding to the site.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.sprkkr.sites.SiteType.creator">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">creator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">atoms</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/sites.html#SiteType.creator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.sites.SiteType.creator" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">creator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">atoms</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/sites.html#SiteType.creator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.sites.SiteType.creator" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -190,7 +192,7 @@ corresponding to the site.</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="ase2sprkkr.sprkkr.sites.SiteType.has_symmetry">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">has_symmetry</span></span><a class="headerlink" href="#ase2sprkkr.sprkkr.sites.SiteType.has_symmetry" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">has_symmetry</span></span><a class="headerlink" href="#ase2sprkkr.sprkkr.sites.SiteType.has_symmetry" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -205,7 +207,7 @@ corresponding to the site.</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="ase2sprkkr.sprkkr.sites.SiteType.mesh">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">mesh</span></span><a class="headerlink" href="#ase2sprkkr.sprkkr.sites.SiteType.mesh" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">mesh</span></span><a class="headerlink" href="#ase2sprkkr.sprkkr.sites.SiteType.mesh" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -220,19 +222,19 @@ corresponding to the site.</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="ase2sprkkr.sprkkr.sites.SiteType.potential">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">potential</span></span><a class="headerlink" href="#ase2sprkkr.sprkkr.sites.SiteType.potential" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">potential</span></span><a class="headerlink" href="#ase2sprkkr.sprkkr.sites.SiteType.potential" title="Link to this definition"></a></dt>
 <dd><p>The radial potential data of the site, if it has one atomic type</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="ase2sprkkr.sprkkr.sites.SiteType.charge">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">charge</span></span><a class="headerlink" href="#ase2sprkkr.sprkkr.sites.SiteType.charge" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">charge</span></span><a class="headerlink" href="#ase2sprkkr.sprkkr.sites.SiteType.charge" title="Link to this definition"></a></dt>
 <dd><p>The radial charge data of the site, if it has one atomic type</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="ase2sprkkr.sprkkr.sites.SiteType.moments">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">moments</span></span><a class="headerlink" href="#ase2sprkkr.sprkkr.sites.SiteType.moments" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">moments</span></span><a class="headerlink" href="#ase2sprkkr.sprkkr.sites.SiteType.moments" title="Link to this definition"></a></dt>
 <dd><p>The moments data of the site, if it has one atomic type</p>
 </dd></dl>
 
@@ -244,7 +246,7 @@ corresponding to the site.</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="ase2sprkkr.sprkkr.sites.SiteType.occupation">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">occupation</span></span><a class="headerlink" href="#ase2sprkkr.sprkkr.sites.SiteType.occupation" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">occupation</span></span><a class="headerlink" href="#ase2sprkkr.sprkkr.sites.SiteType.occupation" title="Link to this definition"></a></dt>
 <dd><p>The method returns the <cite>:class:Occupation&lt;ase2sprkkr.sprkkr.occupations.Occupation&gt;</cite> - that represent
 the occupation of the site by atoms. The occupation captures the probability of occurence of the
 given atoms on the site. There can be only partial occupancy (the probability, that there is
@@ -261,13 +263,18 @@ an atom on the site is not 100%).</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="ase2sprkkr.sprkkr.sites.SiteType.primary_symbol">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">primary_symbol</span></span><a class="headerlink" href="#ase2sprkkr.sprkkr.sites.SiteType.primary_symbol" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">primary_symbol</span></span><a class="headerlink" href="#ase2sprkkr.sprkkr.sites.SiteType.primary_symbol" title="Link to this definition"></a></dt>
 <dd><p>Symbol of the most important (most probable) chemical element present on the site.</p>
 </dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.sprkkr.sites.SiteType.update_atomic_number">
+<span class="sig-name descname"><span class="pre">update_atomic_number</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">symbol</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/sites.html#SiteType.update_atomic_number"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.sites.SiteType.update_atomic_number" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
 <dl class="py property">
 <dt class="sig sig-object py" id="ase2sprkkr.sprkkr.sites.SiteType.primary_atomic_number">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">primary_atomic_number</span></span><a class="headerlink" href="#ase2sprkkr.sprkkr.sites.SiteType.primary_atomic_number" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">primary_atomic_number</span></span><a class="headerlink" href="#ase2sprkkr.sprkkr.sites.SiteType.primary_atomic_number" title="Link to this definition"></a></dt>
 <dd><p>Atomic symbol of the most important (most probable) chemical element present on the site.</p>
 </dd></dl>
 
@@ -296,12 +303,12 @@ an atom on the site is not 100%).</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="ase2sprkkr.sprkkr.sites.SiteType.atomic_type">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">atomic_type</span></span><a class="headerlink" href="#ase2sprkkr.sprkkr.sites.SiteType.atomic_type" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">atomic_type</span></span><a class="headerlink" href="#ase2sprkkr.sprkkr.sites.SiteType.atomic_type" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="ase2sprkkr.sprkkr.sites.SiteType.atomic_types">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">atomic_types</span></span><a class="headerlink" href="#ase2sprkkr.sprkkr.sites.SiteType.atomic_types" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">atomic_types</span></span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/sites.html#SiteType.atomic_types"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.sites.SiteType.atomic_types" title="Link to this definition"></a></dt>
 <dd><p>This method provides the access to the atomic types of the current site.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -322,7 +329,7 @@ or string - chemical symbol. It returns the atomic type, corresponding to the cu
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="ase2sprkkr.sprkkr.sites.Site.html" class="btn btn-neutral float-left" title="Site" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="ase2sprkkr.sprkkr.sites.SitePropertyProxy.html" class="btn btn-neutral float-left" title="SitePropertyProxy" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="ase2sprkkr.sprkkr.spacegroup_info.html" class="btn btn-neutral float-right" title="spacegroup_info" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

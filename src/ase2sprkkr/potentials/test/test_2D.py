@@ -1,30 +1,27 @@
-import os
+from pathlib import Path
 
-if __package__:
-   from .init_tests import TestCase, patch_package
-else:
-   from init_tests import TestCase, patch_package
-__package__, __name__ = patch_package(__package__, __name__)
+import numpy as np
 
-from ..potentials import Potential   # NOQA E402
+from ..potentials import Potential
 
 
-class Test2DPotential(TestCase):
+EXAMPLE_POTENTIAL = Path(__file__).parent.parent / "examples" / "GeTe.pot"
 
-    def test(self):
-        p=Potential.from_file(os.path.join(os.path.dirname(__file__),'..','examples', 'GeTe.pot'))
-        atoms = p.atoms
-        self.assertEqual(str(atoms.symbols), "GeXTeX" * 8 + "GeXTeX13")
-        self.assertEqual(len(atoms.regions['left']), 4)
-        self.assertEqual(len(atoms.regions['right']), 4)
 
-        pf = p.to_string()
-        p2=Potential.from_string(pf)
-        a2 = p2.atoms
-        self.assertEqual(atoms.cell, a2.cell)
-        self.assertEqual(atoms.regions['left'].cell, a2.regions['left'].cell)
-        self.assertEqual(len(atoms.regions['left']), len(a2.regions['left']))
-        self.assertEqual(atoms.regions['right'].cell, a2.regions['right'].cell)
-        self.assertEqual(len(atoms.regions['right']), len(a2.regions['right']))
-        self.assertEqual(atoms.positions, a2.positions)
-        self.assertEqual(str(atoms.symbols), str(a2.symbols))
+def test_2d_potential_round_trip():
+    potential = Potential.from_file(EXAMPLE_POTENTIAL)
+    atoms = potential.atoms
+
+    assert str(atoms.symbols) == "GeXTeX" * 8 + "GeXTeX13"
+    assert len(atoms.regions["left"]) == 4
+    assert len(atoms.regions["right"]) == 4
+
+    restored = Potential.from_string(potential.to_string()).atoms
+
+    np.testing.assert_allclose(atoms.cell, restored.cell)
+    np.testing.assert_allclose(atoms.regions["left"].cell, restored.regions["left"].cell)
+    np.testing.assert_allclose(atoms.regions["right"].cell, restored.regions["right"].cell)
+    np.testing.assert_allclose(atoms.positions, restored.positions)
+    assert len(atoms.regions["left"]) == len(restored.regions["left"])
+    assert len(atoms.regions["right"]) == len(restored.regions["right"])
+    assert str(atoms.symbols) == str(restored.symbols)

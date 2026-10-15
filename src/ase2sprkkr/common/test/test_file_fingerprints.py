@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from ase2sprkkr.common.file_fingerprints import FileFingerprint, file_fingerprint
 
 

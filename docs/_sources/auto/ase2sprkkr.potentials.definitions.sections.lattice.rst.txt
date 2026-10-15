@@ -24,6 +24,19 @@ Full name: **ase2sprkkr.potentials.definitions.sections.lattice**
 
    
    
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      _sections_lattice_atoms_pbc_error
+      _sections_lattice_central_symmetry_error
+      _sections_lattice_left_symmetry_error
+      _sections_lattice_right_symmetry_error
+      _sections_lattice_value_is_none
+      _sections_lattice_value_is_not_none
+   
    
 
 

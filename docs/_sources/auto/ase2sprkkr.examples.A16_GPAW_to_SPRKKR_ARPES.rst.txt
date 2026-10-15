@@ -1,0 +1,45 @@
+A16\_GPAW\_to\_SPRKKR\_ARPES
+============================
+
+Full name: **ase2sprkkr.examples.A16\_GPAW\_to\_SPRKKR\_ARPES**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.examples.A16_GPAW_to_SPRKKR_ARPES
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  .. rubric:: Modules
+
+  .. autosummary::
+     :toctree:
+     :template: custom-module-template.rst
+     :recursive:
+  
+  
+     gpaw_to_arpes
+  
+  
+  

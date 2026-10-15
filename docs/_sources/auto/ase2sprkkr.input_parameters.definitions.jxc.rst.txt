@@ -22,6 +22,8 @@ Full name: **ase2sprkkr.input\_parameters.definitions.jxc**
       :toctree:
       :template: custom-base-template.rst
    
+      _jxc_mode_warning_condition
+      _jxc_nonmag_warning_condition
       input_parameters
    
    

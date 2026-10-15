@@ -7,7 +7,7 @@ Full name: **ase2sprkkr.outputs.sprkkr\_output\_reader**
 
 .. rubric:: Module class hierarchy
 
-.. inheritance-diagram::  ase2sprkkr.outputs.sprkkr_output_reader.SprKkrOutputReader 
+.. inheritance-diagram::  ase2sprkkr.outputs.sprkkr_output_reader.SprKkrOutputParser 
       :parts: 1
 
 |
@@ -35,7 +35,7 @@ Full name: **ase2sprkkr.outputs.sprkkr\_output\_reader**
       :toctree:
       :template: custom-class-template.rst
    
-      SprKkrOutputReader
+      SprKkrOutputParser
    
    
 

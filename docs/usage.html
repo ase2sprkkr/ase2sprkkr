@@ -7,9 +7,10 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>How to use ASE2SPRKKR &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="_static/mods.css?v=26f6988d" />
 
   
@@ -71,6 +72,7 @@
 <li class="toctree-l1"><a class="reference internal" href="how-to-install.html">More about the package installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="philosophy.html">Philosophy of the package (for developers)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="authors.html">Authors</a></li>
 <li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
 </ul>
@@ -165,8 +167,8 @@ basic examples of how to use the package.</p>
 <h3>Computing a bulk material<a class="headerlink" href="#computing-a-bulk-material" title="Link to this heading"></a></h3>
 <p>The basic usage of the package is to use ASE to define the computed
 structure and, using SPR-KKR calculator, run the calculation:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ase.build</span> <span class="kn">import</span> <span class="n">bulk</span>
-<span class="kn">from</span> <span class="nn">ase2sprkkr.sprkkr.calculator</span> <span class="kn">import</span> <span class="n">SPRKKR</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ase.build</span><span class="w"> </span><span class="kn">import</span> <span class="n">bulk</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ase2sprkkr.sprkkr.calculator</span><span class="w"> </span><span class="kn">import</span> <span class="n">SPRKKR</span>
 
 <span class="n">atoms</span> <span class="o">=</span> <span class="n">bulk</span><span class="p">(</span><span class="s1">&#39;Li&#39;</span><span class="p">)</span>
 <span class="n">calculator</span> <span class="o">=</span> <span class="n">SPRKKR</span><span class="p">(</span><span class="n">atoms</span><span class="o">=</span><span class="n">atoms</span><span class="p">)</span>
@@ -190,10 +192,10 @@ do not support occupation of the sites. To define it, you most promote
 the atoms object to the ASE2SPRKKR one. It is done automatically, if you
 pass the atoms object into the SPRKKR calculator constructor, however,
 you can do it manually, if needed.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ase.build</span> <span class="kn">import</span> <span class="n">bulk</span>
-<span class="kn">from</span> <span class="nn">ase2sprkkr.sprkkr.sprkkr_atoms</span> <span class="kn">import</span> <span class="n">SPRKKRAtoms</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ase.build</span><span class="w"> </span><span class="kn">import</span> <span class="n">bulk</span>
 <span class="n">atoms</span><span class="o">=</span><span class="n">bulk</span><span class="p">(</span><span class="s1">&#39;LiCl&#39;</span><span class="p">,</span> <span class="s1">&#39;rocksalt&#39;</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="mf">5.64</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-<span class="n">atoms</span> <span class="o">=</span> <span class="n">SPRKKRAtoms</span><span class="o">.</span><span class="n">promote_ase_atoms</span><span class="p">(</span><span class="n">atoms</span><span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ase2sprkkr</span><span class="w"> </span><span class="kn">import</span> <span class="n">promote_ase_atoms</span>
+<span class="n">atoms</span> <span class="o">=</span> <span class="n">promote_ase_atoms</span><span class="p">(</span><span class="n">atoms</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Promoted atoms have the sites attribute, which is an array of the sites
@@ -219,7 +221,7 @@ accordingly — or just query the occupation of a given atomic type:</p>
 <p>Some codes stores the occupation information in
 <code class="docutils literal notranslate"><span class="pre">atoms.info['occupancy']</span></code>. To allow interoperability with these codes
 the occupancy is readed from this array when
-meth:<cite>SPRKKRAtoms.promote_ase_atoms&lt;ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms.promote_ase_atoms&gt;</cite> is called and the
+func:<cite>promote_ase_atoms&lt;ase2sprkkr.promote_ase_atoms&gt;</cite> is called and the
 <code class="docutils literal notranslate"><span class="pre">atoms.info['occupancy']</span></code> is updated each time the
 <code class="docutils literal notranslate"><span class="pre">atoms.sites[x].occupation</span></code> is changed.</p>
 </section>
@@ -318,7 +320,7 @@ property,
 or to the
 <a class="reference internal" href="auto/ase2sprkkr.sprkkr.calculator.SPRKKR.html#ase2sprkkr.sprkkr.calculator.SPRKKR.calculate" title="ase2sprkkr.sprkkr.calculator.SPRKKR.calculate"><code class="xref py py-meth docutils literal notranslate"><span class="pre">InputParameters</span></code></a>
 method</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ase2sprkkr.input_parameters.input_parameters</span> <span class="kn">import</span> <span class="n">InputParameters</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ase2sprkkr.input_parameters.input_parameters</span><span class="w"> </span><span class="kn">import</span> <span class="n">InputParameters</span>
 <span class="n">input_parameters</span> <span class="o">=</span> <span class="n">InputParameters</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="s1">&#39;SCF&#39;</span><span class="p">)</span>
 <span class="n">input_parameters</span><span class="o">.</span><span class="n">ENERGY</span><span class="o">.</span><span class="n">NE</span> <span class="o">=</span> <span class="mi">5</span>
 <span class="n">input_parameters</span><span class="o">.</span><span class="n">TAU</span><span class="o">.</span><span class="n">NKTAB</span> <span class="o">=</span> <span class="mi">13</span>
@@ -406,7 +408,7 @@ calculation:</p>
 </div>
 <p>or to create the <a class="reference internal" href="auto/ase2sprkkr.potentials.potentials.Potential.html#ase2sprkkr.potentials.potentials.Potential" title="ase2sprkkr.potentials.potentials.Potential"><code class="xref py py-class docutils literal notranslate"><span class="pre">Potential</span></code></a> object manually from ASE atoms object and to
 alter/check its properties before the computation</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ase2sprkkr.potential.potentials</span> <span class="kn">import</span> <span class="n">Potential</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ase2sprkkr.potential.potentials</span><span class="w"> </span><span class="kn">import</span> <span class="n">Potential</span>
 <span class="n">potential</span> <span class="o">=</span> <span class="n">Potential</span><span class="o">.</span><span class="n">from_atoms</span><span class="p">(</span><span class="n">atoms</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">potential</span><span class="o">.</span><span class="n">GLOBAL_SYSTEM_PARAMETER</span><span class="o">.</span><span class="n">IREL</span><span class="p">())</span>
 <span class="n">calculator</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span><span class="n">potential</span> <span class="o">=</span> <span class="n">potential</span><span class="p">)</span>

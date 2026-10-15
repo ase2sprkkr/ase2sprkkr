@@ -1,190 +1,277 @@
-import inspect
-import tempfile
 import asyncio
+import inspect
+import os
+import tempfile
+import warnings
 
-if __package__:
-   from .init_tests import TestCase, patch_package
-else:
-   from init_tests import TestCase, patch_package
-__package__, __name__ = patch_package(__package__, __name__)
+import pytest
 
-from ..decorators import add_to_signature   # NOQA: E402
-from ..process_output_reader import AsyncioFileReader  # NOQA: E402
+from ..backward_compatibility import ExceptionGroup, _FallbackExceptionGroup
+from ..decorators import add_to_signature
+from ..file_utils import FilePath
+from ..process_output_reader import AsyncioFileReader
+from ..warnings import (
+    DataValidityError,
+    DataValidityErrors,
+    DataValidityWarning,
+    ValidationResult,
+    catch_warnings_of,
+)
 
 
-class TestCommon(TestCase):
+class TestCommon:
+    def test_validation_result(self):
+        warning = DataValidityWarning("warning")
+        error = DataValidityError("error")
+        assert isinstance(warning, ValidationResult)
+        assert isinstance(error, ValidationResult)
 
-  def test_common(self):
+        with warnings.catch_warnings(record=True) as caught:
+            warnings.simplefilter("always")
+            ValidationResult.emit([warning, error])
+        assert [warning, error] == [item.message for item in caught]
 
-    def f(a, b=2, **kwargs):
-        return a,b,kwargs
+        with pytest.raises(TypeError):
+            ValidationResult.emit(UserWarning("not a validation result"))
 
-    @add_to_signature(f)
-    def ff(c=2, *args, **kwargs):
-        return c,f(*args,**kwargs)
+    def test_validation_collection_does_not_capture_other_warnings(self):
+        validation = DataValidityWarning("validation")
+        error = DataValidityError("error")
 
-    self.assertEqual( ('c',('a',2, {'d':'d', 'e':'e'})),
-                       ff('a',c='c', d='d', e='e'))
-    self.assertEqual( ('c',('a','b', {'d':'d', 'e':'e'})),
-                       ff('a','b','c', d='d', e='e'))
-    self.assertTrue('a' in inspect.signature(ff).parameters)
-    self.assertEqual('a', list(inspect.signature(ff).parameters.values())[0].name)
+        def emit():
+            ValidationResult.emit(validation)
+            warnings.warn("ordinary", UserWarning)
+            raise error
 
-    @add_to_signature(f, prepend=True)
-    def ff(c, *args, **kwargs):
-        return c,f(*args,**kwargs)
+        with warnings.catch_warnings(record=True) as caught:
+            warnings.simplefilter("always")
+            results = ValidationResult.collect(emit)
 
-    self.assertEqual( ('c',('a',2, {'d':'d', 'e':'e'})),
-                       ff('c', 'a', d='d', e='e'))
+        assert [validation, error] == results
+        assert ["ordinary"] == [str(item.message) for item in caught]
 
-    def f(c=1, d=5):
-        return c,d
+    def test_catch_warnings_of_catches_only_requested_category(self):
+        validation = DataValidityWarning("validation")
 
-    @add_to_signature(f, prepend=True)
-    def ff(a=2, d='d', *args, **kwargs):
-        return a, f(d=d, *args, **kwargs)
+        with warnings.catch_warnings(record=True) as caught:
+            warnings.simplefilter("always")
+            with catch_warnings_of(ValidationResult) as selected:
+                warnings.warn(validation)
+                warnings.warn("ordinary", UserWarning)
 
-    self.assertEqual( ('a', (1, 'c')),
-                      ff('a', 'c')
-                    )
+        assert [validation] == selected
+        assert ["ordinary"] == [str(item.message) for item in caught]
 
-    @add_to_signature(f, prepend=True)
-    def ff(a=2, *args, d='d', **kwargs):
-        return a, f(d=d, *args, **kwargs)
+    def test_validation_reporting_warns_before_raising_errors(self):
+        first = DataValidityError("first")
+        later = DataValidityWarning("later")
+        second = DataValidityError("second")
 
-    self.assertEqual( ('a', ('c', 'd')),
-                      ff('a', 'c')
-                    )
+        with warnings.catch_warnings(record=True) as caught:
+            warnings.simplefilter("always")
+            with pytest.raises(DataValidityErrors) as raised:
+                ValidationResult.report([first, later, second], "raise")
 
-    def f(*args):
-       return args
+        assert isinstance(raised.value, DataValidityError)
+        assert isinstance(raised.value, ExceptionGroup)
+        assert (first, second) == raised.value.exceptions
+        assert isinstance(raised.value.derive((first,)), DataValidityErrors)
+        assert [later] == [item.message for item in caught]
 
-    @add_to_signature(f)
-    def ff(a,*args):
-       return a, f(*args)
+        with pytest.raises(DataValidityError) as raised:
+            ValidationResult.report([first], "raise")
+        assert raised.value is first
 
-    self.assertEqual( ('a', ('c', 'd')),
-                      ff('a', 'c', 'd')
-                    )
+    def test_fallback_exception_group_can_split_nested_groups(self):
+        first = ValueError("first")
+        second = TypeError("second")
+        nested = _FallbackExceptionGroup("nested", (second,))
+        group = _FallbackExceptionGroup("all", (first, nested))
 
-    @add_to_signature(lambda:None)
-    def ff(*args, c, **kwargs):
-        return c
-    self.assertEqual( 1, ff(c=1) )
+        selected = group.subgroup(ValueError)
+        assert selected.exceptions == (first,)
 
-    @add_to_signature(lambda x: x)
-    def ff(*args, c, **kwargs):
-        return c, args
-    self.assertEqual((1,(2,)), ff(2,c=1) )
+        selected, remainder = group.split(TypeError)
+        assert selected.exceptions[0].exceptions == (second,)
+        assert remainder.exceptions == (first,)
 
-    @add_to_signature(lambda x: x)
-    def ff(*args, c, **kwargs):
-        return c, kwargs
-    self.assertEqual((1,{'x':2}), ff(x=2,c=1) )
+    def test_file_path(self, tmp_path):
+        directory = os.fspath(tmp_path)
+        path = FilePath("results/output.out", directory)
+        absolute = os.path.join(directory, "results", "output.out")
 
-    @add_to_signature(lambda:None)
-    def ff(a, *args, c, **kwargs):
-        return a,c
-    self.assertEqual((2,1), ff(2,c=1) )
+        assert str(path) == "results/output.out"
+        assert os.fspath(path) == absolute
+        assert os.path.abspath(path) == absolute
+        assert path == FilePath(absolute, directory)
 
-    def f(a=1, b=2):
-        return a,b
+    def test_common(self):
+        def f(a, b=2, **kwargs):
+            return a, b, kwargs
 
-    @add_to_signature(f, excluding='b')
-    def ff(c=1, *args, **kwargs):
-        return c,f(b=5, *args, **kwargs)
-    self.assertEqual((7,(3,5)), ff(3,7))
-    self.assertEqual((7,(3,5)), ff(3,c=7))
-    self.assertEqual((7,(3,5)), ff(a=3,c=7))
+        @add_to_signature(f)
+        def ff(c=2, *args, **kwargs):
+            return c, f(*args, **kwargs)
 
-  def test_asyncio_file_reader(self):
-    with tempfile.TemporaryFile(mode='w+b') as tfile:
-      tfile.write(b"""First line\nSecond line\nHi, this is a very long file!! really!!! 12345123456789""")
-      tfile.seek(0)
-      ar = AsyncioFileReader(tfile, buffersize=5)
-      self.assertAsyncEqual(b"First line\n", ar.readline())
-      self.assertAsyncEqual(b"Second line\n", ar.readline())
-      self.assertAsyncEqual(b"Hi, this", ar.readuntil(b'is'))
-      self.assertAsyncEqual(b" is", ar.readuntil(b'is'))
-      self.assertAsyncEqual(b" a very long file!! really!!!", ar.readuntil(b'!!!'))
-      self.assertAsyncEqual(b" 12345123456", ar.readuntil(b'123456'))
-      with self.assertRaises(asyncio.IncompleteReadError):
-        self.runAsync(ar.readuntil(b'123456'))
+        assert ff("a", c="c", d="d", e="e") == ("c", ("a", 2, {"d": "d", "e": "e"}))
+        assert ff("a", "b", "c", d="d", e="e") == ("c", ("a", "b", {"d": "d", "e": "e"}))
+        assert "a" in inspect.signature(ff).parameters
+        assert list(inspect.signature(ff).parameters.values())[0].name == "a"
 
-  def test_cached_property(self):
-      from ..decorators import cached_property
+        @add_to_signature(f, prepend=True)
+        def ff(c, *args, **kwargs):
+            return c, f(*args, **kwargs)
 
-      class A():
-        u = 1
+        assert ff("c", "a", d="d", e="e") == ("c", ("a", 2, {"d": "d", "e": "e"}))
 
-        @cached_property
-        def a(self):
-            self.__class__.u+=1
-            return self.__class__.u
-      a=A()
-      self.assertEqual(2, a.a)
-      self.assertEqual(2, a.a)
-      a.a=5
-      self.assertEqual(5, a.a)
-      self.assertEqual(5, a.a)
-      del a.a
-      self.assertEqual(3, a.a)
-      self.assertEqual(3, a.a)
-      a=A()
-      self.assertEqual(4, a.a)
-      self.assertEqual(4, a.a)
+        def f(c=1, d=5):
+            return c, d
 
-      class A():
-        u = 1
+        @add_to_signature(f, prepend=True)
+        def ff(a=2, d="d", *args, **kwargs):
+            return a, f(d=d, *args, **kwargs)
 
-        @cached_property
-        def a(self):
-            self.__class__.u+=1
-            return self.__class__.u
+        assert ff("a", "c") == ("a", (1, "c"))
 
-        @a.setter
-        def a(self, value):
-            self.__dict__['a'] = value + 10
+        @add_to_signature(f, prepend=True)
+        def ff(a=2, *args, d="d", **kwargs):
+            return a, f(d=d, *args, **kwargs)
 
-        @a.deleter
-        def a(self):
-            self.__dict__['a'] = 25
+        assert ff("a", "c") == ("a", ("c", "d"))
 
-      a=A()
-      self.assertEqual(2, a.a)
-      self.assertEqual(2, a.a)
-      a.a=5
-      self.assertEqual(15, a.a)
-      self.assertEqual(15, a.a)
-      del a.a
-      self.assertEqual(25, a.a)
-      self.assertEqual(25, a.a)
-      a=A()
-      self.assertEqual(3, a.a)
-      self.assertEqual(3, a.a)
+        def f(*args):
+            return args
 
-      # test, that indirect decorator works
-      def modifier(fce):
-          def wrap(self):
-              return fce(self)
-          return cached_property(wrap)
+        @add_to_signature(f)
+        def ff(a, *args):
+            return a, f(*args)
 
-      class A():
-        u = 1
+        assert ff("a", "c", "d") == ("a", ("c", "d"))
 
-        @modifier
-        def a(self):
-            self.__class__.u+=1
-            return self.__class__.u
+        @add_to_signature(lambda: None)
+        def ff(*args, c, **kwargs):
+            return c
 
-        @modifier
-        def b(self):
-            self.__class__.u+=1
-            return self.__class__.u
+        assert ff(c=1) == 1
 
-      a=A()
-      self.assertEqual(2, a.a)
-      self.assertEqual(2, a.a)
-      self.assertEqual(3, a.b)
-      self.assertEqual(3, a.b)
-      self.assertEqual(2, a.a)
+        @add_to_signature(lambda x: x)
+        def ff(*args, c, **kwargs):
+            return c, args
+
+        assert ff(2, c=1) == (1, (2,))
+
+        @add_to_signature(lambda x: x)
+        def ff(*args, c, **kwargs):
+            return c, kwargs
+
+        assert ff(x=2, c=1) == (1, {"x": 2})
+
+        @add_to_signature(lambda: None)
+        def ff(a, *args, c, **kwargs):
+            return a, c
+
+        assert ff(2, c=1) == (2, 1)
+
+        def f(a=1, b=2):
+            return a, b
+
+        @add_to_signature(f, excluding="b")
+        def ff(c=1, *args, **kwargs):
+            return c, f(b=5, *args, **kwargs)
+
+        assert ff(3, 7) == (7, (3, 5))
+        assert ff(3, c=7) == (7, (3, 5))
+        assert ff(a=3, c=7) == (7, (3, 5))
+
+    def test_asyncio_file_reader(self):
+        with tempfile.TemporaryFile(mode="w+b") as tfile:
+            tfile.write(b"First line\nSecond line\nHi, this is a very long file!! really!!! 12345123456789")
+            tfile.seek(0)
+            reader = AsyncioFileReader(tfile, buffersize=5)
+            assert asyncio.run(reader.readline()) == b"First line\n"
+            assert asyncio.run(reader.readline()) == b"Second line\n"
+            assert asyncio.run(reader.readuntil(b"is")) == b"Hi, this"
+            assert asyncio.run(reader.readuntil(b"is")) == b" is"
+            assert asyncio.run(reader.readuntil(b"!!!")) == b" a very long file!! really!!!"
+            assert asyncio.run(reader.readuntil(b"123456")) == b" 12345123456"
+            with pytest.raises(asyncio.IncompleteReadError):
+                asyncio.run(reader.readuntil(b"123456"))
+
+    def test_cached_property(self):
+        from ..decorators import cached_property
+
+        class A:
+            u = 1
+
+            @cached_property
+            def a(self):
+                self.__class__.u += 1
+                return self.__class__.u
+
+        a = A()
+        assert a.a == 2
+        assert a.a == 2
+        a.a = 5
+        assert a.a == 5
+        assert a.a == 5
+        del a.a
+        assert a.a == 3
+        assert a.a == 3
+        a = A()
+        assert a.a == 4
+        assert a.a == 4
+
+        class A:
+            u = 1
+
+            @cached_property
+            def a(self):
+                self.__class__.u += 1
+                return self.__class__.u
+
+            @a.setter
+            def a(self, value):
+                self.__dict__["a"] = value + 10
+
+            @a.deleter
+            def a(self):
+                self.__dict__["a"] = 25
+
+        a = A()
+        assert a.a == 2
+        assert a.a == 2
+        a.a = 5
+        assert a.a == 15
+        assert a.a == 15
+        del a.a
+        assert a.a == 25
+        assert a.a == 25
+        a = A()
+        assert a.a == 3
+        assert a.a == 3
+
+        def modifier(function):
+            def wrap(self):
+                return function(self)
+
+            return cached_property(wrap)
+
+        class A:
+            u = 1
+
+            @modifier
+            def a(self):
+                self.__class__.u += 1
+                return self.__class__.u
+
+            @modifier
+            def b(self):
+                self.__class__.u += 1
+                return self.__class__.u
+
+        a = A()
+        assert a.a == 2
+        assert a.a == 2
+        assert a.b == 3
+        assert a.b == 3
+        assert a.a == 2

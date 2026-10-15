@@ -24,6 +24,15 @@ Full name: **ase2sprkkr.potentials.definitions.potential**
 
    
    
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      _potential_header_default_value
+      _potential_system_default_value
+   
    
 
 

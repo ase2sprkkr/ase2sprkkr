@@ -38,13 +38,36 @@ Full name: **ase2sprkkr.tools.commands**
      :template: custom-module-template.rst
      :recursive:
   
+  
      config
-     examples
+  
+  
+     example
+  
+  
      info
+  
+  
+     k_path
+  
+  
      nomad
+  
+  
      plot
+  
+  
      run
+  
+  
+     shell
+  
+  
      show_structure
-     test
+  
+  
+  
+     uppasd
+  
   
   

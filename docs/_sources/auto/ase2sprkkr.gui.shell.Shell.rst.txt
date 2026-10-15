@@ -1,0 +1,36 @@
+Shell
+=====
+
+
+.. currentmodule:: ase2sprkkr.gui.shell
+
+.. autoclass:: Shell
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.gui.shell.Shell
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

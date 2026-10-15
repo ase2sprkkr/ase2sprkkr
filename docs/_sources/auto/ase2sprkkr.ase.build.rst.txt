@@ -22,6 +22,10 @@ Full name: **ase2sprkkr.ase.build**
       :toctree:
       :template: custom-base-template.rst
    
+      _ext_gcd
+      _fractional_inplane_period
+      _minimal_surface_layers
+      _surface_basis
       aperiodic_times
       flip
       flip_around

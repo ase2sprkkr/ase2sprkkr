@@ -7,9 +7,10 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Changelog &mdash; ASE2SPRKKR  documentation</title>
-      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="_static/plot_directive.css" />
       <link rel="stylesheet" type="text/css" href="_static/mods.css?v=26f6988d" />
 
   
@@ -21,7 +22,7 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Some examples of ase2sprkkr" href="examples.html" />
+    <link rel="next" title="Authors" href="authors.html" />
     <link rel="prev" title="ASE2SPR-KKR’s philosophy for the developers" href="philosophy.html" /> 
 </head>
 
@@ -50,6 +51,14 @@
 <li class="toctree-l1"><a class="reference internal" href="how-to-install.html">More about the package installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="philosophy.html">Philosophy of the package (for developers)</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Changelog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#version-3-5">Version 3.5</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#internals">Internals</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#version-3-4">Version 3.4</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#version-3-3-4">Version 3.3.4</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#version-3-3-3">Version 3.3.3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#version-3-3-2">Version 3.3.2</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#version-3-2-5-beta">Version 3.2.5-beta</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#user-interface">User interface</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#for-developers">For developers</a></li>
@@ -60,29 +69,29 @@
 <li class="toctree-l2"><a class="reference internal" href="#version-3-0-0-beta">Version 3.0.0-beta</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#id1">User interface</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#tools">Tools</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#internals">Internals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id2">Internals</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#refactoring">Refactoring</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#version-2-2-1">Version 2.2.1</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#version-2-2-0-beta">Version 2.2.0-beta</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#id2">Internals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id3">Internals</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#version-2-1-1">Version 2.1.1</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#id3">User interface</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#id4">Internals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id4">User interface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id5">Internals</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#version-2-0-4">Version 2.0.4</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#version-2-0-1">Version 2.0.1</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#version-2-0-0-beta2">Version 2.0.0-beta2</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#id5">User interface</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#id6">Internals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id6">User interface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id7">Internals</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#version-2-0-0-beta1">Version 2.0.0-beta1</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#id7">User interface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id8">User interface</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#architecture-changes">Architecture changes</a></li>
 </ul>
 </li>
@@ -90,6 +99,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#version-1-0-6">Version 1.0.6</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="authors.html">Authors</a></li>
 <li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
 </ul>
@@ -133,6 +143,90 @@
              
   <section id="changelog">
 <h1>Changelog<a class="headerlink" href="#changelog" title="Link to this heading"></a></h1>
+<section id="version-3-5">
+<h2>Version 3.5<a class="headerlink" href="#version-3-5" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><cite>promote_ase_atoms</cite> can be directly imported from the <cite>ase2sprkkr</cite> root package</p></li>
+<li><p>Changing properties via <cite>site</cite> is disallowed in cases where <cite>site_type</cite> is shared</p></li>
+<li><p>JXC output file parsing and plotting</p></li>
+<li><p>XAS output file parsing and plotting</p></li>
+<li><p>Beyond-DFT parammeters (DFTM, DFT+U,…)</p></li>
+<li><p>Semi-infinite structure building improved</p></li>
+<li><p>Uppasd improvements: direct calling of <cite>sd</cite>, input file stub writing</p></li>
+<li><p>Improved layout for multiple plots</p></li>
+<li><p>Additional values parsed for SFC task</p></li>
+<li><p>Tool: Python-like output for <cite>ase2sprkkr</cite> k-path tool</p></li>
+<li><p>Tool: <cite>ase2sprkkr</cite> example search (–regex) and example display</p></li>
+<li><p>Tool: <cite>ase2sprkkr shell –pdb</cite> for running examples in the Python debugger</p></li>
+<li><p>Tool: <cite>ase2sprkkr plot -V &lt;filename&gt;</cite> for showing plottable values in a file</p></li>
+<li><p>Improved Hall number determination from Cell</p></li>
+<li><p>Docstrings added for examples</p></li>
+<li><p>Various bug fixes</p></li>
+<li><p>SLURM work manager auto-detection</p></li>
+<li><p>Examples from ASE2SPRKKR article were added</p></li>
+<li><p>Runtime dependencies were revisited</p></li>
+</ul>
+<section id="internals">
+<h3>Internals<a class="headerlink" href="#internals" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Adoption of Ruff: code formatting and cleanup</p></li>
+<li><p>Picklability of Atom objects (for better ase.view compatibility)</p></li>
+<li><p>Refactoring of ProcessOutput and ProcessReaders</p></li>
+<li><p>Actions for Outputs and OutputFiles (for GUI support)</p></li>
+</ul>
+</section>
+</section>
+<section id="version-3-4">
+<h2>Version 3.4<a class="headerlink" href="#version-3-4" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>Magnetization moments parse</p></li>
+<li><p>Units uses unyts for better units support (retaining the unit user used)</p></li>
+<li><p>Empty spheres uses spglib for symmetry (which solves some cases that have not been computed correctly )</p></li>
+<li><p>ASE read/write compatibility</p></li>
+<li><p>Allow to run computation inside Jupyter notebook</p></li>
+<li><p>promote_ase_atoms exported</p></li>
+<li><p>BSF and SCP outputs improved</p></li>
+<li><p>Calculator do not longer overwrite the potential file, if it is given in constructor</p></li>
+<li><p>Symmetry handling improved</p></li>
+<li><p>Some fixies and enhancements for plotting</p></li>
+<li><p>Allow async running of the process</p></li>
+<li><p>Python 3.14 compatibility</p></li>
+<li><p>MDIR option has no default value</p></li>
+<li><p>SPEC task parser</p></li>
+<li><p>Dij output file parser</p></li>
+</ul>
+</section>
+<section id="version-3-3-4">
+<h2>Version 3.3.4<a class="headerlink" href="#version-3-3-4" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>Sites are update according to the symbols during save</p></li>
+<li><p>XAS task</p></li>
+<li><p>Torque Task</p></li>
+<li><p>Empty-spheres finding improved</p></li>
+<li><p>MALF, MBET and MGAM options</p></li>
+<li><p>BSF-SPN file added</p></li>
+<li><p>K-path generating tool for BSF task</p></li>
+<li><p>Layer and fermi argument to BSF plotting</p></li>
+<li><p>–separate_plots argument for plotting routines</p></li>
+<li><p>Uppasd task for generating Uppasd input files</p></li>
+<li><p>Various fixies</p></li>
+</ul>
+</section>
+<section id="version-3-3-3">
+<h2>Version 3.3.3<a class="headerlink" href="#version-3-3-3" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>Added mesh parameter to empty spheres finding</p></li>
+<li><p>Spacegroup from ASE is no longer used, since it have been deprecated</p></li>
+</ul>
+</section>
+<section id="version-3-3-2">
+<h2>Version 3.3.2<a class="headerlink" href="#version-3-3-2" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>Buildsystem changed to scikit-build-core (mesonpy do not support editable build at least in some setups)</p></li>
+<li><p>Atoms rotating, shifting and flipping routines</p></li>
+<li><p>Config file printing, value-setting etc. routines from cmdline</p></li>
+</ul>
+</section>
 <section id="version-3-2-5-beta">
 <h2>Version 3.2.5-beta<a class="headerlink" href="#version-3-2-5-beta" title="Link to this heading"></a></h2>
 <section id="user-interface">
@@ -142,7 +236,7 @@
 <li><p>Bash ase2sprkkr commandline completing</p></li>
 <li><p>Faster package loading, lazy loading of some modules/data definitions</p></li>
 <li><p>Task BSF improved</p></li>
-<li><p>Python 3.8, pyparsing 2.x, and numpy &lt; 1.23 support dropped</p></li>
+<li><p>Python 3.7, pyparsing 2.x, and numpy &lt; 1.23 support dropped</p></li>
 <li><p>Nomad uploading proof of concept</p></li>
 <li><p>Configuration file improved, help available</p></li>
 <li><p>Occupancy and symmetry handling fixed</p></li>
@@ -211,8 +305,8 @@ due to symmetry</p></li>
 <li><p>Various tools and plotting fixies</p></li>
 </ul>
 </section>
-<section id="internals">
-<h3>Internals<a class="headerlink" href="#internals" title="Link to this heading"></a></h3>
+<section id="id2">
+<h3>Internals<a class="headerlink" href="#id2" title="Link to this heading"></a></h3>
 <ul class="simple">
 <li><p>NumpyArray grammar type improved</p></li>
 <li><p>Some fixies and code lininting</p></li>
@@ -247,8 +341,8 @@ due to symmetry</p></li>
 <li><p>Plotting improved</p></li>
 <li><p>Better help values for output files</p></li>
 </ul>
-<section id="id2">
-<h3>Internals<a class="headerlink" href="#id2" title="Link to this heading"></a></h3>
+<section id="id3">
+<h3>Internals<a class="headerlink" href="#id3" title="Link to this heading"></a></h3>
 <ul class="simple">
 <li><p>Generated type improvement</p></li>
 <li><p>Switch grammar element: format of a parsed file can depend on the previously parsed values</p></li>
@@ -260,8 +354,8 @@ due to symmetry</p></li>
 </section>
 <section id="version-2-1-1">
 <h2>Version 2.1.1<a class="headerlink" href="#version-2-1-1" title="Link to this heading"></a></h2>
-<section id="id3">
-<h3>User interface<a class="headerlink" href="#id3" title="Link to this heading"></a></h3>
+<section id="id4">
+<h3>User interface<a class="headerlink" href="#id4" title="Link to this heading"></a></h3>
 <ul class="simple">
 <li><p>ARPES and SCF task definition improved</p></li>
 <li><p>ARPES SPC results can be parsed and plotted</p></li>
@@ -277,8 +371,8 @@ due to symmetry</p></li>
 <li><p>Some minor tweaks and corrections of input parameters</p></li>
 </ul>
 </section>
-<section id="id4">
-<h3>Internals<a class="headerlink" href="#id4" title="Link to this heading"></a></h3>
+<section id="id5">
+<h3>Internals<a class="headerlink" href="#id5" title="Link to this heading"></a></h3>
 <ul class="simple">
 <li><p>GrammmarTypes refactorized (splitted to more files)</p></li>
 <li><p>NumpyArray and RestOfTheFile grammar types for output files</p></li>
@@ -303,8 +397,8 @@ due to symmetry</p></li>
 </section>
 <section id="version-2-0-0-beta2">
 <h2>Version 2.0.0-beta2<a class="headerlink" href="#version-2-0-0-beta2" title="Link to this heading"></a></h2>
-<section id="id5">
-<h3>User interface<a class="headerlink" href="#id5" title="Link to this heading"></a></h3>
+<section id="id6">
+<h3>User interface<a class="headerlink" href="#id6" title="Link to this heading"></a></h3>
 <ul class="simple">
 <li><p>es_finder integration for empty spheres finding</p></li>
 <li><p>Support for 2D problems</p></li>
@@ -313,8 +407,8 @@ due to symmetry</p></li>
 <li><p>calculate(…, directory=False) runs the calculation in a temporary directory</p></li>
 </ul>
 </section>
-<section id="id6">
-<h3>Internals<a class="headerlink" href="#id6" title="Link to this heading"></a></h3>
+<section id="id7">
+<h3>Internals<a class="headerlink" href="#id7" title="Link to this heading"></a></h3>
 <ul class="simple">
 <li><p>Sections validation</p></li>
 <li><p>LatticeData class refactored</p></li>
@@ -324,8 +418,8 @@ due to symmetry</p></li>
 </section>
 <section id="version-2-0-0-beta1">
 <h2>Version 2.0.0-beta1<a class="headerlink" href="#version-2-0-0-beta1" title="Link to this heading"></a></h2>
-<section id="id7">
-<h3>User interface<a class="headerlink" href="#id7" title="Link to this heading"></a></h3>
+<section id="id8">
+<h3>User interface<a class="headerlink" href="#id8" title="Link to this heading"></a></h3>
 <ul class="simple">
 <li><p>Runtime documentation available.</p></li>
 <li><p>Runtime documentation is added to the docstring and to the generated documentation.
@@ -374,7 +468,7 @@ values are outputed only if they differ from the defaults.</p></li>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="philosophy.html" class="btn btn-neutral float-left" title="ASE2SPR-KKR’s philosophy for the developers" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="examples.html" class="btn btn-neutral float-right" title="Some examples of ase2sprkkr" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="authors.html" class="btn btn-neutral float-right" title="Authors" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

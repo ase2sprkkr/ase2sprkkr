@@ -1,38 +1,45 @@
 all: install
 
+.PHONY: all install editable_install ei clean test doc docs doc-gather doc-clean doc-debug doc-build doc-readme package package_clean publish anaconda conda checkout-docs
+
 install:
 	pip install .
 
 editable_install:
-	pip install --no-deps --no-build-isolation --editable .
+	pip install -C cmake.build-type=Debug --no-deps --editable .
 
 ei: editable_install
 
 clean:
-	rm -rf ./dist
+	rm -rf ./build ./dist
 
 test:
-	src/ase2sprkkr/run_tests
+	./run_tests
 
-doc: doc-gather doc-build doc-readme
+doc: docs
+
+docs: doc-gather doc-build doc-readme
 
 doc-gather: doc-clean
-	(cd sphinx ; sphinx-apidoc -feM -o ./auto ../src/ase2sprkkr */test/)
+	(cd doc_src ; sphinx-apidoc -feM -o ./auto ../src/ase2sprkkr \
+	"../src/ase2sprkkr/*/test" \
+	"../src/ase2sprkkr/*/test/*" \
+	)
 
 doc-clean:
-	rm -rf sphinx/auto/*
+	rm -rf doc_src/auto/*
 	rm -rf docs/*
 	rm -rf docs/.??*
 
 doc-debug:
-	(cd docs;  sphinx-build -P sphinx .)
+	sphinx-build -P doc_src docs/
 
 doc-build:
-	sphinx-build -j auto sphinx docs/
-	cp -r sphinx/_root/* sphinx/_root/.??* docs/
+	sphinx-build -j auto doc_src docs/
+	cp -r doc_src/_root/* doc_src/_root/.??* docs/
 
 doc-readme:
-	cd sphinx; pandoc README.rst -o ../README.md
+	cd doc_src; pandoc README.rst -o ../README.md
 
 package: | package_clean
 	python -m build --sdist
@@ -40,9 +47,7 @@ package: | package_clean
 package_clean:
 	rm -rf dist/*
 
-publish: build_clean build pip
-
-pip: | package
+publish: package
 	twine upload --username ase2sprkkr dist/*
 
 anaconda:

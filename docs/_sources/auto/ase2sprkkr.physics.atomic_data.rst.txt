@@ -1,0 +1,43 @@
+atomic\_data
+============
+
+Full name: **ase2sprkkr.physics.atomic\_data**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.physics.atomic_data
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      periodic_table
+      valence_electrons
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

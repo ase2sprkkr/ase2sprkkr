@@ -1,0 +1,36 @@
+Arrow3D
+=======
+
+
+.. currentmodule:: ase2sprkkr.gui.k_path
+
+.. autoclass:: Arrow3D
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.gui.k_path.Arrow3D
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

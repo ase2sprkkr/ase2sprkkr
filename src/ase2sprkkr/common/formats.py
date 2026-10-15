@@ -1,4 +1,5 @@
-""" Formating routines """
+"""Formating routines"""
+
 import re
 
 
@@ -7,14 +8,14 @@ def format_for_string(format):
     Return a format string derived from given format,
     that suits for string.
 
-    >>> format_for_string('>14')
+    >>> format_for_string(">14")
     '>14'
-    >>> format_for_string('>14e')
+    >>> format_for_string(">14e")
     '>14'
-    >>> format_for_string('>14e')
+    >>> format_for_string(">14e")
     '>14'
     """
-    return re.sub('[eEfFgG]$','', format)
+    return re.sub("[eEfFgG]$", "", format)
 
 
 def full_format_for_string(format):
@@ -22,17 +23,17 @@ def full_format_for_string(format):
     Return a format string derived from the given format,
     that suits for string.
 
-    >>> full_format_for_string('Cokoli {>14} tu')
+    >>> full_format_for_string("Cokoli {>14} tu")
     'Cokoli {>14} tu'
-    >>> full_format_for_string('Remove{>14e}here')
+    >>> full_format_for_string("Remove{>14e}here")
     'Remove{>14}here'
-    >>> full_format_for_string('{>14g}')
+    >>> full_format_for_string("{>14g}")
     '{>14}'
     """
-    return re.sub('[eEfFgG]}(?!})','}', format)
+    return re.sub("[eEfFgG]}(?!})", "}", format)
 
 
-def fortran_format(value, format=':.12e'):
+def fortran_format(value, format=":.12e"):
     """
     Format the value with a leading zero.
 
@@ -58,16 +59,16 @@ def fortran_format(value, format=':.12e'):
     output: str
       A string containing the number in scientific notation with a leading zero.
     """
-    la = ('{' + format + '}').format(float(value))
+    la = ("{" + format + "}").format(float(value))
     a = la.lstrip()
-    leading = la[:len(la) - len(a)]
+    leading = la[: len(la) - len(a)]
     la = a
     a = la.rstrip()
-    trailing = la[len(a):]
-    if 'E' in format:
-        e = a.find('E')
-    elif 'e' in format:
-        e = a.find('e')
+    trailing = la[len(a) :]
+    if "E" in format:
+        e = a.find("E")
+    elif "e" in format:
+        e = a.find("e")
     else:
         raise ("No E in fortran format string: " + format)
-    return leading + '0.{}{}{}{:02d}'.format(a[0],a[2:e],a[e:e + 2],abs(int(a[e + 1:]) * 1 + 1)) + trailing
+    return leading + "0.{}{}{}{:02d}".format(a[0], a[2:e], a[e : e + 2], abs(int(a[e + 1 :]) * 1 + 1)) + trailing

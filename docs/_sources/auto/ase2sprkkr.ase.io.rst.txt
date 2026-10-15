@@ -22,7 +22,9 @@ Full name: **ase2sprkkr.ase.io**
       :toctree:
       :template: custom-base-template.rst
    
+      read_SPRKKR
       read_sprkkr
+      write_SPRKKR
       write_sprkkr
    
    

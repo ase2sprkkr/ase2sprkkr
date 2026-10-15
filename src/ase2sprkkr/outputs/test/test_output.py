@@ -1,18 +1,82 @@
 import os
-from ..readers.scf import ScfOutputReader, ScfResult, atomic_types_definition
+from io import BytesIO
+from pathlib import Path
+from shutil import copyfile
 
-if __package__:
-   from .init_tests import TestCase, patch_package
-else:
-   from init_tests import TestCase, patch_package
-__package__, __name__ = patch_package(__package__, __name__)
+import pytest
+from ase.build import bulk
+
+from ...common.file_utils import FilePath, filename_from_file
+from ...common.options import Option
+from ...input_parameters.input_parameters import InputParameters
+from ...output_files.definitions.sfn import SFNOutputFile
+from ...output_files.output_files import OutputFile
+from ...potentials.potentials import Potential
+from ..readers.bsf import BsfResult
+from ..readers.dos import DosResult
+from ..readers.jxc import JxcOutputReader
+from ..readers.scf import ScfOutputParser, ScfResult, atomic_types_definition
+from ..task_result import TaskResult
 
 
-class TestOutput(TestCase):
+EXAMPLES = Path(__file__).parent.parent / "examples"
 
-  def test_scf(self):
-      atomic_types_definition.parse(
-"""  33 E= 0.6083 0.0000          IT=   1  Li_1
+
+class TestOutput:
+    def test_task_result_normalizes_existing_files(self, tmp_path):
+        filename = tmp_path / "result.out"
+        filename.write_bytes(b"output")
+        input_filename = tmp_path / "result.inp"
+
+        with filename.open("rb") as output:
+            assert filename_from_file(output) == str(filename)
+            assert filename_from_file(filename) == str(filename)
+            result = TaskResult(
+                None,
+                None,
+                str(tmp_path),
+                output_file=output,
+                input_file=str(input_filename),
+            )
+            assert result.sfn_generated is None
+            assert isinstance(result.output_file, FilePath)
+            assert isinstance(result.input_file, FilePath)
+            assert str(result.output_file) == "result.out"
+            assert os.fspath(result.output_file) == str(filename)
+            assert os.fspath(result.input_file) == str(input_filename)
+            assert result.path_to("output") == str(filename)
+            assert isinstance(result.files["output"], Option)
+            assert isinstance(result.files["output"](), FilePath)
+            assert str(result.files["output"]()) == "result.out"
+            assert os.fspath(result.files["output"]()) == str(filename)
+            assert result.files["output"].path() == str(filename)
+            assert "open" in result.files["output"].actions()
+
+        relative = TaskResult(None, None, str(tmp_path), output_file="result.out")
+        assert relative.path_to("output") == str(filename)
+
+        inferred = TaskResult(None, None, None, output_file=str(filename))
+        assert inferred.directory == str(tmp_path)
+        assert inferred.path_to("output") == str(filename)
+
+        nested = TaskResult(None, None, None, output_file=os.path.join("subdir", "result.out"))
+        assert nested.path_to("output") == os.path.join(os.getcwd(), "subdir", "result.out")
+
+        stream = BytesIO(b"output")
+        with pytest.raises(TypeError):
+            filename_from_file(stream)
+        assert filename_from_file(stream, None) is None
+        stream_result = TaskResult(None, None, str(tmp_path), output_file=stream)
+        assert stream_result.output_file is None
+        assert "output" not in stream_result.files
+
+        no_output = TaskResult(None, None, str(tmp_path))
+        assert no_output.output_file is None
+        assert "output" not in no_output.files
+
+    def test_scf_atomic_types(self):
+        atomic_types_definition.parse(
+            """  33 E= 0.6083 0.0000          IT=   1  Li_1
          DOS      NOS     P_spin   m_spin    P_orb    m_orb    B_val      B_core
   s    0.4387   0.0296    0.0000   0.0000   0.00000  0.00000    0.00 s      0.00
   p    1.2579   0.0962    0.0000   0.0000   0.00000  0.00000    0.00 ns     0.00
@@ -20,21 +84,221 @@ class TestOutput(TestCase):
   f    0.3427   0.0476    0.0000   0.0000   0.00000  0.00000    0.00
  sum   2.7279   0.2660    0.0000   0.0000   0.00000  0.00000    0.00 v+c    0.00
  E_band         0.11559127 [Ry]
-dipole moment   1      0.0000000000000000      0.0000000000000000      0.0000000000000000""")  # NOQA: E122
+dipole moment   1      0.0000000000000000      0.0000000000000000      0.0000000000000000"""
+        )
 
-  def test_output(self):
-      path = os.path.join(
-              os.path.dirname(__file__),
-              '..', 'examples', 'scf.out'
-      )
+    def test_read_output_from_displayed_relative_path(self):
+        directory = os.path.realpath(EXAMPLES)
+        filename = FilePath("scf.out", directory)
 
-      # read_from_file is both method and class_method
-      for reader in ScfOutputReader, ScfOutputReader():
+        result = InputParameters.create("scf").read_output_from_file(filename)
 
-          out = ScfResult(None, None, None)
-          reader.read_from_file(path, read_args = [out])
+        assert str(result.output_file) == "scf.out"
+        assert os.fspath(result.output_file) == os.path.join(directory, "scf.out")
+        assert result.path_to("output") == os.path.join(directory, "scf.out")
 
-          self.assertEqual(out.iterations[-1]['energy']['EMIN'](), -0.5)
-          self.assertEqual(len(out.iterations[-1]['atomic_types']), 2)
-          self.assertEqual(out.iterations[0].converged(), False)
-          self.assertEqual(out.iterations[-1].converged(), True)
+    def test_output(self):
+        path = EXAMPLES / "scf.out"
+
+        for reader in ScfOutputParser, ScfOutputParser():
+            result = ScfResult(None, None, None)
+            reader.read_from_file(path, read_args=[result])
+
+            assert result.iterations[-1]["energy"]["EMIN"]() == -0.5
+            assert len(result.iterations[-1]["atomic_types"]) == 2
+            assert result.iterations[0].converged() is False
+            assert result.iterations[-1].converged() is True
+            values = result.output_values
+            assert isinstance(values["Converged"], Option)
+            assert values["Converged"]._definition.is_generated
+            assert values["Number of iterations"]() == len(result.iterations)
+            assert values["Fermi energy"].actions() == ("plot",)
+            assert values["Fermi energy"].info == "Fermi energy at the final SCF iteration."
+            assert values["Error"].display_name == "Convergence error"
+            assert values["Data"].display_name == "SCF result data"
+            assert values["Data"].actions() == ("data",)
+            assert values["Data"].data() is result
+            assert values["potential"] is result.files["potential"]
+
+    def test_scf_restart_without_emin_block(self):
+        result = TaskResult.from_file(EXAMPLES / "Al_SCF.out")
+
+        assert result.iterations
+        assert len(result.iterations) == 1
+        assert result.iterations[0].energy.EMIN() is None
+
+    def test_scf_sfn(self, tmp_path, monkeypatch):
+        fullpot = ScfResult(None, None, tmp_path)
+        expected_filename = os.path.join(tmp_path, "shape.sfn")
+        fullpot.files.add_file("SFN", "shape.sfn")
+
+        class ParsedSFN:
+            def __init__(self):
+                self.actions = []
+
+            def plot_shape(self):
+                self.actions.append("shape")
+
+            def plot_cell(self):
+                self.actions.append("cell")
+
+            def plot_periodic(self):
+                self.actions.append("periodic")
+
+            def plot_slice(self):
+                self.actions.append("slice")
+
+            def plot_radial(self):
+                self.actions.append("radial")
+
+        parsed = ParsedSFN()
+
+        def parse_sfn(filename, **kwargs):
+            assert filename == expected_filename
+            assert set(kwargs) == {"try_only", "potential"}
+            return parsed
+
+        monkeypatch.setattr(OutputFile, "from_file", parse_sfn)
+
+        assert fullpot.sfn_filename == expected_filename
+        assert fullpot.sfn is parsed
+        assert fullpot.output_values["SFN"] is fullpot.files["SFN"]
+        assert fullpot.files["SFN"].file_type == "sfn"
+        assert fullpot.files["SFN"].display_name == "Shape functions (SFN)"
+        assert fullpot.files["SFN"].actions() == (
+            "open",
+            "open_directory",
+            "save",
+            "plot",
+            "plot_cell",
+            "plot_periodic",
+            "plot_shape",
+            "plot_slice",
+            "plot_radial",
+        )
+        fullpot.files["SFN"].plot_cell()
+        fullpot.files["SFN"].plot_periodic()
+        fullpot.files["SFN"].plot_shape()
+        fullpot.files["SFN"].plot_slice()
+        fullpot.files["SFN"].plot_radial()
+        assert parsed.actions == ["cell", "periodic", "shape", "slice", "radial"]
+
+        asa = ScfResult(None, None, tmp_path)
+        assert asa.sfn_filename is None
+        assert asa.sfn is None
+        assert "SFN" not in asa.output_values
+
+    def test_output_files_prefer_existing_result_potential(self, tmp_path, monkeypatch):
+        result = ScfResult(None, None, tmp_path)
+        old_potential = tmp_path / "Fe.pot"
+        new_potential = tmp_path / "Fe.pot_new"
+        old_potential.write_text("old")
+        result.files.add_file("potential", old_potential.name)
+        atoms = bulk("Cu")
+        Potential.from_atoms(atoms).save_to_file(old_potential)
+        start_potential = result.any_potential
+        assert start_potential.original_filename == str(old_potential)
+        copyfile(old_potential, new_potential)
+        potential = result.any_potential
+        assert potential.original_filename == str(new_potential)
+        assert result.any_potential is potential
+
+        output = result.files.add_file("JXC", "Fe_JXC.dat", "jxc")
+        parsed = object()
+
+        def parse_output(filename, **kwargs):
+            assert filename == str(tmp_path / "Fe_JXC.dat")
+            assert kwargs == {"try_only": "jxc", "potential": potential}
+            return parsed
+
+        monkeypatch.setattr(OutputFile, "from_file", parse_output)
+        assert output.parsed_file() is parsed
+
+    def test_scf_parser_registers_reported_sfn(self):
+        directory = os.path.realpath(EXAMPLES)
+        output = os.path.join(directory, "Fe2Al_SCF.out")
+
+        result = TaskResult.from_file(output)
+
+        assert result.input_parameters is None
+        assert result.program_info["version"] == "9.7"
+        assert result.program_info["executable"] == "KKRSCF"
+        assert result.sfn_filename == os.path.join(directory, "Fe2Al_SCF.sfn")
+        assert result.files["SFN"].file_type == "sfn"
+        assert result.sfn_generated is True
+        assert isinstance(result.sfn, SFNOutputFile)
+        assert result.sfn.nm == 2
+
+    def test_scf_parser_registers_sfn_reported_before_files(self, tmp_path):
+        content = (EXAMPLES / "Fe2Al_SCF.out").read_bytes()
+
+        report = (
+            b"          the shape functions have been read successfully\n"
+            b"          from file: Fe2Al_SCF.sfn\n"
+        )
+        file_marker = b" fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\n"
+        unavailable = b"              shape function file not available:  Fe2Al_SCF.sfn\n"
+        assert content.count(report) == 1
+        assert content.count(unavailable) == 1
+        assert file_marker in content
+        content = content.replace(report, b"", 1)
+        content = content.replace(unavailable, b"", 1)
+        content = content.replace(file_marker, report + file_marker, 1)
+
+        output = tmp_path / "fullpot-restart.out"
+        output.write_bytes(content)
+        result = TaskResult.from_file(output)
+
+        assert result.sfn_filename == os.path.join(tmp_path, "Fe2Al_SCF.sfn")
+        assert result.sfn_generated is False
+
+    def test_result_file_types_are_inferred_without_duplicate_aliases(self):
+        dos = DosResult(None, None, None)
+        dos_file = dos.files.add_file("DOS", "result.dos")
+        assert dos.output_values["DOS"] is dos_file
+        assert dos_file.name == "DOS"
+        assert dos_file.display_name == "Density of states (DOS)"
+        assert dos_file.file_type == "dos"
+        assert dos_file.info == "Density-of-states data produced by the calculation."
+        assert "plot" in dos_file.actions()
+        assert list(dos.files.items()) == ["DOS"]
+        assert next(iter(dos.output_values)) == "DOS"
+
+        missing_dos = DosResult(None, None, None)
+        with pytest.raises(FileNotFoundError, match="DOS result file is not listed"):
+            missing_dos.output_values
+
+        bsf = BsfResult(None, None, None)
+        bsf_file = bsf.files.add_file("Bloch-SF", "result.bsf")
+        assert bsf.output_values["Bloch-SF"] is bsf_file
+        assert bsf_file.file_type == "bsf"
+        assert "plot" in bsf_file.actions()
+        assert list(bsf.files.items()) == ["Bloch-SF"]
+        assert next(iter(bsf.output_values)) == "Bloch-SF"
+
+        missing_bsf = BsfResult(None, None, None)
+        with pytest.raises(FileNotFoundError, match="BSF result file is not listed"):
+            missing_bsf.output_values
+
+    def test_jxc(self):
+        directory = os.path.realpath(EXAMPLES)
+        result = JxcOutputReader.read_from_file("Fe_jxc.out", directory=directory)
+        assert result.jxc_filename == os.path.join(directory, "Fe_JXC_XCPLTEN_Jij.dat")
+        assert result.dij_filename == os.path.join(directory, "Fe_JXC_XCPLTEN_Dij.dat")
+        assert result.dmi_filename == os.path.join(directory, "Fe_JXC_DMIVEC_Dij.dat")
+        assert isinstance(result.output_values["jxc"], Option)
+        assert isinstance(result.output_values["jxc"](), FilePath)
+        assert str(result.output_values["jxc"]()) == "Fe_JXC_XCPLTEN_Jij.dat"
+        assert os.fspath(result.output_values["jxc"]()) == os.path.join(
+            directory, "Fe_JXC_XCPLTEN_Jij.dat"
+        )
+        assert callable(result.output_values["jxc"].parsed_file)
+        assert result.mean_field_curie_temperature == 763.4
+
+    def test_reader_keeps_underlying_output_filename(self):
+        directory = os.path.realpath(EXAMPLES)
+        filename = os.path.join(directory, "Fe_jxc.out")
+        with open(filename, "rb") as output:
+            result = JxcOutputReader.read_from_file(output, directory=directory)
+        assert result.path_to("output") == filename
+        assert result.files["output"].path() == filename

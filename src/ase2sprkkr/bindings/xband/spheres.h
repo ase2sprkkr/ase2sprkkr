@@ -1,25 +1,28 @@
-void find_empty_spheres_(
-              int* n_out,
+int32_t find_empty_spheres_(
+              int32_t* n_out,
               double* centres,
               double* radii,
               double* min_radius,
               double* max_radius,
               double* alat,
               double* cell,
-              int* n,
+              int32_t* n,
               double* positions,
-              int* atom_eq_class,
-              int* n_classes,
-              int* n_types,
+              int32_t* atom_eq_class,
+              int32_t* n_classes,
+              int32_t* n_types,
               char* symbols,
               double* atomic_numbers,
               double* occupations,
-              int* type_eq_class,
-              int* n_symop,
-              int* symop_number,
-              int* symop_data,
-              int* mesh,
-              int* verbose
+              int32_t* type_eq_class,
+              //int32_t* n_symop,
+              //int32_t* symop_number,
+              //int32_t* symop_data,
+              int32_t* mesh,
+              int32_t* n_symmetry_ops,
+              double* rotations,
+              double* translations,
+              int32_t* verbose
   );
 
 

@@ -1,0 +1,64 @@
+result\_options
+===============
+
+Full name: **ase2sprkkr.outputs.result\_options**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.outputs.result_options.DataOutputOption  ase2sprkkr.outputs.result_options.OutputFileDefinition  ase2sprkkr.outputs.result_options.OutputFileOption  ase2sprkkr.outputs.result_options.OutputFilesSection  ase2sprkkr.outputs.result_options.OutputOption 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.outputs.result_options
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      create_files_section
+      create_output_section
+      generated_output
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      DataOutputOption
+      OutputFileDefinition
+      OutputFileOption
+      OutputFilesSection
+      OutputOption
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

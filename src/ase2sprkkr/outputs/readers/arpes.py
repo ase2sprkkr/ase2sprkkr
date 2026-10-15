@@ -1,34 +1,49 @@
-""" The ARPES reader and result. """
+"""The ARPES reader and result."""
 
-from ..task_result import TaskResult, KkrProcess
-from .default import DefaultOutputReader
+from ..task_result import TaskResult, KkrOutputReader
+from .default import DefaultOutputParser
 from ...common.decorators import cached_property
-from ...output_files.output_files import OutputFile
 import os
 
 
 class ArpesResult(TaskResult):
-  """ ARPES result provides acces to the generated SPC output file
-  containing the results of Angle resolved photoelectron electroscopy,
-  using the :py:attr:`~spc` property. """
+    """ARPES result provides acces to the generated SPC output file
+    containing the results of Angle resolved photoelectron electroscopy,
+    using the :py:attr:`~spc` property."""
 
-  @cached_property
-  def spc_filename(self):
-      """ New (output) potential file name """
-      fname = self.input_parameters.CONTROL.DATASET() + '_ARPES_data.spc'
-      if self.directory:
-         fname = os.path.join(self.directory, fname)
-      return fname
+    @cached_property
+    def spc_filename(self):
+        """Spectroscopy results file name"""
+        fname = self.input_parameters.CONTROL.DATASET() + "_ARPES_data.spc"
+        if self.directory:
+            fname = os.path.join(self.directory, fname)
+        return fname
 
-  @cached_property
-  def spc(self):
-      """ The new (output) potential - that contains the converged charge density etc. """
-      return OutputFile.from_file(self.spc_filename, try_only='spc')
+    @cached_property
+    def spc(self):
+        """Spectroscopy results."""
+        return self._spc_file.parsed_file()
+
+    @property
+    def arpes(self):
+        """ Alias of ``meth:ArpesResult.spc`` """
+        return self.spc()
+
+    @property
+    def output_values(self):
+        self._spc_file
+        return super().output_values
+
+    @cached_property
+    def _spc_file(self):
+        if "SPC" not in self.files:
+            return self.files.add_file("SPC", self.spc_filename, "spc")
+        return self.files.set_file_type("SPC", "spc")
 
 
-class ArpesProcess(KkrProcess):
-  """ ARPES task output reader currently do nothing, just have a special
-  result, that allow easy acces to spc output file """
+class ArpesOutputReader(KkrOutputReader):
+    """ARPES task has no special parser, it just has a special
+    result, that allow easy acces to spc output file"""
 
-  result_class = ArpesResult
-  reader_class = DefaultOutputReader
+    result_class = ArpesResult
+    parser_class = DefaultOutputParser

@@ -4,7 +4,6 @@ ase2sprkkr - ASE interface to SPR-KKR electron structure calculation.
 This root package import a few most used objects to provide shortcuts to them.
 """
 
-
 """ SPRKKR calculator to be used to calculate electronic structure using ASE """
 from .sprkkr.calculator import SPRKKR  # NOQA: F401, E402
 
@@ -17,26 +16,34 @@ from .potentials.potentials import Potential  # NOQA: F401, E402
 """ An extension of ASE atoms object """
 from .sprkkr.sprkkr_atoms import SPRKKRAtoms  # NOQA: F401, E402
 
+""" For promoting ASE atoms to use ASE2SPRKKR extensions"""
+promote_ase_atoms = SPRKKRAtoms.promote_ase_atoms
+
 """ SPRKKR Output File """
 from .output_files.output_files import OutputFile  # NOQA: F401, E402
 
 """ Task results """
-from .outputs.task_result import TaskResult   # NOQA E402
+from .outputs.task_result import TaskResult  # NOQA E402
 
 """ Version of the package """
 from .version import __version__  # NOQA: F401, E402
 
+""" Enhance the atoms with sites array and other ASE2SPRKKR enhancements """
+promote_ase_atoms = SPRKKRAtoms.promote_ase_atoms
 
 def _init():
-    import ase   # NOQA: F401
+    import ase  # NOQA: F401
     from .ase.register import register
-    from .configuration import load_user_preferences
+    from .configuration import load_user_preferences  # noqa: F401
 
     register()
-    load_user_preferences()
+    import os
+
+    if not os.environ.get("ASE2SPRKKR_NO_USER_PROFILE", False):
+        load_user_preferences()
 
 
 _init()
 del _init
 
-from .configuration import config
+from .configuration import config as config

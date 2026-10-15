@@ -1,0 +1,648 @@
+"""PSI/J execution backend."""
+
+from __future__ import annotations
+
+import asyncio
+import os
+import shlex
+import subprocess
+import sys
+from datetime import datetime
+from pathlib import Path
+from threading import Event, Lock, Thread
+
+from .base import (
+    ExecutionSpec,
+    Executor,
+    OutputObservers,
+    RunReference,
+    RunState,
+    RunStatus,
+    SubmissionNotStarted,
+)
+
+
+_STATE_MAP = {
+    "NEW": RunState.NEW,
+    "STAGE_IN": RunState.QUEUED,
+    "QUEUED": RunState.QUEUED,
+    "ACTIVE": RunState.RUNNING,
+    "STAGE_OUT": RunState.RUNNING,
+    "COMPLETED": RunState.FINISHED,
+    "FAILED": RunState.FAILED,
+    "CANCELED": RunState.CANCELLED,
+}
+
+_SLURM_STATE_MAP = {
+    "PENDING": RunState.QUEUED,
+    "CONFIGURING": RunState.QUEUED,
+    "SUSPENDED": RunState.QUEUED,
+    "RUNNING": RunState.RUNNING,
+    "COMPLETING": RunState.RUNNING,
+    "RESIZING": RunState.RUNNING,
+    "COMPLETED": RunState.FINISHED,
+    "CANCELLED": RunState.CANCELLED,
+    "CANCELED": RunState.CANCELLED,
+    "BOOT_FAIL": RunState.FAILED,
+    "DEADLINE": RunState.FAILED,
+    "FAILED": RunState.FAILED,
+    "NODE_FAIL": RunState.FAILED,
+    "OUT_OF_MEMORY": RunState.FAILED,
+    "PREEMPTED": RunState.FAILED,
+    "REVOKED": RunState.FAILED,
+    "TIMEOUT": RunState.FAILED,
+}
+
+
+def _load_psij():
+    try:
+        import psij
+    except ImportError as exc:
+        raise ImportError(
+            "PSI/J support requires the optional 'psij-python' package. "
+            "Install it with 'python -m pip install \"ase2sprkkr[psij]\"'."
+        ) from exc
+    return psij
+
+
+def _path(value, directory=None):
+    if value is None:
+        return None
+    value = getattr(value, "name", value)
+    try:
+        path = os.fspath(value)
+    except TypeError as exc:
+        raise ValueError("PSI/J execution requires named input/output files") from exc
+    if directory and not os.path.isabs(path):
+        path = os.path.join(directory, path)
+    return os.path.abspath(path)
+
+
+def _scheduler_output(argv):
+    """Run one scheduler inspection command; failures remain transport failures."""
+    return subprocess.run(
+        tuple(argv),
+        check=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+    ).stdout
+
+
+def _slurm_state(value):
+    """Map an extended Slurm state, including suffixes, to RunState."""
+    value = (value or "").strip().upper().split("+", 1)[0]
+    return _SLURM_STATE_MAP.get(value, RunState.UNKNOWN)
+
+
+def _slurm_exit_code(value):
+    if not value:
+        return None
+    code = value.split(":", 1)[0]
+    try:
+        return int(code)
+    except ValueError:
+        return None
+
+
+def _slurm_details(native_id):
+    """Return fields needed to reconstruct a live Slurm reference."""
+    output = _scheduler_output(("scontrol", "--oneliner", "show", "job", str(native_id)))
+    fields = {}
+    for token in shlex.split(output):
+        name, separator, value = token.partition("=")
+        if separator:
+            fields[name] = value
+    return fields
+
+
+def _slurm_current_matches(run_id):
+    """Find current user's live jobs carrying this ASE2SPRKKR identity."""
+    marker = f"ase2sprkkr:{run_id}"
+    output = _scheduler_output(
+        ("squeue", "--noheader", "--me", "--format=%i|%k|%T|%Z")
+    )
+    matches = []
+    for line in output.splitlines():
+        fields = line.split("|", 3)
+        if len(fields) != 4:
+            continue
+        native_id, comment, state, directory = (field.strip() for field in fields)
+        if comment == marker:
+            matches.append((native_id, state, directory))
+    return tuple(matches)
+
+
+def _slurm_accounting_stores_comments():
+    output = _scheduler_output(("scontrol", "show", "config"))
+    for line in output.splitlines():
+        name, separator, value = line.partition("=")
+        if separator and name.strip() == "AccountingStoreFlags":
+            flags = {flag.strip().lower() for flag in value.split(",")}
+            return "job_comment" in flags
+    return False
+
+
+def _slurm_time(value):
+    """Format an ASE2SPRKKR timestamp using Slurm's accepted local-time syntax."""
+    parsed = datetime.fromisoformat(value)
+    if parsed.tzinfo is not None:
+        parsed = parsed.astimezone()
+    return parsed.strftime("%Y-%m-%dT%H:%M:%S")
+
+
+def _slurm_accounting_matches(run_id, submitted_at):
+    """Look up a completed/recent job by its persisted Slurm comment."""
+    marker = f"ase2sprkkr:{run_id}"
+    output = _scheduler_output(
+        (
+            "sacct",
+            "-X",
+            "-n",
+            "-P",
+            f"--starttime={_slurm_time(submitted_at)}",
+            "--format=JobIDRaw,Comment,State,WorkDir,StdOut,StdErr,ExitCode",
+        )
+    )
+    matches = []
+    for line in output.splitlines():
+        fields = line.rstrip("|").split("|")
+        if len(fields) != 7:
+            continue
+        native_id, comment, state, directory, stdout, stderr, exit_code = fields
+        if comment.strip() == marker:
+            matches.append(
+                (
+                    native_id.strip(),
+                    state.strip(),
+                    directory.strip(),
+                    stdout.strip() or None,
+                    stderr.strip() or None,
+                    _slurm_exit_code(exit_code.strip()),
+                )
+            )
+    return tuple(matches)
+
+
+class PsijRunner:
+    """One job managed by a PSI/J executor.
+
+    PSI/J scheduler executors redirect stdout/stderr to files. The runner
+    follows those files while the job is active and feeds the same asynchronous
+    output reader that is used by :class:`LocalRunner`.
+    """
+
+    def __init__(
+        self,
+        executor,
+        reader,
+        spec: ExecutionSpec,
+        callback=None,
+        *,
+        output_listener=None,
+        start=False,
+        job=None,
+        attached=False,
+        run_id=None,
+    ):
+        self.executor = executor
+        self.reader = reader
+        self.spec = spec
+        self.callback = callback
+        self.result = reader.create_result(spec.output_file, spec.input_file)
+        self._run_id = run_id
+
+        self._stdout_path = _path(spec.output_file, spec.directory)
+        if self._stdout_path is None:
+            raise ValueError("PSI/J execution requires an output file")
+        self._stderr_path = _path(spec.error_file, spec.directory) or self._stdout_path + ".err"
+        self._stdin_path = _path(spec.stdin, spec.directory)
+
+        self._output_observers = OutputObservers(output_listener)
+        self._lock = Lock()
+        self._submit_lock = Lock()
+        self._done = Event()
+        self._exception = None
+        self._callback_exception = None
+        self._finalization_failed = False
+        self._return_code = None
+        self._thread = None
+        self._attached = attached
+
+        self._psij = executor._psij
+        self._job = job or self._create_job()
+
+        if start:
+            self.start()
+
+    def _mpi_launcher(self):
+        return "srun" if self.executor.backend.lower() == "slurm" else "mpirun"
+
+    def _job_command(self):
+        launch = self.spec.launch
+        if not launch or self.spec.mpi_argv is None:
+            return tuple(self.spec.argv), None, None
+
+        if isinstance(launch.mpi, tuple):
+            return (*launch.mpi, *self.spec.mpi_argv), None, None
+
+        resources = None
+        if launch.process_count is not None:
+            resources = self._psij.ResourceSpecV1(
+                process_count=launch.process_count
+            )
+        return tuple(self.spec.mpi_argv), resources, self._mpi_launcher()
+
+    def _persistent_metadata(self):
+        if self._run_id is None:
+            return None, None
+        environment = {"ASE2SPRKKR_RUN_ID": self._run_id}
+        attributes = None
+        if self.executor.backend.lower() == "slurm":
+            attributes = self._psij.JobAttributes(
+                custom_attributes={
+                    "slurm.comment": f"ase2sprkkr:{self._run_id}",
+                }
+            )
+        return environment, attributes
+
+    def _create_job(self):
+        argv, resources, launcher = self._job_command()
+        if not argv:
+            raise ValueError("Cannot submit a PSI/J run without a command")
+        environment, attributes = self._persistent_metadata()
+        job_spec = self._psij.JobSpec(
+            executable=os.fspath(argv[0]),
+            arguments=[os.fspath(arg) for arg in argv[1:]],
+            directory=self.spec.directory,
+            environment=environment,
+            stdin_path=None if self.spec.launch and self.spec.mpi_argv is not None else self._stdin_path,
+            stdout_path=self._stdout_path,
+            stderr_path=self._stderr_path,
+            resources=resources,
+            attributes=attributes,
+            launcher=launcher,
+        )
+        return self._psij.Job(job_spec)
+
+    @property
+    def state(self):
+        if self._finalization_failed:
+            return RunState.FAILED
+        state = getattr(getattr(self._job, "status", None), "state", None)
+        return _STATE_MAP.get(getattr(state, "name", None), RunState.UNKNOWN)
+
+    @property
+    def exception(self):
+        return self._exception
+
+    @property
+    def return_code(self):
+        if self._return_code is not None:
+            return self._return_code
+        return getattr(getattr(self._job, "status", None), "exit_code", None)
+
+    @property
+    def reference(self):
+        native_id = getattr(self._job, "native_id", None)
+        if native_id is None:
+            return None
+        return RunReference(
+            executor=f"psij:{self.executor.backend}",
+            native_id=str(native_id),
+            computer=self.executor.url,
+            directory=os.fspath(self.spec.directory),
+            input_file=_path(self.spec.input_file, self.spec.directory),
+            output_file=self._stdout_path,
+            error_file=self._stderr_path,
+        )
+
+    def add_output_listener(self, callback):
+        self._output_observers.add(callback)
+
+    def add_output_error_listener(self, callback):
+        self._output_observers.add_error_listener(callback)
+
+    def _emit_output(self, data, kind):
+        if not data:
+            return
+        text = data.decode("utf8")
+        if self.reader.print_output:
+            print(text, end="", file=sys.stderr if kind == "err" else sys.stdout)
+        self._output_observers.emit(text, kind)
+
+    @staticmethod
+    def _flush(value):
+        if value is not None and hasattr(value, "flush"):
+            value.flush()
+
+    @staticmethod
+    def _close(value):
+        if value is not None and hasattr(value, "close"):
+            value.close()
+
+    def _prepare_io(self):
+        self._flush(self.spec.input_file)
+        self._flush(self.spec.output_file)
+        self._flush(self.spec.error_file)
+        self._close(self.spec.output_file)
+        self._close(self.spec.error_file)
+        Path(self._stdout_path).parent.mkdir(parents=True, exist_ok=True)
+        Path(self._stderr_path).parent.mkdir(parents=True, exist_ok=True)
+        Path(self._stdout_path).write_bytes(b"")
+        Path(self._stderr_path).write_bytes(b"")
+
+    async def _follow_file(self, path, stream, kind, finished):
+        position = 0
+        empty_after_finish = False
+        try:
+            while True:
+                data = b""
+                try:
+                    size = os.path.getsize(path)
+                    if size < position:
+                        position = 0
+                    with open(path, "rb") as source:
+                        source.seek(position)
+                        data = source.read()
+                except FileNotFoundError:
+                    pass
+
+                if data:
+                    position += len(data)
+                    self._emit_output(data, kind)
+                    stream.feed_data(data)
+                    empty_after_finish = False
+                elif finished.is_set():
+                    if empty_after_finish:
+                        break
+                    empty_after_finish = True
+                await asyncio.sleep(self.executor.poll_interval)
+        finally:
+            stream.feed_eof()
+
+    async def _monitor(self):
+        stdout = asyncio.StreamReader()
+        stderr = asyncio.StreamReader()
+        finished = asyncio.Event()
+        parse_task = asyncio.create_task(
+            self.reader.parse_streams(stdout, stderr, self.result)
+        )
+        followers = [
+            asyncio.create_task(self._follow_file(self._stdout_path, stdout, "out", finished)),
+            asyncio.create_task(self._follow_file(self._stderr_path, stderr, "err", finished)),
+        ]
+        status = None
+        try:
+            status = await asyncio.to_thread(self._job.wait)
+        finally:
+            finished.set()
+            await asyncio.gather(*followers, return_exceptions=False)
+
+        self._return_code = getattr(status, "exit_code", None)
+        if self._return_code is None:
+            self._return_code = (
+                0
+                if getattr(getattr(status, "state", None), "name", None) == "COMPLETED"
+                else 1
+            )
+        output, error = await parse_task
+        return self.reader.complete_result(
+            self.result, output, error, self._return_code
+        )
+
+    def _thread_main(self):
+        try:
+            asyncio.run(self._monitor())
+        except BaseException as exc:
+            self._exception = exc
+            self._finalization_failed = True
+        finally:
+            try:
+                if self.callback:
+                    self.callback(self.result)
+            except BaseException as exc:
+                self._callback_exception = exc
+            self._done.set()
+
+    def _start_monitor(self):
+        with self._lock:
+            if self._thread is not None:
+                return
+            self._thread = Thread(target=self._thread_main, daemon=True)
+            self._thread.start()
+
+    def start(self):
+        if self._attached:
+            return self._start_monitor()
+        return self.submit()
+
+    def submit(self):
+        with self._submit_lock:
+            if self._thread is not None or self.state != RunState.NEW:
+                raise RuntimeError(f"Run is already {self.state.value}")
+            try:
+                self._prepare_io()
+            except Exception as exc:
+                raise SubmissionNotStarted(str(exc)) from exc
+            self.executor._job_executor.submit(self._job)
+            self._start_monitor()
+
+    def wait(self):
+        if self._thread is None:
+            raise RuntimeError("Run has not been started")
+        self._done.wait()
+        if self._exception is not None:
+            raise self._exception
+        if self._callback_exception is not None:
+            raise self._callback_exception
+        return self.result
+
+    def run(self):
+        if self._thread is None:
+            self.start()
+        return self.wait()
+
+    async def run_async(self):
+        if self._thread is None:
+            self.start()
+        return await asyncio.to_thread(self.wait)
+
+    def cancel(self):
+        if self._thread is None and not self._attached:
+            raise RuntimeError("Run has not been submitted")
+        self._job.cancel()
+
+
+class PsijExecutor(Executor):
+    """Execute calculations through a PSI/J backend such as Slurm or PBS."""
+
+    name = "psij"
+
+    def __init__(
+        self,
+        backend="slurm",
+        *,
+        url=None,
+        config=None,
+        job_executor=None,
+        poll_interval=0.1,
+    ):
+        self.backend = backend
+        self.url = url
+        self.poll_interval = poll_interval
+        self._psij = _load_psij()
+        self._job_executor = (
+            job_executor
+            if job_executor is not None
+            else self._psij.JobExecutor.get_instance(backend, url=url, config=config)
+        )
+        self._status_jobs = {}
+
+    def create_run(self, reader, spec: ExecutionSpec, callback=None):
+        return PsijRunner(self, reader, spec, callback=callback)
+
+    def create_persistent_run(
+        self, reader, spec: ExecutionSpec, *, run_id, callback=None
+    ):
+        return PsijRunner(
+            self,
+            reader,
+            spec,
+            callback=callback,
+            run_id=run_id,
+        )
+
+    def status(self, *references: RunReference):
+        expected = f"psij:{self.backend}"
+        for reference in references:
+            if reference.executor != expected:
+                raise ValueError(
+                    f"Run reference belongs to {reference.executor!r}, not {expected!r}"
+                )
+
+        statuses = []
+        for reference in references:
+            attached = False
+            job = self._status_jobs.get(reference.native_id)
+            if job is None:
+                job = self._psij.Job()
+                self._job_executor.attach(job, reference.native_id)
+                self._status_jobs[reference.native_id] = job
+                attached = True
+            status = getattr(job, "status", None)
+            state = getattr(status, "state", None)
+            state_name = getattr(state, "name", None)
+            run_state = (
+                RunState.UNKNOWN
+                if attached and state_name == "NEW"
+                else _STATE_MAP.get(state_name, RunState.UNKNOWN)
+            )
+            statuses.append(
+                RunStatus(
+                    reference,
+                    run_state,
+                    return_code=getattr(status, "exit_code", None),
+                    message=getattr(status, "message", None),
+                )
+            )
+        return tuple(statuses)
+
+    @staticmethod
+    def _recovered_reference(backend, url, native_id, directory, output_file, error_file):
+        return RunReference(
+            executor=f"psij:{backend}",
+            native_id=str(native_id),
+            computer=url,
+            directory=directory or None,
+            output_file=output_file or None,
+            error_file=error_file or None,
+        )
+
+    def recover_submission(self, run_id, submission, *, submitted_at=None):
+        if self.backend.lower() != "slurm":
+            raise NotImplementedError(
+                f"PSI/J backend {self.backend!r} cannot recover uncertain submissions"
+            )
+
+        matches = _slurm_current_matches(run_id)
+        if len(matches) > 1:
+            raise RuntimeError(
+                f"Multiple live Slurm jobs carry ASE2SPRKKR run id {run_id!r}"
+            )
+        if matches:
+            native_id, state, directory = matches[0]
+            details = _slurm_details(native_id)
+            reference = self._recovered_reference(
+                self.backend,
+                self.url,
+                native_id,
+                details.get("WorkDir") or directory or submission.directory,
+                details.get("StdOut"),
+                details.get("StdErr"),
+            )
+            return RunStatus(reference, _slurm_state(state))
+
+        if submitted_at is None or not _slurm_accounting_stores_comments():
+            raise NotImplementedError(
+                "Slurm cannot safely determine whether this submission already "
+                "finished because job comments are unavailable in accounting"
+            )
+
+        accounting = _slurm_accounting_matches(run_id, submitted_at)
+        if len(accounting) > 1:
+            raise RuntimeError(
+                f"Multiple Slurm accounting records carry ASE2SPRKKR run id {run_id!r}"
+            )
+        if accounting:
+            native_id, state, directory, stdout, stderr, return_code = accounting[0]
+            reference = self._recovered_reference(
+                self.backend,
+                self.url,
+                native_id,
+                directory or submission.directory,
+                stdout,
+                stderr,
+            )
+            return RunStatus(
+                reference,
+                _slurm_state(state),
+                return_code=return_code,
+            )
+        return None
+
+    def attach(
+        self,
+        reference: RunReference,
+        reader,
+        callback=None,
+        output_listener=None,
+        start=True,
+    ):
+        expected = f"psij:{self.backend}"
+        if reference.executor != expected:
+            raise ValueError(
+                f"Run reference belongs to {reference.executor!r}, not {expected!r}"
+            )
+        if not reference.directory or not reference.output_file:
+            raise ValueError("PSI/J run reference lacks output location")
+
+        job = self._psij.Job()
+        self._job_executor.attach(job, reference.native_id)
+        spec = ExecutionSpec(
+            argv=(),
+            input_file=reference.input_file,
+            output_file=reference.output_file,
+            error_file=reference.error_file,
+            directory=reference.directory,
+        )
+        return PsijRunner(
+            self,
+            reader,
+            spec,
+            callback=callback,
+            output_listener=output_listener,
+            start=start,
+            job=job,
+            attached=True,
+        )
