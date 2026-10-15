@@ -28,13 +28,21 @@ class SPRKKR(BaseCalculator):
 
     ``SPRKKR`` is a mutable facade holding defaults shared by calculations:
     structure/potential, input parameters, filename templates, working directory
-    and execution policy.  Each call snapshots those defaults into a separate
-    :class:`PreparedCalculation` before execution.
+    and execution policy. Preparation snapshots run-specific configuration and
+    materializes the selected physical state into independent calculation files.
+
+    Selected ``Atoms`` and ``Potential`` objects are mutable physical working
+    state, not per-run snapshots. This applies both to calculator defaults and
+    explicitly supplied objects: preparation may promote or normalize the
+    structure, add automatic empty spheres, and synchronize the potential. Once
+    preparation finishes, the returned :class:`PreparedCalculation` owns its
+    concrete files and resources, so execution no longer depends on subsequent
+    changes to those physical objects.
 
     A calculator instance is not intended to be prepared concurrently from
-    multiple threads because filename-template counters are mutable facade
-    state.  Prepared runners themselves own independent resources and may run
-    concurrently.
+    multiple threads because filename-template counters and physical
+    preprocessing are mutable state. Prepared runners themselves own independent
+    resources and may run concurrently.
     """
 
     implemented_properties = ["energy"]
@@ -209,13 +217,16 @@ class SPRKKR(BaseCalculator):
         allow_temporary_files: bool = True,
         restart_scf: bool = False,
     ):
-        """Snapshot calculator defaults into one independent prepared calculation.
+        """Materialize current calculation state into one prepared calculation.
 
-        The returned :class:`PreparedCalculation` owns all files and temporary
-        directory resources created while preparing the calculation. Mutating
-        calculator defaults afterwards does not change the prepared input.
-        Call :meth:`PreparedCalculation.close` when the object is not transferred
-        to a runner.
+        ``InputParameters`` are copied before one-shot task/options and generated
+        file values are applied. Selected ``Atoms`` and ``Potential`` objects are
+        not deep-copied and may be normalized or synchronized during preparation.
+        The returned :class:`PreparedCalculation` owns all concrete files and
+        temporary directory resources, so subsequent physical-state changes do
+        not alter the already materialized run. Call
+        :meth:`PreparedCalculation.close` when the object is not transferred to
+        a runner.
         """
         prepared = PreparedCalculation.prepare(
             default_atoms=self._atoms,

@@ -1,6 +1,7 @@
 import io
 import os
 
+from ...common.temporary import temporary_option_value
 from ..potentials import Potential
 
 
@@ -33,19 +34,19 @@ def test_restart_scf_is_only_a_serialization_override():
     assert len(saved.MOMENTS) == moments_count
 
 
-def test_normal_save_keeps_existing_start_inference():
+def test_normal_save_preserves_start_status():
     potential = _converged_potential()
     potential.SCF_INFO.SCFSTATUS = "START"
 
     output = io.StringIO()
     potential.save_to_file(output)
 
-    assert potential.SCF_INFO.SCFSTATUS() == "CONVERGED"
+    assert potential.SCF_INFO.SCFSTATUS() == "START"
     output.seek(0)
-    assert Potential.from_file(output).SCF_INFO.SCFSTATUS() == "CONVERGED"
+    assert Potential.from_file(output).SCF_INFO.SCFSTATUS() == "START"
 
 
-def test_scf_inference_uses_potential_being_synchronized():
+def test_set_from_atoms_does_not_infer_scf_status():
     attached = _converged_potential()
     atoms = attached.atoms
     attached.SCF_INFO.SCFSTATUS = "ITR"
@@ -56,8 +57,37 @@ def test_scf_inference_uses_potential_being_synchronized():
     standalone.set_from_atoms(atoms)
 
     assert attached.SCF_INFO.SCFSTATUS() == "ITR"
-    assert standalone.SCF_INFO.SCFSTATUS() == "CONVERGED"
+    assert standalone.SCF_INFO.SCFSTATUS() == "START"
     assert atoms.potential is attached
+
+
+def test_temporary_option_value_restores_existing_result():
+    potential = _converged_potential()
+    status = potential.SCF_INFO.SCFSTATUS
+    status.result = "ITR"
+
+    with temporary_option_value(status, "START"):
+        assert status() == "START"
+        assert status.result == "START"
+
+    assert status() == "ITR"
+    assert status.result == "ITR"
+    status.clear_result()
+    assert status() == "CONVERGED"
+
+
+def test_restart_scf_restores_existing_result_override():
+    potential = _converged_potential()
+    status = potential.SCF_INFO.SCFSTATUS
+    status.result = "ITR"
+
+    output = io.StringIO()
+    potential.save_to_file(output, restart_scf=True)
+
+    assert status() == "ITR"
+    assert status.result == "ITR"
+    output.seek(0)
+    assert Potential.from_file(output).SCF_INFO.SCFSTATUS() == "START"
 
 
 def test_restart_override_does_not_change_intermediate_2d_status():

@@ -60,7 +60,7 @@ def test_scf_status_serialization_follows_effective_task(
     )
 
     assert actual_task == expected_task
-    assert in_memory_status == expected_status
+    assert in_memory_status == status
     assert saved_status == expected_status
 
 
@@ -97,4 +97,5 @@ def test_calculate_serializes_status_before_mocked_execution(tmp_path, monkeypat
 
     assert returned is result
     assert runner.ran
+    assert potential.SCF_INFO.SCFSTATUS() == "START"
     assert Potential.from_file(tmp_path / "task.pot").SCF_INFO.SCFSTATUS() == "CONVERGED"

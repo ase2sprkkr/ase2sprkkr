@@ -9,6 +9,7 @@ from ..sprkkr.configuration import ConfigurationFile
 from ..sprkkr.io_data import ReadIoData, WriteIoData
 from ..common.decorators import class_property, cache
 from ..common.file_fingerprints import file_fingerprint
+from ..common.temporary import temporary_option_value
 from ..sprkkr.sprkkr_atoms import SPRKKRAtoms
 
 
@@ -212,20 +213,16 @@ class Potential(ConfigurationFile):
 
         ``restart_scf`` is an execution/serialization intent, not potential state.
         Synchronization from atoms is performed exactly once before writing. The
-        value written for ``SCFSTATUS`` is then overridden to ``START`` without
-        changing the canonical status or discarding converged electronic data.
+        value written for ``SCFSTATUS`` is then temporarily overridden to
+        ``START`` without changing the canonical status or discarding converged
+        electronic data.
         """
         self.set_from_atoms(None if atoms is False else atoms)
 
-        status = None
         if restart_scf:
-            status = self.SCF_INFO.SCFSTATUS
-            status.result = "START"
-        try:
-            return super().save_to_file(file, False, validate=validate)
-        finally:
-            if status is not None:
-                status.clear_result()
+            with temporary_option_value(self.SCF_INFO.SCFSTATUS, "START"):
+                return super().save_to_file(file, False, validate=validate)
+        return super().save_to_file(file, False, validate=validate)
 
 
 # At last - to avoid circular import problem
