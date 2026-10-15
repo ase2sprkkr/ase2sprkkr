@@ -1,4 +1,4 @@
-from ase2sprkkr.input_parameters import InputParameters
+from ase2sprkkr import InputParameters
 from ase2sprkkr.outputs.task_result import KkrOutputReader, TaskResult
 
 
