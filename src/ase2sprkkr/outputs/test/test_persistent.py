@@ -18,42 +18,6 @@ from ase2sprkkr.outputs.readers.bsf import BsfOutputReader
 from ase2sprkkr.outputs.readers.dos import DosOutputReader
 
 
-_DOS_INPUT = """CONTROL  DATASET=Fe
-         ADSI=Dirac
-         POTFIL=Fe.pot
-         KRWS=1
-TAU      BZINT=POINTS
-ENERGY   GRID={3}
-         NE=500
-         ImE=0.001
-         EMIN=-0.2
-TASK     DOS
-"""
-
-_BSFEK_INPUT = """CONTROL
-    DATASET=Fe_BSFEK
-    ADSI=BLOCHSF
-    POTFIL=Fe.pot_new
-    KRWS=1
-    PRINT=0
-TAU
-    BZINT=POINTS
-    NKTAB=250
-TASK
-    BSF
-    NK=300
-    KPATH=3
-ENERGY
-    GRID={3}
-    NE={200}
-    ImE=0.001
-    EMIN=-0.2
-    EMAX=0.2
-SITES
-    NL={3}
-"""
-
-
 class _Store:
     def __init__(self, record):
         self.record = record
@@ -110,6 +74,16 @@ def _record(
     )
 
 
+def _input_file(tmp_path, task):
+    parameters = InputParameters.create(task)
+    parameters.CONTROL.POTFIL = "Fe.pot"
+    if task == "BSFEK":
+        parameters.TASK.KPATH = 3
+    path = tmp_path / "run.inp"
+    path.write_text(parameters.to_string(validate=True))
+    return path
+
+
 def test_persistent_attach_uses_persisted_effective_task(tmp_path):
     record = _record(
         tmp_path,
@@ -135,8 +109,7 @@ def test_persistent_attach_uses_registered_reader(tmp_path):
 
 
 def test_persistent_attach_reconstructs_exact_input_definition(tmp_path):
-    input_file = tmp_path / "run.inp"
-    input_file.write_text(_BSFEK_INPUT)
+    input_file = _input_file(tmp_path, "BSFEK")
     record = _record(
         tmp_path,
         "BSFEK",
@@ -155,8 +128,7 @@ def test_persistent_attach_reconstructs_exact_input_definition(tmp_path):
 
 
 def test_persistent_attach_reconstructs_standard_input_definition(tmp_path):
-    input_file = tmp_path / "run.inp"
-    input_file.write_text(_DOS_INPUT)
+    input_file = _input_file(tmp_path, "DOS")
     record = _record(
         tmp_path,
         "DOS",
@@ -202,8 +174,7 @@ def test_persistent_attach_rejects_unknown_effective_task(tmp_path):
 
 
 def test_persistent_attach_rejects_unknown_input_definition(tmp_path):
-    input_file = tmp_path / "run.inp"
-    input_file.write_text(_DOS_INPUT)
+    input_file = _input_file(tmp_path, "DOS")
     record = _record(
         tmp_path,
         "DOS",
@@ -219,8 +190,7 @@ def test_persistent_attach_rejects_unknown_input_definition(tmp_path):
 
 
 def test_persistent_attach_rejects_input_with_different_effective_task(tmp_path):
-    input_file = tmp_path / "run.inp"
-    input_file.write_text(_DOS_INPUT)
+    input_file = _input_file(tmp_path, "DOS")
     record = _record(
         tmp_path,
         "SCF",
