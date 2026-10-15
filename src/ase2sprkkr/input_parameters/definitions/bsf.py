@@ -1,6 +1,5 @@
-"""BSF task definition."""
+"""BSF input-parameter definition."""
 
-from functools import cache
 from typing import Any, List, Optional
 
 from ...common.generated_configuration_definitions import Length
@@ -21,7 +20,10 @@ KK_TASK_ITEMS = ("NK1", "NK2", "K1", "K2")
 
 
 def _mode_hint(parameters):
-    name = parameters.task_name.upper()
+    task = parameters.requested_task_definition
+    if task is None:
+        return None
+    name = task.name.upper()
     if name == "BSFEK":
         return EK
     if name == "BSFKK":
@@ -303,10 +305,18 @@ class BSFTaskSection(InputSection):
             self.set(out)
 
 
-@cache
+class BSFInputParametersDefinition(InputParametersDefinition):
+    """Shared BSF input format resolving EK and KK effective tasks by values."""
+
+    dynamic_task = True
+
+    def task_definition_name(self, parameters):
+        return "BSFEK" if bsf_mode(parameters) == EK else "BSFKK"
+
+
 def bsf_definition():
-    """Return the single input schema shared by the BSF aliases."""
-    out = InputParametersDefinition(
+    """Return the input schema shared by the BSF EK and KK calculations."""
+    out = BSFInputParametersDefinition(
         "bsf",
         [
             CONTROL("BLOCHSF"),

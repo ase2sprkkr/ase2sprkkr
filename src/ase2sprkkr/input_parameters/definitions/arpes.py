@@ -1,9 +1,9 @@
-"""ARPES task definition."""
+"""SPEC/ARPES input-parameter definition."""
 
 from ...common.grammar_types import SetOf, DefKeyword, Keyword, Range, Array, flag
 from .sections import CONTROL, TAU, ENERGY, SITES
 from ..input_parameters_definitions import (
-    InputParametersDefinition as InputParameters,
+    InputParametersDefinition,
     InputValueDefinition as V,
     InputSectionDefinition as Section,
 )
@@ -46,8 +46,17 @@ def _validate_angular_scan(parameters, _container, why):
         return [DataValidityError(message) for message in angular_scan_errors(parameters)]
 
 
+class SpecInputParametersDefinition(InputParametersDefinition):
+    """Shared SPEC input format resolving the effective task from TASK.TASK."""
+
+    dynamic_task = True
+
+    def task_definition_name(self, parameters):
+        return str(parameters.TASK.TASK()).upper()
+
+
 def task_definition():
-    schema = InputParameters(
+    schema = SpecInputParametersDefinition(
         "arpes",
         [
             CONTROL("ARPES"),

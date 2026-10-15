@@ -1,8 +1,10 @@
-"""
-Definitions of SPR-KKR input-parameter file formats.
+"""Definitions of SPR-KKR input-parameter file formats.
 
-An InputParametersDefinition describes only the input-file schema. Execution,
-result-reader and auxiliary-file policy belong to TaskDefinition.
+An :class:`InputParametersDefinition` describes an SPR-KKR input-file schema.
+Execution, result-reader and auxiliary-file policy belong to
+:class:`TaskDefinition`.  The common one-task case keeps a direct reference to
+its task.  Shared schemas resolve an effective task name from concrete values
+and delegate object lookup to the task registry supplied by ``InputParameters``.
 """
 
 import pyparsing as pp
@@ -60,13 +62,80 @@ class InputSectionDefinition(ConfigurationSectionDefinition):
 
 
 class InputParametersDefinition(ConfigurationFileDefinition):
-    """Describe only the syntax and semantics of an SPR-KKR input file."""
+    """Describe the syntax and semantics of an SPR-KKR input file.
+
+    A normal schema corresponds to one task and stores a direct reference to
+    that :class:`TaskDefinition`.  A shared schema sets ``dynamic_task = True``
+    and overrides :meth:`task_definition_name` to derive the effective task from
+    concrete values.  Registry construction is intentionally outside this class;
+    dynamic resolution uses the registry supplied by the runtime
+    :class:`InputParameters` object.
+    """
 
     save_hook = None
     child_class = InputSectionDefinition
     result_class = InputParameters
     custom_class = staticmethod(CustomConfigurationSection.factory(InputSectionDefinition))
     configuration_type_name = "INPUT PARAMETERS"
+    dynamic_task = False
+
+    def __init__(self, *args, task_definition=None, **kwargs):
+        self._task_definition = task_definition
+        super().__init__(*args, **kwargs)
+
+    def _associate_task_definition(self, task_definition):
+        """Associate the ordinary one-task schema with its task.
+
+        Shared schemas deliberately keep no local collection of tasks; their
+        effective task is obtained through the externally supplied task registry.
+        """
+        if self.dynamic_task:
+            return task_definition
+        if self._task_definition is None:
+            self._task_definition = task_definition
+        elif self._task_definition is not task_definition:
+            raise ValueError(
+                f"Input-parameter definition {self.name!r} is already associated "
+                f"with task {self._task_definition.name}"
+            )
+        return task_definition
+
+    def task_definition_name(self, parameters):
+        """Return the effective task name represented by *parameters*.
+
+        The base implementation is only for the common one-task case. Shared
+        definitions override this method and leave ``_task_definition`` unset.
+        """
+        if self._task_definition is None:
+            raise RuntimeError(
+                f"Input-parameter definition {self.name!r} must override "
+                "task_definition_name(parameters)"
+            )
+        return self._task_definition.name
+
+    def task_definition(self, parameters):
+        """Resolve the effective :class:`TaskDefinition` for *parameters*."""
+        if self._task_definition is not None:
+            return self._task_definition
+
+        registry = getattr(parameters, "task_registry", None)
+        if registry is None:
+            raise RuntimeError(
+                f"Input-parameter definition {self.name!r} requires an external "
+                "task registry to resolve its effective task"
+            )
+        return registry[self.task_definition_name(parameters)]
+
+    def copy(self, *args, **kwargs):
+        """Copy the schema without copying a direct task association."""
+        copied = super().copy(*args, **kwargs)
+        copied._task_definition = None
+        return copied
+
+    def create_object(self, container=None, **kwargs):
+        """Create concrete input parameters from this schema."""
+        self._finalize()
+        return self.result_class(self, container, **kwargs)
 
     @cached_class_property
     def delimiter():
@@ -97,11 +166,3 @@ class InputParametersDefinition(ConfigurationFileDefinition):
 
     def _generic_info(self):
         return f"Input parameters file format {self.name}"
-
-    def read_from_file(self, *args, **kwargs):
-        """Reject creation of task-less runtime parameters through a raw schema."""
-        raise TypeError(
-            "InputParametersDefinition is a file schema, not a task factory; "
-            "parse input through TaskDefinition.read_input_parameters() or "
-            "InputParameters.from_file()."
-        )
