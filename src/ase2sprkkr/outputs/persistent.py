@@ -57,9 +57,14 @@ def _reader_for_record(manager, record):
         task_definition = parameters.task_definition
 
     if task_definition is not None:
+        # Only schema-2 records distinguish bound TaskDefinition identity from
+        # the concrete native execution task. In schema-1 records ``task`` may
+        # itself be a TaskDefinition alias such as BSFEK/BSFKK, so treating it
+        # as a native reader key would lose the alias's BSF reader semantics.
+        execution_task = record.task if record.task_definition is not None else None
         reader_class = task_definition.output_reader_class(
             parameters,
-            execution_task=record.task,
+            execution_task=execution_task,
         )
     else:
         try:
