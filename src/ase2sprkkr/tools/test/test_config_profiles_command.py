@@ -91,3 +91,116 @@ def test_config_set_rejects_reserved_profile(monkeypatch, capsys):
 
     assert saved == []
     assert "reserved profile name" in capsys.readouterr().out
+
+
+def test_config_unset_removes_named_profile(monkeypatch):
+    config = definition.create_object()
+    config.profiles.set(
+        {
+            "cluster": {"mpi": 8},
+            "local": {"mpi": 4},
+        },
+        unknown="fail",
+    )
+
+    saved = _run_with_config(
+        monkeypatch,
+        config,
+        "--unset",
+        "profiles.cluster",
+    )
+
+    assert "cluster" not in config.profiles
+    assert config.profiles["local"].mpi() == 4
+    assert saved == [{"profiles": {"local": {"mpi": 4}}}]
+
+
+def test_config_unset_profile_field_preserves_empty_default_profile(monkeypatch):
+    config = definition.create_object()
+    config.profiles.set({"cluster": {"mpi": 8}}, unknown="fail")
+    config.default_profile.set("cluster")
+
+    saved = _run_with_config(
+        monkeypatch,
+        config,
+        "--unset",
+        "profiles.cluster.mpi",
+    )
+
+    assert config.profiles["cluster"].mpi() == "auto"
+    assert saved == [{"default_profile": "cluster", "profiles": {"cluster": {}}}]
+
+
+def test_config_unset_rejects_reserved_profile(monkeypatch, capsys):
+    config = definition.create_object()
+
+    saved = _run_with_config(
+        monkeypatch,
+        config,
+        "--unset",
+        "profiles.ase",
+    )
+
+    assert saved == []
+    assert "reserved profile name" in capsys.readouterr().out
+
+
+def test_config_unset_rejects_explicit_default_profile(monkeypatch, capsys):
+    config = definition.create_object()
+    config.profiles.set({"cluster": {"mpi": 8}}, unknown="fail")
+    config.default_profile.set("cluster")
+
+    saved = _run_with_config(
+        monkeypatch,
+        config,
+        "--unset",
+        "profiles.cluster",
+    )
+
+    assert "cluster" in config.profiles
+    assert config.default_profile() == "cluster"
+    assert saved == []
+    assert "default execution profile" in capsys.readouterr().out
+
+
+def test_config_unset_default_profile_allows_later_profile_removal(monkeypatch):
+    config = definition.create_object()
+    config.profiles.set({"cluster": {"mpi": 8}}, unknown="fail")
+    config.default_profile.set("cluster")
+
+    first_save = _run_with_config(
+        monkeypatch,
+        config,
+        "--unset",
+        "default_profile",
+    )
+    second_save = _run_with_config(
+        monkeypatch,
+        config,
+        "--unset",
+        "profiles.cluster",
+    )
+
+    assert config.default_profile() is None
+    assert "cluster" not in config.profiles
+    assert len(first_save) == 1
+    assert len(second_save) == 1
+
+
+def test_config_list_profiles_marks_explicit_default(monkeypatch, capsys):
+    config = definition.create_object()
+    config.profiles.set(
+        {
+            "cluster": {"mpi": 8},
+            "local": {"mpi": 4},
+        },
+        unknown="fail",
+    )
+    config.default_profile.set("cluster")
+
+    saved = _run_with_config(monkeypatch, config, "--list-profiles")
+
+    output = capsys.readouterr().out.splitlines()
+    assert "cluster (default)" in output
+    assert "local" in output
+    assert saved == []

@@ -44,6 +44,15 @@ def test_named_profile_is_persistent_configuration():
     assert config.as_dict()["profiles"]["local"]["mpi"] == 4
 
 
+def test_empty_named_profile_is_preserved_in_explicit_configuration():
+    config = fresh_config()
+    config.profiles.add("local")
+
+    explicit = config.as_dict(only_changed="explicit", generated=False)
+
+    assert explicit["profiles"] == {"local": {}}
+
+
 def test_profile_mpi_policy_has_implicit_defaults():
     config = fresh_config()
     profile = config.profiles.add("local")
@@ -332,3 +341,40 @@ def test_unknown_explicit_default_profile_is_reported():
 
     with pytest.raises(KeyError, match="Unknown execution profile"):
         config.profiles.resolve()
+
+
+def test_remove_named_profile_preserves_other_profiles_and_legacy():
+    config = fresh_config()
+    config.profiles.set(
+        {"cluster": {"mpi": 8}, "local": {"mpi": 4}},
+        unknown="fail",
+    )
+    local = config.profiles["local"]
+    with pytest.warns(FutureWarning):
+        config.running.mpi.set(2)
+
+    config.profiles.remove("cluster")
+
+    assert "cluster" not in config.profiles
+    assert config.profiles["local"] is local
+    assert local.mpi() == 4
+    assert config.profiles["legacy"].mpi() == 2
+
+
+def test_remove_named_profile_rejects_reserved_and_default_profiles():
+    config = fresh_config()
+    config.profiles.set({"cluster": {"mpi": 8}}, unknown="fail")
+
+    with pytest.raises(ValueError, match="reserved profile name"):
+        config.profiles.remove("legacy")
+
+    config.default_profile.set("cluster")
+    with pytest.raises(ValueError, match="default execution profile"):
+        config.profiles.remove("cluster")
+
+
+def test_remove_missing_named_profile_raises_key_error():
+    config = fresh_config()
+
+    with pytest.raises(KeyError):
+        config.profiles.remove("missing")

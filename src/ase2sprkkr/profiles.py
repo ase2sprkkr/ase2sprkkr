@@ -198,6 +198,19 @@ class ASEProfile:
 class ProfilesConfigurationContainer(RepeatedConfigurationContainer):
     """Dict-like repeated section with persistent and virtual profile views."""
 
+    class RemovalChange:
+        """Rollback state for removing one stored profile."""
+
+        def __init__(self, profiles):
+            self.profiles = profiles
+            self.old_values = profiles._values.copy()
+
+        def commit(self):
+            return None
+
+        def rollback(self):
+            self.profiles._values = self.old_values
+
     reserved_names = frozenset(("legacy", "ase"))
     legacy_fields = (
         "mpi",
@@ -400,6 +413,23 @@ class ProfilesConfigurationContainer(RepeatedConfigurationContainer):
             raise ValueError(f"{id!r} is a reserved profile name")
         return self._add(id)
 
+    def remove(self, name):
+        """Transactionally remove one mutable named profile."""
+        if name in self.reserved_names:
+            raise ValueError(f"{name!r} is a reserved profile name")
+        if name not in self._values:
+            raise KeyError(name)
+        if self._container.default_profile() == name:
+            raise ValueError(
+                f"Cannot remove default execution profile {name!r}; "
+                "unset or change default_profile first"
+            )
+
+        with self._mutation("set") as (transaction, _policy):
+            change = self.RemovalChange(self)
+            del self._values[name]
+            transaction.push(change)
+
     def __getitem__(self, name):
         if name == "legacy":
             if self._legacy_available():
@@ -440,6 +470,17 @@ class ProfilesConfigurationContainer(RepeatedConfigurationContainer):
         """Iterate over public profile views only."""
         for _name, profile in self.items():
             yield profile
+
+    def _as_dict(self, get):
+        """Serialize stored profiles while preserving empty named profiles."""
+        out = {}
+        for name, profile in self._raw_items():
+            value = profile._as_dict(get)
+            if value is not None:
+                out[name] = value
+            elif name not in self.reserved_names:
+                out[name] = {}
+        return out or None
 
     def available_items(self):
         """Backward-compatible alias for public profile items."""
