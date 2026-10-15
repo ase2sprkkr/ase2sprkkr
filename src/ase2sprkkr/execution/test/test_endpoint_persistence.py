@@ -68,7 +68,7 @@ def test_manager_reconstructs_local_executor_after_restart(tmp_path):
     assert isinstance(executor, LocalExecutor)
 
 
-def test_attach_reconstructs_persisted_endpoint_and_reader_after_restart(tmp_path):
+def test_attach_reconstructs_persisted_endpoint_with_explicit_reader(tmp_path):
     class AttachedRunner:
         def __init__(self, reference):
             self.reference = reference
@@ -114,14 +114,14 @@ def test_attach_reconstructs_persisted_endpoint_and_reader_after_restart(tmp_pat
     executor = ReconstructedExecutor()
     pool = RecordingPool(executor)
     restarted = ExecutionManager(store, executor_pool=pool)
+    reader = object()
 
-    attached = restarted.attach(record.id)
+    attached = restarted.attach(record.id, reader=reader)
 
     assert pool.endpoints == [endpoint]
     assert attached.executor is executor
     assert executor.calls[0][0] == reference
-    assert executor.calls[0][1] is not None
-    assert executor.calls[0][1].directory == str(tmp_path)
+    assert executor.calls[0][1] is reader
     assert executor.calls[0][3:] == (None, True)
 
 

@@ -35,6 +35,21 @@ def parser(parser):
         metavar=("NAME", "VALUE"),
     )
     parser.add_argument(
+        "-U",
+        "--unset",
+        metavar="NAME",
+        help=(
+            "Unset a configuration value and persist the change. "
+            "For a whole named execution profile use, for example, "
+            "'--unset profiles.cluster'."
+        ),
+    )
+    parser.add_argument(
+        "--list-profiles",
+        action="store_true",
+        help="List available execution profiles and mark the explicit default.",
+    )
+    parser.add_argument(
         "-e", "--edit", help="Edit config.yaml using the editor in $EDITOR.", action="store_true"
     )
     parser.add_argument(
@@ -227,6 +242,24 @@ def _set_configuration_value(config, name, value):
     config.save_user_preferences()
 
 
+def _unset_configuration_value(config, name):
+    """Unset one CLI value, or remove one complete named profile."""
+    path = name.split(".")
+    if len(path) == 2 and path[0] == "profiles" and path[1]:
+        config.profiles.remove(path[1])
+    else:
+        config.find(name).clear()
+    config.save_user_preferences()
+
+
+def _print_profiles(config):
+    """Print public execution profiles, marking an explicitly selected default."""
+    default = config.default_profile()
+    for name in config.profiles:
+        suffix = " (default)" if name == default else ""
+        print(f"{name}{suffix}")
+
+
 def run(args, global_args):
     import os
     import pyparsing
@@ -289,6 +322,21 @@ def run(args, global_args):
                 f"Suspicious configuration value '{args.set[1]}'. If you are sure, "
                 "please edit the configuration file manually."
             )
+        run = False
+    unset = getattr(args, "unset", None)
+    if unset:
+        from ...common.warnings import DataValidityError
+
+        try:
+            _unset_configuration_value(config, unset)
+            print(f"Configuration '{unset}' has been unset.")
+        except KeyError:
+            print(f"Unknown configuration name '{unset}'.")
+        except (DataValidityError, TypeError, ValueError) as error:
+            print(f"Cannot unset configuration '{unset}': {error}")
+        run = False
+    if getattr(args, "list_profiles", False):
+        _print_profiles(config)
         run = False
     if args.show:
         import pprint

@@ -8,8 +8,7 @@ from ...common.grammar_types import Keyword, SetOf
 from ...common.warnings import DataValidityError, DataValidityWarning
 from ..input_parameters import InputSection
 from ...physics.lattice_data import bravais_number
-from ._file_manifests import TauCacheInputParametersDefinition
-from ..input_parameters_definitions import InputValueDefinition as V
+from ..input_parameters_definitions import InputParametersDefinition, InputValueDefinition as V
 from .sections import CONTROL, CPA, ENERGY, MODE, SITES, STRCONST, TASK, TAU
 
 
@@ -21,7 +20,7 @@ KK_TASK_ITEMS = ("NK1", "NK2", "K1", "K2")
 
 
 def _mode_hint(parameters):
-    name = getattr(parameters, "_requested_task_name", "").upper()
+    name = parameters.task_name.upper()
     if name == "BSFEK":
         return EK
     if name == "BSFKK":
@@ -375,10 +374,15 @@ class BSFTaskSection(InputSection):
             self.set(out)
 
 
+class BSFInputParametersDefinition(InputParametersDefinition):
+    def task_definition_name(self, parameters):
+        return "BSFEK" if bsf_mode(parameters) == EK else "BSFKK"
+
+
 @cache
 def bsf_definition():
-    """Return the single definition shared by the BSFEK and BSFKK aliases."""
-    out = TauCacheInputParametersDefinition(
+    """Return the single definition shared by BSF task views."""
+    out = BSFInputParametersDefinition(
         "bsf",
         [
             CONTROL("BLOCHSF"),
@@ -390,8 +394,6 @@ def bsf_definition():
             CPA,
             SITES,
         ],
-        executable="kkrgen",
-        mpi=True,
         info="BSF - Bloch spectral functions in the E-K or K-K plane",
         validators=_validate_bsf,
     )
@@ -399,4 +401,4 @@ def bsf_definition():
     return out
 
 
-input_parameters = bsf_definition
+input_parameters_definition = bsf_definition

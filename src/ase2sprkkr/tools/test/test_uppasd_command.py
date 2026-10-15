@@ -5,8 +5,8 @@ from ase import Atoms
 
 from ..commands import uppasd
 from ...bindings import uppasd as uppasd_bindings
-from ...output_files.output_files import OutputFile
-from ...output_files.definitions.jxc import Selector
+from ...result_files import ResultFile
+from ...result_files.definitions.jxc import Selector
 from ...potentials.potentials import Potential
 
 
@@ -47,7 +47,7 @@ class TestUppasdCommand:
         calls = {"pos": [], "mom": []}
 
         monkeypatch.setattr(Potential, "from_file", staticmethod(lambda filename: SimpleNamespace(atoms=atoms)))
-        monkeypatch.setattr(OutputFile, "from_file", staticmethod(lambda filename, **kwargs: jxc_output))
+        monkeypatch.setattr(ResultFile, "from_file", staticmethod(lambda filename, **kwargs: jxc_output))
         monkeypatch.setattr(
             uppasd_bindings,
             "write_pos_file",
@@ -101,7 +101,7 @@ class TestUppasdCommand:
         calls = {"pos": 0, "mom": 0}
 
         monkeypatch.setattr(Potential, "from_file", staticmethod(lambda filename: SimpleNamespace(atoms=atoms)))
-        monkeypatch.setattr(OutputFile, "from_file", staticmethod(lambda filename, **kwargs: jxc_output))
+        monkeypatch.setattr(ResultFile, "from_file", staticmethod(lambda filename, **kwargs: jxc_output))
         monkeypatch.setattr(
             uppasd_bindings,
             "write_pos_file",

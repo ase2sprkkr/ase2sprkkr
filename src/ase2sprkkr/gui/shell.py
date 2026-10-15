@@ -120,7 +120,7 @@ class Shell:
         """from ase2sprkkr import (
         SPRKKRAtoms,
         InputParameters,
-        OutputFile,
+        ResultFile,
         Potential
     )"""
     ]
@@ -136,7 +136,7 @@ class Shell:
     def add_output_file(self, file):
         of = "out" + str(self.output_file_counter)
         self.output_file_counter = self.output_file_counter + 1 if self.output_file_counter else 1
-        self.code.append(f"{of} = OutputFile.from_file({repr(str(file))})\n{of}.plot()")
+        self.code.append(f"{of} = ResultFile.from_file({repr(str(file))})\n{of}.plot()")
 
     def run_example(self, example, dir):
         ex = Example.by_number(example)

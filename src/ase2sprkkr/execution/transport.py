@@ -233,11 +233,7 @@ class Transport:
         raise NotImplementedError
 
     async def file_signature(self, path):
-        """Return a cheap modification signature for *path*, or ``None`` if absent.
-
-        The signature is intended for comparing one target-side file before and
-        after a calculation, not for comparing files across different machines.
-        """
+        """Return ``(size, mtime_ns)`` for *path*, or ``None`` if absent."""
         raise NotImplementedError
 
 
@@ -260,6 +256,16 @@ def local_file_signature(path):
     except FileNotFoundError:
         return None
     return stat.st_size, stat.st_mtime_ns
+
+
+def _parse_remote_file_signature(raw):
+    """Parse GNU ``stat`` output into ``(size, mtime_ns)``."""
+    size, seconds, timestamp = raw.decode("utf8").rstrip("\n").split("|", 2)
+    fraction = ""
+    if "." in timestamp:
+        fraction = timestamp.split(".", 1)[1].split(None, 1)[0]
+    nanoseconds = int((fraction + "000000000")[:9]) if fraction else 0
+    return int(size), int(seconds) * 1_000_000_000 + nanoseconds
 
 
 # Kept temporarily for code using the helper inside the execution package.
@@ -303,11 +309,19 @@ class LocalTransport(Transport):
         return await _completed_process(process, argv, input=input, check=check)
 
     async def put_file(self, source, destination):
+        source = os.fspath(source)
+        signature = local_file_signature(source)
+        if signature is None:
+            raise FileNotFoundError(source)
         destination = Path(destination)
         temporary = _local_temporary_path(destination)
         loop = asyncio.get_running_loop()
         try:
             await loop.run_in_executor(None, shutil.copyfile, source, temporary)
+            if local_file_signature(source) != signature:
+                raise RuntimeError(f"Local file changed while copying: {source}")
+            stat = temporary.stat()
+            os.utime(temporary, ns=(stat.st_atime_ns, signature[1]))
             os.replace(temporary, destination)
         finally:
             try:
@@ -391,6 +405,11 @@ class SshTransport(Transport):
         return await _completed_process(process, command, input=input, check=check)
 
     async def put_file(self, source, destination):
+        source = os.fspath(source)
+        signature = local_file_signature(source)
+        if signature is None:
+            raise FileNotFoundError(source)
+
         destination = os.fspath(destination)
         parent = posixpath.dirname(destination)
         if parent:
@@ -410,15 +429,32 @@ class SshTransport(Transport):
                     stderr=asyncio.subprocess.PIPE,
                 )
                 await _completed_process(process, command)
+            if local_file_signature(source) != signature:
+                raise RuntimeError(f"Local file changed while uploading: {source}")
+            seconds, nanoseconds = divmod(signature[1], 1_000_000_000)
+            await self.run(
+                (
+                    "touch",
+                    "-d",
+                    f"@{seconds}.{nanoseconds:09d}",
+                    "--",
+                    temporary,
+                )
+            )
             await self.run(("mv", "-f", "--", temporary, destination))
         except BaseException:
             await self.run(("rm", "-f", "--", temporary), check=False)
             raise
 
     async def get_file(self, source, destination):
+        source = os.fspath(source)
+        signature = await self.file_signature(source)
+        if signature is None:
+            raise FileNotFoundError(source)
+
         destination = Path(destination)
         temporary = _local_temporary_path(destination)
-        command = self._command(("cat", "--", os.fspath(source)))
+        command = self._command(("cat", "--", source))
         try:
             with temporary.open("wb") as destination_file:
                 process = await asyncio.create_subprocess_exec(
@@ -431,6 +467,10 @@ class SshTransport(Transport):
                     raise subprocess.CalledProcessError(
                         process.returncode, command, stderr=stderr
                     )
+            if await self.file_signature(source) != signature:
+                raise RuntimeError(f"Remote file changed while downloading: {source}")
+            stat = temporary.stat()
+            os.utime(temporary, ns=(stat.st_atime_ns, signature[1]))
             os.replace(temporary, destination)
         finally:
             try:
@@ -597,7 +637,7 @@ class SshTransport(Transport):
             (
                 "sh",
                 "-c",
-                '[ -f "$1" ] || exit 3; stat -c "%s|%y" -- "$1"',
+                '[ -f "$1" ] || exit 3; stat -c "%s|%Y|%y" -- "$1"',
                 "sh",
                 path,
             ),
@@ -612,5 +652,4 @@ class SshTransport(Transport):
                 output=result.stdout,
                 stderr=result.stderr,
             )
-        size, mtime = result.stdout.decode("utf8").rstrip("\n").split("|", 1)
-        return int(size), mtime
+        return _parse_remote_file_signature(result.stdout)

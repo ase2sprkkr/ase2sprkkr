@@ -633,7 +633,7 @@ class SPRKKR(BaseCalculator):
                 empty_spheres = self.empty_spheres
             if empty_spheres == "auto":
                 empty_spheres = (
-                    input_parameters.TASK.TASK == 'SCF'
+                    input_parameters.TASK.TASK() == "SCF"
                     and atoms is not None
                     and (
                         not atoms.has_potential()
@@ -682,8 +682,6 @@ class SPRKKR(BaseCalculator):
 
         def save_input_file():
             """update input_parameters by the potential"""
-            if task:
-                input_parameters.change_task(task)
             if options:
                 input_parameters.set(options, unknown="find")
             if potential_file:
@@ -737,14 +735,24 @@ class SPRKKR(BaseCalculator):
         # HERE starts the execution
         potential, atoms, potential_file, save_input = resolve_potential_and_atoms(potential, atoms, potential_file)
         input_parameters, input_file, save_input = resolve_input_parameters(input_parameters, input_file, save_input)
+        if task:
+            input_parameters.change_task(task)
+        effective_task = str(taskname()).strip().upper()
         if restart_scf:
-            if str(taskname()).strip().upper() != "SCF":
+            if effective_task != "SCF":
                 raise ValueError("restart_scf=True is only valid for an SCF calculation.")
             if not isinstance(potential, Potential):
                 raise ValueError(
                     "restart_scf=True requires a writable Potential or atoms from which one can be generated."
                 )
         resolve_empty_spheres(empty_spheres)
+        if (
+            isinstance(potential, Potential)
+            and effective_task != "SCF"
+            and potential.SCF_INFO.SCFSTATUS() == "START"
+            and potential.is_scf_converged(atoms)
+        ):
+            potential.SCF_INFO.SCFSTATUS = "CONVERGED"
 
         templator = FilenameTemplator(self, taskname, symbols)
         with Directory.new(directory, default=self._directory) as directory:

@@ -185,7 +185,7 @@ def test_psij_mpi_process_count_becomes_resource_spec(monkeypatch, tmp_path):
     spec = ExecutionSpec(
         argv=("program",),
         mpi_argv=("programMPI", str(tmp_path / "run.inp")),
-        launch=LaunchSpec(mpi=True, process_count=16),
+        launch=LaunchSpec.from_mpi(16),
         input_file=input_file,
         output_file=output_file,
         directory=str(tmp_path),
@@ -212,7 +212,7 @@ def test_psij_auto_uses_mpi_without_fixed_process_count(monkeypatch, tmp_path):
     spec = ExecutionSpec(
         argv=("program",),
         mpi_argv=("programMPI", str(tmp_path / "run.inp")),
-        launch=LaunchSpec(mpi="auto"),
+        launch=LaunchSpec.from_mpi("auto"),
         input_file=input_file,
         output_file=output_file,
         directory=str(tmp_path),

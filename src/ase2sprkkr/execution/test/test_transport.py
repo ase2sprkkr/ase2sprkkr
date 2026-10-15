@@ -1,6 +1,7 @@
 """Tests for command/file transports."""
 
 import asyncio
+import os
 import sys
 
 from ..transport import LocalTransport, SshTransport
@@ -39,6 +40,23 @@ def test_local_transport_run_start_and_files(tmp_path):
 
         await transport.get_file(copied, returned)
         assert returned.read_bytes() == b"content"
+
+    asyncio.run(run_test())
+
+
+def test_local_transport_preserves_file_signature(tmp_path):
+    async def run_test():
+        transport = LocalTransport()
+        source = tmp_path / "source"
+        destination = tmp_path / "destination"
+        source.write_bytes(b"content")
+        stat = source.stat()
+        os.utime(source, ns=(stat.st_atime_ns, stat.st_mtime_ns - 1_000_000_000))
+
+        source_signature = await transport.file_signature(source)
+        await transport.get_file(source, destination)
+
+        assert await transport.file_signature(destination) == source_signature
 
     asyncio.run(run_test())
 

@@ -7,10 +7,7 @@ from ...common.generated_configuration_definitions import Length
 from ...common.grammar_types import Array
 from ...common.warnings import DataValidityError
 from ...potentials.definitions.potential import potential_definition
-from ..definitions.jxc import input_parameters as jxc_input_parameters
-from ..definitions.scf import input_parameters as scf_input_parameters
 from ..definitions.sections import ENERGY, TAU
-from ..definitions.torque import input_parameters as torque_input_parameters
 from ..input_parameters import InputParameters
 from ..input_parameters_definitions import (
     InputParametersDefinition,
@@ -107,8 +104,8 @@ class TestDefinitionCallbacks:
                     5.0,
                 ),
             ),
-            torque_input_parameters(),
-            jxc_input_parameters(),
+            InputParameters.task_registry["TORQUE"].input_parameters_definition,
+            InputParameters.task_registry["JXC"].input_parameters_definition,
         ]
 
         hooks = []
@@ -197,7 +194,7 @@ class TestInputParametersPickle:
             parameters.CONTROL.SECOND.set([1, 2])
 
     def test_scf_input_parameters_pickle(self):
-        pickle.dumps(scf_input_parameters())
+        pickle.dumps(InputParameters.task_registry["SCF"].input_parameters_definition)
 
     def test_uninitialized_container_dunder_lookup_does_not_recurse(self):
         obj = object.__new__(InputParameters)

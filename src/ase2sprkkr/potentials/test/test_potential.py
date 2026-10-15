@@ -96,8 +96,11 @@ class TestPotential:
             assert Potential.from_file(saved).SCF_INFO.SCFSTATUS() == status
 
         potential.SCF_INFO.SCFSTATUS = "START"
-        potential.save_to_file(io.StringIO())
-        assert potential.SCF_INFO.SCFSTATUS() == "CONVERGED"
+        saved = io.StringIO()
+        potential.save_to_file(saved)
+        assert potential.SCF_INFO.SCFSTATUS() == "START"
+        saved.seek(0)
+        assert Potential.from_file(saved).SCF_INFO.SCFSTATUS() == "START"
 
     @pytest.mark.slow
     def test_2d(self, tmp_path):

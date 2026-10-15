@@ -58,8 +58,8 @@ def parser(parser):
         help="Only remove completed runs older than AGE, e.g. 30d or 12h",
     )
 
-    # Kept as a diagnostic/compatibility command. Normal remote execution no
-    # longer calls it: launch intent is resolved by the target-side executor.
+    # Used both as a diagnostic command and by remote clients that want to
+    # report an unavailable ``mpi='auto'`` launcher before submission.
     actions.add_parser("resolve-mpi")
 
 
@@ -141,9 +141,11 @@ def run(args, global_args):
     elif args.remote_action == "clean":
         _print_json(clean_remote_runs(args.directory, older_than=args.older_than))
     elif args.remote_action == "resolve-mpi":
+        from ...execution.base import LaunchSpec
         from ...execution.mpi import resolve_mpi_command
 
         request = json.load(sys.stdin)
-        _print_json({"mpi": resolve_mpi_command(request.get("mpi"))})
+        launch = LaunchSpec.from_mpi(request.get("mpi"))
+        _print_json({"mpi": resolve_mpi_command(launch.mpi)})
     else:
         raise ValueError("Unknown remote action: {}".format(args.remote_action))

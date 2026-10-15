@@ -121,7 +121,7 @@ class SPRKKRProfile:
         mpi_launch = LaunchSpec.from_mpi(self.mpi) if mpi_supported else LaunchSpec()
         launch = replace(
             mpi_launch,
-            mpi_warning=self.mpi_warning,
+            mpi=replace(mpi_launch.mpi, warning=self.mpi_warning),
             local_root=self.local_root,
             remote_root=self.remote_root,
             input_sync=self.input_sync,
@@ -179,6 +179,8 @@ def _shell_argv(value):
 
 
 def _normalize_mpi(value):
+    if isinstance(value, LaunchSpec):
+        return value
     if isinstance(value, str):
         return value if value == "auto" else _shell_argv(value)
     if value is None or isinstance(value, (bool, int)):
