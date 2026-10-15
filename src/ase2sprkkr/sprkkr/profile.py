@@ -106,7 +106,7 @@ class SPRKKRProfile:
         input_file,
         output_file,
         directory,
-        *positional,
+        *,
         error_file=None,
         input_files=(),
         output_files=(),
@@ -114,19 +114,7 @@ class SPRKKRProfile:
         mpi_supported=False,
         gdb=False,
     ):
-        """Create the concrete execution specification for one run.
-
-        ``error_file`` is additive to the historical positional API.  During
-        the preparation/execution boundary transition we also accept the
-        internal five-positional form ``(..., output_file, error_file,
-        directory)``; external callers can keep the original directory
-        position or use ``error_file=`` explicitly.
-        """
-        if positional:
-            if len(positional) != 1 or error_file is not None:
-                raise TypeError("error_file must be supplied only once")
-            error_file, directory = directory, positional[0]
-
+        """Create the concrete execution specification for one run."""
         executable += self.executable_suffix or ""
         if self.executable_dir:
             executable = os.path.join(self.executable_dir, executable)
