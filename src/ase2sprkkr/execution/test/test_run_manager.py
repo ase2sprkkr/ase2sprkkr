@@ -473,8 +473,10 @@ def test_run_store_shards_records_and_marks_schema(tmp_path):
     data = json.loads(path.read_text())
 
     assert path.is_file()
-    assert data["schema_version"] == 2
+    assert data["schema_version"] == 3
     assert data["task"] == "ARPES"
+    assert data["input_definition"] is None
+    assert data["requested_task"] is None
     assert "task_definition" not in data
     assert data["finished_at"] is None
 
@@ -502,8 +504,10 @@ def test_run_store_migrates_schema_one_records(tmp_path):
 
     migrated = store.get(record.id)
 
-    assert migrated.schema_version == 2
+    assert migrated.schema_version == 3
     assert migrated.task == "DOS"
+    assert migrated.input_definition is None
+    assert migrated.requested_task is None
     assert {item.path for item in migrated.result_files.input_fingerprints} == {
         str(tmp_path / "run.inp")
     }
@@ -512,7 +516,7 @@ def test_run_store_migrates_schema_one_records(tmp_path):
     }
 
 
-def test_development_dual_task_schema_is_migrated_to_requested_task(tmp_path):
+def test_development_dual_task_schema_preserves_effective_task(tmp_path):
     store = RunStore(tmp_path / "runs")
     manager = ExecutionManager(store)
     record = manager.new_record(task="ARPES", directory=tmp_path)
@@ -525,7 +529,9 @@ def test_development_dual_task_schema_is_migrated_to_requested_task(tmp_path):
 
     migrated = store.get(record.id)
 
-    assert migrated.task == "ARPES"
+    assert migrated.task == "SPLEED"
+    assert migrated.requested_task == "ARPES"
+    assert migrated.input_definition is None
     assert not hasattr(migrated, "task_definition")
 
 
@@ -541,12 +547,13 @@ def test_schema_two_development_digest_is_ignored(tmp_path):
     store.save(record)
     path = tmp_path / "runs" / record.created_at[:10] / f"{record.id}.json"
     data = json.loads(path.read_text())
+    data["schema_version"] = 2
     data["result_files"]["output_digest"] = "obsolete-development-field"
     path.write_text(json.dumps(data))
 
     loaded = store.get(record.id)
 
-    assert loaded.schema_version == 2
+    assert loaded.schema_version == 3
     assert not hasattr(loaded.result_files, "output_digest")
 
 
