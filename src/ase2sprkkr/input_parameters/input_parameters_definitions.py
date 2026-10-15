@@ -55,7 +55,7 @@ class InputParametersDefinition(ConfigurationFileDefinition):
     """Syntax and parameter semantics of one SPR-KKR input-file schema."""
 
     _task_definition = None
-    """Canonical 1:1 task, or None for schemas shared by multiple tasks."""
+    """Canonical 1:1 task, or None for shared/detached schemas."""
 
     save_hook = None
     child_class = InputSectionDefinition
@@ -66,18 +66,19 @@ class InputParametersDefinition(ConfigurationFileDefinition):
     configuration_type_name = "INPUT PARAMETERS"
 
     def task_definition_name(self, parameters):
-        """Return the task name represented by *parameters*.
+        """Return the effective task name for a shared schema.
 
-        Shared schemas override this method. For standard schemas it is normally
-        unused because ``_task_definition`` is set directly.
+        Shared schemas override this method. Returning ``None`` keeps an
+        unregistered ad-hoc schema detached from task execution semantics.
         """
-        return str(self.name).upper()
+        return None
 
     def task_definition(self, parameters):
         """Resolve the task represented by concrete parameter values."""
         if self._task_definition is not None:
             return self._task_definition
-        return parameters.task_registry[self.task_definition_name(parameters)]
+        name = self.task_definition_name(parameters)
+        return parameters.task_registry[name] if name is not None else None
 
     def initialize_for_task(self, parameters, task_name):
         """Initialize an explicit task discriminator when the schema has one.
