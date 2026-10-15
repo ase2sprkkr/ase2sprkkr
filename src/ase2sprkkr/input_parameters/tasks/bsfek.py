@@ -1,0 +1,5 @@
+from ..definitions._file_manifests import TauCacheTaskDefinition
+
+
+def task_definition():
+    return TauCacheTaskDefinition("BSF", name="BSFEK", executable="kkrgen", mpi=True)

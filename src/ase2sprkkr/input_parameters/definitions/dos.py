@@ -1,4 +1,4 @@
-"""DOS task definition."""
+"""DOS input-parameter definition."""
 
 from .sections import CONTROL, TAU, ENERGY, TASK, SITES
 from ..input_parameters_definitions import InputParametersDefinition
@@ -6,7 +6,7 @@ from ..task_definition import TaskDefinition
 
 
 def input_parameters_definition():
-    return InputParametersDefinition(
+    schema = InputParametersDefinition(
         "dos",
         [
             CONTROL("DOS"),
@@ -20,13 +20,11 @@ def input_parameters_definition():
         ],
         info="DOS - The density of states computation",
     )
-
-
-def task_definition():
-    return TaskDefinition(
-        input_parameters_definition,
+    schema._task_definition = TaskDefinition(
+        schema,
         name="DOS",
         executable="kkrgen",
         mpi=True,
         output_file_templates=("{dataset}.dos",),
     )
+    return schema

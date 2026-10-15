@@ -1,4 +1,4 @@
-"""SCF task definition."""
+"""SCF input-parameter definition."""
 
 import os
 
@@ -31,18 +31,16 @@ class SCFTaskDefinition(TaskDefinition):
 
 
 def input_parameters_definition():
-    return InputParametersDefinition(
+    schema = InputParametersDefinition(
         "scf",
         [CONTROL("SCF"), TASK("SCF"), TAU, ENERGY(), SCF, SITES, STRCONST, CPA, MODE],
         info="SCF - Calculate a self-consistent potential",
         description="",
     )
-
-
-def task_definition():
-    return SCFTaskDefinition(
-        input_parameters_definition,
+    schema._task_definition = SCFTaskDefinition(
+        schema,
         name="SCF",
         executable="kkrscf",
         mpi=True,
     )
+    return schema

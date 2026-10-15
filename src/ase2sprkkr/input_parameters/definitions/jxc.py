@@ -1,4 +1,4 @@
-"""JXC task definition."""
+"""JXC input-parameter definition."""
 
 from ._file_manifests import resolve_file
 from .sections import TASK, CONTROL, TAU, ENERGY, SITES, STRCONST, MODE
@@ -21,9 +21,7 @@ class JxcTaskDefinition(TaskDefinition):
 
 def _jxc_mode_warning_condition(value):
     return (
-        "JXC task does not support SREL (scalar relativity without spin) or "
-        "NREL (no relativity at all) MODE. Please change SCF.MODE, or "
-        "the computation will fail."
+        "JXC task does not support SREL (scalar relativity without spin) or NREL (no relativity at all) MODE. Please change SCF.MODE, or the computation will fail."
         if value in ("SREL", "NREL")
         else None
     )
@@ -31,8 +29,7 @@ def _jxc_mode_warning_condition(value):
 
 def _jxc_nonmag_warning_condition(value):
     return (
-        "JXC task does not support non-magnetic computation. Please disable "
-        "CONTROL.NONMAG, or the computation will fail."
+        "JXC task does not support non-magnetic computation. Please disable CONTROL.NONMAG, or the computation will fail."
         if value
         else None
     )
@@ -42,7 +39,7 @@ def _prepare_from_result(parameters, result):
     parameters.set("EMIN", result.last_iteration.energy.EMIN())
 
 
-def task_definition():
+def input_parameters_definition():
     mmode = MODE["MODE"].copy(warning_condition=_jxc_mode_warning_condition)
     schema = InputParametersDefinition(
         "jxc",
@@ -64,9 +61,7 @@ def task_definition():
                     V(
                         "CLURAD",
                         2.2,
-                        info="""The radius of a sphere restricting the cluster
-        of atoms for which the exchange coupling
-        constants will be calculated""",
+                        info="The radius restricting the cluster for exchange coupling constants.",
                     ),
                 ]
             ),
@@ -75,10 +70,11 @@ def task_definition():
         info="JXC",
     )
     schema["CONTROL"]["NONMAG"].warning_condition = _jxc_nonmag_warning_condition
-    return JxcTaskDefinition(
+    schema._task_definition = JxcTaskDefinition(
         schema,
         name="JXC",
         executable="kkrgen",
         mpi=True,
         prepare_from_result=_prepare_from_result,
     )
+    return schema

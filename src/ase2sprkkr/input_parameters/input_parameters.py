@@ -7,8 +7,8 @@ import os
 import pyparsing as pp
 from typing import Union
 
-from . import definitions
-from .task_definition import TaskRegistry
+from . import definitions, tasks
+from .task_definition import InputParametersRegistry, TaskRegistry
 from ..sprkkr.configuration import ConfigurationFile, ConfigurationSection
 from ..common.decorators import cached_class_property
 from ..common.warnings import DataValidityError
@@ -26,13 +26,13 @@ class InputSection(ConfigurationSection):
 class InputParameters(ConfigurationFile):
     """Concrete values of an SPR-KKR input file.
 
-    Canonical task identity is resolved through :meth:`get_task_definition`.
-    The default implementation follows the input schema back to its owning
-    TaskDefinition. ``task_name`` is only the concrete task view used to create
-    these parameters, so aliases such as BSFEK/BSFKK need no second task object.
+    Input-file schemas and task identities are separate registries. Standard
+    schemas carry their canonical task directly; shared schemas resolve the task
+    from their concrete values.
     """
 
-    task_registry = TaskRegistry(definitions)
+    input_parameters_registry = InputParametersRegistry(definitions)
+    task_registry = TaskRegistry(input_parameters_registry, tasks)
 
     def __init__(
         self,
@@ -48,12 +48,8 @@ class InputParameters(ConfigurationFile):
         self._outputfile = inputfile if outputfile is False else outputfile
 
     def get_task_definition(self):
-        """Return the canonical task governing these parameters, if any.
-
-        The lookup is intentionally overridable instead of being duplicated as
-        instance state.
-        """
-        return getattr(self._definition, "task_definition", None)
+        """Return the task represented by the current parameter values."""
+        return self._definition.task_definition(self)
 
     @property
     def task_definition(self):
@@ -94,12 +90,7 @@ class InputParameters(ConfigurationFile):
 
     @property
     def task_name(self):
-        """Concrete requested/view task name used for persistence and UX.
-
-        Canonical identity is ``get_task_definition().name``. A low-level native
-        execution mode such as ARPES->SPLEED is interpreted by TaskDefinition and
-        is deliberately not persisted as task identity.
-        """
+        """Task name originally requested when these parameters were created."""
         return self._task_name
 
     def uses_separate_single_site_contour(self):
@@ -251,13 +242,7 @@ class InputParameters(ConfigurationFile):
         if not directory and calculator and calculator.directory:
             directory = calculator.directory
 
-        task_definition = self.get_task_definition()
-        if task_definition is not None:
-            cls = task_definition.output_reader_class(self)
-        else:
-            from ..outputs.task_result import KkrOutputReader
-            task = self.TASK.TASK().lower()
-            cls = KkrOutputReader.class_for_task(task)
+        cls = self._require_task_definition().output_reader_class(self)
         return cls(self, calculator, directory, print_output)
 
     def read_output_from_file(self, filename, directory=None):
@@ -279,13 +264,13 @@ class InputParameters(ConfigurationFile):
 
     @classmethod
     def definition(cls, name):
-        return cls.task_registry[name].input_parameters_definition
+        return cls.input_parameters_registry[name]
 
     @cached_class_property
     def definitions(cls):
         return {
-            name: cls.task_registry[name].input_parameters_definition
-            for name in cls.task_registry.names()
+            name: cls.input_parameters_registry[name]
+            for name in cls.input_parameters_registry.names()
         }
 
     @classmethod
@@ -315,15 +300,10 @@ class InputParameters(ConfigurationFile):
 
     @classmethod
     def from_file(cls, filename, allow_dangerous: bool = False):
-        """Parse using the overridable schema collection, deduplicating aliases."""
+        """Try all registered input-file schemas."""
         last = None
         is_stream = hasattr(filename, "seek")
-        seen = set()
         for definition in cls.definitions.values():
-            identity = id(definition)
-            if identity in seen:
-                continue
-            seen.add(identity)
             if is_stream:
                 filename.seek(0)
             try:

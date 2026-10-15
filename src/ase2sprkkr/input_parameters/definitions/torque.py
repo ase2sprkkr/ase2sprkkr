@@ -1,4 +1,4 @@
-"""Torque task definition."""
+"""Torque input-parameter definition."""
 
 from .sections import TASK, CONTROL, TAU, ENERGY, SITES, STRCONST, MODE
 from ..input_parameters_definitions import InputParametersDefinition, InputValueDefinition as V
@@ -24,7 +24,7 @@ def _torque_nonmag_warning_condition(value):
     )
 
 
-def task_definition():
+def input_parameters_definition():
     mmode = MODE["MODE"].copy(warning_condition=_torque_mode_warning_condition)
     schema = InputParametersDefinition(
         "torque",
@@ -45,9 +45,10 @@ def task_definition():
         info="TORQUE",
     )
     schema["CONTROL"]["NONMAG"].warning_condition = _torque_nonmag_warning_condition
-    return TaskDefinition(
+    schema._task_definition = TaskDefinition(
         schema,
         name="TORQUE",
         executable="kkrgen",
         mpi=True,
     )
+    return schema

@@ -1,4 +1,4 @@
-"""PHAGEN task definition."""
+"""PHAGEN input-parameter definition."""
 
 from ._file_manifests import resolve_file
 from .sections import CONTROL, TASK, TAU, ENERGY, SCF
@@ -21,18 +21,16 @@ class PhagenTaskDefinition(TaskDefinition):
 
 
 def input_parameters_definition():
-    return InputParametersDefinition(
+    schema = InputParametersDefinition(
         "phagen",
         [CONTROL("PHAGEN"), TASK("PHAGEN"), TAU, ENERGY(), SCF],
         info="PHAGEN",
         description="<TODO: change to something meaningfull>",
     )
-
-
-def task_definition():
-    return PhagenTaskDefinition(
-        input_parameters_definition,
+    schema._task_definition = PhagenTaskDefinition(
+        schema,
         name="PHAGEN",
         executable="kkrscf",
         mpi=False,
     )
+    return schema
