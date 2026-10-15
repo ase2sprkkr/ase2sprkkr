@@ -126,8 +126,10 @@ class TestCalculator:
         calculator = SPRKKR(atoms=atoms, **calc_args())
         inp_file = here("output_test_calc.inp")
         pot_file = here("output_test_calc.pot")
+        other_pot_file = here("other.pot")
         Path(inp_file).touch()
         Path(pot_file).touch()
+        Path(other_pot_file).touch()
 
         times = {"inp": 0, "pot": 0}
 
@@ -155,7 +157,13 @@ class TestCalculator:
         assert_change(True, False)
         calculator.save_input(input_parameters=inp_file, potential=atoms.potential)
         assert_change(True, True)
+
+        # Compare paths by their resolved meaning. Re-selecting the POTFIL
+        # already referenced by the input does not rewrite the input; selecting
+        # a genuinely different POTFIL does.
         calculator.save_input(input_parameters=inp_file, potential=pot_file)
+        assert_change(False, False)
+        calculator.save_input(input_parameters=inp_file, potential=other_pot_file)
         assert_change(True, False)
 
     @pytest.mark.slow

@@ -4,6 +4,7 @@ from types import SimpleNamespace
 import pytest
 
 from ...potentials.potentials import Potential
+from .. import calculator as calculator_module
 from ..calculator import SPRKKR
 
 
@@ -77,14 +78,12 @@ def test_calculate_serializes_status_before_mocked_execution(tmp_path, monkeypat
 
     runner = Runner()
 
-    def fake_run_process(self, calculator, input_file, output_file, **kwargs):
-        assert kwargs["run_async"] is True
-        input_file.close()
-        if output_file:
-            output_file.close()
+    def fake_create_run(prepared, **kwargs):
+        assert Potential.from_file(prepared.potential_file).SCF_INFO.SCFSTATUS() == "CONVERGED"
+        prepared.close()
         return runner
 
-    monkeypatch.setattr(SPRKKR.InputParameters, "run_process", fake_run_process)
+    monkeypatch.setattr(calculator_module, "_create_sprkkr_run", fake_create_run)
 
     calculator = SPRKKR(directory=tmp_path, mpi=False, empty_spheres=False)
     returned = calculator.calculate(

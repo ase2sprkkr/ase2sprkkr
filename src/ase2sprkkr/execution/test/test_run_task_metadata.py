@@ -1,7 +1,7 @@
 from types import SimpleNamespace
 
 from ase2sprkkr.execution import ExecutionManager, RunState, RunStore
-from ase2sprkkr.input_parameters import InputParameters
+from ase2sprkkr.input_parameters.input_parameters import InputParameters
 from ase2sprkkr.outputs.persistent import load_persistent_result
 
 
