@@ -1,6 +1,9 @@
 import numpy as np
 
-from ase2sprkkr.physics.broadening import create_gaussian_broadener
+from ase2sprkkr.physics.broadening import (
+    create_gaussian_broadener,
+    create_lorentz_broadener,
+)
 
 
 def _sorted_reference(x, y, sigma=None, fwhm=None, **kwargs):
@@ -99,5 +102,40 @@ def test_gaussian_preserves_discrete_integral_for_multiple_spectra_and_variable_
 
 def test_gaussian_rejects_wrong_energy_axis_length():
     broaden = create_gaussian_broadener([0.0, 1.0, 2.0], sigma=0.2)
+    with np.testing.assert_raises(ValueError):
+        broaden(np.ones((2, 4)))
+
+
+def test_lorentz_broadens_last_axis_for_multiple_spectra():
+    x = np.array([-1.0, -0.2, 0.7, 1.8])
+    y = np.array(
+        [
+            [0.2, 1.0, 0.5, 0.1],
+            [1.2, 0.4, 0.8, 1.1],
+            [0.0, 0.3, 1.4, 0.6],
+        ]
+    )
+    broaden = create_lorentz_broadener(x, gamma=0.3)
+
+    actual = broaden(y)
+    expected = np.stack([broaden(spectrum) for spectrum in y])
+
+    assert actual.shape == y.shape
+    np.testing.assert_allclose(actual, expected)
+
+
+def test_lorentz_broadens_last_axis_for_square_leading_dimension():
+    x = np.array([-1.0, -0.2, 0.7, 1.8])
+    y = np.arange(16.0).reshape(4, 4)
+    broaden = create_lorentz_broadener(x, gamma=0.3)
+
+    actual = broaden(y)
+    expected = np.stack([broaden(spectrum) for spectrum in y])
+
+    np.testing.assert_allclose(actual, expected)
+
+
+def test_lorentz_rejects_wrong_energy_axis_length():
+    broaden = create_lorentz_broadener([0.0, 1.0, 2.0], gamma=0.2)
     with np.testing.assert_raises(ValueError):
         broaden(np.ones((2, 4)))

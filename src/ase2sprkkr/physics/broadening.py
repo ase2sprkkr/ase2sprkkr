@@ -249,7 +249,8 @@ def create_lorentz_broadener(x_orig, gamma, wlortab=None, nelag=5, ylag=True):
     Returns
     -------
     callable
-        Function ``broaden_y(y)`` that applies the precomputed broadening matrix.
+        Function ``broaden_y(y)`` that applies the precomputed broadening matrix
+        along the last axis.
     """
     x = np.asarray(x_orig)
     N = len(x)
@@ -306,11 +307,13 @@ def create_lorentz_broadener(x_orig, gamma, wlortab=None, nelag=5, ylag=True):
     L[:, -1] += W_high.sum(axis=0)
 
     def broaden_y(y_orig):
-        """
-        Applies the precomputed Lorentzian broadening to y_orig using matrix multiplication.
-        This nested function has access to the precomputed weight_matrix.
-        """
-        return np.dot(L, y_orig.reshape(y_orig.shape[:1] + (-1,))).reshape(y_orig.shape)
+        """Apply Lorentzian broadening along the last (energy) axis."""
+        y = np.asarray(y_orig)
+        if y.ndim == 0 or y.shape[-1] != N:
+            raise ValueError("The last axis of y_orig must have the same length as x_orig.")
+        flat = y.reshape((-1, N)).T
+        out = L @ flat
+        return np.asarray(out).T.reshape(y.shape)
 
     return broaden_y
 
