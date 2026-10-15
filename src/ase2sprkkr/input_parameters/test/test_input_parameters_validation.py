@@ -102,7 +102,7 @@ def test_dangerous_value():
     check_dangerous("aaa=sss", ("aaa", "sss"))
     check_dangerous("aaa={2,3}", ("aaa", np.array([2, 3])))
 
-    definition = cd.InputParametersDefinition("aaa", 2, is_required=True)
+    definition = cd.InputValueDefinition("aaa", 2, is_required=True)
     option = definition.create_object()
     option.set_dangerous("AAA")
     assert option.to_string() == "\taaa=AAA"
