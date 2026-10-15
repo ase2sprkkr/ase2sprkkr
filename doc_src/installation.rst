@@ -65,7 +65,7 @@ package sources.
 Requirements
 ------------
 
--  Python >= 3.8
+-  Python >= 3.9
 -  SPR-KKR (not checked by the installer)
 -  Python packages: see the the pypoject.toml file
 -  Git (to obtain the sources)
@@ -167,8 +167,8 @@ If you are using Git cloned sources, you can run
    open docs/index.html
 
 to see the (offline version of the) documentation. The documentation
-contains parts, that are generated from the docstrings in the source
-code. You can regenerate these by
+contains parts, that are generated from the docstrings in the source code.
+You can regenerate these by
 
 .. code:: bash
 
