@@ -1,3 +1,5 @@
+from dataclasses import FrozenInstanceError
+
 import pytest
 
 from ase2sprkkr import executables as public_executables
@@ -53,3 +55,9 @@ def test_builtin_executable_reader_defaults():
 def test_executables_is_public_read_only_metadata():
     assert public_executables is executables
     assert not hasattr(public_executables, "register")
+
+    with pytest.raises(TypeError):
+        public_executables["custom"] = ExecutableDefinition("custom")
+
+    with pytest.raises(FrozenInstanceError):
+        public_executables["kkrscf"].description = "Changed"
