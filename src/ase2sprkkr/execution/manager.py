@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import asyncio
+import fnmatch
 import glob
 import json
 import os
@@ -31,7 +32,7 @@ from .endpoint import ExecutorEndpoint, endpoint_for_executor
 from .pool import default_executor_pool
 
 
-_RUN_RECORD_SCHEMA_VERSION = 1
+_RUN_RECORD_SCHEMA_VERSION = 2
 _FINAL_STATES = {
     RunState.FINISHED,
     RunState.EXECUTION_FAILED,
@@ -83,6 +84,42 @@ def _unique(values):
     return tuple(dict.fromkeys(value for value in values if value is not None))
 
 
+def _manifest_prefix(value):
+    """Return the non-pattern prefix used for conservative pattern overlap."""
+    value = os.fspath(value)
+    positions = [value.find(char) for char in "*[?" if char in value]
+    if not positions:
+        return value
+    return value[: min(positions)]
+
+
+def _manifests_overlap(left, right):
+    """Whether two concrete paths/file patterns may denote the same file."""
+    left = os.path.normpath(os.fspath(left))
+    right = os.path.normpath(os.fspath(right))
+    if left == right:
+        return True
+    left_magic = glob.has_magic(left)
+    right_magic = glob.has_magic(right)
+    if left_magic and not right_magic:
+        return fnmatch.fnmatchcase(right, left)
+    if right_magic and not left_magic:
+        return fnmatch.fnmatchcase(left, right)
+    if not left_magic:
+        return False
+
+    # Exact pattern intersection is expensive in the general case. Shared
+    # literal prefixes give a conservative answer: false positives only delay
+    # a run, while a false negative could corrupt files.
+    left_prefix = _manifest_prefix(left)
+    right_prefix = _manifest_prefix(right)
+    return left_prefix.startswith(right_prefix) or right_prefix.startswith(left_prefix)
+
+
+def _manifest_sets_overlap(left, right):
+    return any(_manifests_overlap(a, b) for a in left for b in right)
+
+
 def _state_from_backend(state):
     """Map one backend status into the authoritative persistent lifecycle."""
     state = RunState(state)
@@ -122,16 +159,52 @@ class FileRetrievalState(str, Enum):
 
 
 @dataclass(frozen=True)
+class RunFilesRecord:
+    """Concrete file roles of one reserved run.
+
+    ``input`` and ``output`` are the authoritative read/write roles used for
+    submission locking. ``cache`` is orthogonal provenance: every cache manifest
+    is materialized into exactly one of input/output at reservation time, but is
+    retained so reusable files are not later mistaken for immutable results.
+    """
+
+    input: tuple[str, ...] = ()
+    output: tuple[str, ...] = ()
+    cache: tuple[str, ...] = ()
+
+    def __post_init__(self):
+        for name in ("input", "output", "cache"):
+            object.__setattr__(
+                self,
+                name,
+                _unique(os.path.normpath(os.fspath(value)) for value in getattr(self, name)),
+            )
+        overlap = set(self.input) & set(self.output)
+        if overlap:
+            raise ValueError(
+                "Run files cannot be both input and output: " + ", ".join(sorted(overlap))
+            )
+        missing_cache = set(self.cache) - set(self.input) - set(self.output)
+        if missing_cache:
+            raise ValueError(
+                "Every cache file must be materialized as input or output: "
+                + ", ".join(sorted(missing_cache))
+            )
+
+    def conflicts_with(self, other):
+        """Whether two run manifests require incompatible file locks."""
+        return _manifest_sets_overlap(self.output, (*other.input, *other.output)) or _manifest_sets_overlap(
+            other.output, self.input
+        )
+
+
+@dataclass(frozen=True)
 class ResultFilesRecord:
-    """Persistent manifests and exact file versions captured at finalization.
+    """Persistent result manifests and exact file versions captured at finalization.
 
-    Manifests describe which files belong to the calculation. ``input_versions``
-    and ``output_versions`` are immutable snapshots of the concrete files found
-    when the run was finalized. Their SHA-256 digests are authoritative content
-    identity; cheap filesystem metadata only avoids re-hashing unchanged files.
-
-    Cache files are intentionally absent because reusable caches may legitimately
-    be updated by later calculations.
+    The immutable result snapshot deliberately excludes reusable cache files.
+    Cache provenance and the concrete read/write role chosen for the run live in
+    :class:`RunFilesRecord` on the parent :class:`RunRecord`.
     """
 
     input_file: Optional[str] = None
@@ -205,32 +278,14 @@ class ResultFilesRecord:
 
 
 @dataclass(frozen=True)
-class SubmissionKey:
-    """Persistent namespace used only for duplicate-submit protection."""
+class _SubmissionDirectory:
+    """Compatibility adapter for executor recovery APIs expecting ``.directory``."""
 
-    endpoint: ExecutorEndpoint
     directory: str
-    task: str
-    dataset: Optional[str] = None
-
-    def __post_init__(self):
-        if isinstance(self.endpoint, dict):
-            object.__setattr__(self, "endpoint", ExecutorEndpoint(**self.endpoint))
-        object.__setattr__(self, "directory", os.fspath(self.directory))
-        object.__setattr__(self, "task", str(self.task).upper())
-        if self.dataset is not None:
-            object.__setattr__(self, "dataset", str(self.dataset))
-
-    def conflicts_with(self, other):
-        if self.endpoint != other.endpoint or self.directory != other.directory:
-            return False
-        if self.task == "SCF" or other.task == "SCF":
-            return True
-        return self.task == other.task and self.dataset == other.dataset
 
 
 class DuplicateSubmissionError(RuntimeError):
-    """A persistent run would duplicate an active calculation namespace."""
+    """A persistent run would conflict with active file ownership."""
 
     def __init__(self, record, conflicts):
         self.record = record
@@ -248,20 +303,14 @@ class RunRecord:
 
     ``task`` is the ASE2SPRKKR task represented by the concrete input values.
     ``input_definition`` independently identifies the input schema used to parse
-    and reconstruct those values.
+    and reconstruct those values. ``files`` is materialized atomically when the
+    run is reserved; it is the sole source of truth for concurrent file access.
 
     ``state`` is the single authoritative lifecycle state. A terminal backend
     outcome advances it to ``FINALIZING`` while result processing completes;
     successful execution then advances to ``FINISHED``, failed execution to
     ``EXECUTION_FAILED``, and any failure of post-processing to
     ``FINALIZATION_FAILED``.
-
-    ``finished_at`` records the current terminal lifecycle transition. Explicit
-    retry of failed finalization reopens the lifecycle at ``FINALIZING`` and
-    clears it until the retry reaches another terminal state. Later metadata
-    changes, including remote file retrieval, update ``updated_at`` but do not
-    otherwise alter lifecycle timestamps. Result-file freshness is derived from
-    immutable :class:`FileVersion` snapshots.
     """
 
     id: str
@@ -273,7 +322,8 @@ class RunRecord:
     finished_at: Optional[str] = None
     dataset: Optional[str] = None
     endpoint: Optional[ExecutorEndpoint] = None
-    submission: Optional[SubmissionKey] = None
+    submission_directory: Optional[str] = None
+    files: Optional[RunFilesRecord] = None
     reference: Optional[RunReference] = None
     return_code: Optional[int] = None
     message: Optional[str] = None
@@ -283,14 +333,19 @@ class RunRecord:
 
     def __post_init__(self):
         object.__setattr__(self, "task", str(self.task).upper())
+        object.__setattr__(self, "directory", os.path.abspath(os.fspath(self.directory)))
         if self.input_definition is not None:
             object.__setattr__(
                 self, "input_definition", str(self.input_definition).upper()
             )
         if isinstance(self.endpoint, dict):
             object.__setattr__(self, "endpoint", ExecutorEndpoint(**self.endpoint))
-        if isinstance(self.submission, dict):
-            object.__setattr__(self, "submission", SubmissionKey(**self.submission))
+        if self.submission_directory is not None:
+            object.__setattr__(
+                self, "submission_directory", os.fspath(self.submission_directory)
+            )
+        if isinstance(self.files, dict):
+            object.__setattr__(self, "files", RunFilesRecord(**self.files))
         if isinstance(self.reference, dict):
             object.__setattr__(self, "reference", RunReference(**self.reference))
         if isinstance(self.result_files, dict):
@@ -299,6 +354,10 @@ class RunRecord:
             )
         if not isinstance(self.state, RunState):
             object.__setattr__(self, "state", RunState(self.state))
+        if self.state != RunState.NEW and self.files is None:
+            # Migrated v1 records have no reconstructable file manifest. They
+            # are handled conservatively by conflict detection until terminal.
+            pass
         if self.schema_version != _RUN_RECORD_SCHEMA_VERSION:
             raise ValueError(
                 f"unsupported schema version {self.schema_version}; "
@@ -347,14 +406,17 @@ class RunStore:
             with path.open() as file:
                 data = json.load(file)
             version = data.get("schema_version")
-            if version != _RUN_RECORD_SCHEMA_VERSION:
+            if version == 1:
+                data.pop("requested_task", None)
+                submission = data.pop("submission", None) or {}
+                data["submission_directory"] = submission.get("directory")
+                data["files"] = None
+                data["schema_version"] = _RUN_RECORD_SCHEMA_VERSION
+            elif version != _RUN_RECORD_SCHEMA_VERSION:
                 raise ValueError(
                     f"unsupported schema version {version!r}; "
-                    f"expected {_RUN_RECORD_SCHEMA_VERSION}"
+                    f"expected 1 or {_RUN_RECORD_SCHEMA_VERSION}"
                 )
-            # Version 1 briefly persisted requested-task provenance. It was never
-            # part of reconstruction identity, so accept and discard that key.
-            data.pop("requested_task", None)
             return RunRecord(**data)
         except CorruptRunRecord:
             raise
@@ -397,7 +459,7 @@ class RunStore:
 
     @contextmanager
     def submission_lock(self):
-        """Serialize duplicate checking and the SUBMITTING record creation."""
+        """Serialize file-role materialization, conflict checks and reservation."""
         self.directory.mkdir(parents=True, exist_ok=True, mode=0o700)
         with self._lock, FileLock(self.directory / ".submit.lock"):
             yield
@@ -457,13 +519,7 @@ class RunStore:
 
 
 class ExecutionManager:
-    """Orchestrate optional persistent run bookkeeping.
-
-    The manager owns persistent records, not live runners. Returned
-    :class:`PersistentRunner` objects remain owned by their callers. Executors
-    are process-wide pooled by persisted endpoint identity, independently of
-    this manager and its store.
-    """
+    """Orchestrate optional persistent run bookkeeping."""
 
     def __init__(self, store=None, *, executor_pool=None, submitting_grace=60.0):
         if submitting_grace < 0:
@@ -481,7 +537,6 @@ class ExecutionManager:
         return reference.executor, reference.computer
 
     def register_executor(self, executor: Executor, endpoint=None, reference=None):
-        """Register a live executor in the independent endpoint pool."""
         endpoint = endpoint or endpoint_for_executor(executor)
         pooled = self.executor_pool.get(endpoint, lambda: executor)
         if reference is not None:
@@ -490,7 +545,6 @@ class ExecutionManager:
         return pooled
 
     def executor_for(self, record):
-        """Return or reconstruct the executor needed for a persisted run."""
         if record.endpoint is not None:
             return self.executor_pool.for_endpoint(record.endpoint)
         reference = record.reference
@@ -538,6 +592,84 @@ class ExecutionManager:
         )
 
     @staticmethod
+    def _submission_path(value, local_directory, submission_directory):
+        local = _result_file_path(value, local_directory)
+        if local is None:
+            return None
+        try:
+            relative = os.path.relpath(local, local_directory)
+        except ValueError:
+            return local
+        if relative == os.pardir or relative.startswith(os.pardir + os.sep):
+            return local
+        return os.path.normpath(os.path.join(submission_directory, relative))
+
+    @classmethod
+    def _materialize_run_files(cls, executor, spec):
+        """Resolve cache manifests to concrete read/write roles for this run."""
+        local_directory = os.path.abspath(os.fspath(spec.directory))
+        submission_directory = os.fspath(executor.submission_directory(spec))
+
+        def local(value):
+            return _result_file_path(value, local_directory)
+
+        def submitted(value):
+            return cls._submission_path(value, local_directory, submission_directory)
+
+        explicit_input = _unique(
+            submitted(value)
+            for value in (
+                getattr(spec, "input_file", None),
+                *getattr(spec, "input_files", ()),
+            )
+        )
+        explicit_output = _unique(
+            submitted(value)
+            for value in (
+                getattr(spec, "output_file", None),
+                getattr(spec, "error_file", None),
+                *getattr(spec, "output_files", ()),
+            )
+        )
+        if _manifest_sets_overlap(explicit_input, explicit_output):
+            raise ValueError("Execution spec declares overlapping input and output files")
+
+        inputs = list(explicit_input)
+        outputs = list(explicit_output)
+        caches = []
+        for value in getattr(spec, "cache_files", ()):
+            cache = submitted(value)
+            source = local(value)
+            if cache is None or source is None or cache in caches:
+                continue
+            caches.append(cache)
+            if _manifest_sets_overlap((cache,), explicit_input):
+                continue
+            if _manifest_sets_overlap((cache,), explicit_output):
+                continue
+            # A cache pattern is treated conservatively as writable: even if it
+            # currently has matches, the calculation may create another match.
+            available = not glob.has_magic(source) and os.path.isfile(source)
+            (inputs if available else outputs).append(cache)
+
+        return RunFilesRecord(
+            input=_unique(inputs),
+            output=_unique(outputs),
+            cache=_unique(caches),
+        )
+
+    @staticmethod
+    def _records_conflict(candidate, active):
+        if candidate.endpoint != active.endpoint:
+            return False
+        if candidate.files is None or active.files is None:
+            return (
+                candidate.submission_directory is not None
+                and candidate.submission_directory == active.submission_directory
+            )
+        return candidate.files.conflicts_with(active.files)
+
+    @staticmethod
     def _result_files_snapshot(manifests):
         versions = []
         seen = set()
@@ -569,17 +701,14 @@ class ExecutionManager:
 
     @staticmethod
     def _missing_result_files(result_files):
-        """Return the concrete historical files that should be restored."""
         if result_files is None:
             return ()
-
         if result_files.captured_at is not None:
             return tuple(
                 os.fspath(item.path)
                 for item in result_files.all_versions
                 if item.state() is FileState.MISSING
             )
-
         missing = []
         for manifest in result_files.manifests:
             if glob.has_magic(manifest):
@@ -604,7 +733,6 @@ class ExecutionManager:
         )
 
     def input_file_is_current(self, run):
-        """Whether the primary historical input is safe to use for reconstruction."""
         record = self.store.get(run) if isinstance(run, str) else self.store.get(run.id)
         result_files = record.result_files
         return self._file_is_current(
@@ -614,7 +742,6 @@ class ExecutionManager:
         )
 
     def output_file_is_current(self, run):
-        """Whether the primary historical output belongs to the captured run."""
         record = self.store.get(run) if isinstance(run, str) else self.store.get(run.id)
         result_files = record.result_files
         return self._file_is_current(
@@ -630,12 +757,12 @@ class ExecutionManager:
         directory,
         dataset=None,
         endpoint=None,
-        submission=None,
+        submission_directory=None,
+        files=None,
         result_files=None,
         input_definition=None,
         run_id=None,
     ):
-        """Create the in-memory identity of an unsubmitted persistent run."""
         now = _now()
         return RunRecord(
             id=run_id or uuid4().hex,
@@ -647,7 +774,8 @@ class ExecutionManager:
             dataset=None if dataset is None else str(dataset),
             directory=os.path.abspath(os.fspath(directory)),
             endpoint=endpoint,
-            submission=submission,
+            submission_directory=submission_directory,
+            files=files,
             result_files=result_files,
             input_definition=input_definition,
         )
@@ -688,26 +816,17 @@ class ExecutionManager:
         message=_UNCHANGED,
         result_files=_UNCHANGED,
     ):
-        """Merge one lifecycle update into the latest persisted record."""
-
         def merge(latest):
             final_locked = latest.state in _FINAL_STATES
             now = _now()
             merged_state = self._merged_state(latest, state)
-            changes = {
-                "state": merged_state,
-                "updated_at": now,
-            }
+            changes = {"state": merged_state, "updated_at": now}
             if latest.state not in _FINAL_STATES and merged_state in _FINAL_STATES:
                 changes["finished_at"] = now
             merged_result_files = self._merged_result_files(latest, result_files)
             if merged_result_files is not latest.result_files:
                 changes["result_files"] = merged_result_files
-            if (
-                reference is not _UNCHANGED
-                and reference is not None
-                and latest.reference is None
-            ):
+            if reference is not _UNCHANGED and reference is not None and latest.reference is None:
                 changes["reference"] = reference
             if return_code is not _UNCHANGED and return_code is not None:
                 if not final_locked or latest.return_code is None:
@@ -716,23 +835,15 @@ class ExecutionManager:
                 if not final_locked or latest.message is None:
                     changes["message"] = message
             return replace(latest, **changes)
-
         return self.store.update(record, merge)
 
     def fail_finalization(self, record, error):
-        """Make a failed finalization attempt terminal without backend heuristics."""
         record = self.store.get(record.id)
         if record.state != RunState.FINALIZING:
             return record
-        return self.finalize(
-            record,
-            state=RunState.FINALIZATION_FAILED,
-            message=str(error),
-        )
+        return self.finalize(record, state=RunState.FINALIZATION_FAILED, message=str(error))
 
     def retry_finalization(self, record):
-        """Explicitly reopen a failed finalization attempt."""
-
         def retry(latest):
             if latest.state != RunState.FINALIZATION_FAILED:
                 raise RuntimeError(
@@ -745,19 +856,15 @@ class ExecutionManager:
                 finished_at=None,
                 message=None,
             )
-
         return self.store.update(record, retry)
 
     def _is_stale_submitting(self, record, *, now=None):
         if record.state != RunState.SUBMITTING or record.reference is not None:
             return False
         now = now or datetime.now(timezone.utc)
-        return (
-            now - _timestamp(record.updated_at)
-        ).total_seconds() >= self.submitting_grace
+        return (now - _timestamp(record.updated_at)).total_seconds() >= self.submitting_grace
 
     def recover_submitting(self, record):
-        """Recover one stale SUBMITTING record without guessing on uncertainty."""
         record = self.store.get(record.id)
         if not self._is_stale_submitting(record):
             return record
@@ -765,7 +872,7 @@ class ExecutionManager:
         try:
             status = executor.recover_submission(
                 record.id,
-                record.submission,
+                _SubmissionDirectory(record.submission_directory or record.directory),
                 submitted_at=record.updated_at,
             )
         except NotImplementedError:
@@ -784,27 +891,26 @@ class ExecutionManager:
                 finished_at=now,
                 message="Stale submission was not found by its execution backend",
             )
-
         return self.store.update(record, mark_absent)
 
-    def reserve(self, record):
-        """Atomically reserve *record*'s persistent submission namespace."""
-        if record.submission is None:
-            raise ValueError("Persistent run lacks a submission key")
-
+    def reserve(self, record, executor, spec):
+        """Atomically materialize file roles and reserve their read/write locks."""
         attempted_recovery = set()
         while True:
             with self.store.submission_lock():
+                candidate = replace(
+                    record,
+                    files=self._materialize_run_files(executor, spec),
+                    submission_directory=os.fspath(executor.submission_directory(spec)),
+                )
                 conflicts = tuple(
                     active
                     for active in self.store.runs(active=True)
-                    if active.id != record.id
-                    and active.submission is not None
-                    and record.submission.conflicts_with(active.submission)
+                    if active.id != candidate.id and self._records_conflict(candidate, active)
                 )
                 if not conflicts:
                     return self.transition(
-                        record,
+                        candidate,
                         state=RunState.SUBMITTING,
                         reference=None,
                     )
@@ -814,9 +920,8 @@ class ExecutionManager:
                     if conflict.id not in attempted_recovery
                     and self._is_stale_submitting(conflict)
                 )
-
             if not stale:
-                raise DuplicateSubmissionError(record, conflicts)
+                raise DuplicateSubmissionError(candidate, conflicts)
             progressed = False
             for conflict in stale:
                 attempted_recovery.add(conflict.id)
@@ -824,10 +929,9 @@ class ExecutionManager:
                 if recovered.state != RunState.SUBMITTING or recovered.reference is not None:
                     progressed = True
             if not progressed:
-                raise DuplicateSubmissionError(record, conflicts)
+                raise DuplicateSubmissionError(candidate, conflicts)
 
     def update(self, record, status: RunStatus):
-        """Persist a backend status in the authoritative lifecycle graph."""
         backend_state = RunState(status.state)
         return_code = status.return_code
         if backend_state == RunState.EXECUTION_FAILED and return_code is None:
@@ -849,7 +953,6 @@ class ExecutionManager:
         return_code=None,
         message=None,
     ):
-        """Finish one lifecycle after result processing has completed or failed."""
         state = RunState(state)
         result_files = record.result_files
         if state != RunState.FINALIZATION_FAILED:
@@ -864,9 +967,7 @@ class ExecutionManager:
         )
 
     def update_file_retrieval(self, record, state, message=None):
-        """Persist local file availability without changing calculation state."""
         state = FileRetrievalState(state)
-
         def update(latest):
             result_files = latest.result_files
             if result_files is None:
@@ -880,29 +981,22 @@ class ExecutionManager:
                     retrieval_message=message,
                 ),
             )
-
         return self.store.update(record, update)
 
     def check_result_files(self, run):
-        """Return the latest record; file freshness is derived from FileVersion."""
         return self.store.get(run) if isinstance(run, str) else self.store.get(run.id)
 
     def retrieve_result_files(self, run):
-        """Restore locally missing files belonging to one terminal persistent run."""
         record = self.store.get(run) if isinstance(run, str) else self.store.get(run.id)
         if record.state not in _FINAL_STATES:
             raise RuntimeError(f"Run {record.id} is not finished")
-
         missing = self._missing_result_files(record.result_files)
         if not missing or record.reference is None:
             return record
-
         executor = self.executor_for(record)
         if not executor.supports_result_file_retrieval:
             return record
-
         executor.fetch_result_files(record.reference, missing)
-
         refreshed = self.store.get(record.id)
         remaining = self._missing_result_files(refreshed.result_files)
         if not remaining:
@@ -921,8 +1015,7 @@ class ExecutionManager:
         if callback is not None:
             callback(result)
 
-    def _wrap_runner(self, executor, record, factory, callback):
-        """Create a persistent wrapper without assuming callback timing."""
+    def _wrap_runner(self, executor, record, factory, callback, *, spec=None):
         guard = RLock()
         holder = {"runner": None, "pending": _UNCHANGED}
 
@@ -935,7 +1028,7 @@ class ExecutionManager:
             self._complete(persistent, result, callback)
 
         runner = factory(completed)
-        persistent = PersistentRunner(self, executor, runner, record)
+        persistent = PersistentRunner(self, executor, runner, record, spec=spec)
         with guard:
             holder["runner"] = persistent
             pending = holder["pending"]
@@ -956,21 +1049,14 @@ class ExecutionManager:
         callback=None,
         run_id=None,
     ):
-        """Create a caller-owned runner whose lifecycle is persisted."""
         endpoint = endpoint_for_executor(executor)
-        submission = SubmissionKey(
-            endpoint=endpoint,
-            directory=executor.submission_directory(spec),
-            task=task,
-            dataset=dataset,
-        )
         record = self.new_record(
             task=task,
             input_definition=input_definition,
             dataset=dataset,
             directory=spec.directory,
             endpoint=endpoint,
-            submission=submission,
+            submission_directory=executor.submission_directory(spec),
             result_files=self._result_files_for_spec(spec),
             run_id=run_id,
         )
@@ -985,10 +1071,10 @@ class ExecutionManager:
                 callback=completed,
             ),
             callback,
+            spec=spec,
         )
 
     def refresh(self, records=None):
-        """Refresh referenced runs, reconstructing endpoints when necessary."""
         records = tuple(self.store.runs(active=True) if records is None else records)
         current = {record.id: record for record in records}
         groups = {}
@@ -997,7 +1083,6 @@ class ExecutionManager:
                 continue
             executor = self.executor_for(record)
             groups.setdefault(executor, []).append(record)
-
         for executor, group in groups.items():
             statuses = executor.status(*(record.reference for record in group))
             if len(statuses) != len(group):
@@ -1015,15 +1100,6 @@ class ExecutionManager:
         callback=None,
         output_listener=None,
     ):
-        """Attach to a stored run using an explicitly supplied output reader.
-
-        ``executor`` is retained as an explicit override for records whose
-        endpoint cannot be reconstructed from :class:`ExecutorEndpoint` alone.
-
-        ``output_listener`` is installed by the backend before monitoring starts.
-        Attached runners therefore cannot lose output replayed immediately during
-        attach, including output from an already completed run.
-        """
         record = self.store.get(run) if isinstance(run, str) else run
         if record.reference is None:
             raise RuntimeError(f"Run {record.id} has no backend reference")
@@ -1048,11 +1124,12 @@ class ExecutionManager:
 class PersistentRunner:
     """Caller-owned runner that persists execution lifecycle transitions."""
 
-    def __init__(self, manager, executor, runner, record):
+    def __init__(self, manager, executor, runner, record, *, spec=None):
         self.manager = manager
         self.executor = executor
         self._runner = runner
         self._record = record
+        self._spec = spec
 
     @property
     def id(self):
@@ -1094,7 +1171,9 @@ class PersistentRunner:
     def submit(self):
         if self._record.state != RunState.NEW:
             raise RuntimeError(f"Run is already {self._record.state.value}")
-        self._record = self.manager.reserve(self._record)
+        if self._spec is None:
+            raise RuntimeError("New persistent run lacks its execution specification")
+        self._record = self.manager.reserve(self._record, self.executor, self._spec)
         try:
             result = self._runner.submit()
         except SubmissionNotStarted as exc:
@@ -1120,11 +1199,7 @@ class PersistentRunner:
         reference = self.reference
         if reference is None:
             raise RuntimeError("Executor submit returned without a run reference")
-        self.manager.register_executor(
-            self.executor,
-            self._record.endpoint,
-            reference,
-        )
+        self.manager.register_executor(self.executor, self._record.endpoint, reference)
         backend_state = self._runner.state
         if backend_state == RunState.NEW:
             backend_state = RunState.QUEUED
@@ -1176,7 +1251,6 @@ class PersistentRunner:
         return await loop.run_in_executor(None, self.run)
 
     def refresh(self):
-        """Refresh this run's persisted backend status."""
         self._record = self.manager.refresh((self._record,))[0]
         return self._record
 
