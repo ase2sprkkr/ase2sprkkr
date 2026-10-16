@@ -81,6 +81,17 @@ def test_remote_process_preserves_failure_return_code(tmp_path):
     assert status["return_code"] == 7
 
 
+def test_remote_process_reports_child_launch_failure(tmp_path):
+    request = _request(tmp_path, "unused")
+    request["argv"] = [str(tmp_path / "does-not-exist")]
+
+    submitted = submit_remote(request)
+    status = _terminal(submitted["remote_id"])
+
+    assert status["state"] == RunState.EXECUTION_FAILED.value
+    assert status["return_code"] == 127
+
+
 def test_run_reference_separates_remote_id_from_client_context():
     reference = RunReference(
         executor="remote:local",
