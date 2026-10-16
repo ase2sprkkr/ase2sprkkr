@@ -17,6 +17,11 @@ def _jxc_tensor_file(parameters, directory):
     return resolve_file(directory, f"{dataset}_XCPLTEN_Jij.dat")
 
 
+def _jxc_dmi_file(parameters, directory):
+    dataset = parameters.CONTROL.DATASET()
+    return resolve_file(directory, f"{dataset}_DMIVEC_Dij.dat")
+
+
 def _jxc_agr_file(parameters, directory):
     dataset = parameters.CONTROL.DATASET()
     return resolve_file(directory, f"{dataset}*.agr")
@@ -28,6 +33,10 @@ def _is_spsrel(parameters):
 
 def _is_not_spsrel(parameters):
     return not _is_spsrel(parameters)
+
+
+def _uses_dmi(parameters):
+    return bool(parameters.TASK.DMI())
 
 
 class JxcInputParametersDefinition(InputParametersDefinition):
@@ -96,6 +105,7 @@ def input_parameters_definition():
         output_file_templates=(
             FileSpec(_jxc_spsrel_file, condition=_is_spsrel),
             FileSpec(_jxc_tensor_file, condition=_is_not_spsrel),
+            FileSpec(_jxc_dmi_file, condition=_uses_dmi),
             FileSpec(_jxc_agr_file),
         ),
     )
