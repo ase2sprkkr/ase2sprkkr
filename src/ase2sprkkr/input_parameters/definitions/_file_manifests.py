@@ -38,3 +38,23 @@ def bsf_file(parameters, directory):
     if not dataset or not adsi:
         return None
     return resolve_file(directory, f"{dataset}_{adsi}.bsf")
+
+
+def kkrspec_uses_legacy_input(parameters):
+    """Whether KKRSPEC reads externally supplied ``input.inp`` files."""
+    return parameters.TASK.INPVER() == 0
+
+
+def kkrspec_uses_legacy_structure(parameters):
+    """Whether KKRSPEC reads an externally supplied structure file."""
+    return parameters.TASK.STRVER() == 0
+
+
+def kkrspec_single_spc_output(parameters):
+    """Whether KKRSPEC writes one unpolarized/single SPC result file."""
+    return parameters.TASK.TASK() == "BAND" or parameters.SPEC_PH.NPOL() == 1
+
+
+def kkrspec_polarized_spc_output(parameters):
+    """Whether KKRSPEC writes the pair of polarization-resolved SPC files."""
+    return not kkrspec_single_spc_output(parameters)
