@@ -20,7 +20,7 @@ class OutputReaderRegistry(ModuleRegistry):
 
     def __init__(self, package=readers, executables=default_executables):
         super().__init__(package)
-        self.executables = executables
+        self._executables = executables
 
     def value_from_module(self, name, module):
         class_name = name.title() + "OutputReader"
@@ -77,7 +77,7 @@ class OutputReaderRegistry(ModuleRegistry):
         if task.output_reader is not None:
             reader_name = task.output_reader
         else:
-            executable = self.executables[task.executable]
+            executable = self._executables[task.executable]
             reader_name = executable.default_output_reader
         return self[reader_name]
 
