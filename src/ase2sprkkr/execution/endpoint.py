@@ -41,7 +41,7 @@ def endpoint_for_executor(executor) -> ExecutorEndpoint:
     """Describe a live executor without persisting launch/staging policy."""
     from .local import LocalExecutor
     from .psij import PsijExecutor
-    from .remote_endpoint_client import RemoteEndpointExecutor
+    from .remote_endpoint import RemoteEndpointExecutor
     from .transport import SshTransport
 
     if isinstance(executor, LocalExecutor):
@@ -97,7 +97,7 @@ def create_executor_from_endpoint(endpoint: ExecutorEndpoint):
     """Reconstruct a standard executor from persisted endpoint identity."""
     from .local import LocalExecutor
     from .psij import PsijExecutor
-    from .remote_endpoint_client import RemoteEndpointExecutor
+    from .remote_endpoint import RemoteEndpointExecutor
     from .transport import SshTransport
 
     if isinstance(endpoint, dict):
