@@ -12,6 +12,7 @@ from ase2sprkkr.execution import (
 )
 from ase2sprkkr.outputs.persistent import (
     PersistentResultUnavailableError,
+    UnrecoverablePersistentResultError,
     attach_persistent_run,
     load_persistent_result,
 )
@@ -99,13 +100,15 @@ def test_parser_failure_after_failed_execution_is_still_finalization_failure(tmp
     assert record.message == "result parsing failed"
 
 
-def test_failed_reconstruction_terminates_finalization_and_can_be_retried(tmp_path):
+def test_unrecoverable_reconstruction_terminates_finalization_and_can_be_retried(
+    tmp_path,
+):
     store = RunStore(tmp_path / "runs")
     manager = ExecutionManager(store)
     record = manager.new_record(task="NO_SUCH_TASK", directory=tmp_path)
     record = manager.transition(record, state=RunState.FINALIZING)
 
-    with pytest.raises(PersistentResultUnavailableError):
+    with pytest.raises(UnrecoverablePersistentResultError):
         attach_persistent_run(manager, record)
 
     failed = store.get(record.id)
@@ -113,20 +116,18 @@ def test_failed_reconstruction_terminates_finalization_and_can_be_retried(tmp_pa
     assert failed.finished_at is not None
     assert "unknown persisted effective task" in failed.message
 
-    retrying = manager.retry_finalization(failed)
-    assert retrying.state == RunState.FINALIZING
-    assert retrying.finished_at is None
-    assert retrying.message is None
-
-    with pytest.raises(PersistentResultUnavailableError):
-        attach_persistent_run(manager, retrying)
+    # attach_persistent_run is also the public retry operation: a failed
+    # finalization is reopened before reader reconstruction is attempted again.
+    with pytest.raises(UnrecoverablePersistentResultError):
+        attach_persistent_run(manager, failed)
 
     failed_again = store.get(record.id)
     assert failed_again.state == RunState.FINALIZATION_FAILED
+    assert failed_again.finished_at is not None
     assert "unknown persisted effective task" in failed_again.message
 
 
-def test_reader_reconstruction_programming_error_fails_finalization_and_reraises(
+def test_reader_reconstruction_programming_error_is_not_classified_as_finalization_failure(
     tmp_path, monkeypatch
 ):
     store = RunStore(tmp_path / "runs")
@@ -149,10 +150,10 @@ def test_reader_reconstruction_programming_error_fails_finalization_and_reraises
         attach_persistent_run(manager, record)
 
     assert exc_info.value is error
-    failed = store.get(record.id)
-    assert failed.state == RunState.FINALIZATION_FAILED
-    assert failed.message == "reader constructor failed"
-    assert failed.finished_at is not None
+    current = store.get(record.id)
+    assert current.state == RunState.FINALIZING
+    assert current.message is None
+    assert current.finished_at is None
 
 
 def test_transient_attach_failure_keeps_finalization_retryable(tmp_path, monkeypatch):

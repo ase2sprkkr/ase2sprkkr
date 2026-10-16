@@ -16,6 +16,10 @@ class PersistentResultUnavailableError(RuntimeError):
         super().__init__(f"Run {record.id}: {message}")
 
 
+class UnrecoverablePersistentResultError(PersistentResultUnavailableError):
+    """Retrying reconstruction with unchanged persisted data cannot succeed."""
+
+
 def _record(manager, run):
     return manager.store.get(run) if isinstance(run, str) else manager.store.get(run.id)
 
@@ -25,7 +29,7 @@ def _task_definition_for_record(record):
     try:
         return InputParameters.task_registry[record.task]
     except RegistryEntryNotFound:
-        raise PersistentResultUnavailableError(
+        raise UnrecoverablePersistentResultError(
             record, f"unknown persisted effective task {record.task!r}"
         ) from None
 
@@ -42,7 +46,7 @@ def _input_parameters_for_record(manager, record):
     try:
         definition = InputParameters.input_parameters_registry[record.input_definition]
     except RegistryEntryNotFound:
-        raise PersistentResultUnavailableError(
+        raise UnrecoverablePersistentResultError(
             record,
             f"unknown persisted input definition {record.input_definition!r}",
         ) from None
@@ -54,7 +58,7 @@ def _input_parameters_for_record(manager, record):
     effective_task = parameters.task_definition
     if effective_task is None or effective_task.name != record.task:
         actual = None if effective_task is None else effective_task.name
-        raise PersistentResultUnavailableError(
+        raise UnrecoverablePersistentResultError(
             record,
             "persisted effective task does not match historical input "
             f"({record.task!r} != {actual!r})",
@@ -93,10 +97,7 @@ def attach_persistent_run(
     if reader is None:
         try:
             reader = _reader_for_record(manager, record)
-        except Exception as exc:
-            # Reader reconstruction is local finalization work. Any failure in
-            # this phase makes the current attempt terminal, but the original
-            # exception is still re-raised for the caller/programmer to see.
+        except UnrecoverablePersistentResultError as exc:
             if record.state == RunState.FINALIZING:
                 manager.fail_finalization(record, exc)
             raise
