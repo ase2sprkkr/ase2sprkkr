@@ -52,7 +52,6 @@ def _record(
     task,
     *,
     input_definition=None,
-    requested_task=None,
     input_file=None,
 ):
     result_files = (
@@ -63,7 +62,6 @@ def _record(
     return RunRecord(
         id="run",
         task=task,
-        requested_task=requested_task or task,
         input_definition=input_definition,
         directory=str(tmp_path),
         state=RunState.RUNNING,
@@ -88,7 +86,6 @@ def test_persistent_attach_uses_persisted_effective_task(tmp_path):
     record = _record(
         tmp_path,
         "BSFEK",
-        requested_task="BSFKK",
         input_definition="BSF",
     )
 
@@ -113,7 +110,6 @@ def test_persistent_attach_reconstructs_exact_input_definition(tmp_path):
     record = _record(
         tmp_path,
         "BSFEK",
-        requested_task="BSFEK",
         input_definition="BSF",
         input_file=input_file,
     )
@@ -123,8 +119,9 @@ def test_persistent_attach_reconstructs_exact_input_definition(tmp_path):
 
     assert isinstance(attached.reader, BsfOutputReader)
     assert parameters._definition is InputParameters.input_parameters_registry["BSF"]
+    assert parameters.definition_name == "BSF"
+    assert parameters.requested_task_name == "BSFEK"
     assert parameters.task_name == "BSFEK"
-    assert parameters.task_definition.name == "BSFEK"
 
 
 def test_persistent_attach_reconstructs_standard_input_definition(tmp_path):
@@ -141,7 +138,7 @@ def test_persistent_attach_reconstructs_standard_input_definition(tmp_path):
 
     assert isinstance(attached.reader, DosOutputReader)
     assert parameters._definition is InputParameters.input_parameters_registry["DOS"]
-    assert parameters.task_definition.name == "DOS"
+    assert parameters.task_name == "DOS"
 
 
 def test_persistent_attach_does_not_parse_stale_input(tmp_path):

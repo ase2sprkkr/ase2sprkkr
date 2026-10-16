@@ -279,7 +279,7 @@ def _resolve_input_parameters(
     value = default_input_parameters if input_parameters is None else input_parameters
 
     if isinstance(value, (str, os.PathLike)):
-        if isinstance(value, str) and InputParameters.is_it_an_input_parameters_name(value):
+        if isinstance(value, str) and InputParameters.is_task_name(value):
             value = InputParameters.create_input_parameters(value)
         else:
             parameter_filename = _calculation_path(value, directory)
@@ -347,7 +347,7 @@ def _resolve_empty_spheres(
         empty_spheres = default_empty_spheres
     if empty_spheres == "auto":
         empty_spheres = (
-            input_parameters.execution_task_name == "SCF"
+            input_parameters.task_name == "SCF"
             and atoms is not None
             and (
                 not atoms.has_potential()
@@ -521,7 +521,7 @@ class PreparedCalculation:
                 directory=work_directory,
             )
 
-            task_name = input_parameters.execution_task_name
+            task_name = input_parameters.task_name
             effective_task = str(task_name).strip().upper()
             if restart_scf:
                 if effective_task != "SCF":
@@ -944,9 +944,8 @@ def _create_sprkkr_run(
                 executor,
                 reader,
                 spec,
-                task=input_parameters.execution_task_name,
-                input_definition=input_parameters._definition.name,
-                requested_task=input_parameters.task_name,
+                task=input_parameters.task_name,
+                input_definition=input_parameters.definition_name,
                 dataset=input_parameters.CONTROL.DATASET.result,
                 callback=finalized,
             )

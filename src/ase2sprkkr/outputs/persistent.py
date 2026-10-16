@@ -49,7 +49,7 @@ def _input_parameters_for_record(manager, record):
 
     parameters = definition.read_from_file(
         input_file,
-        task_name=record.requested_task or record.task,
+        requested_task_name=record.task,
     )
     effective_task = parameters.task_definition
     if effective_task is None or effective_task.name != record.task:

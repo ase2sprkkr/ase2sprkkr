@@ -5,7 +5,7 @@ from typing import Any, List, Optional
 
 from ...common.generated_configuration_definitions import Length
 from ...common.grammar_types import Keyword, SetOf
-from ...common.warnings import DataValidityError, DataValidityWarning
+from ...common.warnings import DataValidityError
 from ..input_parameters import InputSection
 from ...physics.lattice_data import bravais_number
 from ..input_parameters_definitions import InputParametersDefinition, InputValueDefinition as V
@@ -20,8 +20,8 @@ EK_TASK_ITEMS = ("NK", "KPATH", "NKDIR", "KE")
 KK_TASK_ITEMS = ("NK1", "NK2", "K1", "K2")
 
 
-def _mode_hint(parameters):
-    name = parameters.task_name
+def _requested_mode(parameters):
+    name = parameters.requested_task_name
     if name is None:
         return None
     name = name.upper()
@@ -36,7 +36,7 @@ def bsf_mode(parameters):
     """Return the BSF mode selected by the number of energy points."""
     ne = parameters["ENERGY"]["NE"]()
     if ne is None or len(ne) == 0:
-        return _mode_hint(parameters) or KK
+        return _requested_mode(parameters) or KK
     return EK if ne[0] > 1 else KK
 
 
@@ -65,7 +65,7 @@ def _ka_numbered(option):
 
 
 def _ne_default(option):
-    return [200] if _mode_hint(_root(option)) == EK else [1]
+    return [200] if _requested_mode(_root(option)) == EK else [1]
 
 
 def _emin_default(option):
@@ -86,16 +86,9 @@ def _emax_default(option):
 
 def _validate_bsf(
     parameters: Any, _values: Any, why: str
-) -> Optional[List[DataValidityWarning]]:
+) -> Optional[List[DataValidityError]]:
     issues = []
     mode = bsf_mode(parameters)
-    hint = _mode_hint(parameters)
-    if hint and hint != mode:
-        issues.append(
-            DataValidityWarning(
-                f"ENERGY.NE selects BSF-{mode}, but BSF-{hint} was requested"
-            )
-        )
 
     task = parameters["TASK"]
     incompatible = KK_TASK_ITEMS if mode == EK else EK_TASK_ITEMS

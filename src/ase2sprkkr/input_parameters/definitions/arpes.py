@@ -18,6 +18,12 @@ class ArpesInputParametersDefinition(InputParameters):
         return str(parameters.TASK.TASK() or "ARPES").upper()
 
 
+def _task_default(option):
+    """Default the shared TASK selector from the requested task context."""
+    parameters = option._get_root_container()
+    return parameters.requested_task_name or "ARPES"
+
+
 def _electron_angle_default(option):
     """SPEC_INPUT defaults differ for photoemission and SPLEED."""
     angle = (45.0 if option.name == 'THETA' else 270.0) if option._container._container.TASK.TASK() == 'SPLEED' else 0.0
@@ -86,6 +92,7 @@ def input_parameters_definition():
                                 "BAND": "band structure calculations (experimental feature)",
                             }
                         ),
+                        _task_default,
                         name_in_grammar=False,
                         info="Type of the calculation",
                     ),

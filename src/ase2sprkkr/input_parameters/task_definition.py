@@ -191,14 +191,12 @@ class InputParametersRegistry(ModuleRegistry):
         from .input_parameters import InputParameters
 
         definition = self.definition_for_task(task)
-        out = InputParameters(
+        return InputParameters(
             definition=definition,
-            task_name=task.name,
+            requested_task_name=task.name,
             inputfile=inputfile,
             outputfile=outputfile,
         )
-        definition.initialize_for_task(out, task.name)
-        return out
 
     def read_for_task(self, task, file, *, allow_dangerous=False):
         """Read parameters and require the parsed values to represent *task*."""

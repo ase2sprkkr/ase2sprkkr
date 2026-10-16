@@ -82,26 +82,6 @@ class InputParametersDefinition(ConfigurationFileDefinition):
         """
         return None
 
-    def initialize_for_task(self, parameters, task_name):
-        """Initialize an explicit task discriminator when the schema has one.
-
-        Shared schemas commonly encode their concrete task in ``TASK.TASK``.
-        When that option accepts the requested task, make the requested task an
-        explicit value. Schemas using another discriminator (for example BSF)
-        keep their own task-dependent defaults and may override this hook.
-        """
-        if self._task_definition is not None:
-            return
-        try:
-            option = parameters["TASK"]["TASK"]
-            grammar_type = option._definition.type
-            keywords = grammar_type.keywords
-        except (KeyError, AttributeError):
-            return
-        value = grammar_type.convert(task_name)
-        if value in keywords:
-            option.set(value)
-
     def update_from_result(self, parameters, result):
         """Apply schema-specific values derived from an existing result."""
 

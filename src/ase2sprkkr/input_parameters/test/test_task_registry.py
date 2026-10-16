@@ -28,17 +28,21 @@ def test_standard_task_comes_from_input_parameters_definition():
     assert "SCF" not in InputParameters.task_registry.extra_tasks.names()
 
 
-def test_spec_tasks_share_schema_and_requested_task_is_materialized():
+def test_spec_tasks_share_schema_and_requested_task_is_default():
     schema = InputParameters.input_parameters_registry["ARPES"]
     spleed = InputParameters.create("SPLEED")
 
     assert schema._task_definition is None
     assert spleed._definition is schema
+    assert spleed.requested_task_name == "SPLEED"
     assert spleed.TASK.TASK() == "SPLEED"
-    assert spleed.task_definition.name == "SPLEED"
+    assert not spleed.TASK.TASK.is_set()
+    assert spleed.task_name == "SPLEED"
 
     spleed.TASK.TASK.set("ARPES")
-    assert spleed.task_name == "SPLEED"
+    assert spleed.TASK.TASK.is_set()
+    assert spleed.requested_task_name == "SPLEED"
+    assert spleed.task_name == "ARPES"
     assert spleed.task_definition.name == "ARPES"
 
 
@@ -51,14 +55,22 @@ def test_bsf_is_schema_not_task_and_views_keep_schema_defaults():
     assert "BSF" not in InputParameters.task_registry
     assert ek._definition is schema
     assert kk._definition is schema
+    assert ek.requested_task_name == "BSFEK"
+    assert kk.requested_task_name == "BSFKK"
     assert ek.ENERGY.NE()[0] > 1
     assert kk.ENERGY.NE()[0] == 1
-    assert ek.task_definition.name == "BSFEK"
-    assert kk.task_definition.name == "BSFKK"
+    assert not ek.ENERGY.NE.is_set()
+    assert not kk.ENERGY.NE.is_set()
+    assert ek.task_name == "BSFEK"
+    assert kk.task_name == "BSFKK"
+
+    ek.ENERGY.NE = [1]
+    assert ek.requested_task_name == "BSFEK"
+    assert ek.task_name == "BSFKK"
 
     with pytest.raises(RegistryEntryNotFound):
         InputParameters.create("BSF")
-    assert InputParameters.is_it_an_input_parameters_name("BSF") is False
+    assert InputParameters.is_task_name("BSF") is False
 
 
 def test_input_and_task_registry_namespaces_are_distinct():
@@ -106,6 +118,7 @@ def test_schema_does_not_resolve_task_services():
     schema = InputParameters.input_parameters_registry["ARPES"]
 
     assert not hasattr(schema, "task_definition")
+    assert not hasattr(schema, "initialize_for_task")
     assert schema.task_definition_name(InputParameters.create("SPLEED")) == "SPLEED"
 
 
@@ -116,6 +129,8 @@ def test_task_registry_resolves_effective_task_from_values():
     task = InputParameters.task_registry.effective_task(parameters)
 
     assert task is InputParameters.task_registry["SPLEED"]
+    assert parameters.task_name == "SPLEED"
+    assert parameters.requested_task_name == "ARPES"
 
 
 def test_input_parameters_registry_creates_parameters_from_result():
@@ -131,6 +146,7 @@ def test_input_parameters_registry_creates_parameters_from_result():
     )
 
     assert parameters.task_name == "JXC"
+    assert parameters.requested_task_name == "JXC"
     assert parameters.task_definition.name == "JXC"
     assert parameters.ENERGY.EMIN() == -0.35
 

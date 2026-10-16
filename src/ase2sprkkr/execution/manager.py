@@ -248,9 +248,7 @@ class RunRecord:
 
     ``task`` is the effective ASE2SPRKKR task represented by the concrete input
     values. ``input_definition`` independently identifies the input schema used
-    to parse and reconstruct those values. ``requested_task`` is optional
-    provenance describing the task originally requested by the caller; it is
-    never used in place of the effective task.
+    to parse and reconstruct those values.
 
     ``state`` is the single authoritative lifecycle state. A terminal backend
     outcome advances it to ``FINALIZING`` while result processing completes;
@@ -281,7 +279,6 @@ class RunRecord:
     message: Optional[str] = None
     result_files: Optional[ResultFilesRecord] = None
     input_definition: Optional[str] = None
-    requested_task: Optional[str] = None
     schema_version: int = _RUN_RECORD_SCHEMA_VERSION
 
     def __post_init__(self):
@@ -290,8 +287,6 @@ class RunRecord:
             object.__setattr__(
                 self, "input_definition", str(self.input_definition).upper()
             )
-        if self.requested_task is not None:
-            object.__setattr__(self, "requested_task", str(self.requested_task).upper())
         if isinstance(self.endpoint, dict):
             object.__setattr__(self, "endpoint", ExecutorEndpoint(**self.endpoint))
         if isinstance(self.submission, dict):
@@ -357,6 +352,9 @@ class RunStore:
                     f"unsupported schema version {version!r}; "
                     f"expected {_RUN_RECORD_SCHEMA_VERSION}"
                 )
+            # Version 1 briefly persisted requested-task provenance. It was never
+            # part of reconstruction identity, so accept and discard that key.
+            data.pop("requested_task", None)
             return RunRecord(**data)
         except CorruptRunRecord:
             raise
@@ -635,7 +633,6 @@ class ExecutionManager:
         submission=None,
         result_files=None,
         input_definition=None,
-        requested_task=None,
         run_id=None,
     ):
         """Create the in-memory identity of an unsubmitted persistent run."""
@@ -653,7 +650,6 @@ class ExecutionManager:
             submission=submission,
             result_files=result_files,
             input_definition=input_definition,
-            requested_task=requested_task,
         )
 
     @staticmethod
@@ -956,7 +952,6 @@ class ExecutionManager:
         *,
         task,
         input_definition=None,
-        requested_task=None,
         dataset=None,
         callback=None,
         run_id=None,
@@ -972,7 +967,6 @@ class ExecutionManager:
         record = self.new_record(
             task=task,
             input_definition=input_definition,
-            requested_task=requested_task,
             dataset=dataset,
             directory=spec.directory,
             endpoint=endpoint,

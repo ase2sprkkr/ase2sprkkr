@@ -126,9 +126,9 @@ def test_explicit_manager_persists_effective_task_and_dataset(tmp_path, monkeypa
 
     record = _persistent_record(parameters, tmp_path)
 
-    assert record.task == parameters.execution_task_name.upper()
-    assert record.input_definition == parameters._definition.name.upper()
-    assert record.requested_task == parameters.task_name
+    assert record.task == parameters.task_name
+    assert record.input_definition == parameters.definition_name.upper()
+    assert not hasattr(record, "requested_task")
     assert record.dataset == "sample"
     assert record.state == RunState.FINISHED
 
@@ -139,11 +139,24 @@ def test_persistence_uses_shared_schema_effective_task(tmp_path, monkeypatch):
 
     record = _persistent_record(parameters, tmp_path)
 
-    assert parameters.task_name == "ARPES"
-    assert parameters.task_definition.name == "SPLEED"
+    assert parameters.requested_task_name == "ARPES"
+    assert parameters.task_name == "SPLEED"
     assert record.task == "SPLEED"
     assert record.input_definition == "ARPES"
-    assert record.requested_task == "ARPES"
+    assert not hasattr(record, "requested_task")
+
+
+def test_persistence_does_not_confuse_bsf_native_task_with_effective_task(
+    tmp_path, monkeypatch
+):
+    parameters = _parameters(monkeypatch, "BSFEK")
+
+    record = _persistent_record(parameters, tmp_path)
+
+    assert parameters.TASK.TASK() == "BSF"
+    assert parameters.task_name == "BSFEK"
+    assert record.task == "BSFEK"
+    assert record.input_definition == "BSF"
 
 
 def test_project_bound_manager_is_preserved_by_execution_adapter(tmp_path, monkeypatch):

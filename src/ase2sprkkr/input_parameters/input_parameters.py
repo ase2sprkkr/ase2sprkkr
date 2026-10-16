@@ -30,10 +30,14 @@ class InputParameters(ConfigurationFile):
         inputfile=None,
         outputfile=False,
         *,
-        task_name=None,
+        requested_task_name=None,
     ):
         super().__init__(definition)
-        self._task_name = None if task_name is None else str(task_name).upper()
+        self._requested_task_name = (
+            None
+            if requested_task_name is None
+            else str(requested_task_name).upper()
+        )
         self._inputfile = inputfile
         self._outputfile = inputfile if outputfile is False else outputfile
 
@@ -51,6 +55,26 @@ class InputParameters(ConfigurationFile):
         return task
 
     @property
+    def task_name(self):
+        """Return the effective ASE2SPRKKR task represented by current values."""
+        task = self.task_definition
+        return None if task is None else task.name
+
+    @property
+    def requested_task_name(self):
+        """Task requested when these parameters were created or last retargeted.
+
+        Shared input schemas may use this only as context for callable defaults.
+        Concrete parameter values remain authoritative for :attr:`task_name`.
+        """
+        return self._requested_task_name
+
+    @property
+    def definition_name(self):
+        """Return the registered input-parameter schema name."""
+        return self._definition.name
+
+    @property
     def potential(self):
         pot = getattr(self, "_potential", None)
         potfil = self.CONTROL.POTFIL.result
@@ -62,27 +86,14 @@ class InputParameters(ConfigurationFile):
         return out
 
     def copy(self, copy_values: bool = False):
-        """Copy parameters while preserving requested-task provenance."""
+        """Copy parameters while preserving requested-task default context."""
         values = self.as_dict(copy=copy_values, only_changed=True)
-        out = self.__class__(definition=self._definition, task_name=self.task_name)
+        out = self.__class__(
+            definition=self._definition,
+            requested_task_name=self.requested_task_name,
+        )
         out.set(values, unknown="add", retain_invalid="all", report_invalid="ignore")
         return out
-
-    @property
-    def task_name(self):
-        """Originally requested task, or ``None`` for a detached schema object."""
-        return self._task_name
-
-    @property
-    def execution_task_name(self):
-        """Return the concrete SPR-KKR TASK value used for execution."""
-        try:
-            value = self["TASK"]["TASK"]()
-        except KeyError:
-            value = None
-        if value:
-            return str(value).upper()
-        return self._require_task_definition().name
 
     def uses_separate_single_site_contour(self):
         switches = (
@@ -152,14 +163,15 @@ class InputParameters(ConfigurationFile):
         }
 
     @classmethod
-    def is_it_an_input_parameters_name(cls, name):
+    def is_task_name(cls, name):
+        """Return the normalized task name when *name* identifies a task."""
         name = cls.task_registry.normalize_name(name)
         return name if name in cls.task_registry else False
 
     @classmethod
     def create_input_parameters(cls, arg):
         if isinstance(arg, str):
-            name = cls.is_it_an_input_parameters_name(arg)
+            name = cls.is_task_name(arg)
             if name:
                 return cls.create(name)
             return cls.from_file(arg)
@@ -209,7 +221,7 @@ class InputParameters(ConfigurationFile):
         self._definition = self.input_parameters_registry.definition_for_task(
             task_definition
         )
-        self._task_name = requested
+        self._requested_task_name = requested
         self._init_members_from_the_definition()
 
         if retain_values:
@@ -219,8 +231,6 @@ class InputParameters(ConfigurationFile):
                 retain_invalid="none",
                 report_invalid="ignore",
             )
-
-        self._definition.initialize_for_task(self, requested)
 
     def save_to_file(self, file, atoms=None, *, validate="save"):
         if self._definition.save_hook:

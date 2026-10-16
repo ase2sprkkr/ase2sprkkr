@@ -30,6 +30,7 @@ def test_task_binding_is_authoritative():
     parameters = InputParameters.create("SCF")
 
     assert parameters.task_name == "SCF"
+    assert parameters.definition_name == "SCF"
     assert parameters._definition is _schema_for(parameters.task_definition)
     assert parameters.task_definition.executable == "kkrscf"
     assert parameters.task_definition.mpi is True
@@ -43,8 +44,11 @@ def test_copy_preserves_task_binding(copy_values):
 
     assert copied.task_definition is parameters.task_definition
     assert copied.task_name == "BSFEK"
+    assert copied.requested_task_name == "BSFEK"
+    assert copied.definition_name == "BSF"
     assert copied._definition is _schema_for(copied.task_definition)
     np.testing.assert_array_equal(copied.ENERGY.NE(), [200])
+    assert not copied.ENERGY.NE.is_set()
 
 
 def test_change_task_changes_task_and_schema_atomically():
@@ -53,19 +57,38 @@ def test_change_task_changes_task_and_schema_atomically():
     parameters.change_task("SCF")
 
     assert parameters.task_name == "SCF"
+    assert parameters.requested_task_name == "SCF"
+    assert parameters.definition_name == "SCF"
     assert parameters.task_definition.name == "SCF"
     assert parameters._definition is _schema_for(parameters.task_definition)
 
 
-def test_change_task_reasserts_shared_schema_discriminator_after_retain():
+def test_change_task_retargets_shared_schema_default():
+    parameters = InputParameters.create("SPLEED")
+
+    assert parameters.TASK.TASK() == "SPLEED"
+    assert not parameters.TASK.TASK.is_set()
+
+    parameters.change_task("AIPES")
+
+    assert parameters.requested_task_name == "AIPES"
+    assert parameters.task_name == "AIPES"
+    assert parameters.TASK.TASK() == "AIPES"
+    assert not parameters.TASK.TASK.is_set()
+    assert parameters.task_definition.name == "AIPES"
+
+
+def test_change_task_retain_values_preserves_explicit_shared_task_value():
     parameters = InputParameters.create("ARPES")
     parameters.TASK.TASK = "SPLEED"
 
     parameters.change_task("AIPES", retain_values=True)
 
-    assert parameters.task_name == "AIPES"
-    assert parameters.TASK.TASK() == "AIPES"
-    assert parameters.task_definition.name == "AIPES"
+    assert parameters.requested_task_name == "AIPES"
+    assert parameters.task_name == "SPLEED"
+    assert parameters.TASK.TASK.is_set()
+    assert parameters.TASK.TASK() == "SPLEED"
+    assert parameters.task_definition.name == "SPLEED"
 
 
 def test_direct_schema_objects_are_detached():
@@ -74,16 +97,20 @@ def test_direct_schema_objects_are_detached():
 
     assert parameters.task_definition is None
     assert parameters.task_name is None
+    assert parameters.requested_task_name is None
     assert parameters.copy().task_name is None
+    assert parameters.copy().requested_task_name is None
 
 
-def test_canonical_schema_identity_is_not_requested_task_provenance():
+def test_canonical_schema_identity_does_not_imply_requested_task():
     schema = InputParameters.input_parameters_registry["SCF"]
     parameters = schema.create_object()
 
     assert parameters.task_definition is InputParameters.task_registry["SCF"]
-    assert parameters.execution_task_name == "SCF"
-    assert parameters.task_name is None
+    assert parameters.task_name == "SCF"
+    assert parameters.definition_name == "SCF"
+    assert parameters.requested_task_name is None
+    assert not hasattr(parameters, "execution_task_name")
 
 
 def test_task_definition_requires_schema_name():
@@ -204,12 +231,14 @@ def test_builtin_task_definitions_are_metadata_objects():
 def test_effective_task_follows_shared_schema_values():
     parameters = InputParameters.create("ARPES")
 
+    assert parameters.requested_task_name == "ARPES"
     assert parameters.task_name == "ARPES"
     assert parameters.task_definition.name == "ARPES"
 
     parameters.TASK.TASK = "SPLEED"
 
-    assert parameters.task_name == "ARPES"
+    assert parameters.requested_task_name == "ARPES"
+    assert parameters.task_name == "SPLEED"
     assert parameters.task_definition.name == "SPLEED"
 
 
