@@ -6,7 +6,7 @@ import pytest
 
 from ..input_parameters import InputParameters
 from ..input_parameters_definitions import InputParametersDefinition
-from ..task_definition import FileSpec, TaskDefinition, TaskFiles
+from ..task_definition import FileSpec, TaskDefinition
 from ...outputs.readers.default import DefaultOutputReader
 
 
@@ -220,25 +220,18 @@ def _enabled(parameters):
     return parameters.CONTROL.DATASET() != "disabled"
 
 
-def test_task_definition_files_support_dynamic_names_and_conditions(tmp_path):
-    task = TaskDefinition(
-        "SCF",
-        files=TaskFiles(
-            output=(FileSpec(_dynamic_file, condition=_enabled),),
-        ),
-    )
+def test_file_spec_supports_dynamic_names_and_conditions(tmp_path):
+    spec = FileSpec(_dynamic_file, condition=_enabled)
     parameters = InputParameters.create("SCF")
     parameters.CONTROL.DATASET = "case"
+    materialize = InputParameters.input_parameters_registry._materialize_file
 
-    files = InputParameters.input_parameters_registry.files_for_task(
-        task, parameters, tmp_path, "output"
+    assert materialize(spec, parameters, tmp_path) == str(
+        tmp_path / "case_dynamic.dat"
     )
-    assert files == (str(tmp_path / "case_dynamic.dat"),)
 
     parameters.CONTROL.DATASET = "disabled"
-    assert not InputParameters.input_parameters_registry.files_for_task(
-        task, parameters, tmp_path, "output"
-    )
+    assert materialize(spec, parameters, tmp_path) is None
 
 
 def test_bsf_task_materializes_output_from_dataset_and_adsi(tmp_path):
