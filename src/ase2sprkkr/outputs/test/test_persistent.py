@@ -82,7 +82,7 @@ def _input_file(tmp_path, task):
     return path
 
 
-def test_persistent_attach_uses_persisted_effective_task(tmp_path):
+def test_persistent_attach_uses_persisted_task(tmp_path):
     record = _record(
         tmp_path,
         "BSFEK",
@@ -160,12 +160,12 @@ def test_persistent_attach_does_not_parse_stale_input(tmp_path):
     assert attached.reader.input_parameters is None
 
 
-def test_persistent_attach_rejects_unknown_effective_task(tmp_path):
+def test_persistent_attach_rejects_unknown_task(tmp_path):
     record = _record(tmp_path, "UNKNOWN_TASK", input_definition="DOS")
 
     with pytest.raises(
         PersistentResultUnavailableError,
-        match="unknown persisted effective task 'UNKNOWN_TASK'",
+        match="unknown persisted task 'UNKNOWN_TASK'",
     ):
         attach_persistent_run(_Manager(record), record.id)
 
@@ -186,7 +186,7 @@ def test_persistent_attach_rejects_unknown_input_definition(tmp_path):
         attach_persistent_run(_Manager(record), record.id)
 
 
-def test_persistent_attach_rejects_input_with_different_effective_task(tmp_path):
+def test_persistent_attach_rejects_input_with_different_task(tmp_path):
     input_file = _input_file(tmp_path, "DOS")
     record = _record(
         tmp_path,
@@ -197,7 +197,7 @@ def test_persistent_attach_rejects_input_with_different_effective_task(tmp_path)
 
     with pytest.raises(
         PersistentResultUnavailableError,
-        match="persisted effective task does not match historical input",
+        match="persisted task does not match historical input",
     ):
         attach_persistent_run(_Manager(record), record.id)
 

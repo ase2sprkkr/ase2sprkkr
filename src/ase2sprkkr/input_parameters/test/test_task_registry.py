@@ -101,7 +101,8 @@ def test_input_parameters_registry_owns_input_parameter_operations():
 def test_task_registry_is_identity_resolution_only():
     registry = InputParameters.task_registry
 
-    assert callable(registry.effective_task)
+    assert callable(registry.task_for_parameters)
+    assert not hasattr(registry, "effective_task")
     for name in (
         "input_parameters_definition",
         "create_input_parameters",
@@ -122,11 +123,11 @@ def test_schema_does_not_resolve_task_services():
     assert schema.task_definition_name(InputParameters.create("SPLEED")) == "SPLEED"
 
 
-def test_task_registry_resolves_effective_task_from_values():
+def test_task_registry_resolves_task_from_values():
     parameters = InputParameters.create("ARPES")
     parameters.TASK.TASK = "SPLEED"
 
-    task = InputParameters.task_registry.effective_task(parameters)
+    task = InputParameters.task_registry.task_for_parameters(parameters)
 
     assert task is InputParameters.task_registry["SPLEED"]
     assert parameters.task_name == "SPLEED"

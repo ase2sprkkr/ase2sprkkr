@@ -121,7 +121,7 @@ def _persistent_record(parameters, tmp_path):
     return manager.store.get(runner.id)
 
 
-def test_explicit_manager_persists_effective_task_and_dataset(tmp_path, monkeypatch):
+def test_explicit_manager_persists_task_and_dataset(tmp_path, monkeypatch):
     parameters = _parameters(monkeypatch)
 
     record = _persistent_record(parameters, tmp_path)
@@ -133,7 +133,7 @@ def test_explicit_manager_persists_effective_task_and_dataset(tmp_path, monkeypa
     assert record.state == RunState.FINISHED
 
 
-def test_persistence_uses_shared_schema_effective_task(tmp_path, monkeypatch):
+def test_persistence_uses_task_selected_by_shared_schema_values(tmp_path, monkeypatch):
     parameters = _parameters(monkeypatch, "ARPES")
     parameters.TASK.TASK = "SPLEED"
 
@@ -146,7 +146,7 @@ def test_persistence_uses_shared_schema_effective_task(tmp_path, monkeypatch):
     assert not hasattr(record, "requested_task")
 
 
-def test_persistence_does_not_confuse_bsf_native_task_with_effective_task(
+def test_persistence_keeps_ase2sprkkr_task_distinct_from_sprkkr_task_value(
     tmp_path, monkeypatch
 ):
     parameters = _parameters(monkeypatch, "BSFEK")

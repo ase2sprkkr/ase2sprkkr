@@ -522,9 +522,8 @@ class PreparedCalculation:
             )
 
             task_name = input_parameters.task_name
-            effective_task = str(task_name).strip().upper()
             if restart_scf:
-                if effective_task != "SCF":
+                if task_name != "SCF":
                     raise ValueError(
                         "restart_scf=True is only valid for an SCF calculation."
                     )
@@ -544,7 +543,7 @@ class PreparedCalculation:
             scf_status_override = None
             if (
                 isinstance(potential, Potential)
-                and effective_task != "SCF"
+                and task_name != "SCF"
                 and potential.SCF_INFO.SCFSTATUS() == "START"
                 and potential.is_scf_converged(atoms)
             ):

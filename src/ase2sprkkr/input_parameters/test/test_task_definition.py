@@ -228,7 +228,7 @@ def test_builtin_task_definitions_are_metadata_objects():
         assert not hasattr(TaskDefinition, name)
 
 
-def test_effective_task_follows_shared_schema_values():
+def test_task_name_follows_shared_schema_values():
     parameters = InputParameters.create("ARPES")
 
     assert parameters.requested_task_name == "ARPES"

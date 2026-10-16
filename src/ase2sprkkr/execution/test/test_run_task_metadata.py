@@ -1,7 +1,7 @@
 from ase2sprkkr.execution import ExecutionManager, RunStore
 
 
-def test_run_record_persists_effective_task_and_schema(tmp_path):
+def test_run_record_persists_task_and_schema(tmp_path):
     manager = ExecutionManager(RunStore(tmp_path / "runs"))
     record = manager.new_record(
         task="spleed",
