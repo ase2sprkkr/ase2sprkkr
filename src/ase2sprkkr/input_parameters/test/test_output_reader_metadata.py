@@ -1,12 +1,17 @@
 import pytest
 
-from ase2sprkkr import executables
 from ..input_parameters import InputParameters
 from ..task_definition import TaskDefinition
 from ...common.module_registry import RegistryEntryNotFound
 from ...outputs.reader_registry import reader_registry
 from ...outputs.readers.default import DefaultOutputReader
 from ...outputs.task_result import KkrOutputReader
+from ...sprkkr.executables import executables
+
+
+def test_all_builtin_tasks_use_known_executables():
+    for task in InputParameters.task_registry.values():
+        assert task.executable in executables
 
 
 def test_all_registered_tasks_have_resolvable_output_reader_metadata():
