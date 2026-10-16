@@ -5,14 +5,12 @@ from __future__ import annotations
 import io
 import os
 import pyparsing as pp
-from typing import Union
 
 from . import definitions, tasks
 from .task_definition import InputParametersRegistry, TaskRegistry
 from ..sprkkr.configuration import ConfigurationFile, ConfigurationSection
 from ..common.decorators import cached_class_property
 from ..common.warnings import DataValidityError
-from ..configuration import config
 from ..potentials.potentials import Potential
 
 
@@ -63,13 +61,6 @@ class InputParameters(ConfigurationFile):
         self._potential = potfil, out
         return out
 
-    def resolve_executable_suffix(self, suffix: Union[str, bool]):
-        if suffix is False:
-            return ""
-        if suffix is True:
-            return config.executables.suffix()
-        return suffix
-
     def copy(self, copy_values: bool = False):
         """Copy parameters while preserving requested-task provenance."""
         values = self.as_dict(copy=copy_values, only_changed=True)
@@ -81,14 +72,6 @@ class InputParameters(ConfigurationFile):
     def task_name(self):
         """Originally requested task, or ``None`` for a detached schema object."""
         return self._task_name
-
-    @property
-    def executable(self):
-        return self._require_task_definition().executable
-
-    @property
-    def mpi_supported(self):
-        return self._require_task_definition().mpi
 
     @property
     def execution_task_name(self):
@@ -115,9 +98,6 @@ class InputParameters(ConfigurationFile):
                 pass
         task = self.task_definition
         return task is not None and task.name == "COMPTON"
-
-    def is_mpi(self, mpi=True):
-        return mpi and self._require_task_definition().mpi
 
     def _task_files(self, directory, kind):
         task = self._require_task_definition()

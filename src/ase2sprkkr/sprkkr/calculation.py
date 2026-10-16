@@ -881,6 +881,7 @@ def _create_sprkkr_run(
     input_parameters = prepared.input_parameters
 
     try:
+        task = input_parameters._require_task_definition()
         reader = input_parameters.output_reader(
             result_context, print_output, prepared.directory
         )
@@ -889,7 +890,7 @@ def _create_sprkkr_run(
         manager = resolve_execution_manager(persistent)
 
         execution_profile = profile
-        if input_parameters.mpi_supported:
+        if task.mpi:
             execution_profile = profile.with_overrides(
                 mpi=executor.resolve_mpi(profile.mpi)
             )
@@ -919,7 +920,7 @@ def _create_sprkkr_run(
         )
 
         spec = execution_profile.create_execution(
-            input_parameters.executable,
+            task.executable,
             prepared.input_file,
             prepared.output_file,
             prepared.directory,
@@ -927,7 +928,7 @@ def _create_sprkkr_run(
             input_files=input_files,
             output_files=output_files,
             cache_files=cache_files,
-            mpi_supported=input_parameters.mpi_supported,
+            mpi_supported=task.mpi,
             gdb=gdb,
         )
 

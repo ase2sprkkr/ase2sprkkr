@@ -34,9 +34,19 @@ class _Executor:
 
 
 def test_input_parameters_do_not_own_execution():
-    assert not hasattr(InputParameters, "run_process")
-    assert not hasattr(InputParameters, "calculate")
-    assert InputParameters.create("SCF").task_definition.executable
+    for name in (
+        "run_process",
+        "calculate",
+        "executable",
+        "mpi_supported",
+        "is_mpi",
+        "resolve_executable_suffix",
+    ):
+        assert not hasattr(InputParameters, name)
+
+    task = InputParameters.create("SCF").task_definition
+    assert task.executable
+    assert task.mpi
 
 
 def test_preparation_is_independent_of_execution_profile():
@@ -166,6 +176,7 @@ def test_prepared_calculation_constructs_its_runner(tmp_path):
     )
     prepared = calculator.prepare(output_file=False)
 
+    task = prepared.input_parameters.task_definition
     runner = prepared.create_run(
         result_context=calculator,
         profile=calculator.profile,
@@ -174,6 +185,7 @@ def test_prepared_calculation_constructs_its_runner(tmp_path):
 
     assert runner.spec.directory == str(tmp_path)
     assert runner.spec.input_file is prepared.input_file
+    assert runner.spec.argv == (task.executable,)
 
     runner.close()
     assert prepared.closed
