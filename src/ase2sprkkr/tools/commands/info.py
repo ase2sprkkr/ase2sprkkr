@@ -51,8 +51,7 @@ def parser(parser):
     )
     parser.add_argument(
         "--executables",
-        action="store_const",
-        const=True,
+        action="store_true",
         default=None,
         help="Show known SPR-KKR executables and their default output readers.",
     )
