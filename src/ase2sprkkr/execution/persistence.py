@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from threading import RLock
 
-from .manager import ExecutionManager as BaseExecutionManager
+from .file_manager import ExecutionManager as BaseExecutionManager
 from .project_manager import ExecutionManager
 
 
