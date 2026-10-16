@@ -34,7 +34,8 @@ def test_result_uses_effective_task_identity(tmp_path):
     parameters = InputParameters.create("ARPES")
     parameters.TASK.TASK = "SPLEED"
 
-    assert parameters.task_name == "ARPES"
+    assert parameters.requested_task_name == "ARPES"
+    assert parameters.task_name == "SPLEED"
     assert parameters.task_definition.name == "SPLEED"
 
     result = TaskResult(parameters, None, str(tmp_path))

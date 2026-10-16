@@ -6,6 +6,7 @@ from ase2sprkkr.configuration import definition
 from ase2sprkkr.execution import ExecutorPool, LocalExecutor, RunState, SshTransport
 from ase2sprkkr.execution.remote_endpoint import RemoteEndpointExecutor
 from ase2sprkkr.input_parameters.input_parameters import InputParameters
+from ase2sprkkr.input_parameters.task_definition import TaskDefinition
 from ase2sprkkr.profiles import ProfilesConfigurationContainer
 from ase2sprkkr.sprkkr import calculation as calculation_module
 from ase2sprkkr.sprkkr.calculation import PreparedCalculation
@@ -164,9 +165,9 @@ def test_profile_executor_is_selected_before_mpi_resolution(monkeypatch, tmp_pat
         lambda profile: calls.append(("factory", profile.executor)) or fake_executor,
     )
     monkeypatch.setattr(
-        InputParameters,
+        TaskDefinition,
         "output_reader",
-        lambda self, *args, **kwargs: SimpleNamespace(print_output=False),
+        lambda self, **kwargs: SimpleNamespace(print_output=False),
     )
 
     profile = SPRKKRProfile(executor="ssh", host="cluster", mpi=8)
