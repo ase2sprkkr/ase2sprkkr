@@ -105,6 +105,10 @@ class Configuration:
 
             def pick_only_changed(d):
                 return d.is_expert
+        elif only_changed == "explicit":
+
+            def pick_only_changed(_d):
+                return False
         else:
             only_changed = bool(only_changed)
 

@@ -29,8 +29,8 @@ def test_auto_empty_spheres_only_for_effective_scf(
     assert bool(add_empty_spheres.call_count) is should_add
 
 
-def test_auto_empty_spheres_uses_canonical_execution_task_identity():
-    parameters = SimpleNamespace(execution_task_name="SCF")
+def test_auto_empty_spheres_uses_effective_task_identity():
+    parameters = SimpleNamespace(task_name="SCF")
     atoms = SimpleNamespace(has_potential=lambda: False, sites=[])
 
     with patch("ase2sprkkr.sprkkr.calculation.add_empty_spheres") as add_empty_spheres:

@@ -51,6 +51,27 @@ def test_copy_preserves_task_binding(copy_values):
     assert not copied.ENERGY.NE.is_set()
 
 
+def test_explicit_view_keeps_value_equal_to_default():
+    parameters = InputParameters.create("ARPES")
+    parameters.TASK.TASK = "ARPES"
+
+    explicit = parameters.to_dict(only_changed="explicit")
+
+    assert explicit["TASK"]["TASK"] == "ARPES"
+
+
+def test_copy_preserves_explicit_value_equal_to_default():
+    parameters = InputParameters.create("ARPES")
+    parameters.TASK.TASK = "ARPES"
+
+    copied = parameters.copy()
+
+    assert copied.requested_task_name == "ARPES"
+    assert copied.task_name == "ARPES"
+    assert copied.TASK.TASK.is_set()
+    assert copied.TASK.TASK() == "ARPES"
+
+
 def test_change_task_changes_task_and_schema_atomically():
     parameters = InputParameters.create("DOS")
 
@@ -89,6 +110,19 @@ def test_change_task_retain_values_preserves_explicit_shared_task_value():
     assert parameters.TASK.TASK.is_set()
     assert parameters.TASK.TASK() == "SPLEED"
     assert parameters.task_definition.name == "SPLEED"
+
+
+def test_change_task_retain_values_preserves_explicit_value_equal_to_default():
+    parameters = InputParameters.create("ARPES")
+    parameters.TASK.TASK = "ARPES"
+
+    parameters.change_task("SPLEED", retain_values=True)
+
+    assert parameters.requested_task_name == "SPLEED"
+    assert parameters.task_name == "ARPES"
+    assert parameters.TASK.TASK.is_set()
+    assert parameters.TASK.TASK() == "ARPES"
+    assert parameters.task_definition.name == "ARPES"
 
 
 def test_direct_schema_objects_are_detached():

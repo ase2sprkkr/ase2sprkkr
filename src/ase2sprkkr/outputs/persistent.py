@@ -30,8 +30,8 @@ def _task_definition_for_record(record):
         ) from None
 
 
-def _input_parameters_for_record(manager, record):
-    """Reconstruct parameters from the exact persisted input schema."""
+def _input_parameters_for_record(manager, record, task_definition):
+    """Reconstruct parameters through the persisted task/schema contract."""
     result_files = record.result_files
     input_file = None if result_files is None else result_files.input_file
     if input_file is None or not manager.input_file_is_current(record):
@@ -39,33 +39,34 @@ def _input_parameters_for_record(manager, record):
     if record.input_definition is None:
         return None
 
+    registry = InputParameters.input_parameters_registry
     try:
-        definition = InputParameters.input_parameters_registry[record.input_definition]
+        persisted_definition = registry[record.input_definition]
     except RegistryEntryNotFound:
         raise PersistentResultUnavailableError(
             record,
             f"unknown persisted input definition {record.input_definition!r}",
         ) from None
 
-    parameters = definition.read_from_file(
-        input_file,
-        requested_task_name=record.task,
-    )
-    effective_task = parameters.task_definition
-    if effective_task is None or effective_task.name != record.task:
-        actual = None if effective_task is None else effective_task.name
+    expected_definition = registry.definition_for_task(task_definition)
+    if persisted_definition is not expected_definition:
         raise PersistentResultUnavailableError(
             record,
-            "persisted effective task does not match historical input "
-            f"({record.task!r} != {actual!r})",
+            "persisted input definition does not match effective task "
+            f"({record.input_definition!r} != "
+            f"{task_definition.input_parameters_definition_name!r})",
         )
-    return parameters
+
+    try:
+        return registry.read_for_task(task_definition, input_file)
+    except ValueError as exc:
+        raise PersistentResultUnavailableError(record, str(exc)) from exc
 
 
 def _reader_for_record(manager, record):
     """Create the reader declared by the persisted effective task."""
     task_definition = _task_definition_for_record(record)
-    parameters = _input_parameters_for_record(manager, record)
+    parameters = _input_parameters_for_record(manager, record, task_definition)
     reader_class = reader_registry.class_for_task(task_definition)
 
     return reader_class(

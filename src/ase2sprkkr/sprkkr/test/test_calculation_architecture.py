@@ -160,9 +160,9 @@ def test_effective_task_survives_preparation_snapshot(tmp_path):
     )
 
     try:
-        assert prepared.input_parameters.task_name == "ARPES"
+        assert prepared.input_parameters.requested_task_name == "ARPES"
+        assert prepared.input_parameters.task_name == "SPLEED"
         assert prepared.input_parameters.task_definition.name == "SPLEED"
-        assert prepared.input_parameters.execution_task_name == "SPLEED"
     finally:
         prepared.close()
 

@@ -94,6 +94,7 @@ def input_parameters_definition():
                         ),
                         _task_default,
                         name_in_grammar=False,
+                        is_required=True,
                         info="Type of the calculation",
                     ),
                     V("IQ_AT_SURF", Site.I, 1),

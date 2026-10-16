@@ -17,6 +17,26 @@ from ..common.module_registry import (
 _FileTemplate = Union[str, os.PathLike[str]]
 
 
+def _task_discriminator(parameters):
+    """Return the explicitly parsed ``TASK.TASK`` value, or ``None``."""
+    try:
+        option = parameters["TASK"]["TASK"]
+    except (KeyError, AttributeError):
+        return None
+    if not option.is_set():
+        return None
+    value = option()
+    return None if value is None else str(value).upper()
+
+
+def _task_discriminator_matches(parameters, task):
+    """Whether parsed ``TASK.TASK`` is compatible with effective *task*."""
+    discriminator = _task_discriminator(parameters)
+    if discriminator is None:
+        return False
+    return discriminator in {task.name, task.input_parameters_definition_name}
+
+
 def _normalize_identifier(value: str, field: str) -> str:
     if not isinstance(value, str):
         raise TypeError(f"{field} must be a string")
@@ -199,20 +219,33 @@ class InputParametersRegistry(ModuleRegistry):
         )
 
     def read_for_task(self, task, file, *, allow_dangerous=False):
-        """Read parameters and require the parsed values to represent *task*."""
-        out = self.create_for_task(task, inputfile=file)
-        out.read_from_file(file, allow_dangerous=allow_dangerous)
+        """Read parameters and require the file to identify exactly *task*."""
+        definition = self.definition_for_task(task)
+        out = definition.read_from_file(
+            file,
+            allow_dangerous=allow_dangerous,
+            requested_task_name=task.name,
+        )
 
-        definition = out.definition
-        if definition._task_definition is None:
-            effective_name = definition.task_definition_name(out)
-            if effective_name is not None:
-                effective_name = self.normalize_name(effective_name)
-            if effective_name != task.name:
-                raise ValueError(
-                    f"Input file read for task {task.name!r} represents "
-                    f"task {effective_name!r}"
-                )
+        discriminator = _task_discriminator(out)
+        if discriminator is None:
+            raise ValueError(
+                f"Input file read for task {task.name!r} does not explicitly "
+                "identify a task"
+            )
+
+        effective = out.task_definition
+        effective_name = None if effective is None else effective.name
+        if effective_name != task.name:
+            raise ValueError(
+                f"Input file read for task {task.name!r} represents "
+                f"task {effective_name!r}"
+            )
+        if not _task_discriminator_matches(out, task):
+            raise ValueError(
+                f"Input file read for task {task.name!r} contains task "
+                f"discriminator {discriminator!r}"
+            )
         return out
 
     def create_from_result(self, task, result):

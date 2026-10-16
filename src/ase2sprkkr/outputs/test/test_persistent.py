@@ -186,7 +186,7 @@ def test_persistent_attach_rejects_unknown_input_definition(tmp_path):
         attach_persistent_run(_Manager(record), record.id)
 
 
-def test_persistent_attach_rejects_input_with_different_effective_task(tmp_path):
+def test_persistent_attach_rejects_schema_inconsistent_with_effective_task(tmp_path):
     input_file = _input_file(tmp_path, "DOS")
     record = _record(
         tmp_path,
@@ -197,7 +197,26 @@ def test_persistent_attach_rejects_input_with_different_effective_task(tmp_path)
 
     with pytest.raises(
         PersistentResultUnavailableError,
-        match="persisted effective task does not match historical input",
+        match="persisted input definition does not match effective task",
+    ):
+        attach_persistent_run(_Manager(record), record.id)
+
+
+def test_persistent_attach_rejects_input_with_different_effective_task(tmp_path):
+    parameters = InputParameters.create("SPLEED")
+    parameters.CONTROL.POTFIL = "Fe.pot"
+    input_file = tmp_path / "run.inp"
+    input_file.write_text(parameters.to_string(validate=True))
+    record = _record(
+        tmp_path,
+        "ARPES",
+        input_definition="ARPES",
+        input_file=input_file,
+    )
+
+    with pytest.raises(
+        PersistentResultUnavailableError,
+        match="read for task 'ARPES'.*task 'SPLEED'",
     ):
         attach_persistent_run(_Manager(record), record.id)
 

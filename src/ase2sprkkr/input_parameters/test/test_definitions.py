@@ -7,7 +7,7 @@ import numpy as np
 import pytest
 
 from ...common.grammar_types import Keyword
-from ...common.warnings import DataValidityError, DataValidityWarning
+from ...common.warnings import DataValidityError
 from ..input_parameters import InputParameters
 from ..input_parameters_definitions import InputParametersDefinition
 from ..task_definition import TaskDefinition
@@ -138,15 +138,17 @@ class TestDefinitions:
 
         assert bsfkk.name == "bsf"
         assert bsfkk.ENERGY.NE().tolist() == [1]
-        with pytest.warns(DataValidityWarning, match="BSF-EK.*BSF-KK"):
-            bsfkk.ENERGY.NE = 2
+        assert bsfkk.task_name == "BSFKK"
+        bsfkk.ENERGY.NE = 2
         assert bsfkk.ENERGY.NE().tolist() == [2]
+        assert bsfkk.task_name == "BSFEK"
 
         bsfek = InputParameters.create("BSFEK")
         assert bsfek.ENERGY.NE().tolist() == [200]
-        with pytest.warns(DataValidityWarning, match="BSF-KK.*BSF-EK"):
-            bsfek.ENERGY.NE = 1
+        assert bsfek.task_name == "BSFEK"
+        bsfek.ENERGY.NE = 1
         assert bsfek.ENERGY.NE().tolist() == [1]
+        assert bsfek.task_name == "BSFKK"
 
     def test_bsf_modes_cannot_be_mixed(self):
         ip = InputParameters.create("BSFEK")

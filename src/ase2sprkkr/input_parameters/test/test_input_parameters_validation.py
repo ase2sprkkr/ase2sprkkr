@@ -32,9 +32,10 @@ def test_copy_preserves_requested_and_effective_task_views(copy_values):
 
     copied = parameters.copy(copy_values=copy_values)
 
+    assert copied.requested_task_name == "BSFEK"
     assert copied.task_name == "BSFEK"
     assert copied.task_definition.name == "BSFEK"
-    assert copied.execution_task_name == "BSF"
+    assert copied.definition_name == "BSF"
     np.testing.assert_array_equal(copied.ENERGY.NE(), [200])
 
 
