@@ -93,7 +93,10 @@ def attach_persistent_run(
     if reader is None:
         try:
             reader = _reader_for_record(manager, record)
-        except PersistentResultUnavailableError as exc:
+        except Exception as exc:
+            # Reader reconstruction is local finalization work. Any failure in
+            # this phase makes the current attempt terminal, but the original
+            # exception is still re-raised for the caller/programmer to see.
             if record.state == RunState.FINALIZING:
                 manager.fail_finalization(record, exc)
             raise
