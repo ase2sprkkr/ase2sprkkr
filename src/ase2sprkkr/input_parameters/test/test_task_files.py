@@ -1,4 +1,4 @@
-from ase2sprkkr.input_parameters import InputParameters
+from ..input_parameters import InputParameters
 
 
 def test_arpes_family_uses_single_spc_output_for_npol_one(tmp_path):
