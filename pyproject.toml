@@ -90,6 +90,7 @@ sdist.exclude = [
 ]
 sdist.include = [
 	"src/ase2sprkkr/input_parameters/examples/*.in",
+	"src/ase2sprkkr/input_parameters/examples/*.inp",
 	"src/ase2sprkkr/potentials/examples/*.pot",
 	"src/ase2sprkkr/result_files/examples/*.bsf",
 	"src/ase2sprkkr/result_files/examples/*.rat",

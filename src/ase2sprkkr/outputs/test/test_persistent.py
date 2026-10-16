@@ -119,7 +119,7 @@ def test_persistent_attach_reconstructs_exact_input_definition(tmp_path):
 
     assert isinstance(attached.reader, BsfOutputReader)
     assert parameters._definition is InputParameters.input_parameters_registry["BSF"]
-    assert parameters.definition_name == "bsf"
+    assert parameters.definition_name == "BSF"
     assert parameters.requested_task_name == "BSFEK"
     assert parameters.task_name == "BSFEK"
 
