@@ -58,3 +58,27 @@ def kkrspec_single_spc_output(parameters):
 def kkrspec_polarized_spc_output(parameters):
     """Whether KKRSPEC writes the pair of polarization-resolved SPC files."""
     return not kkrspec_single_spc_output(parameters)
+
+
+def kkrspec_task_file_templates():
+    """Return the shared file declarations of ARPES-family KKRSPEC tasks."""
+    from ..task_definition import FileSpec
+
+    return (
+        (
+            FileSpec("input.inp", condition=kkrspec_uses_legacy_input),
+            FileSpec("in_bar.inp", condition=kkrspec_uses_legacy_input),
+            FileSpec("in_structur.inp", condition=kkrspec_uses_legacy_structure),
+        ),
+        (
+            FileSpec("{dataset}_data.spc", condition=kkrspec_single_spc_output),
+            FileSpec(
+                "{dataset}_data_pol1.spc",
+                condition=kkrspec_polarized_spc_output,
+            ),
+            FileSpec(
+                "{dataset}_data_pol2.spc",
+                condition=kkrspec_polarized_spc_output,
+            ),
+        ),
+    )
