@@ -39,7 +39,7 @@ from .projects import (
 from .project_manager import ExecutionManager
 from .psij import PsijExecutor, PsijRunner
 from .remote import FileSyncPolicy, RemoteRunner
-from .remote_endpoint_client import RemoteEndpointExecutor
+from .remote_endpoint import RemoteEndpointExecutor
 from .transport import LocalTransport, RunningCommand, SshTransport, Transport
 
 # Public remote executors represent reusable endpoint identity only. Per-run
