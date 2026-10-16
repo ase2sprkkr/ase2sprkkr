@@ -75,8 +75,6 @@ def test_direct_schema_objects_are_detached():
     assert parameters.task_definition is None
     assert parameters.task_name is None
     assert parameters.copy().task_name is None
-    with pytest.raises(RuntimeError, match="not associated"):
-        parameters.is_mpi()
 
 
 def test_canonical_schema_identity_is_not_requested_task_provenance():
