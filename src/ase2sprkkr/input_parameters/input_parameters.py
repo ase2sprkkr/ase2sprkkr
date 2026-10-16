@@ -7,7 +7,13 @@ import pyparsing as pp
 
 from . import definitions, tasks
 from .task_definition import InputParametersRegistry, TaskRegistry
-from ..sprkkr.configuration import ConfigurationFile, ConfigurationSection
+from ..sprkkr.configuration import (
+    ConfigurationFile,
+    ConfigurationSection,
+    ConfigurationValue,
+)
+from ..common.configuration_containers import BaseConfigurationContainer
+from ..common.repeated_configuration_containers import RepeatedConfigurationContainer
 from ..common.decorators import cached_class_property
 from ..common.warnings import DataValidityError
 from ..potentials.potentials import Potential
@@ -15,6 +21,31 @@ from ..potentials.potentials import Potential
 
 class InputSection(ConfigurationSection):
     """Input parameters sections have nothing special yet."""
+
+
+class InputValue(ConfigurationValue):
+    """Input-file option supporting a default specific to one parameter instance."""
+
+    @property
+    def default_value(self):
+        """Return an instance-specific override of the definition default."""
+        if hasattr(self, "_default_override"):
+            return self._default_override
+        return super().default_value
+
+    def set_default(self, value):
+        """Override this instance's definition default without setting a value."""
+        if self._definition.is_generated:
+            raise TypeError("Generated options cannot have instance defaults")
+        if self._definition.default_value is None:
+            raise ValueError(
+                "An instance default can only override an existing definition default"
+            )
+        self._default_override = None if value is None else self._pack_value(value)
+
+    def clear_default(self):
+        """Restore the default supplied by the input-parameter definition."""
+        self.__dict__.pop("_default_override", None)
 
 
 class InputParameters(ConfigurationFile):
@@ -30,7 +61,6 @@ class InputParameters(ConfigurationFile):
         outputfile=False,
         *,
         requested_task_name=None,
-        from_result=None,
     ):
         super().__init__(definition)
         self._requested_task_name = (
@@ -38,7 +68,6 @@ class InputParameters(ConfigurationFile):
             if requested_task_name is None
             else str(requested_task_name).upper()
         )
-        self._from_result = from_result
         self._inputfile = inputfile
         self._outputfile = inputfile if outputfile is False else outputfile
 
@@ -72,15 +101,6 @@ class InputParameters(ConfigurationFile):
         return self._requested_task_name
 
     @property
-    def from_result(self):
-        """Result from which these parameters were derived, if any.
-
-        Like :attr:`requested_task_name`, this is provenance and default-value
-        context rather than part of the task identity.
-        """
-        return self._from_result
-
-    @property
     def definition_name(self):
         """Return the registered input-parameter schema name."""
         return self._definition.name
@@ -96,15 +116,53 @@ class InputParameters(ConfigurationFile):
         self._potential = potfil, out
         return out
 
+    @staticmethod
+    def _copy_instance_defaults(source, target, copy_values):
+        if isinstance(source, RepeatedConfigurationContainer):
+            for key, source_member in source._raw_items():
+                try:
+                    target_member = target[key]
+                except (IndexError, KeyError, TypeError):
+                    if isinstance(target._values, list):
+                        while len(target._values) <= key:
+                            target._add()
+                    else:
+                        target._add(key)
+                    target_member = target[key]
+                InputParameters._copy_instance_defaults(
+                    source_member, target_member, copy_values
+                )
+            return
+
+        if isinstance(source, BaseConfigurationContainer):
+            for name, source_member in source.items():
+                try:
+                    target_member = target[name]
+                except (KeyError, TypeError):
+                    continue
+                InputParameters._copy_instance_defaults(
+                    source_member, target_member, copy_values
+                )
+            return
+
+        if not isinstance(source, InputValue):
+            return
+        if not hasattr(source, "_default_override"):
+            return
+        value = source._default_override
+        if copy_values and value is not None:
+            value = source._definition.copy_value(value, all_values=True)
+        target._default_override = value
+
     def copy(self, copy_values: bool = False):
-        """Copy parameters while preserving provenance and default context."""
-        values = self.as_dict(copy=copy_values, only_changed=True)
+        """Copy parameters, including instance-specific defaults."""
+        values = self.as_dict(copy=copy_values, only_changed="explicit")
         out = self.__class__(
             definition=self._definition,
             requested_task_name=self.requested_task_name,
-            from_result=self.from_result,
         )
         out.set(values, unknown="add", retain_invalid="all", report_invalid="ignore")
+        self._copy_instance_defaults(self, out, copy_values)
         return out
 
     def uses_separate_single_site_contour(self):

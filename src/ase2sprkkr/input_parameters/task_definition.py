@@ -242,7 +242,6 @@ class InputParametersRegistry(ModuleRegistry):
         *,
         inputfile=None,
         outputfile=False,
-        from_result=None,
     ):
         """Create InputParameters for a resolved TaskDefinition."""
         from .input_parameters import InputParameters
@@ -251,7 +250,6 @@ class InputParametersRegistry(ModuleRegistry):
         return InputParameters(
             definition=definition,
             requested_task_name=task.name,
-            from_result=from_result,
             inputfile=inputfile,
             outputfile=outputfile,
         )
@@ -270,8 +268,11 @@ class InputParametersRegistry(ModuleRegistry):
         return out
 
     def create_from_result(self, task, result):
-        """Create InputParameters for *task* using *result* as provenance context."""
-        return self.create_for_task(task, from_result=result)
+        """Create InputParameters for *task* using snapshot defaults from *result*."""
+        definition = self.definition_for_task(task)
+        out = self.create_for_task(task)
+        definition.initialize_from_result(out, result)
+        return out
 
     @staticmethod
     def _resolve_file_templates(parameters, directory, templates):
