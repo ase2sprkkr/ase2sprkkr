@@ -1,15 +1,11 @@
+import os
+import signal
 import sys
-import time
-from pathlib import Path
 
 import pytest
 
-from ase2sprkkr.execution import ExecutionSpec, LaunchSpec, RunState
-from ase2sprkkr.execution.remote_endpoint_client import (
-    RemoteEndpointExecutor,
-    _pack_reference,
-    _unpack_reference,
-)
+from ase2sprkkr.execution import RunReference, RunState
+from ase2sprkkr.execution.remote_endpoint_client import RemoteEndpointExecutor
 from ase2sprkkr.execution.remote_service import (
     _decode_handle,
     status_remote,
@@ -44,23 +40,23 @@ def test_remote_process_submission_creates_no_lifecycle_metadata(tmp_path):
         assert not (tmp_path / ".ase2sprkkr" / "runs").exists()
     finally:
         try:
-            import os
-            import signal
-
             os.killpg(handle["pid"], signal.SIGKILL)
         except ProcessLookupError:
             pass
 
 
-def test_remote_reference_keeps_reconnect_context_on_client():
-    native_id = _pack_reference(
-        "opaque-target-id",
-        launch={"remote_root": "/scratch/user"},
-        client_sync={"output_file": "/scratch/user/case/out"},
+def test_run_reference_separates_remote_id_from_client_context():
+    reference = RunReference(
+        executor="remote:local",
+        native_id="opaque-target-id",
+        context={
+            "launch": {"remote_root": "/scratch/user"},
+            "client_sync": {"output_file": "/scratch/user/case/out"},
+        },
     )
 
-    assert _unpack_reference(native_id) == {
-        "remote_id": "opaque-target-id",
+    assert reference.native_id == "opaque-target-id"
+    assert reference.context == {
         "launch": {"remote_root": "/scratch/user"},
         "client_sync": {"output_file": "/scratch/user/case/out"},
     }
@@ -78,15 +74,12 @@ def test_remote_endpoint_status_sends_only_opaque_remote_id():
         return {"state": RunState.RUNNING.value, "return_code": None}
 
     executor._json_request = request
-    native_id = _pack_reference("pid:start", launch={}, client_sync={})
-
-    from ase2sprkkr.execution import RunReference
-
     reference = RunReference(
         executor="remote:local",
-        native_id=native_id,
+        native_id="pid:start",
         computer="cluster",
         directory="/work/case",
+        context={"launch": {}, "client_sync": {}},
     )
     status = executor.status(reference)[0]
 
