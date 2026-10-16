@@ -2,13 +2,12 @@ import os
 import pickle
 import re
 import tempfile
-from types import SimpleNamespace
 
 import numpy as np
 import pytest
 
 from ...common.grammar_types import Keyword
-from ...common.warnings import DataValidityError, DataValidityWarning
+from ...common.warnings import DataValidityError
 from ..input_parameters import InputParameters
 from ..input_parameters_definitions import InputParametersDefinition
 from ..task_definition import TaskDefinition
@@ -31,74 +30,74 @@ class TestDefinitions:
         with pytest.raises(KeyError, match="No option with name UNKNOWN_OPTION"):
             ip.set_option("UNKNOWN_OPTION", 1)
 
-    def test_task_file_templates_and_overrides(self, tmp_path):
-        parameters = SimpleNamespace(CONTROL=SimpleNamespace(DATASET=lambda: "Fe"))
+    def test_adsi_is_customizable_string_with_task_default(self):
+        ip = InputParameters.create("SCF")
 
-        class DynamicTaskDefinition(TaskDefinition):
-            def output_files(self, parameters, directory):
-                return (
-                    *super().output_files(parameters, directory),
-                    os.path.join(directory, "dynamic.out"),
-                )
+        assert ip.CONTROL.ADSI() == "SCF"
 
-        definition = DynamicTaskDefinition(
-            "TEST",
+        ip.CONTROL.ADSI = "CUSTOM"
+        assert ip.CONTROL.ADSI() == "CUSTOM"
+
+        parsed = InputParameters.definition("SCF").read_from_string(ip.to_string())
+        assert parsed.CONTROL.ADSI() == "CUSTOM"
+
+    def test_task_file_templates_and_schema_overrides(self, tmp_path):
+        parameters = InputParameters.create("BSFEK")
+        parameters.CONTROL.DATASET = "Fe"
+        task = TaskDefinition(
+            "BSF",
+            name="CUSTOM",
             input_file_templates=("{dataset}.aux",),
-            output_file_templates=("{dataset}.dat",),
+            cache_file_templates=("{dataset}.cache",),
         )
+        registry = InputParameters.input_parameters_registry
 
-        assert definition.input_files(parameters, str(tmp_path)) == (
-            str(tmp_path / "Fe.aux"),
-        )
-        assert definition.output_files(parameters, str(tmp_path)) == (
-            str(tmp_path / "Fe.dat"),
-            str(tmp_path / "dynamic.out"),
+        assert registry.files_for_task(
+            task, parameters, str(tmp_path), "input"
+        ) == (str(tmp_path / "Fe.aux"),)
+        assert registry.files_for_task(
+            task, parameters, str(tmp_path), "cache"
+        ) == (
+            str(tmp_path / "Fe.cache"),
+            str(tmp_path / "Fe.tau.dir"),
         )
 
     def test_task_definitions_do_not_own_registries_and_are_pickleable(self):
-        registry = InputParameters.task_registry
-        for name in registry.names():
-            task = registry[name]
+        task_registry = InputParameters.task_registry
+        input_registry = InputParameters.input_parameters_registry
+        for name in task_registry.names():
+            task = task_registry[name]
             assert not hasattr(task, "_input_parameters_registry")
 
             restored = pickle.loads(pickle.dumps(task))
-            assert restored.name == task.name
-            assert (
-                restored.input_parameters_definition_name
-                == task.input_parameters_definition_name
-            )
-            assert (
-                registry.input_parameters_definition(restored)
-                is registry.input_parameters_definition(task)
-            )
-            restored_parameters = registry.create_input_parameters(restored)
+            assert restored == task
+            assert input_registry.definition_for_task(
+                restored
+            ) is input_registry.definition_for_task(task)
+            restored_parameters = input_registry.create_for_task(restored)
             assert restored_parameters.task_name == task.name
             assert (
                 restored_parameters._definition
-                is registry.input_parameters_definition(task)
+                is input_registry.definition_for_task(task)
             )
 
     def test_input_parameters_delegate_file_manifests(self, tmp_path, monkeypatch):
         parameters = InputParameters.create("DOS")
-        definition = parameters.task_definition
+        task = parameters.task_definition
+        registry = InputParameters.input_parameters_registry
         calls = []
 
-        def input_files(actual_parameters, directory):
-            calls.append(("input", actual_parameters, directory))
-            return ("input.dat",)
+        def files_for_task(actual_task, actual_parameters, directory, kind):
+            calls.append((kind, actual_task, actual_parameters, directory))
+            return (f"{kind}.dat",)
 
-        def output_files(actual_parameters, directory):
-            calls.append(("output", actual_parameters, directory))
-            return ("output.dat",)
-
-        monkeypatch.setattr(definition, "input_files", input_files)
-        monkeypatch.setattr(definition, "output_files", output_files)
+        monkeypatch.setattr(registry, "files_for_task", files_for_task)
 
         assert parameters.input_files(str(tmp_path)) == ("input.dat",)
         assert parameters.output_files(str(tmp_path)) == ("output.dat",)
         assert calls == [
-            ("input", parameters, str(tmp_path)),
-            ("output", parameters, str(tmp_path)),
+            ("input", task, parameters, str(tmp_path)),
+            ("output", task, parameters, str(tmp_path)),
         ]
 
     def test_bsf_definitions_are_shared(self):
@@ -138,16 +137,18 @@ class TestDefinitions:
         bsfkk = InputParameters.create("BSFKK")
 
         assert bsfkk.name == "bsf"
+        assert bsfkk.task_name == "BSFKK"
         assert bsfkk.ENERGY.NE().tolist() == [1]
-        with pytest.warns(DataValidityWarning, match="BSF-EK.*BSF-KK"):
-            bsfkk.ENERGY.NE = 2
+        bsfkk.ENERGY.NE = 2
         assert bsfkk.ENERGY.NE().tolist() == [2]
+        assert bsfkk.task_name == "BSFEK"
 
         bsfek = InputParameters.create("BSFEK")
+        assert bsfek.task_name == "BSFEK"
         assert bsfek.ENERGY.NE().tolist() == [200]
-        with pytest.warns(DataValidityWarning, match="BSF-KK.*BSF-EK"):
-            bsfek.ENERGY.NE = 1
+        bsfek.ENERGY.NE = 1
         assert bsfek.ENERGY.NE().tolist() == [1]
+        assert bsfek.task_name == "BSFKK"
 
     def test_bsf_modes_cannot_be_mixed(self):
         ip = InputParameters.create("BSFEK")
@@ -314,7 +315,7 @@ class TestDefinitions:
                 assert parameters.task_definition is not None
                 assert (
                     parameters._definition
-                    is parameters.task_registry.input_parameters_definition(
+                    is parameters.input_parameters_registry.definition_for_task(
                         parameters.task_definition
                     )
                 )

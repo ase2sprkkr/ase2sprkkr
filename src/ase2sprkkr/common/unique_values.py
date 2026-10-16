@@ -144,7 +144,7 @@ class UniqueValuesMapping:
           >>> UniqueValuesMapping._create_mapping([1.0, 4.0, 1.0])
           (array([1, 2, 1], dtype=int32), {1.0: 1, 4.0: 2})
         """
-        mapping = np.empty(length or len(values), dtype=dtype)
+        mapping = np.empty(len(values) if length is None else length, dtype=dtype)
         reverse = {}
 
         for i, v in enumerate(values):

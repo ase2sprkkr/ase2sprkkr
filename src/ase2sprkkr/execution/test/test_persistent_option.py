@@ -121,29 +121,42 @@ def _persistent_record(parameters, tmp_path):
     return manager.store.get(runner.id)
 
 
-def test_explicit_manager_persists_effective_task_and_dataset(tmp_path, monkeypatch):
+def test_explicit_manager_persists_task_and_dataset(tmp_path, monkeypatch):
     parameters = _parameters(monkeypatch)
 
     record = _persistent_record(parameters, tmp_path)
 
-    assert record.task == parameters.execution_task_name.upper()
-    assert record.input_definition == parameters._definition.name.upper()
-    assert record.requested_task == parameters.task_name
+    assert record.task == parameters.task_name
+    assert record.input_definition == parameters.definition_name.upper()
+    assert not hasattr(record, "requested_task")
     assert record.dataset == "sample"
     assert record.state == RunState.FINISHED
 
 
-def test_persistence_uses_shared_schema_effective_task(tmp_path, monkeypatch):
+def test_persistence_uses_task_selected_by_shared_schema_values(tmp_path, monkeypatch):
     parameters = _parameters(monkeypatch, "ARPES")
     parameters.TASK.TASK = "SPLEED"
 
     record = _persistent_record(parameters, tmp_path)
 
-    assert parameters.task_name == "ARPES"
-    assert parameters.task_definition.name == "SPLEED"
+    assert parameters.requested_task_name == "ARPES"
+    assert parameters.task_name == "SPLEED"
     assert record.task == "SPLEED"
     assert record.input_definition == "ARPES"
-    assert record.requested_task == "ARPES"
+    assert not hasattr(record, "requested_task")
+
+
+def test_persistence_keeps_ase2sprkkr_task_distinct_from_sprkkr_task_value(
+    tmp_path, monkeypatch
+):
+    parameters = _parameters(monkeypatch, "BSFEK")
+
+    record = _persistent_record(parameters, tmp_path)
+
+    assert parameters.TASK.TASK() == "BSF"
+    assert parameters.task_name == "BSFEK"
+    assert record.task == "BSFEK"
+    assert record.input_definition == "BSF"
 
 
 def test_project_bound_manager_is_preserved_by_execution_adapter(tmp_path, monkeypatch):

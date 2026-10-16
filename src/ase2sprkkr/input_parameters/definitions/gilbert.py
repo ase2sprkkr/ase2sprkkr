@@ -7,7 +7,7 @@ from ..input_parameters_definitions import InputParametersDefinition, InputValue
 from ..task_definition import TaskDefinition
 
 
-class GilbertTaskDefinition(TaskDefinition):
+class GilbertInputParametersDefinition(InputParametersDefinition):
     def input_files(self, parameters, directory):
         files = list(super().input_files(parameters, directory))
         if parameters.TASK.SETFLUCT() == "M_T" and parameters.TASK.FLUCTFIL():
@@ -16,7 +16,7 @@ class GilbertTaskDefinition(TaskDefinition):
 
 
 def input_parameters_definition():
-    schema = InputParametersDefinition(
+    schema = GilbertInputParametersDefinition(
         "gilbert",
         [
             CONTROL("GILBERT"),
@@ -64,7 +64,7 @@ def input_parameters_definition():
         ],
         info="GILBERT - The Gilbert damping parameter calculation",
     )
-    schema._task_definition = GilbertTaskDefinition(
+    schema._task_definition = TaskDefinition(
         "GILBERT",
         name="GILBERT",
         executable="kkrchi",

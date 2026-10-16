@@ -19,6 +19,7 @@ from uuid import uuid4
 from platformdirs import user_state_dir
 
 from ..common.file_locks import FileLock
+from ..common.file_versions import FileState, FileVersion
 from .base import (
     Executor,
     RunReference,
@@ -30,16 +31,22 @@ from .endpoint import ExecutorEndpoint, endpoint_for_executor
 from .pool import default_executor_pool
 
 
-_RUN_RECORD_SCHEMA_VERSION = 3
-_FINAL_STATES = {RunState.FINISHED, RunState.FAILED, RunState.CANCELLED}
+_RUN_RECORD_SCHEMA_VERSION = 1
+_FINAL_STATES = {
+    RunState.FINISHED,
+    RunState.EXECUTION_FAILED,
+    RunState.FINALIZATION_FAILED,
+    RunState.CANCELLED,
+}
 _STATE_RANK = {
     RunState.NEW: 0,
     RunState.SUBMITTING: 1,
     RunState.QUEUED: 2,
     RunState.RUNNING: 3,
-    RunState.FINISHING: 4,
+    RunState.FINALIZING: 4,
     RunState.FINISHED: 5,
-    RunState.FAILED: 5,
+    RunState.EXECUTION_FAILED: 5,
+    RunState.FINALIZATION_FAILED: 5,
     RunState.CANCELLED: 5,
 }
 _UNCHANGED = object()
@@ -76,12 +83,26 @@ def _unique(values):
     return tuple(dict.fromkeys(value for value in values if value is not None))
 
 
-def _processing_state(backend_state):
-    """Map a terminal backend outcome to the still-running finalization phase."""
+def _state_from_backend(state):
+    """Map one backend status into the authoritative persistent lifecycle."""
+    state = RunState(state)
+    if state in (RunState.FINISHED, RunState.EXECUTION_FAILED):
+        return RunState.FINALIZING
+    return state
+
+
+def _completion_state(backend_state, error):
+    """Resolve the terminal lifecycle state after result finalization."""
     backend_state = RunState(backend_state)
-    if backend_state in (RunState.FINISHED, RunState.FAILED):
-        return RunState.FINISHING
-    return backend_state
+    if backend_state in (RunState.FINISHED, RunState.EXECUTION_FAILED):
+        if error is not None:
+            return RunState.FINALIZATION_FAILED
+        return backend_state
+    if backend_state == RunState.CANCELLED:
+        return RunState.CANCELLED
+    if error is not None:
+        return RunState.EXECUTION_FAILED
+    return _state_from_backend(backend_state)
 
 
 class CorruptRunRecord(RuntimeError):
@@ -90,13 +111,6 @@ class CorruptRunRecord(RuntimeError):
     def __init__(self, path, message):
         self.path = Path(path)
         super().__init__(f"Corrupt run record {self.path}: {message}")
-
-
-class ResultFilesState(str, Enum):
-    """Freshness of files produced by a completed calculation."""
-
-    CURRENT = "current"
-    OVERWRITTEN = "overwritten"
 
 
 class FileRetrievalState(str, Enum):
@@ -108,36 +122,25 @@ class FileRetrievalState(str, Enum):
 
 
 @dataclass(frozen=True)
-class FileFingerprint:
-    """Cheap local identity used to notice later file changes."""
-
-    path: str
-    size: int
-    mtime_ns: int
-
-    def __post_init__(self):
-        object.__setattr__(self, "path", os.fspath(self.path))
-
-
-@dataclass(frozen=True)
 class ResultFilesRecord:
-    """Persistent file manifests and snapshots captured at finalization.
+    """Persistent manifests and exact file versions captured at finalization.
 
-    ``fingerprints`` describe calculation outputs and determine ``state``.
-    ``input_fingerprints`` preserve reconstructable historical input context,
-    but an unavailable/changed input does not invalidate output that is still
-    current. Cache files are intentionally absent because reusable caches may
-    legitimately be updated by later calculations.
+    Manifests describe which files belong to the calculation. ``input_versions``
+    and ``output_versions`` are immutable snapshots of the concrete files found
+    when the run was finalized. Their SHA-256 digests are authoritative content
+    identity; cheap filesystem metadata only avoids re-hashing unchanged files.
+
+    Cache files are intentionally absent because reusable caches may legitimately
+    be updated by later calculations.
     """
 
     input_file: Optional[str] = None
     output_file: Optional[str] = None
     input_files: tuple[str, ...] = ()
     output_files: tuple[str, ...] = ()
-    input_fingerprints: tuple[FileFingerprint, ...] = ()
-    fingerprints: tuple[FileFingerprint, ...] = ()
+    input_versions: tuple[FileVersion, ...] = ()
+    output_versions: tuple[FileVersion, ...] = ()
     captured_at: Optional[str] = None
-    state: ResultFilesState = ResultFilesState.CURRENT
     retrieval_state: Optional[FileRetrievalState] = None
     retrieval_message: Optional[str] = None
 
@@ -152,19 +155,15 @@ class ResultFilesRecord:
                 name,
                 tuple(os.fspath(value) for value in getattr(self, name)),
             )
-        for name in ("input_fingerprints", "fingerprints"):
+        for name in ("input_versions", "output_versions"):
             object.__setattr__(
                 self,
                 name,
                 tuple(
-                    value
-                    if isinstance(value, FileFingerprint)
-                    else FileFingerprint(**value)
+                    value if isinstance(value, FileVersion) else FileVersion(**value)
                     for value in getattr(self, name)
                 ),
             )
-        if not isinstance(self.state, ResultFilesState):
-            object.__setattr__(self, "state", ResultFilesState(self.state))
         if self.retrieval_state is not None and not isinstance(
             self.retrieval_state, FileRetrievalState
         ):
@@ -179,16 +178,30 @@ class ResultFilesRecord:
         return _unique((*self.input_files, *self.output_files))
 
     @property
-    def all_fingerprints(self):
+    def all_versions(self):
         return tuple(
             sorted(
                 {
-                    item.path: item
-                    for item in (*self.input_fingerprints, *self.fingerprints)
+                    os.fspath(item.path): item
+                    for item in (*self.input_versions, *self.output_versions)
                 }.values(),
-                key=lambda item: item.path,
+                key=lambda item: os.fspath(item.path),
             )
         )
+
+    @property
+    def state(self):
+        """Current aggregate state of the captured output files."""
+        if self.captured_at is None:
+            return FileState.CURRENT
+        states = tuple(version.state() for version in self.output_versions)
+        if all(state is FileState.CURRENT for state in states):
+            return FileState.CURRENT
+        if FileState.OVERWRITTEN in states:
+            return FileState.OVERWRITTEN
+        if FileState.UNAVAILABLE in states:
+            return FileState.UNAVAILABLE
+        return FileState.MISSING
 
 
 @dataclass(frozen=True)
@@ -233,22 +246,22 @@ class DuplicateSubmissionError(RuntimeError):
 class RunRecord:
     """Persistent identity and last known lifecycle state of one run.
 
-    ``task`` is the effective ASE2SPRKKR task represented by the concrete input
-    values. ``input_definition`` independently identifies the input schema used
-    to parse and reconstruct those values. ``requested_task`` is optional
-    provenance describing the task originally requested by the caller; it is
-    never used in place of the effective task.
+    ``task`` is the ASE2SPRKKR task represented by the concrete input values.
+    ``input_definition`` independently identifies the input schema used to parse
+    and reconstruct those values.
 
-    ``state`` is the public run lifecycle, including result finalization. A
-    terminal backend outcome is therefore represented as ``FINISHING`` until
-    output parsing and the completion callback have finished. A finalization
-    error makes the public state ``FAILED`` even if the backend itself exited
-    successfully. ``backend_state`` records that independent backend outcome.
+    ``state`` is the single authoritative lifecycle state. A terminal backend
+    outcome advances it to ``FINALIZING`` while result processing completes;
+    successful execution then advances to ``FINISHED``, failed execution to
+    ``EXECUTION_FAILED``, and any failure of post-processing to
+    ``FINALIZATION_FAILED``.
 
-    ``finished_at`` records the first terminal lifecycle transition and is
-    immutable afterwards. Later metadata changes, including result-file
-    freshness and remote file retrieval, update ``updated_at`` but never
-    ``finished_at``.
+    ``finished_at`` records the current terminal lifecycle transition. Explicit
+    retry of failed finalization reopens the lifecycle at ``FINALIZING`` and
+    clears it until the retry reaches another terminal state. Later metadata
+    changes, including remote file retrieval, update ``updated_at`` but do not
+    otherwise alter lifecycle timestamps. Result-file freshness is derived from
+    immutable :class:`FileVersion` snapshots.
     """
 
     id: str
@@ -262,12 +275,10 @@ class RunRecord:
     endpoint: Optional[ExecutorEndpoint] = None
     submission: Optional[SubmissionKey] = None
     reference: Optional[RunReference] = None
-    backend_state: Optional[RunState] = None
     return_code: Optional[int] = None
     message: Optional[str] = None
     result_files: Optional[ResultFilesRecord] = None
     input_definition: Optional[str] = None
-    requested_task: Optional[str] = None
     schema_version: int = _RUN_RECORD_SCHEMA_VERSION
 
     def __post_init__(self):
@@ -276,8 +287,6 @@ class RunRecord:
             object.__setattr__(
                 self, "input_definition", str(self.input_definition).upper()
             )
-        if self.requested_task is not None:
-            object.__setattr__(self, "requested_task", str(self.requested_task).upper())
         if isinstance(self.endpoint, dict):
             object.__setattr__(self, "endpoint", ExecutorEndpoint(**self.endpoint))
         if isinstance(self.submission, dict):
@@ -290,8 +299,6 @@ class RunRecord:
             )
         if not isinstance(self.state, RunState):
             object.__setattr__(self, "state", RunState(self.state))
-        if self.backend_state is not None and not isinstance(self.backend_state, RunState):
-            object.__setattr__(self, "backend_state", RunState(self.backend_state))
         if self.schema_version != _RUN_RECORD_SCHEMA_VERSION:
             raise ValueError(
                 f"unsupported schema version {self.schema_version}; "
@@ -335,64 +342,19 @@ class RunStore:
         raise FileNotFoundError(run_id)
 
     @staticmethod
-    def _migrate_result_files(data):
-        result_files = data.get("result_files")
-        if result_files is None:
-            return
-        result_files.pop("output_digest", None)
-        if "input_fingerprints" in result_files:
-            return
-
-        # Schema 1 stored inputs and outputs in one snapshot. Split exact input
-        # manifests where possible; leave ambiguous paths in the output snapshot
-        # so migration remains conservative rather than accepting changed output.
-        fingerprints = result_files.get("fingerprints", ())
-        input_exact = {
-            os.path.abspath(path)
-            for path in result_files.get("input_files", ())
-            if not glob.has_magic(path)
-        }
-        output_exact = {
-            os.path.abspath(path)
-            for path in result_files.get("output_files", ())
-            if not glob.has_magic(path)
-        }
-        input_fingerprints = []
-        output_fingerprints = []
-        for fingerprint in fingerprints:
-            path = os.path.abspath(fingerprint["path"])
-            if path in input_exact and path not in output_exact:
-                input_fingerprints.append(fingerprint)
-            else:
-                output_fingerprints.append(fingerprint)
-        result_files["input_fingerprints"] = input_fingerprints
-        result_files["fingerprints"] = output_fingerprints
-
-    @staticmethod
     def _decode(path):
         try:
             with path.open() as file:
                 data = json.load(file)
-            data.setdefault("finished_at", None)
-            version = data.get("schema_version", 1)
-            if version in (1, 2):
-                data["schema_version"] = _RUN_RECORD_SCHEMA_VERSION
-            elif version != _RUN_RECORD_SCHEMA_VERSION:
+            version = data.get("schema_version")
+            if version != _RUN_RECORD_SCHEMA_VERSION:
                 raise ValueError(
-                    f"unsupported schema version {version}; "
+                    f"unsupported schema version {version!r}; "
                     f"expected {_RUN_RECORD_SCHEMA_VERSION}"
                 )
-
-            data.setdefault("input_definition", None)
-            data.setdefault("requested_task", None)
-
-            # A short-lived development schema stored the native/effective task
-            # in ``task`` and the originally requested identity separately.
-            task_definition = data.pop("task_definition", None)
-            if task_definition is not None and data["requested_task"] is None:
-                data["requested_task"] = task_definition
-
-            RunStore._migrate_result_files(data)
+            # Version 1 briefly persisted requested-task provenance. It was never
+            # part of reconstruction identity, so accept and discard that key.
+            data.pop("requested_task", None)
             return RunRecord(**data)
         except CorruptRunRecord:
             raise
@@ -406,13 +368,21 @@ class RunStore:
         self._warned_corrupt.add(key)
         warnings.warn(str(exc), RuntimeWarning, stacklevel=3)
 
+    @staticmethod
+    def _json_default(value):
+        if isinstance(value, os.PathLike):
+            return os.fspath(value)
+        raise TypeError(f"Object of type {type(value).__name__} is not JSON serializable")
+
     def _write_unlocked(self, record):
         self.directory.mkdir(parents=True, exist_ok=True, mode=0o700)
         path = self._path(record)
         path.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
         temporary = path.with_name(f".{path.name}.{uuid4().hex}.tmp")
         try:
-            temporary.write_text(json.dumps(asdict(record), sort_keys=True))
+            temporary.write_text(
+                json.dumps(asdict(record), sort_keys=True, default=self._json_default)
+            )
             try:
                 os.chmod(temporary, 0o600)
             except OSError:
@@ -569,7 +539,7 @@ class ExecutionManager:
 
     @staticmethod
     def _result_files_snapshot(manifests):
-        fingerprints = []
+        versions = []
         seen = set()
         for manifest in manifests:
             matches = (
@@ -582,37 +552,19 @@ class ExecutionManager:
                 if path in seen or not os.path.isfile(path):
                     continue
                 seen.add(path)
-                stat = os.stat(path)
-                fingerprints.append(
-                    FileFingerprint(
-                        path=path,
-                        size=stat.st_size,
-                        mtime_ns=stat.st_mtime_ns,
-                    )
-                )
-        return tuple(sorted(fingerprints, key=lambda value: value.path))
-
-    @staticmethod
-    def _fingerprint_current(fingerprint):
-        try:
-            stat = os.stat(fingerprint.path)
-        except FileNotFoundError:
-            return False
-        return (
-            stat.st_size == fingerprint.size
-            and stat.st_mtime_ns == fingerprint.mtime_ns
-        )
+                versions.append(FileVersion.capture(path, require_digest=True))
+        return tuple(sorted(versions, key=lambda value: os.fspath(value.path)))
 
     @classmethod
-    def _file_is_current(cls, result_files, path, fingerprints):
+    def _file_is_current(cls, result_files, path, versions):
         if result_files is None or path is None:
             return False
         path = os.path.abspath(path)
         if result_files.captured_at is None:
             return os.path.isfile(path)
-        for fingerprint in fingerprints:
-            if os.path.abspath(fingerprint.path) == path:
-                return cls._fingerprint_current(fingerprint)
+        for version in versions:
+            if os.path.abspath(os.fspath(version.path)) == path:
+                return version.is_current()
         return False
 
     @staticmethod
@@ -622,13 +574,10 @@ class ExecutionManager:
             return ()
 
         if result_files.captured_at is not None:
-            # After finalization the concrete snapshot is authoritative. Do not
-            # rediscover manifests: a later calculation may create new files
-            # matching the same exact name or wildcard.
             return tuple(
-                item.path
-                for item in result_files.all_fingerprints
-                if not os.path.isfile(item.path)
+                os.fspath(item.path)
+                for item in result_files.all_versions
+                if item.state() is FileState.MISSING
             )
 
         missing = []
@@ -649,38 +598,29 @@ class ExecutionManager:
             return result_files
         return replace(
             result_files,
-            input_fingerprints=self._result_files_snapshot(result_files.input_files),
-            fingerprints=self._result_files_snapshot(result_files.output_files),
+            input_versions=self._result_files_snapshot(result_files.input_files),
+            output_versions=self._result_files_snapshot(result_files.output_files),
             captured_at=_now(),
-            state=ResultFilesState.CURRENT,
         )
 
     def input_file_is_current(self, run):
         """Whether the primary historical input is safe to use for reconstruction."""
-        record = (
-            self.store.get(run)
-            if isinstance(run, str)
-            else self.store.get(run.id)
-        )
+        record = self.store.get(run) if isinstance(run, str) else self.store.get(run.id)
         result_files = record.result_files
         return self._file_is_current(
             result_files,
             None if result_files is None else result_files.input_file,
-            () if result_files is None else result_files.input_fingerprints,
+            () if result_files is None else result_files.input_versions,
         )
 
     def output_file_is_current(self, run):
         """Whether the primary historical output belongs to the captured run."""
-        record = (
-            self.store.get(run)
-            if isinstance(run, str)
-            else self.store.get(run.id)
-        )
+        record = self.store.get(run) if isinstance(run, str) else self.store.get(run.id)
         result_files = record.result_files
         return self._file_is_current(
             result_files,
             None if result_files is None else result_files.output_file,
-            () if result_files is None else result_files.fingerprints,
+            () if result_files is None else result_files.output_versions,
         )
 
     def new_record(
@@ -693,7 +633,6 @@ class ExecutionManager:
         submission=None,
         result_files=None,
         input_definition=None,
-        requested_task=None,
         run_id=None,
     ):
         """Create the in-memory identity of an unsubmitted persistent run."""
@@ -711,7 +650,6 @@ class ExecutionManager:
             submission=submission,
             result_files=result_files,
             input_definition=input_definition,
-            requested_task=requested_task,
         )
 
     @staticmethod
@@ -728,15 +666,6 @@ class ExecutionManager:
         return requested
 
     @staticmethod
-    def _merged_backend_state(latest, requested):
-        if requested is _UNCHANGED or requested is None:
-            return latest.backend_state
-        requested = RunState(requested)
-        if latest.backend_state in _FINAL_STATES:
-            return latest.backend_state
-        return requested
-
-    @staticmethod
     def _merged_result_files(latest, requested):
         if requested is _UNCHANGED or requested is None:
             return latest.result_files
@@ -745,8 +674,6 @@ class ExecutionManager:
         current = latest.result_files
         if current is None:
             return requested
-        if current.state == ResultFilesState.OVERWRITTEN:
-            return current
         if current.captured_at is not None and requested.captured_at is not None:
             return current
         return requested
@@ -757,7 +684,6 @@ class ExecutionManager:
         *,
         state=None,
         reference=_UNCHANGED,
-        backend_state=_UNCHANGED,
         return_code=_UNCHANGED,
         message=_UNCHANGED,
         result_files=_UNCHANGED,
@@ -774,9 +700,6 @@ class ExecutionManager:
             }
             if latest.state not in _FINAL_STATES and merged_state in _FINAL_STATES:
                 changes["finished_at"] = now
-            merged_backend_state = self._merged_backend_state(latest, backend_state)
-            if merged_backend_state is not latest.backend_state:
-                changes["backend_state"] = merged_backend_state
             merged_result_files = self._merged_result_files(latest, result_files)
             if merged_result_files is not latest.result_files:
                 changes["result_files"] = merged_result_files
@@ -795,6 +718,35 @@ class ExecutionManager:
             return replace(latest, **changes)
 
         return self.store.update(record, merge)
+
+    def fail_finalization(self, record, error):
+        """Make a failed finalization attempt terminal without backend heuristics."""
+        record = self.store.get(record.id)
+        if record.state != RunState.FINALIZING:
+            return record
+        return self.finalize(
+            record,
+            state=RunState.FINALIZATION_FAILED,
+            message=str(error),
+        )
+
+    def retry_finalization(self, record):
+        """Explicitly reopen a failed finalization attempt."""
+
+        def retry(latest):
+            if latest.state != RunState.FINALIZATION_FAILED:
+                raise RuntimeError(
+                    f"Run {latest.id} is {latest.state.value}, not finalization_failed"
+                )
+            return replace(
+                latest,
+                state=RunState.FINALIZING,
+                updated_at=_now(),
+                finished_at=None,
+                message=None,
+            )
+
+        return self.store.update(record, retry)
 
     def _is_stale_submitting(self, record, *, now=None):
         if record.state != RunState.SUBMITTING or record.reference is not None:
@@ -827,7 +779,7 @@ class ExecutionManager:
             now = _now()
             return replace(
                 latest,
-                state=RunState.FAILED,
+                state=RunState.EXECUTION_FAILED,
                 updated_at=now,
                 finished_at=now,
                 message="Stale submission was not found by its execution backend",
@@ -869,23 +821,22 @@ class ExecutionManager:
             for conflict in stale:
                 attempted_recovery.add(conflict.id)
                 recovered = self.recover_submitting(conflict)
-                if (
-                    recovered.state != RunState.SUBMITTING
-                    or recovered.reference is not None
-                ):
+                if recovered.state != RunState.SUBMITTING or recovered.reference is not None:
                     progressed = True
             if not progressed:
                 raise DuplicateSubmissionError(record, conflicts)
 
     def update(self, record, status: RunStatus):
-        """Persist a backend status while keeping result finalization explicit."""
+        """Persist a backend status in the authoritative lifecycle graph."""
         backend_state = RunState(status.state)
+        return_code = status.return_code
+        if backend_state == RunState.EXECUTION_FAILED and return_code is None:
+            return_code = 1
         return self.transition(
             record,
-            state=_processing_state(backend_state),
-            backend_state=backend_state,
+            state=_state_from_backend(backend_state),
             reference=status.reference,
-            return_code=status.return_code,
+            return_code=return_code,
             message=status.message,
         )
 
@@ -896,17 +847,16 @@ class ExecutionManager:
         state,
         reference=None,
         return_code=None,
-        backend_state=None,
         message=None,
     ):
-        """Capture result files while preserving the execution lifecycle outcome."""
-        result_files = self._capture_result_files(record.result_files)
-        if backend_state is None:
-            backend_state = state if state in _FINAL_STATES else _UNCHANGED
+        """Finish one lifecycle after result processing has completed or failed."""
+        state = RunState(state)
+        result_files = record.result_files
+        if state != RunState.FINALIZATION_FAILED:
+            result_files = self._capture_result_files(result_files)
         return self.transition(
             record,
             state=state,
-            backend_state=backend_state,
             reference=reference,
             return_code=return_code,
             message=message,
@@ -934,44 +884,12 @@ class ExecutionManager:
         return self.store.update(record, update)
 
     def check_result_files(self, run):
-        """Refresh output freshness without changing calculation outcome."""
-        record = (
-            self.store.get(run)
-            if isinstance(run, str)
-            else self.store.get(run.id)
-        )
-
-        def verify(latest):
-            result_files = latest.result_files
-            if (
-                latest.state not in _FINAL_STATES
-                or result_files is None
-                or result_files.captured_at is None
-                or result_files.state == ResultFilesState.OVERWRITTEN
-            ):
-                return latest
-            if all(
-                self._fingerprint_current(fingerprint)
-                for fingerprint in result_files.fingerprints
-            ):
-                return latest
-            return replace(
-                latest,
-                updated_at=_now(),
-                result_files=replace(
-                    result_files, state=ResultFilesState.OVERWRITTEN
-                ),
-            )
-
-        return self.store.update(record, verify)
+        """Return the latest record; file freshness is derived from FileVersion."""
+        return self.store.get(run) if isinstance(run, str) else self.store.get(run.id)
 
     def retrieve_result_files(self, run):
         """Restore locally missing files belonging to one terminal persistent run."""
-        record = (
-            self.store.get(run)
-            if isinstance(run, str)
-            else self.store.get(run.id)
-        )
+        record = self.store.get(run) if isinstance(run, str) else self.store.get(run.id)
         if record.state not in _FINAL_STATES:
             raise RuntimeError(f"Run {record.id} is not finished")
 
@@ -988,9 +906,7 @@ class ExecutionManager:
         refreshed = self.store.get(record.id)
         remaining = self._missing_result_files(refreshed.result_files)
         if not remaining:
-            return self.update_file_retrieval(
-                refreshed, FileRetrievalState.AVAILABLE
-            )
+            return self.update_file_retrieval(refreshed, FileRetrievalState.AVAILABLE)
         if refreshed.state == RunState.FINISHED:
             return self.update_file_retrieval(
                 refreshed,
@@ -1036,7 +952,6 @@ class ExecutionManager:
         *,
         task,
         input_definition=None,
-        requested_task=None,
         dataset=None,
         callback=None,
         run_id=None,
@@ -1052,7 +967,6 @@ class ExecutionManager:
         record = self.new_record(
             task=task,
             input_definition=input_definition,
-            requested_task=requested_task,
             dataset=dataset,
             directory=spec.directory,
             endpoint=endpoint,
@@ -1075,9 +989,7 @@ class ExecutionManager:
 
     def refresh(self, records=None):
         """Refresh referenced runs, reconstructing endpoints when necessary."""
-        records = tuple(
-            self.store.runs(active=True) if records is None else records
-        )
+        records = tuple(self.store.runs(active=True) if records is None else records)
         current = {record.id: record for record in records}
         groups = {}
         for record in records:
@@ -1161,14 +1073,13 @@ class PersistentRunner:
     @property
     def state(self):
         backend_state = self._runner.state
-        state = _processing_state(backend_state)
+        state = _state_from_backend(backend_state)
         if backend_state == RunState.NEW and self._record.state != RunState.NEW:
             state = self._record.state
         if self._record.state != RunState.NEW and state != self._record.state:
             self._record = self.manager.transition(
                 self._record,
                 state=state,
-                backend_state=backend_state,
                 reference=self.reference,
             )
             state = self._record.state
@@ -1189,7 +1100,7 @@ class PersistentRunner:
         except SubmissionNotStarted as exc:
             self._record = self.manager.transition(
                 self._record,
-                state=RunState.FAILED,
+                state=RunState.EXECUTION_FAILED,
                 message=str(exc),
             )
             raise
@@ -1201,8 +1112,7 @@ class PersistentRunner:
                     backend_state = RunState.QUEUED
                 self._record = self.manager.transition(
                     self._record,
-                    state=_processing_state(backend_state),
-                    backend_state=backend_state,
+                    state=_state_from_backend(backend_state),
                     reference=reference,
                 )
             raise
@@ -1220,8 +1130,7 @@ class PersistentRunner:
             backend_state = RunState.QUEUED
         self._record = self.manager.transition(
             self._record,
-            state=_processing_state(backend_state),
-            backend_state=backend_state,
+            state=_state_from_backend(backend_state),
             reference=reference,
         )
         self._sync_file_retrieval()
@@ -1241,11 +1150,10 @@ class PersistentRunner:
         self._sync_file_retrieval()
         backend_state = self._runner.state
         error = self._runner.exception
-        state = RunState.FAILED if error is not None else backend_state
+        state = _completion_state(backend_state, error)
         self._record = self.manager.finalize(
             self._record,
             state=state,
-            backend_state=backend_state,
             reference=self.reference,
             return_code=getattr(result, "return_code", None),
             message=None if error is None else str(error),
@@ -1277,10 +1185,8 @@ class PersistentRunner:
             return self._runner.cancel()
         finally:
             if self._record.state != RunState.NEW:
-                backend_state = self._runner.state
                 self._record = self.manager.transition(
                     self._record,
-                    state=_processing_state(backend_state),
-                    backend_state=backend_state,
+                    state=_state_from_backend(self._runner.state),
                     reference=self.reference,
                 )

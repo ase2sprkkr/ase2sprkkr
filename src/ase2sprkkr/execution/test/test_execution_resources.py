@@ -13,17 +13,23 @@ from ase2sprkkr.sprkkr.calculation import PreparedCalculation
 from ase2sprkkr.sprkkr.profile import SPRKKRProfile
 
 
-class _Parameters:
+class _Task:
+    name = "SCF"
     executable = "sprkkr"
-    mpi_supported = False
-    execution_task_name = "SCF"
+    mpi = False
+
+    def output_reader(self, **kwargs):
+        return object()
+
+
+class _Parameters:
     CONTROL = SimpleNamespace(
         POTFIL=SimpleNamespace(result=None),
         DATASET=SimpleNamespace(result=None),
     )
 
-    def output_reader(self, calculator, print_output, directory):
-        return object()
+    def task_definition_required(self):
+        return _Task()
 
     def input_files(self, directory):
         return ()

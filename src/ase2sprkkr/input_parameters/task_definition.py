@@ -2,7 +2,9 @@
 
 from __future__ import annotations
 
+from dataclasses import dataclass
 import os
+from typing import Iterable, Optional, Tuple, Union
 
 from ..common.doc import process_input_parameters_definition
 from ..common.module_registry import (
@@ -12,96 +14,171 @@ from ..common.module_registry import (
 )
 
 
+_FileTemplate = Union[str, os.PathLike[str]]
+
+
+def _normalize_identifier(value: str, field: str) -> str:
+    if not isinstance(value, str):
+        raise TypeError(f"{field} must be a string")
+    value = value.strip()
+    if not value:
+        raise ValueError(f"{field} must not be empty")
+    return value.upper()
+
+
+def _validate_executable(value: str) -> str:
+    if not isinstance(value, str):
+        raise TypeError("executable must be a string")
+    if not value.strip():
+        raise ValueError("executable must not be empty")
+    return value
+
+
+def _normalize_file_templates(
+    templates: Iterable[_FileTemplate], field: str
+) -> Tuple[str, ...]:
+    if isinstance(templates, (str, bytes, os.PathLike)):
+        raise TypeError(
+            f"{field} must be an iterable of path-like strings, not a single path"
+        )
+    try:
+        iterator = iter(templates)
+    except TypeError:
+        raise TypeError(
+            f"{field} must be an iterable of path-like strings"
+        ) from None
+
+    normalized = []
+    for index, item in enumerate(iterator):
+        try:
+            path = os.fspath(item)
+        except TypeError:
+            raise TypeError(
+                f"{field}[{index}] must be a string or os.PathLike, "
+                f"got {type(item).__name__}"
+            ) from None
+        if not isinstance(path, str):
+            raise TypeError(
+                f"{field}[{index}] must resolve to a string, "
+                f"got {type(path).__name__}"
+            )
+        normalized.append(path)
+    return tuple(normalized)
+
+
+@dataclass(frozen=True, init=False)
 class TaskDefinition:
-    """Definition of one SPR-KKR task."""
+    """Immutable declarative metadata identifying one SPR-KKR task.
+
+    Convenience methods delegate task-bound operations to their owning service
+    registries; resolution and parsing policy does not live in this value object.
+    """
+
+    input_parameters_definition_name: str
+    name: str
+    executable: str
+    mpi: bool
+    output_reader_name: Optional[str]
+    input_file_templates: Tuple[str, ...]
+    output_file_templates: Tuple[str, ...]
+    cache_file_templates: Tuple[str, ...]
 
     def __init__(
         self,
-        input_parameters_definition_name,
+        input_parameters_definition_name: str,
         *,
-        name=None,
-        executable="kkrscf",
-        mpi=True,
-        output_reader=None,
-        input_file_templates=(),
-        output_file_templates=(),
-        cache_file_templates=(),
-        prepare_from_result=None,
-    ):
-        if not isinstance(input_parameters_definition_name, str):
-            raise TypeError("input_parameters_definition_name must be a string")
-        self.input_parameters_definition_name = input_parameters_definition_name.upper()
-        self.name = str(name or self.input_parameters_definition_name).upper()
-        self.executable = executable
-        self.mpi = mpi
-        self.output_reader = (
-            output_reader.upper() if isinstance(output_reader, str) else output_reader
+        name: Optional[str] = None,
+        executable: str = "kkrscf",
+        mpi: bool = True,
+        output_reader_name: Optional[str] = None,
+        output_reader: Optional[str] = None,
+        input_file_templates: Iterable[_FileTemplate] = (),
+        output_file_templates: Iterable[_FileTemplate] = (),
+        cache_file_templates: Iterable[_FileTemplate] = (),
+    ) -> None:
+        schema_name = _normalize_identifier(
+            input_parameters_definition_name, "input_parameters_definition_name"
         )
-        self.input_file_templates = tuple(input_file_templates)
-        self.output_file_templates = tuple(output_file_templates)
-        self.cache_file_templates = tuple(cache_file_templates)
-        self._prepare_from_result = prepare_from_result
-
-    @staticmethod
-    def _resolve_file_templates(parameters, directory, templates):
-        dataset = parameters.CONTROL.DATASET()
-        return tuple(
-            path if os.path.isabs(path) else os.path.join(directory, path)
-            for path in (
-                os.fspath(template).format(dataset=dataset)
-                for template in templates
+        task_name = (
+            schema_name if name is None else _normalize_identifier(name, "name")
+        )
+        executable = _validate_executable(executable)
+        if type(mpi) is not bool:
+            raise TypeError("mpi must be a bool")
+        if output_reader_name is not None and output_reader is not None:
+            raise TypeError(
+                "Specify only one of output_reader_name and output_reader"
             )
+        if output_reader_name is None:
+            output_reader_name = output_reader
+        if output_reader_name is not None:
+            if not isinstance(output_reader_name, str):
+                raise TypeError("output_reader must be a string or None")
+            output_reader_name = _normalize_identifier(
+                output_reader_name, "output_reader"
+            )
+
+        object.__setattr__(self, "input_parameters_definition_name", schema_name)
+        object.__setattr__(self, "name", task_name)
+        object.__setattr__(self, "executable", executable)
+        object.__setattr__(self, "mpi", mpi)
+        object.__setattr__(self, "output_reader_name", output_reader_name)
+        object.__setattr__(
+            self,
+            "input_file_templates",
+            _normalize_file_templates(input_file_templates, "input_file_templates"),
+        )
+        object.__setattr__(
+            self,
+            "output_file_templates",
+            _normalize_file_templates(output_file_templates, "output_file_templates"),
+        )
+        object.__setattr__(
+            self,
+            "cache_file_templates",
+            _normalize_file_templates(cache_file_templates, "cache_file_templates"),
         )
 
-    def input_files(self, parameters, directory):
-        return self._resolve_file_templates(
-            parameters, directory, self.input_file_templates
-        )
-
-    def output_files(self, parameters, directory):
-        return self._resolve_file_templates(
-            parameters, directory, self.output_file_templates
-        )
-
-    def cache_files(self, parameters, directory):
-        return self._resolve_file_templates(
-            parameters, directory, self.cache_file_templates
-        )
-
-    def execution_task_name(self, parameters=None):
-        if parameters is not None:
-            try:
-                value = parameters["TASK"]["TASK"]()
-            except KeyError:
-                value = None
-            if value:
-                return str(value).upper()
-        return self.name
-
-    def output_reader_class(self):
-        """Return this task's output reader.
-
-        An explicit ``output_reader`` overrides the naming convention and is
-        resolved strictly, so a bad explicit mapping is a definition error.
-        Otherwise the reader is resolved from this TaskDefinition's own
-        ``name`` and the registry supplies the generic default when no
-        specialized reader exists.
-        """
-        if isinstance(self.output_reader, type):
-            return self.output_reader
+    def output_reader(
+        self,
+        input_parameters=None,
+        calculator=None,
+        print_output=False,
+        directory=None,
+    ):
+        """Create this task's output reader through the reader registry."""
         from ..outputs.reader_registry import reader_registry
 
-        if self.output_reader is not None:
-            return reader_registry[self.output_reader]
-        return reader_registry.class_for_task(self.name)
+        return reader_registry.reader_for_task(
+            self,
+            input_parameters=input_parameters,
+            calculator=calculator,
+            print_output=print_output,
+            directory=directory,
+        )
 
-    def prepare_from_result(self, parameters, result):
-        if self._prepare_from_result is not None:
-            self._prepare_from_result(parameters, result)
+    def read_output_from_file(
+        self,
+        filename,
+        *,
+        input_parameters=None,
+        calculator=None,
+        directory=None,
+    ):
+        """Read a completed output file through the task's registered reader."""
+        from ..outputs.reader_registry import reader_registry
+
+        return reader_registry.read_for_task(
+            self,
+            filename,
+            input_parameters=input_parameters,
+            calculator=calculator,
+            directory=directory,
+        )
 
 
 class InputParametersRegistry(ModuleRegistry):
-    """Registry of input-file schemas, independent of task identity."""
+    """Registry and factory service for input-parameter schemas and values."""
 
     def __init__(self, package):
         super().__init__(
@@ -145,17 +222,93 @@ class InputParametersRegistry(ModuleRegistry):
         process_input_parameters_definition(module, value)
         return value
 
-    def task_definitions(self):
-        """Return canonical tasks declared by standard input schemas."""
-        return {
-            name: definition._task_definition
-            for name in self.names()
-            if (definition := self[name])._task_definition is not None
-        }
+    def definition_for_task(self, task):
+        """Return the schema identified by declarative task metadata."""
+        if not isinstance(task, TaskDefinition):
+            raise TypeError("task must be a TaskDefinition")
+        definition = self[task.input_parameters_definition_name]
+        canonical = definition._task_definition
+        if canonical is not None and canonical != task:
+            raise RegistryDefinitionError(
+                f"Task {task.name} references input schema "
+                f"{task.input_parameters_definition_name}, which is bound to "
+                f"different canonical task metadata {canonical!r}"
+            )
+        return definition
+
+    def create_for_task(
+        self,
+        task,
+        *,
+        inputfile=None,
+        outputfile=False,
+    ):
+        """Create InputParameters for a resolved TaskDefinition."""
+        from .input_parameters import InputParameters
+
+        definition = self.definition_for_task(task)
+        return InputParameters(
+            definition=definition,
+            requested_task_name=task.name,
+            inputfile=inputfile,
+            outputfile=outputfile,
+        )
+
+    def read_for_task(self, task, file, *, allow_dangerous=False):
+        """Read parameters and require the parsed values to represent *task*."""
+        out = self.create_for_task(task, inputfile=file)
+        out.read_from_file(file, allow_dangerous=allow_dangerous)
+
+        parsed_task_name = out.task_name
+        if parsed_task_name != task.name:
+            raise ValueError(
+                f"Input file read for task {task.name!r} represents "
+                f"task {parsed_task_name!r}"
+            )
+        return out
+
+    def create_from_result(self, task, result):
+        """Create InputParameters for *task* using snapshot defaults from *result*."""
+        definition = self.definition_for_task(task)
+        out = self.create_for_task(task)
+        definition.initialize_from_result(out, result)
+        return out
+
+    @staticmethod
+    def _resolve_file_templates(parameters, directory, templates):
+        dataset = parameters.CONTROL.DATASET()
+        return tuple(
+            path if os.path.isabs(path) else os.path.join(directory, path)
+            for path in (
+                os.fspath(template).format(dataset=dataset)
+                for template in templates
+            )
+        )
+
+    def files_for_task(self, task, parameters, directory, kind):
+        """Combine declarative task templates with schema-specific file rules."""
+        definition = self.definition_for_task(task)
+        templates = getattr(task, f"{kind}_file_templates")
+        declared = self._resolve_file_templates(parameters, directory, templates)
+        schema_files = getattr(definition, f"{kind}_files")(parameters, directory)
+        return (*declared, *schema_files)
 
 
 class TaskRegistry:
-    """Registry combining colocated 1:1 tasks and explicit shared-schema tasks."""
+    """Authoritative namespace and resolver for SPR-KKR task identities.
+
+    Task declarations intentionally have two sources.  A schema with exactly
+    one canonical task may co-locate its :class:`TaskDefinition` on the
+    ``InputParametersDefinition`` as ``_task_definition``; this keeps the
+    common one-schema/one-task case simple and declarative.  Tasks sharing one
+    input schema are declared separately in the extra task package and refer
+    to that schema by name.
+
+    The registry owns the task namespace and resolution rules, not necessarily
+    the physical location of each declaration.  Consumers should resolve task
+    identities through this registry rather than reading ``_task_definition``
+    directly.
+    """
 
     normalize_name = staticmethod(ModuleRegistry.normalize_name)
 
@@ -187,6 +340,13 @@ class TaskRegistry:
             raise RegistryDefinitionError(
                 f"Extra task {task.name} is registered as {name}"
             )
+        try:
+            self.input_parameters_registry.definition_for_task(task)
+        except RegistryEntryNotFound:
+            raise RegistryDefinitionError(
+                f"Task {task.name} references unknown input schema "
+                f"{task.input_parameters_definition_name}"
+            ) from None
         return task
 
     def __getitem__(self, name):
@@ -212,7 +372,11 @@ class TaskRegistry:
 
     def names(self):
         names = set(self.extra_tasks.names())
-        for name in self.input_parameters_registry.task_definitions():
+        for schema_name in self.input_parameters_registry.names():
+            task = self.input_parameters_registry[schema_name]._task_definition
+            if task is None:
+                continue
+            name = task.name
             if name in names:
                 raise RegistryDefinitionError(
                     f"Task {name} is defined both by an input schema and explicitly"
@@ -223,30 +387,12 @@ class TaskRegistry:
     def values(self):
         return tuple(self[name] for name in self.names())
 
-    def input_parameters_definition(self, task):
-        """Return the input-file schema referenced by *task*."""
-        if not isinstance(task, TaskDefinition):
-            task = self[task]
-        return self.input_parameters_registry[task.input_parameters_definition_name]
-
-    def create_input_parameters(self, task, *, inputfile=None, outputfile=False):
-        """Create input parameters for *task* using this registry's schemas."""
-        from .input_parameters import InputParameters
-
-        if not isinstance(task, TaskDefinition):
-            task = self[task]
-        definition = self.input_parameters_definition(task)
-        out = InputParameters(
-            definition=definition,
-            task_name=task.name,
-            inputfile=inputfile,
-            outputfile=outputfile,
-        )
-        definition.initialize_for_task(out, task.name)
-        return out
-
-    def read_input_parameters(self, task, file, *, allow_dangerous=False):
-        """Read input parameters for *task* using this registry's schemas."""
-        out = self.create_input_parameters(task, inputfile=file)
-        out.read_from_file(file, allow_dangerous=allow_dangerous)
-        return out
+    def task_for_parameters(self, parameters):
+        """Resolve the task identity represented by concrete parameter values."""
+        definition = parameters._definition
+        if definition._task_definition is not None:
+            return definition._task_definition
+        name = definition.task_definition_name(parameters)
+        if name is None:
+            return None
+        return self[name]

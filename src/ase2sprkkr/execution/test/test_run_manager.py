@@ -6,9 +6,10 @@ from types import SimpleNamespace
 import pytest
 
 from ase2sprkkr.execution import (
+    CorruptRunRecord,
     ExecutionManager,
     Executor,
-    ResultFilesState,
+    FileState,
     RunReference,
     RunState,
     RunStatus,
@@ -47,7 +48,9 @@ class _FakeRunner:
 
     def finish(self, return_code=0):
         self.result.return_code = return_code
-        self.state = RunState.FINISHED if return_code == 0 else RunState.FAILED
+        self.state = (
+            RunState.FINISHED if return_code == 0 else RunState.EXECUTION_FAILED
+        )
         if self.callback:
             self.callback(self.result)
 
@@ -158,7 +161,13 @@ def test_completion_callback_persists_final_result(tmp_path):
 
 
 @pytest.mark.parametrize(
-    "state", (RunState.FINISHED, RunState.FAILED, RunState.CANCELLED)
+    "state",
+    (
+        RunState.FINISHED,
+        RunState.EXECUTION_FAILED,
+        RunState.FINALIZATION_FAILED,
+        RunState.CANCELLED,
+    ),
 )
 def test_first_terminal_transition_sets_immutable_finished_at(tmp_path, state):
     manager = ExecutionManager(RunStore(tmp_path / "runs"))
@@ -166,7 +175,7 @@ def test_first_terminal_transition_sets_immutable_finished_at(tmp_path, state):
     record = manager.transition(record, state=RunState.RUNNING)
     assert record.finished_at is None
 
-    record = manager.transition(record, state=RunState.FINISHING)
+    record = manager.transition(record, state=RunState.FINALIZING)
     assert record.finished_at is None
 
     record = manager.transition(record, state=state)
@@ -191,15 +200,16 @@ def test_completion_captures_inputs_and_outputs_separately(tmp_path):
 
     stored = store.get(run.id)
     assert stored.state == RunState.FINISHED
-    assert stored.result_files.state == ResultFilesState.CURRENT
+    assert stored.result_files.state is FileState.CURRENT
     assert stored.result_files.captured_at is not None
-    assert {item.path for item in stored.result_files.input_fingerprints} == {
+    assert {os.fspath(item.path) for item in stored.result_files.input_versions} == {
         str(tmp_path / "run.inp")
     }
-    assert {item.path for item in stored.result_files.fingerprints} == {
+    assert {os.fspath(item.path) for item in stored.result_files.output_versions} == {
         str(tmp_path / "run.out"),
         str(tmp_path / "case.dat"),
     }
+    assert all(item.digest for item in stored.result_files.all_versions)
     assert str(tmp_path / "cache.dat") not in stored.result_files.manifests
 
 
@@ -262,14 +272,14 @@ def test_new_glob_member_does_not_change_historical_snapshot(tmp_path):
 
     updated = manager.check_result_files(run.id)
 
-    assert updated.result_files.state == ResultFilesState.CURRENT
-    assert {item.path for item in updated.result_files.fingerprints} == {
+    assert updated.result_files.state is FileState.CURRENT
+    assert {os.fspath(item.path) for item in updated.result_files.output_versions} == {
         str(output_file),
         str(historical),
     }
 
 
-def test_changed_result_file_marks_overwritten_without_changing_outcome(tmp_path):
+def test_changed_result_file_is_overwritten_without_changing_outcome(tmp_path):
     store = RunStore(tmp_path / "runs")
     manager = ExecutionManager(store)
     executor = _FakeExecutor()
@@ -287,11 +297,31 @@ def test_changed_result_file_marks_overwritten_without_changing_outcome(tmp_path
 
     assert updated.state == RunState.FINISHED
     assert updated.return_code == 0
-    assert updated.result_files.state == ResultFilesState.OVERWRITTEN
+    assert updated.result_files.state is FileState.OVERWRITTEN
     assert updated.finished_at == finished.finished_at
 
 
-def test_same_size_content_change_with_new_mtime_marks_result_overwritten(tmp_path):
+def test_restoring_original_contents_restores_current_state(tmp_path):
+    store = RunStore(tmp_path / "runs")
+    manager = ExecutionManager(store)
+    executor = _FakeExecutor()
+    spec = _result_files_spec(tmp_path)
+    run = manager.create_run(executor, object(), spec, task="DOS")
+
+    run.submit()
+    (tmp_path / "run.out").write_text("output")
+    generated = tmp_path / "case.dat"
+    generated.write_text("first")
+    executor.runners[0].finish()
+    generated.write_text("other")
+    assert manager.check_result_files(run.id).result_files.state is FileState.OVERWRITTEN
+
+    generated.write_text("first")
+
+    assert manager.check_result_files(run.id).result_files.state is FileState.CURRENT
+
+
+def test_same_size_content_change_with_restored_mtime_marks_result_overwritten(tmp_path):
     store = RunStore(tmp_path / "runs")
     manager = ExecutionManager(store)
     executor = _FakeExecutor()
@@ -307,16 +337,16 @@ def test_same_size_content_change_with_new_mtime_marks_result_overwritten(tmp_pa
     generated.write_text("other")
     os.utime(
         generated,
-        ns=(original.st_atime_ns, original.st_mtime_ns + 1_000_000),
+        ns=(original.st_atime_ns, original.st_mtime_ns),
     )
 
     updated = manager.check_result_files(run.id)
 
-    assert updated.result_files.state == ResultFilesState.OVERWRITTEN
+    assert updated.result_files.state is FileState.OVERWRITTEN
 
 
 @pytest.mark.parametrize("filename", ["run.out", "case.dat"])
-def test_output_metadata_change_has_uniform_overwritten_semantics(tmp_path, filename):
+def test_output_metadata_change_keeps_result_current(tmp_path, filename):
     store = RunStore(tmp_path / "runs")
     manager = ExecutionManager(store)
     executor = _FakeExecutor()
@@ -333,7 +363,7 @@ def test_output_metadata_change_has_uniform_overwritten_semantics(tmp_path, file
 
     updated = manager.check_result_files(run.id)
 
-    assert updated.result_files.state == ResultFilesState.OVERWRITTEN
+    assert updated.result_files.state is FileState.CURRENT
 
 
 def test_input_change_does_not_invalidate_current_output(tmp_path):
@@ -352,7 +382,7 @@ def test_input_change_does_not_invalidate_current_output(tmp_path):
 
     updated = manager.check_result_files(run.id)
 
-    assert updated.result_files.state == ResultFilesState.CURRENT
+    assert updated.result_files.state is FileState.CURRENT
     assert manager.input_file_is_current(updated) is False
 
 
@@ -372,7 +402,7 @@ def test_changed_cache_does_not_mark_result_overwritten(tmp_path):
     updated = manager.check_result_files(run.id)
 
     assert updated.state == RunState.FINISHED
-    assert updated.result_files.state == ResultFilesState.CURRENT
+    assert updated.result_files.state is FileState.CURRENT
 
 
 def test_load_persistent_result_parses_output_without_backend_refresh(tmp_path):
@@ -433,7 +463,7 @@ def test_load_persistent_result_omits_stale_input_context(tmp_path):
     result = load_persistent_result(manager, run.id, reader=Reader())
 
     assert calls[0]["input_file"] is None
-    assert result.run_record.result_files.state == ResultFilesState.CURRENT
+    assert result.run_record.result_files.state is FileState.CURRENT
 
 
 def test_refresh_batches_referenced_runs(tmp_path):
@@ -473,15 +503,16 @@ def test_run_store_shards_records_and_marks_schema(tmp_path):
     data = json.loads(path.read_text())
 
     assert path.is_file()
-    assert data["schema_version"] == 3
+    assert data["schema_version"] == 1
     assert data["task"] == "ARPES"
     assert data["input_definition"] is None
-    assert data["requested_task"] is None
+    assert "requested_task" not in data
     assert "task_definition" not in data
+    assert "backend_state" not in data
     assert data["finished_at"] is None
 
 
-def test_run_store_migrates_schema_one_records(tmp_path):
+def test_run_store_persists_file_digests(tmp_path):
     store = RunStore(tmp_path / "runs")
     manager = ExecutionManager(store)
     spec = _result_files_spec(tmp_path)
@@ -491,67 +522,34 @@ def test_run_store_migrates_schema_one_records(tmp_path):
         result_files=manager._result_files_for_spec(spec),
     )
     store.save(record)
+    (tmp_path / "run.out").write_text("output")
+    (tmp_path / "case.dat").write_text("data")
     record = manager.finalize(record, state=RunState.FINISHED)
+
     path = tmp_path / "runs" / record.created_at[:10] / f"{record.id}.json"
     data = json.loads(path.read_text())
-    data["schema_version"] = 1
-    result_files = data["result_files"]
-    result_files["fingerprints"] = [
-        *result_files.pop("input_fingerprints"),
-        *result_files["fingerprints"],
-    ]
-    path.write_text(json.dumps(data))
 
-    migrated = store.get(record.id)
-
-    assert migrated.schema_version == 3
-    assert migrated.task == "DOS"
-    assert {item.path for item in migrated.result_files.input_fingerprints} == {
-        str(tmp_path / "run.inp")
-    }
-    assert str(tmp_path / "run.inp") not in {
-        item.path for item in migrated.result_files.fingerprints
-    }
-
-
-def test_development_dual_task_schema_is_migrated_to_requested_task(tmp_path):
-    store = RunStore(tmp_path / "runs")
-    manager = ExecutionManager(store)
-    record = manager.new_record(task="ARPES", directory=tmp_path)
-    store.save(record)
-    path = tmp_path / "runs" / record.created_at[:10] / f"{record.id}.json"
-    data = json.loads(path.read_text())
-    data["task"] = "SPLEED"
-    data["task_definition"] = "ARPES"
-    path.write_text(json.dumps(data))
-
-    migrated = store.get(record.id)
-
-    assert migrated.task == "SPLEED"
-    assert migrated.requested_task == "ARPES"
-    assert not hasattr(migrated, "task_definition")
-
-
-def test_schema_two_development_digest_is_ignored(tmp_path):
-    store = RunStore(tmp_path / "runs")
-    manager = ExecutionManager(store)
-    spec = _result_files_spec(tmp_path)
-    record = manager.new_record(
-        task="DOS",
-        directory=tmp_path,
-        result_files=manager._result_files_for_spec(spec),
+    assert all(
+        version["digest"]
+        for version in data["result_files"]["input_versions"]
+        + data["result_files"]["output_versions"]
     )
+    assert "state" not in data["result_files"]
+
+
+@pytest.mark.parametrize("schema_version", [0, 2, 3, 4, 5])
+def test_run_store_rejects_other_schema_versions(tmp_path, schema_version):
+    store = RunStore(tmp_path / "runs")
+    manager = ExecutionManager(store)
+    record = manager.new_record(task="DOS", directory=tmp_path)
     store.save(record)
     path = tmp_path / "runs" / record.created_at[:10] / f"{record.id}.json"
     data = json.loads(path.read_text())
-    data["schema_version"] = 2
-    data["result_files"]["output_digest"] = "obsolete-development-field"
+    data["schema_version"] = schema_version
     path.write_text(json.dumps(data))
 
-    loaded = store.get(record.id)
-
-    assert loaded.schema_version == 3
-    assert not hasattr(loaded.result_files, "output_digest")
+    with pytest.raises(CorruptRunRecord, match="unsupported schema version"):
+        store.get(record.id)
 
 
 def test_run_store_listing_warns_once_and_skips_corrupt_record(tmp_path):

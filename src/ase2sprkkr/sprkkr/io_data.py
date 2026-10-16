@@ -82,7 +82,7 @@ class ReadIoData(BaseIoData):
         However, the store the handler, to be executed (or repeated) on a newly
         given atoms - for the case, that a new atoms object will be created later
         """
-        if atoms:
+        if atoms is not None:
             handler(atoms)
         self._postponed.append(handler)
 

@@ -3,8 +3,9 @@
 from __future__ import annotations
 
 from ..common.module_registry import RegistryEntryNotFound
-from ..execution import ResultFilesState, RunState
+from ..execution import FileState, RunState
 from ..input_parameters.input_parameters import InputParameters
+from .reader_registry import reader_registry
 
 
 class PersistentResultUnavailableError(RuntimeError):
@@ -15,17 +16,21 @@ class PersistentResultUnavailableError(RuntimeError):
         super().__init__(f"Run {record.id}: {message}")
 
 
+class UnrecoverablePersistentResultError(PersistentResultUnavailableError):
+    """Retrying reconstruction with unchanged persisted data cannot succeed."""
+
+
 def _record(manager, run):
     return manager.store.get(run) if isinstance(run, str) else manager.store.get(run.id)
 
 
 def _task_definition_for_record(record):
-    """Return the effective task definition persisted for this run."""
+    """Return the task definition persisted for this run."""
     try:
         return InputParameters.task_registry[record.task]
     except RegistryEntryNotFound:
-        raise PersistentResultUnavailableError(
-            record, f"unknown persisted effective task {record.task!r}"
+        raise UnrecoverablePersistentResultError(
+            record, f"unknown persisted task {record.task!r}"
         ) from None
 
 
@@ -41,31 +46,31 @@ def _input_parameters_for_record(manager, record):
     try:
         definition = InputParameters.input_parameters_registry[record.input_definition]
     except RegistryEntryNotFound:
-        raise PersistentResultUnavailableError(
+        raise UnrecoverablePersistentResultError(
             record,
             f"unknown persisted input definition {record.input_definition!r}",
         ) from None
 
     parameters = definition.read_from_file(
         input_file,
-        task_name=record.requested_task or record.task,
+        requested_task_name=record.task,
     )
-    effective_task = parameters.task_definition
-    if effective_task is None or effective_task.name != record.task:
-        actual = None if effective_task is None else effective_task.name
-        raise PersistentResultUnavailableError(
+    task_definition = parameters.task_definition
+    if task_definition is None or task_definition.name != record.task:
+        actual = None if task_definition is None else task_definition.name
+        raise UnrecoverablePersistentResultError(
             record,
-            "persisted effective task does not match historical input "
+            "persisted task does not match historical input "
             f"({record.task!r} != {actual!r})",
         )
     return parameters
 
 
 def _reader_for_record(manager, record):
-    """Create the reader declared by the persisted effective task."""
+    """Create the reader declared by the persisted task."""
     task_definition = _task_definition_for_record(record)
     parameters = _input_parameters_for_record(manager, record)
-    reader_class = task_definition.output_reader_class()
+    reader_class = reader_registry.class_for_task(task_definition)
 
     return reader_class(
         parameters,
@@ -84,10 +89,21 @@ def attach_persistent_run(
     callback=None,
     output_listener=None,
 ):
-    """Attach to a stored run using its persisted effective task metadata."""
+    """Attach to or explicitly retry finalization of one stored run."""
     record = _record(manager, run)
+    if record.state == RunState.FINALIZATION_FAILED:
+        record = manager.retry_finalization(record)
+
     if reader is None:
-        reader = _reader_for_record(manager, record)
+        try:
+            reader = _reader_for_record(manager, record)
+        except UnrecoverablePersistentResultError as exc:
+            if record.state == RunState.FINALIZING:
+                manager.fail_finalization(record, exc)
+            raise
+
+    # Attach/transport failures are deliberately not classified as finalization
+    # failures here. They may be transient and leave FINALIZING retryable.
     return manager.attach(
         record,
         reader=reader,
@@ -100,13 +116,17 @@ def attach_persistent_run(
 def load_persistent_result(manager, run, *, reader=None):
     """Reconstruct the historical TaskResult of one terminal persistent run.
 
-    Reader selection is determined by the persisted effective task. When the
-    historical input file is still current and its exact input definition was
-    persisted, parameters are reconstructed from that definition. Legacy records
-    without an input-definition identity may still load output, but their input
-    parameters are intentionally not guessed.
+    Reader selection is determined by the persisted task. When the historical
+    input file is still current and its exact input definition was persisted,
+    parameters are reconstructed from that definition.
     """
-    record = manager.retrieve_result_files(run)
+    record = _record(manager, run)
+    if record.state == RunState.FINALIZATION_FAILED:
+        raise PersistentResultUnavailableError(
+            record, "result finalization failed; retry finalization first"
+        )
+
+    record = manager.retrieve_result_files(record)
     record = manager.check_result_files(record)
     result_files = record.result_files
     if result_files is None or result_files.output_file is None:
@@ -114,10 +134,15 @@ def load_persistent_result(manager, run, *, reader=None):
             record, "no persisted output result file"
         )
 
-    if result_files.state == ResultFilesState.OVERWRITTEN:
-        raise PersistentResultUnavailableError(
-            record, "result files have been overwritten"
-        )
+    file_state = result_files.state
+    if file_state is not FileState.CURRENT:
+        if file_state is FileState.OVERWRITTEN:
+            message = "result files have been overwritten"
+        elif file_state is FileState.MISSING:
+            message = "result files are missing"
+        else:
+            message = "result files are unavailable"
+        raise PersistentResultUnavailableError(record, message)
 
     output_file = result_files.output_file
     output_available = manager.output_file_is_current(record)
@@ -132,7 +157,11 @@ def load_persistent_result(manager, run, *, reader=None):
 
     return_code = record.return_code
     if return_code is None:
-        return_code = 0 if record.state == RunState.FINISHED else 1
+        return_code = (
+            0
+            if record.state in (RunState.FINALIZING, RunState.FINISHED)
+            else 1
+        )
 
     input_file = None
     if manager.input_file_is_current(record) and (

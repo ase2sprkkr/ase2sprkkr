@@ -6,7 +6,7 @@ from ..input_parameters_definitions import InputParametersDefinition
 from ..task_definition import TaskDefinition
 
 
-class PhagenTaskDefinition(TaskDefinition):
+class PhagenInputParametersDefinition(InputParametersDefinition):
     def output_files(self, parameters, directory):
         files = list(super().output_files(parameters, directory))
         potfil = parameters.CONTROL.POTFIL()
@@ -21,13 +21,13 @@ class PhagenTaskDefinition(TaskDefinition):
 
 
 def input_parameters_definition():
-    schema = InputParametersDefinition(
+    schema = PhagenInputParametersDefinition(
         "phagen",
         [CONTROL("PHAGEN"), TASK("PHAGEN"), TAU, ENERGY(), SCF],
         info="PHAGEN",
         description="<TODO: change to something meaningfull>",
     )
-    schema._task_definition = PhagenTaskDefinition(
+    schema._task_definition = TaskDefinition(
         "PHAGEN",
         name="PHAGEN",
         executable="kkrscf",

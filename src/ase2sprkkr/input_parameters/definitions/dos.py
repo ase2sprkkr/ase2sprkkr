@@ -25,6 +25,7 @@ def input_parameters_definition():
         name="DOS",
         executable="kkrgen",
         mpi=True,
+        output_reader="DOS",
         output_file_templates=("{dataset}.dos",),
     )
     return schema

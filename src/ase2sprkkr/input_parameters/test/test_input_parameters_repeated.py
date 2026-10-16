@@ -121,6 +121,8 @@ def test_repeated_value():
     C=77"""
     pp.ParserElement.verbose_stacktrace = True
     assert_parse(data, {"ENERGY": {"A": 3, "B": [2, 5, 8], "C": 77}}, grammar)
+    parameters = definition.read_from_string(data)
+    assert compact(parameters.ENERGY.to_string()) == compact(data)
 
     data = """ENERGY A=3
     B1=2

@@ -1,3 +1,5 @@
+from types import SimpleNamespace
+
 import pyparsing as pp
 import pytest
 
@@ -25,6 +27,13 @@ def _parameters_with(definitions):
     return Parameters
 
 
+def _candidate(adsi, task_name):
+    return SimpleNamespace(
+        CONTROL=SimpleNamespace(ADSI=lambda: adsi),
+        task_name=task_name,
+    )
+
+
 def test_from_file_tries_next_definition_after_parse_mismatch():
     mismatch = _Definition(pp.ParseException("not this task"))
     expected = object()
@@ -45,6 +54,28 @@ def test_from_file_tries_next_definition_after_data_validity_error():
     assert parameters.from_file("input.inp") is expected
     assert mismatch.calls == 1
     assert match.calls == 1
+
+
+def test_from_file_prefers_success_matching_registered_adsi_task():
+    permissive = _Definition(_candidate("SCF", "ARPES"))
+    expected = _candidate("SCF", "SCF")
+    exact = _Definition(expected)
+    parameters = _parameters_with({"first": permissive, "second": exact})
+
+    assert parameters.from_file("input.inp") is expected
+    assert permissive.calls == 1
+    assert exact.calls == 1
+
+
+def test_from_file_keeps_first_success_when_adsi_is_not_a_task():
+    expected = _candidate("custom label", "ARPES")
+    first = _Definition(expected)
+    second = _Definition(_candidate("another label", "SCF"))
+    parameters = _parameters_with({"first": first, "second": second})
+
+    assert parameters.from_file("input.inp") is expected
+    assert first.calls == 1
+    assert second.calls == 0
 
 
 @pytest.mark.parametrize("error", [

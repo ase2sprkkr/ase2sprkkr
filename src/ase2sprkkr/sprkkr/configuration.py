@@ -33,9 +33,10 @@ class ConfigurationSectionTrait:
           :func:`GrammarType.validate<ase2sprkkr.common.grammar_types.GrammarType.validate>`
           True (default) means full validation: i.e. the same as ``save``.
         """
-        if atoms:
+        if atoms is not None:
             atoms = SPRKKRAtoms.promote_ase_atoms(atoms)
-        io_data = io_data or WriteIoData(atoms)
+        if io_data is None:
+            io_data = WriteIoData(atoms)
         self._set_from_atoms(atoms, io_data)
         return io_data
 

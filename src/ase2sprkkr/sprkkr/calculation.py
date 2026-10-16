@@ -209,7 +209,7 @@ def _resolve_potential_and_atoms(
     if potential is None and atoms is None:
         potential = default_potential
     if potential is None:
-        potential = bool(atoms or default_atoms)
+        potential = atoms is not None or default_atoms is not None
 
     potential_specified = potential is not None and potential is not True
     if atoms is not None and potential_specified:
@@ -218,9 +218,9 @@ def _resolve_potential_and_atoms(
             "calculate method; one is generated from the other."
         )
 
-    atoms = atoms or default_atoms
+    atoms = default_atoms if atoms is None else atoms
     if potential is True:
-        if not atoms:
+        if atoms is None:
             raise ValueError(
                 "Potential is True, which requests generation from atoms, but no "
                 "atoms object has been supplied."
@@ -250,7 +250,7 @@ def _resolve_potential_and_atoms(
 
     if isinstance(potential, Potential):
         atoms = potential.atoms
-    elif atoms:
+    elif atoms is not None:
         atoms = SPRKKRAtoms.promote_ase_atoms(atoms)
 
     return potential, atoms, potential_file, save_input
@@ -277,9 +277,10 @@ def _resolve_input_parameters(
 ):
     """Resolve and snapshot task parameters for one concrete calculation."""
     value = default_input_parameters if input_parameters is None else input_parameters
+    potential_missing = potential is None or potential is False
 
     if isinstance(value, (str, os.PathLike)):
-        if isinstance(value, str) and InputParameters.is_it_an_input_parameters_name(value):
+        if isinstance(value, str) and InputParameters.is_task_name(value):
             value = InputParameters.create_input_parameters(value)
         else:
             parameter_filename = _calculation_path(value, directory)
@@ -290,7 +291,7 @@ def _resolve_input_parameters(
                 save_input = source_potential != potential_file
             elif (
                 save_input is None
-                and not potential
+                and potential_missing
                 and potential_file is None
                 and not options
                 and not task
@@ -305,7 +306,7 @@ def _resolve_input_parameters(
 
             if save_input is False:
                 input_file = parameter_filename
-            elif not potential and potential_file is None and source_potential:
+            elif potential_missing and potential_file is None and source_potential:
                 # Preserve the original POTFIL meaning if the parsed input must
                 # be materialized into another file/directory.
                 potential_file = source_potential
@@ -326,7 +327,7 @@ def _resolve_input_parameters(
 
     if (
         not input_parameters.CONTROL.POTFIL.result
-        and not potential
+        and potential_missing
         and not potential_file
     ):
         raise ValueError(
@@ -347,7 +348,7 @@ def _resolve_empty_spheres(
         empty_spheres = default_empty_spheres
     if empty_spheres == "auto":
         empty_spheres = (
-            input_parameters.execution_task_name == "SCF"
+            input_parameters.task_name == "SCF"
             and atoms is not None
             and (
                 not atoms.has_potential()
@@ -357,7 +358,7 @@ def _resolve_empty_spheres(
         if empty_spheres:
             empty_spheres = not any(site.is_vacuum() for site in atoms.sites)
 
-    if not empty_spheres or not atoms:
+    if not empty_spheres or atoms is None:
         return
 
     if isinstance(empty_spheres, tuple):
@@ -387,7 +388,7 @@ def _symbols_for_filenames(
     default_potential_file,
 ):
     """Return a stable best-effort system name for filename templates."""
-    if atoms:
+    if atoms is not None:
         return filename_from_symbols(atoms.symbols)
     for name in "POTFIL", "DATASET":
         option = input_parameters.CONTROL[name]
@@ -521,10 +522,10 @@ class PreparedCalculation:
                 directory=work_directory,
             )
 
-            task_name = input_parameters.execution_task_name
-            effective_task = str(task_name).strip().upper()
+            task_definition = input_parameters.task_definition_required()
+            task_name = task_definition.name
             if restart_scf:
-                if effective_task != "SCF":
+                if task_name != "SCF":
                     raise ValueError(
                         "restart_scf=True is only valid for an SCF calculation."
                     )
@@ -544,7 +545,7 @@ class PreparedCalculation:
             scf_status_override = None
             if (
                 isinstance(potential, Potential)
-                and effective_task != "SCF"
+                and task_name != "SCF"
                 and potential.SCF_INFO.SCFSTATUS() == "START"
                 and potential.is_scf_converged(atoms)
             ):
@@ -592,7 +593,7 @@ class PreparedCalculation:
                         return base + replacement
                 return default
 
-            if potential:
+            if potential is not None and potential is not False:
                 selected_potential = (
                     default_potential_file
                     if potential_file is None
@@ -881,15 +882,19 @@ def _create_sprkkr_run(
     input_parameters = prepared.input_parameters
 
     try:
-        reader = input_parameters.output_reader(
-            result_context, print_output, prepared.directory
+        task = input_parameters.task_definition_required()
+        reader = task.output_reader(
+            input_parameters=input_parameters,
+            calculator=result_context,
+            print_output=print_output,
+            directory=prepared.directory,
         )
         if executor is None:
             executor = executor_from_profile(profile)
         manager = resolve_execution_manager(persistent)
 
         execution_profile = profile
-        if input_parameters.mpi_supported:
+        if task.mpi:
             execution_profile = profile.with_overrides(
                 mpi=executor.resolve_mpi(profile.mpi)
             )
@@ -919,7 +924,7 @@ def _create_sprkkr_run(
         )
 
         spec = execution_profile.create_execution(
-            input_parameters.executable,
+            task.executable,
             prepared.input_file,
             prepared.output_file,
             prepared.directory,
@@ -927,7 +932,7 @@ def _create_sprkkr_run(
             input_files=input_files,
             output_files=output_files,
             cache_files=cache_files,
-            mpi_supported=input_parameters.mpi_supported,
+            mpi_supported=task.mpi,
             gdb=gdb,
         )
 
@@ -943,9 +948,8 @@ def _create_sprkkr_run(
                 executor,
                 reader,
                 spec,
-                task=input_parameters.execution_task_name,
-                input_definition=input_parameters._definition.name,
-                requested_task=input_parameters.task_name,
+                task=task.name,
+                input_definition=input_parameters.definition_name,
                 dataset=input_parameters.CONTROL.DATASET.result,
                 callback=finalized,
             )

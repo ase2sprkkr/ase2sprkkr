@@ -21,7 +21,8 @@ def _copy_validator(_item, _values, _why):
 
 
 def _schema_for(task):
-    return InputParameters.task_registry.input_parameters_definition(task)
+    task_definition = InputParameters.task_registry[task]
+    return InputParameters.input_parameters_registry.definition_for_task(task_definition)
 
 
 DEFINITION_HOOK_ATTRIBUTES = (

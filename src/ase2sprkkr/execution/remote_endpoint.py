@@ -30,6 +30,7 @@ from .remote import (
     _STATE_FILE,
     _run_sync,
 )
+from .stream_protocol import FramedRunningCommand
 from .transport import AtomicLocalFile
 
 
@@ -322,7 +323,10 @@ class RemoteEndpointExecutor(Executor):
         return await self._json_request("cancel", directory, run_id)
 
     async def _follow(self, directory, run_id):
-        return await self.transport.start((*self.command, "follow", directory, run_id))
+        process = await self.transport.start(
+            (*self.command, "follow", directory, run_id, "--framed")
+        )
+        return FramedRunningCommand(process)
 
     async def _saved_request(self, directory, run_id):
         path = posixpath.join(directory, _METADATA_DIR, _RUNS_DIR, run_id, _REQUEST_FILE)

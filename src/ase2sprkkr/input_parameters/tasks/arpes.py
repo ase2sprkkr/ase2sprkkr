@@ -2,4 +2,9 @@ from ..task_definition import TaskDefinition
 
 
 def task_definition():
-    return TaskDefinition("ARPES", name="ARPES", executable="kkrspec")
+    return TaskDefinition(
+        "ARPES",
+        name="ARPES",
+        executable="kkrspec",
+        output_reader="ARPES",
+    )

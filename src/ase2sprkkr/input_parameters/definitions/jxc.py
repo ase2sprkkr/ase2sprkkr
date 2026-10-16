@@ -7,7 +7,10 @@ from ..task_definition import TaskDefinition
 from ...common.grammar_types import flag
 
 
-class JxcTaskDefinition(TaskDefinition):
+class JxcInputParametersDefinition(InputParametersDefinition):
+    def initialize_from_result(self, parameters, result):
+        parameters.ENERGY.EMIN.set_default(result.last_iteration.energy.EMIN())
+
     def output_files(self, parameters, directory):
         files = list(super().output_files(parameters, directory))
         dataset = parameters.CONTROL.DATASET()
@@ -38,13 +41,9 @@ def _jxc_nonmag_warning_condition(value):
     )
 
 
-def _prepare_from_result(parameters, result):
-    parameters.set("EMIN", result.last_iteration.energy.EMIN())
-
-
 def input_parameters_definition():
     mmode = MODE["MODE"].copy(warning_condition=_jxc_mode_warning_condition)
-    schema = InputParametersDefinition(
+    schema = JxcInputParametersDefinition(
         "jxc",
         [
             CONTROL("JXC"),
@@ -75,11 +74,11 @@ def input_parameters_definition():
         info="JXC",
     )
     schema["CONTROL"]["NONMAG"].warning_condition = _jxc_nonmag_warning_condition
-    schema._task_definition = JxcTaskDefinition(
+    schema._task_definition = TaskDefinition(
         "JXC",
         name="JXC",
         executable="kkrgen",
         mpi=True,
-        prepare_from_result=_prepare_from_result,
+        output_reader="JXC",
     )
     return schema

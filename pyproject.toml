@@ -31,6 +31,8 @@ dependencies = [
     "elementy",
     "platformdirs",
     "packaging",
+    # Intentionally a runtime dependency: `ase2sprkkr test` runs the installed
+    # package's self-tests so users can verify that their installation works.
     "pytest",
     "pyyaml",
     "ruamel.yaml>=0.18.16",
@@ -88,6 +90,7 @@ sdist.exclude = [
 ]
 sdist.include = [
 	"src/ase2sprkkr/input_parameters/examples/*.in",
+	"src/ase2sprkkr/input_parameters/examples/*.inp",
 	"src/ase2sprkkr/potentials/examples/*.pot",
 	"src/ase2sprkkr/result_files/examples/*.bsf",
 	"src/ase2sprkkr/result_files/examples/*.rat",

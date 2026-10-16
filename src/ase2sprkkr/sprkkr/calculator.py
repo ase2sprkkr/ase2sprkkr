@@ -68,14 +68,14 @@ class SPRKKR(BaseCalculator):
         persistent=False,
         **kwargs,
     ):
-        if potential and not isinstance(potential, (bool, str)):
-            if atoms:
+        if potential is not None and not isinstance(potential, (bool, str)):
+            if atoms is not None:
                 raise ValueError(
                     "You can not specify both atoms and potential. "
                     "If you specify one of them, the other will be generated from it."
                 )
             atoms = potential.atoms
-        elif atoms:
+        elif atoms is not None:
             atoms = SPRKKRAtoms.promote_ase_atoms(atoms)
 
         self._potential = None
@@ -149,7 +149,7 @@ class SPRKKR(BaseCalculator):
     def potential(self) -> Potential:
         """Potential associated with the calculator, generated lazily from atoms."""
         if self._potential is None:
-            if not self._atoms:
+            if self._atoms is None:
                 return None
             self._potential = Potential.from_atoms(self._atoms)
         return self._potential
@@ -157,9 +157,9 @@ class SPRKKR(BaseCalculator):
     @potential.setter
     def potential(self, pot):
         self._potential = pot
-        if pot and not isinstance(pot, (bool, str)):
+        if pot is not None and not isinstance(pot, (bool, str)):
             atoms = pot.atoms
-            if atoms:
+            if atoms is not None:
                 self._atoms = atoms
             else:
                 pot._atoms = self._atoms
@@ -179,7 +179,7 @@ class SPRKKR(BaseCalculator):
     def atoms(self, atoms):
         atoms = SPRKKRAtoms.promote_ase_atoms(atoms)
         self._atoms = atoms
-        if self._potential:
+        if self._potential is not None and self._potential is not False:
             if isinstance(self._potential, str):
                 self._potential = None
             elif self._potential is not True:
@@ -434,7 +434,7 @@ class SPRKKR(BaseCalculator):
                 potential = result.potential
             except (ValueError, FileNotFoundError):
                 return
-            if potential:
+            if potential is not None:
                 self.potential = potential
 
     def calculate(
@@ -513,7 +513,9 @@ class SPRKKR(BaseCalculator):
         self._update_from_result(
             result,
             adopt_potential=(
-                result.task_name.upper() == "SCF" and not potential and not atoms
+                result.task_name.upper() == "SCF"
+                and potential is None
+                and atoms is None
             ),
         )
         if callback:

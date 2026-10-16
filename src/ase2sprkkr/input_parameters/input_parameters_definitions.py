@@ -12,13 +12,15 @@ from ..sprkkr.configuration import (
 from ..common.grammar_types import mixed, flag
 from ..common.grammar import generate_grammar, delimitedList
 from ..common.decorators import cached_class_property, cache
-from .input_parameters import InputParameters, InputSection
+from .input_parameters import InputParameters, InputSection, InputValue
 
 with generate_grammar():
     section_line_ends = pp.Regex("(\n[ \t]*)*[ \t]")
 
 
 class InputValueDefinition(ConfigurationValueDefinition):
+    result_class = InputValue
+
     @cached_class_property
     def delimiter():
         with generate_grammar():
@@ -55,9 +57,17 @@ class InputParametersDefinition(ConfigurationFileDefinition):
     """Syntax and parameter semantics of one SPR-KKR input-file schema."""
 
     _task_definition = None
-    """Canonical 1:1 task, or None for schemas shared by multiple tasks."""
+    """Canonical 1:1 task declared together with this schema.
 
-    save_hook = None
+    This is declaration-time metadata for the simple case where one input
+    schema represents exactly one task.  Schemas shared by multiple tasks leave
+    it as ``None`` and declare those tasks separately through ``TaskRegistry``'s
+    extra task package.
+
+    The association is internal and must not be changed after registration.
+    Consumers should resolve task identities through ``TaskRegistry`` instead.
+    """
+
     child_class = InputSectionDefinition
     result_class = InputParameters
     custom_class = staticmethod(
@@ -66,42 +76,27 @@ class InputParametersDefinition(ConfigurationFileDefinition):
     configuration_type_name = "INPUT PARAMETERS"
 
     def task_definition_name(self, parameters):
-        """Return the task represented by *parameters*, if the schema encodes one.
+        """Return the task identifier represented by *parameters*, if encoded.
 
-        Schemas shared by multiple tasks override this method. A plain schema is
-        deliberately detached from execution semantics unless a canonical task
-        is attached through ``_task_definition``.
+        Schemas shared by multiple tasks override this method. Resolution of the
+        identifier to a TaskDefinition belongs to TaskRegistry.
         """
         return None
 
-    def task_definition(self, parameters):
-        """Resolve the task represented by concrete parameter values."""
-        if self._task_definition is not None:
-            return self._task_definition
-        name = self.task_definition_name(parameters)
-        if name is None:
-            return None
-        return parameters.task_registry[name]
+    def initialize_from_result(self, parameters, result):
+        """Initialize instance-specific defaults derived from a previous result."""
 
-    def initialize_for_task(self, parameters, task_name):
-        """Initialize an explicit task discriminator when the schema has one.
+    def input_files(self, parameters, directory):
+        """Return schema-specific auxiliary input files."""
+        return ()
 
-        Shared schemas commonly encode their concrete task in ``TASK.TASK``.
-        When that option accepts the requested task, make the requested task an
-        explicit value. Schemas using another discriminator (for example BSF)
-        keep their own task-dependent defaults and may override this hook.
-        """
-        if self._task_definition is not None:
-            return
-        try:
-            option = parameters["TASK"]["TASK"]
-            grammar_type = option._definition.type
-            keywords = grammar_type.keywords
-        except (KeyError, AttributeError):
-            return
-        value = grammar_type.convert(task_name)
-        if value in keywords:
-            option.set(value)
+    def output_files(self, parameters, directory):
+        """Return schema-specific output files."""
+        return ()
+
+    def cache_files(self, parameters, directory):
+        """Return schema-specific optional cache files."""
+        return ()
 
     @classmethod
     @cache
