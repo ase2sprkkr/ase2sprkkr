@@ -43,8 +43,8 @@ class InputParameters(ConfigurationFile):
 
     @property
     def task_definition(self):
-        """Return the effective task represented by the current values."""
-        return self.task_registry.effective_task(self)
+        """Return the task represented by the current values."""
+        return self.task_registry.task_for_parameters(self)
 
     def _require_task_definition(self):
         task = self.task_definition
@@ -56,7 +56,7 @@ class InputParameters(ConfigurationFile):
 
     @property
     def task_name(self):
-        """Return the effective ASE2SPRKKR task represented by current values."""
+        """Return the ASE2SPRKKR task represented by the current values."""
         task = self.task_definition
         return None if task is None else task.name
 

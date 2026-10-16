@@ -114,7 +114,7 @@ def test_unrecoverable_reconstruction_terminates_finalization_and_can_be_retried
     failed = store.get(record.id)
     assert failed.state == RunState.FINALIZATION_FAILED
     assert failed.finished_at is not None
-    assert "unknown persisted effective task" in failed.message
+    assert "unknown persisted task" in failed.message
 
     # attach_persistent_run is also the public retry operation: a failed
     # finalization is reopened before reader reconstruction is attempted again.
@@ -124,7 +124,7 @@ def test_unrecoverable_reconstruction_terminates_finalization_and_can_be_retried
     failed_again = store.get(record.id)
     assert failed_again.state == RunState.FINALIZATION_FAILED
     assert failed_again.finished_at is not None
-    assert "unknown persisted effective task" in failed_again.message
+    assert "unknown persisted task" in failed_again.message
 
 
 def test_reader_reconstruction_programming_error_is_not_classified_as_finalization_failure(

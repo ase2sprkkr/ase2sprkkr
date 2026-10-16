@@ -25,12 +25,12 @@ def _record(manager, run):
 
 
 def _task_definition_for_record(record):
-    """Return the effective task definition persisted for this run."""
+    """Return the task definition persisted for this run."""
     try:
         return InputParameters.task_registry[record.task]
     except RegistryEntryNotFound:
         raise UnrecoverablePersistentResultError(
-            record, f"unknown persisted effective task {record.task!r}"
+            record, f"unknown persisted task {record.task!r}"
         ) from None
 
 
@@ -55,19 +55,19 @@ def _input_parameters_for_record(manager, record):
         input_file,
         requested_task_name=record.task,
     )
-    effective_task = parameters.task_definition
-    if effective_task is None or effective_task.name != record.task:
-        actual = None if effective_task is None else effective_task.name
+    task_definition = parameters.task_definition
+    if task_definition is None or task_definition.name != record.task:
+        actual = None if task_definition is None else task_definition.name
         raise UnrecoverablePersistentResultError(
             record,
-            "persisted effective task does not match historical input "
+            "persisted task does not match historical input "
             f"({record.task!r} != {actual!r})",
         )
     return parameters
 
 
 def _reader_for_record(manager, record):
-    """Create the reader declared by the persisted effective task."""
+    """Create the reader declared by the persisted task."""
     task_definition = _task_definition_for_record(record)
     parameters = _input_parameters_for_record(manager, record)
     reader_class = reader_registry.class_for_task(task_definition)
@@ -116,9 +116,9 @@ def attach_persistent_run(
 def load_persistent_result(manager, run, *, reader=None):
     """Reconstruct the historical TaskResult of one terminal persistent run.
 
-    Reader selection is determined by the persisted effective task. When the
-    historical input file is still current and its exact input definition was
-    persisted, parameters are reconstructed from that definition.
+    Reader selection is determined by the persisted task. When the historical
+    input file is still current and its exact input definition was persisted,
+    parameters are reconstructed from that definition.
     """
     record = _record(manager, run)
     if record.state == RunState.FINALIZATION_FAILED:

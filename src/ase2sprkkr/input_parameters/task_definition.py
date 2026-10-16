@@ -205,13 +205,13 @@ class InputParametersRegistry(ModuleRegistry):
 
         definition = out.definition
         if definition._task_definition is None:
-            effective_name = definition.task_definition_name(out)
-            if effective_name is not None:
-                effective_name = self.normalize_name(effective_name)
-            if effective_name != task.name:
+            parsed_task_name = definition.task_definition_name(out)
+            if parsed_task_name is not None:
+                parsed_task_name = self.normalize_name(parsed_task_name)
+            if parsed_task_name != task.name:
                 raise ValueError(
                     f"Input file read for task {task.name!r} represents "
-                    f"task {effective_name!r}"
+                    f"task {parsed_task_name!r}"
                 )
         return out
 
@@ -335,7 +335,7 @@ class TaskRegistry:
     def values(self):
         return tuple(self[name] for name in self.names())
 
-    def effective_task(self, parameters):
+    def task_for_parameters(self, parameters):
         """Resolve the task identity represented by concrete parameter values."""
         definition = parameters._definition
         if definition._task_definition is not None:
