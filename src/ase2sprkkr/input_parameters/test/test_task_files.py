@@ -48,3 +48,27 @@ def test_arpes_legacy_input_files_follow_inpver_and_strver(tmp_path):
         str(tmp_path / "in_bar.inp"),
         str(tmp_path / "in_structur.inp"),
     )
+
+
+def test_torque_declares_tau_as_cache(tmp_path):
+    parameters = InputParameters.create("TORQUE")
+    parameters.CONTROL.DATASET = "case"
+
+    assert parameters.cache_files(str(tmp_path)) == (
+        str(tmp_path / "case.tau.dir"),
+    )
+
+
+def test_jxc_declares_optional_dmi_output(tmp_path):
+    parameters = InputParameters.create("JXC")
+    parameters.CONTROL.DATASET = "case"
+
+    assert str(tmp_path / "case_DMIVEC_Dij.dat") not in parameters.output_files(
+        str(tmp_path)
+    )
+
+    parameters.TASK.DMI = True
+
+    assert str(tmp_path / "case_DMIVEC_Dij.dat") in parameters.output_files(
+        str(tmp_path)
+    )
