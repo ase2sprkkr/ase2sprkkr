@@ -10,7 +10,7 @@ from ...common.grammar_types import Keyword
 from ...common.warnings import DataValidityError, DataValidityWarning
 from ..input_parameters import InputParameters
 from ..input_parameters_definitions import InputParametersDefinition
-from ..task_definition import TaskDefinition
+from ..task_definition import FileSpec, TaskDefinition
 
 
 class TestDefinitions:
@@ -41,14 +41,21 @@ class TestDefinitions:
         parsed = InputParameters.definition("SCF").read_from_string(ip.to_string())
         assert parsed.CONTROL.ADSI() == "CUSTOM"
 
-    def test_task_file_templates_and_schema_overrides(self, tmp_path):
+    def test_task_file_specs_resolve_static_dynamic_and_conditional_files(self, tmp_path):
         parameters = InputParameters.create("BSFEK")
         parameters.CONTROL.DATASET = "Fe"
+
+        def dynamic_cache(actual_parameters, directory):
+            return os.path.join(directory, f"{actual_parameters.CONTROL.DATASET()}.dynamic")
+
         task = TaskDefinition(
             "BSF",
             name="CUSTOM",
             input_file_templates=("{dataset}.aux",),
-            cache_file_templates=("{dataset}.cache",),
+            cache_file_templates=(
+                FileSpec(dynamic_cache),
+                FileSpec("{dataset}.disabled", condition=lambda _parameters: False),
+            ),
         )
         registry = InputParameters.input_parameters_registry
 
@@ -57,8 +64,17 @@ class TestDefinitions:
         ) == (str(tmp_path / "Fe.aux"),)
         assert registry.files_for_task(
             task, parameters, str(tmp_path), "cache"
-        ) == (
-            str(tmp_path / "Fe.cache"),
+        ) == (str(tmp_path / "Fe.dynamic"),)
+
+    def test_builtin_bsf_manifest_uses_dataset_adsi_and_tau_cache(self, tmp_path):
+        parameters = InputParameters.create("BSFEK")
+        parameters.CONTROL.DATASET = "Fe"
+        parameters.CONTROL.ADSI = "CUSTOM"
+
+        assert parameters.output_files(str(tmp_path)) == (
+            str(tmp_path / "Fe_CUSTOM.bsf"),
+        )
+        assert parameters.cache_files(str(tmp_path)) == (
             str(tmp_path / "Fe.tau.dir"),
         )
 
