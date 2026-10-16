@@ -5,7 +5,7 @@ import pytest
 from ase2sprkkr.execution import CorruptRunRecord, RunRecord, RunState, RunStore
 
 
-@pytest.mark.parametrize("schema_version", [0, 2, 3, 4, 5])
+@pytest.mark.parametrize("schema_version", [0, 3, 4, 5])
 def test_other_run_record_schemas_are_not_supported(tmp_path, schema_version):
     store = RunStore(tmp_path / "runs")
     created_at = "2026-10-12T12:34:56+00:00"
@@ -30,12 +30,13 @@ def test_other_run_record_schemas_are_not_supported(tmp_path, schema_version):
         store.get("legacy")
 
 
-def test_schema_one_requested_task_provenance_is_ignored(tmp_path):
+def test_schema_one_submission_is_migrated_to_recovery_directory(tmp_path):
     store = RunStore(tmp_path / "runs")
     created_at = "2026-10-12T12:34:56+00:00"
     directory = store.directory / "2026-10-12"
     directory.mkdir(parents=True)
     path = directory / "legacy.json"
+    submission_directory = str(tmp_path / "remote-work")
     path.write_text(
         json.dumps(
             {
@@ -47,6 +48,12 @@ def test_schema_one_requested_task_provenance_is_ignored(tmp_path):
                 "input_definition": "ARPES",
                 "requested_task": "ARPES",
                 "directory": str(tmp_path),
+                "submission": {
+                    "endpoint": {"executor": "local"},
+                    "directory": submission_directory,
+                    "task": "SPLEED",
+                    "dataset": "case",
+                },
                 "schema_version": 1,
             }
         )
@@ -56,7 +63,11 @@ def test_schema_one_requested_task_provenance_is_ignored(tmp_path):
 
     assert record.task == "SPLEED"
     assert record.input_definition == "ARPES"
+    assert record.submission_directory == submission_directory
+    assert record.files is None
+    assert record.schema_version == 2
     assert not hasattr(record, "requested_task")
+    assert not hasattr(record, "submission")
 
 
 def test_run_record_constructor_does_not_require_finished_at(tmp_path):
@@ -74,5 +85,5 @@ def test_run_record_constructor_does_not_require_finished_at(tmp_path):
     assert record.task == "DOS"
     assert record.directory == str(tmp_path)
     assert record.finished_at is None
-    assert record.schema_version == 1
+    assert record.schema_version == 2
     assert not hasattr(record, "backend_state")
