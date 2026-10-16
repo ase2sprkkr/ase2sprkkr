@@ -66,7 +66,6 @@ class InputParametersDefinition(ConfigurationFileDefinition):
     Consumers should resolve task identities through ``TaskRegistry`` instead.
     """
 
-    save_hook = None
     child_class = InputSectionDefinition
     result_class = InputParameters
     custom_class = staticmethod(

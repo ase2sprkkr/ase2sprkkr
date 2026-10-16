@@ -8,6 +8,7 @@ from ..input_parameters import InputParameters
 from ..input_parameters_definitions import InputParametersDefinition
 from ..task_definition import TaskDefinition
 from ...outputs.readers.default import DefaultOutputReader
+from ...sprkkr.configuration import ConfigurationFile
 
 
 def _schema_for(task):
@@ -226,6 +227,11 @@ def test_builtin_task_definitions_are_metadata_objects():
         "execution_task_name",
     ):
         assert not hasattr(TaskDefinition, name)
+
+
+def test_input_parameters_use_generic_save_contract():
+    assert not hasattr(InputParametersDefinition, "save_hook")
+    assert InputParameters.save_to_file is ConfigurationFile.save_to_file
 
 
 def test_task_name_follows_shared_schema_values():
