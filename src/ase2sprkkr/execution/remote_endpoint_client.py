@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import glob
 import os
+from dataclasses import asdict
 from uuid import uuid4
 
 from .base import RunReference, RunState, RunStatus, SubmissionNotStarted
@@ -26,6 +27,21 @@ def _reference_context(reference):
     if not isinstance(context, dict):
         raise ValueError("Remote run reference has invalid reconnect context")
     return context
+
+
+def _local_path(value, directory):
+    if value is None:
+        return None
+    value = getattr(value, "name", value)
+    try:
+        path = os.fspath(value)
+    except TypeError:
+        return None
+    if isinstance(path, int):
+        return None
+    if not os.path.isabs(path):
+        path = os.path.join(directory, path)
+    return os.path.abspath(path)
 
 
 class _ClientOwnedRemoteRun(_LegacyRemoteRun):
@@ -47,6 +63,7 @@ class _ClientOwnedRemoteRun(_LegacyRemoteRun):
         context = {
             "launch": request.get("launch") or {},
             "client_sync": request.get("client_sync") or {},
+            "local_sync": self.executor.submission_context(self.spec).get("local_sync"),
         }
         return remote_id, context, status
 
@@ -81,6 +98,48 @@ class _ClientOwnedRunContext(_LegacyRemoteRunContext):
             run_id=run_id,
         )
 
+    async def _client_sync(self, reference):
+        context = _reference_context(reference)
+        precise = context.get("client_sync")
+        if precise is not None:
+            return precise
+
+        local = context.get("local_sync") or {}
+        output_file = local.get("output_file")
+        error_file = local.get("error_file")
+        primary = {value for value in (output_file, error_file) if value is not None}
+
+        output_files = []
+        output_patterns = []
+        for path in local.get("output_files", ()):
+            remote = await self.map_path(path)
+            if glob.has_magic(path):
+                output_patterns.append(remote)
+            elif path not in primary:
+                output_files.append(remote)
+
+        cache_files = []
+        cache_patterns = []
+        for path in local.get("cache_files", ()):
+            remote = await self.map_path(path)
+            if glob.has_magic(path):
+                cache_patterns.append(remote)
+            else:
+                # Recovery has no pre-submit target signature snapshot.  Using
+                # ``None`` intentionally treats an existing cache as changed,
+                # which is conservative and cannot lose a produced cache file.
+                cache_files.append({"path": remote, "before": None})
+
+        return {
+            "output_file": None if output_file is None else await self.map_path(output_file),
+            "error_file": None if error_file is None else await self.map_path(error_file),
+            "output_files": output_files,
+            "cache_files": cache_files,
+            "output_patterns": output_patterns,
+            "cache_patterns": cache_patterns,
+            "cache_before": [],
+        }
+
     async def attach(
         self,
         reference,
@@ -95,7 +154,7 @@ class _ClientOwnedRunContext(_LegacyRemoteRunContext):
         request = {
             "executor": self.backend,
             "launch": context.get("launch") or {},
-            "client_sync": context.get("client_sync") or {},
+            "client_sync": await self._client_sync(reference),
         }
         return await super().attach(
             reference,
@@ -121,6 +180,31 @@ class RemoteEndpointExecutor(_LegacyRemoteEndpointExecutor):
         if not isinstance(launch, LaunchSpec):
             launch = LaunchSpec(**dict(launch))
         return _ClientOwnedRunContext(endpoint, launch)
+
+    def submission_context(self, spec):
+        """Return portable reconnect data persisted before backend submission."""
+        directory = os.path.abspath(os.fspath(spec.directory))
+        return {
+            "launch": asdict(spec.launch),
+            "local_sync": {
+                "output_file": _local_path(spec.output_file, directory),
+                "error_file": _local_path(spec.error_file, directory),
+                "output_files": [
+                    path
+                    for path in (
+                        _local_path(value, directory) for value in spec.output_files
+                    )
+                    if path is not None
+                ],
+                "cache_files": [
+                    path
+                    for path in (
+                        _local_path(value, directory) for value in spec.cache_files
+                    )
+                    if path is not None
+                ],
+            },
+        }
 
     async def _submit(self, request):
         launch = request.get("launch") or {}
