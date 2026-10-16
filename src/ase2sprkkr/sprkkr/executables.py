@@ -2,7 +2,6 @@
 
 from collections.abc import Mapping
 from dataclasses import dataclass
-from types import MappingProxyType
 
 from ..common.module_registry import RegistryDefinitionError, RegistryEntryNotFound
 
@@ -58,7 +57,7 @@ class ExecutableRegistry(Mapping):
                     f"Duplicate executable definition {definition.name!r}"
                 )
             items[definition.name] = definition
-        self._definitions = MappingProxyType(items)
+        self._definitions = items
 
     def __getitem__(self, name):
         try:
