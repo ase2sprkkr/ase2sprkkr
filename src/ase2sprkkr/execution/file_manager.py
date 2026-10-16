@@ -1,0 +1,458 @@
+"""File-manifest policy for persistent execution.
+
+The lifecycle implementation in :mod:`ase2sprkkr.execution.manager` is kept
+independent of SPR-KKR task identities.  This layer gives persistent runs a
+concrete input/output/cache manifest and uses only that manifest for concurrent
+submission protection.
+"""
+
+from __future__ import annotations
+
+import fnmatch
+import glob
+import json
+import os
+from dataclasses import dataclass, replace
+from pathlib import Path
+from typing import Optional
+from uuid import uuid4
+
+from ..common.file_versions import FileState, FileVersion
+from .base import Executor, RunReference, RunState
+from .endpoint import ExecutorEndpoint, endpoint_for_executor
+from .manager import (
+    CorruptRunRecord,
+    DuplicateSubmissionError,
+    ExecutionManager as _LifecycleExecutionManager,
+    FileRetrievalState,
+    PersistentRunner,
+    ResultFilesRecord as _LegacyResultFilesRecord,
+    RunRecord as _LegacyRunRecord,
+    RunStore as _LegacyRunStore,
+    _now,
+    _timestamp,
+    _unique,
+)
+
+
+@dataclass(frozen=True)
+class ResultFilesRecord(_LegacyResultFilesRecord):
+    """Concrete run file manifest plus immutable historical snapshots.
+
+    ``input_files`` and ``output_files`` are the access roles chosen for this
+    concrete run. ``cache_files`` is orthogonal provenance: every cache belongs
+    to exactly one of the two access roles after reservation, but remains tagged
+    so later cache reuse does not make an old result look overwritten.
+    """
+
+    cache_files: tuple[str, ...] = ()
+
+    def __post_init__(self):
+        super().__post_init__()
+        object.__setattr__(
+            self,
+            "cache_files",
+            tuple(os.fspath(value) for value in self.cache_files),
+        )
+
+    @property
+    def materialized(self):
+        """Whether all cache declarations have a concrete input/output role."""
+        roles = set(self.input_files) | set(self.output_files)
+        return all(cache in roles for cache in self.cache_files)
+
+    @property
+    def historical_input_files(self):
+        caches = set(self.cache_files)
+        return tuple(path for path in self.input_files if path not in caches)
+
+    @property
+    def historical_output_files(self):
+        caches = set(self.cache_files)
+        return tuple(path for path in self.output_files if path not in caches)
+
+    @property
+    def manifests(self):
+        """Files belonging to the immutable historical result."""
+        return _unique((*self.historical_input_files, *self.historical_output_files))
+
+
+@dataclass(frozen=True)
+class SubmissionKey:
+    """Backend location needed for persistent submission recovery.
+
+    Collision identity deliberately does not live here. Concurrent-run
+    conflicts are derived from :class:`ResultFilesRecord` input/output roles.
+    """
+
+    endpoint: ExecutorEndpoint
+    directory: str
+
+    def __post_init__(self):
+        if isinstance(self.endpoint, dict):
+            object.__setattr__(self, "endpoint", ExecutorEndpoint(**self.endpoint))
+        object.__setattr__(self, "directory", os.path.abspath(os.fspath(self.directory)))
+
+
+@dataclass(frozen=True)
+class RunRecord(_LegacyRunRecord):
+    """Persistent run record using file-based submission identity."""
+
+    def __post_init__(self):
+        object.__setattr__(self, "task", str(self.task).upper())
+        if self.input_definition is not None:
+            object.__setattr__(
+                self, "input_definition", str(self.input_definition).upper()
+            )
+        if isinstance(self.endpoint, dict):
+            object.__setattr__(self, "endpoint", ExecutorEndpoint(**self.endpoint))
+        if isinstance(self.submission, dict):
+            # Version-1 records may contain the retired task/dataset fields.
+            object.__setattr__(
+                self,
+                "submission",
+                SubmissionKey(
+                    endpoint=self.submission["endpoint"],
+                    directory=self.submission["directory"],
+                ),
+            )
+        elif self.submission is not None and not isinstance(
+            self.submission, SubmissionKey
+        ):
+            object.__setattr__(
+                self,
+                "submission",
+                SubmissionKey(
+                    endpoint=self.submission.endpoint,
+                    directory=self.submission.directory,
+                ),
+            )
+        if isinstance(self.reference, dict):
+            object.__setattr__(self, "reference", RunReference(**self.reference))
+        if isinstance(self.result_files, dict):
+            object.__setattr__(
+                self, "result_files", ResultFilesRecord(**self.result_files)
+            )
+        elif self.result_files is not None and not isinstance(
+            self.result_files, ResultFilesRecord
+        ):
+            legacy = self.result_files
+            object.__setattr__(
+                self,
+                "result_files",
+                ResultFilesRecord(
+                    input_file=legacy.input_file,
+                    output_file=legacy.output_file,
+                    input_files=legacy.input_files,
+                    output_files=legacy.output_files,
+                    input_versions=legacy.input_versions,
+                    output_versions=legacy.output_versions,
+                    captured_at=legacy.captured_at,
+                    retrieval_state=legacy.retrieval_state,
+                    retrieval_message=legacy.retrieval_message,
+                ),
+            )
+        if not isinstance(self.state, RunState):
+            object.__setattr__(self, "state", RunState(self.state))
+        if self.schema_version != 1:
+            raise ValueError(
+                f"unsupported schema version {self.schema_version}; expected 1"
+            )
+
+
+class RunStore(_LegacyRunStore):
+    """Run store decoding both legacy and file-manifest version-1 records."""
+
+    @staticmethod
+    def _decode(path):
+        try:
+            with path.open() as file:
+                data = json.load(file)
+            version = data.get("schema_version")
+            if version != 1:
+                raise ValueError(
+                    f"unsupported schema version {version!r}; expected 1"
+                )
+            data.pop("requested_task", None)
+            return RunRecord(**data)
+        except CorruptRunRecord:
+            raise
+        except (json.JSONDecodeError, TypeError, ValueError, KeyError) as exc:
+            raise CorruptRunRecord(path, str(exc)) from exc
+
+
+def _path_conflicts(first, second):
+    """Conservatively decide whether two concrete file manifests may overlap."""
+    first = os.path.normcase(os.path.abspath(os.fspath(first)))
+    second = os.path.normcase(os.path.abspath(os.fspath(second)))
+    first_magic = glob.has_magic(first)
+    second_magic = glob.has_magic(second)
+    if not first_magic and not second_magic:
+        return first == second
+    if first_magic and not second_magic:
+        return fnmatch.fnmatchcase(second, first)
+    if second_magic and not first_magic:
+        return fnmatch.fnmatchcase(first, second)
+    if first == second:
+        return True
+
+    # Exact glob intersection is not generally cheap. Different fixed directory
+    # prefixes cannot overlap; within the same possible directory we choose the
+    # safe answer and serialize the runs rather than miss a write collision.
+    def fixed_prefix(value):
+        positions = [
+            position
+            for token in ("*", "?", "[")
+            if (position := value.find(token)) >= 0
+        ]
+        return value[: min(positions)] if positions else value
+
+    a = fixed_prefix(first)
+    b = fixed_prefix(second)
+    return a.startswith(b) or b.startswith(a)
+
+
+def _sets_conflict(writes, reads_or_writes):
+    return any(
+        _path_conflicts(write, other)
+        for write in writes
+        for other in reads_or_writes
+    )
+
+
+class ExecutionManager(_LifecycleExecutionManager):
+    """Persistent lifecycle with file-derived concurrent-run protection."""
+
+    def __init__(self, store=None, *, executor_pool=None, submitting_grace=60.0):
+        super().__init__(
+            RunStore() if store is None else store,
+            executor_pool=executor_pool,
+            submitting_grace=submitting_grace,
+        )
+
+    @staticmethod
+    def _result_files_for_spec(spec):
+        directory = os.path.abspath(os.fspath(spec.directory))
+
+        def path(value):
+            if value is None:
+                return None
+            value = getattr(value, "name", value)
+            try:
+                value = os.fspath(value)
+            except TypeError:
+                return None
+            if isinstance(value, int):
+                return None
+            if not os.path.isabs(value):
+                value = os.path.join(directory, value)
+            return os.path.abspath(value)
+
+        input_file = path(getattr(spec, "input_file", None))
+        output_file = path(getattr(spec, "output_file", None))
+        input_files = _unique(
+            (input_file, *(path(value) for value in getattr(spec, "input_files", ())))
+        )
+        output_files = _unique(
+            (output_file, *(path(value) for value in getattr(spec, "output_files", ())))
+        )
+        cache_files = _unique(
+            path(value) for value in getattr(spec, "cache_files", ())
+        )
+        return ResultFilesRecord(
+            input_file=input_file,
+            output_file=output_file,
+            input_files=input_files,
+            output_files=output_files,
+            cache_files=cache_files,
+        )
+
+    def new_record(
+        self,
+        *,
+        task,
+        directory,
+        dataset=None,
+        endpoint=None,
+        submission=None,
+        result_files=None,
+        input_definition=None,
+        run_id=None,
+    ):
+        now = _now()
+        return RunRecord(
+            id=run_id or uuid4().hex,
+            state=RunState.NEW,
+            created_at=now,
+            updated_at=now,
+            finished_at=None,
+            task=str(task).upper(),
+            dataset=None if dataset is None else str(dataset),
+            directory=os.path.abspath(os.fspath(directory)),
+            endpoint=endpoint,
+            submission=submission,
+            result_files=result_files,
+            input_definition=input_definition,
+        )
+
+    @staticmethod
+    def _merged_result_files(latest, requested):
+        from .manager import _UNCHANGED
+
+        if requested is _UNCHANGED or requested is None:
+            return latest.result_files
+        if isinstance(requested, dict):
+            requested = ResultFilesRecord(**requested)
+        current = latest.result_files
+        if current is None:
+            return requested
+        if current.captured_at is not None and requested.captured_at is not None:
+            return current
+        return requested
+
+    @staticmethod
+    def _materialize_cache_roles(result_files):
+        if result_files is None or result_files.materialized:
+            return result_files
+        inputs = list(result_files.input_files)
+        outputs = list(result_files.output_files)
+        for cache in result_files.cache_files:
+            if cache in inputs or cache in outputs:
+                continue
+            # A glob cache is potentially extended by the calculation even when
+            # it already has matches, therefore classify it conservatively as a
+            # writer. Exact caches are reusable inputs once present.
+            if not glob.has_magic(cache) and os.path.isfile(cache):
+                inputs.append(cache)
+            else:
+                outputs.append(cache)
+        return replace(
+            result_files,
+            input_files=_unique(inputs),
+            output_files=_unique(outputs),
+        )
+
+    @staticmethod
+    def _records_conflict(first, second):
+        if first.endpoint != second.endpoint:
+            return False
+        a = first.result_files
+        b = second.result_files
+        if a is None or b is None:
+            return False
+        return _sets_conflict(a.output_files, (*b.input_files, *b.output_files)) or _sets_conflict(
+            b.output_files, a.input_files
+        )
+
+    def reserve(self, record):
+        """Atomically classify caches, check file locks and persist SUBMITTING."""
+        if record.submission is None:
+            raise ValueError("Persistent run lacks submission metadata")
+
+        attempted_recovery = set()
+        while True:
+            with self.store.submission_lock():
+                # Existence is intentionally sampled only inside the same
+                # critical section that reserves the chosen access roles.
+                record = replace(
+                    record,
+                    result_files=self._materialize_cache_roles(record.result_files),
+                )
+                conflicts = tuple(
+                    active
+                    for active in self.store.runs(active=True)
+                    if active.id != record.id and self._records_conflict(record, active)
+                )
+                if not conflicts:
+                    return self.transition(
+                        record,
+                        state=RunState.SUBMITTING,
+                        reference=None,
+                        result_files=record.result_files,
+                    )
+                stale = tuple(
+                    conflict
+                    for conflict in conflicts
+                    if conflict.id not in attempted_recovery
+                    and self._is_stale_submitting(conflict)
+                )
+
+            if not stale:
+                raise DuplicateSubmissionError(record, conflicts)
+            progressed = False
+            for conflict in stale:
+                attempted_recovery.add(conflict.id)
+                recovered = self.recover_submitting(conflict)
+                if recovered.state != RunState.SUBMITTING or recovered.reference is not None:
+                    progressed = True
+            if not progressed:
+                raise DuplicateSubmissionError(record, conflicts)
+
+    def _capture_result_files(self, result_files):
+        if result_files is None or result_files.captured_at is not None:
+            return result_files
+        return replace(
+            result_files,
+            input_versions=self._result_files_snapshot(
+                result_files.historical_input_files
+            ),
+            output_versions=self._result_files_snapshot(
+                result_files.historical_output_files
+            ),
+            captured_at=_now(),
+        )
+
+    def create_run(
+        self,
+        executor,
+        reader,
+        spec,
+        *,
+        task,
+        input_definition=None,
+        dataset=None,
+        callback=None,
+        run_id=None,
+    ):
+        endpoint = endpoint_for_executor(executor)
+        submission = SubmissionKey(
+            endpoint=endpoint,
+            directory=executor.submission_directory(spec),
+        )
+        record = self.new_record(
+            task=task,
+            input_definition=input_definition,
+            dataset=dataset,
+            directory=spec.directory,
+            endpoint=endpoint,
+            submission=submission,
+            result_files=self._result_files_for_spec(spec),
+            run_id=run_id,
+        )
+        self.register_executor(executor, endpoint)
+        return self._wrap_runner(
+            executor,
+            record,
+            lambda completed: executor.create_persistent_run(
+                reader,
+                spec,
+                run_id=record.id,
+                callback=completed,
+            ),
+            callback,
+        )
+
+
+__all__ = [
+    "ExecutionManager",
+    "ResultFilesRecord",
+    "RunRecord",
+    "RunStore",
+    "SubmissionKey",
+    "PersistentRunner",
+    "DuplicateSubmissionError",
+    "CorruptRunRecord",
+    "FileRetrievalState",
+    "FileState",
+    "FileVersion",
+]
