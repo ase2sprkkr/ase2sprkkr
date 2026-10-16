@@ -254,6 +254,34 @@ class _RemotePsijAgent:
             return False
         return True
 
+    def _clear_retryable_error(self, run_id, field):
+        """Clear one recovered diagnostic without overwriting unrelated errors."""
+        from .detached import (
+            _read_state_unlocked,
+            _state_lock,
+            _write_state_unlocked,
+        )
+
+        try:
+            with _state_lock(self.directory, run_id):
+                state = _read_state_unlocked(self.directory, run_id)
+                if state.get("state") in _FINAL_STATE_NAMES:
+                    return True
+                message = state.get(field)
+                if message is None:
+                    return True
+                _write_state_unlocked(
+                    self.directory,
+                    run_id,
+                    **{
+                        field: None,
+                        "error": None if state.get("error") == message else state.get("error"),
+                    },
+                )
+        except OSError:
+            return False
+        return True
+
     def _submit(self, run_id, request):
         from .detached import (
             _read_state_unlocked,
@@ -374,11 +402,11 @@ class _RemotePsijAgent:
             _write_state_unlocked,
         )
 
-        executor = self._executor_for(request)
         submission = SimpleNamespace(
             directory=request.get("directory") or os.fspath(self.directory)
         )
         try:
+            executor = self._executor_for(request)
             status = executor.recover_submission(
                 run_id,
                 submission,
@@ -496,8 +524,8 @@ class _RemotePsijAgent:
         reference = state.get("backend_reference")
         if reference is None:
             return False
-        executor = self._executor_for(request)
         try:
+            executor = self._executor_for(request)
             runner = executor.attach(RunReference(**reference), _RemoteReader())
         except Exception as exc:
             self._record_retryable_error(run_id, "attach_error", exc)
@@ -616,28 +644,55 @@ class _RemotePsijAgent:
 
         activity = False
         for run_id, active in tuple(self._active.items()):
+            if not self._retry_ready(run_id):
+                continue
+
             try:
                 state = _read_state(self.directory, run_id)
-                requested_cancel = bool(state.get("cancel_requested"))
+            except OSError as exc:
+                self._record_retryable_error(run_id, "poll_error", exc)
+                self._schedule_retry(run_id)
+                activity = True
+                continue
+
+            requested_cancel = bool(state.get("cancel_requested"))
+            try:
                 current = active.runner.state
-                if current in _FINAL_RUN_STATES:
-                    self._finish(run_id, active, requested_cancel)
+            except Exception as exc:
+                self._record_retryable_error(run_id, "poll_error", exc)
+                self._schedule_retry(run_id)
+                activity = True
+                continue
+
+            if current in _FINAL_RUN_STATES:
+                self._clear_retry(run_id)
+                self._clear_retryable_error(run_id, "poll_error")
+                self._finish(run_id, active, requested_cancel)
+                activity = True
+                continue
+
+            if requested_cancel and not active.cancel_sent:
+                try:
+                    active.runner.cancel()
+                    current = active.runner.state
+                except Exception as exc:
+                    self._record_retryable_error(run_id, "poll_error", exc)
+                    self._schedule_retry(run_id)
                     activity = True
                     continue
+                active.cancel_sent = True
+                activity = True
+                if current in _FINAL_RUN_STATES:
+                    self._clear_retry(run_id)
+                    self._clear_retryable_error(run_id, "poll_error")
+                    self._finish(run_id, active, requested_cancel)
+                    continue
 
-                if requested_cancel and not active.cancel_sent:
-                    active.runner.cancel()
-                    active.cancel_sent = True
-                    activity = True
-                    current = active.runner.state
-                    if current in _FINAL_RUN_STATES:
-                        self._finish(run_id, active, requested_cancel)
-                        continue
-
-                if (
-                    current in (RunState.QUEUED, RunState.RUNNING)
-                    and current != active.last_state
-                ):
+            if (
+                current in (RunState.QUEUED, RunState.RUNNING)
+                and current != active.last_state
+            ):
+                try:
                     with _state_lock(self.directory, run_id):
                         current_state = _read_state_unlocked(self.directory, run_id)
                         if current_state.get("state") not in _FINAL_STATE_NAMES:
@@ -649,11 +704,16 @@ class _RemotePsijAgent:
                             _write_state_unlocked(
                                 self.directory, run_id, **changes
                             )
+                except OSError as exc:
+                    self._record_retryable_error(run_id, "poll_error", exc)
+                    self._schedule_retry(run_id)
                     activity = True
-                active.last_state = current
-            except BaseException as exc:
-                self._fail(run_id, exc)
+                    continue
                 activity = True
+
+            active.last_state = current
+            self._clear_retry(run_id)
+            self._clear_retryable_error(run_id, "poll_error")
         return activity
 
     def run(self):
