@@ -9,6 +9,11 @@ from ...outputs.task_result import KkrOutputReader
 from ...sprkkr.executables import executables
 
 
+def test_all_builtin_tasks_use_known_executables():
+    for task in InputParameters.task_registry.values():
+        assert task.executable in executables
+
+
 def test_all_registered_tasks_have_resolvable_output_reader_metadata():
     for task in InputParameters.task_registry.values():
         assert issubclass(reader_registry.class_for_task(task), KkrOutputReader)
