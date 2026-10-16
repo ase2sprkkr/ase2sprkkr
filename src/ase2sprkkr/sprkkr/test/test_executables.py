@@ -1,7 +1,11 @@
+from dataclasses import FrozenInstanceError
+import pickle
+
 import pytest
 
+from ase2sprkkr import executables as public_executables
 from ...common.module_registry import RegistryDefinitionError, RegistryEntryNotFound
-from ..executables import ExecutableDefinition, ExecutableRegistry, executable_registry
+from ..executables import ExecutableDefinition, ExecutableRegistry, executables
 
 
 def test_executable_definition_normalizes_reader_name_only():
@@ -22,28 +26,50 @@ def test_executable_definition_keeps_executable_name_exact():
     assert definition.name == " custom "
 
 
-def test_executable_registry_can_be_extended_independently_of_task_registry():
-    registry = ExecutableRegistry()
+def test_executable_registry_accepts_custom_definitions_at_construction():
     definition = ExecutableDefinition("custom", default_output_reader="SPEC")
+    registry = ExecutableRegistry((definition,))
 
-    assert registry.register(definition) is definition
     assert registry["custom"] is definition
+    assert not hasattr(registry, "register")
 
 
 def test_executable_registry_rejects_duplicate_definitions():
-    registry = ExecutableRegistry((ExecutableDefinition("custom"),))
-
     with pytest.raises(RegistryDefinitionError, match="Duplicate executable"):
-        registry.register(ExecutableDefinition("custom"))
+        ExecutableRegistry(
+            (ExecutableDefinition("custom"), ExecutableDefinition("custom"))
+        )
 
 
 def test_executable_registry_reports_unknown_executable():
     with pytest.raises(RegistryEntryNotFound, match="unknown"):
-        executable_registry["unknown"]
+        executables["unknown"]
+
+
+def test_executable_registry_is_pickleable():
+    registry = ExecutableRegistry(
+        (ExecutableDefinition("custom", default_output_reader="SPEC"),)
+    )
+
+    restored = pickle.loads(pickle.dumps(registry))
+
+    assert tuple(restored) == ("custom",)
+    assert restored["custom"] == registry["custom"]
 
 
 def test_builtin_executable_reader_defaults():
-    assert executable_registry["kkrscf"].default_output_reader == "DEFAULT"
-    assert executable_registry["kkrgen"].default_output_reader == "DEFAULT"
-    assert executable_registry["kkrspec"].default_output_reader == "SPEC"
-    assert executable_registry["kkrchi"].default_output_reader == "DEFAULT"
+    assert executables["kkrscf"].default_output_reader == "DEFAULT"
+    assert executables["kkrgen"].default_output_reader == "DEFAULT"
+    assert executables["kkrspec"].default_output_reader == "SPEC"
+    assert executables["kkrchi"].default_output_reader == "DEFAULT"
+
+
+def test_executables_is_public_read_only_metadata():
+    assert public_executables is executables
+    assert not hasattr(public_executables, "register")
+
+    with pytest.raises(TypeError):
+        public_executables["custom"] = ExecutableDefinition("custom")
+
+    with pytest.raises(FrozenInstanceError):
+        public_executables["kkrscf"].description = "Changed"

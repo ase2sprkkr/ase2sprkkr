@@ -11,7 +11,7 @@ if not __package__:
     __package__ = "ase2sprkkr.tools.commands"
 sys.path.append(str(Path(__file__).resolve().parents[3]))
 
-from ... import InputParameters, ResultFile  # NOQA
+from ... import InputParameters, ResultFile, executables  # NOQA
 from ...common.tools import main  # NOQA
 
 
@@ -35,7 +35,7 @@ description = """\n Example of usage:
 default_options = ["task", "output_file"]
 
 """ These are the all options """
-possible_options = default_options
+possible_options = [*default_options, "executables"]
 
 
 def parser(parser):
@@ -48,6 +48,12 @@ def parser(parser):
     )
     parser.add_argument(
         "--output-file", "-o", help="Show information about known structured result files.", nargs="?", const=True
+    )
+    parser.add_argument(
+        "--executables",
+        action="store_true",
+        default=None,
+        help="Show known SPR-KKR executables and their default output readers.",
     )
     action = getattr(argparse, "BooleanOptionalAction", "store_true")
     parser.add_argument(
@@ -145,6 +151,25 @@ def run(args, global_args):
                 print(i.description(verbose=True))
             else:
                 print(i.info())
+
+    def info_executables(args, filter):
+        print("Known SPR-KKR executables\n-------------------------")
+        definitions = tuple(executables.values())
+        name_width = max(len("Executable"), *(len(item.name) for item in definitions))
+        reader_width = max(
+            len("Default reader"),
+            *(len(item.default_output_reader) for item in definitions),
+        )
+        print(
+            f"{'Executable':<{name_width}}  "
+            f"{'Default reader':<{reader_width}}  Description"
+        )
+        for executable in definitions:
+            print(
+                f"{executable.name:<{name_width}}  "
+                f"{executable.default_output_reader:<{reader_width}}  "
+                f"{executable.description}"
+            )
 
     g = locals()
 

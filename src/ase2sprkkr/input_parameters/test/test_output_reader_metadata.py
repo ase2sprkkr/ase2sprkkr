@@ -1,5 +1,6 @@
 import pytest
 
+from ase2sprkkr import executables
 from ..input_parameters import InputParameters
 from ..task_definition import TaskDefinition
 from ...common.module_registry import RegistryEntryNotFound
@@ -18,9 +19,7 @@ def test_every_specialized_reader_is_owned_by_at_least_one_task():
         (
             task.output_reader
             if task.output_reader is not None
-            else reader_registry.executable_registry[
-                task.executable
-            ].default_output_reader
+            else executables[task.executable].default_output_reader
         )
         for task in InputParameters.task_registry.values()
     }

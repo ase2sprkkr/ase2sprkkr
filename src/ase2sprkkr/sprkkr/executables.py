@@ -2,8 +2,12 @@
 
 from collections.abc import Mapping
 from dataclasses import dataclass
+from types import MappingProxyType
 
 from ..common.module_registry import RegistryDefinitionError, RegistryEntryNotFound
+
+
+__all__ = ("ExecutableDefinition", "ExecutableRegistry", "executables")
 
 
 def _nonblank_string(value, field):
@@ -37,7 +41,7 @@ class ExecutableDefinition:
 
 
 class ExecutableRegistry(Mapping):
-    """Registry of known SPR-KKR executable metadata.
+    """Read-only registry of known SPR-KKR executable metadata.
 
     Task definitions are deliberately not validated against this registry.
     A custom task may name any executable; the registry is consulted only when
@@ -45,19 +49,16 @@ class ExecutableRegistry(Mapping):
     """
 
     def __init__(self, definitions=()):
-        self._definitions = {}
+        items = {}
         for definition in definitions:
-            self.register(definition)
-
-    def register(self, definition):
-        if not isinstance(definition, ExecutableDefinition):
-            raise TypeError("definition must be an ExecutableDefinition")
-        if definition.name in self._definitions:
-            raise RegistryDefinitionError(
-                f"Duplicate executable definition {definition.name!r}"
-            )
-        self._definitions[definition.name] = definition
-        return definition
+            if not isinstance(definition, ExecutableDefinition):
+                raise TypeError("definition must be an ExecutableDefinition")
+            if definition.name in items:
+                raise RegistryDefinitionError(
+                    f"Duplicate executable definition {definition.name!r}"
+                )
+            items[definition.name] = definition
+        self._definitions = MappingProxyType(items)
 
     def __getitem__(self, name):
         try:
@@ -71,8 +72,11 @@ class ExecutableRegistry(Mapping):
     def __len__(self):
         return len(self._definitions)
 
+    def __reduce__(self):
+        return type(self), (tuple(self._definitions.values()),)
 
-executable_registry = ExecutableRegistry(
+
+executables = ExecutableRegistry(
     (
         ExecutableDefinition(
             "kkrscf",
