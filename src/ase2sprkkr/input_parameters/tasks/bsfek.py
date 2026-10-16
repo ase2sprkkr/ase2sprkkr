@@ -1,4 +1,5 @@
-from ..task_definition import TaskDefinition
+from ..definitions._file_manifests import bsf_file, tau_file
+from ..task_definition import FileSpec, TaskDefinition, TaskFiles
 
 
 def task_definition():
@@ -8,4 +9,8 @@ def task_definition():
         executable="kkrgen",
         mpi=True,
         output_reader="BSF",
+        files=TaskFiles(
+            output=(FileSpec(bsf_file),),
+            cache=(FileSpec(tau_file),),
+        ),
     )

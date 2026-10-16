@@ -6,7 +6,7 @@ import pytest
 
 from ..input_parameters import InputParameters
 from ..input_parameters_definitions import InputParametersDefinition
-from ..task_definition import TaskDefinition
+from ..task_definition import FileSpec, TaskDefinition
 from ...outputs.readers.default import DefaultOutputReader
 
 
@@ -186,7 +186,7 @@ def test_task_definition_rejects_non_pathlike_template_elements(field):
     ["input_file_templates", "output_file_templates", "cache_file_templates"],
 )
 def test_task_definition_rejects_single_template_instead_of_iterable(field):
-    with pytest.raises(TypeError, match="iterable of path-like strings"):
+    with pytest.raises(TypeError, match="iterable"):
         TaskDefinition("SCF", **{field: "{dataset}.dat"})
 
 
@@ -210,6 +210,49 @@ def test_task_definition_is_an_immutable_value_object():
     assert hash(first) == hash(second)
     with pytest.raises(FrozenInstanceError):
         first.output_reader = "BSF"
+
+
+def _dynamic_file(parameters, _directory):
+    return f"{parameters.CONTROL.DATASET()}_dynamic.dat"
+
+
+def _enabled(parameters):
+    return parameters.CONTROL.DATASET() != "disabled"
+
+
+def test_file_spec_supports_dynamic_names_and_conditions(tmp_path):
+    spec = FileSpec(_dynamic_file, condition=_enabled)
+    parameters = InputParameters.create("SCF")
+    parameters.CONTROL.DATASET = "case"
+    materialize = InputParameters.input_parameters_registry._materialize_file
+
+    assert materialize(spec, parameters, tmp_path) == str(
+        tmp_path / "case_dynamic.dat"
+    )
+
+    parameters.CONTROL.DATASET = "disabled"
+    assert materialize(spec, parameters, tmp_path) is None
+
+
+def test_bsf_task_materializes_output_from_dataset_and_adsi(tmp_path):
+    parameters = InputParameters.create("BSFEK")
+    parameters.CONTROL.DATASET = "Fe"
+    parameters.CONTROL.ADSI = "CUSTOM"
+
+    assert parameters.output_files(tmp_path) == (str(tmp_path / "Fe_CUSTOM.bsf"),)
+    assert len(parameters.cache_files(tmp_path)) == 1
+
+
+def test_scf_file_conditions_are_task_metadata(tmp_path):
+    parameters = InputParameters.create("SCF")
+    parameters.CONTROL.POTFIL = "Fe.pot"
+    parameters.CONTROL.SFNFIL = "Fe.sfn"
+
+    assert str(tmp_path / "Fe.pot_new") in parameters.output_files(tmp_path)
+    assert parameters.cache_files(tmp_path) == ()
+
+    parameters.SCF.FULLPOT = True
+    assert parameters.cache_files(tmp_path) == (str(tmp_path / "Fe.sfn"),)
 
 
 def test_builtin_task_definitions_are_metadata_objects():

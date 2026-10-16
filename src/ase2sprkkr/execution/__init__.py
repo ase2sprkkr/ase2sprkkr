@@ -17,16 +17,8 @@ from .base import (
 )
 from .endpoint import ExecutorEndpoint
 from .local import LocalExecutor, LocalRunner
-from .manager import (
-    CorruptRunRecord,
-    DuplicateSubmissionError,
-    FileRetrievalState,
-    PersistentRunner,
-    ResultFilesRecord,
-    RunRecord,
-    RunStore,
-    SubmissionKey,
-)
+from .manager import CorruptRunRecord, DuplicateSubmissionError, FileRetrievalState, PersistentRunner
+from .file_manager import ResultFilesRecord, RunRecord, RunStore, SubmissionKey
 from .pool import ExecutorPool, default_executor_pool
 from .projects import (
     Project,
