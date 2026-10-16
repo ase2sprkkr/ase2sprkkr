@@ -231,8 +231,3 @@ class InputParameters(ConfigurationFile):
                 retain_invalid="none",
                 report_invalid="ignore",
             )
-
-    def save_to_file(self, file, atoms=None, *, validate="save"):
-        if self._definition.save_hook:
-            self._definition.save_hook(getattr(file, "name", None), atoms)
-        super().save_to_file(file, atoms, validate=validate)
