@@ -1,4 +1,5 @@
 from dataclasses import FrozenInstanceError
+from pathlib import Path
 
 import numpy as np
 import pytest
@@ -92,14 +93,76 @@ def test_task_definition_requires_schema_name():
 
     with pytest.raises(TypeError, match="must be a string"):
         TaskDefinition(schema)
+    with pytest.raises(ValueError, match="must not be empty"):
+        TaskDefinition("   ")
 
 
 def test_task_definition_output_reader_is_an_identifier():
     with pytest.raises(TypeError, match="output_reader must be a string or None"):
         TaskDefinition("SCF", output_reader=DefaultOutputReader)
 
-    task = TaskDefinition("SCF", output_reader="bsf")
+    task = TaskDefinition("SCF", output_reader=" bsf ")
     assert task.output_reader == "BSF"
+
+
+def test_task_definition_normalizes_scalar_metadata():
+    task = TaskDefinition(
+        " scf ",
+        name=" scf ",
+        executable=" kkrscf ",
+        output_reader=" scf ",
+    )
+
+    assert task.input_parameters_definition_name == "SCF"
+    assert task.name == "SCF"
+    assert task.executable == "kkrscf"
+    assert task.output_reader == "SCF"
+
+
+@pytest.mark.parametrize(
+    ("kwargs", "error", "message"),
+    [
+        ({"name": 1}, TypeError, "name must be a string"),
+        ({"name": "   "}, ValueError, "name must not be empty"),
+        ({"executable": 1}, TypeError, "executable must be a string"),
+        ({"executable": "   "}, ValueError, "executable must not be empty"),
+        ({"mpi": "banana"}, TypeError, "mpi must be a bool"),
+        ({"mpi": 1}, TypeError, "mpi must be a bool"),
+        ({"output_reader": "   "}, ValueError, "output_reader must not be empty"),
+    ],
+)
+def test_task_definition_rejects_invalid_scalar_metadata(kwargs, error, message):
+    with pytest.raises(error, match=message):
+        TaskDefinition("SCF", **kwargs)
+
+
+@pytest.mark.parametrize(
+    "field",
+    ["input_file_templates", "output_file_templates", "cache_file_templates"],
+)
+def test_task_definition_materializes_pathlike_templates_as_strings(field):
+    task = TaskDefinition("SCF", **{field: (Path("{dataset}.dat"),)})
+
+    assert getattr(task, field) == ("{dataset}.dat",)
+    hash(task)
+
+
+@pytest.mark.parametrize(
+    "field",
+    ["input_file_templates", "output_file_templates", "cache_file_templates"],
+)
+def test_task_definition_rejects_non_pathlike_template_elements(field):
+    with pytest.raises(TypeError, match=rf"{field}\[0\]"):
+        TaskDefinition("SCF", **{field: ([1, 2],)})
+
+
+@pytest.mark.parametrize(
+    "field",
+    ["input_file_templates", "output_file_templates", "cache_file_templates"],
+)
+def test_task_definition_rejects_single_template_instead_of_iterable(field):
+    with pytest.raises(TypeError, match="iterable of path-like strings"):
+        TaskDefinition("SCF", **{field: "{dataset}.dat"})
 
 
 def test_task_definition_is_an_immutable_value_object():
