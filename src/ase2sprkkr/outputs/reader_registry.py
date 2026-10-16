@@ -8,6 +8,7 @@ from ..common.module_registry import (
     RegistryDefinitionError,
     RegistryEntryNotFound,
 )
+from ..sprkkr.executables import executable_registry as default_executable_registry
 from . import readers
 
 
@@ -17,8 +18,9 @@ _TASK_PATTERN = re.compile(rb"(?m)^\s*TASK\s*=\s*([A-Z]+)\s*$")
 class OutputReaderRegistry(ModuleRegistry):
     """Load, select and detect ``<Task>OutputReader`` classes."""
 
-    def __init__(self, package=readers):
+    def __init__(self, package=readers, executable_registry=default_executable_registry):
         super().__init__(package)
+        self.executable_registry = executable_registry
 
     def value_from_module(self, name, module):
         class_name = name.title() + "OutputReader"
@@ -56,9 +58,8 @@ class OutputReaderRegistry(ModuleRegistry):
         if not task_name:
             return self._class_for_reader_name(task_name)
 
-        # A task name can intentionally map to a differently named reader
-        # (for example BSFEK/BSFKK -> BSF). Keep this service-side: task
-        # metadata remains identifiers only and never resolves the reader.
+        # Registered tasks use declarative task/executable metadata. Unknown
+        # task names retain the generic standalone/legacy reader fallback.
         from ..input_parameters.input_parameters import InputParameters
 
         try:
@@ -68,14 +69,17 @@ class OutputReaderRegistry(ModuleRegistry):
         return self.class_for_task(task)
 
     def class_for_task(self, task):
-        """Return the reader declared by *task*, falling back to its task name."""
+        """Return the reader explicitly declared by the task or its executable."""
         from ..input_parameters.task_definition import TaskDefinition
 
         if not isinstance(task, TaskDefinition):
             raise TypeError("task must be a TaskDefinition")
         if task.output_reader is not None:
-            return self[task.output_reader]
-        return self._class_for_reader_name(task.name)
+            reader_name = task.output_reader
+        else:
+            executable = self.executable_registry[task.executable]
+            reader_name = executable.default_output_reader
+        return self[reader_name]
 
     def detect(self, file):
         """Detect the task represented by a standalone SPR-KKR output file.
