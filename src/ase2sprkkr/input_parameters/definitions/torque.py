@@ -1,8 +1,9 @@
 """Torque input-parameter definition."""
 
+from ._file_manifests import tau_file
 from .sections import TASK, CONTROL, TAU, ENERGY, SITES, STRCONST, MODE
 from ..input_parameters_definitions import InputParametersDefinition, InputValueDefinition as V
-from ..task_definition import TaskDefinition
+from ..task_definition import FileSpec, TaskDefinition
 
 
 def _torque_mode_warning_condition(value):
@@ -50,5 +51,6 @@ def input_parameters_definition():
         name="TORQUE",
         executable="kkrgen",
         mpi=True,
+        cache_file_templates=(FileSpec(tau_file),),
     )
     return schema
