@@ -16,6 +16,7 @@ from uuid import uuid4
 
 
 _SPEC_ENV = "ASE2SPRKKR_REMOTE_PROCESS_SPEC"
+_START_FD_ENV = "ASE2SPRKKR_REMOTE_PROCESS_START_FD"
 _LAUNCH_FAILURE_RETURN_CODE = 127
 
 
@@ -32,11 +33,27 @@ def _write_return_code(path, return_code):
             pass
 
 
+def _wait_for_parent_release():
+    value = os.environ.pop(_START_FD_ENV, None)
+    if value is None:
+        return
+    fd = int(value)
+    try:
+        os.read(fd, 1)
+    finally:
+        os.close(fd)
+
+
 def main():
     raw = os.environ.pop(_SPEC_ENV, None)
     if raw is None:
         raise RuntimeError(f"Missing {_SPEC_ENV}")
     spec = json.loads(raw)
+
+    # The parent must first capture our PID/start-time identity. Without this
+    # handshake an extremely short child could let the supervisor exit before
+    # the submit command can form its opaque remote id.
+    _wait_for_parent_release()
 
     opened = []
     stdin = subprocess.DEVNULL
