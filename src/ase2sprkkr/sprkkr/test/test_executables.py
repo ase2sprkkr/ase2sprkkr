@@ -1,4 +1,5 @@
 from dataclasses import FrozenInstanceError
+import pickle
 
 import pytest
 
@@ -43,6 +44,17 @@ def test_executable_registry_rejects_duplicate_definitions():
 def test_executable_registry_reports_unknown_executable():
     with pytest.raises(RegistryEntryNotFound, match="unknown"):
         executables["unknown"]
+
+
+def test_executable_registry_is_pickleable():
+    registry = ExecutableRegistry(
+        (ExecutableDefinition("custom", default_output_reader="SPEC"),)
+    )
+
+    restored = pickle.loads(pickle.dumps(registry))
+
+    assert tuple(restored) == ("custom",)
+    assert restored["custom"] == registry["custom"]
 
 
 def test_builtin_executable_reader_defaults():
