@@ -503,10 +503,10 @@ def test_run_store_shards_records_and_marks_schema(tmp_path):
     data = json.loads(path.read_text())
 
     assert path.is_file()
-    assert data["schema_version"] == 1
+    assert data["schema_version"] == 2
     assert data["task"] == "ARPES"
     assert data["input_definition"] is None
-    assert data["requested_task"] is None
+    assert "requested_task" not in data
     assert "task_definition" not in data
     assert "backend_state" not in data
     assert data["finished_at"] is None
@@ -537,7 +537,7 @@ def test_run_store_persists_file_digests(tmp_path):
     assert "state" not in data["result_files"]
 
 
-@pytest.mark.parametrize("schema_version", [0, 2, 3, 4, 5])
+@pytest.mark.parametrize("schema_version", [0, 3, 4, 5])
 def test_run_store_rejects_other_schema_versions(tmp_path, schema_version):
     store = RunStore(tmp_path / "runs")
     manager = ExecutionManager(store)
