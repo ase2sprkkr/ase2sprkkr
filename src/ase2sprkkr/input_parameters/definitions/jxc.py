@@ -7,6 +7,14 @@ from ..task_definition import TaskDefinition
 from ...common.grammar_types import flag
 
 
+def _jxc_emin_default(option):
+    parameters = option._get_root_container()
+    result = parameters.from_result
+    if result is None:
+        return -0.2
+    return result.last_iteration.energy.EMIN()
+
+
 class JxcInputParametersDefinition(InputParametersDefinition):
     def output_files(self, parameters, directory):
         files = list(super().output_files(parameters, directory))
@@ -17,9 +25,6 @@ class JxcInputParametersDefinition(InputParametersDefinition):
             files.append(resolve_file(directory, f"{dataset}_XCPLTEN_Jij.dat"))
         files.append(resolve_file(directory, f"{dataset}*.agr"))
         return tuple(files)
-
-    def update_from_result(self, parameters, result):
-        parameters.set("EMIN", result.last_iteration.energy.EMIN())
 
 
 def _jxc_mode_warning_condition(value):
@@ -50,7 +55,13 @@ def input_parameters_definition():
             TAU,
             MODE.copy(add=[mmode]),
             STRCONST,
-            ENERGY(),
+            ENERGY(
+                emin=(
+                    _jxc_emin_default,
+                    "The real part of the lowest E-value",
+                    None,
+                )
+            ),
             TASK("JXC").copy(
                 [
                     V(

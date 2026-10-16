@@ -68,13 +68,17 @@ def _normalize_file_templates(
 
 @dataclass(frozen=True, init=False)
 class TaskDefinition:
-    """Immutable declarative metadata identifying one SPR-KKR task."""
+    """Immutable declarative metadata identifying one SPR-KKR task.
+
+    Convenience methods delegate task-bound operations to their owning service
+    registries; resolution and parsing policy does not live in this value object.
+    """
 
     input_parameters_definition_name: str
     name: str
     executable: str
     mpi: bool
-    output_reader: Optional[str]
+    output_reader_name: Optional[str]
     input_file_templates: Tuple[str, ...]
     output_file_templates: Tuple[str, ...]
     cache_file_templates: Tuple[str, ...]
@@ -86,6 +90,7 @@ class TaskDefinition:
         name: Optional[str] = None,
         executable: str = "kkrscf",
         mpi: bool = True,
+        output_reader_name: Optional[str] = None,
         output_reader: Optional[str] = None,
         input_file_templates: Iterable[_FileTemplate] = (),
         output_file_templates: Iterable[_FileTemplate] = (),
@@ -100,16 +105,24 @@ class TaskDefinition:
         executable = _validate_executable(executable)
         if type(mpi) is not bool:
             raise TypeError("mpi must be a bool")
-        if output_reader is not None:
-            if not isinstance(output_reader, str):
+        if output_reader_name is not None and output_reader is not None:
+            raise TypeError(
+                "Specify only one of output_reader_name and output_reader"
+            )
+        if output_reader_name is None:
+            output_reader_name = output_reader
+        if output_reader_name is not None:
+            if not isinstance(output_reader_name, str):
                 raise TypeError("output_reader must be a string or None")
-            output_reader = _normalize_identifier(output_reader, "output_reader")
+            output_reader_name = _normalize_identifier(
+                output_reader_name, "output_reader"
+            )
 
         object.__setattr__(self, "input_parameters_definition_name", schema_name)
         object.__setattr__(self, "name", task_name)
         object.__setattr__(self, "executable", executable)
         object.__setattr__(self, "mpi", mpi)
-        object.__setattr__(self, "output_reader", output_reader)
+        object.__setattr__(self, "output_reader_name", output_reader_name)
         object.__setattr__(
             self,
             "input_file_templates",
@@ -124,6 +137,43 @@ class TaskDefinition:
             self,
             "cache_file_templates",
             _normalize_file_templates(cache_file_templates, "cache_file_templates"),
+        )
+
+    def output_reader(
+        self,
+        input_parameters=None,
+        calculator=None,
+        print_output=False,
+        directory=None,
+    ):
+        """Create this task's output reader through the reader registry."""
+        from ..outputs.reader_registry import reader_registry
+
+        return reader_registry.reader_for_task(
+            self,
+            input_parameters=input_parameters,
+            calculator=calculator,
+            print_output=print_output,
+            directory=directory,
+        )
+
+    def read_output_from_file(
+        self,
+        filename,
+        *,
+        input_parameters=None,
+        calculator=None,
+        directory=None,
+    ):
+        """Read a completed output file through the task's registered reader."""
+        from ..outputs.reader_registry import reader_registry
+
+        return reader_registry.read_for_task(
+            self,
+            filename,
+            input_parameters=input_parameters,
+            calculator=calculator,
+            directory=directory,
         )
 
 
@@ -186,7 +236,14 @@ class InputParametersRegistry(ModuleRegistry):
             )
         return definition
 
-    def create_for_task(self, task, *, inputfile=None, outputfile=False):
+    def create_for_task(
+        self,
+        task,
+        *,
+        inputfile=None,
+        outputfile=False,
+        from_result=None,
+    ):
         """Create InputParameters for a resolved TaskDefinition."""
         from .input_parameters import InputParameters
 
@@ -194,6 +251,7 @@ class InputParametersRegistry(ModuleRegistry):
         return InputParameters(
             definition=definition,
             requested_task_name=task.name,
+            from_result=from_result,
             inputfile=inputfile,
             outputfile=outputfile,
         )
@@ -216,11 +274,8 @@ class InputParametersRegistry(ModuleRegistry):
         return out
 
     def create_from_result(self, task, result):
-        """Create InputParameters for *task* initialized from *result*."""
-        definition = self.definition_for_task(task)
-        out = self.create_for_task(task)
-        definition.update_from_result(out, result)
-        return out
+        """Create InputParameters for *task* using *result* as provenance context."""
+        return self.create_for_task(task, from_result=result)
 
     @staticmethod
     def _resolve_file_templates(parameters, directory, templates):

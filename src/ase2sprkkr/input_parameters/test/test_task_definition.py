@@ -1,4 +1,4 @@
-from dataclasses import FrozenInstanceError
+from dataclasses import FrozenInstanceError, replace
 from pathlib import Path
 
 import numpy as np
@@ -34,6 +34,7 @@ def test_task_binding_is_authoritative():
     assert parameters._definition is _schema_for(parameters.task_definition)
     assert parameters.task_definition.executable == "kkrscf"
     assert parameters.task_definition.mpi is True
+    assert parameters.task_definition_required() is parameters.task_definition
 
 
 @pytest.mark.parametrize("copy_values", [False, True])
@@ -98,6 +99,8 @@ def test_direct_schema_objects_are_detached():
     assert parameters.task_definition is None
     assert parameters.task_name is None
     assert parameters.requested_task_name is None
+    with pytest.raises(RuntimeError, match="not associated with an SPR-KKR task"):
+        parameters.task_definition_required()
     assert parameters.copy().task_name is None
     assert parameters.copy().requested_task_name is None
 
@@ -127,7 +130,25 @@ def test_task_definition_output_reader_is_an_identifier():
         TaskDefinition("SCF", output_reader=DefaultOutputReader)
 
     task = TaskDefinition("SCF", output_reader=" bsf ")
-    assert task.output_reader == "BSF"
+    assert task.output_reader_name == "BSF"
+
+
+def test_task_definition_reader_alias_and_canonical_field_are_unambiguous():
+    with pytest.raises(TypeError, match="Specify only one"):
+        TaskDefinition(
+            "SCF",
+            output_reader_name="SCF",
+            output_reader="SCF",
+        )
+
+
+def test_task_definition_dataclass_replace_uses_canonical_reader_field():
+    task = TaskDefinition("SCF", output_reader="SCF")
+
+    replaced = replace(task, output_reader_name="DOS")
+
+    assert replaced.output_reader_name == "DOS"
+    assert replace(task) == task
 
 
 def test_task_definition_normalizes_identifiers_but_preserves_executable_name():
@@ -141,7 +162,7 @@ def test_task_definition_normalizes_identifiers_but_preserves_executable_name():
     assert task.input_parameters_definition_name == "SCF"
     assert task.name == "SCF"
     assert task.executable == " KkrScf "
-    assert task.output_reader == "SCF"
+    assert task.output_reader_name == "SCF"
 
 
 @pytest.mark.parametrize(
@@ -154,6 +175,7 @@ def test_task_definition_normalizes_identifiers_but_preserves_executable_name():
         ({"mpi": "banana"}, TypeError, "mpi must be a bool"),
         ({"mpi": 1}, TypeError, "mpi must be a bool"),
         ({"output_reader": "   "}, ValueError, "output_reader must not be empty"),
+        ({"output_reader_name": "   "}, ValueError, "output_reader must not be empty"),
     ],
 )
 def test_task_definition_rejects_invalid_scalar_metadata(kwargs, error, message):
@@ -202,14 +224,14 @@ def test_task_definition_is_an_immutable_value_object():
         "SCF",
         name="SCF",
         executable="kkrscf",
-        output_reader="SCF",
+        output_reader_name="SCF",
         output_file_templates=("{dataset}.out",),
     )
 
     assert first == second
     assert hash(first) == hash(second)
     with pytest.raises(FrozenInstanceError):
-        first.output_reader = "BSF"
+        first.output_reader_name = "BSF"
 
 
 def test_builtin_task_definitions_are_metadata_objects():
@@ -246,5 +268,5 @@ def test_bsf_tasks_declare_shared_output_reader_identifier():
     bsfek = InputParameters.task_registry["BSFEK"]
     bsfkk = InputParameters.task_registry["BSFKK"]
 
-    assert bsfek.output_reader == "BSF"
-    assert bsfkk.output_reader == "BSF"
+    assert bsfek.output_reader_name == "BSF"
+    assert bsfkk.output_reader_name == "BSF"

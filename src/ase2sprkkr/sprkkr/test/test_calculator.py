@@ -187,7 +187,11 @@ class TestCalculator:
         assert isinstance(output.potential, Potential)
         assert isinstance(output.calculator.potential_object, Potential)
 
-        reread = SPRKKR.InputParameters.create("scf").read_output_from_file(output.output_file)
+        parameters = SPRKKR.InputParameters.create("scf")
+        reread = parameters.task_definition_required().read_output_from_file(
+            output.output_file,
+            input_parameters=parameters,
+        )
         assert output.output_file == reread.output_file
         assert len(reread.iterations) == 2
         output.plot(filename=str(tmp_path / "output_test_calc.png"))
@@ -204,7 +208,11 @@ class TestCalculator:
             assert len(atomic_type["orbitals"]) == 4
         assert str(atoms.symbols) == str(output.atoms.symbols)
 
-        reread = SPRKKR.InputParameters.from_file(output.input_file).read_output_from_file(output.output_file)
+        parameters = SPRKKR.InputParameters.from_file(output.input_file)
+        reread = parameters.task_definition_required().read_output_from_file(
+            output.output_file,
+            input_parameters=parameters,
+        )
         assert str(atoms.symbols) == str(reread.atoms.symbols)
         assert len(reread.iterations) == 1
 

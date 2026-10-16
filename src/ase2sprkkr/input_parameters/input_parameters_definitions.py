@@ -66,7 +66,6 @@ class InputParametersDefinition(ConfigurationFileDefinition):
     Consumers should resolve task identities through ``TaskRegistry`` instead.
     """
 
-    save_hook = None
     child_class = InputSectionDefinition
     result_class = InputParameters
     custom_class = staticmethod(
@@ -81,9 +80,6 @@ class InputParametersDefinition(ConfigurationFileDefinition):
         identifier to a TaskDefinition belongs to TaskRegistry.
         """
         return None
-
-    def update_from_result(self, parameters, result):
-        """Apply schema-specific values derived from an existing result."""
 
     def input_files(self, parameters, directory):
         """Return schema-specific auxiliary input files."""
