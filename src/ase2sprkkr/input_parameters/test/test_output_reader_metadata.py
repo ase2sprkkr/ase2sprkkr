@@ -18,7 +18,7 @@ def test_every_specialized_reader_is_owned_by_at_least_one_task():
         (
             task.output_reader
             if task.output_reader is not None
-            else reader_registry.executable_registry[
+            else reader_registry.executables[
                 task.executable
             ].default_output_reader
         )

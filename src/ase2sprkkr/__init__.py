@@ -18,6 +18,7 @@ __all__ = (
     "promote_ase_atoms",
     "ResultFile",
     "TaskResult",
+    "executables",
     "__version__",
     "config",
 )
@@ -46,6 +47,9 @@ promote_ase_atoms = SPRKKRAtoms.promote_ase_atoms
 
 """ Structured SPR-KKR result file """
 from .result_files import ResultFile  # NOQA: F401, E402
+
+""" Read-only metadata for known SPR-KKR executables """
+from .sprkkr.executables import executables  # NOQA: F401, E402
 
 
 def __getattr__(name):
