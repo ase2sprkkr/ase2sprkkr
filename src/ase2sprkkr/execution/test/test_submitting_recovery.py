@@ -56,14 +56,28 @@ class _RecoveringExecutor(Executor):
         return self.recovered
 
 
+def _spec(tmp_path):
+    return SimpleNamespace(
+        directory=str(tmp_path),
+        input_file=None,
+        output_file=None,
+        error_file=None,
+        input_files=(),
+        output_files=(str(tmp_path / "shared.out"),),
+        cache_files=(),
+    )
+
+
 def _run(manager, executor, tmp_path):
-    return manager.create_run(
+    spec = _spec(tmp_path)
+    run = manager.create_run(
         executor,
         reader=object(),
-        spec=SimpleNamespace(directory=str(tmp_path)),
+        spec=spec,
         task="DOS",
         dataset="case",
     )
+    return run, spec
 
 
 def test_confirmed_absent_stale_submission_releases_namespace(tmp_path):
@@ -73,9 +87,9 @@ def test_confirmed_absent_stale_submission_releases_namespace(tmp_path):
         executor_pool=ExecutorPool(),
         submitting_grace=0,
     )
-    abandoned = _run(manager, executor, tmp_path)
-    manager.reserve(abandoned.record)
-    replacement = _run(manager, executor, tmp_path)
+    abandoned, abandoned_spec = _run(manager, executor, tmp_path)
+    manager.reserve(abandoned.record, executor, abandoned_spec)
+    replacement, _ = _run(manager, executor, tmp_path)
 
     replacement.submit()
 
@@ -84,6 +98,7 @@ def test_confirmed_absent_stale_submission_releases_namespace(tmp_path):
     assert "not found" in old.message
     assert replacement.record.state == RunState.QUEUED
     assert executor.recovery_calls[0][0] == abandoned.id
+    assert executor.recovery_calls[0][1].directory == str(tmp_path.resolve())
     assert executor.recovery_calls[0][2] is not None
 
 
@@ -97,9 +112,9 @@ def test_recovered_submission_keeps_duplicate_protection(tmp_path):
         executor_pool=ExecutorPool(),
         submitting_grace=0,
     )
-    uncertain = _run(manager, executor, tmp_path)
-    manager.reserve(uncertain.record)
-    replacement = _run(manager, executor, tmp_path)
+    uncertain, uncertain_spec = _run(manager, executor, tmp_path)
+    manager.reserve(uncertain.record, executor, uncertain_spec)
+    replacement, _ = _run(manager, executor, tmp_path)
 
     with pytest.raises(DuplicateSubmissionError):
         replacement.submit()
@@ -116,9 +131,9 @@ def test_unsupported_recovery_never_releases_submission(tmp_path):
         executor_pool=ExecutorPool(),
         submitting_grace=0,
     )
-    uncertain = _run(manager, executor, tmp_path)
-    manager.reserve(uncertain.record)
-    replacement = _run(manager, executor, tmp_path)
+    uncertain, uncertain_spec = _run(manager, executor, tmp_path)
+    manager.reserve(uncertain.record, executor, uncertain_spec)
+    replacement, _ = _run(manager, executor, tmp_path)
 
     with pytest.raises(DuplicateSubmissionError):
         replacement.submit()
@@ -133,9 +148,9 @@ def test_fresh_submitting_record_is_not_recovered(tmp_path):
         executor_pool=ExecutorPool(),
         submitting_grace=3600,
     )
-    uncertain = _run(manager, executor, tmp_path)
-    manager.reserve(uncertain.record)
-    replacement = _run(manager, executor, tmp_path)
+    uncertain, uncertain_spec = _run(manager, executor, tmp_path)
+    manager.reserve(uncertain.record, executor, uncertain_spec)
+    replacement, _ = _run(manager, executor, tmp_path)
 
     with pytest.raises(DuplicateSubmissionError):
         replacement.submit()
