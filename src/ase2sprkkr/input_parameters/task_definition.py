@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 import os
-from typing import Iterable, Optional, Tuple, Union
+from typing import Callable, Iterable, Optional, Tuple, Union
 
 from ..common.doc import process_input_parameters_definition
 from ..common.module_registry import (
@@ -15,6 +15,8 @@ from ..common.module_registry import (
 
 
 _FileTemplate = Union[str, os.PathLike[str]]
+_FileResolver = Callable[[object, str], Optional[_FileTemplate]]
+_FileCondition = Callable[[object], bool]
 
 
 def _normalize_identifier(value: str, field: str) -> str:
@@ -34,27 +36,58 @@ def _validate_executable(value: str) -> str:
     return value
 
 
+@dataclass(frozen=True)
+class FileSpec:
+    """Declarative description of one task-owned file.
+
+    ``filename`` is either a static path/template or a resolver receiving the
+    concrete InputParameters and calculation directory. ``condition`` can omit
+    the file for parameter combinations where it is not used. Resolution is
+    intentionally owned by :class:`InputParametersRegistry`; TaskDefinition
+    remains immutable metadata rather than an execution service.
+    """
+
+    filename: Union[str, _FileResolver]
+    condition: Optional[_FileCondition] = None
+
+    def __post_init__(self):
+        filename = self.filename
+        if not callable(filename):
+            try:
+                filename = os.fspath(filename)
+            except TypeError:
+                raise TypeError(
+                    "FileSpec.filename must be path-like or callable"
+                ) from None
+            if not isinstance(filename, str):
+                raise TypeError("FileSpec.filename must resolve to a string")
+            object.__setattr__(self, "filename", filename)
+        if self.condition is not None and not callable(self.condition):
+            raise TypeError("FileSpec.condition must be callable or None")
+
+
 def _normalize_file_templates(
-    templates: Iterable[_FileTemplate], field: str
-) -> Tuple[str, ...]:
+    templates: Iterable[Union[_FileTemplate, FileSpec]], field: str
+) -> Tuple[Union[str, FileSpec], ...]:
     if isinstance(templates, (str, bytes, os.PathLike)):
         raise TypeError(
-            f"{field} must be an iterable of path-like strings, not a single path"
+            f"{field} must be an iterable of file declarations, not a single path"
         )
     try:
         iterator = iter(templates)
     except TypeError:
-        raise TypeError(
-            f"{field} must be an iterable of path-like strings"
-        ) from None
+        raise TypeError(f"{field} must be an iterable of file declarations") from None
 
     normalized = []
     for index, item in enumerate(iterator):
+        if isinstance(item, FileSpec):
+            normalized.append(item)
+            continue
         try:
             path = os.fspath(item)
         except TypeError:
             raise TypeError(
-                f"{field}[{index}] must be a string or os.PathLike, "
+                f"{field}[{index}] must be a string, os.PathLike or FileSpec, "
                 f"got {type(item).__name__}"
             ) from None
         if not isinstance(path, str):
@@ -68,16 +101,21 @@ def _normalize_file_templates(
 
 @dataclass(frozen=True, init=False)
 class TaskDefinition:
-    """Immutable declarative metadata identifying one SPR-KKR task."""
+    """Immutable declarative metadata identifying one SPR-KKR task.
+
+    File declarations are task metadata too. Static strings support ``{dataset}``
+    formatting; :class:`FileSpec` handles parameter-dependent names and
+    conditions without moving file knowledge into the input-schema classes.
+    """
 
     input_parameters_definition_name: str
     name: str
     executable: str
     mpi: bool
     output_reader: Optional[str]
-    input_file_templates: Tuple[str, ...]
-    output_file_templates: Tuple[str, ...]
-    cache_file_templates: Tuple[str, ...]
+    input_file_templates: Tuple[Union[str, FileSpec], ...]
+    output_file_templates: Tuple[Union[str, FileSpec], ...]
+    cache_file_templates: Tuple[Union[str, FileSpec], ...]
 
     def __init__(
         self,
@@ -87,9 +125,9 @@ class TaskDefinition:
         executable: str = "kkrscf",
         mpi: bool = True,
         output_reader: Optional[str] = None,
-        input_file_templates: Iterable[_FileTemplate] = (),
-        output_file_templates: Iterable[_FileTemplate] = (),
-        cache_file_templates: Iterable[_FileTemplate] = (),
+        input_file_templates: Iterable[Union[_FileTemplate, FileSpec]] = (),
+        output_file_templates: Iterable[Union[_FileTemplate, FileSpec]] = (),
+        cache_file_templates: Iterable[Union[_FileTemplate, FileSpec]] = (),
     ) -> None:
         schema_name = _normalize_identifier(
             input_parameters_definition_name, "input_parameters_definition_name"
@@ -223,37 +261,51 @@ class InputParametersRegistry(ModuleRegistry):
         return out
 
     @staticmethod
-    def _resolve_file_templates(parameters, directory, templates):
-        dataset = parameters.CONTROL.DATASET()
-        return tuple(
-            path if os.path.isabs(path) else os.path.join(directory, path)
-            for path in (
-                os.fspath(template).format(dataset=dataset)
-                for template in templates
-            )
-        )
+    def _resolve_file(parameters, directory, declaration):
+        if isinstance(declaration, FileSpec):
+            if declaration.condition is not None and not declaration.condition(parameters):
+                return None
+            declaration = declaration.filename
+            if callable(declaration):
+                path = declaration(parameters, directory)
+                if path is None:
+                    return None
+            else:
+                path = declaration
+        else:
+            path = declaration
+
+        path = os.fspath(path).format(dataset=parameters.CONTROL.DATASET())
+        return path if os.path.isabs(path) else os.path.join(directory, path)
 
     def files_for_task(self, task, parameters, directory, kind):
-        """Combine declarative task templates with schema-specific file rules."""
-        definition = self.definition_for_task(task)
-        templates = getattr(task, f"{kind}_file_templates")
-        declared = self._resolve_file_templates(parameters, directory, templates)
-        schema_files = getattr(definition, f"{kind}_files")(parameters, directory)
-        return (*declared, *schema_files)
+        """Materialize task-owned file declarations for concrete parameters."""
+        # Validate that the task/schema association is still registered, but all
+        # file knowledge itself belongs to TaskDefinition.
+        self.definition_for_task(task)
+        declarations = getattr(task, f"{kind}_file_templates")
+        return tuple(
+            resolved
+            for resolved in (
+                self._resolve_file(parameters, directory, declaration)
+                for declaration in declarations
+            )
+            if resolved is not None
+        )
 
 
 class TaskRegistry:
     """Authoritative namespace and resolver for SPR-KKR task identities.
 
-    Task declarations intentionally have two sources.  A schema with exactly
-    one canonical task may co-locate its :class:`TaskDefinition` on the
-    ``InputParametersDefinition`` as ``_task_definition``; this keeps the
-    common one-schema/one-task case simple and declarative.  Tasks sharing one
-    input schema are declared separately in the extra task package and refer
-    to that schema by name.
+    Task declarations intentionally have two sources. A schema with exactly one
+    canonical task may co-locate its :class:`TaskDefinition` on the
+    ``InputParametersDefinition`` as ``_task_definition``; this keeps the common
+    one-schema/one-task case simple and declarative. Tasks sharing one input
+    schema are declared separately in the extra task package and refer to that
+    schema by name.
 
     The registry owns the task namespace and resolution rules, not necessarily
-    the physical location of each declaration.  Consumers should resolve task
+    the physical location of each declaration. Consumers should resolve task
     identities through this registry rather than reading ``_task_definition``
     directly.
     """
