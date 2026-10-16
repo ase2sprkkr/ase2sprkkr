@@ -50,6 +50,11 @@ def parser(parser):
         help="List available execution profiles and mark the explicit default.",
     )
     parser.add_argument(
+        "--executables",
+        action="store_true",
+        help="List known SPR-KKR executables and their default output readers.",
+    )
+    parser.add_argument(
         "-e", "--edit", help="Edit config.yaml using the editor in $EDITOR.", action="store_true"
     )
     parser.add_argument(
@@ -260,6 +265,28 @@ def _print_profiles(config):
         print(f"{name}{suffix}")
 
 
+def _print_executables():
+    """Print declarative information about known SPR-KKR executables."""
+    from ...sprkkr.executables import executable_registry
+
+    definitions = tuple(executable_registry.values())
+    name_width = max(len("Executable"), *(len(item.name) for item in definitions))
+    reader_width = max(
+        len("Default reader"),
+        *(len(item.default_output_reader) for item in definitions),
+    )
+    print(
+        f"{'Executable':<{name_width}}  "
+        f"{'Default reader':<{reader_width}}  Description"
+    )
+    for executable in definitions:
+        print(
+            f"{executable.name:<{name_width}}  "
+            f"{executable.default_output_reader:<{reader_width}}  "
+            f"{executable.description}"
+        )
+
+
 def run(args, global_args):
     import os
     import pyparsing
@@ -337,6 +364,9 @@ def run(args, global_args):
         run = False
     if getattr(args, "list_profiles", False):
         _print_profiles(config)
+        run = False
+    if getattr(args, "executables", False):
+        _print_executables()
         run = False
     if args.show:
         import pprint

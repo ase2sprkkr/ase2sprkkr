@@ -26,11 +26,10 @@ def _normalize_identifier(value: str, field: str) -> str:
     return value.upper()
 
 
-def _normalize_executable(value: str) -> str:
+def _validate_executable(value: str) -> str:
     if not isinstance(value, str):
         raise TypeError("executable must be a string")
-    value = value.strip()
-    if not value:
+    if not value.strip():
         raise ValueError("executable must not be empty")
     return value
 
@@ -98,7 +97,7 @@ class TaskDefinition:
         task_name = (
             schema_name if name is None else _normalize_identifier(name, "name")
         )
-        executable = _normalize_executable(executable)
+        executable = _validate_executable(executable)
         if type(mpi) is not bool:
             raise TypeError("mpi must be a bool")
         if output_reader is not None:

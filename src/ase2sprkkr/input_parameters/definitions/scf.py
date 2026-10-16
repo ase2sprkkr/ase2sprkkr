@@ -37,5 +37,6 @@ def input_parameters_definition():
         name="SCF",
         executable="kkrscf",
         mpi=True,
+        output_reader="SCF",
     )
     return schema

@@ -79,5 +79,6 @@ def input_parameters_definition():
         name="JXC",
         executable="kkrgen",
         mpi=True,
+        output_reader="JXC",
     )
     return schema
