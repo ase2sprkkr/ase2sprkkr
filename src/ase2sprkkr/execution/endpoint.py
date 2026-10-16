@@ -41,7 +41,7 @@ def endpoint_for_executor(executor) -> ExecutorEndpoint:
     """Describe a live executor without persisting launch/staging policy."""
     from .local import LocalExecutor
     from .psij import PsijExecutor
-    from .remote_endpoint import RemoteEndpointExecutor
+    from .remote_endpoint_client import RemoteEndpointExecutor
     from .transport import SshTransport
 
     if isinstance(executor, LocalExecutor):
@@ -58,11 +58,6 @@ def endpoint_for_executor(executor) -> ExecutorEndpoint:
         psij_url = None
         if executor.backend == "psij":
             options = executor.backend_options or {}
-            # ``RemoteEndpointExecutor(..., backend="psij")`` is a complete
-            # public configuration even when no options are supplied: the
-            # target-side PSI/J backend then defaults to Slurm. Persist that
-            # default explicitly so restart reconstruction cannot silently
-            # turn the endpoint into the ordinary remote-local backend.
             psij_backend = options.get("backend") or "slurm"
             psij_url = options.get("url")
 
@@ -89,8 +84,6 @@ def endpoint_for_executor(executor) -> ExecutorEndpoint:
             psij_url=psij_url,
         )
 
-    # Custom executors can participate in duplicate-submit protection in this
-    # process. Reconstruction is intentionally limited to known endpoint types.
     return ExecutorEndpoint(
         executor="custom:{}.{}:{}".format(
             type(executor).__module__,
@@ -104,7 +97,7 @@ def create_executor_from_endpoint(endpoint: ExecutorEndpoint):
     """Reconstruct a standard executor from persisted endpoint identity."""
     from .local import LocalExecutor
     from .psij import PsijExecutor
-    from .remote_endpoint import RemoteEndpointExecutor
+    from .remote_endpoint_client import RemoteEndpointExecutor
     from .transport import SshTransport
 
     if isinstance(endpoint, dict):
