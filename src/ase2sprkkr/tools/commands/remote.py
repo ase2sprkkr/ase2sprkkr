@@ -43,6 +43,11 @@ def parser(parser):
     follow.add_argument("run_id")
     follow.add_argument("--stdout-offset", type=int, default=0)
     follow.add_argument("--stderr-offset", type=int, default=0)
+    follow.add_argument(
+        "--framed",
+        action="store_true",
+        help="multiplex calculation stdout/stderr over stdout using the binary protocol",
+    )
 
     runs = actions.add_parser("runs", help="List runs recorded in a workspace")
     runs.add_argument("directory")
@@ -97,6 +102,20 @@ def _finalize_failed_worker_start(directory, request, exc):
     )
 
 
+class _FramedSink:
+    def __init__(self, stream, kind):
+        self.stream = stream
+        self.kind = kind
+
+    def write(self, data):
+        from ...execution.stream_protocol import encode_stream_frame
+
+        self.stream.write(encode_stream_frame(self.kind, data))
+
+    def flush(self):
+        self.stream.flush()
+
+
 def run(args, global_args):
     from ...execution.remote import (
         cancel_remote,
@@ -128,11 +147,22 @@ def run(args, global_args):
     elif args.remote_action == "cancel":
         _print_json(cancel_remote(args.directory, args.run_id))
     elif args.remote_action == "follow":
+        if args.framed:
+            from ...execution.stream_protocol import STREAM_MAGIC
+
+            stream = sys.stdout.buffer
+            stream.write(STREAM_MAGIC)
+            stream.flush()
+            stdout = _FramedSink(stream, "out")
+            stderr = _FramedSink(stream, "err")
+        else:
+            stdout = sys.stdout.buffer
+            stderr = sys.stderr.buffer
         follow_remote(
             args.directory,
             args.run_id,
-            sys.stdout.buffer,
-            sys.stderr.buffer,
+            stdout,
+            stderr,
             stdout_offset=args.stdout_offset,
             stderr_offset=args.stderr_offset,
         )
