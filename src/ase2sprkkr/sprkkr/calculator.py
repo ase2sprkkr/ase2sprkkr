@@ -520,26 +520,6 @@ class SPRKKR(BaseCalculator):
             callback(result)
         return result
 
-    def scf(self, *args, **kwargs):
-        """Run an SCF calculation."""
-        self.calculate(input_parameters="SCF", *args, **kwargs)
-
-    def phagen(self, *args, **kwargs):
-        """Run a PHAGEN calculation."""
-        self.calculate(input_parameters="PHAGEN", *args, **kwargs)
-
-    def kkrgen(self, *args, **kwargs):
-        """Run a KKRGEN calculation."""
-        self.calculate(input_parameters="KKRGEN", *args, **kwargs)
-
-    def kkrspec(self, *args, **kwargs):
-        """Run a KKRSPEC calculation."""
-        self.calculate(input_parameters="KKRSPEC", *args, **kwargs)
-
-    def kkrch(self, *args, **kwargs):
-        """Run a KKRCH calculation."""
-        self.calculate(input_parameters="KKRCH", *args, **kwargs)
-
     def run_xband(self, executable="xband"):
         """Start the external ``xband`` executable detached from calculator IO."""
         subprocess.Popen(executable, stdout=subprocess.DEVNULL)
