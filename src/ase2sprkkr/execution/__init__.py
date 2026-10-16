@@ -23,9 +23,9 @@ from .manager import (
     FileRetrievalState,
     PersistentRunner,
     ResultFilesRecord,
+    RunFilesRecord,
     RunRecord,
     RunStore,
-    SubmissionKey,
 )
 from .pool import ExecutorPool, default_executor_pool
 from .projects import (
@@ -59,7 +59,6 @@ __all__ = [
     "RunReference",
     "RunState",
     "RunStatus",
-    "SubmissionKey",
     "DuplicateSubmissionError",
     "FileFingerprint",
     "FileState",
@@ -67,6 +66,7 @@ __all__ = [
     "FileVersionCaptureError",
     "FileRetrievalState",
     "ResultFilesRecord",
+    "RunFilesRecord",
     "RunRecord",
     "RunStore",
     "CorruptRunRecord",
