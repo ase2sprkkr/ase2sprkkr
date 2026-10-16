@@ -184,7 +184,20 @@ class InputParametersRegistry(ModuleRegistry):
 
 
 class TaskRegistry:
-    """Registry of task identities and their declarative metadata."""
+    """Authoritative namespace and resolver for SPR-KKR task identities.
+
+    Task declarations intentionally have two sources.  A schema with exactly
+    one canonical task may co-locate its :class:`TaskDefinition` on the
+    ``InputParametersDefinition`` as ``_task_definition``; this keeps the
+    common one-schema/one-task case simple and declarative.  Tasks sharing one
+    input schema are declared separately in the extra task package and refer
+    to that schema by name.
+
+    The registry owns the task namespace and resolution rules, not necessarily
+    the physical location of each declaration.  Consumers should resolve task
+    identities through this registry rather than reading ``_task_definition``
+    directly.
+    """
 
     normalize_name = staticmethod(ModuleRegistry.normalize_name)
 
