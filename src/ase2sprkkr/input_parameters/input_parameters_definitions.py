@@ -55,7 +55,16 @@ class InputParametersDefinition(ConfigurationFileDefinition):
     """Syntax and parameter semantics of one SPR-KKR input-file schema."""
 
     _task_definition = None
-    """Canonical 1:1 task, or None for schemas shared by multiple tasks."""
+    """Canonical 1:1 task declared together with this schema.
+
+    This is declaration-time metadata for the simple case where one input
+    schema represents exactly one task.  Schemas shared by multiple tasks leave
+    it as ``None`` and declare those tasks separately through ``TaskRegistry``'s
+    extra task package.
+
+    The association is internal and must not be changed after registration.
+    Consumers should resolve task identities through ``TaskRegistry`` instead.
+    """
 
     save_hook = None
     child_class = InputSectionDefinition
