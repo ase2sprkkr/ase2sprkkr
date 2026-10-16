@@ -90,7 +90,9 @@ class _RemoteRun(RemoteRunner):
         context = {
             "launch": request.get("launch") or {},
             "client_sync": request.get("client_sync") or {},
-            "local_sync": self.executor.submission_context(self.spec).get("local_sync"),
+            "local_sync": self.executor.endpoint.submission_context(self.spec).get(
+                "local_sync"
+            ),
         }
         return remote_id, context, status
 
