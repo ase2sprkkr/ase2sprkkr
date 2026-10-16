@@ -120,6 +120,7 @@ def test_schema_does_not_resolve_task_services():
 
     assert not hasattr(schema, "task_definition")
     assert not hasattr(schema, "initialize_for_task")
+    assert not hasattr(schema, "update_from_result")
     assert schema.task_definition_name(InputParameters.create("SPLEED")) == "SPLEED"
 
 
@@ -134,7 +135,7 @@ def test_task_registry_resolves_task_from_values():
     assert parameters.requested_task_name == "ARPES"
 
 
-def test_input_parameters_registry_creates_parameters_from_result():
+def test_input_parameters_registry_creates_parameters_from_result_as_default_context():
     result = SimpleNamespace(
         last_iteration=SimpleNamespace(
             energy=SimpleNamespace(EMIN=lambda: -0.35)
@@ -148,8 +149,29 @@ def test_input_parameters_registry_creates_parameters_from_result():
 
     assert parameters.task_name == "JXC"
     assert parameters.requested_task_name == "JXC"
+    assert parameters.from_result is result
     assert parameters.task_definition.name == "JXC"
     assert parameters.ENERGY.EMIN() == -0.35
+    assert not parameters.ENERGY.EMIN.is_set()
+
+    for copy_values in (False, True):
+        copied = parameters.copy(copy_values=copy_values)
+        assert copied.requested_task_name == "JXC"
+        assert copied.from_result is result
+        assert copied.ENERGY.EMIN() == -0.35
+        assert not copied.ENERGY.EMIN.is_set()
+
+    parameters.ENERGY.EMIN = -0.5
+    assert parameters.ENERGY.EMIN() == -0.5
+    assert parameters.ENERGY.EMIN.is_set()
+
+
+def test_jxc_without_result_keeps_normal_emin_default():
+    parameters = InputParameters.create("JXC")
+
+    assert parameters.from_result is None
+    assert parameters.ENERGY.EMIN() == -0.2
+    assert not parameters.ENERGY.EMIN.is_set()
 
 
 def test_task_cannot_reuse_schema_bound_to_different_canonical_task():

@@ -521,7 +521,8 @@ class PreparedCalculation:
                 directory=work_directory,
             )
 
-            task_name = input_parameters.task_name
+            task_definition = input_parameters.task_definition_required()
+            task_name = task_definition.name
             if restart_scf:
                 if task_name != "SCF":
                     raise ValueError(
@@ -880,9 +881,12 @@ def _create_sprkkr_run(
     input_parameters = prepared.input_parameters
 
     try:
-        task = input_parameters._require_task_definition()
-        reader = input_parameters.output_reader(
-            result_context, print_output, prepared.directory
+        task = input_parameters.task_definition_required()
+        reader = task.output_reader(
+            input_parameters=input_parameters,
+            calculator=result_context,
+            print_output=print_output,
+            directory=prepared.directory,
         )
         if executor is None:
             executor = executor_from_profile(profile)
@@ -943,7 +947,7 @@ def _create_sprkkr_run(
                 executor,
                 reader,
                 spec,
-                task=input_parameters.task_name,
+                task=task.name,
                 input_definition=input_parameters.definition_name,
                 dataset=input_parameters.CONTROL.DATASET.result,
                 callback=finalized,

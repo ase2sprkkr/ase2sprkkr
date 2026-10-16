@@ -82,9 +82,6 @@ class InputParametersDefinition(ConfigurationFileDefinition):
         """
         return None
 
-    def update_from_result(self, parameters, result):
-        """Apply schema-specific values derived from an existing result."""
-
     def input_files(self, parameters, directory):
         """Return schema-specific auxiliary input files."""
         return ()

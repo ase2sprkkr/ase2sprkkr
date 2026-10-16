@@ -1,6 +1,11 @@
+from pathlib import Path
+
 import pytest
 
 from ..input_parameters import InputParameters
+
+
+EXAMPLES = Path(__file__).parent.parent / "examples"
 
 
 def _reader_setting(values):
@@ -51,6 +56,43 @@ def test_read_for_task_accepts_matching_effective_task(
     monkeypatch.setattr(InputParameters, "read_from_file", _reader_setting(values))
 
     parameters = registry.read_for_task(task, "ignored.inp")
+
+    assert parameters.task_name == requested
+    assert parameters.task_definition.name == requested
+
+
+@pytest.mark.parametrize(
+    ("requested", "filename", "effective"),
+    (
+        ("SPLEED", "arpes.in", "ARPES"),
+        ("BSFKK", "bsf.inp", "BSFEK"),
+    ),
+)
+def test_read_for_task_rejects_real_shared_schema_mismatch(
+    requested, filename, effective
+):
+    registry = InputParameters.input_parameters_registry
+    task = InputParameters.task_registry[requested]
+
+    with pytest.raises(
+        ValueError,
+        match=rf"read for task '{requested}'.*task '{effective}'",
+    ):
+        registry.read_for_task(task, str(EXAMPLES / filename))
+
+
+@pytest.mark.parametrize(
+    ("requested", "filename"),
+    (
+        ("ARPES", "arpes.in"),
+        ("BSFEK", "bsf.inp"),
+    ),
+)
+def test_read_for_task_accepts_real_matching_shared_schema(requested, filename):
+    registry = InputParameters.input_parameters_registry
+    task = InputParameters.task_registry[requested]
+
+    parameters = registry.read_for_task(task, str(EXAMPLES / filename))
 
     assert parameters.task_name == requested
     assert parameters.task_definition.name == requested

@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import io
-import os
 import pyparsing as pp
 
 from . import definitions, tasks
@@ -31,6 +30,7 @@ class InputParameters(ConfigurationFile):
         outputfile=False,
         *,
         requested_task_name=None,
+        from_result=None,
     ):
         super().__init__(definition)
         self._requested_task_name = (
@@ -38,15 +38,17 @@ class InputParameters(ConfigurationFile):
             if requested_task_name is None
             else str(requested_task_name).upper()
         )
+        self._from_result = from_result
         self._inputfile = inputfile
         self._outputfile = inputfile if outputfile is False else outputfile
 
     @property
     def task_definition(self):
-        """Return the task represented by the current values."""
+        """Return the task represented by the current values, if any."""
         return self.task_registry.task_for_parameters(self)
 
-    def _require_task_definition(self):
+    def task_definition_required(self):
+        """Return the task represented by the current values, failing if detached."""
         task = self.task_definition
         if task is None:
             raise RuntimeError(
@@ -70,6 +72,15 @@ class InputParameters(ConfigurationFile):
         return self._requested_task_name
 
     @property
+    def from_result(self):
+        """Result from which these parameters were derived, if any.
+
+        Like :attr:`requested_task_name`, this is provenance and default-value
+        context rather than part of the task identity.
+        """
+        return self._from_result
+
+    @property
     def definition_name(self):
         """Return the registered input-parameter schema name."""
         return self._definition.name
@@ -86,11 +97,12 @@ class InputParameters(ConfigurationFile):
         return out
 
     def copy(self, copy_values: bool = False):
-        """Copy parameters while preserving requested-task default context."""
+        """Copy parameters while preserving provenance and default context."""
         values = self.as_dict(copy=copy_values, only_changed=True)
         out = self.__class__(
             definition=self._definition,
             requested_task_name=self.requested_task_name,
+            from_result=self.from_result,
         )
         out.set(values, unknown="add", retain_invalid="all", report_invalid="ignore")
         return out
@@ -111,7 +123,7 @@ class InputParameters(ConfigurationFile):
         return task is not None and task.name == "COMPTON"
 
     def _task_files(self, directory, kind):
-        task = self._require_task_definition()
+        task = self.task_definition_required()
         return self.input_parameters_registry.files_for_task(
             task, self, directory, kind
         )
@@ -126,16 +138,21 @@ class InputParameters(ConfigurationFile):
         return self._task_files(directory, "cache")
 
     def output_reader(self, calculator=None, print_output=False, directory=None):
-        from ..outputs.reader_registry import reader_registry
-
-        if not directory and calculator and calculator.directory:
-            directory = calculator.directory
-        cls = reader_registry.class_for_task(self._require_task_definition())
-        return cls(self, calculator, directory, print_output)
+        """Create the reader for the effective task represented by these values."""
+        return self.task_definition_required().output_reader(
+            input_parameters=self,
+            calculator=calculator,
+            print_output=print_output,
+            directory=directory,
+        )
 
     def read_output_from_file(self, filename, directory=None):
-        directory = directory or os.path.dirname(filename)
-        return self.output_reader(directory=directory).read_from_file(filename)
+        """Read a completed output through the effective task's registered reader."""
+        return self.task_definition_required().read_output_from_file(
+            filename,
+            input_parameters=self,
+            directory=directory,
+        )
 
     def __str__(self):
         return f"<Configuration container {self._get_path()}>"

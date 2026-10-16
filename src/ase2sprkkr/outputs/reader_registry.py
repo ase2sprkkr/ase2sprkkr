@@ -74,12 +74,65 @@ class OutputReaderRegistry(ModuleRegistry):
 
         if not isinstance(task, TaskDefinition):
             raise TypeError("task must be a TaskDefinition")
-        if task.output_reader is not None:
-            reader_name = task.output_reader
+        if task.output_reader_name is not None:
+            reader_name = task.output_reader_name
         else:
             executable = self._executables[task.executable]
             reader_name = executable.default_output_reader
         return self[reader_name]
+
+    @staticmethod
+    def _validate_input_parameters(task, input_parameters):
+        if input_parameters is None:
+            return
+        parameter_task = input_parameters.task_definition
+        if parameter_task is not None and parameter_task != task:
+            raise ValueError(
+                f"Input parameters represent task {parameter_task.name!r}, "
+                f"not requested task {task.name!r}"
+            )
+
+    def reader_for_task(
+        self,
+        task,
+        *,
+        input_parameters=None,
+        calculator=None,
+        print_output=False,
+        directory=None,
+    ):
+        """Construct the registered output reader for *task*."""
+        self._validate_input_parameters(task, input_parameters)
+        if directory is None and calculator is not None:
+            directory = getattr(calculator, "directory", None)
+        reader = self.class_for_task(task)(
+            input_parameters,
+            calculator,
+            directory,
+            print_output,
+        )
+        if reader.task_name is None:
+            reader.task_name = task.name
+        return reader
+
+    def read_for_task(
+        self,
+        task,
+        filename,
+        *,
+        input_parameters=None,
+        calculator=None,
+        directory=None,
+    ):
+        """Read a completed output file using the registered reader for *task*."""
+        if directory is None and isinstance(filename, (str, os.PathLike)):
+            directory = os.path.dirname(os.fspath(filename))
+        return self.reader_for_task(
+            task,
+            input_parameters=input_parameters,
+            calculator=calculator,
+            directory=directory,
+        ).read_from_file(filename)
 
     def detect(self, file):
         """Detect the task represented by a standalone SPR-KKR output file.
