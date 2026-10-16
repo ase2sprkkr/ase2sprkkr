@@ -75,20 +75,20 @@ executable_registry = ExecutableRegistry(
     (
         ExecutableDefinition(
             "kkrscf",
-            description="SPR-KKR potential and self-consistency executable.",
+            description="Potential generation and self-consistent calculations.",
         ),
         ExecutableDefinition(
             "kkrgen",
-            description="General-purpose SPR-KKR property executable.",
+            description="Electronic-structure and general property calculations.",
         ),
         ExecutableDefinition(
             "kkrspec",
             default_output_reader="SPEC",
-            description="SPR-KKR spectroscopy executable.",
+            description="Spectroscopy and photoemission calculations.",
         ),
         ExecutableDefinition(
             "kkrchi",
-            description="SPR-KKR response-function executable.",
+            description="Response-function calculations.",
         ),
     )
 )
