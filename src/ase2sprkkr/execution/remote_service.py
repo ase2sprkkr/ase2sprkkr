@@ -1,8 +1,8 @@
 """Stateless target-side operations for remote execution.
 
-The remote host is deliberately not a lifecycle authority.  Each operation is
+The remote host is deliberately not a lifecycle authority. Each operation is
 fully described by its request or by an opaque ``remote_id`` returned from
-submission.  No ASE2SPRKKR run record is written on the target.
+submission. No ASE2SPRKKR run record is written on the target.
 """
 
 from __future__ import annotations
@@ -103,7 +103,9 @@ def _local_submit(request):
 
     directory = Path(request["directory"]).expanduser().resolve()
     directory.mkdir(parents=True, exist_ok=True)
-    spec = materialize_local_spec(_request_spec(dict(request, directory=os.fspath(directory))))
+    spec = materialize_local_spec(
+        _request_spec(dict(request, directory=os.fspath(directory)))
+    )
 
     output_path = _absolute(directory, spec.output_file or "stdout")
     error_path = _absolute(directory, spec.error_file or "stderr")
@@ -197,14 +199,15 @@ def _psij_executor(options):
 
 def _psij_submit(request):
     executor = _psij_executor(request.get("executor_options"))
-    spec = _request_spec(request)
     runner = executor.create_persistent_run(
-        _DrainReader(), spec, run_id=request.get("id")
+        _DrainReader(),
+        _request_spec(request),
+        run_id=request.get("id"),
     )
-    # Submit only. Monitoring belongs to the client; target-side daemon threads
-    # would reintroduce a second lifecycle owner.
-    runner._prepare_io()
-    executor._job_executor.submit(runner._job)
+    # PSI/J owns scheduler submission. The helper process exits immediately
+    # after the native reference is available; its daemon monitor thread is not
+    # a persistent lifecycle authority and cannot outlive this command.
+    runner.submit()
     reference = runner.reference
     if reference is None:
         raise RuntimeError("PSI/J submission did not return a backend id")
@@ -418,7 +421,12 @@ def follow_remote(
                 had_data = True
 
         state = status_remote(remote_id)
-        if state["state"] in {item.value for item in _FINAL_STATES} and not had_data:
+        terminal = state["state"] in {item.value for item in _FINAL_STATES}
+        lost_process = (
+            handle["kind"] == "process"
+            and state["state"] == RunState.UNKNOWN.value
+        )
+        if (terminal or lost_process) and not had_data:
             return state
         if not had_data:
             time.sleep(poll_interval)
