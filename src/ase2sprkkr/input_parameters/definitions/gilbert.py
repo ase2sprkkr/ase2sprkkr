@@ -14,25 +14,6 @@ def _uses_fluctuation_file(parameters):
     return parameters.TASK.SETFLUCT() == "M_T" and bool(parameters.TASK.FLUCTFIL())
 
 
-def _torque_mode_warning_condition(value):
-    return (
-        "Torque task does not support SREL (scalar relativity without spin) or "
-        "NREL (no relativity at all) MODE. Please change SCF.MODE, or "
-        "the computation will fail."
-        if value in ("SREL", "NREL")
-        else None
-    )
-
-
-def _torque_nonmag_warning_condition(value):
-    return (
-        "Torque task does not support non-magnetic computation. Please disable "
-        "CONTROL.NONMAG, or the computation will fail."
-        if value
-        else None
-    )
-
-
 def input_parameters_definition():
     schema = InputParametersDefinition(
         "gilbert",
