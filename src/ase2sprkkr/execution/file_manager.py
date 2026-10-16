@@ -273,14 +273,11 @@ class ExecutionManager(_LifecycleExecutionManager):
         """Map a local run path into the persisted submission namespace."""
         path = os.path.abspath(os.fspath(path))
         directory = os.path.abspath(os.fspath(record.directory))
+        if record.submission is None:
+            return os.path.normcase(path)
         try:
             relative = os.path.relpath(path, directory)
         except ValueError:
-            relative = None
-        inside = relative is not None and relative != os.pardir and not relative.startswith(
-            os.pardir + os.sep
-        )
-        if not inside or record.submission is None:
             return os.path.normcase(path)
 
         backend_directory = os.fspath(record.submission.directory)
@@ -295,13 +292,11 @@ class ExecutionManager(_LifecycleExecutionManager):
             # A pattern can be extended by the run even when it already has
             # matches, so it is conservatively a writer.
             return False
-        if os.path.isfile(cache):
-            return True
         if record.endpoint is None or record.endpoint.host is None:
-            return False
+            return os.path.isfile(cache)
 
-        # A remote cache can already exist in the backend workspace even when
-        # there is no local copy. Probe the same backend path used by locking.
+        # For a remote run, the backend filesystem is authoritative. A local
+        # cache that has not been staged yet is itself a future backend write.
         executor = self.executor_for(record)
         transport = getattr(executor, "transport", None)
         resolve = getattr(executor, "_resolve_submission_directory", None)
