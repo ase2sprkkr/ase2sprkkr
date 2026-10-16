@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from .base import RunState
-from .manager import ExecutionManager as _ExecutionManager
+from .file_manager import ExecutionManager as _ExecutionManager
 from .projects import Project, ProjectConflictError, ProjectRepository
 
 
