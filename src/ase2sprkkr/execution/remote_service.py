@@ -19,7 +19,7 @@ from types import SimpleNamespace
 from uuid import uuid4
 
 from .base import ExecutionSpec, LaunchSpec, RunReference, RunState
-from .remote_process_worker import _SPEC_ENV
+from .remote_process_worker import _SPEC_ENV, _START_FD_ENV
 
 
 _FINAL_STATES = {
@@ -130,24 +130,36 @@ def _local_submit(request):
     env = os.environ.copy()
     env["ASE2SPRKKR_RUN_ID"] = run_id
     env[_SPEC_ENV] = json.dumps(worker_spec, separators=(",", ":"))
-    process = subprocess.Popen(
-        [sys.executable, "-m", "ase2sprkkr.execution.remote_process_worker"],
-        cwd=directory,
-        stdin=subprocess.DEVNULL,
-        stdout=subprocess.DEVNULL,
-        stderr=subprocess.DEVNULL,
-        env=env,
-        start_new_session=True,
-        close_fds=True,
-    )
-    info = _process_info(process.pid)
-    if info is None:
+
+    start_fd, release_fd = os.pipe()
+    env[_START_FD_ENV] = str(start_fd)
+    try:
         try:
-            os.killpg(process.pid, signal.SIGKILL)
-        except ProcessLookupError:
-            pass
-        raise RuntimeError("Started remote process disappeared before identification")
-    start_time, _ = info
+            process = subprocess.Popen(
+                [sys.executable, "-m", "ase2sprkkr.execution.remote_process_worker"],
+                cwd=directory,
+                stdin=subprocess.DEVNULL,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+                env=env,
+                start_new_session=True,
+                close_fds=True,
+                pass_fds=(start_fd,),
+            )
+        finally:
+            os.close(start_fd)
+
+        info = _process_info(process.pid)
+        if info is None:
+            try:
+                os.killpg(process.pid, signal.SIGKILL)
+            except ProcessLookupError:
+                pass
+            raise RuntimeError("Started remote process disappeared before identification")
+        start_time, _ = info
+        os.write(release_fd, b"1")
+    finally:
+        os.close(release_fd)
 
     remote_id = _encode_handle(
         {
