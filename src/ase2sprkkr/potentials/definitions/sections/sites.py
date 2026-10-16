@@ -33,7 +33,7 @@ class SitesSection(PotentialSection):
     def _update_atoms(self, atoms, read_io_data):
         positions = self["SCALED_ATOMIC_POSITIONS"]() * (read_io_data["lattice.alat"] * self["BASSCALE"]())
         try:
-            if atoms:
+            if atoms is not None:
                 atoms.set_positions(positions)
                 return
         except ValueError:
