@@ -140,9 +140,20 @@ class InputParametersRegistry(ModuleRegistry):
         return out
 
     def read_for_task(self, task, file, *, allow_dangerous=False):
-        """Read InputParameters for a resolved TaskDefinition."""
+        """Read parameters and require the parsed values to represent *task*."""
         out = self.create_for_task(task, inputfile=file)
         out.read_from_file(file, allow_dangerous=allow_dangerous)
+
+        definition = out.definition
+        if definition._task_definition is None:
+            effective_name = definition.task_definition_name(out)
+            if effective_name is not None:
+                effective_name = self.normalize_name(effective_name)
+            if effective_name != task.name:
+                raise ValueError(
+                    f"Input file read for task {task.name!r} represents "
+                    f"task {effective_name!r}"
+                )
         return out
 
     def create_from_result(self, task, result):
