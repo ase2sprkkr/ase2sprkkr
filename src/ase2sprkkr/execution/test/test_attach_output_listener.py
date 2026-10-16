@@ -5,7 +5,7 @@ from ase2sprkkr.execution.base import LaunchSpec, RunReference, RunState
 from ase2sprkkr.execution.local import LocalExecutor
 from ase2sprkkr.execution.manager import ExecutionManager, RunStore
 from ase2sprkkr.execution.psij import PsijExecutor, PsijRunner
-from ase2sprkkr.execution.remote_endpoint_client import _RemoteRun, _RemoteRunContext
+from ase2sprkkr.execution.remote_endpoint import _RemoteRun, _RemoteRunContext
 
 
 class _Reader:
