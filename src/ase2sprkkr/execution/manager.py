@@ -13,7 +13,7 @@ from datetime import datetime, timezone
 from enum import Enum
 from pathlib import Path
 from threading import RLock
-from typing import Optional
+from typing import Any, Optional
 from uuid import uuid4
 
 from platformdirs import user_state_dir
@@ -206,12 +206,19 @@ class ResultFilesRecord:
 
 @dataclass(frozen=True)
 class SubmissionKey:
-    """Persistent namespace used only for duplicate-submit protection."""
+    """Persistent submission identity plus client-owned recovery context.
+
+    ``context`` is deliberately ignored by :meth:`conflicts_with`; it stores
+    backend-specific information needed to reconstruct a reference when a
+    submit response was lost, while endpoint/directory/task/dataset remain the
+    duplicate-submission namespace.
+    """
 
     endpoint: ExecutorEndpoint
     directory: str
     task: str
     dataset: Optional[str] = None
+    context: Any = None
 
     def __post_init__(self):
         if isinstance(self.endpoint, dict):
@@ -958,11 +965,16 @@ class ExecutionManager:
     ):
         """Create a caller-owned runner whose lifecycle is persisted."""
         endpoint = endpoint_for_executor(executor)
+        context_factory = getattr(executor, "submission_context", None)
+        submission_context = (
+            None if context_factory is None else context_factory(spec)
+        )
         submission = SubmissionKey(
             endpoint=endpoint,
             directory=executor.submission_directory(spec),
             task=task,
             dataset=dataset,
+            context=submission_context,
         )
         record = self.new_record(
             task=task,

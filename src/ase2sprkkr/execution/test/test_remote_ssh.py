@@ -43,7 +43,7 @@ def _wait_for_live_output(runner, output_seen, output, timeout=30):
         if output_seen.wait(0.1):
             return
         state = runner.state
-        if state.value in {"finished", "failed", "cancelled"}:
+        if state.value in {"finished", "execution_failed", "cancelled"}:
             try:
                 result = runner.wait()
             except Exception as exc:
@@ -182,12 +182,20 @@ def test_remote_executor_over_ssh(docker_execution_image):
             except subprocess.CalledProcessError as exc:
                 _remote_error(exc)
 
-            assert runner.reference is not None
-            assert runner.reference.computer == "tester@127.0.0.1"
-            assert (
-                runner.reference.directory
-                == "/home/tester/ase2sprkkr-runs/calculation"
-            )
+            reference = runner.reference
+            assert reference is not None
+            assert reference.executor == "remote:local"
+            assert reference.native_id
+            assert reference.computer == "tester@127.0.0.1"
+            assert reference.directory == "/home/tester/ase2sprkkr-runs/calculation"
+            assert reference.context
+            assert "launch" in reference.context
+
+            lifecycle_dir = f"{reference.directory}/.ase2sprkkr/runs"
+            assert subprocess.run(
+                ssh + ["test", "!", "-e", lifecycle_dir]
+            ).returncode == 0
+
             _wait_for_live_output(runner, output_seen, output)
 
             result = runner.wait()
@@ -202,7 +210,7 @@ def test_remote_executor_over_ssh(docker_execution_image):
             remote_potential = (
                 potfil
                 if posixpath.isabs(potfil)
-                else posixpath.join(runner.reference.directory, potfil)
+                else posixpath.join(reference.directory, potfil)
             )
             remote_pot_new = remote_potential + "_new"
             subprocess.run(ssh + ["test", "-s", remote_pot_new], check=True)
@@ -212,9 +220,8 @@ def test_remote_executor_over_ssh(docker_execution_image):
             )
 
             # Simulate a client restart. A fresh manager/pool knows only the
-            # persisted run id; it must reconstruct SSH endpoint identity,
-            # task reader and the saved per-run LaunchSpec before replaying the
-            # finished output.
+            # client-persisted run record and must reconstruct SSH endpoint
+            # identity plus per-run reconnect context before replaying output.
             run_id = runner.id
             restarted = ExecutionManager(
                 RunStore(tmp / "runs"), executor_pool=ExecutorPool()
@@ -227,6 +234,10 @@ def test_remote_executor_over_ssh(docker_execution_image):
             assert attached.executor.transport.options == options
             assert replayed.return_code == 0
             assert len(replayed.iterations) > 0
+
+            stored = restarted.store.get(run_id)
+            assert stored.reference.native_id == reference.native_id
+            assert stored.reference.context == reference.context
         finally:
             subprocess.run(
                 [docker, "rm", "-f", container],

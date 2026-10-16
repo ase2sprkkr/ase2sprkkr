@@ -21,7 +21,6 @@ from ase2sprkkr.execution.manager import (
     RunStore,
     SubmissionKey,
 )
-from ase2sprkkr.execution.remote_psij import _RemotePsijAgent
 from ase2sprkkr.execution.transport import AtomicLocalFile, LocalTransport
 
 
@@ -231,21 +230,3 @@ def test_process_group_cancel_checks_group_not_only_leader(tmp_path, monkeypatch
     assert state["state"] == "cancelled"
     assert calls[0][0] == 1234
     assert any(sig == 0 for _, sig in calls)
-
-
-def test_psij_retry_uses_exponential_backoff(tmp_path, monkeypatch):
-    now = [100.0]
-    monkeypatch.setattr(
-        "ase2sprkkr.execution.remote_psij.time.monotonic", lambda: now[0]
-    )
-    agent = _RemotePsijAgent(tmp_path)
-
-    agent._schedule_retry("run")
-    assert not agent._retry_ready("run")
-    first_deadline = agent._retry["run"][1]
-    assert first_deadline == pytest.approx(100.5)
-
-    now[0] = first_deadline
-    assert agent._retry_ready("run")
-    agent._schedule_retry("run")
-    assert agent._retry["run"][1] == pytest.approx(first_deadline + 1.0)

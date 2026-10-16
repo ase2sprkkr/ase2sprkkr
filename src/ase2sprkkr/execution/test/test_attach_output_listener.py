@@ -72,7 +72,8 @@ def _remote_context(tmp_path):
         async def _remote_home(self):
             return "/remote"
 
-        async def _status(self, directory, run_id):
+        async def _status(self, directory, remote_id):
+            assert remote_id == "opaque-id"
             return {
                 "state": "running",
                 "input_file": "/remote/work/input.inp",
@@ -85,22 +86,21 @@ def _remote_context(tmp_path):
     )
     reference = RunReference(
         executor="remote:local",
-        native_id="run",
+        native_id="opaque-id",
         computer="host",
         directory="/remote/work",
         input_file="/remote/work/input.inp",
         output_file="/remote/work/output.out",
-    )
-    request = {
-        "executor": "local",
-        "client_sync": {
-            "output_file": "/remote/work/output.out",
-            "error_file": None,
-            "output_files": (),
-            "cache_files": (),
+        context={
+            "client_sync": {
+                "output_file": "/remote/work/output.out",
+                "error_file": None,
+                "output_files": (),
+                "cache_files": (),
+            }
         },
-    }
-    return context, reference, request
+    )
+    return context, reference
 
 
 def test_remote_attach_installs_listener_before_monitor(monkeypatch, tmp_path):
@@ -113,7 +113,7 @@ def test_remote_attach_installs_listener_before_monitor(monkeypatch, tmp_path):
         self._done.set()
 
     monkeypatch.setattr(_RemoteRun, "_thread_main", immediate_monitor)
-    context, reference, request = _remote_context(tmp_path)
+    context, reference = _remote_context(tmp_path)
 
     import asyncio
 
@@ -123,7 +123,6 @@ def test_remote_attach_installs_listener_before_monitor(monkeypatch, tmp_path):
             _Reader(),
             callback=lambda result: events.append(("finished", None)),
             output_listener=lambda text, kind: events.append((text, kind)),
-            request=request,
         )
     )
     runner._done.wait(1)
@@ -139,7 +138,7 @@ def test_remote_attach_can_defer_monitor_start(monkeypatch, tmp_path):
         self._done.set()
 
     monkeypatch.setattr(_RemoteRun, "_thread_main", immediate_monitor)
-    context, reference, request = _remote_context(tmp_path)
+    context, reference = _remote_context(tmp_path)
 
     import asyncio
 
@@ -149,7 +148,6 @@ def test_remote_attach_can_defer_monitor_start(monkeypatch, tmp_path):
             _Reader(),
             output_listener=lambda text, kind: events.append((text, kind)),
             start=False,
-            request=request,
         )
     )
 

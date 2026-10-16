@@ -1,4 +1,4 @@
-"""Remote execution through a small ASE2SPRKKR helper on another machine."""
+"""Client-side remote execution staging, streaming and file synchronization."""
 
 from __future__ import annotations
 
@@ -9,42 +9,8 @@ import sys
 from dataclasses import asdict
 from enum import Enum
 from threading import Event, Lock, Thread
-from uuid import uuid4
 
-from .base import (
-    OutputObservers,
-    RunReference,
-    RunState,
-    SubmissionNotStarted,
-)
-from .detached import (
-    _FINAL_STATES,
-    _METADATA_DIR,
-    _REQUEST_FILE,
-    _RUNS_DIR,
-    _STATE_FILE,
-    _STATE_LOCK_FILE,
-    _DETACHED_EXECUTORS as _REMOTE_EXECUTORS,
-    _read_state,
-    _read_state_unlocked,
-    _request_path,
-    _request_spec,
-    _run_directory,
-    _state_lock,
-    _state_lock_path,
-    _state_path,
-    _timestamp,
-    _write_state,
-    _write_state_unlocked,
-    cancel_detached as cancel_remote,
-    clean_detached_runs as clean_remote_runs,
-    follow_detached as follow_remote,
-    list_detached_runs as list_remote_runs,
-    resolve_detached_mpi as resolve_remote_mpi,
-    run_detached_worker as run_remote_worker,
-    status_detached as status_remote,
-    submit_detached as submit_remote,
-)
+from .base import OutputObservers, RunState
 from .transport import expand_local_files, has_file_magic, local_file_digest
 
 
@@ -82,7 +48,7 @@ def _run_sync(coro):
 
 
 class RemoteRunner:
-    """A local proxy for one run controlled by a remote ASE2SPRKKR helper."""
+    """Client-side proxy for one run identified by a remote backend reference."""
 
     def __init__(
         self,
@@ -143,7 +109,8 @@ class RemoteRunner:
             return self._state
         status = _run_sync(
             self.executor._status(
-                self._reference.directory, self._reference.native_id
+                self._reference.directory,
+                self._reference.native_id,
             )
         )
         self._state = RunState(status.get("state", "unknown"))
@@ -319,7 +286,8 @@ class RemoteRunner:
 
                 if output_policy != FileSyncPolicy.NEVER:
                     for remote in await self.executor.transport.expand_files(
-                        remote_pattern, remote_root
+                        remote_pattern,
+                        remote_root,
                     ):
                         pattern_before[remote] = (
                             await self.executor.transport.file_signature(remote)
@@ -381,7 +349,8 @@ class RemoteRunner:
                     continue
                 patterns.append(remote)
                 for match in await self.executor.transport.expand_files(
-                    remote, remote_root
+                    remote,
+                    remote_root,
                 ):
                     if match not in input_targets:
                         removable.add(match)
@@ -496,7 +465,8 @@ class RemoteRunner:
         exact = {remote for remote, _ in self._cache_targets.values()}
         for pattern in self._cache_patterns:
             for remote in await self.executor.transport.expand_files(
-                pattern, remote_root
+                pattern,
+                remote_root,
             ):
                 if remote in selected or remote in exact:
                     continue
@@ -593,9 +563,11 @@ class RemoteRunner:
             "executor_options": self.executor.backend_options,
             "directory": remote_directory,
             "argv": self._remote_argv(self.spec.argv, staged),
-            "mpi_argv": None
-            if self.spec.mpi_argv is None
-            else self._remote_argv(self.spec.mpi_argv, staged),
+            "mpi_argv": (
+                None
+                if self.spec.mpi_argv is None
+                else self._remote_argv(self.spec.mpi_argv, staged)
+            ),
             "launch": asdict(self.spec.launch),
             "input_file": input_target,
             "stdin": stdin_target,
@@ -627,7 +599,8 @@ class RemoteRunner:
         try:
             try:
                 self._follow_process = await self.executor._follow(
-                    self._reference.directory, self._reference.native_id
+                    self._reference.directory,
+                    self._reference.native_id,
                 )
                 stdout_task = asyncio.create_task(
                     self._pump(self._follow_process.stdout, stdout, "out")
@@ -636,14 +609,17 @@ class RemoteRunner:
                     self._pump(self._follow_process.stderr, stderr, "err")
                 )
                 follow_return_code, _, _ = await asyncio.gather(
-                    self._follow_process.wait(), stdout_task, stderr_task
+                    self._follow_process.wait(),
+                    stdout_task,
+                    stderr_task,
                 )
             except Exception as exc:
                 self._file_retrieval_state = "failed"
                 self._file_retrieval_message = str(exc)
                 try:
                     status = await self.executor._status(
-                        self._reference.directory, self._reference.native_id
+                        self._reference.directory,
+                        self._reference.native_id,
                     )
                     self._state = RunState(status.get("state", "unknown"))
                     if status.get("return_code") is not None:
@@ -653,7 +629,8 @@ class RemoteRunner:
                 raise
 
             status = await self.executor._status(
-                self._reference.directory, self._reference.native_id
+                self._reference.directory,
+                self._reference.native_id,
             )
             self._state = RunState(status.get("state", "unknown"))
             if follow_return_code != 0 and self._state not in (
@@ -687,7 +664,10 @@ class RemoteRunner:
 
             output, error = await parse_task
             return self.reader.complete_result(
-                self.result, output, error, self._return_code
+                self.result,
+                output,
+                error,
+                self._return_code,
             )
         finally:
             tasks = tuple(
@@ -747,38 +727,10 @@ class RemoteRunner:
             return self.submit()
         return self._start_monitor()
 
-    async def _submit_async(self):
-        run_id = uuid4().hex
-        try:
-            remote_directory = await self.executor.map_directory(self.spec.directory)
-            await self.executor.transport.run(
-                ("mkdir", "-p", "--", remote_directory)
-            )
-            request = await self._prepare_request(run_id, remote_directory)
-        except Exception as exc:
-            raise SubmissionNotStarted(str(exc)) from exc
-        status = await self.executor._submit(request)
-        return run_id, status
-
     def submit(self):
-        with self._lock:
-            if self._state != RunState.NEW:
-                raise RuntimeError(f"Run is already {self._state.value}")
-
-            run_id, status = _run_sync(self._submit_async())
-            self._state = RunState(status["state"])
-            self._return_code = status.get("return_code")
-            directory = status["directory"]
-            self._reference = RunReference(
-                executor=f"remote:{self.executor.backend}",
-                native_id=run_id,
-                computer=self.executor.computer,
-                directory=directory,
-                input_file=status.get("input_file"),
-                output_file=status.get("output_file"),
-                error_file=status.get("error_file"),
-            )
-        self._start_monitor()
+        raise NotImplementedError(
+            "Remote submission is provided by the endpoint-specific runner"
+        )
 
     def wait(self):
         if self._thread is None:
@@ -806,7 +758,8 @@ class RemoteRunner:
             raise RuntimeError("Run has not been submitted")
         status = _run_sync(
             self.executor._cancel(
-                self._reference.directory, self._reference.native_id
+                self._reference.directory,
+                self._reference.native_id,
             )
         )
         self._state = RunState(status.get("state", "cancelled"))

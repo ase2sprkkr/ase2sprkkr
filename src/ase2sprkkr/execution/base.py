@@ -273,7 +273,12 @@ class ResourceOwnedRunner:
 
 @dataclass(frozen=True)
 class RunReference:
-    """Serializable information needed to reconnect to a persistent run."""
+    """Serializable information needed to reconnect to a persistent run.
+
+    ``native_id`` is the opaque identifier returned by the execution backend.
+    ``context`` is client-owned reconnect data; backends may persist portable
+    per-run launch/staging information there without changing the native id.
+    """
 
     executor: str
     native_id: str
@@ -282,6 +287,7 @@ class RunReference:
     input_file: Optional[str] = None
     output_file: Optional[str] = None
     error_file: Optional[str] = None
+    context: Any = None
 
 
 @dataclass(frozen=True)
