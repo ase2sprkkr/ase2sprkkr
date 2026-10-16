@@ -506,7 +506,7 @@ def test_run_store_shards_records_and_marks_schema(tmp_path):
     assert data["schema_version"] == 1
     assert data["task"] == "ARPES"
     assert data["input_definition"] is None
-    assert data["requested_task"] is None
+    assert "requested_task" not in data
     assert "task_definition" not in data
     assert "backend_state" not in data
     assert data["finished_at"] is None

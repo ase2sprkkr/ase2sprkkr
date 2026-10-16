@@ -86,7 +86,7 @@ def test_persistent_attach_uses_persisted_task(tmp_path):
     record = _record(
         tmp_path,
         "BSFEK",
-        input_definition="BSF",
+        input_definition="bsf",
     )
 
     attached = attach_persistent_run(_Manager(record), record.id)
@@ -96,7 +96,7 @@ def test_persistent_attach_uses_persisted_task(tmp_path):
 
 
 def test_persistent_attach_uses_registered_reader(tmp_path):
-    record = _record(tmp_path, "DOS", input_definition="DOS")
+    record = _record(tmp_path, "DOS", input_definition="dos")
 
     attached = attach_persistent_run(_Manager(record), record.id)
 
@@ -110,7 +110,7 @@ def test_persistent_attach_reconstructs_exact_input_definition(tmp_path):
     record = _record(
         tmp_path,
         "BSFEK",
-        input_definition="BSF",
+        input_definition="bsf",
         input_file=input_file,
     )
 
@@ -119,7 +119,7 @@ def test_persistent_attach_reconstructs_exact_input_definition(tmp_path):
 
     assert isinstance(attached.reader, BsfOutputReader)
     assert parameters._definition is InputParameters.input_parameters_registry["BSF"]
-    assert parameters.definition_name == "BSF"
+    assert parameters.definition_name == "bsf"
     assert parameters.requested_task_name == "BSFEK"
     assert parameters.task_name == "BSFEK"
 
@@ -129,7 +129,7 @@ def test_persistent_attach_reconstructs_standard_input_definition(tmp_path):
     record = _record(
         tmp_path,
         "DOS",
-        input_definition="DOS",
+        input_definition="dos",
         input_file=input_file,
     )
 
@@ -147,7 +147,7 @@ def test_persistent_attach_does_not_parse_stale_input(tmp_path):
     record = _record(
         tmp_path,
         "DOS",
-        input_definition="DOS",
+        input_definition="dos",
         input_file=input_file,
     )
 
@@ -161,7 +161,7 @@ def test_persistent_attach_does_not_parse_stale_input(tmp_path):
 
 
 def test_persistent_attach_rejects_unknown_task(tmp_path):
-    record = _record(tmp_path, "UNKNOWN_TASK", input_definition="DOS")
+    record = _record(tmp_path, "UNKNOWN_TASK", input_definition="dos")
 
     with pytest.raises(
         PersistentResultUnavailableError,
@@ -191,7 +191,7 @@ def test_persistent_attach_rejects_input_with_different_task(tmp_path):
     record = _record(
         tmp_path,
         "SCF",
-        input_definition="DOS",
+        input_definition="dos",
         input_file=input_file,
     )
 
@@ -210,7 +210,7 @@ def test_persistent_attach_does_not_hide_task_registry_programming_errors(
             raise KeyError(f"broken task definition for {name}")
 
     monkeypatch.setattr(InputParameters, "task_registry", BrokenRegistry())
-    record = _record(tmp_path, "DOS", input_definition="DOS")
+    record = _record(tmp_path, "DOS", input_definition="dos")
 
     with pytest.raises(KeyError, match="broken task definition"):
         attach_persistent_run(_Manager(record), record.id)
@@ -222,14 +222,14 @@ def test_persistent_attach_only_translates_missing_task_entries(monkeypatch, tmp
             raise RegistryEntryNotFound(name)
 
     monkeypatch.setattr(InputParameters, "task_registry", MissingRegistry())
-    record = _record(tmp_path, "DOS", input_definition="DOS")
+    record = _record(tmp_path, "DOS", input_definition="dos")
 
     with pytest.raises(PersistentResultUnavailableError):
         attach_persistent_run(_Manager(record), record.id)
 
 
 def test_persistent_attach_respects_explicit_reader(tmp_path):
-    record = _record(tmp_path, "BSFEK", input_definition="BSF")
+    record = _record(tmp_path, "BSFEK", input_definition="bsf")
     reader = object()
 
     attached = attach_persistent_run(_Manager(record), record.id, reader=reader)

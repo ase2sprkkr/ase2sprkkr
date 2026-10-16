@@ -282,18 +282,44 @@ class InputParameters(ConfigurationFile):
 
     @classmethod
     def from_file(cls, filename, allow_dangerous: bool = False):
-        """Try all registered input-file schemas."""
+        """Try registered schemas, preferring a task matching ``CONTROL.ADSI``.
+
+        SPR-KKR schemas intentionally overlap, so a permissive schema can parse
+        an input intended for another task. ``ADSI`` normally identifies the
+        task, but it is user-editable and therefore only disambiguates when it
+        names a registered task and disagrees with the first successful parse.
+        """
         last = None
+        first_match = None
         is_stream = hasattr(filename, "seek")
         for definition in cls.definitions.values():
             if is_stream:
                 filename.seek(0)
             try:
-                return definition.read_from_file(
+                parsed = definition.read_from_file(
                     filename, allow_dangerous=allow_dangerous
                 )
             except (pp.ParseBaseException, DataValidityError) as e:
                 last = e
+                continue
+
+            try:
+                adsi = parsed.CONTROL.ADSI()
+            except (AttributeError, KeyError):
+                return parsed
+            if not isinstance(adsi, str):
+                return parsed
+
+            adsi = cls.task_registry.normalize_name(adsi)
+            if adsi not in cls.task_registry:
+                return parsed
+            if parsed.task_name == adsi:
+                return parsed
+            if first_match is None:
+                first_match = parsed
+
+        if first_match is not None:
+            return first_match
         if last is None:
             raise ValueError("No SPR-KKR input-parameter definitions are available")
         raise last
