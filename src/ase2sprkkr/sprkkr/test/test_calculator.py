@@ -1,3 +1,4 @@
+import io
 import os
 import re
 from datetime import datetime
@@ -22,6 +23,12 @@ def _fast_atoms(atoms, jrws=20, r1=2e-6):
 
 def _sprkkr_enabled():
     return not os.environ.get("DO_NOT_RUN_SPRKKR", "")
+
+
+def _input_for_atoms(parameters, atoms):
+    output = io.StringIO()
+    parameters.save_to_file(output, atoms)
+    return output.getvalue()
 
 
 class TestCalculator:
@@ -68,11 +75,10 @@ class TestCalculator:
 
         calculator = SPRKKR(atoms=slab, **calc_args())
         _fast_atoms(slab)
-        calculator.input_parameters.set_from_atoms(slab)
         calculator.input_parameters.CONTROL.POTFIL = "xxx"
-        text = calculator.input_parameters.to_string()
+        text = _input_for_atoms(calculator.input_parameters, slab)
         assert re.search("NKTAB3D=5", text)
-        assert not re.match("NKTAB=", text)
+        assert not re.search(r"(?m)^\s*NKTAB=", text)
 
         if not _sprkkr_enabled():
             pytest.skip("SPR-KKR execution disabled by DO_NOT_RUN_SPRKKR")
@@ -81,11 +87,10 @@ class TestCalculator:
             slab,
             **calc_args(options={"EMIN": 8.0, "NITER": 2, "NKTAB3D": 4}),
         )
-        output.input_parameters.set_from_atoms(slab)
         output.input_parameters.CONTROL.POTFIL = "xxx"
-        text = output.input_parameters.to_string()
+        text = _input_for_atoms(output.input_parameters, slab)
         assert re.search("NKTAB3D=", text)
-        assert not re.match("NKTAB=", text)
+        assert not re.search(r"(?m)^\s*NKTAB=", text)
 
     @pytest.mark.slow
     def test_calculator(self, calc_args, tmp_path):
