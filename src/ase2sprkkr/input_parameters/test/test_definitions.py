@@ -30,6 +30,17 @@ class TestDefinitions:
         with pytest.raises(KeyError, match="No option with name UNKNOWN_OPTION"):
             ip.set_option("UNKNOWN_OPTION", 1)
 
+    def test_adsi_is_customizable_string_with_task_default(self):
+        ip = InputParameters.create("SCF")
+
+        assert ip.CONTROL.ADSI() == "SCF"
+
+        ip.CONTROL.ADSI = "CUSTOM"
+        assert ip.CONTROL.ADSI() == "CUSTOM"
+
+        parsed = InputParameters.definition("SCF").read_from_string(ip.to_string())
+        assert parsed.CONTROL.ADSI() == "CUSTOM"
+
     def test_task_file_templates_and_schema_overrides(self, tmp_path):
         parameters = InputParameters.create("BSFEK")
         parameters.CONTROL.DATASET = "Fe"

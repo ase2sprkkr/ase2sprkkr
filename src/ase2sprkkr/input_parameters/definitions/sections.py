@@ -157,7 +157,7 @@ def CONTROL(ADSI):
                 is_always_added=False,
                 info="Shape-function file used for full-potential calculations.",
             ),
-            V("ADSI", DefKeyword(ADSI), is_required=True, info="Type of the computation."),
+            V("ADSI", str, ADSI, is_required=False, info="Type of the computation."),
             V(
                 "POTFIL",
                 str,
