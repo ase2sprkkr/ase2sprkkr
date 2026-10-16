@@ -11,6 +11,10 @@ def _sfn_file(parameters, directory):
     return resolve_file(directory, sfnfil) if sfnfil else None
 
 
+def _uses_fullpot(parameters):
+    return parameters.SCF.FULLPOT()
+
+
 def _new_potential_file(parameters, directory):
     potfil = parameters.CONTROL.POTFIL()
     return resolve_file(directory, f"{potfil}_new") if potfil else None
@@ -30,8 +34,6 @@ def input_parameters_definition():
         mpi=True,
         output_reader="SCF",
         output_file_templates=(FileSpec(_new_potential_file),),
-        cache_file_templates=(
-            FileSpec(_sfn_file, condition=lambda parameters: parameters.SCF.FULLPOT()),
-        ),
+        cache_file_templates=(FileSpec(_sfn_file, condition=_uses_fullpot),),
     )
     return schema
