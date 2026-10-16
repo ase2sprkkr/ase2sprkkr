@@ -4,19 +4,20 @@ from ...common.grammar_types import real, Keyword
 from ._file_manifests import resolve_file
 from .sections import CONTROL, TAU, ENERGY, SITES, TASK
 from ..input_parameters_definitions import InputParametersDefinition, InputValueDefinition as V
-from ..task_definition import TaskDefinition
+from ..task_definition import FileSpec, TaskDefinition
 
 
-class GilbertInputParametersDefinition(InputParametersDefinition):
-    def input_files(self, parameters, directory):
-        files = list(super().input_files(parameters, directory))
-        if parameters.TASK.SETFLUCT() == "M_T" and parameters.TASK.FLUCTFIL():
-            files.append(resolve_file(directory, parameters.TASK.FLUCTFIL()))
-        return tuple(files)
+def _fluctuation_file(parameters, directory):
+    filename = parameters.TASK.FLUCTFIL()
+    return resolve_file(directory, filename) if filename else None
+
+
+def _uses_fluctuation_file(parameters):
+    return parameters.TASK.SETFLUCT() == "M_T" and bool(parameters.TASK.FLUCTFIL())
 
 
 def input_parameters_definition():
-    schema = GilbertInputParametersDefinition(
+    schema = InputParametersDefinition(
         "gilbert",
         [
             CONTROL("GILBERT"),
@@ -68,6 +69,9 @@ def input_parameters_definition():
         "GILBERT",
         name="GILBERT",
         executable="kkrchi",
+        input_file_templates=(
+            FileSpec(_fluctuation_file, condition=_uses_fluctuation_file),
+        ),
     )
     return schema
 
