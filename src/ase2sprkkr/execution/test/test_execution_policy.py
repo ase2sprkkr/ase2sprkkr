@@ -19,7 +19,6 @@ from ase2sprkkr.execution.manager import (
     PersistentRunner,
     ResultFilesRecord,
     RunStore,
-    SubmissionKey,
 )
 from ase2sprkkr.execution.remote_psij import _RemotePsijAgent
 from ase2sprkkr.execution.transport import AtomicLocalFile, LocalTransport
@@ -127,14 +126,28 @@ def _persistent_wrapper(tmp_path, runner):
     manager = ExecutionManager(RunStore(tmp_path / "runs"))
     executor = LocalExecutor()
     endpoint = endpoint_for_executor(executor)
-    submission = SubmissionKey(endpoint, str(tmp_path), "SCF")
+    spec = SimpleNamespace(
+        directory=str(tmp_path),
+        input_file=None,
+        output_file=None,
+        error_file=None,
+        input_files=(),
+        output_files=(str(tmp_path / "shared.out"),),
+        cache_files=(),
+    )
     record = manager.new_record(
         task="SCF",
         directory=tmp_path,
         endpoint=endpoint,
-        submission=submission,
+        submission_directory=executor.submission_directory(spec),
     )
-    return manager, PersistentRunner(manager, executor, runner, record)
+    return manager, PersistentRunner(
+        manager,
+        executor,
+        runner,
+        record,
+        spec=spec,
+    )
 
 
 def test_definite_pre_submit_failure_becomes_execution_failed(tmp_path):
