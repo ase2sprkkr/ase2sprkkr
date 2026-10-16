@@ -3,21 +3,34 @@
 from ._file_manifests import resolve_file
 from .sections import TASK, CONTROL, TAU, ENERGY, SITES, STRCONST, MODE
 from ..input_parameters_definitions import InputParametersDefinition, InputValueDefinition as V
-from ..task_definition import TaskDefinition
+from ..task_definition import FileSpec, TaskDefinition
 from ...common.grammar_types import flag
 
 
-class JxcInputParametersDefinition(InputParametersDefinition):
-    def output_files(self, parameters, directory):
-        files = list(super().output_files(parameters, directory))
-        dataset = parameters.CONTROL.DATASET()
-        if parameters.MODE.MODE() == "SP-SREL":
-            files.append(resolve_file(directory, f"{dataset}*Jij*"))
-        else:
-            files.append(resolve_file(directory, f"{dataset}_XCPLTEN_Jij.dat"))
-        files.append(resolve_file(directory, f"{dataset}*.agr"))
-        return tuple(files)
+def _jxc_spsrel_file(parameters, directory):
+    dataset = parameters.CONTROL.DATASET()
+    return resolve_file(directory, f"{dataset}*Jij*")
 
+
+def _jxc_tensor_file(parameters, directory):
+    dataset = parameters.CONTROL.DATASET()
+    return resolve_file(directory, f"{dataset}_XCPLTEN_Jij.dat")
+
+
+def _jxc_agr_file(parameters, directory):
+    dataset = parameters.CONTROL.DATASET()
+    return resolve_file(directory, f"{dataset}*.agr")
+
+
+def _is_spsrel(parameters):
+    return parameters.MODE.MODE() == "SP-SREL"
+
+
+def _is_not_spsrel(parameters):
+    return not _is_spsrel(parameters)
+
+
+class JxcInputParametersDefinition(InputParametersDefinition):
     def update_from_result(self, parameters, result):
         parameters.set("EMIN", result.last_iteration.energy.EMIN())
 
@@ -80,5 +93,10 @@ def input_parameters_definition():
         executable="kkrgen",
         mpi=True,
         output_reader="JXC",
+        output_file_templates=(
+            FileSpec(_jxc_spsrel_file, condition=_is_spsrel),
+            FileSpec(_jxc_tensor_file, condition=_is_not_spsrel),
+            FileSpec(_jxc_agr_file),
+        ),
     )
     return schema
