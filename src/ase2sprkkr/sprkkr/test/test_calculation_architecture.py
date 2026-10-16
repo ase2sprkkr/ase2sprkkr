@@ -7,6 +7,7 @@ import pytest
 
 from ...execution.base import RunState
 from ...input_parameters.input_parameters import InputParameters
+from ...input_parameters.task_definition import TaskDefinition
 from ...potentials.potentials import Potential
 from .. import calculation
 from ..calculator import SPRKKR
@@ -44,7 +45,7 @@ def test_input_parameters_do_not_own_execution():
     ):
         assert not hasattr(InputParameters, name)
 
-    task = InputParameters.create("SCF").task_definition
+    task = InputParameters.create("SCF").task_definition_required()
     assert task.executable
     assert task.mpi
 
@@ -143,7 +144,7 @@ def test_preparation_snapshots_input_parameters(tmp_path):
         prepared.close()
 
 
-def test_effective_task_survives_preparation_snapshot(tmp_path):
+def test_task_survives_preparation_snapshot(tmp_path):
     parameters = InputParameters.create("ARPES")
     parameters.TASK.TASK = "SPLEED"
     calculator = SPRKKR(
@@ -160,11 +161,29 @@ def test_effective_task_survives_preparation_snapshot(tmp_path):
     )
 
     try:
-        assert prepared.input_parameters.task_name == "ARPES"
+        assert prepared.input_parameters.requested_task_name == "ARPES"
+        assert prepared.input_parameters.task_name == "SPLEED"
         assert prepared.input_parameters.task_definition.name == "SPLEED"
-        assert prepared.input_parameters.execution_task_name == "SPLEED"
+        assert not hasattr(prepared.input_parameters, "execution_task_name")
     finally:
         prepared.close()
+
+
+def test_preparation_requires_task_definition(monkeypatch, tmp_path):
+    calculator = SPRKKR(
+        atoms=bulk("Fe"),
+        directory=tmp_path,
+        profile=SPRKKRProfile(mpi=False),
+        empty_spheres=False,
+    )
+
+    def detached(self):
+        raise RuntimeError("detached parameters cannot be prepared")
+
+    monkeypatch.setattr(InputParameters, "task_definition_required", detached)
+
+    with pytest.raises(RuntimeError, match="detached parameters cannot be prepared"):
+        calculator.prepare(output_file=False, allow_temporary_files=True)
 
 
 def test_prepared_calculation_constructs_its_runner(tmp_path):
@@ -176,7 +195,7 @@ def test_prepared_calculation_constructs_its_runner(tmp_path):
     )
     prepared = calculator.prepare(output_file=False)
 
-    task = prepared.input_parameters.task_definition
+    task = prepared.input_parameters.task_definition_required()
     runner = prepared.create_run(
         result_context=calculator,
         profile=calculator.profile,
@@ -239,7 +258,7 @@ def test_reader_file_not_found_is_not_relabelled_as_missing_executable(
     def missing_reader(self, *args, **kwargs):
         raise FileNotFoundError("reader dependency missing")
 
-    monkeypatch.setattr(InputParameters, "output_reader", missing_reader)
+    monkeypatch.setattr(TaskDefinition, "output_reader", missing_reader)
 
     with pytest.raises(FileNotFoundError, match="reader dependency missing"):
         prepared.create_run(

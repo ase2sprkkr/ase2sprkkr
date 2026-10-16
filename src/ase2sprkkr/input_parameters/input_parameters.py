@@ -3,12 +3,17 @@
 from __future__ import annotations
 
 import io
-import os
 import pyparsing as pp
 
 from . import definitions, tasks
 from .task_definition import InputParametersRegistry, TaskRegistry
-from ..sprkkr.configuration import ConfigurationFile, ConfigurationSection
+from ..sprkkr.configuration import (
+    ConfigurationFile,
+    ConfigurationSection,
+    ConfigurationValue,
+)
+from ..common.configuration_containers import BaseConfigurationContainer
+from ..common.repeated_configuration_containers import RepeatedConfigurationContainer
 from ..common.decorators import cached_class_property
 from ..common.warnings import DataValidityError
 from ..potentials.potentials import Potential
@@ -16,6 +21,31 @@ from ..potentials.potentials import Potential
 
 class InputSection(ConfigurationSection):
     """Input parameters sections have nothing special yet."""
+
+
+class InputValue(ConfigurationValue):
+    """Input-file option supporting a default specific to one parameter instance."""
+
+    @property
+    def default_value(self):
+        """Return an instance-specific override of the definition default."""
+        if hasattr(self, "_default_override"):
+            return self._default_override
+        return super().default_value
+
+    def set_default(self, value):
+        """Override this instance's definition default without setting a value."""
+        if self._definition.is_generated:
+            raise TypeError("Generated options cannot have instance defaults")
+        if self._definition.default_value is None:
+            raise ValueError(
+                "An instance default can only override an existing definition default"
+            )
+        self._default_override = None if value is None else self._pack_value(value)
+
+    def clear_default(self):
+        """Restore the default supplied by the input-parameter definition."""
+        self.__dict__.pop("_default_override", None)
 
 
 class InputParameters(ConfigurationFile):
@@ -43,10 +73,11 @@ class InputParameters(ConfigurationFile):
 
     @property
     def task_definition(self):
-        """Return the task represented by the current values."""
+        """Return the task represented by the current values, if any."""
         return self.task_registry.task_for_parameters(self)
 
-    def _require_task_definition(self):
+    def task_definition_required(self):
+        """Return the task represented by the current values, failing if detached."""
         task = self.task_definition
         if task is None:
             raise RuntimeError(
@@ -71,8 +102,8 @@ class InputParameters(ConfigurationFile):
 
     @property
     def definition_name(self):
-        """Return the registered input-parameter schema name."""
-        return self._definition.name
+        """Return the normalized registered input-parameter schema name."""
+        return self.input_parameters_registry.normalize_name(self._definition.name)
 
     @property
     def potential(self):
@@ -85,14 +116,70 @@ class InputParameters(ConfigurationFile):
         self._potential = potfil, out
         return out
 
+    @staticmethod
+    def _has_instance_defaults(source):
+        if isinstance(source, InputValue):
+            return hasattr(source, "_default_override")
+        if isinstance(source, RepeatedConfigurationContainer):
+            return any(
+                InputParameters._has_instance_defaults(member)
+                for member in source._raw_values()
+            )
+        if isinstance(source, BaseConfigurationContainer):
+            return any(
+                InputParameters._has_instance_defaults(member)
+                for member in source._members.values()
+            )
+        return False
+
+    @staticmethod
+    def _copy_instance_defaults(source, target, copy_values):
+        if isinstance(source, RepeatedConfigurationContainer):
+            for key, source_member in source._raw_items():
+                try:
+                    target_member = target[key]
+                except (IndexError, KeyError, TypeError):
+                    if not InputParameters._has_instance_defaults(source_member):
+                        continue
+                    if isinstance(target._values, list):
+                        while len(target._values) <= key:
+                            target._add()
+                    else:
+                        target._add(key)
+                    target_member = target[key]
+                InputParameters._copy_instance_defaults(
+                    source_member, target_member, copy_values
+                )
+            return
+
+        if isinstance(source, BaseConfigurationContainer):
+            for name, source_member in source._members.items():
+                target_member = target._members.get(name)
+                if target_member is None:
+                    continue
+                InputParameters._copy_instance_defaults(
+                    source_member, target_member, copy_values
+                )
+            return
+
+        if not isinstance(source, InputValue):
+            return
+        if not hasattr(source, "_default_override"):
+            return
+        value = source._default_override
+        if copy_values and value is not None:
+            value = source._definition.copy_value(value, all_values=True)
+        target._default_override = value
+
     def copy(self, copy_values: bool = False):
-        """Copy parameters while preserving requested-task default context."""
-        values = self.as_dict(copy=copy_values, only_changed=True)
+        """Copy parameters, including instance-specific defaults."""
+        values = self.as_dict(copy=copy_values, only_changed="explicit")
         out = self.__class__(
             definition=self._definition,
             requested_task_name=self.requested_task_name,
         )
         out.set(values, unknown="add", retain_invalid="all", report_invalid="ignore")
+        self._copy_instance_defaults(self, out, copy_values)
         return out
 
     def uses_separate_single_site_contour(self):
@@ -111,7 +198,7 @@ class InputParameters(ConfigurationFile):
         return task is not None and task.name == "COMPTON"
 
     def _task_files(self, directory, kind):
-        task = self._require_task_definition()
+        task = self.task_definition_required()
         return self.input_parameters_registry.files_for_task(
             task, self, directory, kind
         )
@@ -126,16 +213,21 @@ class InputParameters(ConfigurationFile):
         return self._task_files(directory, "cache")
 
     def output_reader(self, calculator=None, print_output=False, directory=None):
-        from ..outputs.reader_registry import reader_registry
-
-        if not directory and calculator and calculator.directory:
-            directory = calculator.directory
-        cls = reader_registry.class_for_task(self._require_task_definition())
-        return cls(self, calculator, directory, print_output)
+        """Create the reader for the effective task represented by these values."""
+        return self.task_definition_required().output_reader(
+            input_parameters=self,
+            calculator=calculator,
+            print_output=print_output,
+            directory=directory,
+        )
 
     def read_output_from_file(self, filename, directory=None):
-        directory = directory or os.path.dirname(filename)
-        return self.output_reader(directory=directory).read_from_file(filename)
+        """Read a completed output through the effective task's registered reader."""
+        return self.task_definition_required().read_output_from_file(
+            filename,
+            input_parameters=self,
+            directory=directory,
+        )
 
     def __str__(self):
         return f"<Configuration container {self._get_path()}>"
@@ -214,7 +306,7 @@ class InputParameters(ConfigurationFile):
 
     def change_task(self, task, retain_values=False):
         if retain_values:
-            vals = self.to_dict(only_changed=True)
+            vals = self.to_dict(only_changed="explicit")
 
         requested = self.task_registry.normalize_name(task)
         task_definition = self.task_registry[requested]
