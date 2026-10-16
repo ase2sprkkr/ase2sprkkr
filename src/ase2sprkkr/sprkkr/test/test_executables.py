@@ -1,5 +1,5 @@
-from dataclasses import FrozenInstanceError
 import pickle
+from dataclasses import FrozenInstanceError
 
 import pytest
 
@@ -26,12 +26,32 @@ def test_executable_definition_keeps_executable_name_exact():
     assert definition.name == " custom "
 
 
+@pytest.mark.parametrize(
+    ("kwargs", "error"),
+    (
+        ({"name": None}, TypeError),
+        ({"name": "   "}, ValueError),
+        ({"name": "custom", "default_output_reader": None}, TypeError),
+        ({"name": "custom", "default_output_reader": "   "}, ValueError),
+        ({"name": "custom", "description": None}, TypeError),
+    ),
+)
+def test_executable_definition_rejects_invalid_metadata(kwargs, error):
+    with pytest.raises(error):
+        ExecutableDefinition(**kwargs)
+
+
 def test_executable_registry_accepts_custom_definitions_at_construction():
     definition = ExecutableDefinition("custom", default_output_reader="SPEC")
     registry = ExecutableRegistry((definition,))
 
     assert registry["custom"] is definition
     assert not hasattr(registry, "register")
+
+
+def test_executable_registry_rejects_non_definition_items():
+    with pytest.raises(TypeError, match="ExecutableDefinition"):
+        ExecutableRegistry(("custom",))
 
 
 def test_executable_registry_rejects_duplicate_definitions():
