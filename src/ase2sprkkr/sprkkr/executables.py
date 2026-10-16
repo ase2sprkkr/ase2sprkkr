@@ -6,13 +6,16 @@ from dataclasses import dataclass
 from ..common.module_registry import RegistryDefinitionError, RegistryEntryNotFound
 
 
-def _nonempty_string(value, field):
+def _nonblank_string(value, field):
     if not isinstance(value, str):
         raise TypeError(f"{field} must be a string")
-    value = value.strip()
-    if not value:
+    if not value.strip():
         raise ValueError(f"{field} must not be empty")
     return value
+
+
+def _normalize_reader_name(value):
+    return _nonblank_string(value, "default_output_reader").strip().upper()
 
 
 @dataclass(frozen=True)
@@ -24,10 +27,8 @@ class ExecutableDefinition:
     description: str = ""
 
     def __post_init__(self):
-        name = _nonempty_string(self.name, "name")
-        reader = _nonempty_string(
-            self.default_output_reader, "default_output_reader"
-        ).upper()
+        name = _nonblank_string(self.name, "name")
+        reader = _normalize_reader_name(self.default_output_reader)
         if not isinstance(self.description, str):
             raise TypeError("description must be a string")
 

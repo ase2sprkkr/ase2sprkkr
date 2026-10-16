@@ -105,17 +105,17 @@ def test_task_definition_output_reader_is_an_identifier():
     assert task.output_reader == "BSF"
 
 
-def test_task_definition_normalizes_scalar_metadata():
+def test_task_definition_normalizes_identifiers_but_preserves_executable_name():
     task = TaskDefinition(
         " scf ",
         name=" scf ",
-        executable=" kkrscf ",
+        executable=" KkrScf ",
         output_reader=" scf ",
     )
 
     assert task.input_parameters_definition_name == "SCF"
     assert task.name == "SCF"
-    assert task.executable == "kkrscf"
+    assert task.executable == " KkrScf "
     assert task.output_reader == "SCF"
 
 

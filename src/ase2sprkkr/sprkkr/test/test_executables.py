@@ -4,16 +4,22 @@ from ...common.module_registry import RegistryDefinitionError, RegistryEntryNotF
 from ..executables import ExecutableDefinition, ExecutableRegistry, executable_registry
 
 
-def test_executable_definition_normalizes_reader_name():
+def test_executable_definition_normalizes_reader_name_only():
     definition = ExecutableDefinition(
-        " custom ",
+        "CustomExecutable",
         default_output_reader=" spec ",
         description="Custom executable",
     )
 
-    assert definition.name == "custom"
+    assert definition.name == "CustomExecutable"
     assert definition.default_output_reader == "SPEC"
     assert definition.description == "Custom executable"
+
+
+def test_executable_definition_keeps_executable_name_exact():
+    definition = ExecutableDefinition(" custom ")
+
+    assert definition.name == " custom "
 
 
 def test_executable_registry_can_be_extended_independently_of_task_registry():
