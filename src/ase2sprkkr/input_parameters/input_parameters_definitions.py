@@ -66,22 +66,12 @@ class InputParametersDefinition(ConfigurationFileDefinition):
     configuration_type_name = "INPUT PARAMETERS"
 
     def task_definition_name(self, parameters):
-        """Return the task represented by *parameters*, if the schema encodes one.
+        """Return the task identifier represented by *parameters*, if encoded.
 
-        Schemas shared by multiple tasks override this method. A plain schema is
-        deliberately detached from execution semantics unless a canonical task
-        is attached through ``_task_definition``.
+        Schemas shared by multiple tasks override this method. Resolution of the
+        identifier to a TaskDefinition belongs to TaskRegistry.
         """
         return None
-
-    def task_definition(self, parameters):
-        """Resolve the task represented by concrete parameter values."""
-        if self._task_definition is not None:
-            return self._task_definition
-        name = self.task_definition_name(parameters)
-        if name is None:
-            return None
-        return parameters.task_registry[name]
 
     def initialize_for_task(self, parameters, task_name):
         """Initialize an explicit task discriminator when the schema has one.
@@ -102,6 +92,21 @@ class InputParametersDefinition(ConfigurationFileDefinition):
         value = grammar_type.convert(task_name)
         if value in keywords:
             option.set(value)
+
+    def update_from_result(self, parameters, result):
+        """Apply schema-specific values derived from an existing result."""
+
+    def input_files(self, parameters, directory):
+        """Return schema-specific auxiliary input files."""
+        return ()
+
+    def output_files(self, parameters, directory):
+        """Return schema-specific output files."""
+        return ()
+
+    def cache_files(self, parameters, directory):
+        """Return schema-specific optional cache files."""
+        return ()
 
     @classmethod
     @cache

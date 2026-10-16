@@ -9,6 +9,7 @@ from ...common.warnings import DataValidityError, DataValidityWarning
 from ..input_parameters import InputSection
 from ...physics.lattice_data import bravais_number
 from ..input_parameters_definitions import InputParametersDefinition, InputValueDefinition as V
+from ._file_manifests import tau_file
 from .sections import CONTROL, CPA, ENERGY, MODE, SITES, STRCONST, TASK, TAU
 
 
@@ -380,6 +381,9 @@ class BSFTaskSection(InputSection):
 class BSFInputParametersDefinition(InputParametersDefinition):
     def task_definition_name(self, parameters):
         return "BSFEK" if bsf_mode(parameters) == EK else "BSFKK"
+
+    def cache_files(self, parameters, directory):
+        return (tau_file(parameters, directory), *super().cache_files(parameters, directory))
 
 
 @cache

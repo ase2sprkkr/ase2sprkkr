@@ -125,15 +125,24 @@ class TaskResult:
         )
 
     def new_task(self, task):
-        """Create a fresh calculator for *task* continuing from this result."""
+        """Create a fresh calculator for *task* using values from this result."""
+        from ..input_parameters.task_definition import TaskDefinition
         from ..sprkkr.calculator import SPRKKR
 
-        out = SPRKKR(potential=self.potential_filename)
-        out.input_parameters = task
-        out.input_parameters.task_definition.prepare_from_result(
-            out.input_parameters, self
+        task = (
+            task
+            if isinstance(task, TaskDefinition)
+            else input_parameters.InputParameters.task_registry[task]
         )
-        return out
+        parameters = (
+            input_parameters.InputParameters.input_parameters_registry.create_from_result(
+                task, self
+            )
+        )
+        return SPRKKR(
+            potential=self.potential_filename,
+            input_parameters=parameters,
+        )
 
     def complete(self, error, return_code):
         self.error = error
@@ -163,7 +172,7 @@ class TaskResult:
 
         filename = os.fspath(file)
         task = reader_registry.detect(filename)
-        reader_class = reader_registry.class_for_task(task)
+        reader_class = reader_registry.class_for_task_name(task)
         reader = reader_class(
             None,
             None,
@@ -268,10 +277,3 @@ class KkrOutputReader:
         )
         result.complete(parsed_error, parsed_return_code)
         return result
-
-    @staticmethod
-    def class_for_task(task):
-        """Compatibility facade for task-specific output-reader discovery."""
-        from .reader_registry import reader_registry
-
-        return reader_registry.class_for_task(task)

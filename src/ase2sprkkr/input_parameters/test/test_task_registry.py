@@ -1,10 +1,11 @@
 import importlib
+from types import SimpleNamespace
 
 import pytest
 
 from ...common.module_registry import RegistryDefinitionError, RegistryEntryNotFound
 from ..input_parameters import InputParameters
-from ..task_definition import InputParametersRegistry, TaskRegistry
+from ..task_definition import InputParametersRegistry, TaskDefinition, TaskRegistry
 
 
 def _package(tmp_path, monkeypatch, name, modules):
@@ -23,7 +24,7 @@ def test_standard_task_comes_from_input_parameters_definition():
 
     assert schema._task_definition is task
     assert task.input_parameters_definition_name == "SCF"
-    assert InputParameters.task_registry.input_parameters_definition(task) is schema
+    assert InputParameters.input_parameters_registry.definition_for_task(task) is schema
     assert "SCF" not in InputParameters.task_registry.extra_tasks.names()
 
 
@@ -71,6 +72,83 @@ def test_input_and_task_registry_namespaces_are_distinct():
     assert {"ARPES", "SPLEED", "BSFEK", "BSFKK"} <= task_names
 
 
+def test_input_parameters_registry_owns_input_parameter_operations():
+    registry = InputParameters.input_parameters_registry
+
+    for name in (
+        "definition_for_task",
+        "create_for_task",
+        "read_for_task",
+        "create_from_result",
+        "files_for_task",
+    ):
+        assert callable(getattr(registry, name))
+    assert not hasattr(registry, "task_definitions")
+
+
+def test_task_registry_is_identity_resolution_only():
+    registry = InputParameters.task_registry
+
+    assert callable(registry.effective_task)
+    for name in (
+        "input_parameters_definition",
+        "create_input_parameters",
+        "read_input_parameters",
+        "input_parameters_from_result",
+        "input_files",
+        "output_files",
+        "cache_files",
+    ):
+        assert not hasattr(registry, name)
+
+
+def test_schema_does_not_resolve_task_services():
+    schema = InputParameters.input_parameters_registry["ARPES"]
+
+    assert not hasattr(schema, "task_definition")
+    assert schema.task_definition_name(InputParameters.create("SPLEED")) == "SPLEED"
+
+
+def test_task_registry_resolves_effective_task_from_values():
+    parameters = InputParameters.create("ARPES")
+    parameters.TASK.TASK = "SPLEED"
+
+    task = InputParameters.task_registry.effective_task(parameters)
+
+    assert task is InputParameters.task_registry["SPLEED"]
+
+
+def test_input_parameters_registry_creates_parameters_from_result():
+    result = SimpleNamespace(
+        last_iteration=SimpleNamespace(
+            energy=SimpleNamespace(EMIN=lambda: -0.35)
+        )
+    )
+    task = InputParameters.task_registry["JXC"]
+
+    parameters = InputParameters.input_parameters_registry.create_from_result(
+        task, result
+    )
+
+    assert parameters.task_name == "JXC"
+    assert parameters.task_definition.name == "JXC"
+    assert parameters.ENERGY.EMIN() == -0.35
+
+
+def test_task_cannot_reuse_schema_bound_to_different_canonical_task():
+    task = TaskDefinition("SCF", name="SPECIAL")
+
+    with pytest.raises(RegistryDefinitionError, match="different canonical task metadata"):
+        InputParameters.input_parameters_registry.definition_for_task(task)
+
+
+def test_canonical_task_metadata_must_match_as_a_value():
+    task = TaskDefinition("SCF", name="SCF", executable="different-executable")
+
+    with pytest.raises(RegistryDefinitionError, match="different canonical task metadata"):
+        InputParameters.input_parameters_registry.definition_for_task(task)
+
+
 def test_extra_task_resolves_schema_from_own_input_registry(tmp_path, monkeypatch):
     definitions_package = _package(
         tmp_path,
@@ -102,7 +180,7 @@ def test_extra_task_resolves_schema_from_own_input_registry(tmp_path, monkeypatc
     task_registry = TaskRegistry(input_registry, tasks_package)
     task = task_registry["SPECIAL"]
 
-    assert task_registry.input_parameters_definition(task) is input_registry["SHARED"]
+    assert input_registry.definition_for_task(task) is input_registry["SHARED"]
 
 
 def test_old_input_parameters_export_is_rejected(tmp_path, monkeypatch):

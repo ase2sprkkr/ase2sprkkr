@@ -1,14 +1,20 @@
 """XAS input-parameter definition."""
 
 from ...common.grammar_types import DefKeyword, flag
-from ._file_manifests import TauCacheTaskDefinition
+from ._file_manifests import tau_file
 from .sections import CONTROL, TASK, TAU, ENERGY, SITES, MODE
 from ..input_parameters_definitions import InputParametersDefinition, InputValueDefinition as V
+from ..task_definition import TaskDefinition
+
+
+class XasInputParametersDefinition(InputParametersDefinition):
+    def cache_files(self, parameters, directory):
+        return (tau_file(parameters, directory), *super().cache_files(parameters, directory))
 
 
 def input_parameters_definition():
     """XAS task input-parameter definition."""
-    schema = InputParametersDefinition(
+    schema = XasInputParametersDefinition(
         "xas",
         [
             CONTROL("XAS"),
@@ -57,7 +63,7 @@ def input_parameters_definition():
         ],
         info="Calculates X-ray absorption spectra",
     )
-    schema._task_definition = TauCacheTaskDefinition(
+    schema._task_definition = TaskDefinition(
         "XAS",
         name="XAS",
         executable="kkrgen",

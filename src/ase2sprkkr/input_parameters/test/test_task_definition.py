@@ -1,13 +1,16 @@
+from dataclasses import FrozenInstanceError
+
 import numpy as np
 import pytest
 
 from ..input_parameters import InputParameters
 from ..input_parameters_definitions import InputParametersDefinition
 from ..task_definition import TaskDefinition
+from ...outputs.readers.default import DefaultOutputReader
 
 
 def _schema_for(task):
-    return InputParameters.task_registry.input_parameters_definition(task)
+    return InputParameters.input_parameters_registry.definition_for_task(task)
 
 
 def test_bsf_task_views_share_schema_not_identity():
@@ -53,6 +56,17 @@ def test_change_task_changes_task_and_schema_atomically():
     assert parameters._definition is _schema_for(parameters.task_definition)
 
 
+def test_change_task_reasserts_shared_schema_discriminator_after_retain():
+    parameters = InputParameters.create("ARPES")
+    parameters.TASK.TASK = "SPLEED"
+
+    parameters.change_task("AIPES", retain_values=True)
+
+    assert parameters.task_name == "AIPES"
+    assert parameters.TASK.TASK() == "AIPES"
+    assert parameters.task_definition.name == "AIPES"
+
+
 def test_direct_schema_objects_are_detached():
     schema = InputParametersDefinition.definition_from_dict({"TEST": []})
     parameters = schema.create_object()
@@ -78,6 +92,52 @@ def test_task_definition_requires_schema_name():
 
     with pytest.raises(TypeError, match="must be a string"):
         TaskDefinition(schema)
+
+
+def test_task_definition_output_reader_is_an_identifier():
+    with pytest.raises(TypeError, match="output_reader must be a string or None"):
+        TaskDefinition("SCF", output_reader=DefaultOutputReader)
+
+    task = TaskDefinition("SCF", output_reader="bsf")
+    assert task.output_reader == "BSF"
+
+
+def test_task_definition_is_an_immutable_value_object():
+    first = TaskDefinition(
+        "scf",
+        name="scf",
+        executable="kkrscf",
+        output_reader="scf",
+        output_file_templates=("{dataset}.out",),
+    )
+    second = TaskDefinition(
+        "SCF",
+        name="SCF",
+        executable="kkrscf",
+        output_reader="SCF",
+        output_file_templates=("{dataset}.out",),
+    )
+
+    assert first == second
+    assert hash(first) == hash(second)
+    with pytest.raises(FrozenInstanceError):
+        first.output_reader = "BSF"
+
+
+def test_builtin_task_definitions_are_metadata_objects():
+    assert all(
+        type(task) is TaskDefinition
+        for task in InputParameters.task_registry.values()
+    )
+    for name in (
+        "output_reader_class",
+        "prepare_from_result",
+        "input_files",
+        "output_files",
+        "cache_files",
+        "execution_task_name",
+    ):
+        assert not hasattr(TaskDefinition, name)
 
 
 def test_effective_task_follows_shared_schema_values():

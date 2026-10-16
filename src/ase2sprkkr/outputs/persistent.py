@@ -5,6 +5,7 @@ from __future__ import annotations
 from ..common.module_registry import RegistryEntryNotFound
 from ..execution import FileState, RunState
 from ..input_parameters.input_parameters import InputParameters
+from .reader_registry import reader_registry
 
 
 class PersistentResultUnavailableError(RuntimeError):
@@ -65,7 +66,7 @@ def _reader_for_record(manager, record):
     """Create the reader declared by the persisted effective task."""
     task_definition = _task_definition_for_record(record)
     parameters = _input_parameters_for_record(manager, record)
-    reader_class = task_definition.output_reader_class()
+    reader_class = reader_registry.class_for_task(task_definition)
 
     return reader_class(
         parameters,

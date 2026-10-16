@@ -40,16 +40,42 @@ class OutputReaderRegistry(ModuleRegistry):
             )
         return value
 
-    def class_for_task(self, task):
-        """Return the specialized reader for *task*, or the default reader."""
+    def _class_for_reader_name(self, name):
+        """Resolve a reader identifier, with the generic reader as fallback."""
         from .readers.default import DefaultOutputReader
 
-        if not task:
+        if not name:
             return DefaultOutputReader
         try:
-            return self[task]
+            return self[name]
         except RegistryEntryNotFound:
             return DefaultOutputReader
+
+    def class_for_task_name(self, task_name):
+        """Return the reader for a registered task name or guess by reader name."""
+        if not task_name:
+            return self._class_for_reader_name(task_name)
+
+        # A task name can intentionally map to a differently named reader
+        # (for example BSFEK/BSFKK -> BSF). Keep this service-side: task
+        # metadata remains identifiers only and never resolves the reader.
+        from ..input_parameters.input_parameters import InputParameters
+
+        try:
+            task = InputParameters.task_registry[task_name]
+        except RegistryEntryNotFound:
+            return self._class_for_reader_name(task_name)
+        return self.class_for_task(task)
+
+    def class_for_task(self, task):
+        """Return the reader declared by *task*, falling back to its task name."""
+        from ..input_parameters.task_definition import TaskDefinition
+
+        if not isinstance(task, TaskDefinition):
+            raise TypeError("task must be a TaskDefinition")
+        if task.output_reader is not None:
+            return self[task.output_reader]
+        return self._class_for_reader_name(task.name)
 
     def detect(self, file):
         """Detect the task represented by a standalone SPR-KKR output file.

@@ -21,12 +21,7 @@ class InputSection(ConfigurationSection):
 
 
 class InputParameters(ConfigurationFile):
-    """Concrete values of an SPR-KKR input file.
-
-    Input-file schemas and task identities are separate registries. Standard
-    schemas carry their canonical task directly; shared schemas resolve the task
-    from their concrete values.
-    """
+    """Concrete values of an SPR-KKR input file."""
 
     input_parameters_registry = InputParametersRegistry(definitions)
     task_registry = TaskRegistry(input_parameters_registry, tasks)
@@ -46,8 +41,8 @@ class InputParameters(ConfigurationFile):
 
     @property
     def task_definition(self):
-        """Return the task represented by the current parameter values."""
-        return self._definition.task_definition(self)
+        """Return the effective task represented by the current values."""
+        return self.task_registry.effective_task(self)
 
     def _require_task_definition(self):
         task = self.task_definition
@@ -89,18 +84,22 @@ class InputParameters(ConfigurationFile):
 
     @property
     def executable(self):
-        """Executable basename declared by the effective task."""
         return self._require_task_definition().executable
 
     @property
     def mpi_supported(self):
-        """Whether the effective task has an MPI executable."""
         return self._require_task_definition().mpi
 
     @property
     def execution_task_name(self):
-        """Execution identity represented by the concrete parameter values."""
-        return self._require_task_definition().execution_task_name(self)
+        """Return the concrete SPR-KKR TASK value used for execution."""
+        try:
+            value = self["TASK"]["TASK"]()
+        except KeyError:
+            value = None
+        if value:
+            return str(value).upper()
+        return self._require_task_definition().name
 
     def uses_separate_single_site_contour(self):
         switches = (
@@ -120,20 +119,27 @@ class InputParameters(ConfigurationFile):
     def is_mpi(self, mpi=True):
         return mpi and self._require_task_definition().mpi
 
+    def _task_files(self, directory, kind):
+        task = self._require_task_definition()
+        return self.input_parameters_registry.files_for_task(
+            task, self, directory, kind
+        )
+
     def input_files(self, directory):
-        return self._require_task_definition().input_files(self, directory)
+        return self._task_files(directory, "input")
 
     def output_files(self, directory):
-        return self._require_task_definition().output_files(self, directory)
+        return self._task_files(directory, "output")
 
     def cache_files(self, directory):
-        return self._require_task_definition().cache_files(self, directory)
+        return self._task_files(directory, "cache")
 
     def output_reader(self, calculator=None, print_output=False, directory=None):
+        from ..outputs.reader_registry import reader_registry
+
         if not directory and calculator and calculator.directory:
             directory = calculator.directory
-
-        cls = self._require_task_definition().output_reader_class()
+        cls = reader_registry.class_for_task(self._require_task_definition())
         return cls(self, calculator, directory, print_output)
 
     def read_output_from_file(self, filename, directory=None):
@@ -152,10 +158,11 @@ class InputParameters(ConfigurationFile):
 
     @classmethod
     def definition(cls, name):
-        name = cls.input_parameters_registry.normalize_name(name)
-        if name in cls.input_parameters_registry:
-            return cls.input_parameters_registry[name]
-        return cls.task_registry.input_parameters_definition(name)
+        normalized = cls.input_parameters_registry.normalize_name(name)
+        if normalized in cls.input_parameters_registry:
+            return cls.input_parameters_registry[normalized]
+        task = cls.task_registry[normalized]
+        return cls.input_parameters_registry.definition_for_task(task)
 
     @cached_class_property
     def definitions(cls):
@@ -182,8 +189,8 @@ class InputParameters(ConfigurationFile):
 
     @classmethod
     def create(cls, name):
-        requested = cls.task_registry.normalize_name(name)
-        return cls.task_registry.create_input_parameters(requested)
+        task = cls.task_registry[name]
+        return cls.input_parameters_registry.create_for_task(task)
 
     @classmethod
     def default_parameters(cls):
@@ -218,7 +225,10 @@ class InputParameters(ConfigurationFile):
             vals = self.to_dict(only_changed=True)
 
         requested = self.task_registry.normalize_name(task)
-        self._definition = self.task_registry.input_parameters_definition(requested)
+        task_definition = self.task_registry[requested]
+        self._definition = self.input_parameters_registry.definition_for_task(
+            task_definition
+        )
         self._task_name = requested
         self._init_members_from_the_definition()
 
@@ -229,6 +239,8 @@ class InputParameters(ConfigurationFile):
                 retain_invalid="none",
                 report_invalid="ignore",
             )
+
+        self._definition.initialize_for_task(self, requested)
 
     def save_to_file(self, file, atoms=None, *, validate="save"):
         if self._definition.save_hook:
