@@ -1,5 +1,7 @@
+from concurrent.futures import ThreadPoolExecutor
 import importlib
 import sys
+from threading import Barrier, Thread
 
 import pytest
 
@@ -84,6 +86,68 @@ def test_modules_import_without_materializing_values(tmp_path, monkeypatch):
 
     assert tuple(modules) == ("ALPHA",)
     assert modules["ALPHA"].__name__ == "_ase2sprkkr_registry_modules.alpha"
+
+
+def test_module_import_does_not_hold_registry_lock(tmp_path, monkeypatch):
+    package = _package(
+        tmp_path,
+        monkeypatch,
+        "_ase2sprkkr_registry_import_lock",
+        {"alpha": "value = object()\n"},
+    )
+    registry = ModuleRegistry(package, "value")
+    original_import = importlib.import_module
+
+    def checked_import(name, package=None):
+        acquired = []
+
+        def try_registry_lock():
+            locked = registry._lock.acquire(timeout=1)
+            acquired.append(locked)
+            if locked:
+                registry._lock.release()
+
+        thread = Thread(target=try_registry_lock)
+        thread.start()
+        thread.join()
+        assert acquired == [True]
+        return original_import(name, package)
+
+    monkeypatch.setattr(importlib, "import_module", checked_import)
+
+    registry["alpha"]
+
+
+def test_concurrent_first_lookup_materializes_factory_once(tmp_path, monkeypatch):
+    package = _package(
+        tmp_path,
+        monkeypatch,
+        "_ase2sprkkr_registry_concurrent",
+        {
+            "alpha": (
+                "import time\n"
+                "calls = 0\n"
+                "def value():\n"
+                "    global calls\n"
+                "    calls += 1\n"
+                "    time.sleep(0.05)\n"
+                "    return object()\n"
+            )
+        },
+    )
+    registry = ModuleRegistry(package, "value", factory=True)
+    workers = 8
+    start = Barrier(workers)
+
+    def lookup():
+        start.wait(timeout=5)
+        return registry["alpha"]
+
+    with ThreadPoolExecutor(max_workers=workers) as executor:
+        values = list(executor.map(lambda _: lookup(), range(workers)))
+
+    assert all(value is values[0] for value in values)
+    assert sys.modules["_ase2sprkkr_registry_concurrent.alpha"].calls == 1
 
 
 def test_missing_module_has_specific_lookup_error(tmp_path, monkeypatch):
