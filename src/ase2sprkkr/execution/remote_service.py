@@ -321,19 +321,23 @@ def status_remote(remote_id):
 def cancel_remote(remote_id, timeout=1.0):
     handle = _decode_handle(remote_id)
     if handle["kind"] == "process":
-        if _same_process(handle):
+        if not _same_process(handle):
+            return status_remote(remote_id)
+
+        try:
+            os.killpg(int(handle["pid"]), signal.SIGTERM)
+        except ProcessLookupError:
+            return status_remote(remote_id)
+
+        deadline = time.monotonic() + timeout
+        while time.monotonic() < deadline and _process_running(handle):
+            time.sleep(0.05)
+        if _process_running(handle):
             try:
-                os.killpg(int(handle["pid"]), signal.SIGTERM)
+                os.killpg(int(handle["pid"]), signal.SIGKILL)
             except ProcessLookupError:
                 pass
-            deadline = time.monotonic() + timeout
-            while time.monotonic() < deadline and _process_running(handle):
-                time.sleep(0.05)
-            if _process_running(handle):
-                try:
-                    os.killpg(int(handle["pid"]), signal.SIGKILL)
-                except ProcessLookupError:
-                    pass
+
         state = status_remote(remote_id)
         state["state"] = RunState.CANCELLED.value
         return state
