@@ -14,13 +14,15 @@ from ase2sprkkr.sprkkr.profile import SPRKKRProfile
 
 
 class _Parameters:
-    executable = "sprkkr"
-    mpi_supported = False
-    execution_task_name = "SCF"
+    task_name = "SCF"
+    definition_name = "SCF"
     CONTROL = SimpleNamespace(
         POTFIL=SimpleNamespace(result=None),
         DATASET=SimpleNamespace(result=None),
     )
+
+    def _require_task_definition(self):
+        return SimpleNamespace(executable="sprkkr", mpi=False)
 
     def output_reader(self, calculator, print_output, directory):
         return object()

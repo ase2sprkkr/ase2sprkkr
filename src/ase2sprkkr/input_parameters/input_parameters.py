@@ -7,7 +7,12 @@ import os
 import pyparsing as pp
 
 from . import definitions, tasks
-from .task_definition import InputParametersRegistry, TaskRegistry
+from .task_definition import (
+    InputParametersRegistry,
+    TaskRegistry,
+    _task_discriminator,
+    _task_discriminator_matches,
+)
 from ..sprkkr.configuration import ConfigurationFile, ConfigurationSection
 from ..common.decorators import cached_class_property
 from ..common.warnings import DataValidityError
@@ -72,7 +77,7 @@ class InputParameters(ConfigurationFile):
     @property
     def definition_name(self):
         """Return the registered input-parameter schema name."""
-        return self._definition.name
+        return self.input_parameters_registry.normalize_name(self._definition.name)
 
     @property
     def potential(self):
@@ -87,7 +92,7 @@ class InputParameters(ConfigurationFile):
 
     def copy(self, copy_values: bool = False):
         """Copy parameters while preserving requested-task default context."""
-        values = self.as_dict(copy=copy_values, only_changed=True)
+        values = self.as_dict(copy=copy_values, only_changed="explicit")
         out = self.__class__(
             definition=self._definition,
             requested_task_name=self.requested_task_name,
@@ -190,16 +195,31 @@ class InputParameters(ConfigurationFile):
 
     @classmethod
     def from_file(cls, filename, allow_dangerous: bool = False):
-        """Try all registered input-file schemas."""
+        """Autodetect a schema from a file that explicitly identifies its task."""
         last = None
         is_stream = hasattr(filename, "seek")
         for definition in cls.definitions.values():
             if is_stream:
                 filename.seek(0)
             try:
-                return definition.read_from_file(
+                parameters = definition.read_from_file(
                     filename, allow_dangerous=allow_dangerous
                 )
+                discriminator = _task_discriminator(parameters)
+                if discriminator is None:
+                    last = DataValidityError(
+                        f"Input parsed as {definition.name!r} does not explicitly "
+                        "contain TASK.TASK"
+                    )
+                    continue
+                task = parameters.task_definition
+                if task is None or not _task_discriminator_matches(parameters, task):
+                    last = DataValidityError(
+                        f"Input parsed as {definition.name!r} contains incompatible "
+                        f"TASK.TASK={discriminator!r}"
+                    )
+                    continue
+                return parameters
             except (pp.ParseBaseException, DataValidityError) as e:
                 last = e
         if last is None:
@@ -214,7 +234,7 @@ class InputParameters(ConfigurationFile):
 
     def change_task(self, task, retain_values=False):
         if retain_values:
-            vals = self.to_dict(only_changed=True)
+            vals = self.to_dict(only_changed="explicit")
 
         requested = self.task_registry.normalize_name(task)
         task_definition = self.task_registry[requested]

@@ -11,11 +11,11 @@ def test_other_run_record_schemas_are_not_supported(tmp_path, schema_version):
     created_at = "2026-10-12T12:34:56+00:00"
     directory = store.directory / "2026-10-12"
     directory.mkdir(parents=True)
-    path = directory / "legacy.json"
+    path = directory / "record.json"
     path.write_text(
         json.dumps(
             {
-                "id": "legacy",
+                "id": "record",
                 "state": "finished",
                 "created_at": created_at,
                 "updated_at": created_at,
@@ -27,19 +27,19 @@ def test_other_run_record_schemas_are_not_supported(tmp_path, schema_version):
     )
 
     with pytest.raises(CorruptRunRecord, match="unsupported schema version"):
-        store.get("legacy")
+        store.get("record")
 
 
-def test_schema_one_requested_task_provenance_is_ignored(tmp_path):
+def test_unknown_run_record_fields_are_rejected(tmp_path):
     store = RunStore(tmp_path / "runs")
     created_at = "2026-10-12T12:34:56+00:00"
     directory = store.directory / "2026-10-12"
     directory.mkdir(parents=True)
-    path = directory / "legacy.json"
+    path = directory / "record.json"
     path.write_text(
         json.dumps(
             {
-                "id": "legacy",
+                "id": "record",
                 "state": "finished",
                 "created_at": created_at,
                 "updated_at": created_at,
@@ -52,11 +52,8 @@ def test_schema_one_requested_task_provenance_is_ignored(tmp_path):
         )
     )
 
-    record = store.get("legacy")
-
-    assert record.task == "SPLEED"
-    assert record.input_definition == "ARPES"
-    assert not hasattr(record, "requested_task")
+    with pytest.raises(CorruptRunRecord, match="requested_task"):
+        store.get("record")
 
 
 def test_run_record_constructor_does_not_require_finished_at(tmp_path):

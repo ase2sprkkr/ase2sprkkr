@@ -15,8 +15,16 @@ def _reader_setting(values):
     (
         ("ARPES", {"TASK": {"TASK": "SPLEED"}}, "SPLEED"),
         ("SPLEED", {"TASK": {"TASK": "ARPES"}}, "ARPES"),
-        ("BSFEK", {"ENERGY": {"NE": [1]}}, "BSFKK"),
-        ("BSFKK", {"ENERGY": {"NE": [200]}}, "BSFEK"),
+        (
+            "BSFEK",
+            {"TASK": {"TASK": "BSF"}, "ENERGY": {"NE": [1]}},
+            "BSFKK",
+        ),
+        (
+            "BSFKK",
+            {"TASK": {"TASK": "BSF"}, "ENERGY": {"NE": [200]}},
+            "BSFEK",
+        ),
     ),
 )
 def test_read_for_task_rejects_mismatched_effective_task(
@@ -36,11 +44,11 @@ def test_read_for_task_rejects_mismatched_effective_task(
 @pytest.mark.parametrize(
     ("requested", "values"),
     (
-        ("SCF", {}),
+        ("SCF", {"TASK": {"TASK": "SCF"}}),
         ("ARPES", {"TASK": {"TASK": "ARPES"}}),
         ("SPLEED", {"TASK": {"TASK": "SPLEED"}}),
-        ("BSFEK", {"ENERGY": {"NE": [200]}}),
-        ("BSFKK", {"ENERGY": {"NE": [1]}}),
+        ("BSFEK", {"TASK": {"TASK": "BSF"}, "ENERGY": {"NE": [200]}}),
+        ("BSFKK", {"TASK": {"TASK": "BSF"}, "ENERGY": {"NE": [1]}}),
     ),
 )
 def test_read_for_task_accepts_matching_effective_task(
@@ -54,3 +62,12 @@ def test_read_for_task_accepts_matching_effective_task(
 
     assert parameters.task_name == requested
     assert parameters.task_definition.name == requested
+
+
+def test_read_for_task_rejects_defaulted_task_discriminator(monkeypatch):
+    registry = InputParameters.input_parameters_registry
+    task = InputParameters.task_registry["SCF"]
+    monkeypatch.setattr(InputParameters, "read_from_file", _reader_setting({}))
+
+    with pytest.raises(ValueError, match="does not explicitly identify a task"):
+        registry.read_for_task(task, "ignored.inp")

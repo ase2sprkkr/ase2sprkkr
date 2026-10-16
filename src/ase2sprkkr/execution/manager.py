@@ -352,9 +352,6 @@ class RunStore:
                     f"unsupported schema version {version!r}; "
                     f"expected {_RUN_RECORD_SCHEMA_VERSION}"
                 )
-            # Version 1 briefly persisted requested-task provenance. It was never
-            # part of reconstruction identity, so accept and discard that key.
-            data.pop("requested_task", None)
             return RunRecord(**data)
         except CorruptRunRecord:
             raise
