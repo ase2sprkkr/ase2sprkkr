@@ -1,6 +1,6 @@
 """Minimal direct-process supervisor used by the stateless remote service.
 
-It owns no ASE2SPRKKR lifecycle state.  Its only durable output beyond the
+It owns no ASE2SPRKKR lifecycle state. Its only durable output beyond the
 calculation streams is the immutable process return code, which a bare POSIX
 PID cannot provide after the process has been reaped.
 """
@@ -16,6 +16,7 @@ from uuid import uuid4
 
 
 _SPEC_ENV = "ASE2SPRKKR_REMOTE_PROCESS_SPEC"
+_LAUNCH_FAILURE_RETURN_CODE = 127
 
 
 def _write_return_code(path, return_code):
@@ -39,6 +40,7 @@ def main():
 
     opened = []
     stdin = subprocess.DEVNULL
+    return_code = _LAUNCH_FAILURE_RETURN_CODE
     try:
         if spec.get("stdin"):
             stdin = open(spec["stdin"], "rb")
@@ -52,20 +54,24 @@ def main():
             error = open(spec["error_file"], "wb")
             opened.append(error)
 
-        process = subprocess.Popen(
-            spec["argv"],
-            cwd=spec["directory"],
-            stdin=stdin,
-            stdout=output,
-            stderr=error,
-            close_fds=True,
-        )
-        return_code = process.wait()
+        try:
+            process = subprocess.Popen(
+                spec["argv"],
+                cwd=spec["directory"],
+                stdin=stdin,
+                stdout=output,
+                stderr=error,
+                close_fds=True,
+            )
+        except OSError:
+            return_code = _LAUNCH_FAILURE_RETURN_CODE
+        else:
+            return_code = process.wait()
     finally:
         for file in opened:
             file.close()
+        _write_return_code(spec["return_code_file"], return_code)
 
-    _write_return_code(spec["return_code_file"], return_code)
     return return_code
 
 
