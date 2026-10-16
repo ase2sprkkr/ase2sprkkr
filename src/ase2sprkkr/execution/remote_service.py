@@ -12,11 +12,14 @@ import json
 import os
 import signal
 import subprocess
+import sys
 import time
 from pathlib import Path
 from types import SimpleNamespace
+from uuid import uuid4
 
 from .base import ExecutionSpec, LaunchSpec, RunReference, RunState
+from .remote_process_worker import _SPEC_ENV
 
 
 _FINAL_STATES = {
@@ -107,51 +110,49 @@ def _local_submit(request):
     Path(output_path).parent.mkdir(parents=True, exist_ok=True)
     Path(error_path).parent.mkdir(parents=True, exist_ok=True)
 
-    stdin = subprocess.DEVNULL
-    opened = []
+    run_id = str(request.get("id") or uuid4().hex)
+    return_code_file = os.fspath(directory / f".{run_id}.returncode")
     try:
-        if spec.stdin:
-            stdin = open(_absolute(directory, spec.stdin), "rb")
-            opened.append(stdin)
-        output = open(output_path, "wb")
-        opened.append(output)
-        if error_path == output_path:
-            error = subprocess.STDOUT
-        else:
-            error = open(error_path, "wb")
-            opened.append(error)
+        os.unlink(return_code_file)
+    except FileNotFoundError:
+        pass
 
-        env = os.environ.copy()
-        run_id = request.get("id")
-        if run_id:
-            env["ASE2SPRKKR_RUN_ID"] = str(run_id)
-        process = subprocess.Popen(
-            spec.argv,
-            cwd=directory,
-            stdin=stdin,
-            stdout=output,
-            stderr=error,
-            env=env,
-            start_new_session=True,
-            close_fds=True,
-        )
-        info = _process_info(process.pid)
-        if info is None:
-            try:
-                os.killpg(process.pid, signal.SIGKILL)
-            except ProcessLookupError:
-                pass
-            raise RuntimeError("Started remote process disappeared before identification")
-        start_time, _ = info
-    finally:
-        for file in opened:
-            file.close()
+    worker_spec = {
+        "argv": list(spec.argv),
+        "directory": os.fspath(directory),
+        "stdin": _absolute(directory, spec.stdin),
+        "output_file": output_path,
+        "error_file": error_path,
+        "return_code_file": return_code_file,
+    }
+    env = os.environ.copy()
+    env["ASE2SPRKKR_RUN_ID"] = run_id
+    env[_SPEC_ENV] = json.dumps(worker_spec, separators=(",", ":"))
+    process = subprocess.Popen(
+        [sys.executable, "-m", "ase2sprkkr.execution.remote_process_worker"],
+        cwd=directory,
+        stdin=subprocess.DEVNULL,
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+        env=env,
+        start_new_session=True,
+        close_fds=True,
+    )
+    info = _process_info(process.pid)
+    if info is None:
+        try:
+            os.killpg(process.pid, signal.SIGKILL)
+        except ProcessLookupError:
+            pass
+        raise RuntimeError("Started remote process disappeared before identification")
+    start_time, _ = info
 
     remote_id = _encode_handle(
         {
             "kind": "process",
             "pid": process.pid,
             "start_time": start_time,
+            "return_code_file": return_code_file,
             "directory": os.fspath(directory),
             "input_file": _absolute(directory, spec.input_file),
             "output_file": output_path,
@@ -200,8 +201,8 @@ def _psij_submit(request):
     runner = executor.create_persistent_run(
         _DrainReader(), spec, run_id=request.get("id")
     )
-    # Submit only.  Monitoring belongs to the client; target-side daemon
-    # threads would reintroduce a second lifecycle owner.
+    # Submit only. Monitoring belongs to the client; target-side daemon threads
+    # would reintroduce a second lifecycle owner.
     runner._prepare_io()
     executor._job_executor.submit(runner._job)
     reference = runner.reference
@@ -231,7 +232,7 @@ def _psij_submit(request):
 
 
 def submit_remote(request):
-    """Submit one run without creating target-side ASE2SPRKKR metadata."""
+    """Submit one run without creating target-side ASE2SPRKKR lifecycle state."""
     executor = request.get("executor", "local")
     if executor == "local":
         return _local_submit(request)
@@ -252,18 +253,34 @@ def _reference(handle):
     )
 
 
+def _process_return_code(handle):
+    try:
+        return int(Path(handle["return_code_file"]).read_text().strip())
+    except FileNotFoundError:
+        return None
+    except (KeyError, ValueError) as exc:
+        raise RuntimeError("Invalid remote process return-code artifact") from exc
+
+
 def status_remote(remote_id):
     """Query backend facts for an opaque target id."""
     handle = _decode_handle(remote_id)
     if handle["kind"] == "process":
-        # A bare POSIX process has no durable post-mortem status service.  Its
-        # pid/start-time pair is a strong live identity, but after reap only the
-        # fact that it is no longer running remains observable.  Persistent
-        # lifecycle state still lives exclusively on the client.
-        state = RunState.RUNNING if _process_running(handle) else RunState.FINISHED
+        if _process_running(handle):
+            state = RunState.RUNNING
+            return_code = None
+        else:
+            return_code = _process_return_code(handle)
+            state = (
+                RunState.UNKNOWN
+                if return_code is None
+                else RunState.FINISHED
+                if return_code == 0
+                else RunState.EXECUTION_FAILED
+            )
         return {
             "state": state.value,
-            "return_code": None,
+            "return_code": return_code,
             "directory": handle.get("directory"),
             "input_file": handle.get("input_file"),
             "output_file": handle.get("output_file"),
@@ -323,8 +340,8 @@ def recover_remote(run_id, request, *, submitted_at=None):
     executor = request.get("executor", "local")
     if executor == "local":
         raise NotImplementedError(
-            "A bare remote process cannot recover a lost submit response without "
-            "target-side persistence"
+            "A direct remote process cannot recover a lost submit response from "
+            "PID identity alone"
         )
     if executor != "psij":
         raise ValueError(f"Unsupported remote executor: {executor!r}")
