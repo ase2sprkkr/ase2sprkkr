@@ -41,7 +41,7 @@ class FileSpec:
     """Declarative description of one task-owned file.
 
     ``path`` is either a static filename template or a resolver receiving the
-    concrete input parameters and calculation directory.  ``condition`` can
+    concrete input parameters and calculation directory. ``condition`` can
     suppress the file for parameter combinations for which it is not used.
     Resolvers and conditions are declarations only; materialization is owned by
     :class:`InputParametersRegistry`.
@@ -56,9 +56,7 @@ class FileSpec:
             try:
                 path = os.fspath(path)
             except TypeError:
-                raise TypeError(
-                    "FileSpec.path must be path-like or callable"
-                ) from None
+                raise TypeError("FileSpec.path must be path-like or callable") from None
             if not isinstance(path, str):
                 raise TypeError("FileSpec.path must resolve to a string")
             object.__setattr__(self, "path", path)
@@ -104,6 +102,32 @@ class TaskFiles:
         object.__setattr__(self, "output", _normalize_file_specs(output, "files.output"))
         object.__setattr__(self, "cache", _normalize_file_specs(cache, "files.cache"))
 
+    @classmethod
+    def from_legacy_templates(
+        cls,
+        *,
+        input_file_templates=(),
+        output_file_templates=(),
+        cache_file_templates=(),
+    ):
+        out = object.__new__(cls)
+        object.__setattr__(
+            out,
+            "input",
+            _normalize_file_specs(input_file_templates, "input_file_templates"),
+        )
+        object.__setattr__(
+            out,
+            "output",
+            _normalize_file_specs(output_file_templates, "output_file_templates"),
+        )
+        object.__setattr__(
+            out,
+            "cache",
+            _normalize_file_specs(cache_file_templates, "cache_file_templates"),
+        )
+        return out
+
 
 def _legacy_templates(files, kind):
     """Return static unconditional declarations for compatibility/introspection."""
@@ -116,7 +140,11 @@ def _legacy_templates(files, kind):
 
 @dataclass(frozen=True, init=False)
 class TaskDefinition:
-    """Immutable declarative metadata identifying one SPR-KKR task."""
+    """Immutable declarative metadata identifying one SPR-KKR task.
+
+    The task owns the complete file declaration. File names may depend on the
+    concrete input values; the registry only materializes the declaration.
+    """
 
     input_parameters_definition_name: str
     name: str
@@ -152,23 +180,21 @@ class TaskDefinition:
                 raise TypeError("output_reader must be a string or None")
             output_reader = _normalize_identifier(output_reader, "output_reader")
 
-        legacy = (
-            tuple(input_file_templates),
-            tuple(output_file_templates),
-            tuple(cache_file_templates),
+        legacy_values = (
+            input_file_templates,
+            output_file_templates,
+            cache_file_templates,
         )
         if files is not None:
             if not isinstance(files, TaskFiles):
                 raise TypeError("files must be a TaskFiles or None")
-            if any(legacy):
-                raise ValueError(
-                    "files cannot be combined with legacy *_file_templates"
-                )
+            if any(value != () for value in legacy_values):
+                raise ValueError("files cannot be combined with legacy *_file_templates")
         else:
-            files = TaskFiles(
-                input=legacy[0],
-                output=legacy[1],
-                cache=legacy[2],
+            files = TaskFiles.from_legacy_templates(
+                input_file_templates=input_file_templates,
+                output_file_templates=output_file_templates,
+                cache_file_templates=cache_file_templates,
             )
 
         object.__setattr__(self, "input_parameters_definition_name", schema_name)
@@ -328,15 +354,15 @@ class InputParametersRegistry(ModuleRegistry):
 class TaskRegistry:
     """Authoritative namespace and resolver for SPR-KKR task identities.
 
-    Task declarations intentionally have two sources.  A schema with exactly
-    one canonical task may co-locate its :class:`TaskDefinition` on the
-    ``InputParametersDefinition`` as ``_task_definition``; this keeps the
-    common one-schema/one-task case simple and declarative.  Tasks sharing one
-    input schema are declared separately in the extra task package and refer
-    to that schema by name.
+    Task declarations intentionally have two sources. A schema with exactly one
+    canonical task may co-locate its :class:`TaskDefinition` on the
+    ``InputParametersDefinition`` as ``_task_definition``; this keeps the common
+    one-schema/one-task case simple and declarative. Tasks sharing one input
+    schema are declared separately in the extra task package and refer to that
+    schema by name.
 
     The registry owns the task namespace and resolution rules, not necessarily
-    the physical location of each declaration.  Consumers should resolve task
+    the physical location of each declaration. Consumers should resolve task
     identities through this registry rather than reading ``_task_definition``
     directly.
     """
