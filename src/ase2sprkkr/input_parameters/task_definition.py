@@ -203,7 +203,7 @@ class InputParametersRegistry(ModuleRegistry):
         out = self.create_for_task(task, inputfile=file)
         out.read_from_file(file, allow_dangerous=allow_dangerous)
 
-        definition = out.definition
+        definition = out._definition
         if definition._task_definition is None:
             parsed_task_name = definition.task_definition_name(out)
             if parsed_task_name is not None:
