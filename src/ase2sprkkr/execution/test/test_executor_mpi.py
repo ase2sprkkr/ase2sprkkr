@@ -15,6 +15,7 @@ from ...execution import (
 )
 from ...execution.local import materialize_local_spec
 from ...input_parameters.input_parameters import InputParameters
+from ...input_parameters.task_definition import TaskDefinition
 from ...sprkkr import calculation as calculation_module
 from ...sprkkr.calculation import PreparedCalculation
 from ...sprkkr.profile import SPRKKRProfile
@@ -43,9 +44,9 @@ def test_input_parameters_preserve_mpi_launch_intent(tmp_path, monkeypatch):
     reader = object()
     parameters = InputParameters.create("SCF")
     monkeypatch.setattr(
-        InputParameters,
+        TaskDefinition,
         "output_reader",
-        lambda self, calculator, print_output, directory: reader,
+        lambda self, **kwargs: reader,
     )
 
     seen = {}
@@ -249,9 +250,9 @@ def test_explicit_local_executor_overrides_remote_profile(tmp_path, monkeypatch)
     reader = object()
     parameters = InputParameters.create("SCF")
     monkeypatch.setattr(
-        InputParameters,
+        TaskDefinition,
         "output_reader",
-        lambda self, calculator, print_output, directory: reader,
+        lambda self, **kwargs: reader,
     )
 
     runner = SimpleNamespace(

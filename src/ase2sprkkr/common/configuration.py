@@ -96,7 +96,7 @@ class Configuration:
 
     @staticmethod
     def as_dict_getter(only_changed: Union[bool, str] = "default", generated=False, copy=False):
-
+        explicit = only_changed == "explicit"
         if only_changed == "default":
 
             def pick_only_changed(d):
@@ -105,6 +105,10 @@ class Configuration:
 
             def pick_only_changed(d):
                 return d.is_expert
+        elif explicit:
+
+            def pick_only_changed(_d):
+                return False
         else:
             only_changed = bool(only_changed)
 
@@ -115,7 +119,7 @@ class Configuration:
             d = self._definition
             if d.is_generated and not generated:
                 return None
-            if only_changed == "explicit":
+            if explicit:
                 v = self._unpack_value(self._value)
             elif pick_only_changed(d):
                 v, c = self.value_and_changed()

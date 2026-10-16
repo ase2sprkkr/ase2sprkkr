@@ -8,6 +8,9 @@ from ...common.grammar_types import flag
 
 
 class JxcInputParametersDefinition(InputParametersDefinition):
+    def initialize_from_result(self, parameters, result):
+        parameters.ENERGY.EMIN.set_default(result.last_iteration.energy.EMIN())
+
     def output_files(self, parameters, directory):
         files = list(super().output_files(parameters, directory))
         dataset = parameters.CONTROL.DATASET()
@@ -17,9 +20,6 @@ class JxcInputParametersDefinition(InputParametersDefinition):
             files.append(resolve_file(directory, f"{dataset}_XCPLTEN_Jij.dat"))
         files.append(resolve_file(directory, f"{dataset}*.agr"))
         return tuple(files)
-
-    def update_from_result(self, parameters, result):
-        parameters.set("EMIN", result.last_iteration.energy.EMIN())
 
 
 def _jxc_mode_warning_condition(value):
