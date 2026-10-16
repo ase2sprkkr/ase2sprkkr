@@ -2,17 +2,14 @@
 
 This module keeps staging and file synchronization from :mod:`remote_endpoint`,
 but removes the target-side ASE2SPRKKR run database.  The target returns one
-opaque ``remote_id``; the client persists that id together with the per-run
-reconnect context in :class:`RunReference.native_id`.
+opaque ``remote_id``; the client persists that id as ``RunReference.native_id``
+and keeps reconnect-only staging information in ``RunReference.context``.
 """
 
 from __future__ import annotations
 
-import base64
 import glob
-import json
 import os
-from dataclasses import asdict
 from uuid import uuid4
 
 from .base import RunReference, RunState, RunStatus, SubmissionNotStarted
@@ -24,29 +21,11 @@ from .remote_endpoint import (
 )
 
 
-def _pack_reference(remote_id, *, launch, client_sync):
-    payload = {
-        "remote_id": str(remote_id),
-        "launch": launch,
-        "client_sync": client_sync,
-    }
-    raw = json.dumps(payload, separators=(",", ":"), sort_keys=True).encode("utf8")
-    return "v1:" + base64.urlsafe_b64encode(raw).decode("ascii").rstrip("=")
-
-
-def _unpack_reference(native_id):
-    value = str(native_id)
-    if not value.startswith("v1:"):
-        raise ValueError("Remote run reference does not contain client reconnect data")
-    value = value[3:]
-    padding = "=" * (-len(value) % 4)
-    try:
-        payload = json.loads(base64.urlsafe_b64decode(value + padding).decode("utf8"))
-    except (ValueError, json.JSONDecodeError) as exc:
-        raise ValueError("Invalid remote run reference") from exc
-    if not isinstance(payload, dict) or not payload.get("remote_id"):
-        raise ValueError("Invalid remote run reference")
-    return payload
+def _reference_context(reference):
+    context = reference.context or {}
+    if not isinstance(context, dict):
+        raise ValueError("Remote run reference has invalid reconnect context")
+    return context
 
 
 class _ClientOwnedRemoteRun(_LegacyRemoteRun):
@@ -65,12 +44,31 @@ class _ClientOwnedRemoteRun(_LegacyRemoteRun):
         remote_id = status.get("remote_id")
         if not remote_id:
             raise RuntimeError("Remote submit returned no remote_id")
-        native_id = _pack_reference(
-            remote_id,
-            launch=request.get("launch") or {},
-            client_sync=request.get("client_sync") or {},
-        )
-        return native_id, status
+        context = {
+            "launch": request.get("launch") or {},
+            "client_sync": request.get("client_sync") or {},
+        }
+        return remote_id, context, status
+
+    def submit(self):
+        with self._lock:
+            if self._state != RunState.NEW:
+                raise RuntimeError(f"Run is already {self._state.value}")
+
+            remote_id, context, status = _run_sync(self._submit_async())
+            self._state = RunState(status["state"])
+            self._return_code = status.get("return_code")
+            self._reference = RunReference(
+                executor=f"remote:{self.executor.backend}",
+                native_id=str(remote_id),
+                computer=self.executor.computer,
+                directory=status["directory"],
+                input_file=status.get("input_file"),
+                output_file=status.get("output_file"),
+                error_file=status.get("error_file"),
+                context=context,
+            )
+        self._start_monitor()
 
 
 class _ClientOwnedRunContext(_LegacyRemoteRunContext):
@@ -93,11 +91,11 @@ class _ClientOwnedRunContext(_LegacyRemoteRunContext):
         *,
         request=None,
     ):
-        packed = _unpack_reference(reference.native_id)
+        context = _reference_context(reference)
         request = {
             "executor": self.backend,
-            "launch": packed.get("launch") or {},
-            "client_sync": packed.get("client_sync") or {},
+            "launch": context.get("launch") or {},
+            "client_sync": context.get("client_sync") or {},
         }
         return await super().attach(
             reference,
@@ -124,10 +122,6 @@ class RemoteEndpointExecutor(_LegacyRemoteEndpointExecutor):
             launch = LaunchSpec(**dict(launch))
         return _ClientOwnedRunContext(endpoint, launch)
 
-    @staticmethod
-    def _remote_id(reference):
-        return _unpack_reference(reference.native_id)["remote_id"]
-
     async def _submit(self, request):
         launch = request.get("launch") or {}
         mpi = launch.get("mpi") or {}
@@ -151,18 +145,17 @@ class RemoteEndpointExecutor(_LegacyRemoteEndpointExecutor):
         return await self._json_request("submit", request["directory"], payload=request)
 
     async def _status(self, directory, native_id):
-        remote_id = _unpack_reference(native_id)["remote_id"]
-        return await self._json_request("status", remote_id)
+        return await self._json_request("status", native_id)
 
     async def _cancel(self, directory, native_id):
-        remote_id = _unpack_reference(native_id)["remote_id"]
-        return await self._json_request("cancel", remote_id)
+        return await self._json_request("cancel", native_id)
 
     async def _follow(self, directory, native_id):
         from .stream_protocol import FramedRunningCommand
 
-        remote_id = _unpack_reference(native_id)["remote_id"]
-        process = await self.transport.start((*self.command, "follow", remote_id, "--framed"))
+        process = await self.transport.start(
+            (*self.command, "follow", str(native_id), "--framed")
+        )
         return FramedRunningCommand(process)
 
     async def _saved_request(self, directory, run_id):
@@ -192,19 +185,16 @@ class RemoteEndpointExecutor(_LegacyRemoteEndpointExecutor):
 
     async def _recover_submission(self, run_id, submission, *, submitted_at=None):
         directory = await self._resolve_submission_directory(submission.directory)
-        try:
-            state = await self._json_request(
-                "recover",
-                directory,
-                run_id,
-                payload={
-                    "executor": self.backend,
-                    "executor_options": self.backend_options,
-                    "submitted_at": submitted_at,
-                },
-            )
-        except RuntimeError:
-            raise
+        state = await self._json_request(
+            "recover",
+            directory,
+            run_id,
+            payload={
+                "executor": self.backend,
+                "executor_options": self.backend_options,
+                "submitted_at": submitted_at,
+            },
+        )
         if state is None:
             return None
         if state.get("unsupported"):
@@ -213,21 +203,15 @@ class RemoteEndpointExecutor(_LegacyRemoteEndpointExecutor):
         if not remote_id:
             raise RuntimeError("Recovered remote submission has no remote_id")
 
-        # Recovery happens before a RunReference exists.  The persisted client
-        # record still contains result manifests, while launch/file-sync context
-        # is unavailable unless the backend was able to return a reference in
-        # the original submit response.  Scheduler recovery is therefore kept
-        # deliberately minimal here; normal attach uses the reference created
-        # by a successful submit.
-        native_id = _pack_reference(remote_id, launch={}, client_sync={})
         reference = RunReference(
             executor=f"remote:{self.backend}",
-            native_id=native_id,
+            native_id=str(remote_id),
             computer=self.computer,
             directory=state.get("directory") or directory,
             input_file=state.get("input_file"),
             output_file=state.get("output_file"),
             error_file=state.get("error_file"),
+            context=getattr(submission, "context", None),
         )
         return RunStatus(
             reference,
@@ -243,10 +227,10 @@ class RemoteEndpointExecutor(_LegacyRemoteEndpointExecutor):
 
     async def _fetch_result_files(self, reference, files):
         self._validate_reference(reference)
-        packed = _unpack_reference(reference.native_id)
+        context_data = _reference_context(reference)
         from .base import LaunchSpec
 
-        launch = LaunchSpec(**(packed.get("launch") or {}))
+        launch = LaunchSpec(**(context_data.get("launch") or {}))
         context = self._context(self, launch)
         remote_root = await context._resolved_remote_root()
 
@@ -273,10 +257,10 @@ class RemoteEndpointExecutor(_LegacyRemoteEndpointExecutor):
         start=True,
     ):
         self._validate_reference(reference)
-        packed = _unpack_reference(reference.native_id)
+        context_data = _reference_context(reference)
         from .base import LaunchSpec
 
-        launch = LaunchSpec(**(packed.get("launch") or {}))
+        launch = LaunchSpec(**(context_data.get("launch") or {}))
         context = self._context(self, launch)
         return await context.attach(
             reference,
