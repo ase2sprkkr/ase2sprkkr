@@ -58,7 +58,7 @@ class InputParametersDefinition(ConfigurationFileDefinition):
     """Canonical 1:1 task declared together with this schema.
 
     This is declaration-time metadata for the simple case where one input
-    schema represents exactly one task.  Schemas shared by multiple tasks leave
+    schema represents exactly one task. Schemas shared by multiple tasks leave
     it as ``None`` and declare those tasks separately through ``TaskRegistry``'s
     extra task package.
 
@@ -84,18 +84,6 @@ class InputParametersDefinition(ConfigurationFileDefinition):
 
     def update_from_result(self, parameters, result):
         """Apply schema-specific values derived from an existing result."""
-
-    def input_files(self, parameters, directory):
-        """Return schema-specific auxiliary input files."""
-        return ()
-
-    def output_files(self, parameters, directory):
-        """Return schema-specific output files."""
-        return ()
-
-    def cache_files(self, parameters, directory):
-        """Return schema-specific optional cache files."""
-        return ()
 
     @classmethod
     @cache
