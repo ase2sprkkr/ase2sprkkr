@@ -1,13 +1,5 @@
-from ..definitions._file_manifests import tau_file
+from ..definitions._file_manifests import bsf_file, tau_file
 from ..task_definition import FileSpec, TaskDefinition, TaskFiles
-
-
-def _bsf_output(parameters, _directory):
-    dataset = parameters.CONTROL.DATASET()
-    adsi = parameters.CONTROL.ADSI()
-    if not dataset or not adsi:
-        return None
-    return f"{dataset}_{adsi}.bsf"
 
 
 def task_definition():
@@ -18,7 +10,7 @@ def task_definition():
         mpi=True,
         output_reader="BSF",
         files=TaskFiles(
-            output=(FileSpec(_bsf_output),),
+            output=(FileSpec(bsf_file),),
             cache=(FileSpec(tau_file),),
         ),
     )
