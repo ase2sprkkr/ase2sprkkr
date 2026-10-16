@@ -246,9 +246,9 @@ class DuplicateSubmissionError(RuntimeError):
 class RunRecord:
     """Persistent identity and last known lifecycle state of one run.
 
-    ``task`` is the effective ASE2SPRKKR task represented by the concrete input
-    values. ``input_definition`` independently identifies the input schema used
-    to parse and reconstruct those values.
+    ``task`` is the ASE2SPRKKR task represented by the concrete input values.
+    ``input_definition`` independently identifies the input schema used to parse
+    and reconstruct those values.
 
     ``state`` is the single authoritative lifecycle state. A terminal backend
     outcome advances it to ``FINALIZING`` while result processing completes;
