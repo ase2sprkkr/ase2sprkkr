@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 import os
-from typing import Optional, Tuple
+from typing import Iterable, Optional, Tuple, Union
 
 from ..common.doc import process_input_parameters_definition
 from ..common.module_registry import (
@@ -12,6 +12,59 @@ from ..common.module_registry import (
     RegistryDefinitionError,
     RegistryEntryNotFound,
 )
+
+
+_FileTemplate = Union[str, os.PathLike[str]]
+
+
+def _normalize_identifier(value: str, field: str) -> str:
+    if not isinstance(value, str):
+        raise TypeError(f"{field} must be a string")
+    value = value.strip()
+    if not value:
+        raise ValueError(f"{field} must not be empty")
+    return value.upper()
+
+
+def _normalize_executable(value: str) -> str:
+    if not isinstance(value, str):
+        raise TypeError("executable must be a string")
+    value = value.strip()
+    if not value:
+        raise ValueError("executable must not be empty")
+    return value
+
+
+def _normalize_file_templates(
+    templates: Iterable[_FileTemplate], field: str
+) -> Tuple[str, ...]:
+    if isinstance(templates, (str, bytes, os.PathLike)):
+        raise TypeError(
+            f"{field} must be an iterable of path-like strings, not a single path"
+        )
+    try:
+        iterator = iter(templates)
+    except TypeError:
+        raise TypeError(
+            f"{field} must be an iterable of path-like strings"
+        ) from None
+
+    normalized = []
+    for index, item in enumerate(iterator):
+        try:
+            path = os.fspath(item)
+        except TypeError:
+            raise TypeError(
+                f"{field}[{index}] must be a string or os.PathLike, "
+                f"got {type(item).__name__}"
+            ) from None
+        if not isinstance(path, str):
+            raise TypeError(
+                f"{field}[{index}] must resolve to a string, "
+                f"got {type(path).__name__}"
+            )
+        normalized.append(path)
+    return tuple(normalized)
 
 
 @dataclass(frozen=True, init=False)
@@ -23,47 +76,56 @@ class TaskDefinition:
     executable: str
     mpi: bool
     output_reader: Optional[str]
-    input_file_templates: Tuple[object, ...]
-    output_file_templates: Tuple[object, ...]
-    cache_file_templates: Tuple[object, ...]
+    input_file_templates: Tuple[str, ...]
+    output_file_templates: Tuple[str, ...]
+    cache_file_templates: Tuple[str, ...]
 
     def __init__(
         self,
-        input_parameters_definition_name,
+        input_parameters_definition_name: str,
         *,
-        name=None,
-        executable="kkrscf",
-        mpi=True,
-        output_reader=None,
-        input_file_templates=(),
-        output_file_templates=(),
-        cache_file_templates=(),
-    ):
-        if not isinstance(input_parameters_definition_name, str):
-            raise TypeError("input_parameters_definition_name must be a string")
-        if output_reader is not None and not isinstance(output_reader, str):
-            raise TypeError("output_reader must be a string or None")
+        name: Optional[str] = None,
+        executable: str = "kkrscf",
+        mpi: bool = True,
+        output_reader: Optional[str] = None,
+        input_file_templates: Iterable[_FileTemplate] = (),
+        output_file_templates: Iterable[_FileTemplate] = (),
+        cache_file_templates: Iterable[_FileTemplate] = (),
+    ) -> None:
+        schema_name = _normalize_identifier(
+            input_parameters_definition_name, "input_parameters_definition_name"
+        )
+        task_name = (
+            schema_name if name is None else _normalize_identifier(name, "name")
+        )
+        executable = _normalize_executable(executable)
+        if type(mpi) is not bool:
+            raise TypeError("mpi must be a bool")
+        if output_reader is not None:
+            if not isinstance(output_reader, str):
+                raise TypeError("output_reader must be a string or None")
+            output_reader = _normalize_identifier(output_reader, "output_reader")
 
-        object.__setattr__(
-            self,
-            "input_parameters_definition_name",
-            input_parameters_definition_name.upper(),
-        )
-        object.__setattr__(
-            self,
-            "name",
-            str(name or input_parameters_definition_name).upper(),
-        )
+        object.__setattr__(self, "input_parameters_definition_name", schema_name)
+        object.__setattr__(self, "name", task_name)
         object.__setattr__(self, "executable", executable)
         object.__setattr__(self, "mpi", mpi)
+        object.__setattr__(self, "output_reader", output_reader)
         object.__setattr__(
             self,
-            "output_reader",
-            output_reader.upper() if output_reader is not None else None,
+            "input_file_templates",
+            _normalize_file_templates(input_file_templates, "input_file_templates"),
         )
-        object.__setattr__(self, "input_file_templates", tuple(input_file_templates))
-        object.__setattr__(self, "output_file_templates", tuple(output_file_templates))
-        object.__setattr__(self, "cache_file_templates", tuple(cache_file_templates))
+        object.__setattr__(
+            self,
+            "output_file_templates",
+            _normalize_file_templates(output_file_templates, "output_file_templates"),
+        )
+        object.__setattr__(
+            self,
+            "cache_file_templates",
+            _normalize_file_templates(cache_file_templates, "cache_file_templates"),
+        )
 
 
 class InputParametersRegistry(ModuleRegistry):
