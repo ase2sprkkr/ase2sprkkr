@@ -70,7 +70,7 @@ class AtomsRegion:
                 pbc[inherit_cell] = None
         self.incomplete_cell = Cell(cell)
         self.incomplete_pbc = pbc
-        if atoms:
+        if atoms is not None:
             self.set_atoms(atoms, add)
 
     @staticmethod
