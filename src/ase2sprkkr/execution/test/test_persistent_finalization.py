@@ -2,6 +2,7 @@ from types import SimpleNamespace
 
 import pytest
 
+import ase2sprkkr.outputs.persistent as persistent_output
 from ase2sprkkr.execution import (
     ExecutionManager,
     Executor,
@@ -123,6 +124,35 @@ def test_failed_reconstruction_terminates_finalization_and_can_be_retried(tmp_pa
     failed_again = store.get(record.id)
     assert failed_again.state == RunState.FINALIZATION_FAILED
     assert "unknown persisted effective task" in failed_again.message
+
+
+def test_reader_reconstruction_programming_error_fails_finalization_and_reraises(
+    tmp_path, monkeypatch
+):
+    store = RunStore(tmp_path / "runs")
+    manager = ExecutionManager(store)
+    record = manager.new_record(task="DOS", directory=tmp_path)
+    record = manager.transition(record, state=RunState.FINALIZING)
+    error = RuntimeError("reader constructor failed")
+
+    class BrokenReader:
+        def __init__(self, *_args, **_kwargs):
+            raise error
+
+    monkeypatch.setattr(
+        persistent_output.reader_registry,
+        "class_for_task",
+        lambda _task_definition: BrokenReader,
+    )
+
+    with pytest.raises(RuntimeError, match="reader constructor failed") as exc_info:
+        attach_persistent_run(manager, record)
+
+    assert exc_info.value is error
+    failed = store.get(record.id)
+    assert failed.state == RunState.FINALIZATION_FAILED
+    assert failed.message == "reader constructor failed"
+    assert failed.finished_at is not None
 
 
 def test_transient_attach_failure_keeps_finalization_retryable(tmp_path, monkeypatch):
