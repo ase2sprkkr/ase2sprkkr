@@ -1,32 +1,25 @@
 """SCF input-parameter definition."""
 
-from ._file_manifests import resolve_file
 from .sections import CONTROL, TAU, ENERGY, SCF, SITES, STRCONST, CPA, MODE, TASK
 from ..input_parameters_definitions import InputParametersDefinition
-from ..task_definition import TaskDefinition
+from ..task_definition import FileSpec, TaskDefinition, TaskFiles
 
 
-class SCFInputParametersDefinition(InputParametersDefinition):
-    """SCF schema with files depending on the concrete parameters."""
+def _fullpot(parameters):
+    return bool(parameters.SCF.FULLPOT())
 
-    def cache_files(self, parameters, directory):
-        files = list(super().cache_files(parameters, directory))
-        if parameters.SCF.FULLPOT():
-            sfnfil = parameters.CONTROL.SFNFIL()
-            if sfnfil:
-                files.append(resolve_file(directory, sfnfil))
-        return tuple(files)
 
-    def output_files(self, parameters, directory):
-        files = list(super().output_files(parameters, directory))
-        potfil = parameters.CONTROL.POTFIL()
-        if potfil:
-            files.append(resolve_file(directory, f"{potfil}_new"))
-        return tuple(files)
+def _sfn_file(parameters, _directory):
+    return parameters.CONTROL.SFNFIL() or None
+
+
+def _new_potential_file(parameters, _directory):
+    potfil = parameters.CONTROL.POTFIL()
+    return None if not potfil else f"{potfil}_new"
 
 
 def input_parameters_definition():
-    schema = SCFInputParametersDefinition(
+    schema = InputParametersDefinition(
         "scf",
         [CONTROL("SCF"), TASK("SCF"), TAU, ENERGY(), SCF, SITES, STRCONST, CPA, MODE],
         info="SCF - Calculate a self-consistent potential",
@@ -38,5 +31,9 @@ def input_parameters_definition():
         executable="kkrscf",
         mpi=True,
         output_reader="SCF",
+        files=TaskFiles(
+            output=(FileSpec(_new_potential_file),),
+            cache=(FileSpec(_sfn_file, condition=_fullpot),),
+        ),
     )
     return schema
