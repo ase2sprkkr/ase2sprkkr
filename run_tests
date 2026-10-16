@@ -5,6 +5,11 @@ set -e
 # PYTHONPATH pointing at ``src`` would shadow its compiled extension modules.
 unset PYTHONPATH
 
+# Keep pytest configuration from the checkout while running the actual tests
+# against the installed wheel from an otherwise clean working directory.
+SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd)
+PYTEST_CONFIG="$SCRIPT_DIR/pyproject.toml"
+
 # Run from a fresh directory so the repository checkout cannot accidentally
 # satisfy imports or receive files created by tests intended for the installed
 # wheel.
@@ -30,4 +35,4 @@ for module, required_function in (
         )
 PY
 
-python3 -m ase2sprkkr.tools.ase2sprkkr test "$@"
+python3 -m ase2sprkkr.tools.ase2sprkkr test -c "$PYTEST_CONFIG" "$@"
