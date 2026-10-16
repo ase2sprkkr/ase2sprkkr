@@ -8,7 +8,7 @@ import pytest
 from ase2sprkkr.execution import RunReference, RunState
 from ase2sprkkr.execution.endpoint import ExecutorEndpoint
 from ase2sprkkr.execution.manager import RunRecord, RunStore, SubmissionKey
-from ase2sprkkr.execution.remote_endpoint_client import RemoteEndpointExecutor
+from ase2sprkkr.execution.remote_endpoint import RemoteEndpointExecutor
 from ase2sprkkr.execution.remote_service import (
     _decode_handle,
     status_remote,
