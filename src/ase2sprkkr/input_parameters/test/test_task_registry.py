@@ -1,4 +1,5 @@
 import importlib
+import pickle
 from types import SimpleNamespace
 
 import pytest
@@ -121,6 +122,7 @@ def test_schema_does_not_resolve_task_services():
     assert not hasattr(schema, "task_definition")
     assert not hasattr(schema, "initialize_for_task")
     assert not hasattr(schema, "update_from_result")
+    assert callable(schema.initialize_from_result)
     assert schema.task_definition_name(InputParameters.create("SPLEED")) == "SPLEED"
 
 
@@ -135,7 +137,7 @@ def test_task_registry_resolves_task_from_values():
     assert parameters.requested_task_name == "ARPES"
 
 
-def test_input_parameters_registry_creates_parameters_from_result_as_default_context():
+def test_input_parameters_registry_snapshots_result_defaults():
     result = SimpleNamespace(
         last_iteration=SimpleNamespace(
             energy=SimpleNamespace(EMIN=lambda: -0.35)
@@ -149,17 +151,24 @@ def test_input_parameters_registry_creates_parameters_from_result_as_default_con
 
     assert parameters.task_name == "JXC"
     assert parameters.requested_task_name == "JXC"
-    assert parameters.from_result is result
+    assert not hasattr(parameters, "from_result")
     assert parameters.task_definition.name == "JXC"
     assert parameters.ENERGY.EMIN() == -0.35
+    assert parameters.ENERGY.EMIN.default_value == -0.35
     assert not parameters.ENERGY.EMIN.is_set()
 
     for copy_values in (False, True):
         copied = parameters.copy(copy_values=copy_values)
         assert copied.requested_task_name == "JXC"
-        assert copied.from_result is result
         assert copied.ENERGY.EMIN() == -0.35
+        assert copied.ENERGY.EMIN.default_value == -0.35
         assert not copied.ENERGY.EMIN.is_set()
+
+    restored = pickle.loads(pickle.dumps(parameters))
+    assert restored.requested_task_name == "JXC"
+    assert restored.ENERGY.EMIN() == -0.35
+    assert restored.ENERGY.EMIN.default_value == -0.35
+    assert not restored.ENERGY.EMIN.is_set()
 
     parameters.ENERGY.EMIN = -0.5
     assert parameters.ENERGY.EMIN() == -0.5
@@ -169,9 +178,35 @@ def test_input_parameters_registry_creates_parameters_from_result_as_default_con
 def test_jxc_without_result_keeps_normal_emin_default():
     parameters = InputParameters.create("JXC")
 
-    assert parameters.from_result is None
+    assert not hasattr(parameters, "from_result")
     assert parameters.ENERGY.EMIN() == -0.2
     assert not parameters.ENERGY.EMIN.is_set()
+
+
+def test_instance_default_can_be_cleared():
+    parameters = InputParameters.create("JXC")
+    parameters.ENERGY.EMIN.set_default(-0.35)
+
+    assert parameters.ENERGY.EMIN() == -0.35
+    assert not parameters.ENERGY.EMIN.is_set()
+
+    parameters.ENERGY.EMIN.clear_default()
+
+    assert parameters.ENERGY.EMIN() == -0.2
+    assert not parameters.ENERGY.EMIN.is_set()
+
+
+def test_instance_default_copy_respects_copy_values():
+    parameters = InputParameters.create("JXC")
+    parameters.ENERGY.GRID.set_default([1, 2])
+
+    shallow = parameters.copy(copy_values=False)
+    deep = parameters.copy(copy_values=True)
+
+    assert shallow.ENERGY.GRID.default_value is parameters.ENERGY.GRID.default_value
+    assert deep.ENERGY.GRID.default_value is not parameters.ENERGY.GRID.default_value
+    assert list(shallow.ENERGY.GRID()) == [1, 2]
+    assert list(deep.ENERGY.GRID()) == [1, 2]
 
 
 def test_task_cannot_reuse_schema_bound_to_different_canonical_task():

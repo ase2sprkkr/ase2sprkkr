@@ -12,13 +12,15 @@ from ..sprkkr.configuration import (
 from ..common.grammar_types import mixed, flag
 from ..common.grammar import generate_grammar, delimitedList
 from ..common.decorators import cached_class_property, cache
-from .input_parameters import InputParameters, InputSection
+from .input_parameters import InputParameters, InputSection, InputValue
 
 with generate_grammar():
     section_line_ends = pp.Regex("(\n[ \t]*)*[ \t]")
 
 
 class InputValueDefinition(ConfigurationValueDefinition):
+    result_class = InputValue
+
     @cached_class_property
     def delimiter():
         with generate_grammar():
@@ -81,6 +83,9 @@ class InputParametersDefinition(ConfigurationFileDefinition):
         identifier to a TaskDefinition belongs to TaskRegistry.
         """
         return None
+
+    def initialize_from_result(self, parameters, result):
+        """Initialize instance-specific defaults derived from a previous result."""
 
     def input_files(self, parameters, directory):
         """Return schema-specific auxiliary input files."""
