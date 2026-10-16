@@ -17,7 +17,7 @@ from dataclasses import dataclass, replace
 from uuid import uuid4
 
 from ..common.file_versions import FileState, FileVersion
-from .base import RunReference, RunState
+from .base import RunState
 from .endpoint import ExecutorEndpoint, endpoint_for_executor
 from .manager import (
     CorruptRunRecord,
@@ -26,7 +26,7 @@ from .manager import (
     FileRetrievalState,
     PersistentRunner,
     ResultFilesRecord as _LegacyResultFilesRecord,
-    RunRecord as _LegacyRunRecord,
+    RunRecord,
     RunStore as _LegacyRunStore,
     _now,
     _unique,
@@ -94,72 +94,6 @@ class SubmissionKey:
         object.__setattr__(self, "directory", os.fspath(self.directory))
 
 
-@dataclass(frozen=True)
-class RunRecord(_LegacyRunRecord):
-    """Persistent run record using file-based submission identity."""
-
-    def __post_init__(self):
-        object.__setattr__(self, "task", str(self.task).upper())
-        if self.input_definition is not None:
-            object.__setattr__(
-                self, "input_definition", str(self.input_definition).upper()
-            )
-        if isinstance(self.endpoint, dict):
-            object.__setattr__(self, "endpoint", ExecutorEndpoint(**self.endpoint))
-        if isinstance(self.submission, dict):
-            # Version-1 records may contain the retired task/dataset fields.
-            object.__setattr__(
-                self,
-                "submission",
-                SubmissionKey(
-                    endpoint=self.submission["endpoint"],
-                    directory=self.submission["directory"],
-                ),
-            )
-        elif self.submission is not None and not isinstance(
-            self.submission, SubmissionKey
-        ):
-            object.__setattr__(
-                self,
-                "submission",
-                SubmissionKey(
-                    endpoint=self.submission.endpoint,
-                    directory=self.submission.directory,
-                ),
-            )
-        if isinstance(self.reference, dict):
-            object.__setattr__(self, "reference", RunReference(**self.reference))
-        if isinstance(self.result_files, dict):
-            object.__setattr__(
-                self, "result_files", ResultFilesRecord(**self.result_files)
-            )
-        elif self.result_files is not None and not isinstance(
-            self.result_files, ResultFilesRecord
-        ):
-            legacy = self.result_files
-            object.__setattr__(
-                self,
-                "result_files",
-                ResultFilesRecord(
-                    input_file=legacy.input_file,
-                    output_file=legacy.output_file,
-                    input_files=legacy.input_files,
-                    output_files=legacy.output_files,
-                    input_versions=legacy.input_versions,
-                    output_versions=legacy.output_versions,
-                    captured_at=legacy.captured_at,
-                    retrieval_state=legacy.retrieval_state,
-                    retrieval_message=legacy.retrieval_message,
-                ),
-            )
-        if not isinstance(self.state, RunState):
-            object.__setattr__(self, "state", RunState(self.state))
-        if self.schema_version != 1:
-            raise ValueError(
-                f"unsupported schema version {self.schema_version}; expected 1"
-            )
-
-
 class RunStore(_LegacyRunStore):
     """Run store decoding both legacy and file-manifest version-1 records."""
 
@@ -174,6 +108,17 @@ class RunStore(_LegacyRunStore):
                     f"unsupported schema version {version!r}; expected 1"
                 )
             data.pop("requested_task", None)
+
+            submission = data.get("submission")
+            if isinstance(submission, dict):
+                # Version-1 records may contain the retired task/dataset fields.
+                data["submission"] = SubmissionKey(
+                    endpoint=submission["endpoint"],
+                    directory=submission["directory"],
+                )
+            result_files = data.get("result_files")
+            if isinstance(result_files, dict):
+                data["result_files"] = ResultFilesRecord(**result_files)
             return RunRecord(**data)
         except CorruptRunRecord:
             raise
@@ -302,6 +247,20 @@ class ExecutionManager(_LifecycleExecutionManager):
             return latest.result_files
         if isinstance(requested, dict):
             requested = ResultFilesRecord(**requested)
+        elif isinstance(requested, _LegacyResultFilesRecord) and not isinstance(
+            requested, ResultFilesRecord
+        ):
+            requested = ResultFilesRecord(
+                input_file=requested.input_file,
+                output_file=requested.output_file,
+                input_files=requested.input_files,
+                output_files=requested.output_files,
+                input_versions=requested.input_versions,
+                output_versions=requested.output_versions,
+                captured_at=requested.captured_at,
+                retrieval_state=requested.retrieval_state,
+                retrieval_message=requested.retrieval_message,
+            )
         current = latest.result_files
         if current is None:
             return requested
