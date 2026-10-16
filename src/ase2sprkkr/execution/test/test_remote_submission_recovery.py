@@ -1,5 +1,6 @@
-from ase2sprkkr.execution import RunState, SubmissionKey
-from ase2sprkkr.execution.endpoint import ExecutorEndpoint
+from types import SimpleNamespace
+
+from ase2sprkkr.execution import RunState
 from ase2sprkkr.execution.remote_endpoint import RemoteEndpointExecutor
 
 
@@ -16,12 +17,9 @@ class _Transport:
 
 
 def _submission(directory="/scratch/case"):
-    return SubmissionKey(
-        endpoint=ExecutorEndpoint(executor="ssh", host="cluster"),
-        directory=directory,
-        task="DOS",
-        dataset="case",
-    )
+    # Backend recovery needs only the persisted submission directory. Collision
+    # identity is represented separately by RunRecord.files.
+    return SimpleNamespace(directory=directory)
 
 
 def test_remote_recovery_returns_none_only_for_absent_helper_state():
