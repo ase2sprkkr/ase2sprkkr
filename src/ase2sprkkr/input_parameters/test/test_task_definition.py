@@ -6,7 +6,7 @@ import pytest
 
 from ..input_parameters import InputParameters
 from ..input_parameters_definitions import InputParametersDefinition
-from ..task_definition import TaskDefinition
+from ..task_definition import FileSpec, TaskDefinition
 from ...outputs.readers.default import DefaultOutputReader
 
 
@@ -172,6 +172,22 @@ def test_task_definition_materializes_pathlike_templates_as_strings(field):
     hash(task)
 
 
+def test_file_spec_is_immutable_hashable_metadata():
+    def filename(_parameters, directory):
+        return Path(directory) / "dynamic.dat"
+
+    def enabled(_parameters):
+        return True
+
+    spec = FileSpec(filename, condition=enabled)
+    task = TaskDefinition("SCF", output_file_templates=(spec,))
+
+    assert task.output_file_templates == (spec,)
+    hash(task)
+    with pytest.raises(FrozenInstanceError):
+        spec.condition = None
+
+
 @pytest.mark.parametrize(
     "field",
     ["input_file_templates", "output_file_templates", "cache_file_templates"],
@@ -186,7 +202,7 @@ def test_task_definition_rejects_non_pathlike_template_elements(field):
     ["input_file_templates", "output_file_templates", "cache_file_templates"],
 )
 def test_task_definition_rejects_single_template_instead_of_iterable(field):
-    with pytest.raises(TypeError, match="iterable of path-like strings"):
+    with pytest.raises(TypeError, match="iterable of file declarations"):
         TaskDefinition("SCF", **{field: "{dataset}.dat"})
 
 
