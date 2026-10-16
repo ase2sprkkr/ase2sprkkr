@@ -1,7 +1,7 @@
 """File-manifest policy for persistent execution.
 
 The lifecycle implementation in :mod:`ase2sprkkr.execution.manager` is kept
-independent of SPR-KKR task identities.  This layer gives persistent runs a
+independent of SPR-KKR task identities. This layer gives persistent runs a
 concrete input/output/cache manifest and uses only that manifest for concurrent
 submission protection.
 """
@@ -12,13 +12,12 @@ import fnmatch
 import glob
 import json
 import os
+import posixpath
 from dataclasses import dataclass, replace
-from pathlib import Path
-from typing import Optional
 from uuid import uuid4
 
 from ..common.file_versions import FileState, FileVersion
-from .base import Executor, RunReference, RunState
+from .base import RunReference, RunState
 from .endpoint import ExecutorEndpoint, endpoint_for_executor
 from .manager import (
     CorruptRunRecord,
@@ -30,7 +29,6 @@ from .manager import (
     RunRecord as _LegacyRunRecord,
     RunStore as _LegacyRunStore,
     _now,
-    _timestamp,
     _unique,
 )
 
@@ -91,7 +89,9 @@ class SubmissionKey:
     def __post_init__(self):
         if isinstance(self.endpoint, dict):
             object.__setattr__(self, "endpoint", ExecutorEndpoint(**self.endpoint))
-        object.__setattr__(self, "directory", os.path.abspath(os.fspath(self.directory)))
+        # Backend paths may intentionally contain ``~`` (notably SSH before the
+        # target HOME has been resolved), so never reinterpret them locally.
+        object.__setattr__(self, "directory", os.fspath(self.directory))
 
 
 @dataclass(frozen=True)
@@ -182,9 +182,9 @@ class RunStore(_LegacyRunStore):
 
 
 def _path_conflicts(first, second):
-    """Conservatively decide whether two concrete file manifests may overlap."""
-    first = os.path.normcase(os.path.abspath(os.fspath(first)))
-    second = os.path.normcase(os.path.abspath(os.fspath(second)))
+    """Conservatively decide whether two normalized file paths may overlap."""
+    first = os.fspath(first)
+    second = os.fspath(second)
     first_magic = glob.has_magic(first)
     second_magic = glob.has_magic(second)
     if not first_magic and not second_magic:
@@ -196,9 +196,8 @@ def _path_conflicts(first, second):
     if first == second:
         return True
 
-    # Exact glob intersection is not generally cheap. Different fixed directory
-    # prefixes cannot overlap; within the same possible directory we choose the
-    # safe answer and serialize the runs rather than miss a write collision.
+    # Exact glob intersection is not generally cheap. Different fixed prefixes
+    # cannot overlap; otherwise choose the safe answer and serialize the runs.
     def fixed_prefix(value):
         positions = [
             position
@@ -311,7 +310,54 @@ class ExecutionManager(_LifecycleExecutionManager):
         return requested
 
     @staticmethod
-    def _materialize_cache_roles(result_files):
+    def _backend_path(record, path):
+        """Map a local run path into the persisted submission namespace."""
+        path = os.path.abspath(os.fspath(path))
+        directory = os.path.abspath(os.fspath(record.directory))
+        try:
+            relative = os.path.relpath(path, directory)
+        except ValueError:
+            relative = None
+        inside = relative is not None and relative != os.pardir and not relative.startswith(
+            os.pardir + os.sep
+        )
+        if not inside or record.submission is None:
+            return os.path.normcase(path)
+
+        backend_directory = os.fspath(record.submission.directory)
+        if record.endpoint is not None and record.endpoint.host is not None:
+            parts = () if relative == "." else relative.split(os.sep)
+            return posixpath.normpath(posixpath.join(backend_directory, *parts))
+        return os.path.normcase(os.path.normpath(os.path.join(backend_directory, relative)))
+
+    def _cache_exists(self, record, cache):
+        """Test whether a reusable exact cache is available to this run."""
+        if glob.has_magic(cache):
+            # A pattern can be extended by the run even when it already has
+            # matches, so it is conservatively a writer.
+            return False
+        if os.path.isfile(cache):
+            return True
+        if record.endpoint is None or record.endpoint.host is None:
+            return False
+
+        # A remote cache can already exist in the backend workspace even when
+        # there is no local copy. Probe the same backend path used by locking.
+        executor = self.executor_for(record)
+        transport = getattr(executor, "transport", None)
+        resolve = getattr(executor, "_resolve_submission_directory", None)
+        if transport is None or resolve is None:
+            return False
+        from .remote import _run_sync
+
+        async def probe():
+            path = await resolve(self._backend_path(record, cache))
+            return await transport.file_signature(path) is not None
+
+        return _run_sync(probe())
+
+    def _materialize_cache_roles(self, record):
+        result_files = record.result_files
         if result_files is None or result_files.materialized:
             return result_files
         inputs = list(result_files.input_files)
@@ -319,10 +365,7 @@ class ExecutionManager(_LifecycleExecutionManager):
         for cache in result_files.cache_files:
             if cache in inputs or cache in outputs:
                 continue
-            # A glob cache is potentially extended by the calculation even when
-            # it already has matches, therefore classify it conservatively as a
-            # writer. Exact caches are reusable inputs once present.
-            if not glob.has_magic(cache) and os.path.isfile(cache):
+            if self._cache_exists(record, cache):
                 inputs.append(cache)
             else:
                 outputs.append(cache)
@@ -332,16 +375,19 @@ class ExecutionManager(_LifecycleExecutionManager):
             output_files=_unique(outputs),
         )
 
-    @staticmethod
-    def _records_conflict(first, second):
+    def _records_conflict(self, first, second):
         if first.endpoint != second.endpoint:
             return False
         a = first.result_files
         b = second.result_files
         if a is None or b is None:
             return False
-        return _sets_conflict(a.output_files, (*b.input_files, *b.output_files)) or _sets_conflict(
-            b.output_files, a.input_files
+        a_input = tuple(self._backend_path(first, path) for path in a.input_files)
+        a_output = tuple(self._backend_path(first, path) for path in a.output_files)
+        b_input = tuple(self._backend_path(second, path) for path in b.input_files)
+        b_output = tuple(self._backend_path(second, path) for path in b.output_files)
+        return _sets_conflict(a_output, (*b_input, *b_output)) or _sets_conflict(
+            b_output, a_input
         )
 
     def reserve(self, record):
@@ -356,7 +402,7 @@ class ExecutionManager(_LifecycleExecutionManager):
                 # critical section that reserves the chosen access roles.
                 record = replace(
                     record,
-                    result_files=self._materialize_cache_roles(record.result_files),
+                    result_files=self._materialize_cache_roles(record),
                 )
                 conflicts = tuple(
                     active
