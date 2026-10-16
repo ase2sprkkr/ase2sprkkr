@@ -114,16 +114,15 @@ class ExecutionManager(_ExecutionManager):
                 if attempt + 1 == _PROJECT_ASSIGNMENT_ATTEMPTS:
                     raise
 
-    def reserve(self, record):
-        """Persist the run and establish requested project membership before submit.
+    def reserve(self, record, executor, spec):
+        """Reserve file roles and establish project membership before submit.
 
         The run record and project live in separate atomic files, so there is no
-        filesystem transaction spanning both. The ordering is deliberate: first
-        create the authoritative persistent run identity, then add that identity
-        to the project, and only after both succeed may the backend submit. If
-        project assignment fails, the reserved run is terminally marked failed.
+        filesystem transaction spanning both. File-role materialization and
+        conflict detection happen in the base manager's atomic submission
+        section; project assignment follows before backend submission starts.
         """
-        reserved = super().reserve(record)
+        reserved = super().reserve(record, executor, spec)
         if self._project_id is None:
             return reserved
         try:
