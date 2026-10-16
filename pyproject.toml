@@ -31,6 +31,8 @@ dependencies = [
     "elementy",
     "platformdirs",
     "packaging",
+    # Intentionally a runtime dependency: `ase2sprkkr test` runs the installed
+    # package's self-tests so users can verify that their installation works.
     "pytest",
     "pyyaml",
     "ruamel.yaml>=0.18.16",
@@ -54,93 +56,25 @@ mendeleev = [
 es_finder = [
     "pymatgen",
 ]
-plotting = [
-    "matplotlib",
-    "scipy",
-    "scikit-image",
-]
-psij = [
-    "psij-python>=0.9.11",
-]
-
-[project.urls]
-Homepage = "https://ase2sprkkr.github.io/ase2sprkkr/"
-
-[project.entry-points."ase.plugins"]
-ase2sprkkr = "ase2sprkkr.ase.register"
-
-[project.entry-points."ase.ioformats"]
-SPRKKR = "ase2sprkkr.ase.register:SPRKKRFormat"
-
-[project.entry-points."ase.calculators"]
-SPRKKR = "ase2sprkkr.ase.register"
 
 [tool.scikit-build]
-ninja.make-fallback = false
-cmake.version = ">=3.15"
+cmake.version = ">=3.18"
+cmake.build-type = "Release"
 wheel.packages = ["src/ase2sprkkr"]
-sdist.exclude = [
-	"**/*",
-	"**/*.sw?",
-	"**/.pytest_cache",
-	"**/.pytest_cache/**",
-	"src/ase2sprkkr/bindings/xband/debug_tools/*",
-]
+wheel.install-dir = "ase2sprkkr"
+sdist.exclude = ["**/*"]
 sdist.include = [
-	"src/ase2sprkkr/input_parameters/examples/*.in",
-	"src/ase2sprkkr/potentials/examples/*.pot",
-	"src/ase2sprkkr/result_files/examples/*.bsf",
-	"src/ase2sprkkr/result_files/examples/*.rat",
-	"src/ase2sprkkr/result_files/examples/*.dat",
-	"src/ase2sprkkr/result_files/examples/*.spc",
-	"src/ase2sprkkr/result_files/examples/*.dos",
-	"src/ase2sprkkr/result_files/test/xas_Cu_L23*.agr",
-	"src/ase2sprkkr/outputs/examples/*.out",
-	"src/ase2sprkkr/outputs/examples/*.sfn",
-	"src/ase2sprkkr/examples/README",
-
-	"src/ase2sprkkr/sprkkr/test/*.cif",
-	"src/ase2sprkkr/bindings/xband/tests/*.pot",
-	"src/ase2sprkkr/execution/test/docker/*",
-	"src/ase2sprkkr/execution/test/slurm/*",
-
-	"src/ase2sprkkr/**/*.py",
-	"src/ase2sprkkr/**/*.pyx",
-	"src/ase2sprkkr/**/*.f",
-	"src/ase2sprkkr/**/*.f90",
-	"src/ase2sprkkr/**/*.fi",
-	"src/ase2sprkkr/**/*.h",
-	"src/**/CMakeLists.txt",
-	"/CMakeLists.txt",
-	"/LICENCE",
-	"/CHANGELOG",
-  "/README.md",
-	"docs/**",
-
-	"pyproject.toml",
-	"meta.yaml",
-]
-wheel.exclude = [
-	"**/*.pyx",
-	"**/*.h",
-	"**/*.f",
-	"**/*.f90",
-	"**/*.fi",
-	"CMakeLists.txt",
-	"src/ase2sprkkr/bindings/xband/debug_tools/*",
+    "CMakeLists.txt",
+    "LICENCE",
+    "README.md",
+    "VERSION",
+    "pyproject.toml",
+    "install_dependencies.sh",
+    "run_tests",
+    "src/ase2sprkkr/**",
 ]
 
 [tool.pytest.ini_options]
 markers = [
-	"slow: long-running test (typically over about 1 second)",
+    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
 ]
-
-[tool.ruff]
-line-length=120
-
-[tool.ruff.format]
-docstring-code-format=true
-skip-magic-trailing-comma=true
-
-[tool.ruff.lint]
-ignore = ["E402", "E741"]
