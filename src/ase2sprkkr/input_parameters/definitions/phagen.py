@@ -1,27 +1,20 @@
 """PHAGEN input-parameter definition."""
 
-from ._file_manifests import resolve_file
 from .sections import CONTROL, TASK, TAU, ENERGY, SCF
 from ..input_parameters_definitions import InputParametersDefinition
-from ..task_definition import TaskDefinition
+from ..task_definition import FileSpec, TaskDefinition, TaskFiles
 
 
-class PhagenInputParametersDefinition(InputParametersDefinition):
-    def output_files(self, parameters, directory):
-        files = list(super().output_files(parameters, directory))
+def _potential_output(suffix):
+    def resolve(parameters, _directory):
         potfil = parameters.CONTROL.POTFIL()
-        if potfil:
-            files.extend(
-                (
-                    resolve_file(directory, f"{potfil}_ex_sprkkr"),
-                    resolve_file(directory, f"{potfil}.only_coulomb"),
-                )
-            )
-        return tuple(files)
+        return None if not potfil else f"{potfil}{suffix}"
+
+    return resolve
 
 
 def input_parameters_definition():
-    schema = PhagenInputParametersDefinition(
+    schema = InputParametersDefinition(
         "phagen",
         [CONTROL("PHAGEN"), TASK("PHAGEN"), TAU, ENERGY(), SCF],
         info="PHAGEN",
@@ -32,5 +25,11 @@ def input_parameters_definition():
         name="PHAGEN",
         executable="kkrscf",
         mpi=False,
+        files=TaskFiles(
+            output=(
+                FileSpec(_potential_output("_ex_sprkkr")),
+                FileSpec(_potential_output(".only_coulomb")),
+            ),
+        ),
     )
     return schema
