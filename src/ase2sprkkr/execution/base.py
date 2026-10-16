@@ -86,6 +86,7 @@ class RunState(str, Enum):
     EXECUTION_FAILED = "execution_failed"
     FAILED = "execution_failed"
     FINALIZATION_FAILED = "finalization_failed"
+    RESULT_MISMATCH = "result_mismatch"
     CANCELLED = "cancelled"
     UNKNOWN = "unknown"
 
@@ -371,7 +372,7 @@ class MpiSpec:
 
     @property
     def requested(self) -> bool:
-        """Whether the calculation requests an MPI launch."""
+        """Whether this run requests an MPI launch."""
         return self.required or self.autodetect or bool(self.launcher)
 
     @property

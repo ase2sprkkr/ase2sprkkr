@@ -2,6 +2,7 @@
 
 from .file_provenance import capture_result_file_versions
 from .persistent import (
+    PersistentResultMismatchError,
     PersistentResultUnavailableError,
     UnrecoverablePersistentResultError,
     attach_persistent_run,
@@ -10,6 +11,7 @@ from .persistent import (
 from .task_result import TaskResult
 
 __all__ = [
+    "PersistentResultMismatchError",
     "PersistentResultUnavailableError",
     "UnrecoverablePersistentResultError",
     "TaskResult",

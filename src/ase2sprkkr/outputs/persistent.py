@@ -2,9 +2,13 @@
 
 from __future__ import annotations
 
+import pyparsing as pp
+
 from ..common.module_registry import RegistryEntryNotFound
+from ..common.warnings import DataValidityError
 from ..execution import FileState, RunState
 from ..input_parameters.input_parameters import InputParameters
+from ..input_parameters.task_definition import TaskMismatchError
 from .reader_registry import reader_registry
 
 
@@ -16,7 +20,11 @@ class PersistentResultUnavailableError(RuntimeError):
         super().__init__(f"Run {record.id}: {message}")
 
 
-class UnrecoverablePersistentResultError(PersistentResultUnavailableError):
+class PersistentResultMismatchError(PersistentResultUnavailableError):
+    """Persisted result data cannot be reconstructed consistently by current code."""
+
+
+class UnrecoverablePersistentResultError(PersistentResultMismatchError):
     """Retrying reconstruction with unchanged persisted data cannot succeed."""
 
 
@@ -34,8 +42,8 @@ def _task_definition_for_record(record):
         ) from None
 
 
-def _input_parameters_for_record(manager, record):
-    """Reconstruct parameters from the exact persisted input schema."""
+def _input_parameters_for_record(manager, record, task_definition):
+    """Reconstruct parameters through the common strict task-read contract."""
     result_files = record.result_files
     input_file = None if result_files is None else result_files.input_file
     if input_file is None or not manager.input_file_is_current(record):
@@ -43,33 +51,38 @@ def _input_parameters_for_record(manager, record):
     if record.input_definition is None:
         return None
 
+    input_registry = InputParameters.input_parameters_registry
     try:
-        definition = InputParameters.input_parameters_registry[record.input_definition]
+        persisted_definition = input_registry[record.input_definition]
     except RegistryEntryNotFound:
         raise UnrecoverablePersistentResultError(
             record,
             f"unknown persisted input definition {record.input_definition!r}",
         ) from None
 
-    parameters = definition.read_from_file(
-        input_file,
-        requested_task_name=record.task,
-    )
-    task_definition = parameters.task_definition
-    if task_definition is None or task_definition.name != record.task:
-        actual = None if task_definition is None else task_definition.name
+    try:
+        return input_registry.read_for_task(
+            task_definition,
+            input_file,
+            input_definition=persisted_definition,
+        )
+    except TaskMismatchError as exc:
         raise UnrecoverablePersistentResultError(
             record,
             "persisted task does not match historical input "
-            f"({record.task!r} != {actual!r})",
-        )
-    return parameters
+            f"({record.task!r} != {exc.task_name!r})",
+        ) from exc
+    except (pp.ParseBaseException, DataValidityError) as exc:
+        raise PersistentResultMismatchError(
+            record,
+            f"persisted input cannot be reconstructed: {exc}",
+        ) from exc
 
 
 def _reader_for_record(manager, record):
     """Create the reader declared by the persisted task."""
     task_definition = _task_definition_for_record(record)
-    parameters = _input_parameters_for_record(manager, record)
+    parameters = _input_parameters_for_record(manager, record, task_definition)
     reader_class = reader_registry.class_for_task(task_definition)
 
     return reader_class(
@@ -89,21 +102,21 @@ def attach_persistent_run(
     callback=None,
     output_listener=None,
 ):
-    """Attach to or explicitly retry finalization of one stored run."""
+    """Attach to or explicitly retry result processing of one stored run."""
     record = _record(manager, run)
-    if record.state == RunState.FINALIZATION_FAILED:
+    if record.state in (RunState.FINALIZATION_FAILED, RunState.RESULT_MISMATCH):
         record = manager.retry_finalization(record)
 
     if reader is None:
         try:
             reader = _reader_for_record(manager, record)
-        except UnrecoverablePersistentResultError as exc:
+        except PersistentResultMismatchError as exc:
             if record.state == RunState.FINALIZING:
-                manager.fail_finalization(record, exc)
+                manager.mark_result_mismatch(record, exc)
             raise
 
-    # Attach/transport failures are deliberately not classified as finalization
-    # failures here. They may be transient and leave FINALIZING retryable.
+    # Attach/transport failures are deliberately not classified as result
+    # mismatches. They may be transient and leave FINALIZING retryable.
     return manager.attach(
         record,
         reader=reader,
@@ -123,7 +136,11 @@ def load_persistent_result(manager, run, *, reader=None):
     record = _record(manager, run)
     if record.state == RunState.FINALIZATION_FAILED:
         raise PersistentResultUnavailableError(
-            record, "result finalization failed; retry finalization first"
+            record, "result finalization failed; retry result processing first"
+        )
+    if record.state == RunState.RESULT_MISMATCH:
+        raise PersistentResultUnavailableError(
+            record, "persisted result mismatch; retry result processing first"
         )
 
     record = manager.retrieve_result_files(record)

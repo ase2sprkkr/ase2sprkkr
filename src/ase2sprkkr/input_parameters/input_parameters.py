@@ -72,9 +72,18 @@ class InputParameters(ConfigurationFile):
         self._outputfile = inputfile if outputfile is False else outputfile
 
     @property
+    def task_name(self):
+        """Return the ASE2SPRKKR task represented by the current values."""
+        name = self._definition.task_definition_name(self)
+        if name is None:
+            return None
+        return str(name).strip().upper()
+
+    @property
     def task_definition(self):
         """Return the task represented by the current values, if any."""
-        return self.task_registry.task_for_parameters(self)
+        name = self.task_name
+        return None if name is None else self.task_registry[name]
 
     def task_definition_required(self):
         """Return the task represented by the current values, failing if detached."""
@@ -84,12 +93,6 @@ class InputParameters(ConfigurationFile):
                 "These input parameters are not associated with an SPR-KKR task definition"
             )
         return task
-
-    @property
-    def task_name(self):
-        """Return the ASE2SPRKKR task represented by the current values."""
-        task = self.task_definition
-        return None if task is None else task.name
 
     @property
     def requested_task_name(self):

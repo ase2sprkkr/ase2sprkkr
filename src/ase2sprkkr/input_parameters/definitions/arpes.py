@@ -93,6 +93,7 @@ def input_parameters_definition():
                             }
                         ),
                         _task_default,
+                        is_required=True,
                         name_in_grammar=False,
                         info="Type of the calculation",
                     ),

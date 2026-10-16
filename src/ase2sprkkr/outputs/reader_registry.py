@@ -18,8 +18,15 @@ _TASK_PATTERN = re.compile(rb"(?m)^\s*TASK\s*=\s*([A-Z]+)\s*$")
 class OutputReaderRegistry(ModuleRegistry):
     """Load, select and detect ``<Task>OutputReader`` classes."""
 
-    def __init__(self, package=readers, executables=default_executables):
+    def __init__(
+        self,
+        package=readers,
+        executables=default_executables,
+        *,
+        tasks=None,
+    ):
         super().__init__(package)
+        self._tasks = tasks
         self._executables = executables
 
     def value_from_module(self, name, module):
@@ -58,12 +65,12 @@ class OutputReaderRegistry(ModuleRegistry):
         if not task_name:
             return self._class_for_reader_name(task_name)
 
-        # Registered tasks use declarative task/executable metadata. Unknown
-        # task names retain the generic standalone/legacy reader fallback.
-        from ..input_parameters.input_parameters import InputParameters
-
+        # Standalone/custom reader registries need not know the application task
+        # namespace. In that case task names are interpreted as reader names.
+        if self._tasks is None:
+            return self._class_for_reader_name(task_name)
         try:
-            task = InputParameters.task_registry[task_name]
+            task = self._tasks[task_name]
         except RegistryEntryNotFound:
             return self._class_for_reader_name(task_name)
         return self.class_for_task(task)
@@ -173,4 +180,6 @@ class OutputReaderRegistry(ModuleRegistry):
         return detected[0] if detected else None
 
 
-reader_registry = OutputReaderRegistry()
+from ..input_parameters.input_parameters import InputParameters
+
+reader_registry = OutputReaderRegistry(tasks=InputParameters.task_registry)

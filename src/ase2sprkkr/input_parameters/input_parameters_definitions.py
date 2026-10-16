@@ -60,12 +60,10 @@ class InputParametersDefinition(ConfigurationFileDefinition):
     """Canonical 1:1 task declared together with this schema.
 
     This is declaration-time metadata for the simple case where one input
-    schema represents exactly one task.  Schemas shared by multiple tasks leave
-    it as ``None`` and declare those tasks separately through ``TaskRegistry``'s
-    extra task package.
+    schema represents exactly one task. Schemas shared by multiple tasks leave
+    it as ``None`` and override :meth:`task_definition_name` using their values.
 
     The association is internal and must not be changed after registration.
-    Consumers should resolve task identities through ``TaskRegistry`` instead.
     """
 
     child_class = InputSectionDefinition
@@ -76,12 +74,15 @@ class InputParametersDefinition(ConfigurationFileDefinition):
     configuration_type_name = "INPUT PARAMETERS"
 
     def task_definition_name(self, parameters):
-        """Return the task identifier represented by *parameters*, if encoded.
+        """Return the ASE2SPRKKR task name represented by *parameters*.
 
-        Schemas shared by multiple tasks override this method. Resolution of the
-        identifier to a TaskDefinition belongs to TaskRegistry.
+        The standard one-schema/one-task case is answered directly by the
+        schema declaration. Shared schemas override this method and derive the
+        identity from concrete parameter values. Resolving the returned name to
+        a :class:`TaskDefinition` remains the responsibility of ``TaskRegistry``.
         """
-        return None
+        task = self._task_definition
+        return None if task is None else task.name
 
     def initialize_from_result(self, parameters, result):
         """Initialize instance-specific defaults derived from a previous result."""

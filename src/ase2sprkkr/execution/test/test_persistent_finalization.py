@@ -6,11 +6,13 @@ import ase2sprkkr.outputs.persistent as persistent_output
 from ase2sprkkr.execution import (
     ExecutionManager,
     Executor,
+    ResultFilesRecord,
     RunReference,
     RunState,
     RunStore,
 )
 from ase2sprkkr.outputs.persistent import (
+    PersistentResultMismatchError,
     PersistentResultUnavailableError,
     UnrecoverablePersistentResultError,
     attach_persistent_run,
@@ -100,7 +102,7 @@ def test_parser_failure_after_failed_execution_is_still_finalization_failure(tmp
     assert record.message == "result parsing failed"
 
 
-def test_unrecoverable_reconstruction_terminates_finalization_and_can_be_retried(
+def test_unrecoverable_reconstruction_becomes_result_mismatch_and_can_be_retried(
     tmp_path,
 ):
     store = RunStore(tmp_path / "runs")
@@ -111,20 +113,46 @@ def test_unrecoverable_reconstruction_terminates_finalization_and_can_be_retried
     with pytest.raises(UnrecoverablePersistentResultError):
         attach_persistent_run(manager, record)
 
-    failed = store.get(record.id)
-    assert failed.state == RunState.FINALIZATION_FAILED
-    assert failed.finished_at is not None
-    assert "unknown persisted task" in failed.message
+    mismatch = store.get(record.id)
+    assert mismatch.state == RunState.RESULT_MISMATCH
+    assert mismatch.finished_at is not None
+    assert "unknown persisted task" in mismatch.message
+    assert record.id not in {item.id for item in store.runs(active=True)}
 
-    # attach_persistent_run is also the public retry operation: a failed
-    # finalization is reopened before reader reconstruction is attempted again.
+    # Calling attach explicitly is also the retry operation: RESULT_MISMATCH is
+    # reopened to FINALIZING first, so a parser/registry bug fixed by a newer
+    # version can reconstruct the same persisted data later.
     with pytest.raises(UnrecoverablePersistentResultError):
-        attach_persistent_run(manager, failed)
+        attach_persistent_run(manager, mismatch)
 
-    failed_again = store.get(record.id)
-    assert failed_again.state == RunState.FINALIZATION_FAILED
-    assert failed_again.finished_at is not None
-    assert "unknown persisted task" in failed_again.message
+    mismatch_again = store.get(record.id)
+    assert mismatch_again.state == RunState.RESULT_MISMATCH
+    assert mismatch_again.finished_at is not None
+    assert "unknown persisted task" in mismatch_again.message
+
+
+def test_invalid_persisted_input_becomes_result_mismatch(tmp_path):
+    input_file = tmp_path / "run.inp"
+    input_file.write_text("not valid SPR-KKR input")
+
+    store = RunStore(tmp_path / "runs")
+    manager = ExecutionManager(store)
+    record = manager.new_record(
+        task="DOS",
+        directory=tmp_path,
+        input_definition="DOS",
+        result_files=ResultFilesRecord(input_file=str(input_file)),
+    )
+    record = manager.transition(record, state=RunState.FINALIZING)
+
+    with pytest.raises(PersistentResultMismatchError, match="cannot be reconstructed"):
+        attach_persistent_run(manager, record)
+
+    mismatch = store.get(record.id)
+    assert mismatch.state == RunState.RESULT_MISMATCH
+    assert mismatch.finished_at is not None
+    assert "cannot be reconstructed" in mismatch.message
+    assert record.id not in {item.id for item in store.runs(active=True)}
 
 
 def test_reader_reconstruction_programming_error_is_not_classified_as_finalization_failure(
@@ -184,8 +212,24 @@ def test_failed_finalization_must_be_retried_before_result_load(tmp_path):
 
     with pytest.raises(
         PersistentResultUnavailableError,
-        match="retry finalization first",
+        match="retry result processing first",
     ):
         load_persistent_result(manager, record, reader=object())
 
     assert store.get(record.id).state == RunState.FINALIZATION_FAILED
+
+
+def test_result_mismatch_must_be_explicitly_retried_before_result_load(tmp_path):
+    store = RunStore(tmp_path / "runs")
+    manager = ExecutionManager(store)
+    record = manager.new_record(task="DOS", directory=tmp_path)
+    record = manager.transition(record, state=RunState.FINALIZING)
+    record = manager.mark_result_mismatch(record, ValueError("old parser mismatch"))
+
+    with pytest.raises(
+        PersistentResultUnavailableError,
+        match="persisted result mismatch.*retry result processing first",
+    ):
+        load_persistent_result(manager, record, reader=object())
+
+    assert store.get(record.id).state == RunState.RESULT_MISMATCH

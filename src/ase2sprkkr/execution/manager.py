@@ -36,6 +36,7 @@ _FINAL_STATES = {
     RunState.FINISHED,
     RunState.EXECUTION_FAILED,
     RunState.FINALIZATION_FAILED,
+    RunState.RESULT_MISMATCH,
     RunState.CANCELLED,
 }
 _STATE_RANK = {
@@ -47,6 +48,7 @@ _STATE_RANK = {
     RunState.FINISHED: 5,
     RunState.EXECUTION_FAILED: 5,
     RunState.FINALIZATION_FAILED: 5,
+    RunState.RESULT_MISMATCH: 5,
     RunState.CANCELLED: 5,
 }
 _UNCHANGED = object()
@@ -253,12 +255,13 @@ class RunRecord:
     ``state`` is the single authoritative lifecycle state. A terminal backend
     outcome advances it to ``FINALIZING`` while result processing completes;
     successful execution then advances to ``FINISHED``, failed execution to
-    ``EXECUTION_FAILED``, and any failure of post-processing to
-    ``FINALIZATION_FAILED``.
+    ``EXECUTION_FAILED``, a live post-processing failure to
+    ``FINALIZATION_FAILED``, and deterministic incompatibility discovered while
+    reconstructing persisted result data to ``RESULT_MISMATCH``.
 
     ``finished_at`` records the current terminal lifecycle transition. Explicit
-    retry of failed finalization reopens the lifecycle at ``FINALIZING`` and
-    clears it until the retry reaches another terminal state. Later metadata
+    retry of failed result processing reopens the lifecycle at ``FINALIZING``
+    and clears it until the retry reaches another terminal state. Later metadata
     changes, including remote file retrieval, update ``updated_at`` but do not
     otherwise alter lifecycle timestamps. Result-file freshness is derived from
     immutable :class:`FileVersion` snapshots.
@@ -730,13 +733,27 @@ class ExecutionManager:
             message=str(error),
         )
 
+    def mark_result_mismatch(self, record, error):
+        """Stop automatic reconstruction retries for deterministic result mismatch."""
+        record = self.store.get(record.id)
+        if record.state != RunState.FINALIZING:
+            return record
+        return self.finalize(
+            record,
+            state=RunState.RESULT_MISMATCH,
+            message=str(error),
+        )
+
     def retry_finalization(self, record):
-        """Explicitly reopen a failed finalization attempt."""
+        """Explicitly reopen failed or incompatible result processing."""
+
+        retryable = (RunState.FINALIZATION_FAILED, RunState.RESULT_MISMATCH)
 
         def retry(latest):
-            if latest.state != RunState.FINALIZATION_FAILED:
+            if latest.state not in retryable:
                 raise RuntimeError(
-                    f"Run {latest.id} is {latest.state.value}, not finalization_failed"
+                    f"Run {latest.id} is {latest.state.value}, not a retryable "
+                    "result-processing failure"
                 )
             return replace(
                 latest,
