@@ -1,4 +1,4 @@
-"""Helpers for input-schema auxiliary file manifests."""
+"""Helpers for task file manifests."""
 
 import os
 
@@ -29,3 +29,12 @@ def tau_file(parameters, directory):
     taupath = _optional_value(parameters.TAU, "TAUPATH")
     base = resolve_file(directory, taupath) if taupath else directory
     return os.path.join(base, filename)
+
+
+def bsf_file(parameters, directory):
+    """Return the native BSF output path for the concrete dataset/ADSI."""
+    dataset = parameters.CONTROL.DATASET()
+    adsi = parameters.CONTROL.ADSI()
+    if not dataset or not adsi:
+        return None
+    return resolve_file(directory, f"{dataset}_{adsi}.bsf")
