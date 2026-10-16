@@ -138,7 +138,7 @@ def test_required_local_mpi_without_launcher_fails(monkeypatch, tmp_path):
 
 def test_local_auto_warns_and_falls_back_to_serial(monkeypatch, tmp_path):
     monkeypatch.setattr(
-        "ase2sprkkr.execution.local.resolve_mpi_command", lambda mpi: None
+        "ase2sprkkr.execution.local_process.resolve_mpi_command", lambda mpi: None
     )
     input_file = (tmp_path / "run.inp").open("w+")
     spec = ExecutionSpec(
@@ -161,7 +161,7 @@ def test_local_auto_warns_and_falls_back_to_serial(monkeypatch, tmp_path):
 
 def test_local_auto_can_disable_missing_mpi_warning(monkeypatch, tmp_path):
     monkeypatch.setattr(
-        "ase2sprkkr.execution.local.resolve_mpi_command", lambda mpi: None
+        "ase2sprkkr.execution.local_process.resolve_mpi_command", lambda mpi: None
     )
     input_file = (tmp_path / "run.inp").open("w+")
     spec = ExecutionSpec(

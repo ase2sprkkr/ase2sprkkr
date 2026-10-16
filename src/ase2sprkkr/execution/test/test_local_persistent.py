@@ -101,7 +101,7 @@ def test_persistent_local_submission_can_be_recovered_by_run_id(tmp_path):
     assert recovered.reference.native_id == "recover-local"
     assert recovered.reference.output_file == str(tmp_path / "calculation.out")
     assert recovered.state in {
-        RunState.QUEUED,
+        RunState.SUBMITTING,
         RunState.RUNNING,
         RunState.FINISHED,
     }
