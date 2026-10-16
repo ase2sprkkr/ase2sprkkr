@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 import os
-from typing import Iterable, Optional, Tuple, Union
+from typing import Callable, Iterable, Optional, Tuple, Union
 
 from ..common.doc import process_input_parameters_definition
 from ..common.module_registry import (
@@ -15,6 +15,8 @@ from ..common.module_registry import (
 
 
 _FileTemplate = Union[str, os.PathLike[str]]
+_FileResolver = Callable[[object, str], Optional[_FileTemplate]]
+_FileCondition = Callable[[object], bool]
 
 
 def _normalize_identifier(value: str, field: str) -> str:
@@ -34,36 +36,82 @@ def _validate_executable(value: str) -> str:
     return value
 
 
-def _normalize_file_templates(
-    templates: Iterable[_FileTemplate], field: str
-) -> Tuple[str, ...]:
-    if isinstance(templates, (str, bytes, os.PathLike)):
+@dataclass(frozen=True)
+class FileSpec:
+    """Declarative description of one task-owned file.
+
+    ``path`` is either a static filename template or a resolver receiving the
+    concrete input parameters and calculation directory.  ``condition`` can
+    suppress the file for parameter combinations for which it is not used.
+    Resolvers and conditions are declarations only; materialization is owned by
+    :class:`InputParametersRegistry`.
+    """
+
+    path: Union[str, _FileResolver]
+    condition: Optional[_FileCondition] = None
+
+    def __post_init__(self):
+        path = self.path
+        if not callable(path):
+            try:
+                path = os.fspath(path)
+            except TypeError:
+                raise TypeError(
+                    "FileSpec.path must be path-like or callable"
+                ) from None
+            if not isinstance(path, str):
+                raise TypeError("FileSpec.path must resolve to a string")
+            object.__setattr__(self, "path", path)
+        if self.condition is not None and not callable(self.condition):
+            raise TypeError("FileSpec.condition must be callable or None")
+
+
+def _normalize_file_specs(values, field):
+    if isinstance(values, (str, bytes, os.PathLike, FileSpec)):
         raise TypeError(
-            f"{field} must be an iterable of path-like strings, not a single path"
+            f"{field} must be an iterable of FileSpec or path-like values, "
+            "not a single file"
         )
     try:
-        iterator = iter(templates)
+        iterator = iter(values)
     except TypeError:
         raise TypeError(
-            f"{field} must be an iterable of path-like strings"
+            f"{field} must be an iterable of FileSpec or path-like values"
         ) from None
 
-    normalized = []
-    for index, item in enumerate(iterator):
+    out = []
+    for index, value in enumerate(iterator):
+        if isinstance(value, FileSpec):
+            out.append(value)
+            continue
         try:
-            path = os.fspath(item)
-        except TypeError:
-            raise TypeError(
-                f"{field}[{index}] must be a string or os.PathLike, "
-                f"got {type(item).__name__}"
-            ) from None
-        if not isinstance(path, str):
-            raise TypeError(
-                f"{field}[{index}] must resolve to a string, "
-                f"got {type(path).__name__}"
-            )
-        normalized.append(path)
-    return tuple(normalized)
+            out.append(FileSpec(value))
+        except TypeError as exc:
+            raise TypeError(f"{field}[{index}]: {exc}") from None
+    return tuple(out)
+
+
+@dataclass(frozen=True, init=False)
+class TaskFiles:
+    """Input, output and reusable-cache declarations of one task."""
+
+    input: Tuple[FileSpec, ...]
+    output: Tuple[FileSpec, ...]
+    cache: Tuple[FileSpec, ...]
+
+    def __init__(self, *, input=(), output=(), cache=()):
+        object.__setattr__(self, "input", _normalize_file_specs(input, "files.input"))
+        object.__setattr__(self, "output", _normalize_file_specs(output, "files.output"))
+        object.__setattr__(self, "cache", _normalize_file_specs(cache, "files.cache"))
+
+
+def _legacy_templates(files, kind):
+    """Return static unconditional declarations for compatibility/introspection."""
+    return tuple(
+        spec.path
+        for spec in getattr(files, kind)
+        if isinstance(spec.path, str) and spec.condition is None
+    )
 
 
 @dataclass(frozen=True, init=False)
@@ -75,9 +123,7 @@ class TaskDefinition:
     executable: str
     mpi: bool
     output_reader: Optional[str]
-    input_file_templates: Tuple[str, ...]
-    output_file_templates: Tuple[str, ...]
-    cache_file_templates: Tuple[str, ...]
+    files: TaskFiles
 
     def __init__(
         self,
@@ -87,6 +133,7 @@ class TaskDefinition:
         executable: str = "kkrscf",
         mpi: bool = True,
         output_reader: Optional[str] = None,
+        files: Optional[TaskFiles] = None,
         input_file_templates: Iterable[_FileTemplate] = (),
         output_file_templates: Iterable[_FileTemplate] = (),
         cache_file_templates: Iterable[_FileTemplate] = (),
@@ -105,26 +152,43 @@ class TaskDefinition:
                 raise TypeError("output_reader must be a string or None")
             output_reader = _normalize_identifier(output_reader, "output_reader")
 
+        legacy = (
+            tuple(input_file_templates),
+            tuple(output_file_templates),
+            tuple(cache_file_templates),
+        )
+        if files is not None:
+            if not isinstance(files, TaskFiles):
+                raise TypeError("files must be a TaskFiles or None")
+            if any(legacy):
+                raise ValueError(
+                    "files cannot be combined with legacy *_file_templates"
+                )
+        else:
+            files = TaskFiles(
+                input=legacy[0],
+                output=legacy[1],
+                cache=legacy[2],
+            )
+
         object.__setattr__(self, "input_parameters_definition_name", schema_name)
         object.__setattr__(self, "name", task_name)
         object.__setattr__(self, "executable", executable)
         object.__setattr__(self, "mpi", mpi)
         object.__setattr__(self, "output_reader", output_reader)
-        object.__setattr__(
-            self,
-            "input_file_templates",
-            _normalize_file_templates(input_file_templates, "input_file_templates"),
-        )
-        object.__setattr__(
-            self,
-            "output_file_templates",
-            _normalize_file_templates(output_file_templates, "output_file_templates"),
-        )
-        object.__setattr__(
-            self,
-            "cache_file_templates",
-            _normalize_file_templates(cache_file_templates, "cache_file_templates"),
-        )
+        object.__setattr__(self, "files", files)
+
+    @property
+    def input_file_templates(self):
+        return _legacy_templates(self.files, "input")
+
+    @property
+    def output_file_templates(self):
+        return _legacy_templates(self.files, "output")
+
+    @property
+    def cache_file_templates(self):
+        return _legacy_templates(self.files, "cache")
 
 
 class InputParametersRegistry(ModuleRegistry):
@@ -223,23 +287,42 @@ class InputParametersRegistry(ModuleRegistry):
         return out
 
     @staticmethod
-    def _resolve_file_templates(parameters, directory, templates):
-        dataset = parameters.CONTROL.DATASET()
-        return tuple(
-            path if os.path.isabs(path) else os.path.join(directory, path)
-            for path in (
-                os.fspath(template).format(dataset=dataset)
-                for template in templates
-            )
+    def _materialize_file(spec, parameters, directory):
+        if spec.condition is not None and not spec.condition(parameters):
+            return None
+        value = (
+            spec.path(parameters, directory)
+            if callable(spec.path)
+            else spec.path.format(dataset=parameters.CONTROL.DATASET())
         )
+        if value is None:
+            return None
+        try:
+            path = os.fspath(value)
+        except TypeError:
+            raise TypeError(
+                f"Task file resolver returned non-path value {value!r}"
+            ) from None
+        if not isinstance(path, str):
+            raise TypeError(
+                f"Task file resolver returned non-string path {type(path).__name__}"
+            )
+        return path if os.path.isabs(path) else os.path.join(directory, path)
 
     def files_for_task(self, task, parameters, directory, kind):
-        """Combine declarative task templates with schema-specific file rules."""
-        definition = self.definition_for_task(task)
-        templates = getattr(task, f"{kind}_file_templates")
-        declared = self._resolve_file_templates(parameters, directory, templates)
-        schema_files = getattr(definition, f"{kind}_files")(parameters, directory)
-        return (*declared, *schema_files)
+        """Materialize one class of files declared by the effective task."""
+        self.definition_for_task(task)
+        try:
+            specs = getattr(task.files, kind)
+        except AttributeError:
+            raise ValueError(f"Unknown task file kind {kind!r}") from None
+        return tuple(
+            path
+            for path in (
+                self._materialize_file(spec, parameters, directory) for spec in specs
+            )
+            if path is not None
+        )
 
 
 class TaskRegistry:
