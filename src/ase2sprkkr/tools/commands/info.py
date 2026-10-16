@@ -11,7 +11,7 @@ if not __package__:
     __package__ = "ase2sprkkr.tools.commands"
 sys.path.append(str(Path(__file__).resolve().parents[3]))
 
-from ... import InputParameters, ResultFile  # NOQA
+from ... import InputParameters, ResultFile, executables  # NOQA
 from ...common.tools import main  # NOQA
 
 
@@ -31,13 +31,6 @@ description = """\n Example of usage:
 """
 
 
-""" This options will be printed, if no argument is given """
-default_options = ["task", "output_file"]
-
-""" These are the all options """
-possible_options = default_options
-
-
 def parser(parser):
     parser.add_argument(
         "--task",
@@ -48,6 +41,11 @@ def parser(parser):
     )
     parser.add_argument(
         "--output-file", "-o", help="Show information about known structured result files.", nargs="?", const=True
+    )
+    parser.add_argument(
+        "--executables",
+        action="store_true",
+        help="Show known SPR-KKR executables and their default output readers.",
     )
     action = getattr(argparse, "BooleanOptionalAction", "store_true")
     parser.add_argument(
@@ -146,19 +144,43 @@ def run(args, global_args):
             else:
                 print(i.info())
 
-    g = locals()
-
-    def print_option(i, filter):
-        if filter is not True:
-            filter = filter.lower()
-        g["info_" + i](args, filter)
-        print("\n")
+    def info_executables():
+        print("Known SPR-KKR executables\n-------------------------")
+        definitions = tuple(executables.values())
+        name_width = max(len("Executable"), *(len(item.name) for item in definitions))
+        reader_width = max(
+            len("Default reader"),
+            *(len(item.default_output_reader) for item in definitions),
+        )
+        print(
+            f"{'Executable':<{name_width}}  "
+            f"{'Default reader':<{reader_width}}  Description"
+        )
+        for executable in definitions:
+            print(
+                f"{executable.name:<{name_width}}  "
+                f"{executable.default_output_reader:<{reader_width}}  "
+                f"{executable.description}"
+            )
 
     printed = False
-    for i in possible_options:
-        if getattr(args, i) is not None:
-            print_option(i, getattr(args, i))
-            printed = True
+    if args.task is not None:
+        filter = args.task.lower() if isinstance(args.task, str) else args.task
+        info_task(args, filter)
+        print("\n")
+        printed = True
+    if args.output_file is not None:
+        filter = args.output_file.lower() if isinstance(args.output_file, str) else args.output_file
+        info_output_file(args, filter)
+        print("\n")
+        printed = True
+    if args.executables:
+        info_executables()
+        print("\n")
+        printed = True
+
     if not printed:
-        for i in default_options:
-            print_option(i, True)
+        info_task(args, True)
+        print("\n")
+        info_output_file(args, True)
+        print("\n")

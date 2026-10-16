@@ -8,7 +8,7 @@ from ..common.module_registry import (
     RegistryDefinitionError,
     RegistryEntryNotFound,
 )
-from ..sprkkr.executables import executable_registry as default_executable_registry
+from ..sprkkr.executables import executables as default_executables
 from . import readers
 
 
@@ -18,9 +18,9 @@ _TASK_PATTERN = re.compile(rb"(?m)^\s*TASK\s*=\s*([A-Z]+)\s*$")
 class OutputReaderRegistry(ModuleRegistry):
     """Load, select and detect ``<Task>OutputReader`` classes."""
 
-    def __init__(self, package=readers, executable_registry=default_executable_registry):
+    def __init__(self, package=readers, executables=default_executables):
         super().__init__(package)
-        self.executable_registry = executable_registry
+        self._executables = executables
 
     def value_from_module(self, name, module):
         class_name = name.title() + "OutputReader"
@@ -77,7 +77,7 @@ class OutputReaderRegistry(ModuleRegistry):
         if task.output_reader is not None:
             reader_name = task.output_reader
         else:
-            executable = self.executable_registry[task.executable]
+            executable = self._executables[task.executable]
             reader_name = executable.default_output_reader
         return self[reader_name]
 

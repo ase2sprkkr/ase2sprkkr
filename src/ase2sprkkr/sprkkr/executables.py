@@ -6,6 +6,9 @@ from dataclasses import dataclass
 from ..common.module_registry import RegistryDefinitionError, RegistryEntryNotFound
 
 
+__all__ = ("ExecutableDefinition", "executables")
+
+
 def _nonblank_string(value, field):
     if not isinstance(value, str):
         raise TypeError(f"{field} must be a string")
@@ -36,28 +39,20 @@ class ExecutableDefinition:
         object.__setattr__(self, "default_output_reader", reader)
 
 
-class ExecutableRegistry(Mapping):
-    """Registry of known SPR-KKR executable metadata.
-
-    Task definitions are deliberately not validated against this registry.
-    A custom task may name any executable; the registry is consulted only when
-    output-reader selection needs that executable's default.
-    """
+class _ExecutableRegistry(Mapping):
+    """Read-only mapping of known SPR-KKR executable metadata."""
 
     def __init__(self, definitions=()):
-        self._definitions = {}
+        items = {}
         for definition in definitions:
-            self.register(definition)
-
-    def register(self, definition):
-        if not isinstance(definition, ExecutableDefinition):
-            raise TypeError("definition must be an ExecutableDefinition")
-        if definition.name in self._definitions:
-            raise RegistryDefinitionError(
-                f"Duplicate executable definition {definition.name!r}"
-            )
-        self._definitions[definition.name] = definition
-        return definition
+            if not isinstance(definition, ExecutableDefinition):
+                raise TypeError("definition must be an ExecutableDefinition")
+            if definition.name in items:
+                raise RegistryDefinitionError(
+                    f"Duplicate executable definition {definition.name!r}"
+                )
+            items[definition.name] = definition
+        self._definitions = items
 
     def __getitem__(self, name):
         try:
@@ -72,7 +67,7 @@ class ExecutableRegistry(Mapping):
         return len(self._definitions)
 
 
-executable_registry = ExecutableRegistry(
+executables = _ExecutableRegistry(
     (
         ExecutableDefinition(
             "kkrscf",

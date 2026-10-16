@@ -6,6 +6,12 @@ from ...common.module_registry import RegistryEntryNotFound
 from ...outputs.reader_registry import reader_registry
 from ...outputs.readers.default import DefaultOutputReader
 from ...outputs.task_result import KkrOutputReader
+from ...sprkkr.executables import executables
+
+
+def test_all_builtin_tasks_use_known_executables():
+    for task in InputParameters.task_registry.values():
+        assert task.executable in executables
 
 
 def test_all_registered_tasks_have_resolvable_output_reader_metadata():
@@ -18,9 +24,7 @@ def test_every_specialized_reader_is_owned_by_at_least_one_task():
         (
             task.output_reader
             if task.output_reader is not None
-            else reader_registry.executable_registry[
-                task.executable
-            ].default_output_reader
+            else executables[task.executable].default_output_reader
         )
         for task in InputParameters.task_registry.values()
     }
