@@ -70,7 +70,7 @@ def test_remote_executor_over_ssh(docker_execution_image):
         RunStore,
         SshTransport,
     )
-    from ase2sprkkr.outputs.persistent import attach_persistent_run
+    from ase2sprkkr.outputs.persistent import load_persistent_result
     from ase2sprkkr.sprkkr.calculator import SPRKKR
     from ase2sprkkr.sprkkr.profile import SPRKKRProfile
 
@@ -212,19 +212,20 @@ def test_remote_executor_over_ssh(docker_execution_image):
             )
 
             # Simulate a client restart. A fresh manager/pool knows only the
-            # persisted run id; it must reconstruct SSH endpoint identity,
-            # task reader and the saved per-run LaunchSpec before replaying the
-            # finished output.
+            # persisted run id. It must reconstruct endpoint identity from the
+            # client-owned record, while terminal result replay is handled by
+            # the outputs layer rather than by attaching a live runner.
             run_id = runner.id
             restarted = ExecutionManager(
                 RunStore(tmp / "runs"), executor_pool=ExecutorPool()
             )
-            attached = attach_persistent_run(restarted, run_id)
-            replayed = attached.wait()
+            record = restarted.store.get(run_id)
+            restarted_executor = restarted.executor_for(record)
+            replayed = load_persistent_result(restarted, run_id)
 
-            assert attached.executor is not executor
-            assert attached.executor.transport.host == "tester@127.0.0.1"
-            assert attached.executor.transport.options == options
+            assert restarted_executor is not executor
+            assert restarted_executor.transport.host == "tester@127.0.0.1"
+            assert restarted_executor.transport.options == options
             assert replayed.return_code == 0
             assert len(replayed.iterations) > 0
         finally:

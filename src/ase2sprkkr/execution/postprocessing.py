@@ -34,6 +34,11 @@ class PostprocessingRunner:
         self._thread = None
 
     @property
+    def executor(self):
+        """Expose the raw executor without leaking task processing into it."""
+        return self._runner.executor
+
+    @property
     def reference(self):
         return self._runner.reference
 
