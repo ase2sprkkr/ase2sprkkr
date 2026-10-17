@@ -103,22 +103,27 @@ def attach_persistent_run(
     callback=None,
     output_listener=None,
 ):
-    """Attach to one active stored run.
+    """Attach to one active stored run without reconstructing its result.
 
-    Result reconstruction is deliberately not part of attach. A backend terminal
-    state first completes execution finalization and only then becomes AVAILABLE;
-    result checking happens in a separate phase.
+    Reattachment belongs to execution/file finalization. When no live task
+    reader is supplied the backend uses a parser-free capture adapter; the
+    historical task/input reader is reconstructed only after the run reaches
+    AVAILABLE.
     """
     record = _record(manager, run)
     if record.state == RunState.FINALIZATION_FAILED:
         record = manager.retry_finalization(record)
-    if record.state in (RunState.AVAILABLE, RunState.CHECKED, RunState.FAILED):
+    if record.state in (
+        RunState.AVAILABLE,
+        RunState.CHECKED,
+        RunState.FINISHED,
+        RunState.EXECUTION_FAILED,
+        RunState.FAILED,
+        RunState.CANCELLED,
+    ):
         raise RuntimeError(
             f"Run {record.id} is {record.state.value}; use result loading/checking, not attach"
         )
-
-    if reader is None:
-        reader = _reader_for_record(manager, record)
 
     return manager.attach(
         record,
