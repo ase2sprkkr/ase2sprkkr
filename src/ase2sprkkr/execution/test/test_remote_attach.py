@@ -5,7 +5,10 @@ from types import SimpleNamespace
 
 import pytest
 
-from ..base import ExecutionSpec, LaunchSpec, RunReference, RunState
+from ..base import ExecutionSpec, LaunchSpec, RunState
+from ..manager import RunRecord
+from ..run_model import Execution, WorkingDirectory, FileManifest
+from ..endpoint import endpoint_for_executor
 from ..postprocessing import PostprocessingRunner
 from ..remote_endpoint import RemoteEndpointExecutor
 from ..transport import LocalTransport
@@ -21,6 +24,16 @@ def _executor(*, backend="local"):
 
 def _launch(local_root, remote_root):
     return LaunchSpec(local_root=local_root, remote_root=remote_root)
+
+
+def _record(runner):
+    return RunRecord(
+        id=runner.backend_id, task="SCF", state=RunState.RUNNING,
+        created_at="2026-10-13T08:00:00+00:00",
+        updated_at="2026-10-13T08:00:00+00:00",
+        execution=runner.execution,
+        files=runner.files,
+    )
 
 
 def _processed(raw):
@@ -96,15 +109,15 @@ def test_remote_executor_attach_reconnects_running_run_and_restores_stage_out(tm
     original.submit()
     _wait_for_state(original, RunState.RUNNING)
 
-    reference = original.reference
-    assert reference is not None
+    run = _record(original)
+    assert run.execution.backend_id is not None
 
     # A fresh endpoint object reconstructs per-run staging policy solely from
-    # persisted reference context; no task reader or live runner state is used.
-    attached = _processed(_executor().attach(reference, start=False))
+    # persisted run manifest; no task reader or live runner state is used.
+    attached = _processed(_executor().attach(run, start=False))
     (remote_root / "calculation" / "release").write_text("go")
 
-    assert attached.reference == reference
+    assert attached.backend_id == run.execution.backend_id
     result = attached.wait()
 
     assert attached.state == RunState.FINISHED
@@ -141,10 +154,10 @@ def test_remote_executor_attach_replays_finished_run(tmp_path):
     )
     original = first_executor.create_run(spec)
     assert original.run().return_code == 0
-    reference = original.reference
-    assert reference is not None
+    run = _record(original)
+    assert run.execution.backend_id is not None
 
-    attached = _processed(_executor().attach(reference, start=False))
+    attached = _processed(_executor().attach(run, start=False))
     result = attached.wait()
 
     assert attached.state == RunState.FINISHED
@@ -155,11 +168,16 @@ def test_remote_executor_attach_replays_finished_run(tmp_path):
 
 def test_remote_executor_attach_rejects_reference_for_other_backend(tmp_path):
     executor = _executor()
-    reference = RunReference(
-        executor="remote:psij",
-        native_id="job",
-        directory="/remote/calculation",
+    run = RunRecord(
+        id="wrong-backend", task="SCF", state=RunState.RUNNING,
+        created_at="2026-10-13T08:00:00+00:00",
+        updated_at="2026-10-13T08:00:00+00:00",
+        execution=Execution(
+            endpoint_for_executor(_executor(backend="psij")),
+            WorkingDirectory(str(tmp_path), "/remote/calculation"),
+            "job",
+        ),
+        files=FileManifest(),
     )
-
-    with pytest.raises(ValueError, match="belongs to"):
-        executor.attach(reference)
+    with pytest.raises(ValueError, match="different remote endpoint"):
+        executor.attach(run)
