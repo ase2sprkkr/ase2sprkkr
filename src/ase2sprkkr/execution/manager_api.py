@@ -2,14 +2,16 @@
 
 from __future__ import annotations
 
+from .endpoint import endpoint_for_executor
 from .manager import ExecutionManager as _ExecutionManager
+from .manager import SubmissionKey
 from .postprocessing import PostprocessingRunner
 
 
 class ExecutionManager(_ExecutionManager):
     """Persist a raw execution runner plus client-side postprocessing.
 
-    The durable store remains task-agnostic.  ``postprocess`` is a caller-owned
+    The durable store remains task-agnostic. ``postprocess`` is a caller-owned
     callable that turns an execution outcome into the public result after local
     artifacts are available; it is never passed to an execution backend.
     """
@@ -27,12 +29,7 @@ class ExecutionManager(_ExecutionManager):
         callback=None,
         run_id=None,
     ):
-        endpoint = __import__(
-            "ase2sprkkr.execution.endpoint",
-            fromlist=["endpoint_for_executor"],
-        ).endpoint_for_executor(executor)
-        from .manager import SubmissionKey
-
+        endpoint = endpoint_for_executor(executor)
         submission = SubmissionKey(
             endpoint=endpoint,
             directory=executor.submission_directory(spec),
@@ -72,8 +69,6 @@ class ExecutionManager(_ExecutionManager):
         output_listener=None,
     ):
         """Reconnect raw execution first; reconstruct the result client-side."""
-        from .endpoint import endpoint_for_executor
-
         record = self.store.get(run) if isinstance(run, str) else run
         if record.reference is None:
             raise RuntimeError(f"Run {record.id} has no backend reference")
@@ -91,8 +86,6 @@ class ExecutionManager(_ExecutionManager):
                 print_output=print_output,
             )
             wrapped = PostprocessingRunner(raw, postprocess, callback=completed)
-            # Start through the wrapper so POSTPROCESSING remains observable and
-            # the result callback is tied to the complete client-side lifecycle.
             wrapped.submit()
             return wrapped
 
