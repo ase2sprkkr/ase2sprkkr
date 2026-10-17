@@ -53,6 +53,7 @@ def test_non_tau_cache_roles(tmp_path):
         ("NRAES", {f"{DATASET}.*.L23.aes"}),
         ("CLXPS", {f"{DATASET}*.L23.xps"}),
         ("COMPTON", {f"{DATASET}_BND.mcp", f"{DATASET}_COR.mcp", f"{DATASET}_TOT.mcp"}),
+        ("EKREL", {f"{DATASET}.bnd"}),
         ("FMAG", {f"{DATASET}_fmag_*.agr", f"{DATASET}_dens_*.agr"}),
         ("MEPLOT", {f"{DATASET}_VB_*.agr"}),
         ("POSANI", {f"{DATASET}_BND.mpa", f"{DATASET}_COR.mpa", f"{DATASET}_TOT.mpa"}),
