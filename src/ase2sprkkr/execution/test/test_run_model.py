@@ -57,8 +57,8 @@ def test_manifest_versions_and_availability_roundtrip():
     assert restored.input_file == "/local/in"
     assert restored.output_file == "/local/stdout"
     assert restored.input_files == ("/local/in",)
-    assert restored.output_files == ("/local/stdout", "/local/data")
-    assert restored.manifests == ("/local/in", "/local/stdout", "/local/data")
+    assert restored.output_files == ("/local/stdout", "/local/stderr", "/local/data")
+    assert restored.manifests == ("/local/in", "/local/stdout", "/local/stderr", "/local/data")
     assert restored.all_versions == ()
     with pytest.raises(ValueError, match="availability"):
         FileManifest(availability_state="inconsistent")
@@ -72,3 +72,13 @@ def test_execution_backend_id_is_write_once():
     assert submitted.submitted("job-12") == submitted
     with pytest.raises(ValueError, match="Cannot replace"):
         submitted.submitted("job-13")
+
+def test_manifest_counts_merged_stderr_and_duplicate_outputs_once():
+    output = FileEntry("/local/combined.out", "/remote/combined.out")
+    manifest = FileManifest(
+        stdout=output,
+        stderr=output,
+        outputs=(output, FileEntry("/local/extra", "/remote/extra")),
+    )
+    assert manifest.output_files == ("/local/combined.out", "/local/extra")
+    assert manifest.manifests == ("/local/combined.out", "/local/extra")
