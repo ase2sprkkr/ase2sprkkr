@@ -233,93 +233,57 @@ class _RemoteRunContext:
     async def _submit(self, request):
         return await self.endpoint._submit(request)
 
-    async def _status(self, directory, remote_id, reference=None):
-        return await self.endpoint._status(directory, remote_id, reference)
+    async def _status(self, directory, backend_id, files=None):
+        return await self.endpoint._status(directory, backend_id, files)
 
-    async def _cancel(self, directory, remote_id, reference=None):
-        return await self.endpoint._cancel(directory, remote_id, reference)
+    async def _cancel(self, directory, backend_id, files=None):
+        return await self.endpoint._cancel(directory, backend_id, files)
 
-    async def _follow(self, directory, remote_id, reference=None):
-        return await self.endpoint._follow(directory, remote_id, reference)
+    async def _follow(self, directory, backend_id, files=None):
+        return await self.endpoint._follow(directory, backend_id, files)
 
     def create_run(self, spec, callback=None, *, run_id=None):
         return _RemoteRun(self, spec, callback=callback, run_id=run_id)
 
-    async def _client_sync(self, reference):
-        context = _reference_context(reference)
-        precise = context.get("client_sync")
-        if precise is not None:
-            return precise
-
-        local = context.get("local_sync") or {}
-        output_file = local.get("output_file")
-        error_file = local.get("error_file")
-        primary = {value for value in (output_file, error_file) if value is not None}
-
-        output_files = []
-        output_patterns = []
-        for path in local.get("output_files", ()):
-            remote = await self.map_path(path)
-            if glob.has_magic(path):
-                output_patterns.append(remote)
-            elif path not in primary:
-                output_files.append(remote)
-
-        cache_files = []
-        cache_patterns = []
-        for path in local.get("cache_files", ()):
-            remote = await self.map_path(path)
-            if glob.has_magic(path):
-                cache_patterns.append(remote)
-            else:
-                cache_files.append({"path": remote, "before": None})
-
+    @staticmethod
+    def _manifest_sync(files):
         return {
-            "output_file": (
-                None if output_file is None else await self.map_path(output_file)
-            ),
-            "error_file": (
-                None if error_file is None else await self.map_path(error_file)
-            ),
-            "output_files": output_files,
-            "cache_files": cache_files,
-            "output_patterns": output_patterns,
-            "cache_patterns": cache_patterns,
-            "cache_before": [],
+            "output_files": [
+                entry.remote_path for entry in files.outputs
+                if entry.remote_path and not glob.has_magic(entry.remote_path)
+            ],
+            "output_patterns": [
+                entry.remote_path for entry in files.outputs
+                if entry.remote_path and glob.has_magic(entry.remote_path)
+            ],
+            "cache_files": [
+                {"path": item.file.remote_path, "before": item.before}
+                for item in files.caches
+                if item.file.local_path is not None and item.file.remote_path
+                and not glob.has_magic(item.file.remote_path)
+            ],
+            "cache_patterns": [
+                item.file.remote_path for item in files.caches
+                if item.file.local_path is not None and item.file.remote_path
+                and glob.has_magic(item.file.remote_path)
+            ],
+            "cache_before": [
+                {"path": item.file.remote_path, "signature": item.before}
+                for item in files.caches if item.file.local_path is None
+            ],
         }
 
-    async def attach(
-        self,
-        reference,
-        callback=None,
-        output_listener=None,
-        start=True,
-    ):
-        expected = f"remote:{self.backend}"
-        if reference.executor != expected:
-            raise ValueError(
-                f"Run reference belongs to {reference.executor!r}, not {expected!r}"
-            )
-        if not reference.native_id or not reference.directory:
-            raise ValueError("Remote run reference lacks remote id or directory")
-
-        status = await self._status(reference.directory, reference.native_id, reference)
-        sync = await self._client_sync(reference)
-        local_directory = await self.unmap_path(reference.directory)
+    async def attach(self, run, callback=None, output_listener=None, start=True):
+        execution = run.execution
+        if execution.backend_id is None or execution.directory.remote is None:
+            raise ValueError("Remote run lacks backend ID or target directory")
+        status = await self._status(execution.directory.remote, execution.backend_id, run.files)
+        sync = self._manifest_sync(run.files)
+        local_directory = Path(execution.directory.local)
         local_directory.mkdir(parents=True, exist_ok=True)
-
-        input_remote = status.get("input_file") or reference.input_file
-        input_local = (
-            await self.unmap_path(input_remote) if input_remote is not None else None
-        )
-        output_remote = sync.get("output_file")
-        error_remote = sync.get("error_file")
-        output_local = (
-            await self.unmap_path(output_remote) if output_remote is not None else None
-        )
-        error_local = (
-            await self.unmap_path(error_remote) if error_remote is not None else None
-        )
+        input_local = run.files.input_file
+        output_local = run.files.output_file
+        error_local = None if run.files.stderr is None else run.files.stderr.local_path
 
         output_targets = {}
         for remote in sync.get("output_files", ()):
@@ -376,7 +340,9 @@ class _RemoteRunContext:
                 callback=callback,
                 output_listener=output_listener,
                 start=False,
-                reference=reference,
+                backend_id=execution.backend_id,
+                remote_directory=execution.directory.remote,
+                files=run.files,
                 state=_client_status_state(status),
                 output_targets=output_targets,
                 cache_targets=cache_targets,
