@@ -38,7 +38,9 @@ def input_parameters():
                 V("CHIPRINT", Integer(min=0), is_optional=True, info="Response preparation print control."),
                 V("NOSYMCHI", False, info="Disable response symmetry; also disables global symmetry in native INITVAR."),
             ]), SITES],
-        executable="kkrchi", mpi=False, validators=_validate_chi,
+        executable="kkrchi", mpi=False,
+        cache_file_templates=("{dataset}.tau", "TKTK_tables"),
+        validators=_validate_chi,
         info="Magnetic susceptibility in the serial ASA workflow",
         description="Periodic ASA FREL CHI, one pass only. Native MPI terminates as under construction; "
                     "native magnetization iteration is forcibly disabled. FULLPOT is unavailable in the public version. "

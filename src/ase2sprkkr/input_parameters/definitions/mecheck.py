@@ -3,7 +3,21 @@
 from ...common.grammar_types import Integer, Keyword, SetOf
 from ...common.warnings import DataValidityError, DataValidityWarning
 from ..input_parameters_definitions import InputParametersDefinition as InputParameters, InputValueDefinition as V
+from ._file_manifests import resolve_file
 from ._sections import CONTROL, ENERGY, MODE, SITES, STRCONST, TASK, TAU
+
+
+class MecheckInputParametersDefinition(InputParameters):
+    """MECHECK definition with the files actually enabled in public 9.7."""
+
+    def output_files(self, parameters, directory):
+        files = list(super().output_files(parameters, directory))
+        if parameters.TASK.INITIALSTATE() == "CORE" and parameters.ENERGY.NE()[0] > 1:
+            # K_CALC_ME=2 disables DATASET_check_*.dat in public 9.7.
+            # Only non-zero matrix elements get one of these energy scans.
+            files.extend(resolve_file(directory, f"MPZAZB_{polarization}_*-*-*.dat")
+                         for polarization in ("-", "z", "+"))
+        return tuple(files)
 
 
 def _print_default(option):
@@ -53,7 +67,7 @@ def input_parameters():
                     defaults={"GRID": 3, "NE": 1, "ImE": 0.01})
     energy.copy_member("EMAX", is_optional=True)
     energy.copy_member("NE", type=SetOf(Integer(min=1), min_length=1, max_length=2))
-    return InputParameters(
+    return MecheckInputParametersDefinition(
         "mecheck",
         [CONTROL("MECHECK"), TAU, MODE, STRCONST, energy,
          TASK("MECHECK", [

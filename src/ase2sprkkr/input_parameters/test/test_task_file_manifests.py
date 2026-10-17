@@ -43,6 +43,7 @@ def test_non_tau_cache_roles(tmp_path):
     aes = manifest("AES", "cache", tmp_path)
     assert {"ME", *(f"ME{i}" for i in range(1, 13))} <= aes
     assert f"{DATASET}_positron.rho" in manifest("POSANITAU", "cache", tmp_path)
+    assert {f"{DATASET}.tau", "TKTK_tables"} <= manifest("CHI", "cache", tmp_path)
 
 
 @pytest.mark.parametrize(
@@ -154,6 +155,17 @@ def test_kkrspec_polarization_outputs_follow_pol_p(task, tmp_path):
     names = basenames(p._definition.output_files(p, tmp_path))
     assert f"{DATASET}_data.spc" not in names
     assert {f"{DATASET}_data_pol1.spc", f"{DATASET}_data_pol2.spc"} <= names
+
+
+def test_mecheck_enabled_outputs(tmp_path):
+    p = parameters("MECHECK")
+    assert not basenames(p._definition.output_files(p, tmp_path))
+
+    p.TASK.INITIALSTATE = "CORE"
+    p.ENERGY.NE = 3
+    names = basenames(p._definition.output_files(p, tmp_path))
+    assert {f"MPZAZB_{polarization}_*-*-*.dat" for polarization in ("-", "z", "+")} <= names
+    assert not any("_check_" in name for name in names)
 
 
 def test_pshift_branch_outputs(tmp_path):
