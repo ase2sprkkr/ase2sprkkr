@@ -97,6 +97,25 @@ class CacheEntry:
 
 
 @dataclass(frozen=True)
+class FileMapping:
+    """Resolved mapping and transfer policy of this run's file manifest."""
+
+    local_root: str
+    remote_root: str
+    input_sync: str = "changed"
+    output_sync: str = "changed"
+
+    def __post_init__(self):
+        import os
+
+        object.__setattr__(self, "local_root", os.fspath(self.local_root))
+        object.__setattr__(self, "remote_root", os.fspath(self.remote_root))
+        policies = {"changed", "always", "missing", "never"}
+        if self.input_sync not in policies or self.output_sync not in policies:
+            raise ValueError("Invalid file synchronization policy")
+
+
+@dataclass(frozen=True)
 class FileManifest:
     """All paths and cache baselines required for transfer and reconnect."""
 
@@ -105,6 +124,7 @@ class FileManifest:
     caches: tuple[CacheEntry, ...] = ()
     stdout: Optional[FileEntry] = None
     stderr: Optional[FileEntry] = None
+    mapping: Optional[FileMapping] = None
     input_versions: tuple[FileVersion, ...] = ()
     output_versions: tuple[FileVersion, ...] = ()
     captured_at: Optional[str] = None
@@ -122,6 +142,8 @@ class FileManifest:
             item = getattr(self, name)
             if isinstance(item, dict):
                 object.__setattr__(self, name, FileEntry(**item))
+        if isinstance(self.mapping, dict):
+            object.__setattr__(self, "mapping", FileMapping(**self.mapping))
         for name in ("input_versions", "output_versions"):
             object.__setattr__(
                 self, name,
