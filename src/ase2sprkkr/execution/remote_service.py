@@ -487,7 +487,7 @@ def follow_remote(
     stderr_offset=0,
     poll_interval=0.1,
 ):
-    """Tail backend output until it is no longer active."""
+    """Tail backend output until it is terminal or temporarily unresolved."""
     handle = _decode_handle(remote_id)
     offsets = {"out": stdout_offset, "err": stderr_offset}
     streams = {"out": stdout, "err": stderr}
@@ -518,11 +518,8 @@ def follow_remote(
 
         state = status_remote(remote_id)
         terminal = state["state"] in {item.value for item in _FINAL_STATES}
-        lost_process = (
-            handle["kind"] == "process"
-            and state["state"] == RunState.UNKNOWN.value
-        )
-        if (terminal or lost_process) and not had_data:
+        unresolved = state["state"] == RunState.UNKNOWN.value
+        if (terminal or unresolved) and not had_data:
             return state
         if not had_data:
             time.sleep(poll_interval)
