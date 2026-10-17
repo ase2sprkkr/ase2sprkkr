@@ -4,9 +4,12 @@ import pytest
 
 from ase2sprkkr.common.module_registry import RegistryEntryNotFound
 from ase2sprkkr.execution import (
-    ResultFilesRecord,
+    FileManifest,
+    FileEntry,
+    Execution,
+    WorkingDirectory,
+    ExecutorEndpoint,
     RunRecord,
-    RunReference,
     RunState,
 )
 from ase2sprkkr.input_parameters.input_parameters import InputParameters
@@ -54,21 +57,21 @@ def _record(
     input_definition=None,
     input_file=None,
 ):
-    result_files = (
-        None
-        if input_file is None
-        else ResultFilesRecord(input_file=str(input_file))
+    files = (
+        FileManifest()
+        if input_file is None else FileManifest(
+            inputs=(FileEntry(local_path=str(input_file)),)
+        )
     )
     return RunRecord(
-        id="run",
-        task=task,
-        input_definition=input_definition,
-        directory=str(tmp_path),
+        id="run", task=task, input_definition=input_definition,
         state=RunState.RUNNING,
         created_at="2026-01-01T00:00:00+00:00",
         updated_at="2026-01-01T00:00:00+00:00",
-        reference=RunReference(executor="test", native_id="1"),
-        result_files=result_files,
+        execution=Execution(
+            ExecutorEndpoint(), WorkingDirectory(str(tmp_path)), "1",
+        ),
+        files=files,
     )
 
 
