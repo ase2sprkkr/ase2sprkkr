@@ -2,8 +2,35 @@
 import numpy as np
 from ...common.grammar_types import Integer, SetOf, real
 from ...common.warnings import DataValidityError
+from ._file_manifests import resolve_file, xray_shell_label
 from ._sections import CONTROL, TAU, MODE, CPA, STRCONST, ENERGY, TASK, SITES
 from ..input_parameters_definitions import InputParametersDefinition as InputParameters, InputValueDefinition as V, InputSectionDefinition as Section
+
+
+class ChixasInputParametersDefinition(InputParameters):
+    """CHIXAS definition with the source-defined XAS output families."""
+
+    def output_files(self, parameters, directory):
+        files = list(super().output_files(parameters, directory))
+        dataset = parameters.CONTROL.DATASET()
+        shell = xray_shell_label(parameters.TASK.CL())
+        prefix = f"{dataset}_*"
+        spectrum = f"{prefix}_{shell}"
+
+        files.append(resolve_file(directory, f"{spectrum}.rat"))
+        files.extend(resolve_file(directory, f"{prefix}_{kind}.pol")
+                     for kind in ("ss", "ls", "sl", "ll"))
+        files.extend(resolve_file(directory, f"{spectrum}_spec_{kind}")
+                     for kind in ("0", "s", "o", "sr"))
+        files.extend(resolve_file(directory, f"{spectrum}_{kind}.rat")
+                     for kind in ("SSZ", "SSX", "SST", "LLZ", "LLX", "LLT", "TOT"))
+
+        print_level = parameters.TASK.PRINT()
+        if print_level is None:
+            print_level = parameters.CONTROL.PRINT()
+        if print_level >= 1:
+            files.append(resolve_file(directory, f"{dataset}_*_GG.dat"))
+        return tuple(files)
 
 
 def _validate_chixas(p, _values, why):
@@ -44,7 +71,7 @@ def input_parameters():
     energy = ENERGY(emax=(4.0, "Upper spectral energy in Ry; explicit ASE choice.", None),
                     defaults={"GRID": [3], "NE": [180], "ImE": 0.01})
     energy.copy_member("NE", type=SetOf(Integer(min=2), min_length=1, max_length=2))
-    return InputParameters(
+    return ChixasInputParametersDefinition(
         "chixas", [CONTROL("CHIXAS"), TAU, MODE, CPA, STRCONST, energy,
             Section("SCF", [V("FULLPOT", False)], is_optional=True, is_expert=True),
             TASK("CHIXAS").copy([
