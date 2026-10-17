@@ -13,10 +13,10 @@ from .base import (
     MpiSpec,
     ResourceOwnedRunner,
     Runner,
-    RunReference,
     RunState,
     RunStatus,
 )
+from .run_model import Execution, WorkingDirectory, FileEntry, CacheEntry, FileManifest
 from .endpoint import ExecutorEndpoint
 from .local import LocalExecutor, LocalRunner
 from .manager import (
@@ -24,10 +24,8 @@ from .manager import (
     CorruptRunRecord,
     DuplicateSubmissionError,
     PersistentRunner,
-    ResultFilesRecord,
     RunRecord,
     RunStore,
-    SubmissionKey,
 )
 from .pool import ExecutorPool, default_executor_pool
 from .postprocessing import PostprocessingRunner
@@ -49,6 +47,11 @@ RemoteExecutor = RemoteEndpointExecutor
 
 __all__ = [
     "ArtifactAvailabilityState",
+    "Execution",
+    "WorkingDirectory",
+    "FileEntry",
+    "CacheEntry",
+    "FileManifest",
     "ExecutionOutcome",
     "ExecutionResources",
     "ExecutionSpec",
@@ -61,16 +64,13 @@ __all__ = [
     "PostprocessingRunner",
     "ResourceOwnedRunner",
     "Runner",
-    "RunReference",
     "RunState",
     "RunStatus",
-    "SubmissionKey",
     "DuplicateSubmissionError",
     "FileFingerprint",
     "FileState",
     "FileVersion",
     "FileVersionCaptureError",
-    "ResultFilesRecord",
     "RunRecord",
     "RunStore",
     "CorruptRunRecord",
