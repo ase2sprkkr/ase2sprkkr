@@ -121,13 +121,14 @@ class _RemoteRun(RemoteRunner):
             "client_sync": request.get("client_sync") or {},
             "local_sync": local_sync,
         }
-        return remote_id, context, status
+        context["outcome_file"] = request.get("outcome_file")
+        return remote_id, context, status, request
 
     def submit(self):
         with self._lock:
             if self._state != RunState.NEW:
                 raise RuntimeError(f"Run is already {self._state.value}")
-            remote_id, context, status = _run_sync(self._submit_async())
+            remote_id, context, status, request = _run_sync(self._submit_async())
             self._state = RunState(status["state"])
             self._return_code = status.get("return_code")
             self.result.return_code = self._return_code
@@ -138,10 +139,10 @@ class _RemoteRun(RemoteRunner):
                 executor=f"remote:{self.executor.backend}",
                 native_id=str(remote_id),
                 computer=self.executor.computer,
-                directory=status["directory"],
-                input_file=status.get("input_file"),
-                output_file=status.get("output_file"),
-                error_file=status.get("error_file"),
+                directory=request["directory"],
+                input_file=request.get("input_file"),
+                output_file=request.get("output_file"),
+                error_file=request.get("error_file"),
                 context=context,
             )
         self._start_monitor()
@@ -215,14 +216,14 @@ class _RemoteRunContext:
     async def _submit(self, request):
         return await self.endpoint._submit(request)
 
-    async def _status(self, directory, remote_id):
-        return await self.endpoint._status(directory, remote_id)
+    async def _status(self, directory, remote_id, reference=None):
+        return await self.endpoint._status(directory, remote_id, reference)
 
-    async def _cancel(self, directory, remote_id):
-        return await self.endpoint._cancel(directory, remote_id)
+    async def _cancel(self, directory, remote_id, reference=None):
+        return await self.endpoint._cancel(directory, remote_id, reference)
 
-    async def _follow(self, directory, remote_id):
-        return await self.endpoint._follow(directory, remote_id)
+    async def _follow(self, directory, remote_id, reference=None):
+        return await self.endpoint._follow(directory, remote_id, reference)
 
     def create_run(self, spec, callback=None, *, run_id=None):
         return _RemoteRun(self, spec, callback=callback, run_id=run_id)
@@ -285,7 +286,7 @@ class _RemoteRunContext:
         if not reference.native_id or not reference.directory:
             raise ValueError("Remote run reference lacks remote id or directory")
 
-        status = await self._status(reference.directory, reference.native_id)
+        status = await self._status(reference.directory, reference.native_id, reference)
         sync = await self._client_sync(reference)
         local_directory = await self.unmap_path(reference.directory)
         local_directory.mkdir(parents=True, exist_ok=True)
@@ -510,15 +511,30 @@ class RemoteEndpointExecutor(Executor):
             "submit", request["directory"], payload=request
         )
 
-    async def _status(self, directory, remote_id):
-        return await self._json_request("status", remote_id)
+    @staticmethod
+    def _receipt_args(reference):
+        path = (reference.context or {}).get("outcome_file") if reference else None
+        return () if not path else ("--outcome-file", os.fspath(path))
 
-    async def _cancel(self, directory, remote_id):
-        return await self._json_request("cancel", remote_id)
+    async def _status(self, directory, remote_id, reference=None):
+        return await self._json_request(
+            "status", remote_id, *self._receipt_args(reference)
+        )
 
-    async def _follow(self, directory, remote_id):
+    async def _cancel(self, directory, remote_id, reference=None):
+        return await self._json_request(
+            "cancel", remote_id, *self._receipt_args(reference)
+        )
+
+    async def _follow(self, directory, remote_id, reference=None):
+        options = list(self._receipt_args(reference))
+        if reference is not None:
+            if reference.output_file:
+                options.extend(("--stdout-path", reference.output_file))
+            if reference.error_file:
+                options.extend(("--stderr-path", reference.error_file))
         process = await self.transport.start(
-            (*self.command, "follow", str(remote_id), "--framed")
+            (*self.command, "follow", str(remote_id), *options, "--framed")
         )
         return FramedRunningCommand(process)
 
@@ -531,7 +547,7 @@ class RemoteEndpointExecutor(Executor):
         async def query():
             result = []
             for reference in references:
-                state = await self._status(reference.directory, reference.native_id)
+                state = await self._status(reference.directory, reference.native_id, reference)
                 result.append(
                     RunStatus(
                         reference,

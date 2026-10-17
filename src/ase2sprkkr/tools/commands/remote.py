@@ -16,12 +16,17 @@ def parser(parser):
 
     status = actions.add_parser("status")
     status.add_argument("remote_id")
+    status.add_argument("--outcome-file")
 
     cancel = actions.add_parser("cancel")
     cancel.add_argument("remote_id")
+    cancel.add_argument("--outcome-file")
 
     follow = actions.add_parser("follow")
     follow.add_argument("remote_id")
+    follow.add_argument("--outcome-file")
+    follow.add_argument("--stdout-path")
+    follow.add_argument("--stderr-path")
     follow.add_argument("--stdout-offset", type=int, default=0)
     follow.add_argument("--stderr-offset", type=int, default=0)
     follow.add_argument(
@@ -69,9 +74,9 @@ def run(args, global_args):
         request["directory"] = args.directory
         _print_json(submit_remote(request))
     elif args.remote_action == "status":
-        _print_json(status_remote(args.remote_id))
+        _print_json(status_remote(args.remote_id, outcome_file=getattr(args, "outcome_file", None)))
     elif args.remote_action == "cancel":
-        _print_json(cancel_remote(args.remote_id))
+        _print_json(cancel_remote(args.remote_id, outcome_file=getattr(args, "outcome_file", None)))
     elif args.remote_action == "follow":
         if args.framed:
             from ...execution.stream_protocol import STREAM_MAGIC
@@ -90,6 +95,9 @@ def run(args, global_args):
             stderr,
             stdout_offset=args.stdout_offset,
             stderr_offset=args.stderr_offset,
+            outcome_file=args.outcome_file,
+            stdout_path=args.stdout_path,
+            stderr_path=args.stderr_path,
         )
     elif args.remote_action == "recover":
         request = json.load(sys.stdin)

@@ -108,7 +108,7 @@ def _local_submit(request):
     Path(error_path).parent.mkdir(parents=True, exist_ok=True)
 
     run_id = str(request.get("id") or uuid4().hex)
-    outcome_file = os.fspath(directory / f".{run_id}.outcome.json")
+    outcome_file = os.fspath(request.get("outcome_file") or directory / f".{run_id}.outcome.json")
     try:
         os.unlink(outcome_file)
     except FileNotFoundError:
@@ -161,11 +161,6 @@ def _local_submit(request):
             "kind": "process",
             "pid": process.pid,
             "start_time": start_time,
-            "outcome_file": outcome_file,
-            "directory": os.fspath(directory),
-            "input_file": _absolute(directory, spec.input_file),
-            "output_file": output_path,
-            "error_file": error_path,
         }
     )
     return {
@@ -203,10 +198,6 @@ def _psij_submit(request):
             "backend": executor.backend,
             "url": executor.url,
             "native_id": reference.native_id,
-            "directory": reference.directory,
-            "input_file": reference.input_file,
-            "output_file": reference.output_file,
-            "error_file": reference.error_file,
         }
     )
     return {
@@ -237,16 +228,12 @@ def _reference(handle):
         executor=f"psij:{handle['backend']}",
         native_id=str(handle["native_id"]),
         computer=handle.get("url"),
-        directory=handle.get("directory"),
-        input_file=handle.get("input_file"),
-        output_file=handle.get("output_file"),
-        error_file=handle.get("error_file"),
     )
 
 
-def _process_outcome(handle):
+def _process_outcome(path):
     try:
-        data = json.loads(Path(handle["outcome_file"]).read_text())
+        data = json.loads(Path(path).read_text())
     except FileNotFoundError:
         return None
     except (KeyError, ValueError, json.JSONDecodeError) as exc:
@@ -322,15 +309,11 @@ def _slurm_psij_status(handle):
         "failure_phase": (
             None if failure_phase is None else failure_phase.value
         ),
-        "directory": handle.get("directory"),
-        "input_file": handle.get("input_file"),
-        "output_file": handle.get("output_file"),
-        "error_file": handle.get("error_file"),
     }
 
 
-def status_remote(remote_id):
-    """Query backend facts for an opaque target id."""
+def status_remote(remote_id, *, outcome_file=None):
+    """Query backend facts; the client supplies any terminal receipt path."""
     handle = _decode_handle(remote_id)
     if handle["kind"] == "process":
         if _process_running(handle):
@@ -338,7 +321,7 @@ def status_remote(remote_id):
             return_code = None
             failure_phase = None
         else:
-            outcome = _process_outcome(handle)
+            outcome = None if outcome_file is None else _process_outcome(outcome_file)
             if outcome is None:
                 state = RunState.UNKNOWN
                 return_code = None
@@ -351,10 +334,6 @@ def status_remote(remote_id):
             "failure_phase": (
                 None if failure_phase is None else failure_phase.value
             ),
-            "directory": handle.get("directory"),
-            "input_file": handle.get("input_file"),
-            "output_file": handle.get("output_file"),
-            "error_file": handle.get("error_file"),
         }
 
     if handle["kind"] == "psij":
@@ -375,24 +354,22 @@ def status_remote(remote_id):
             "failure_phase": (
                 None if status.failure_phase is None else status.failure_phase.value
             ),
-            "directory": handle.get("directory"),
-            "input_file": handle.get("input_file"),
-            "output_file": handle.get("output_file"),
-            "error_file": handle.get("error_file"),
         }
     raise ValueError("Unsupported remote execution id")
 
 
-def cancel_remote(remote_id, timeout=1.0):
+def cancel_remote(remote_id, timeout=1.0, *, outcome_file=None):
     handle = _decode_handle(remote_id)
     if handle["kind"] == "process":
+        if outcome_file is None:
+            raise ValueError("Direct-process cancellation requires its outcome path")
         if not _same_process(handle):
-            return status_remote(remote_id)
+            return status_remote(remote_id, outcome_file=outcome_file)
 
         try:
             os.killpg(int(handle["pid"]), signal.SIGTERM)
         except ProcessLookupError:
-            return status_remote(remote_id)
+            return status_remote(remote_id, outcome_file=outcome_file)
 
         deadline = time.monotonic() + timeout
         while time.monotonic() < deadline and _process_running(handle):
@@ -406,24 +383,25 @@ def cancel_remote(remote_id, timeout=1.0):
         # A natural completion racing with cancellation wins. Otherwise publish
         # cancellation as the durable backend outcome so future status queries
         # cannot regress to FAILED/UNKNOWN after the supervisor disappears.
-        current = status_remote(remote_id)
+        current = status_remote(remote_id, outcome_file=outcome_file)
         if current["state"] in (RunState.FINISHED.value, RunState.FAILED.value):
             return current
         _write_outcome(
-            handle["outcome_file"],
+            outcome_file,
             RunState.CANCELLED,
             current.get("return_code"),
             None,
         )
-        return status_remote(remote_id)
+        return status_remote(remote_id, outcome_file=outcome_file)
 
     if handle["kind"] == "psij":
         executor = _psij_executor(
             {"backend": handle["backend"], "url": handle.get("url")}
         )
-        runner = executor.attach(_reference(handle), start=False)
-        runner.cancel()
-        state = status_remote(remote_id)
+        job = executor._psij.Job()
+        executor._job_executor.attach(job, handle["native_id"])
+        job.cancel()
+        state = status_remote(remote_id, outcome_file=outcome_file)
         if state["state"] not in {item.value for item in _FINAL_STATES}:
             state["state"] = RunState.CANCELLED.value
             state["failure_phase"] = None
@@ -457,10 +435,6 @@ def recover_remote(run_id, request, *, submitted_at=None):
             "backend": backend.backend,
             "url": backend.url,
             "native_id": reference.native_id,
-            "directory": reference.directory,
-            "input_file": reference.input_file,
-            "output_file": reference.output_file,
-            "error_file": reference.error_file,
         }
     )
     return {
@@ -486,14 +460,17 @@ def follow_remote(
     stdout_offset=0,
     stderr_offset=0,
     poll_interval=0.1,
+    stdout_path=None,
+    stderr_path=None,
+    outcome_file=None,
 ):
-    """Tail backend output until it is terminal or temporarily unresolved."""
+    """Tail client-selected stream files until backend termination."""
     handle = _decode_handle(remote_id)
     offsets = {"out": stdout_offset, "err": stderr_offset}
     streams = {"out": stdout, "err": stderr}
     paths = {
-        "out": handle.get("output_file"),
-        "err": handle.get("error_file"),
+        "out": stdout_path,
+        "err": stderr_path,
     }
 
     while True:
@@ -516,7 +493,7 @@ def follow_remote(
                 offsets[kind] += len(data)
                 had_data = True
 
-        state = status_remote(remote_id)
+        state = status_remote(remote_id, outcome_file=outcome_file)
         terminal = state["state"] in {item.value for item in _FINAL_STATES}
         unresolved = state["state"] == RunState.UNKNOWN.value
         if (terminal or unresolved) and not had_data:

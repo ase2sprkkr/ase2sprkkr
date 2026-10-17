@@ -127,6 +127,7 @@ class RemoteRunner:
             self.executor._status(
                 self._reference.directory,
                 self._reference.native_id,
+                self._reference,
             )
         )
         self._state = RunState(status.get("state", "unknown"))
@@ -543,6 +544,7 @@ class RemoteRunner:
 
         return {
             "id": run_id,
+            "outcome_file": posixpath.join(remote_directory, f".{run_id}.outcome.json"),
             "executor": self.executor.backend,
             "executor_options": self.executor.backend_options,
             "directory": remote_directory,
@@ -575,6 +577,7 @@ class RemoteRunner:
             self._follow_process = await self.executor._follow(
                 self._reference.directory,
                 self._reference.native_id,
+                self._reference,
             )
             stdout_task = asyncio.create_task(
                 self._pump(self._follow_process.stdout, "out")
@@ -589,6 +592,7 @@ class RemoteRunner:
             status = await self.executor._status(
                 self._reference.directory,
                 self._reference.native_id,
+                self._reference,
             )
             backend_state = RunState(status.get("state", "unknown"))
             self._return_code = status.get("return_code")
