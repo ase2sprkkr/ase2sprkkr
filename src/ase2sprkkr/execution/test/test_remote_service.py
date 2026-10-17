@@ -1,3 +1,4 @@
+import io
 import json
 import signal
 
@@ -125,6 +126,27 @@ def test_slurm_failed_accounting_record_is_execution_failure(tmp_path, monkeypat
     assert status["state"] == RunState.FAILED.value
     assert status["return_code"] == 7
     assert status["failure_phase"] == FailurePhase.EXECUTION.value
+
+
+def test_follow_returns_unknown_instead_of_waiting_forever(tmp_path, monkeypatch):
+    _, remote_id = _psij_handle(tmp_path)
+    calls = []
+
+    def unknown(_remote_id):
+        calls.append(_remote_id)
+        return {"state": RunState.UNKNOWN.value}
+
+    monkeypatch.setattr(remote_service, "status_remote", unknown)
+
+    status = remote_service.follow_remote(
+        remote_id,
+        io.BytesIO(),
+        io.BytesIO(),
+        poll_interval=0,
+    )
+
+    assert status["state"] == RunState.UNKNOWN.value
+    assert calls == [remote_id]
 
 
 def test_direct_process_outcome_uses_crash_durable_write(tmp_path, monkeypatch):
