@@ -16,7 +16,9 @@ from .base import (
     RunState,
     RunStatus,
 )
-from .run_model import Execution, WorkingDirectory, FileEntry, CacheEntry, FileManifest
+from .run_model import (
+    Execution, WorkingDirectory, FileEntry, CacheEntry, FileMapping, FileManifest,
+)
 from .endpoint import ExecutorEndpoint
 from .local import LocalExecutor, LocalRunner
 from .manager import (
@@ -51,6 +53,7 @@ __all__ = [
     "WorkingDirectory",
     "FileEntry",
     "CacheEntry",
+    "FileMapping",
     "FileManifest",
     "ExecutionOutcome",
     "ExecutionResources",
