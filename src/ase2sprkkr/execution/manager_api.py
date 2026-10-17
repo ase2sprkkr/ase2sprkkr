@@ -11,19 +11,24 @@ from .postprocessing import PostprocessingRunner, reader_postprocessor
 class ExecutionManager(_ExecutionManager):
     """Persist a raw execution runner plus client-side postprocessing.
 
-    New callers pass ``spec`` plus ``postprocess=...``.  The historical
+    New callers pass ``spec`` plus ``postprocess=...``. The historical
     ``(reader, spec)`` form remains temporarily accepted at this facade only;
     the reader is immediately converted to a client-side postprocessor and is
     never forwarded to the executor.
     """
 
     @staticmethod
-    def _normalize_postprocess(reader_or_spec, spec, postprocess):
+    def _normalize_postprocess(reader_or_spec, spec, postprocess, print_output):
         if spec is None:
-            return reader_or_spec, postprocess
+            return reader_or_spec, postprocess, print_output
         if postprocess is not None:
             raise TypeError("postprocess cannot be combined with legacy reader argument")
-        return spec, reader_postprocessor(reader_or_spec, spec)
+        reader = reader_or_spec
+        return (
+            spec,
+            reader_postprocessor(reader, spec),
+            bool(getattr(reader, "print_output", print_output)),
+        )
 
     def create_run(
         self,
@@ -39,8 +44,8 @@ class ExecutionManager(_ExecutionManager):
         callback=None,
         run_id=None,
     ):
-        spec, postprocess = self._normalize_postprocess(
-            reader_or_spec, spec, postprocess
+        spec, postprocess, print_output = self._normalize_postprocess(
+            reader_or_spec, spec, postprocess, print_output
         )
         if postprocess is None:
             raise TypeError("postprocess is required for persistent execution")
@@ -98,8 +103,6 @@ class ExecutionManager(_ExecutionManager):
         if postprocess is None:
             if reader is None:
                 raise TypeError("postprocess or legacy reader is required")
-            # Reattached raw runners reconstruct their ExecutionSpec from the
-            # persisted reference, so build an equivalent lightweight spec here.
             from .base import ExecutionSpec
 
             spec = ExecutionSpec(
@@ -110,6 +113,7 @@ class ExecutionManager(_ExecutionManager):
                 directory=record.directory,
             )
             postprocess = reader_postprocessor(reader, spec)
+            print_output = bool(getattr(reader, "print_output", print_output))
 
         def factory(completed):
             raw = executor.attach(
