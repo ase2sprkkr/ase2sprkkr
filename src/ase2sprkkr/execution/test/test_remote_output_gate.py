@@ -63,7 +63,9 @@ def _run(tmp_path, state, *, original=b"old\n"):
         ),
         backend_id="opaque-handle",
         remote_directory="/work/case",
-        files=FileManifest(stdout=FileEntry(str(destination), "/work/case/calculation.out")),
+        files=FileManifest(
+            stdout=FileEntry(str(destination), "/work/case/calculation.out"),
+        ).initialize_availability(),
         state=RunState.RUNNING,
     )
     return runner, executor, destination, output
