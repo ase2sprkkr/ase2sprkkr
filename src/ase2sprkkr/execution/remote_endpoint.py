@@ -17,7 +17,6 @@ from .base import (
     FailurePhase,
     LaunchSpec,
     MpiNotFoundWarning,
-    RunReference,
     RunState,
     RunStatus,
     SubmissionNotStarted,
@@ -25,16 +24,10 @@ from .base import (
 from .remote import FileSyncPolicy, RemoteRunner, _run_sync
 from .stream_protocol import FramedRunningCommand
 from .transport import AtomicLocalFile
+from .run_model import FileEntry, CacheEntry, FileManifest, FileMapping, WorkingDirectory
 
 
 _REMOTE_BACKENDS = {"local", "psij"}
-
-
-def _reference_context(reference):
-    context = reference.context or {}
-    if not isinstance(context, dict):
-        raise ValueError("Remote run reference has invalid reconnect context")
-    return context
 
 
 def _local_path(value, directory):
@@ -78,7 +71,7 @@ class _RemoteRun(RemoteRunner):
     async def _monitor(self):
         local_output = self.result.output_file
         result = await super()._monitor()
-        remote_output = None if self.reference is None else self.reference.output_file
+        remote_output = None if self.files is None or self.files.stdout is None else self.files.stdout.remote_path
         if (
             self.state == RunState.FINISHED
             and local_output is not None
@@ -98,12 +91,48 @@ class _RemoteRun(RemoteRunner):
                 os.utime(local_output, ns=(stat.st_atime_ns, signature[1]))
         return result
 
+    async def _submitted_manifest(self, request):
+        directory = os.path.abspath(os.fspath(self.spec.directory))
+        def local(value):
+            return _local_path(value, directory)
+        inputs = []
+        for item in (self.spec.input_file, *self.spec.input_files):
+            path = local(item)
+            if path is not None:
+                inputs.append(FileEntry(path, await self.executor.map_path(path)))
+        outputs = []
+        for item in self.spec.output_files:
+            path = local(item)
+            if path is not None and path not in (self.result.output_file, self.result.error_file):
+                outputs.append(FileEntry(path, await self.executor.map_path(path)))
+        caches = []
+        for item in self.spec.cache_files:
+            path = local(item)
+            if path is None:
+                continue
+            remote = await self.executor.map_path(path)
+            previous = self._cache_targets.get(path)
+            caches.append(CacheEntry(FileEntry(path, remote), None if previous is None else previous[1]))
+        for remote, before in self._cache_before.items():
+            caches.append(CacheEntry(FileEntry(remote_path=remote), before))
+        sync = request.get("client_sync") or {}
+        mapping = FileMapping(
+            local_root=os.fspath(self.executor.local_root),
+            remote_root=await self.executor._resolved_remote_root(),
+            input_sync=self.executor.input_files.value,
+            output_sync=self.executor.output_files.value,
+        )
+        return FileManifest(
+            inputs=tuple(inputs), outputs=tuple(outputs), caches=tuple(caches),
+            stdout=None if self.result.output_file is None else FileEntry(self.result.output_file, sync.get("output_file")),
+            stderr=None if self.result.error_file is None else FileEntry(self.result.error_file, sync.get("error_file")),
+            mapping=mapping,
+            availability_state="pending",
+        )
+
     async def _submit_async(self):
         run_id = self._run_id or uuid4().hex
         try:
-            local_sync = self.executor.endpoint.submission_context(self.spec)[
-                "local_sync"
-            ]
             remote_directory = await self.executor.map_directory(self.spec.directory)
             await self.executor.transport.run(("mkdir", "-p", "--", remote_directory))
             request = await self._prepare_request(run_id, remote_directory)
@@ -116,34 +145,23 @@ class _RemoteRun(RemoteRunner):
         remote_id = status.get("remote_id")
         if not remote_id:
             raise RuntimeError("Remote submit returned no remote_id")
-        context = {
-            "launch": request.get("launch") or {},
-            "client_sync": request.get("client_sync") or {},
-            "local_sync": local_sync,
-        }
-        return remote_id, context, status, request
+        manifest = await self._submitted_manifest(request)
+        return remote_id, manifest, status, request
 
     def submit(self):
         with self._lock:
             if self._state != RunState.NEW:
                 raise RuntimeError(f"Run is already {self._state.value}")
-            remote_id, context, status, request = _run_sync(self._submit_async())
+            remote_id, manifest, status, request = _run_sync(self._submit_async())
             self._state = RunState(status["state"])
             self._return_code = status.get("return_code")
             self.result.return_code = self._return_code
             phase = status.get("failure_phase")
             self._failure_phase = None if phase is None else FailurePhase(phase)
             self._failure_message = status.get("error")
-            self._reference = RunReference(
-                executor=f"remote:{self.executor.backend}",
-                native_id=str(remote_id),
-                computer=self.executor.computer,
-                directory=request["directory"],
-                input_file=request.get("input_file"),
-                output_file=request.get("output_file"),
-                error_file=request.get("error_file"),
-                context=context,
-            )
+            self._backend_id = str(remote_id)
+            self._remote_directory = request["directory"]
+            self._files = manifest
         self._start_monitor()
 
 
