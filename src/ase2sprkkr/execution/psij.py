@@ -6,14 +6,15 @@ import asyncio
 import os
 import shlex
 import subprocess
-import sys
 from datetime import datetime
 from pathlib import Path
 from threading import Event, Lock, Thread
 
 from .base import (
+    ExecutionOutcome,
     ExecutionSpec,
     Executor,
+    FailurePhase,
     OutputObservers,
     RunReference,
     RunState,
@@ -79,7 +80,6 @@ def _path(value, directory=None):
 
 
 def _scheduler_output(argv):
-    """Run one scheduler inspection command; failures remain transport failures."""
     return subprocess.run(
         tuple(argv),
         check=True,
@@ -90,7 +90,6 @@ def _scheduler_output(argv):
 
 
 def _slurm_state(value):
-    """Map an extended Slurm state, including suffixes, to RunState."""
     value = (value or "").strip().upper().split("+", 1)[0]
     return _SLURM_STATE_MAP.get(value, RunState.UNKNOWN)
 
@@ -106,7 +105,6 @@ def _slurm_exit_code(value):
 
 
 def _slurm_details(native_id):
-    """Return fields needed to reconstruct a live Slurm reference."""
     output = _scheduler_output(("scontrol", "--oneliner", "show", "job", str(native_id)))
     fields = {}
     for token in shlex.split(output):
@@ -117,7 +115,6 @@ def _slurm_details(native_id):
 
 
 def _slurm_current_matches(run_id):
-    """Find current user's live jobs carrying this ASE2SPRKKR identity."""
     marker = f"ase2sprkkr:{run_id}"
     output = _scheduler_output(
         ("squeue", "--noheader", "--me", "--format=%i|%k|%T|%Z")
@@ -144,7 +141,6 @@ def _slurm_accounting_stores_comments():
 
 
 def _slurm_time(value):
-    """Format an ASE2SPRKKR timestamp using Slurm's accepted local-time syntax."""
     parsed = datetime.fromisoformat(value)
     if parsed.tzinfo is not None:
         parsed = parsed.astimezone()
@@ -152,7 +148,6 @@ def _slurm_time(value):
 
 
 def _slurm_accounting_matches(run_id, submitted_at):
-    """Look up a completed/recent job by its persisted Slurm comment."""
     marker = f"ase2sprkkr:{run_id}"
     output = _scheduler_output(
         (
@@ -185,17 +180,11 @@ def _slurm_accounting_matches(run_id, submitted_at):
 
 
 class PsijRunner:
-    """One job managed by a PSI/J executor.
-
-    PSI/J scheduler executors redirect stdout/stderr to files. The runner
-    follows those files while the job is active and feeds the same asynchronous
-    output reader that is used by :class:`LocalRunner`.
-    """
+    """One raw job managed by a PSI/J executor."""
 
     def __init__(
         self,
         executor,
-        reader,
         spec: ExecutionSpec,
         callback=None,
         *,
@@ -206,10 +195,8 @@ class PsijRunner:
         run_id=None,
     ):
         self.executor = executor
-        self.reader = reader
         self.spec = spec
         self.callback = callback
-        self.result = reader.create_result(spec.output_file, spec.input_file)
         self._run_id = run_id
 
         self._stdout_path = _path(spec.output_file, spec.directory)
@@ -217,6 +204,11 @@ class PsijRunner:
             raise ValueError("PSI/J execution requires an output file")
         self._stderr_path = _path(spec.error_file, spec.directory) or self._stdout_path + ".err"
         self._stdin_path = _path(spec.stdin, spec.directory)
+        self.result = ExecutionOutcome(
+            output_file=self._stdout_path,
+            input_file=_path(spec.input_file, spec.directory),
+            error_file=self._stderr_path,
+        )
 
         self._output_observers = OutputObservers(output_listener)
         self._lock = Lock()
@@ -224,8 +216,9 @@ class PsijRunner:
         self._done = Event()
         self._exception = None
         self._callback_exception = None
-        self._finalization_failed = False
         self._return_code = None
+        self._failure_phase = None
+        self._failure_message = None
         self._thread = None
         self._attached = attached
 
@@ -242,16 +235,12 @@ class PsijRunner:
         launch = self.spec.launch
         if not launch or self.spec.mpi_argv is None:
             return tuple(self.spec.argv), None, None
-
         mpi = launch.mpi
         if mpi.launcher:
             return (*mpi.launcher, *self.spec.mpi_argv), None, None
-
         resources = None
         if mpi.process_count is not None:
-            resources = self._psij.ResourceSpecV1(
-                process_count=mpi.process_count
-            )
+            resources = self._psij.ResourceSpecV1(process_count=mpi.process_count)
         return tuple(self.spec.mpi_argv), resources, self._mpi_launcher()
 
     def _persistent_metadata(self):
@@ -261,9 +250,7 @@ class PsijRunner:
         attributes = None
         if self.executor.backend.lower() == "slurm":
             attributes = self._psij.JobAttributes(
-                custom_attributes={
-                    "slurm.comment": f"ase2sprkkr:{self._run_id}",
-                }
+                custom_attributes={"slurm.comment": f"ase2sprkkr:{self._run_id}"}
             )
         return environment, attributes
 
@@ -277,7 +264,11 @@ class PsijRunner:
             arguments=[os.fspath(arg) for arg in argv[1:]],
             directory=self.spec.directory,
             environment=environment,
-            stdin_path=None if self.spec.launch and self.spec.mpi_argv is not None else self._stdin_path,
+            stdin_path=(
+                None
+                if self.spec.launch and self.spec.mpi_argv is not None
+                else self._stdin_path
+            ),
             stdout_path=self._stdout_path,
             stderr_path=self._stderr_path,
             resources=resources,
@@ -288,8 +279,6 @@ class PsijRunner:
 
     @property
     def state(self):
-        if self._finalization_failed:
-            return RunState.FAILED
         state = getattr(getattr(self._job, "status", None), "state", None)
         return _STATE_MAP.get(getattr(state, "name", None), RunState.UNKNOWN)
 
@@ -304,6 +293,14 @@ class PsijRunner:
         return getattr(getattr(self._job, "status", None), "exit_code", None)
 
     @property
+    def failure_phase(self):
+        return self._failure_phase
+
+    @property
+    def failure_message(self):
+        return self._failure_message
+
+    @property
     def reference(self):
         native_id = getattr(self._job, "native_id", None)
         if native_id is None:
@@ -313,7 +310,7 @@ class PsijRunner:
             native_id=str(native_id),
             computer=self.executor.url,
             directory=os.fspath(self.spec.directory),
-            input_file=_path(self.spec.input_file, self.spec.directory),
+            input_file=self.result.input_file,
             output_file=self._stdout_path,
             error_file=self._stderr_path,
         )
@@ -325,12 +322,8 @@ class PsijRunner:
         self._output_observers.add_error_listener(callback)
 
     def _emit_output(self, data, kind):
-        if not data:
-            return
-        text = data.decode("utf8")
-        if self.reader.print_output:
-            print(text, end="", file=sys.stderr if kind == "err" else sys.stdout)
-        self._output_observers.emit(text, kind)
+        if data:
+            self._output_observers.emit(data.decode("utf8"), kind)
 
     @staticmethod
     def _flush(value):
@@ -353,45 +346,36 @@ class PsijRunner:
         Path(self._stdout_path).write_bytes(b"")
         Path(self._stderr_path).write_bytes(b"")
 
-    async def _follow_file(self, path, stream, kind, finished):
+    async def _follow_file(self, path, kind, finished):
         position = 0
         empty_after_finish = False
-        try:
-            while True:
-                data = b""
-                try:
-                    size = os.path.getsize(path)
-                    if size < position:
-                        position = 0
-                    with open(path, "rb") as source:
-                        source.seek(position)
-                        data = source.read()
-                except FileNotFoundError:
-                    pass
+        while True:
+            data = b""
+            try:
+                size = os.path.getsize(path)
+                if size < position:
+                    position = 0
+                with open(path, "rb") as source:
+                    source.seek(position)
+                    data = source.read()
+            except FileNotFoundError:
+                pass
 
-                if data:
-                    position += len(data)
-                    self._emit_output(data, kind)
-                    stream.feed_data(data)
-                    empty_after_finish = False
-                elif finished.is_set():
-                    if empty_after_finish:
-                        break
-                    empty_after_finish = True
-                await asyncio.sleep(self.executor.poll_interval)
-        finally:
-            stream.feed_eof()
+            if data:
+                position += len(data)
+                self._emit_output(data, kind)
+                empty_after_finish = False
+            elif finished.is_set():
+                if empty_after_finish:
+                    return
+                empty_after_finish = True
+            await asyncio.sleep(self.executor.poll_interval)
 
     async def _monitor(self):
-        stdout = asyncio.StreamReader()
-        stderr = asyncio.StreamReader()
         finished = asyncio.Event()
-        parse_task = asyncio.create_task(
-            self.reader.parse_streams(stdout, stderr, self.result)
-        )
         followers = [
-            asyncio.create_task(self._follow_file(self._stdout_path, stdout, "out", finished)),
-            asyncio.create_task(self._follow_file(self._stderr_path, stderr, "err", finished)),
+            asyncio.create_task(self._follow_file(self._stdout_path, "out", finished)),
+            asyncio.create_task(self._follow_file(self._stderr_path, "err", finished)),
         ]
         status = None
         try:
@@ -402,23 +386,24 @@ class PsijRunner:
             await asyncio.gather(*followers, return_exceptions=False)
 
         self._return_code = getattr(status, "exit_code", None)
+        state_name = getattr(getattr(status, "state", None), "name", None)
         if self._return_code is None:
-            self._return_code = (
-                0
-                if getattr(getattr(status, "state", None), "name", None) == "COMPLETED"
-                else 1
+            self._return_code = 0 if state_name == "COMPLETED" else 1
+        self.result.return_code = self._return_code
+        if state_name == "FAILED" or self._return_code != 0:
+            self._failure_phase = FailurePhase.EXECUTION
+            self._failure_message = getattr(status, "message", None) or (
+                f"PSI/J job exited with status {self._return_code}"
             )
-        output, error = await parse_task
-        return self.reader.complete_result(
-            self.result, output, error, self._return_code
-        )
+        return self.result
 
     def _thread_main(self):
         try:
             asyncio.run(self._monitor())
         except BaseException as exc:
             self._exception = exc
-            self._finalization_failed = True
+            self._failure_phase = self._failure_phase or FailurePhase.EXECUTION
+            self._failure_message = self._failure_message or str(exc)
         finally:
             try:
                 if self.callback:
@@ -445,9 +430,13 @@ class PsijRunner:
                 raise RuntimeError(f"Run is already {self.state.value}")
             try:
                 self._prepare_io()
+                self.executor._job_executor.submit(self._job)
             except Exception as exc:
-                raise SubmissionNotStarted(str(exc)) from exc
-            self.executor._job_executor.submit(self._job)
+                if self.reference is None:
+                    self._failure_phase = FailurePhase.SUBMISSION
+                    self._failure_message = str(exc)
+                    raise SubmissionNotStarted(str(exc)) from exc
+                raise
             self._start_monitor()
 
     def wait(self):
@@ -468,8 +457,7 @@ class PsijRunner:
     async def run_async(self):
         if self._thread is None:
             self.start()
-        loop = asyncio.get_running_loop()
-        return await loop.run_in_executor(None, self.wait)
+        return await asyncio.to_thread(self.wait)
 
     def cancel(self):
         if self._thread is None and not self._attached:
@@ -502,15 +490,14 @@ class PsijExecutor(Executor):
         )
         self._status_jobs = {}
 
-    def create_run(self, reader, spec: ExecutionSpec, callback=None):
-        return PsijRunner(self, reader, spec, callback=callback)
+    def create_run(self, spec: ExecutionSpec, callback=None):
+        return PsijRunner(self, spec, callback=callback)
 
     def create_persistent_run(
-        self, reader, spec: ExecutionSpec, *, run_id, callback=None
+        self, spec: ExecutionSpec, *, run_id, callback=None
     ):
         return PsijRunner(
             self,
-            reader,
             spec,
             callback=callback,
             run_id=run_id,
@@ -547,6 +534,9 @@ class PsijExecutor(Executor):
                     run_state,
                     return_code=getattr(status, "exit_code", None),
                     message=getattr(status, "message", None),
+                    failure_phase=(
+                        FailurePhase.EXECUTION if run_state == RunState.FAILED else None
+                    ),
                 )
             )
         return tuple(statuses)
@@ -584,7 +574,14 @@ class PsijExecutor(Executor):
                 details.get("StdOut"),
                 details.get("StdErr"),
             )
-            return RunStatus(reference, _slurm_state(state))
+            run_state = _slurm_state(state)
+            return RunStatus(
+                reference,
+                run_state,
+                failure_phase=(
+                    FailurePhase.EXECUTION if run_state == RunState.FAILED else None
+                ),
+            )
 
         if submitted_at is None or not _slurm_accounting_stores_comments():
             raise NotImplementedError(
@@ -607,17 +604,20 @@ class PsijExecutor(Executor):
                 stdout,
                 stderr,
             )
+            run_state = _slurm_state(state)
             return RunStatus(
                 reference,
-                _slurm_state(state),
+                run_state,
                 return_code=return_code,
+                failure_phase=(
+                    FailurePhase.EXECUTION if run_state == RunState.FAILED else None
+                ),
             )
         return None
 
     def attach(
         self,
         reference: RunReference,
-        reader,
         callback=None,
         output_listener=None,
         start=True,
@@ -641,7 +641,6 @@ class PsijExecutor(Executor):
         )
         return PsijRunner(
             self,
-            reader,
             spec,
             callback=callback,
             output_listener=output_listener,
