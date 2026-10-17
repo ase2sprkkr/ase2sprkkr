@@ -66,7 +66,7 @@ def input_parameters():
     return InputParameters(
         "clxps", [CONTROL("CLXPS"), TAU, MODE, STRCONST, energy, TASK("CLXPS", values), SITES],
         executable="kkrgen", mpi=False,
-        output_file_templates=("{dataset}.pes",), validators=_validate_clxps,
+        output_file_templates=("{dataset}*.*.xps",), validators=_validate_clxps,
         info="Core-level XPS (ASA, fully relativistic).",
         description="TASK sets core shell, photon energy and optional angular geometries. "
                     "Final electron energies are core eigenenergies + EPHOT, not an ENERGY scan. "

@@ -48,8 +48,8 @@ def test_non_tau_cache_roles(tmp_path):
 @pytest.mark.parametrize(
     "task, expected",
     [
-        ("APS", {f"{DATASET}.aps"}),
-        ("CLXPS", {f"{DATASET}.pes"}),
+        ("APS", {f"{DATASET}.*.*.aps"}),
+        ("CLXPS", {f"{DATASET}*.*.xps"}),
         ("FMAG", {f"{DATASET}_fmag_*.agr", f"{DATASET}_dens_*.agr"}),
         ("SIGMA", {"sigma?????.dat"}),
         ("XAS", {f"{DATASET}*.rat"}),
