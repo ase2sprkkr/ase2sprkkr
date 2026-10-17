@@ -2,8 +2,24 @@
 from ...common.grammar_types import Integer, Keyword
 from ...common.warnings import DataValidityError
 from ..input_parameters_definitions import InputValueDefinition as V
-from ._file_manifests import RequiredTauInputParametersDefinition
+from ._file_manifests import (
+    RequiredTauInputParametersDefinition,
+    core_level_output_name,
+    resolve_file,
+)
 from ._sections import CONTROL, ENERGY, MODE, SITES, STRCONST, TASK, TAU
+
+
+class AESInputParametersDefinition(RequiredTauInputParametersDefinition):
+    """AES definition with the native atom/core-shell spectrum filename."""
+
+    def output_files(self, parameters, directory):
+        files = list(super().output_files(parameters, directory))
+        name = core_level_output_name(
+            parameters, "aes", type_separator="", shell_separator="."
+        )
+        files.append(resolve_file(directory, name))
+        return tuple(files)
 
 
 def _validate_aes(parameters, _values, why):
@@ -28,7 +44,7 @@ def input_parameters():
     energy = ENERGY(emax=(None, "Omitted bound delegates to EF", None),
                     defaults={"GRID": 3, "NE": 300, "ImE": .01})
     energy.copy_member("EMAX", is_optional=True)
-    return RequiredTauInputParametersDefinition(
+    return AESInputParametersDefinition(
         "aes", [CONTROL("AES"), TAU, MODE, STRCONST, energy,
         TASK("AES", [
             V("IT", Integer(min=1), 1, is_always_added=False),

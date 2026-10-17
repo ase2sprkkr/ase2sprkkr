@@ -5,6 +5,10 @@ import os
 from ..input_parameters_definitions import InputParametersDefinition
 
 
+_XRAY_SHELLS = "KLMNO"
+_XRAY_SUBSHELL_SUFFIXES = {"S": "1", "P": "23", "D": "45", "F": "67"}
+
+
 def resolve_file(directory, filename):
     """Resolve a task file name relative to the calculation directory."""
     filename = os.fspath(filename)
@@ -16,6 +20,23 @@ def _optional_value(section, name):
         return section[name]()
     except KeyError:
         return None
+
+
+def xray_shell_label(core_level):
+    """Return the native K/L/M/N/O filename label for a core shell."""
+    principal = int(core_level[:-1])
+    orbital = core_level[-1].upper()
+    shell = _XRAY_SHELLS[principal - 1]
+    if principal == 1:
+        return shell
+    return shell + _XRAY_SUBSHELL_SUFFIXES[orbital]
+
+
+def core_level_output_name(parameters, extension, *, type_separator, shell_separator):
+    """Return a constrained native filename pattern for one selected core shell."""
+    dataset = parameters.CONTROL.DATASET()
+    shell = xray_shell_label(parameters.TASK.CL())
+    return f"{dataset}{type_separator}*{shell_separator}{shell}.{extension}"
 
 
 def tau_file(parameters, directory):
@@ -57,24 +78,23 @@ class NrSpectroscopyInputParametersDefinition(InputParametersDefinition):
 
     def output_files(self, parameters, directory):
         files = list(super().output_files(parameters, directory))
-        dataset = parameters.CONTROL.DATASET()
-        extension = self.output_extension
-
-        # Native naming may insert ADSI / atom / shell information before the
-        # extension, so retain that dynamic middle part as a constrained glob.
-        files.append(resolve_file(directory, f"{dataset}*.{extension}"))
+        name = core_level_output_name(
+            parameters, self.output_extension, type_separator=".", shell_separator="."
+        )
+        files.append(resolve_file(directory, name))
 
         if parameters.TASK.CALCLS():
-            files.append(resolve_file(directory, f"{dataset}*.{extension}.??"))
+            files.append(resolve_file(directory, f"{name}.??"))
 
         if parameters.TASK.OUTGNU():
-            # L1,L2 are one-character angular-momentum labels; S1,S2 are U/D.
+            # D/E/W carry L1,L2 and the two-spin label; DE carries only L1,L2.
             files.extend(resolve_file(directory, f"{prefix}??[UD][UD]")
-                         for prefix in ("D", "E", "DE", "W"))
+                         for prefix in ("D", "E", "W"))
+            files.append(resolve_file(directory, "DE??"))
 
         if self.broadened_dos:
             gamma = _optional_value(parameters.TASK, "GAMMA")
             if gamma is not None and gamma > 0:
-                files.append(resolve_file(directory, f"{dataset}.dos.brd"))
+                files.append(resolve_file(directory, f"{parameters.CONTROL.DATASET()}.dos.brd"))
 
         return tuple(files)

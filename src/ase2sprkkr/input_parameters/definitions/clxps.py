@@ -3,7 +3,20 @@ import numpy as np
 from ...common.grammar_types import Integer, Keyword, SetOf
 from ...common.warnings import DataValidityError, DataValidityWarning
 from ..input_parameters_definitions import InputParametersDefinition as InputParameters, InputValueDefinition as V
+from ._file_manifests import core_level_output_name, resolve_file
 from ._sections import CONTROL, ENERGY, MODE, SITES, STRCONST, TASK, TAU
+
+
+class CLXPSInputParametersDefinition(InputParameters):
+    """CLXPS definition with the native atom/core-shell XPS filename."""
+
+    def output_files(self, parameters, directory):
+        files = list(super().output_files(parameters, directory))
+        name = core_level_output_name(
+            parameters, "xps", type_separator="", shell_separator="."
+        )
+        files.append(resolve_file(directory, name))
+        return tuple(files)
 
 
 def _validate_clxps(parameters, _values, why):
@@ -53,7 +66,7 @@ def input_parameters():
     values = [
         V("ME", Keyword("ADA"), "ADA", is_always_added=False, info="Only ADA reaches the implemented matrix-element branch."),
         V("IT", Integer(min=1), 1, is_always_added=False, info="One-based atomic type index."),
-        V("CL", Keyword(*(f"{n}{s}" for n in range(1, 7) for s in "SPDF")), "2P", is_always_added=False),
+        V("CL", Keyword(*(f"{n}{s}" for n in range(1, 6) for s in "SPDF")), "2P", is_always_added=False),
         V("EPHOT", float, 1253.6, is_always_added=False, info="Photon energy in eV; final states must lie above EF."),
         V("ImE", float, 0.01, is_always_added=False, info="Final-state imaginary energy in Ry; near-zero values become 0.01."),
         V("MECHECK", False, info="Print diagnostic matrix elements."),
@@ -63,10 +76,9 @@ def input_parameters():
     ] + [V(f"{name}{i}", SetOf(float, length=2), is_optional=True,
            info="Polar and azimuthal angles in degrees; photon q, polarization e or electron k.")
          for i in range(11) for name in ("ANGQ", "ANGE", "ANGK")]
-    return InputParameters(
+    return CLXPSInputParametersDefinition(
         "clxps", [CONTROL("CLXPS"), TAU, MODE, STRCONST, energy, TASK("CLXPS", values), SITES],
-        executable="kkrgen", mpi=False,
-        output_file_templates=("{dataset}.pes",), validators=_validate_clxps,
+        executable="kkrgen", mpi=False, validators=_validate_clxps,
         info="Core-level XPS (ASA, fully relativistic).",
         description="TASK sets core shell, photon energy and optional angular geometries. "
                     "Final electron energies are core eigenenergies + EPHOT, not an ENERGY scan. "

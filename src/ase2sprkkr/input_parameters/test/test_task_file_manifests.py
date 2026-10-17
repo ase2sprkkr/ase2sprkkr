@@ -48,9 +48,10 @@ def test_non_tau_cache_roles(tmp_path):
 @pytest.mark.parametrize(
     "task, expected",
     [
-        ("APS", {f"{DATASET}*.aps"}),
-        ("NRAES", {f"{DATASET}*.aes"}),
-        ("CLXPS", {f"{DATASET}.pes"}),
+        ("AES", {f"{DATASET}*.L23.aes"}),
+        ("APS", {f"{DATASET}.*.L23.aps"}),
+        ("NRAES", {f"{DATASET}.*.L23.aes"}),
+        ("CLXPS", {f"{DATASET}*.L23.xps"}),
         ("FMAG", {f"{DATASET}_fmag_*.agr", f"{DATASET}_dens_*.agr"}),
         ("SCF", {"*_SCFSTART.dos"}),
         ("SIGMA", {"sigma?????.dat"}),
@@ -63,6 +64,21 @@ def test_audited_output_manifests(task, expected, tmp_path):
     assert expected <= manifest(task, "output", tmp_path)
 
 
+@pytest.mark.parametrize(
+    "task, core_level, expected",
+    [
+        ("AES", "1S", f"{DATASET}*.K.aes"),
+        ("CLXPS", "3D", f"{DATASET}*.M45.xps"),
+        ("APS", "2S", f"{DATASET}.*.L1.aps"),
+        ("NRAES", "5F", f"{DATASET}.*.O67.aes"),
+    ],
+)
+def test_core_level_output_manifest_tracks_selected_shell(task, core_level, expected, tmp_path):
+    p = parameters(task)
+    p.TASK.CL = core_level
+    assert expected in basenames(p._definition.output_files(p, tmp_path))
+
+
 def test_nr_spectroscopy_conditional_outputs(tmp_path):
     aps = parameters("APS")
     names = basenames(aps._definition.output_files(aps, tmp_path))
@@ -73,15 +89,15 @@ def test_nr_spectroscopy_conditional_outputs(tmp_path):
     aps.TASK.OUTGNU = True
     names = basenames(aps._definition.output_files(aps, tmp_path))
     assert f"{DATASET}.dos.brd" in names
-    assert f"{DATASET}*.aps.??" in names
-    assert {"D??[UD][UD]", "E??[UD][UD]", "DE??[UD][UD]", "W??[UD][UD]"} <= names
+    assert f"{DATASET}.*.L23.aps.??" in names
+    assert {"D??[UD][UD]", "E??[UD][UD]", "DE??", "W??[UD][UD]"} <= names
 
     nraes = parameters("NRAES")
     nraes.TASK.CALCLS = True
     nraes.TASK.OUTGNU = True
     names = basenames(nraes._definition.output_files(nraes, tmp_path))
-    assert f"{DATASET}*.aes.??" in names
-    assert {"D??[UD][UD]", "E??[UD][UD]", "DE??[UD][UD]", "W??[UD][UD]"} <= names
+    assert f"{DATASET}.*.L23.aes.??" in names
+    assert {"D??[UD][UD]", "E??[UD][UD]", "DE??", "W??[UD][UD]"} <= names
 
 
 def test_posani_previous_result_is_required_input(tmp_path):
