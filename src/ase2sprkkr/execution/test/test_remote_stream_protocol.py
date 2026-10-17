@@ -13,7 +13,7 @@ from ..stream_protocol import (
     encode_stream_frame,
 )
 from ..transport import LocalTransport
-from .test_remote import _Reader, _launch
+from .test_remote import _launch, _processed_run
 
 
 def _reader_with(data):
@@ -121,7 +121,7 @@ def test_remote_transport_stderr_never_enters_calculation_files(tmp_path):
         launch=_launch(local_root, remote_root),
     )
 
-    result = executor.create_run(_Reader(), spec).run()
+    result = _processed_run(executor, spec).run()
 
     assert result.return_code == 0
     assert result.output == b"stdout\n"
