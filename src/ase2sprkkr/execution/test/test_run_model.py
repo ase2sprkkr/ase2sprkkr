@@ -42,3 +42,23 @@ def test_empty_backend_identity_and_pathless_file_are_invalid():
         Execution(ExecutorEndpoint(), WorkingDirectory("/tmp"), backend_id="")
     with pytest.raises(ValueError, match="location"):
         FileEntry()
+
+
+def test_manifest_versions_and_availability_roundtrip():
+    manifest = FileManifest(
+        inputs=(FileEntry("/local/in", "/remote/in"),),
+        outputs=(FileEntry("/local/data", "/remote/data"),),
+        stdout=FileEntry("/local/stdout", "/remote/stdout"),
+        stderr=FileEntry("/local/stderr", "/remote/stderr"),
+        availability_state="pending",
+    )
+    restored = FileManifest(**asdict(manifest))
+    assert restored == manifest
+    assert restored.input_file == "/local/in"
+    assert restored.output_file == "/local/stdout"
+    assert restored.input_files == ("/local/in",)
+    assert restored.output_files == ("/local/stdout", "/local/data")
+    assert restored.manifests == ("/local/in", "/local/stdout", "/local/data")
+    assert restored.all_versions == ()
+    with pytest.raises(ValueError, match="availability"):
+        FileManifest(availability_state="inconsistent")
