@@ -29,7 +29,7 @@ from .transport import AtomicLocalFile
 
 _FINAL_STATES = {
     RunState.FINISHED,
-    RunState.EXECUTION_FAILED,
+    RunState.FAILED,
     RunState.CANCELLED,
 }
 
@@ -97,8 +97,6 @@ def recover_local_submission(run_id, submission):
         state = status_detached(directory, run_id)
         request = json.loads(_request_path(directory, run_id).read_text())
     except FileNotFoundError:
-        # ``submit_detached`` creates the state before it starts the helper, so
-        # absence on this same filesystem proves that submission did not happen.
         return None
     reference = _reference_from_request(run_id, directory, request)
     return RunStatus(
