@@ -1,9 +1,8 @@
 """JXC task definition."""
 
-from ._file_manifests import resolve_file
 from .sections import TASK, CONTROL, TAU, ENERGY, SITES, STRCONST, MODE
 from ..input_parameters_definitions import InputParametersDefinition, InputValueDefinition as V
-from ..task_definition import TaskDefinition
+from ..task_definition import TaskDefinition, TaskFile
 from ...common.grammar_types import flag
 
 
@@ -11,15 +10,17 @@ class JxcInputParametersDefinition(InputParametersDefinition):
     def initialize_from_result(self, parameters, result):
         parameters.ENERGY.EMIN.set_default(result.last_iteration.energy.EMIN())
 
-    def output_files(self, parameters, directory):
-        files = list(super().output_files(parameters, directory))
-        dataset = parameters.CONTROL.DATASET()
-        if parameters.MODE.MODE() == "SP-SREL":
-            files.append(resolve_file(directory, f"{dataset}*Jij*"))
-        else:
-            files.append(resolve_file(directory, f"{dataset}_XCPLTEN_Jij.dat"))
-        files.append(resolve_file(directory, f"{dataset}*.agr"))
-        return tuple(files)
+
+def _jxc_tensor_result_file(parameters):
+    if parameters.MODE.MODE() == "SP-SREL":
+        return None
+    return "{dataset}_XCPLTEN_Jij.dat"
+
+
+def _jxc_scalar_result_file(parameters):
+    if parameters.MODE.MODE() != "SP-SREL":
+        return None
+    return "{dataset}*Jij*"
 
 
 def _jxc_mode_warning_condition(value):
@@ -80,5 +81,18 @@ def input_parameters_definition():
         executable="kkrgen",
         mpi=True,
         output_reader="JXC",
+        output_files=(
+            TaskFile(
+                _jxc_tensor_result_file,
+                type="JXC",
+                info="Exchange-coupling tensor result",
+            ),
+            TaskFile(
+                _jxc_scalar_result_file,
+                type="JXC",
+                info="Scalar exchange-coupling result",
+            ),
+            TaskFile("{dataset}*.agr", info="AGR plot data"),
+        ),
     )
     return schema

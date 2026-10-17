@@ -1,12 +1,6 @@
-"""Helpers for input-schema auxiliary file manifests."""
+"""Reusable pathname callbacks for declarative task files."""
 
 import os
-
-
-def resolve_file(directory, filename):
-    """Resolve a file name relative to the calculation directory."""
-    filename = os.fspath(filename)
-    return filename if os.path.isabs(filename) else os.path.join(directory, filename)
 
 
 def _optional_value(section, name):
@@ -16,16 +10,22 @@ def _optional_value(section, name):
         return None
 
 
-def tau_file(parameters, directory):
-    """Return the effective native TAU-directory file path."""
+def tau_file(parameters):
+    """Return the effective TAU-directory pathname for concrete parameters."""
     filename = _optional_value(parameters.TAU, "TAUDIR")
-    if not filename:
-        filename = f"{parameters.CONTROL.DATASET()}.tau.dir"
-
-    filename = os.fspath(filename)
-    if os.path.isabs(filename):
-        return filename
+    if filename is None:
+        filename = "{dataset}.tau.dir"
+    else:
+        filename = os.fspath(filename)
+        if not filename:
+            return filename
+        if os.path.isabs(filename):
+            return filename
 
     taupath = _optional_value(parameters.TAU, "TAUPATH")
-    base = resolve_file(directory, taupath) if taupath else directory
-    return os.path.join(base, filename)
+    if taupath is None:
+        return filename
+    taupath = os.fspath(taupath)
+    if not taupath:
+        return taupath
+    return os.path.join(taupath, filename)

@@ -6,7 +6,7 @@ import pytest
 
 from ..input_parameters import InputParameters
 from ..input_parameters_definitions import InputParametersDefinition
-from ..task_definition import TaskDefinition
+from ..task_definition import TaskDefinition, TaskFile
 from ...outputs.readers.default import DefaultOutputReader
 from ...sprkkr.configuration import ConfigurationFile
 
@@ -32,7 +32,7 @@ def test_task_binding_is_authoritative():
 
     assert parameters.task_name == "SCF"
     assert parameters.definition_name == "SCF"
-    assert parameters._definition is _schema_for(parameters.task_definition)
+    assert _schema_for(parameters.task_definition).name == parameters.definition_name
     assert parameters.task_definition.executable == "kkrscf"
     assert parameters.task_definition.mpi is True
     assert parameters.task_definition_required() is parameters.task_definition
@@ -48,7 +48,7 @@ def test_copy_preserves_task_binding(copy_values):
     assert copied.task_name == "BSFEK"
     assert copied.requested_task_name == "BSFEK"
     assert copied.definition_name == "BSF"
-    assert copied._definition is _schema_for(copied.task_definition)
+    assert _schema_for(copied.task_definition).name == copied.definition_name
     np.testing.assert_array_equal(copied.ENERGY.NE(), [200])
     assert not copied.ENERGY.NE.is_set()
 
@@ -62,7 +62,7 @@ def test_change_task_changes_task_and_schema_atomically():
     assert parameters.requested_task_name == "SCF"
     assert parameters.definition_name == "SCF"
     assert parameters.task_definition.name == "SCF"
-    assert parameters._definition is _schema_for(parameters.task_definition)
+    assert _schema_for(parameters.task_definition).name == parameters.definition_name
 
 
 def test_change_task_retargets_shared_schema_default():
@@ -208,22 +208,51 @@ def test_task_definition_materializes_pathlike_templates_as_strings(field):
     hash(task)
 
 
+@pytest.mark.parametrize("field", ["input_files", "output_files", "cache_files"])
+def test_task_definition_materializes_pathlike_files(field):
+    task = TaskDefinition("SCF", **{field: (Path("{dataset}.dat"),)})
+
+    assert getattr(task, field) == (TaskFile("{dataset}.dat"),)
+    hash(task)
+
+
 @pytest.mark.parametrize(
     "field",
     ["input_file_templates", "output_file_templates", "cache_file_templates"],
 )
 def test_task_definition_rejects_non_pathlike_template_elements(field):
-    with pytest.raises(TypeError, match=rf"{field}\[0\]"):
+    with pytest.raises(TypeError, match=field.replace("_templates", "s")):
         TaskDefinition("SCF", **{field: ([1, 2],)})
 
 
-@pytest.mark.parametrize(
-    "field",
-    ["input_file_templates", "output_file_templates", "cache_file_templates"],
-)
-def test_task_definition_rejects_single_template_instead_of_iterable(field):
-    with pytest.raises(TypeError, match="iterable of path-like strings"):
+@pytest.mark.parametrize("field", ["input_files", "output_files", "cache_files"])
+def test_task_definition_rejects_single_file_instead_of_iterable(field):
+    with pytest.raises(TypeError, match="iterable of TaskFile or path-like values"):
         TaskDefinition("SCF", **{field: "{dataset}.dat"})
+
+
+def test_task_file_is_descriptive_immutable_metadata():
+    file = TaskFile(
+        Path("{dataset}.dos"),
+        type=" dos ",
+        info="Task-specific DOS output",
+    )
+
+    assert file.pathname == "{dataset}.dos"
+    assert file.type == "DOS"
+    assert file.info == "Task-specific DOS output"
+    assert hash(file)
+    with pytest.raises(FrozenInstanceError):
+        file.info = "changed"
+
+
+def test_task_definition_rejects_duplicate_file_declaration_styles():
+    with pytest.raises(TypeError, match="Specify only one"):
+        TaskDefinition(
+            "SCF",
+            output_files=(TaskFile("result.dat"),),
+            output_file_templates=("result.dat",),
+        )
 
 
 def test_task_definition_is_an_immutable_value_object():
@@ -232,14 +261,14 @@ def test_task_definition_is_an_immutable_value_object():
         name="scf",
         executable="kkrscf",
         output_reader="scf",
-        output_file_templates=("{dataset}.out",),
+        output_files=(TaskFile("{dataset}.out", info="Main output"),),
     )
     second = TaskDefinition(
         "SCF",
         name="SCF",
         executable="kkrscf",
         output_reader_name="SCF",
-        output_file_templates=("{dataset}.out",),
+        output_files=(TaskFile("{dataset}.out", info="Main output"),),
     )
 
     assert first == second
@@ -256,9 +285,6 @@ def test_builtin_task_definitions_are_metadata_objects():
     for name in (
         "output_reader_class",
         "prepare_from_result",
-        "input_files",
-        "output_files",
-        "cache_files",
         "execution_task_name",
     ):
         assert not hasattr(TaskDefinition, name)

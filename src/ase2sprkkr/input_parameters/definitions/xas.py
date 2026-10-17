@@ -4,17 +4,12 @@ from ...common.grammar_types import DefKeyword, flag
 from ._file_manifests import tau_file
 from .sections import CONTROL, TASK, TAU, ENERGY, SITES, MODE
 from ..input_parameters_definitions import InputParametersDefinition, InputValueDefinition as V
-from ..task_definition import TaskDefinition
-
-
-class XasInputParametersDefinition(InputParametersDefinition):
-    def cache_files(self, parameters, directory):
-        return (tau_file(parameters, directory), *super().cache_files(parameters, directory))
+from ..task_definition import TaskDefinition, TaskFile
 
 
 def input_parameters_definition():
     """XAS task input-parameter definition."""
-    schema = XasInputParametersDefinition(
+    schema = InputParametersDefinition(
         "xas",
         [
             CONTROL("XAS"),
@@ -68,5 +63,6 @@ def input_parameters_definition():
         name="XAS",
         executable="kkrgen",
         mpi=True,
+        cache_files=(TaskFile(tau_file, info="Reusable TAU-directory cache file"),),
     )
     return schema
