@@ -11,13 +11,7 @@ _PROJECT_ASSIGNMENT_ATTEMPTS = 3
 
 
 class ExecutionManager(_ExecutionManager):
-    """Persist runs and optionally assign them to an ASE2SPRKKR project.
-
-    Project membership is part of creating a persistent run, not GUI
-    post-processing. A project-bound manager shares the run store, executor pool
-    and project repository with its parent. The run is first reserved as
-    ``SUBMITTING`` and then added to the project before backend submission starts.
-    """
+    """Persist runs and optionally assign them to an ASE2SPRKKR project."""
 
     def __init__(
         self,
@@ -67,9 +61,10 @@ class ExecutionManager(_ExecutionManager):
     def create_run(
         self,
         executor,
-        spec,
+        reader_or_spec,
+        spec=None,
         *,
-        postprocess,
+        postprocess=None,
         print_output=False,
         task,
         input_definition=None,
@@ -83,6 +78,7 @@ class ExecutionManager(_ExecutionManager):
         return _ExecutionManager.create_run(
             manager,
             executor,
+            reader_or_spec,
             spec,
             postprocess=postprocess,
             print_output=print_output,
