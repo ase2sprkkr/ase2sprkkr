@@ -118,8 +118,9 @@ def test_error_policy_with_multiple_candidate_ipds(monkeypatch):
         def __init__(self, name, outcome):
             self.name, self.outcome, self.calls = name, outcome, 0
 
-        def read_from_string(self, text, allow_dangerous=False):
+        def read_from_file(self, stream, allow_dangerous=False):
             self.calls += 1
+            stream.read()
             if isinstance(self.outcome, Exception):
                 raise self.outcome
             return self.outcome
