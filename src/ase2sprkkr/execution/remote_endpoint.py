@@ -64,9 +64,6 @@ def _client_status_state(state):
         FailurePhase.SUBMISSION,
         FailurePhase.LAUNCH,
     ):
-        # Execution failures may still have useful declared artifacts. The
-        # remote executor therefore remains active until their transfer has
-        # either completed or failed.
         return RunState.DOWNLOADING
     return backend_state
 
@@ -115,9 +112,6 @@ class _RemoteRun(RemoteRunner):
             self._failure_message = str(exc)
             raise SubmissionNotStarted(str(exc)) from exc
 
-        # A transport failure here is intentionally not SubmissionNotStarted:
-        # the target may already have accepted the job. Persistent recovery owns
-        # that uncertainty boundary.
         status = await self.executor._submit(request)
         remote_id = status.get("remote_id")
         if not remote_id:
@@ -291,8 +285,6 @@ class _RemoteRunContext:
         if not reference.native_id or not reference.directory:
             raise ValueError("Remote run reference lacks remote id or directory")
 
-        # Use target-side facts here, not the public client status mapping. The
-        # attached runner itself must still perform the pending download.
         status = await self._status(reference.directory, reference.native_id)
         sync = await self._client_sync(reference)
         local_directory = await self.unmap_path(reference.directory)
@@ -367,7 +359,7 @@ class _RemoteRunContext:
                 output_listener=output_listener,
                 start=False,
                 reference=reference,
-                state=RunState(status.get("state", "unknown")),
+                state=_client_status_state(status),
                 output_targets=output_targets,
                 cache_targets=cache_targets,
                 output_patterns=tuple(sync.get("output_patterns", ())),
