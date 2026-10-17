@@ -4,7 +4,6 @@ import pytest
 
 from ase2sprkkr.execution import (
     ArtifactAvailabilityState,
-    ExecutionManager,
     ExecutionSpec,
     Executor,
     ExecutorPool,
@@ -14,6 +13,7 @@ from ase2sprkkr.execution import (
     RunStore,
 )
 from ase2sprkkr.execution.endpoint import endpoint_for_executor
+from ase2sprkkr.execution.manager import ExecutionManager
 from ase2sprkkr.outputs import persistent as persistent_results
 from ase2sprkkr.outputs.persistent import (
     PersistentResultUnavailableError,
