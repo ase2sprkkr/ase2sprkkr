@@ -89,26 +89,17 @@ def _remote_context(tmp_path):
         Endpoint(),
         LaunchSpec(local_root=str(tmp_path), remote_root="/remote"),
     )
-    reference = RunReference(
-        executor="remote:local",
-        native_id="run",
-        computer="host",
-        directory="/remote/work",
-        input_file="/remote/work/input.inp",
-        output_file="/remote/work/output.out",
-        context={
-            "client_sync": {
-                "output_file": None,
-                "error_file": None,
-                "output_files": (),
-                "cache_files": (),
-                "output_patterns": (),
-                "cache_patterns": (),
-                "cache_before": (),
-            }
-        },
+    run = RunRecord(
+        id="run", task="SCF", state=RunState.RUNNING,
+        created_at="2026-10-13T08:00:00+00:00",
+        updated_at="2026-10-13T08:00:00+00:00",
+        execution=Execution(
+            ExecutorEndpoint(executor="ssh", host="host"),
+            WorkingDirectory(str(tmp_path / "work"), "/remote/work"), "run",
+        ),
+        files=FileManifest(mapping=FileMapping(str(tmp_path), "/remote")),
     )
-    return context, reference
+    return context, run
 
 
 def test_remote_attach_installs_listener_before_monitor(monkeypatch, tmp_path):
@@ -121,13 +112,13 @@ def test_remote_attach_installs_listener_before_monitor(monkeypatch, tmp_path):
         self._done.set()
 
     monkeypatch.setattr(_RemoteRun, "_thread_main", immediate_monitor)
-    context, reference = _remote_context(tmp_path)
+    context, run = _remote_context(tmp_path)
 
     import asyncio
 
     runner = asyncio.run(
         context.attach(
-            reference,
+            run,
             callback=lambda result: events.append(("finished", None)),
             output_listener=lambda text, kind: events.append((text, kind)),
         )
@@ -145,13 +136,13 @@ def test_remote_attach_can_defer_monitor_start(monkeypatch, tmp_path):
         self._done.set()
 
     monkeypatch.setattr(_RemoteRun, "_thread_main", immediate_monitor)
-    context, reference = _remote_context(tmp_path)
+    context, run = _remote_context(tmp_path)
 
     import asyncio
 
     runner = asyncio.run(
         context.attach(
-            reference,
+            run,
             output_listener=lambda text, kind: events.append((text, kind)),
             start=False,
         )
