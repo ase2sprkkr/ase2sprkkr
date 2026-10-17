@@ -275,21 +275,25 @@ class _RemoteRunContext:
         return {
             "output_files": [
                 entry.remote_path for entry in files.outputs
-                if entry.remote_path and not glob.has_magic(entry.remote_path)
+                if entry.source_pattern is None and entry.remote_path
+                and not glob.has_magic(entry.remote_path)
             ],
             "output_patterns": [
                 entry.remote_path for entry in files.outputs
-                if entry.remote_path and glob.has_magic(entry.remote_path)
+                if entry.source_pattern is None and entry.remote_path
+                and glob.has_magic(entry.remote_path)
             ],
             "cache_files": [
                 {"path": item.file.remote_path, "before": item.before}
                 for item in files.caches
-                if item.file.local_path is not None and item.file.remote_path
+                if item.file.source_pattern is None
+                and item.file.local_path is not None and item.file.remote_path
                 and not glob.has_magic(item.file.remote_path)
             ],
             "cache_patterns": [
                 item.file.remote_path for item in files.caches
-                if item.file.local_path is not None and item.file.remote_path
+                if item.file.source_pattern is None
+                and item.file.local_path is not None and item.file.remote_path
                 and glob.has_magic(item.file.remote_path)
             ],
             "cache_before": [

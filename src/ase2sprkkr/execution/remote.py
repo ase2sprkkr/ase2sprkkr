@@ -116,10 +116,14 @@ class RemoteRunner:
     def files(self):
         return self._files
 
-    def _set_file_availability(self, local, state, message=None, *, remote=None, kind="output"):
+    def _set_file_availability(
+        self, local, state, message=None, *,
+        remote=None, kind="output", source_pattern=None,
+    ):
         if self._files is not None:
             self._files = self._files.with_file_availability(
                 local, state, message, remote_path=remote, kind=kind,
+                source_pattern=source_pattern,
             )
 
     def _set_pending_failed(self, message):
@@ -433,41 +437,43 @@ class RemoteRunner:
         }
         selected = set()
         for pattern in self._output_patterns:
-            matches = await self.executor.transport.expand_files(pattern, remote_root)
-            if not matches:
-                if required:
-                    self._set_file_availability(
-                        os.fspath(await self.executor.unmap_path(pattern)), "failed",
-                        f"Declared remote output pattern did not match any files: {pattern}",
-                        remote=pattern,
-                    )
-                    raise FileNotFoundError(
-                        f"Declared remote output pattern did not match any files: {pattern}"
-                    )
-                continue
-            # The pattern is a declaration, not another concrete output.
-            # Expanded files have their own independent transfer states.
-            self._set_file_availability(
-                os.fspath(await self.executor.unmap_path(pattern)), "skipped",
-            )
-            for remote in matches:
-                if remote in selected:
+            local_pattern = os.fspath(await self.executor.unmap_path(pattern))
+            try:
+                matches = await self.executor.transport.expand_files(pattern, remote_root)
+                if not matches:
+                    if required:
+                        raise FileNotFoundError(
+                            f"Declared remote output pattern did not match any files: {pattern}"
+                        )
+                    self._set_file_availability(local_pattern, "skipped")
                     continue
-                selected.add(remote)
-                local = os.fspath(await self.executor.unmap_path(remote))
-                if local in primary:
-                    continue
-                try:
-                    await self._sync_one_output(local, remote, required)
-                except Exception as exc:
+
+                for remote in matches:
+                    if remote in selected:
+                        continue
+                    selected.add(remote)
+                    local = os.fspath(await self.executor.unmap_path(remote))
+                    if local in primary:
+                        # Primary streams are atomically published by the monitor.
+                        continue
                     self._set_file_availability(
-                        local, "failed", str(exc), remote=remote,
+                        local, "pending", remote=remote,
+                        source_pattern=local_pattern,
                     )
-                    raise
-                else:
-                    self._set_file_availability(
-                        local, "available", remote=remote,
-                    )
+                    try:
+                        await self._sync_one_output(local, remote, required)
+                    except Exception as exc:
+                        self._set_file_availability(local, "failed", str(exc))
+                        raise
+                    else:
+                        self._set_file_availability(local, "available")
+
+                # All matches have been considered successfully. Never mark the
+                # pattern complete before its last individual transfer.
+                self._set_file_availability(local_pattern, "available")
+            except Exception as exc:
+                self._set_file_availability(local_pattern, "failed", str(exc))
+                raise
 
     async def _sync_one_output(self, local, remote, required):
         policy = self.executor.output_files
@@ -515,32 +521,55 @@ class RemoteRunner:
         selected = set()
         exact = {remote for remote, _ in self._cache_targets.values()}
         for pattern in self._cache_patterns:
-            for remote in await self.executor.transport.expand_files(pattern, remote_root):
-                if remote in selected or remote in exact:
+            local_pattern = os.fspath(await self.executor.unmap_path(pattern))
+            try:
+                matches = await self.executor.transport.expand_files(pattern, remote_root)
+                if not matches:
+                    self._set_file_availability(
+                        local_pattern, "skipped", kind="cache",
+                    )
                     continue
-                selected.add(remote)
-                local = os.fspath(await self.executor.unmap_path(remote))
-                try:
-                    after = await self.executor.transport.file_signature(remote)
-                    if after is None or after == self._cache_before.get(remote):
-                        self._set_file_availability(
-                            local, "skipped", remote=remote, kind="cache",
-                        )
+                for remote in matches:
+                    if remote in selected or remote in exact:
                         continue
-                    if policy == FileSyncPolicy.MISSING and local_file_digest(local) is not None:
+                    selected.add(remote)
+                    local = os.fspath(await self.executor.unmap_path(remote))
+                    self._set_file_availability(
+                        local, "pending", remote=remote, kind="cache",
+                        source_pattern=local_pattern,
+                    )
+                    try:
+                        after = await self.executor.transport.file_signature(remote)
+                        if after is None or after == self._cache_before.get(remote):
+                            self._set_file_availability(
+                                local, "skipped", kind="cache",
+                            )
+                            continue
+                        if (
+                            policy == FileSyncPolicy.MISSING
+                            and local_file_digest(local) is not None
+                        ):
+                            self._set_file_availability(
+                                local, "skipped", kind="cache",
+                            )
+                            continue
+                        await self.executor.transport.get_file(remote, local)
                         self._set_file_availability(
-                            local, "skipped", remote=remote, kind="cache",
+                            local, "available", kind="cache",
                         )
-                        continue
-                    await self.executor.transport.get_file(remote, local)
-                    self._set_file_availability(
-                        local, "available", remote=remote, kind="cache",
-                    )
-                except Exception as exc:
-                    self._set_file_availability(
-                        local, "failed", str(exc), remote=remote, kind="cache",
-                    )
-                    raise
+                    except Exception as exc:
+                        self._set_file_availability(
+                            local, "failed", str(exc), kind="cache",
+                        )
+                        raise
+                self._set_file_availability(
+                    local_pattern, "available", kind="cache",
+                )
+            except Exception as exc:
+                self._set_file_availability(
+                    local_pattern, "failed", str(exc), kind="cache",
+                )
+                raise
 
     def _remote_argv(self, argv, staged):
         directory = os.path.abspath(self.spec.directory)

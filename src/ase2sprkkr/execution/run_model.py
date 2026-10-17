@@ -72,9 +72,12 @@ class FileEntry:
     remote_path: Optional[str] = None
     availability_state: Optional[str] = None
     availability_message: Optional[str] = None
+    source_pattern: Optional[str] = None
 
     def __post_init__(self):
         import os
+        if self.source_pattern is not None:
+            object.__setattr__(self, "source_pattern", os.fspath(self.source_pattern))
 
         for name in ("local_path", "remote_path"):
             value = getattr(self, name)
@@ -206,12 +209,14 @@ class FileManifest:
         )
 
     def with_file_availability(
-        self, local_path, state, message=None, *, remote_path=None, kind="output",
+        self, local_path, state, message=None, *,
+        remote_path=None, kind="output", source_pattern=None,
     ):
-        """Update one resolved artifact, or register a wildcard match.
+        """Update one artifact, adding each wildcard match as it is discovered.
 
-        Duplicate stream/output declarations of the same path are updated
-        together. Cache entries are optional and remain distinct from outputs.
+        The pattern declaration retains its own independent status. A child's
+        source_pattern identifies the declaration, including after restart.
+        Duplicate stream/output declarations of one path are updated together.
         """
         import os
         path = os.fspath(local_path)
@@ -231,6 +236,7 @@ class FileManifest:
         file = FileEntry(
             local_path=path, remote_path=remote_path,
             availability_state=state, availability_message=message,
+            source_pattern=source_pattern,
         )
         if kind == "output":
             return replace(self, outputs=(*self.outputs, file))
