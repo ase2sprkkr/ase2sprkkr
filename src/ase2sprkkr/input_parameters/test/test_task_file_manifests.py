@@ -134,6 +134,27 @@ def test_momentum_density_debug_output(tmp_path):
         assert f"{DATASET}_data.{extension}" in basenames(p._definition.output_files(p, tmp_path))
 
 
+@pytest.mark.parametrize("task", ["ARPES", "AIPES", "BAND", "CLPES", "SPLEED"])
+def test_kkrspec_outputs_include_task_log(task, tmp_path):
+    assert f"{DATASET}_SPEC.out" in manifest(task, "output", tmp_path)
+
+
+@pytest.mark.parametrize("task", ["ARPES", "AIPES", "BAND", "CLPES", "SPLEED"])
+def test_kkrspec_default_data_output(task, tmp_path):
+    names = manifest(task, "output", tmp_path)
+    assert f"{DATASET}_data.spc" in names
+    assert f"{DATASET}_ARPES_data.spc" not in names
+
+
+@pytest.mark.parametrize("task", ["ARPES", "AIPES", "CLPES"])
+def test_kkrspec_polarization_outputs_follow_pol_p(task, tmp_path):
+    p = parameters(task)
+    p.SPEC_PH.POL_P = "S"
+    names = basenames(p._definition.output_files(p, tmp_path))
+    assert f"{DATASET}_data.spc" not in names
+    assert {f"{DATASET}_data_pol1.spc", f"{DATASET}_data_pol2.spc"} <= names
+
+
 def test_pshift_branch_outputs(tmp_path):
     p = parameters("PSHIFT")
     names = basenames(p._definition.output_files(p, tmp_path))
