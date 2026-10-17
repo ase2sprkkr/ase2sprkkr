@@ -1,8 +1,10 @@
-from types import SimpleNamespace
-
 import pytest
 
-from ase2sprkkr.execution import FailurePhase, RunReference, RunState
+from ase2sprkkr.execution import (
+    Execution, ExecutorEndpoint, FileManifest, RunRecord, FailurePhase, RunState,
+    WorkingDirectory,
+)
+from ase2sprkkr.execution.endpoint import endpoint_for_executor
 from ase2sprkkr.execution.remote_endpoint import (
     RemoteEndpointExecutor,
     _client_status_state,
@@ -14,12 +16,17 @@ class _Transport:
 
 
 
-def _reference(native_id, *, backend="psij"):
-    return RunReference(
-        executor=f"remote:{backend}",
-        native_id=native_id,
-        computer="cluster",
-        directory="/work/case",
+def _run(native_id, *, backend="psij"):
+    endpoint = endpoint_for_executor(RemoteEndpointExecutor(_Transport(), backend=backend))
+    return RunRecord(
+        id=native_id or "unconfirmed", state=RunState.RUNNING,
+        created_at="2026-10-13T08:00:00+00:00",
+        updated_at="2026-10-13T08:00:00+00:00",
+        task="DOS",
+        execution=Execution(
+            endpoint, WorkingDirectory("/local/case", "/work/case"), native_id,
+        ),
+        files=FileManifest(),
     )
 
 
@@ -41,15 +48,15 @@ def test_remote_endpoint_status_queries_opaque_handles_individually():
         return replies[args[0]]
 
     executor._json_request = request
-    references = (_reference("job-1"), _reference("job-2"))
+    runs = (_run("job-1"), _run("job-2"))
 
-    statuses = executor.status(*references)
+    statuses = executor.status(*runs)
 
     assert calls == [
         ("status", ("job-1",), None),
         ("status", ("job-2",), None),
     ]
-    assert tuple(status.reference for status in statuses) == references
+    assert tuple(status.backend_id for status in statuses) == ("job-1", "job-2")
     assert tuple(status.state for status in statuses) == (
         RunState.RUNNING,
         RunState.FAILED,
@@ -68,13 +75,8 @@ def test_direct_remote_status_uses_opaque_handle_without_client_receipt_path():
         return {"state": "finished", "return_code": 0}
 
     executor._json_request = request
-    reference = RunReference(
-        executor="remote:local",
-        native_id="opaque-process",
-        directory="/work/case",
-        context={},
-    )
-    (status,) = executor.status(reference)
+    run = _run("opaque-process", backend="local")
+    (status,) = executor.status(run)
 
     assert status.state == RunState.DOWNLOADING
     assert calls == [
@@ -89,8 +91,8 @@ def test_direct_remote_status_uses_opaque_handle_without_client_receipt_path():
 def test_remote_endpoint_status_rejects_reference_for_other_backend():
     executor = RemoteEndpointExecutor(_Transport(), backend="local")
 
-    with pytest.raises(ValueError, match="belongs to"):
-        executor.status(_reference("job", backend="psij"))
+    with pytest.raises(ValueError, match="different remote endpoint"):
+        executor.status(_run("job", backend="psij"))
 
 
 def test_remote_recovery_passes_submission_timestamp_to_stateless_service():
@@ -106,7 +108,7 @@ def test_remote_recovery_passes_submission_timestamp_to_stateless_service():
         }
 
     executor._json_request = request
-    submission = SimpleNamespace(directory="/work/case", context=None)
+    submission = _run(None, backend="local")
 
     status = executor.recover_submission(
         "run-1",
@@ -125,7 +127,7 @@ def test_remote_recovery_passes_submission_timestamp_to_stateless_service():
             },
         )
     ]
-    assert status.reference.native_id == "opaque-job"
+    assert status.backend_id == "opaque-job"
     assert status.state == RunState.RUNNING
 
 
@@ -139,7 +141,7 @@ def test_remote_recovery_can_report_unsupported_backend_recovery():
 
     with pytest.raises(NotImplementedError, match="cannot be reconstructed"):
         executor.recover_submission(
-            "run-1", SimpleNamespace(directory="/work/case", context=None)
+            "run-1", _run(None, backend="local")
         )
 
 
