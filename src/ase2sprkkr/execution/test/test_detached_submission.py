@@ -295,7 +295,7 @@ def test_local_persistent_launch_failure_is_submission_not_started(tmp_path, mon
 
     assert runner.state == RunState.FAILED
     assert runner.failure_phase == FailurePhase.LAUNCH
-    assert runner.reference is None
+    assert runner.backend_id is None
     assert reader.parse_calls == 0
     assert reader.complete_calls == 0
     assert not output.exists()
@@ -330,7 +330,7 @@ def test_local_persistent_metadata_failure_is_submission_failure(tmp_path, monke
     record = manager.store.get(run.id)
     assert record.state == RunState.EXECUTION_FAILED
     assert record.failure_phase == FailurePhase.SUBMISSION
-    assert record.reference is None
+    assert record.execution.backend_id is None
     assert "state metadata could not be written" in record.message
 
 
@@ -353,7 +353,7 @@ def test_calculation_launch_failure_is_reported_by_submit(tmp_path):
 
     assert runner.state == RunState.FAILED
     assert runner.failure_phase == FailurePhase.LAUNCH
-    assert runner.reference is None
+    assert runner.backend_id is None
     assert reader.parse_calls == 0
     assert reader.complete_calls == 0
     assert not output.exists()
@@ -385,9 +385,9 @@ def test_launch_failure_releases_persistent_submission_namespace(tmp_path, monke
     failed_record = manager.store.get(failed.id)
     assert failed_record.state == RunState.FAILED
     assert failed_record.failure_phase == FailurePhase.LAUNCH
-    assert failed_record.reference is None
-    assert failed_record.result_files.captured_at is None
-    assert failed_record.result_files.output_versions == ()
+    assert failed_record.execution.backend_id is None
+    assert failed_record.files.captured_at is None
+    assert failed_record.files.output_versions == ()
     assert "worker could not be launched" in failed_record.message
 
     monkeypatch.undo()
@@ -424,8 +424,8 @@ def test_calculation_launch_failure_never_enters_finalizing(tmp_path):
     record = manager.store.get(run.id)
     assert record.state == RunState.EXECUTION_FAILED
     assert record.failure_phase == FailurePhase.LAUNCH
-    assert record.reference is None
-    assert record.result_files.captured_at is None
+    assert record.execution.backend_id is None
+    assert record.files.captured_at is None
     assert reader.parse_calls == 0
     assert reader.complete_calls == 0
 
