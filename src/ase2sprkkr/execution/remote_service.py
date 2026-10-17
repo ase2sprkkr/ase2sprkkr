@@ -310,7 +310,9 @@ def _slurm_psij_status(handle):
         else:
             state, return_code = accounted
 
-    if state == RunState.FINISHED and return_code is None:
+    if state not in _FINAL_STATES:
+        return_code = None
+    elif state == RunState.FINISHED and return_code is None:
         return_code = 0
     failure_phase = FailurePhase.EXECUTION if state == RunState.FAILED else None
     return {
