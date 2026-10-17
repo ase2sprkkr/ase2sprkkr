@@ -24,7 +24,6 @@ from ._durability import durable_mkdir, durable_write_json, sync_file
 from .base import (
     Executor,
     FailurePhase,
-    RunReference,
     RunState,
     RunStatus,
     SubmissionNotStarted,
@@ -32,9 +31,10 @@ from .base import (
 from .endpoint import ExecutorEndpoint, endpoint_for_executor
 from .pool import default_executor_pool
 from .postprocessing import PostprocessingRunner
+from .run_model import Execution, WorkingDirectory, FileManifest, FileEntry, CacheEntry
 
 
-_RUN_RECORD_SCHEMA_VERSION = 2
+_RUN_RECORD_SCHEMA_VERSION = 3
 _FINAL_STATES = {RunState.FINISHED, RunState.FAILED, RunState.CANCELLED}
 _STATE_RANK = {
     RunState.NEW: 0,
@@ -108,105 +108,6 @@ class ArtifactAvailabilityState(str, Enum):
     FAILED = "failed"
 
 
-@dataclass(frozen=True)
-class ResultFilesRecord:
-    """Declared result files and immutable versions captured at completion."""
-
-    input_file: Optional[str] = None
-    output_file: Optional[str] = None
-    input_files: tuple[str, ...] = ()
-    output_files: tuple[str, ...] = ()
-    input_versions: tuple[FileVersion, ...] = ()
-    output_versions: tuple[FileVersion, ...] = ()
-    captured_at: Optional[str] = None
-    availability_state: Optional[ArtifactAvailabilityState] = None
-    availability_message: Optional[str] = None
-
-    def __post_init__(self):
-        for name in ("input_file", "output_file"):
-            value = getattr(self, name)
-            if value is not None:
-                object.__setattr__(self, name, os.fspath(value))
-        for name in ("input_files", "output_files"):
-            object.__setattr__(
-                self,
-                name,
-                tuple(os.fspath(value) for value in getattr(self, name)),
-            )
-        for name in ("input_versions", "output_versions"):
-            object.__setattr__(
-                self,
-                name,
-                tuple(
-                    value if isinstance(value, FileVersion) else FileVersion(**value)
-                    for value in getattr(self, name)
-                ),
-            )
-        if self.availability_state is not None and not isinstance(
-            self.availability_state, ArtifactAvailabilityState
-        ):
-            object.__setattr__(
-                self,
-                "availability_state",
-                ArtifactAvailabilityState(self.availability_state),
-            )
-
-    @property
-    def manifests(self):
-        return _unique((*self.input_files, *self.output_files))
-
-    @property
-    def all_versions(self):
-        return tuple(
-            sorted(
-                {
-                    os.fspath(item.path): item
-                    for item in (*self.input_versions, *self.output_versions)
-                }.values(),
-                key=lambda item: os.fspath(item.path),
-            )
-        )
-
-    @property
-    def state(self):
-        if self.captured_at is None:
-            return FileState.CURRENT
-        states = tuple(version.state() for version in self.output_versions)
-        if all(state is FileState.CURRENT for state in states):
-            return FileState.CURRENT
-        if FileState.OVERWRITTEN in states:
-            return FileState.OVERWRITTEN
-        if FileState.UNAVAILABLE in states:
-            return FileState.UNAVAILABLE
-        return FileState.MISSING
-
-
-@dataclass(frozen=True)
-class SubmissionKey:
-    """Persistent duplicate-submission identity and recovery context."""
-
-    endpoint: ExecutorEndpoint
-    directory: str
-    task: str
-    dataset: Optional[str] = None
-    context: Any = None
-
-    def __post_init__(self):
-        if isinstance(self.endpoint, dict):
-            object.__setattr__(self, "endpoint", ExecutorEndpoint(**self.endpoint))
-        object.__setattr__(self, "directory", os.fspath(self.directory))
-        object.__setattr__(self, "task", str(self.task).upper())
-        if self.dataset is not None:
-            object.__setattr__(self, "dataset", str(self.dataset))
-
-    def conflicts_with(self, other):
-        if self.endpoint != other.endpoint or self.directory != other.directory:
-            return False
-        if self.task == "SCF" or other.task == "SCF":
-            return True
-        return self.task == other.task and self.dataset == other.dataset
-
-
 class DuplicateSubmissionError(RuntimeError):
     """A persistent run would duplicate an active calculation namespace."""
 
@@ -222,55 +123,52 @@ class DuplicateSubmissionError(RuntimeError):
 
 @dataclass(frozen=True)
 class RunRecord:
-    """Persistent identity and authoritative lifecycle state of one run."""
+    """Single durable identity, file manifest and lifecycle of one calculation."""
 
     id: str
     state: RunState
     created_at: str
     updated_at: str
     task: str
-    directory: str
+    execution: Execution
+    files: FileManifest
     finished_at: Optional[str] = None
     dataset: Optional[str] = None
-    endpoint: Optional[ExecutorEndpoint] = None
-    submission: Optional[SubmissionKey] = None
-    reference: Optional[RunReference] = None
     return_code: Optional[int] = None
     message: Optional[str] = None
-    result_files: Optional[ResultFilesRecord] = None
     input_definition: Optional[str] = None
     failure_phase: Optional[FailurePhase] = None
     schema_version: int = _RUN_RECORD_SCHEMA_VERSION
 
     def __post_init__(self):
         object.__setattr__(self, "task", str(self.task).upper())
+        if self.dataset is not None:
+            object.__setattr__(self, "dataset", str(self.dataset))
         if self.input_definition is not None:
-            object.__setattr__(
-                self, "input_definition", str(self.input_definition).upper()
-            )
-        if isinstance(self.endpoint, dict):
-            object.__setattr__(self, "endpoint", ExecutorEndpoint(**self.endpoint))
-        if isinstance(self.submission, dict):
-            object.__setattr__(self, "submission", SubmissionKey(**self.submission))
-        if isinstance(self.reference, dict):
-            object.__setattr__(self, "reference", RunReference(**self.reference))
-        if isinstance(self.result_files, dict):
-            object.__setattr__(
-                self, "result_files", ResultFilesRecord(**self.result_files)
-            )
+            object.__setattr__(self, "input_definition", str(self.input_definition).upper())
+        if isinstance(self.execution, dict):
+            object.__setattr__(self, "execution", Execution(**self.execution))
+        if isinstance(self.files, dict):
+            object.__setattr__(self, "files", FileManifest(**self.files))
         if not isinstance(self.state, RunState):
             object.__setattr__(self, "state", RunState(self.state))
-        if self.failure_phase is not None and not isinstance(
-            self.failure_phase, FailurePhase
-        ):
-            object.__setattr__(
-                self, "failure_phase", FailurePhase(self.failure_phase)
-            )
+        if self.failure_phase is not None and not isinstance(self.failure_phase, FailurePhase):
+            object.__setattr__(self, "failure_phase", FailurePhase(self.failure_phase))
         if self.schema_version != _RUN_RECORD_SCHEMA_VERSION:
             raise ValueError(
                 f"unsupported schema version {self.schema_version}; "
                 f"expected {_RUN_RECORD_SCHEMA_VERSION}"
             )
+
+
+def submission_conflicts(left: RunRecord, right: RunRecord) -> bool:
+    """A collision has the same backend, target directory, and task namespace."""
+    a, b = left.execution, right.execution
+    if a.endpoint != b.endpoint or a.directory.target != b.directory.target:
+        return False
+    if left.task == "SCF" or right.task == "SCF":
+        return True
+    return left.task == right.task and left.dataset == right.dataset
 
 
 class RunStore:
@@ -425,38 +323,25 @@ class ExecutionManager:
         return self.executor_pool.get(endpoint, lambda: executor)
 
     def executor_for(self, record):
-        if record.endpoint is None:
-            raise KeyError(f"Run {record.id} has no persisted execution endpoint")
-        return self.executor_pool.for_endpoint(record.endpoint)
+        return self.executor_pool.for_endpoint(record.execution.endpoint)
 
     @staticmethod
     def _result_files_for_spec(spec):
         directory = os.path.abspath(os.fspath(spec.directory))
-        input_file = _result_file_path(getattr(spec, "input_file", None), directory)
-        output_file = _result_file_path(getattr(spec, "output_file", None), directory)
-        input_files = _unique(
-            (
-                input_file,
-                *(
-                    _result_file_path(value, directory)
-                    for value in getattr(spec, "input_files", ())
-                ),
-            )
-        )
-        output_files = _unique(
-            (
-                output_file,
-                *(
-                    _result_file_path(value, directory)
-                    for value in getattr(spec, "output_files", ())
-                ),
-            )
-        )
-        return ResultFilesRecord(
-            input_file=input_file,
-            output_file=output_file,
-            input_files=input_files,
-            output_files=output_files,
+        def absolute(value):
+            return _result_file_path(value, directory)
+        primary_input = absolute(getattr(spec, "input_file", None))
+        primary_output = absolute(getattr(spec, "output_file", None))
+        error = absolute(getattr(spec, "error_file", None))
+        inputs = _unique((primary_input, *(absolute(x) for x in getattr(spec, "input_files", ()))))
+        outputs = _unique((primary_output, *(absolute(x) for x in getattr(spec, "output_files", ()))))
+        caches = _unique(absolute(x) for x in getattr(spec, "cache_files", ()))
+        return FileManifest(
+            inputs=tuple(FileEntry(local_path=x) for x in inputs if x is not None),
+            outputs=tuple(FileEntry(local_path=x) for x in outputs if x is not None and x != primary_output),
+            caches=tuple(CacheEntry(FileEntry(local_path=x)) for x in caches if x is not None),
+            stdout=None if primary_output is None else FileEntry(local_path=primary_output),
+            stderr=None if error is None else FileEntry(local_path=error),
             availability_state=ArtifactAvailabilityState.PENDING,
         )
 
@@ -538,7 +423,7 @@ class ExecutionManager:
 
     def input_file_is_current(self, run):
         record = self.store.get(run) if isinstance(run, str) else self.store.get(run.id)
-        result_files = record.result_files
+        result_files = record.files
         return self._file_is_current(
             result_files,
             None if result_files is None else result_files.input_file,
@@ -547,7 +432,7 @@ class ExecutionManager:
 
     def output_file_is_current(self, run):
         record = self.store.get(run) if isinstance(run, str) else self.store.get(run.id)
-        result_files = record.result_files
+        result_files = record.files
         return self._file_is_current(
             result_files,
             None if result_files is None else result_files.output_file,
@@ -555,30 +440,16 @@ class ExecutionManager:
         )
 
     def new_record(
-        self,
-        *,
-        task,
-        directory,
-        dataset=None,
-        endpoint=None,
-        submission=None,
-        result_files=None,
-        input_definition=None,
-        run_id=None,
+        self, *, task, directory, dataset=None, endpoint=None,
+        remote_directory=None, files=None, input_definition=None, run_id=None,
     ):
         now = _now()
+        local = os.path.abspath(os.fspath(directory))
         return RunRecord(
-            id=run_id or uuid4().hex,
-            state=RunState.NEW,
-            created_at=now,
-            updated_at=now,
-            finished_at=None,
-            task=str(task).upper(),
-            dataset=None if dataset is None else str(dataset),
-            directory=os.path.abspath(os.fspath(directory)),
-            endpoint=endpoint,
-            submission=submission,
-            result_files=result_files,
+            id=run_id or uuid4().hex, state=RunState.NEW, created_at=now,
+            updated_at=now, task=str(task).upper(), dataset=dataset,
+            execution=Execution(endpoint or ExecutorEndpoint(), WorkingDirectory(local, remote_directory)),
+            files=files if files is not None else FileManifest(),
             input_definition=input_definition,
         )
 
@@ -598,10 +469,10 @@ class ExecutionManager:
     @staticmethod
     def _merged_result_files(latest, requested):
         if requested is _UNCHANGED or requested is None:
-            return latest.result_files
+            return latest.files
         if isinstance(requested, dict):
-            requested = ResultFilesRecord(**requested)
-        current = latest.result_files
+            requested = FileManifest(**requested)
+        current = latest.files
         if current is None:
             return requested
         if current.captured_at is not None and requested.captured_at is not None:
@@ -627,8 +498,8 @@ class ExecutionManager:
             if latest.state not in _FINAL_STATES and merged_state in _FINAL_STATES:
                 changes["finished_at"] = now
             merged_result_files = self._merged_result_files(latest, result_files)
-            if merged_result_files is not latest.result_files:
-                changes["result_files"] = merged_result_files
+            if merged_result_files is not latest.files:
+                changes["files"] = merged_result_files
             if (
                 reference is not _UNCHANGED
                 and reference is not None
@@ -653,7 +524,7 @@ class ExecutionManager:
         state = ArtifactAvailabilityState(state)
 
         def update(latest):
-            result_files = latest.result_files
+            result_files = latest.files
             if result_files is None:
                 return latest
             return replace(
@@ -722,8 +593,8 @@ class ExecutionManager:
                     and record.submission.conflicts_with(active.submission)
                 )
                 if not conflicts:
-                    if record.result_files is not None:
-                        self._sync_result_files(record.result_files.input_files)
+                    if record.files is not None:
+                        self._sync_result_files(record.files.input_files)
                     return self.transition(
                         record,
                         state=RunState.SUBMITTING,
@@ -775,7 +646,7 @@ class ExecutionManager:
     ):
         state = RunState(state)
         phase = _failure_phase(failure_phase)
-        result_files = record.result_files
+        result_files = record.files
 
         if artifacts_available and result_files is not None:
             result_files = replace(
@@ -819,7 +690,7 @@ class ExecutionManager:
         if record.state not in _FINAL_STATES:
             raise RuntimeError(f"Run {record.id} is not finished")
 
-        missing = self._missing_result_files(record.result_files)
+        missing = self._missing_result_files(record.files)
         if not missing or record.reference is None:
             return record
 
@@ -829,7 +700,7 @@ class ExecutionManager:
 
         executor.fetch_result_files(record.reference, missing)
         refreshed = self.store.get(record.id)
-        remaining = self._missing_result_files(refreshed.result_files)
+        remaining = self._missing_result_files(refreshed.files)
         if not remaining:
             return self.update_artifact_availability(
                 refreshed, ArtifactAvailabilityState.AVAILABLE
