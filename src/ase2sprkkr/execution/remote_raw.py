@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from .base import FailurePhase, RunState
 from .outcome import ExecutionCapture
+from .postprocessing import PostprocessingRunner, reader_postprocessor
 from .remote_endpoint import RemoteEndpointExecutor as _RemoteEndpointExecutor
 
 
@@ -55,7 +56,7 @@ class _RemoteLifecycleRunner:
 
 
 class RemoteEndpointExecutor(_RemoteEndpointExecutor):
-    """Remote endpoint whose public execution API is parser-free."""
+    """Remote endpoint whose backend boundary is parser-free."""
 
     @staticmethod
     def _capture(print_output):
@@ -65,33 +66,79 @@ class RemoteEndpointExecutor(_RemoteEndpointExecutor):
     def _wrap(runner):
         return _RemoteLifecycleRunner(runner)
 
-    def create_run(self, spec, callback=None, *, print_output=False):
-        runner = super().create_run(
-            self._capture(print_output),
+    def _raw_run(self, spec, callback=None, *, print_output=False, run_id=None):
+        if run_id is None:
+            runner = super().create_run(
+                self._capture(print_output),
+                spec,
+                callback=callback,
+            )
+        else:
+            runner = super().create_persistent_run(
+                self._capture(print_output),
+                spec,
+                run_id=run_id,
+                callback=callback,
+            )
+        return self._wrap(runner)
+
+    def create_run(
+        self,
+        reader_or_spec,
+        spec=None,
+        callback=None,
+        *,
+        print_output=False,
+    ):
+        if spec is None:
+            return self._raw_run(
+                reader_or_spec,
+                callback=callback,
+                print_output=print_output,
+            )
+        reader = reader_or_spec
+        raw = self._raw_run(
             spec,
+            print_output=bool(getattr(reader, "print_output", print_output)),
+        )
+        return PostprocessingRunner(
+            raw,
+            reader_postprocessor(reader, spec),
             callback=callback,
         )
-        return self._wrap(runner)
 
     def create_persistent_run(
         self,
-        spec,
+        reader_or_spec,
+        spec=None,
         *,
         run_id,
         callback=None,
         print_output=False,
     ):
-        runner = super().create_persistent_run(
-            self._capture(print_output),
+        if spec is None:
+            return self._raw_run(
+                reader_or_spec,
+                callback=callback,
+                print_output=print_output,
+                run_id=run_id,
+            )
+        reader = reader_or_spec
+        raw = self._raw_run(
             spec,
+            print_output=bool(getattr(reader, "print_output", print_output)),
             run_id=run_id,
+        )
+        return PostprocessingRunner(
+            raw,
+            reader_postprocessor(reader, spec),
             callback=callback,
         )
-        return self._wrap(runner)
 
     def attach(
         self,
         reference,
+        reader=None,
         callback=None,
         output_listener=None,
         start=True,
@@ -100,9 +147,31 @@ class RemoteEndpointExecutor(_RemoteEndpointExecutor):
     ):
         runner = super().attach(
             reference,
-            self._capture(print_output),
-            callback=callback,
+            self._capture(
+                bool(getattr(reader, "print_output", print_output))
+            ),
+            callback=None if reader is not None else callback,
             output_listener=output_listener,
-            start=start,
+            start=start if reader is None else False,
         )
-        return self._wrap(runner)
+        raw = self._wrap(runner)
+        if reader is None:
+            return raw
+
+        from .base import ExecutionSpec
+
+        spec = ExecutionSpec(
+            argv=(),
+            input_file=reference.input_file,
+            output_file=reference.output_file,
+            error_file=reference.error_file,
+            directory=reference.directory or ".",
+        )
+        wrapped = PostprocessingRunner(
+            raw,
+            reader_postprocessor(reader, spec),
+            callback=callback,
+        )
+        if start:
+            wrapped.submit()
+        return wrapped
