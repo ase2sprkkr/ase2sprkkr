@@ -1,44 +1,62 @@
-# 41. BSF audit of common definition BSFEK/BSFKK
+# BSF — audit of the shared BSF/BSFEK/BSFKK definition
 
-Already supported task; revised common definition. Preliminary: **has fully meaningful***, with limitations defaults and native geometry. The audit focuses on the option E-K/K-K, numbers and geometry; it is not a numerical verification or a complete check of all tables KPATH for all Bravais grids.
+Status: **meaningful with documented defaults and geometry constraints**. This audit describes the current `tasks` branch and the supplied native SPR-KKR 9.7 source (`PUB9.7_260420_18h13`). It covers the E-K and K-K modes selected through the shared BLOCHSF implementation; it is not a numerical certification of every KPATH/Bravais combination.
 
-## Opravy
+## Current ASE2SPRKKR contract
 
-- NK1/NK2 are now Integer(min=2). Native BLOCHSF when parameterization K-K the map divides NK1−1 and NK2−1 (blochsf.f:939–940); the previous plain int allowed division by zero. NK for E-K path has minimum 2, NE minimum 1.
-- GRID default is dynamic: for E-K remains 3, for K-K is 0. Earlier GRID=3/NE=1 at native initialization results in a single point integration weight not different. The change is actually being written out. After explicit setting GRID, the user can of course deviate from default.
-- K-K validation rejects endless/NAN directions and zero or collinear plane. The check takes place against KA, not only by K1/K2 alone.
-- Fixed description K1/K2: end points; native subtracts KA from them. If the relative directions are not perpendicular, the other orthogonalizes. Thus, such an assignment does not have to be drawn by the originally intended parallelogram (blochsf.f:438–455).
+`BSF`, `BSFEK`, and `BSFKK` are public names for one native calculation: `TASK=BSF`, `CONTROL.ADSI=BLOCHSF`. The aliases therefore share one input/output contract rather than having alias-specific filenames.
 
-## Defaults: written versus omitted
+- `NK1`/`NK2` require at least 2 points. Native BLOCHSF divides by `NK1-1` and `NK2-1` in K-K mode.
+- `NK` in E-K mode requires at least 2 points; `NE` requires at least 1.
+- `GRID` is mode-dependent: E-K uses 3 by default, K-K uses 0. This avoids the invalid one-point integration situation produced by `GRID=3`, `NE=1`.
+- K-K validation rejects non-finite vectors and zero or collinear planes relative to `KA`.
+- `K1` and `K2` are endpoints, not direction vectors. Native code subtracts `KA`, then orthogonalizes the second relative direction when needed.
 
-E-K: preserved NE=200, GRID=3, NK=300, ImE=0.001 Ry, EMIN=−0.2 Ry and EMAX=−1 Ry. **EMAX=−1 is real energy, not sentinel for EF.**Native init_mod_energy uses substitution EF to EMAX<−99. The default range −0.2→−1 is therefore decreasing and surprising for the normal spectrum. This is an explicit warning ASE default, not a correction of an ignored parameter native reader. It is appropriate to set its own range, possibly in the future default, to change to a physically understandable range to EF; it is not possible to determine the appropriate absolute top energy without potential. The default is now maintained according to the audit assignment defaults.
+## File contract
 
-Native NK at reading E-K is 800, ASE writes 300. This is a valid explicit deviation; 800 may be better for fine paths, but the final number is divided between segments and may be adjusted according to k-table capacity. Neither 300 nor 800 is a guarantee of convergence.
+The TAU directory used by BLOCHSF is an **optional reusable cache**, not a required input: native code can recompute TAU data when the cache is absent.
 
-K-K: generated energy EMIN=0.7 Ry is explicit ASE option, EMAX copy EMIN; it is not automatically EF. Written NE=1 and newly GRID=0 correspond to one point. The correct energy or relative energy EMINEV should be set to find the Fermi area. Unwritten KA native completes with zero start; Python validation uses the same beginning. NK1/NK2/K1/K2 do not have an imaginary defaults and must be supplied by the user.
+Persistent result artifacts are:
 
-Existing mpi=True left. BLOCHSF has a parallel energy process and GEN allows it; however does not verify has a numerical conformity MPI result. MODE/CPA/STRCONST/SITES remain common sections unchanged.
+- `{dataset}_BLOCHSF.bsf`
+- `{dataset}_BLOCHSF_spol.bsf`
 
-## Other restrictions
+The same filenames apply to `BSF`, `BSFEK`, and `BSFKK`, because all three select `ADSI=BLOCHSF`.
 
-E-K is selected by the actual energy count NE>1, K-K at NE=1; names BSFEK/BSFKK are ASE aliases and hints, not two different native dispatch keys. TASK with writes as BSF, CONTROL ADSI as BLOCHSF. Existing validation warns in conflict with the required alias and NE.
+Transient scratch files are not part of the task result manifest.
 
-In E-K mode native divides points by segment length, with a minimum of two points per segment. Degenerate explicit segments and zero total length can lead to problematic distribution. Their complete control, together with the geometry of each KPATH/Bravais combination, is not solved in this patch.
+## Energy and grid defaults
 
-For 2D native in K-K the branch zeros the z-folder K1/K2 before deduction KA. Input-only check does not know the potential dimension, so the plane valid according to specified 3D vectors can degenerate after native transcription. For 2D, explicit consistent plane input is required.
+### E-K mode
 
-At native reading TAU cache can take BLOCHSF energy from cache; the consistency of external files is not verified here. This audit does not meet Advanced BSFSPN/BSFORB/BSFETD/BSFALF orEPHOT.
+The current explicit defaults are `NE=200`, `GRID=3`, `NK=300`, `ImE=0.001 Ry`, `EMIN=-0.2 Ry`, and `EMAX=-1 Ry`.
 
-## Verification
+`EMAX=-1` is a real absolute energy, **not** a sentinel for the Fermi level. Native `init_mod_energy` substitutes `EF` only for values below approximately `-99`. The default interval therefore decreases from `-0.2` to `-1 Ry`; users should normally set the intended energy window explicitly.
 
-11 new tests, whole set InputParameters **119 passed**, two existing NumPy DeprecationWarning messages. Tests control K-K GRID=0, equality EMIN/EMAX, round-trip/pickle, conservation E-K defaults, non-zero KA with endpoints, minimum numbers, degeneration, colinerite and NN. Existing tests continue to verify the sharing of aliases, regime change and basic grammar.
+Native reading defaults `NK` to 800, while ASE2SPRKKR explicitly writes 300. This is a deliberate ASE-side default, not a claim of convergence.
 
-Command: `PYTHONPATH=src ASE2SPRKKR_NO_USER_PROFILE=1 ../test-env/bin/python -m pytest src/ase2sprkkr/input_parameters/test -q`.
+### K-K mode
 
-Sources: blochsf.f:220–268,310–357,419–455,939–940; init_mod_energy.f:182; epath.f (GRID=3 single point branch). ASE baseline 267512c4b8ccbbfd37af7ede898febc066b7e3ee. Single patch only for BSF. No numerical SPR-KKR run.
+The current explicit energy is `EMIN=0.7 Ry`, with `EMAX=EMIN`, `NE=1`, and `GRID=0`. This is not automatically the Fermi energy. A Fermi-surface calculation must set the intended absolute or relative energy explicitly.
 
-## Current integration status (2026-10-17)
+Unset `KA` is completed by native code as the zero origin; ASE2SPRKKR validation uses the same interpretation. `NK1`, `NK2`, `K1`, and `K2` have no invented defaults and must be supplied where required.
 
-The source audit above remains a historical record of the original definition baseline. On branch `tasks`, the shared `bsf` definition now models the TAU directory as an optional reusable cache and explicitly manifests the native persistent results `{dataset}_BLOCHSF.bsf` and `{dataset}_BLOCHSF_spol.bsf` for `BSF`, `BSFEK`, and `BSFKK`. The aliases do not get separate filenames because all three select native `ADSI=BLOCHSF`.
+## Geometry and native limitations
 
-This file-contract integration is present at commit `032d932b2e05aa3a540ce232c98522b1fb7065c6`. The historical test count above has not been rewritten; the later manifest regression test covers all three public names.
+E-K versus K-K is selected by the actual energy count (`NE>1` versus `NE=1`), not by separate native dispatch keys. ASE2SPRKKR validates conflicts between the requested public alias and the resulting regime.
+
+In E-K mode native code distributes points according to segment lengths, with at least two points per segment. Degenerate explicit segments or zero total path length remain native/geometric edge cases requiring sensible user input.
+
+For 2D systems, the native K-K branch zeros the z components of `K1`/`K2` before subtracting `KA`. A plane that is valid in the supplied 3D vectors can therefore degenerate after native 2D projection. The input definition cannot determine this solely from the vectors; 2D calculations require a geometrically consistent in-plane specification.
+
+BLOCHSF may reuse cached TAU data. ASE2SPRKKR models that reuse but does not prove physical consistency of arbitrary externally supplied cache contents.
+
+Advanced native switches such as `BSFSPN`, `BSFORB`, `BSFETD`, `BSFALF`, and `EPHOT` are outside this audit scope.
+
+## Verification scope
+
+Current regression coverage checks the shared aliases, E-K/K-K regime behavior, K-K `GRID=0`, equality of `EMIN`/`EMAX` in the single-energy regime, round-trip/pickle behavior, point-count minima, finite/nondegenerate geometry, and the shared BLOCHSF result manifest for all three public task names.
+
+No numerical SPR-KKR reference run is claimed by this audit.
+
+Native source references: `blochsf.f` (including the K-K geometry and `NK1-1`/`NK2-1` divisions), `init_mod_energy.f`, and `epath.f`.

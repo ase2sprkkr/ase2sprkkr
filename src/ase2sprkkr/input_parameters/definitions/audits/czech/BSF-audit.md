@@ -1,44 +1,62 @@
-# 41. BSF — audit společné definice BSFEK/BSFKK
+# BSF — audit společné definice BSF/BSFEK/BSFKK
 
-Již podporovaný task; opravena společná definice. Předběžně: **má plný smysl**, s omezeními defaults a nativní geometrie. Audit se zaměřuje na volbu E-K/K-K, počty a geometrii; nejde o numerické ověření ani úplnou kontrolu všech tabulek KPATH pro všechny Bravaisovy mřížky.
+Stav: **smysluplná úloha s dokumentovanými omezeními defaultů a geometrie**. Tento audit popisuje aktuální stav větve `tasks` a dodaný nativní zdroj SPR-KKR 9.7 (`PUB9.7_260420_18h13`). Pokrývá režimy E-K a K-K realizované společným BLOCHSF kódem; nejde o numerickou certifikaci všech kombinací KPATH/Bravais.
 
-## Opravy
+## Aktuální kontrakt ASE2SPRKKR
 
-- NK1/NK2 jsou nyní Integer(min=2). Native BLOCHSF při parametrizaci K-K mapy dělí NK1−1 a NK2−1 (blochsf.f:939–940); předchozí prostý int připouštěl dělení nulou. NK pro E-K cestu má minimum 2, NE minimum 1.
-- GRID default je dynamický: pro E-K zůstává 3, pro K-K je 0. Dřívější GRID=3/NE=1 při nativní inicializaci vede k nedefinované jednobodové integrační váze. Změna se skutečně vypisuje. Po explicitním nastavení GRID se uživatel samozřejmě může od defaultu odchýlit.
-- K-K validace odmítá nekonečné/NaN směry a nulovou či kolineární rovinu. Kontrola probíhá vůči KA, nikoli pouze podle samotných K1/K2.
-- Opraven popis K1/K2: jde o koncové body; native od nich odečítá KA. Pokud nejsou relativní směry kolmé, druhý z nich ortogonalizuje. Takové zadání tedy nemusí vykreslit původně zamýšlený rovnoběžník (blochsf.f:438–455).
+`BSF`, `BSFEK` a `BSFKK` jsou veřejná jména jedné nativní úlohy: `TASK=BSF`, `CONTROL.ADSI=BLOCHSF`. Aliasy proto sdílejí jeden vstupní a výstupní kontrakt a nemají vlastní odlišná jména souborů.
 
-## Defaults: vypsané versus nevypsané
+- `NK1`/`NK2` vyžadují alespoň 2 body. Nativní BLOCHSF v K-K režimu dělí `NK1-1` a `NK2-1`.
+- `NK` v E-K režimu vyžaduje alespoň 2 body; `NE` alespoň 1.
+- `GRID` závisí na režimu: E-K má výchozí hodnotu 3, K-K 0. Tím se zabrání neplatné jednobodové integraci s `GRID=3`, `NE=1`.
+- K-K validace odmítá ne-konečné vektory a nulové nebo kolineární roviny vzhledem ke `KA`.
+- `K1` a `K2` jsou koncové body, ne směrové vektory. Nativní kód od nich odečte `KA` a podle potřeby ortogonalizuje druhý relativní směr.
 
-E-K: zachovány vypsané NE=200, GRID=3, NK=300, ImE=0.001 Ry, EMIN=−0.2 Ry a EMAX=−1 Ry. **EMAX=−1 je skutečná energie, nikoli sentinel pro EF.** Native init_mod_energy používá náhradu EF až pro EMAX<−99. Výchozí rozsah −0.2→−1 je tedy klesající a pro běžné spektrum překvapivý. Toto je upozornění na explicitní ASE default, nikoli oprava parametru ignorovaného native readerem. Je vhodné nastavit vlastní rozsah, případně v budoucnu default změnit na fyzikálně srozumitelný rozsah vůči EF; bez potenciálu nelze určit vhodnou absolutní horní energii. Default nyní zachován podle zadání auditu defaults.
+## Souborový kontrakt
 
-Native NK při čtení E-K je 800, ASE zapisuje 300. Jde o platnou explicitní odchylku; 800 může být lepší pro jemné cesty, ale konečný počet se rozděluje mezi segmenty a může se upravit podle kapacity k-tabulek. Ani 300 ani 800 není zárukou konvergence.
+TAU adresář používaný BLOCHSF je **volitelná znovupoužitelná cache**, nikoli povinný vstup: pokud cache chybí, nativní kód může TAU data znovu spočítat.
 
-K-K: vypsaná energie EMIN=0.7 Ry je explicitní ASE volba, EMAX kopíruje EMIN; nejde automaticky o EF. Vypsané NE=1 a nově GRID=0 odpovídají jednomu bodu. Pro hledání Fermiho plochy je třeba nastavit správnou energii či relativní EMINEV. Nevypsané KA native doplní nulovým počátkem; Python validace používá tentýž počátek. NK1/NK2/K1/K2 nemají vymyšlené defaults a musí je dodat uživatel.
+Persistentní výsledné artefakty jsou:
 
-Existující mpi=True ponecháno. BLOCHSF má paralelní energetický postup a GEN jej připouští; tento audit však neověřuje numerickou shodu MPI výsledku. MODE/CPA/STRCONST/SITES zůstávají společné sekce beze změn.
+- `{dataset}_BLOCHSF.bsf`
+- `{dataset}_BLOCHSF_spol.bsf`
 
-## Další omezení
+Stejná jména platí pro `BSF`, `BSFEK` i `BSFKK`, protože všechny tři volí `ADSI=BLOCHSF`.
 
-E-K se vybírá skutečným počtem energií NE>1, K-K při NE=1; názvy BSFEK/BSFKK jsou ASE aliasy a hinty, nikoli dva rozdílné native dispatch klíče. TASK se zapisuje jako BSF, CONTROL ADSI jako BLOCHSF. Existující validace varuje při rozporu požadovaného aliasu a NE.
+Do result manifestu nepatří dočasné scratch soubory.
 
-V E-K režimu native rozděluje body podle délky segmentů, s minimem dvou bodů na segment. Degenerované explicitní segmenty a nulová celková délka mohou vést k problematickému rozdělení. Jejich úplná kontrola, spolu s geometrií každé KPATH/Bravais kombinace, není v tomto patchi řešena.
+## Energie a defaulty mřížky
 
-Pro 2D native v K-K větvi nuluje z-složky K1/K2 před odečtením KA. Input-only kontrola nezná dimensionalitu potenciálu, takže rovina platná podle zadaných 3D vektorů může po nativním přepisu degenerovat. Pro 2D je nutné explicitně konzistentní rovinné zadání.
+### E-K režim
 
-Při native čtení TAU cache může BLOCHSF převzít počet energií z cache; konzistence externích souborů zde není ověřena. Tento audit nedoplňuje advanced BSFSPN/BSFORB/BSFETD/BSFALF ani EPHOT.
+Aktuální explicitní defaulty jsou `NE=200`, `GRID=3`, `NK=300`, `ImE=0.001 Ry`, `EMIN=-0.2 Ry` a `EMAX=-1 Ry`.
 
-## Ověření
+`EMAX=-1` je skutečná absolutní energie, **nikoli** sentinel pro Fermiho hladinu. Nativní `init_mod_energy` nahrazuje hodnotu `EF` až pro přibližně `EMAX<-99`. Výchozí interval tedy klesá z `-0.2` na `-1 Ry`; uživatel by měl obvykle zamýšlené energetické okno nastavit explicitně.
 
-11 nových testů, celá sada InputParameters **119 passed**, dvě existující NumPy deprecation warnings. Testy kontrolují K-K GRID=0, rovnost EMIN/EMAX, round-trip/pickle, zachování E-K defaults, nenulové KA s endpointy, minimální počty, degeneraci, kolinearitu a NaN. Existující testy nadále ověřují sdílení aliasů, změnu režimu a základní gramatiku.
+Nativní reader má pro `NK` default 800, ASE2SPRKKR explicitně zapisuje 300. Je to vědomý ASE-side default, nikoli tvrzení o konvergenci.
 
-Příkaz: `PYTHONPATH=src ASE2SPRKKR_NO_USER_PROFILE=1 ../test-env/bin/python -m pytest src/ase2sprkkr/input_parameters/test -q`.
+### K-K režim
 
-Zdroje: blochsf.f:220–268,310–357,419–455,939–940; init_mod_energy.f:182; epath.f (GRID=3 jednobodová větev). ASE baseline 267512c4b8ccbbfd37af7ede898febc066b7e3ee. Samostatný patch pouze pro BSF. Žádný numerický SPR-KKR běh.
+Aktuální explicitní energie je `EMIN=0.7 Ry`, `EMAX=EMIN`, `NE=1` a `GRID=0`. Nejde automaticky o Fermiho energii. Pro výpočet Fermiho plochy je třeba požadovanou absolutní nebo relativní energii nastavit explicitně.
 
-## Aktuální integrační stav (2026-10-17)
+Nevyplněné `KA` nativní kód doplní nulovým počátkem; ASE2SPRKKR validace používá stejnou interpretaci. `NK1`, `NK2`, `K1` a `K2` nemají vymyšlené defaulty a tam, kde jsou potřeba, je musí dodat uživatel.
 
-Source audit výše zůstává historickým záznamem původního baseline definice. Na větvi `tasks` nyní společná definice `bsf` modeluje TAU directory jako volitelnou reusable cache a explicitně manifestuje nativní persistentní výsledky `{dataset}_BLOCHSF.bsf` a `{dataset}_BLOCHSF_spol.bsf` pro `BSF`, `BSFEK` i `BSFKK`. Aliasy nemají vlastní odlišná jména souborů, protože všechny tři volí nativní `ADSI=BLOCHSF`.
+## Geometrie a nativní omezení
 
-Tato integrace souborového kontraktu je přítomná v commitu `032d932b2e05aa3a540ce232c98522b1fb7065c6`. Historický počet testů výše nepřepisuji; pozdější regresní test manifestu pokrývá všechna tři veřejná jména tasku.
+E-K versus K-K se vybírá podle skutečného počtu energií (`NE>1` versus `NE=1`), nikoli samostatnými nativními dispatch klíči. ASE2SPRKKR validuje rozpor mezi požadovaným veřejným aliasem a výsledným režimem.
+
+V E-K režimu nativní kód rozděluje body podle délek segmentů, nejméně dva body na segment. Degenerované explicitní segmenty nebo nulová celková délka cesty zůstávají nativní/geometrické okrajové případy vyžadující smysluplný vstup.
+
+U 2D systémů nativní K-K větev před odečtením `KA` nuluje z-složky `K1`/`K2`. Rovina platná pro zadané 3D vektory proto může po nativní 2D projekci degenerovat. Samotná input definice to z vektorů spolehlivě nepozná; 2D výpočty vyžadují geometricky konzistentní rovinné zadání.
+
+BLOCHSF může znovu použít uložená TAU data. ASE2SPRKKR tuto možnost modeluje, ale netvrdí fyzikální konzistenci libovolné externě dodané cache.
+
+Pokročilé nativní přepínače jako `BSFSPN`, `BSFORB`, `BSFETD`, `BSFALF` a `EPHOT` jsou mimo rozsah tohoto auditu.
+
+## Rozsah ověření
+
+Aktuální regresní pokrytí kontroluje sdílení aliasů, chování režimů E-K/K-K, K-K `GRID=0`, shodu `EMIN`/`EMAX` v jednobodovém energetickém režimu, round-trip/pickle, minimální počty bodů, konečnou a nedegenerovanou geometrii a společný BLOCHSF result manifest pro všechna tři veřejná jména tasku.
+
+Tento audit netvrdí provedení numerického referenčního běhu SPR-KKR.
+
+Nativní zdroje: `blochsf.f` (včetně K-K geometrie a dělení `NK1-1`/`NK2-1`), `init_mod_energy.f` a `epath.f`.
