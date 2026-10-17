@@ -9,6 +9,8 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Optional
 
+from ..common.file_versions import FileState, FileVersion
+
 from .endpoint import ExecutorEndpoint
 
 
@@ -92,6 +94,11 @@ class FileManifest:
     caches: tuple[CacheEntry, ...] = ()
     stdout: Optional[FileEntry] = None
     stderr: Optional[FileEntry] = None
+    input_versions: tuple[FileVersion, ...] = ()
+    output_versions: tuple[FileVersion, ...] = ()
+    captured_at: Optional[str] = None
+    availability_state: Optional[str] = None
+    availability_message: Optional[str] = None
 
     def __post_init__(self):
         for name, cls in (("inputs", FileEntry), ("outputs", FileEntry), ("caches", CacheEntry)):
@@ -104,3 +111,57 @@ class FileManifest:
             item = getattr(self, name)
             if isinstance(item, dict):
                 object.__setattr__(self, name, FileEntry(**item))
+        for name in ("input_versions", "output_versions"):
+            object.__setattr__(
+                self, name,
+                tuple(
+                    version if isinstance(version, FileVersion) else FileVersion(**version)
+                    for version in getattr(self, name)
+                ),
+            )
+        if self.availability_state is not None:
+            allowed = {"pending", "available", "failed"}
+            if self.availability_state not in allowed:
+                raise ValueError("Invalid artifact availability state")
+
+    @property
+    def input_file(self):
+        return self.inputs[0].local_path if self.inputs else None
+
+    @property
+    def output_file(self):
+        return self.stdout.local_path if self.stdout is not None else None
+
+    @property
+    def input_files(self):
+        return tuple(entry.local_path for entry in self.inputs if entry.local_path is not None)
+
+    @property
+    def output_files(self):
+        entries = (self.stdout,) if self.stdout is not None else ()
+        return tuple(entry.local_path for entry in (*entries, *self.outputs) if entry.local_path is not None)
+
+    @property
+    def manifests(self):
+        return tuple(dict.fromkeys((*self.input_files, *self.output_files)))
+
+    @property
+    def all_versions(self):
+        by_path = {
+            str(item.path): item
+            for item in (*self.input_versions, *self.output_versions)
+        }
+        return tuple(by_path[key] for key in sorted(by_path))
+
+    @property
+    def state(self):
+        if self.captured_at is None:
+            return FileState.CURRENT
+        states = tuple(version.state() for version in self.output_versions)
+        if all(value is FileState.CURRENT for value in states):
+            return FileState.CURRENT
+        if FileState.OVERWRITTEN in states:
+            return FileState.OVERWRITTEN
+        if FileState.UNAVAILABLE in states:
+            return FileState.UNAVAILABLE
+        return FileState.MISSING
