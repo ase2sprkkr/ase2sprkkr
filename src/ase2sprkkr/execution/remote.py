@@ -613,6 +613,25 @@ class RemoteRunner:
                 self._state = RunState.FAILED
                 return self.result
 
+            if backend_state not in (
+                RunState.FINISHED,
+                RunState.FAILED,
+                RunState.CANCELLED,
+            ):
+                # The stream helper may stop because a backend identity was lost
+                # (for example a direct-process hard crash before its durable
+                # outcome barrier). Without an authoritative terminal backend
+                # fact, streamed bytes are provisional and must not replace the
+                # previously published local artifacts.
+                self._state = RunState.UNKNOWN
+                self._failure_phase = None
+                if self._failure_message is None:
+                    self._failure_message = (
+                        "Remote output stream ended without a terminal backend "
+                        f"state ({backend_state.value})"
+                    )
+                return self.result
+
             self._state = RunState.DOWNLOADING
             try:
                 await self._sync_output_files(required=backend_state == RunState.FINISHED)
