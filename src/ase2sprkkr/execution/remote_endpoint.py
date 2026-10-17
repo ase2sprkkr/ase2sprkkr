@@ -137,6 +137,9 @@ class _RemoteRun(RemoteRunner):
             remote_directory = await self.executor.map_directory(self.spec.directory)
             await self.executor.transport.run(("mkdir", "-p", "--", remote_directory))
             request = await self._prepare_request(run_id, remote_directory)
+            # All manifest computation must finish before starting the backend.
+            # Failure after submit could otherwise lose its durable identity.
+            manifest = await self._submitted_manifest(request)
         except Exception as exc:
             self._failure_phase = FailurePhase.SUBMISSION
             self._failure_message = str(exc)
@@ -146,7 +149,6 @@ class _RemoteRun(RemoteRunner):
         remote_id = status.get("remote_id")
         if not remote_id:
             raise RuntimeError("Remote submit returned no remote_id")
-        manifest = await self._submitted_manifest(request)
         return remote_id, manifest, status, request
 
     def submit(self):
