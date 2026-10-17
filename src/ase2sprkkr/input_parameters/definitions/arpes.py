@@ -14,7 +14,7 @@ from ...common.warnings import DataValidityError
 class ArpesInputParametersDefinition(InputParameters):
     """Shared SPEC_INPUT schema for ARPES-family tasks."""
 
-    def task_definition_name(self, parameters):
+    def task_name(self, parameters):
         return str(parameters.TASK.TASK() or "ARPES").upper()
 
 
