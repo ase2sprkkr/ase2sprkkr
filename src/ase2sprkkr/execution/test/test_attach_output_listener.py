@@ -176,13 +176,19 @@ def _psij_executor():
     return executor
 
 
-def _psij_reference(tmp_path):
-    return RunReference(
-        executor="psij:slurm",
-        native_id="42",
-        directory=str(tmp_path),
-        output_file=str(tmp_path / "output.out"),
-        error_file=str(tmp_path / "error.err"),
+def _psij_run(tmp_path):
+    return RunRecord(
+        id="psij-run", task="SCF", state=RunState.RUNNING,
+        created_at="2026-10-13T08:00:00+00:00",
+        updated_at="2026-10-13T08:00:00+00:00",
+        execution=Execution(
+            ExecutorEndpoint(executor="psij", psij_backend="slurm"),
+            WorkingDirectory(str(tmp_path)), "42",
+        ),
+        files=FileManifest(
+            stdout=FileEntry(local_path=str(tmp_path / "output.out")),
+            stderr=FileEntry(local_path=str(tmp_path / "error.err")),
+        ),
     )
 
 
@@ -198,7 +204,7 @@ def test_psij_attach_installs_listener_before_monitor(monkeypatch, tmp_path):
     monkeypatch.setattr(PsijRunner, "_thread_main", immediate_monitor)
 
     runner = _psij_executor().attach(
-        _psij_reference(tmp_path),
+        _psij_run(tmp_path),
         callback=lambda result: events.append(("finished", None)),
         output_listener=lambda text, kind: events.append((text, kind)),
     )
@@ -217,7 +223,7 @@ def test_psij_attach_can_defer_monitor_start(monkeypatch, tmp_path):
     monkeypatch.setattr(PsijRunner, "_thread_main", immediate_monitor)
 
     runner = _psij_executor().attach(
-        _psij_reference(tmp_path),
+        _psij_run(tmp_path),
         output_listener=lambda text, kind: events.append((text, kind)),
         start=False,
     )
