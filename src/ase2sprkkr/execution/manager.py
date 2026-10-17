@@ -50,11 +50,11 @@ _STATE_RANK = {
     RunState.FINALIZING: 4,
     RunState.AVAILABLE: 5,
     RunState.FINISHED: 5,
-    RunState.CHECKED: 6,
     RunState.EXECUTION_FAILED: 5,
     RunState.FINALIZATION_FAILED: 5,
     RunState.FAILED: 5,
     RunState.CANCELLED: 5,
+    RunState.CHECKED: 6,
 }
 _UNCHANGED = object()
 
@@ -136,7 +136,16 @@ class FileRetrievalState(str, Enum):
 
 @dataclass(frozen=True)
 class ResultFilesRecord:
-    """Persistent manifests and exact file versions captured at finalization."""
+    """Persistent manifests and exact file versions captured at finalization.
+
+    Manifests describe which files belong to the calculation. ``input_versions``
+    and ``output_versions`` are immutable snapshots of the concrete files found
+    when the run was finalized. Their SHA-256 digests are authoritative content
+    identity; cheap filesystem metadata only avoids re-hashing unchanged files.
+
+    Cache files are intentionally absent because reusable caches may legitimately
+    be updated by later calculations.
+    """
 
     input_file: Optional[str] = None
     output_file: Optional[str] = None
@@ -195,6 +204,7 @@ class ResultFilesRecord:
 
     @property
     def state(self):
+        """Current aggregate state of the captured output files."""
         if self.captured_at is None:
             return FileState.CURRENT
         states = tuple(version.state() for version in self.output_versions)
@@ -249,11 +259,19 @@ class DuplicateSubmissionError(RuntimeError):
 class RunRecord:
     """Persistent identity and last known lifecycle state of one run.
 
-    Terminal backend completion first becomes ``FINALIZING``. Successful file
-    finalization becomes ``AVAILABLE``; parsing/checking then advances to
-    ``CHECKED``. Retryable check failures stay ``AVAILABLE`` with a failure
-    reason, while unexpected check failures become ``FAILED``. Failed/cancelled
-    executions are never checked automatically.
+    ``task`` is the ASE2SPRKKR task represented by the concrete input values.
+    ``input_definition`` independently identifies the input schema used to parse
+    and reconstruct those values.
+
+    ``state`` is the single authoritative lifecycle state. A terminal backend
+    outcome first advances it to ``FINALIZING`` while files are finalized. A
+    successful execution then advances to ``AVAILABLE``. Result parsing is a
+    separate phase: success advances to ``CHECKED``, a retryable check failure
+    remains ``AVAILABLE`` with ``failure_reason``, and an unexpected/permanent
+    check failure advances to ``FAILED``. Failed execution is not checked.
+
+    ``FINISHED`` is retained as a legacy persisted state and is upgraded to
+    ``AVAILABLE`` only when result processing is explicitly requested.
     """
 
     id: str
@@ -299,7 +317,7 @@ class RunRecord:
 
     @property
     def failure_reason(self):
-        """Current lifecycle/check failure reason without duplicate persistence."""
+        """Return the current lifecycle/check failure reason, if any."""
         return self.message
 
 
@@ -392,15 +410,18 @@ class RunStore:
 
     @contextmanager
     def submission_lock(self):
+        """Serialize duplicate checking and the SUBMITTING record creation."""
         self.directory.mkdir(parents=True, exist_ok=True, mode=0o700)
         with self._lock, FileLock(self.directory / ".submit.lock"):
             yield
 
     def save(self, record: RunRecord):
+        """Atomically store a complete record supplied by the caller."""
         with self._lock:
             return self._write_unlocked(record)
 
     def update(self, record: RunRecord, updater):
+        """Read latest, merge under a per-run lock, and atomically replace it."""
         with self._lock, FileLock(self._run_lock_path(record)):
             path = self._path(record)
             latest = self._decode(path) if path.is_file() else record
@@ -428,10 +449,12 @@ class RunStore:
         return sorted(records, key=lambda record: record.created_at, reverse=newest)
 
     def runs(self, *, active=None, limit=None, newest=False):
+        """Return stored runs without querying backends or touching result files."""
         if limit is not None and limit < 0:
             raise ValueError("limit must be non-negative")
         if limit == 0:
             return ()
+
         with self._lock:
             records = []
             for day in self._day_directories(newest=newest):
@@ -453,7 +476,9 @@ class ExecutionManager:
         if submitting_grace < 0:
             raise ValueError("submitting_grace must be non-negative")
         self.store = store if store is not None else RunStore()
-        self.executor_pool = executor_pool if executor_pool is not None else default_executor_pool()
+        self.executor_pool = (
+            executor_pool if executor_pool is not None else default_executor_pool()
+        )
         self.submitting_grace = float(submitting_grace)
         self._legacy_executors = {}
         self._lock = RLock()
@@ -482,7 +507,8 @@ class ExecutionManager:
                 executor = self._legacy_executors.get((reference.executor, None))
         if executor is None:
             raise KeyError(
-                f"Run {record.id} predates persisted endpoint identity and no live executor is registered for it"
+                f"Run {record.id} predates persisted endpoint identity and no live "
+                "executor is registered for it"
             )
         return executor
 
@@ -491,8 +517,12 @@ class ExecutionManager:
         directory = os.path.abspath(os.fspath(spec.directory))
         input_file = _result_file_path(getattr(spec, "input_file", None), directory)
         output_file = _result_file_path(getattr(spec, "output_file", None), directory)
-        input_files = _unique((input_file, *(_result_file_path(value, directory) for value in getattr(spec, "input_files", ()))))
-        output_files = _unique((output_file, *(_result_file_path(value, directory) for value in getattr(spec, "output_files", ()))))
+        input_files = _unique(
+            (input_file, *(_result_file_path(value, directory) for value in getattr(spec, "input_files", ())))
+        )
+        output_files = _unique(
+            (output_file, *(_result_file_path(value, directory) for value in getattr(spec, "output_files", ())))
+        )
         return ResultFilesRecord(
             input_file=input_file,
             output_file=output_file,
@@ -640,6 +670,7 @@ class ExecutionManager:
         return_code=_UNCHANGED,
         message=_UNCHANGED,
         result_files=_UNCHANGED,
+        clear_message=False,
     ):
         def merge(latest):
             final_locked = latest.state in _FINAL_STATES
@@ -656,8 +687,10 @@ class ExecutionManager:
             if return_code is not _UNCHANGED and return_code is not None:
                 if not final_locked or latest.return_code is None:
                     changes["return_code"] = return_code
-            if message is not _UNCHANGED:
-                if message is None or not final_locked or latest.message is None:
+            if clear_message:
+                changes["message"] = None
+            elif message is not _UNCHANGED and message is not None:
+                if not final_locked or latest.message is None:
                     changes["message"] = message
             return replace(latest, **changes)
         return self.store.update(record, merge)
@@ -691,12 +724,7 @@ class ExecutionManager:
                 raise RuntimeError(
                     f"Run {latest.id} is {latest.state.value}, not legacy finished"
                 )
-            return replace(
-                latest,
-                state=RunState.AVAILABLE,
-                updated_at=_now(),
-                message=None,
-            )
+            return replace(latest, state=RunState.AVAILABLE, updated_at=_now(), message=None)
         return self.store.update(record, update)
 
     def mark_checked(self, record):
@@ -705,12 +733,7 @@ class ExecutionManager:
                 return latest
             if latest.state not in (RunState.AVAILABLE, RunState.CHECKED):
                 raise RuntimeError(f"Run {latest.id} is {latest.state.value}, not checkable")
-            return replace(
-                latest,
-                state=RunState.CHECKED,
-                updated_at=_now(),
-                message=None,
-            )
+            return replace(latest, state=RunState.CHECKED, updated_at=_now(), message=None)
         return self.store.update(record, update)
 
     def record_result_check_failure(self, record, error, *, retryable):
@@ -825,6 +848,7 @@ class ExecutionManager:
             return_code=return_code,
             message=message,
             result_files=result_files,
+            clear_message=state == RunState.AVAILABLE and message is None,
         )
 
     def update_file_retrieval(self, record, state, message=None):
@@ -1105,9 +1129,9 @@ class PersistentRunner:
             return_code = getattr(self._runner, "return_code", None)
 
         current = self.manager.store.get(self._record.id)
+        message = current.message if error is None else str(error)
         if (
-            backend_state
-            in (RunState.FINISHED, RunState.EXECUTION_FAILED, RunState.FAILED)
+            backend_state in (RunState.FINISHED, RunState.EXECUTION_FAILED, RunState.FAILED)
             and current.state not in _FINAL_STATES
             and current.state != RunState.FINALIZING
         ):
@@ -1116,7 +1140,7 @@ class PersistentRunner:
                 state=RunState.FINALIZING,
                 reference=self.reference,
                 return_code=return_code,
-                message=None if error is None else str(error),
+                message=message,
             )
         else:
             self._record = current
@@ -1126,7 +1150,7 @@ class PersistentRunner:
             state=state,
             reference=self.reference,
             return_code=return_code,
-            message=None if error is None else str(error),
+            message=None if state == RunState.AVAILABLE else message,
         )
         return previous.state not in _FINAL_STATES and self._record.state == RunState.AVAILABLE
 
