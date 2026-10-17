@@ -10,7 +10,6 @@ from ase2sprkkr.execution import (
     Executor,
     ExecutorPool,
     FailurePhase,
-    RunReference,
     RunState,
     RunStatus,
     RunStore,
@@ -21,7 +20,7 @@ class _RawRunner:
     def __init__(self, on_submit=None):
         self.on_submit = on_submit
         self.state = RunState.NEW
-        self.reference = None
+        self.backend_id = None
         self.result = ExecutionOutcome(return_code=None)
         self.exception = None
         self.failure_phase = None
@@ -35,7 +34,7 @@ class _RawRunner:
     def submit(self):
         if self.on_submit:
             self.on_submit()
-        self.reference = RunReference(executor="test", native_id="native-1")
+        self.backend_id = "native-1"
         self.state = RunState.QUEUED
 
     def wait(self):
@@ -78,11 +77,9 @@ class _Executor(Executor):
         self.runners.append(runner)
         return runner
 
-    def status(self, *references):
-        self.status_calls.append(references)
-        return tuple(
-            RunStatus(reference, RunState.RUNNING) for reference in references
-        )
+    def status(self, *runs):
+        self.status_calls.append(runs)
+        return tuple(RunStatus(RunState.RUNNING, backend_id=run.execution.backend_id) for run in runs)
 
 
 def _spec(tmp_path, *, dataset="case"):
@@ -122,7 +119,7 @@ def test_submit_persists_submitting_before_backend_call(tmp_path):
     stored = manager.store.get(run.id)
     assert stored.state == RunState.QUEUED
     assert stored.finished_at is None
-    assert stored.reference == executor.runners[0].reference
+    assert stored.execution.backend_id == executor.runners[0].backend_id
     assert stored.task == "ARPES"
     assert stored.dataset == "case"
 
@@ -187,7 +184,7 @@ def test_refresh_batches_status_queries(tmp_path):
         record = manager.transition(
             record,
             state=RunState.QUEUED,
-            reference=RunReference(executor="test", native_id=str(index)),
+            execution=record.execution.submitted(str(index)),
         )
         records.append(record)
 
@@ -197,7 +194,7 @@ def test_refresh_batches_status_queries(tmp_path):
         RunState.RUNNING,
         RunState.RUNNING,
     ]
-    assert executor.status_calls == [tuple(record.reference for record in records)]
+    assert executor.status_calls == [tuple(records)]
 
 
 def test_duplicate_submission_is_blocked_by_persisted_namespace(tmp_path):

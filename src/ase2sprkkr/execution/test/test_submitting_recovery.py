@@ -8,7 +8,6 @@ from ase2sprkkr.execution import (
     ExecutionManager,
     Executor,
     ExecutorPool,
-    RunReference,
     RunState,
     RunStatus,
     RunStore,
@@ -18,7 +17,7 @@ from ase2sprkkr.execution import (
 class _Runner:
     def __init__(self):
         self.state = RunState.NEW
-        self.reference = None
+        self.backend_id = None
         self.result = SimpleNamespace(return_code=None)
         self.exception = None
         self.failure_phase = None
@@ -27,7 +26,7 @@ class _Runner:
 
     def submit(self):
         self.state = RunState.QUEUED
-        self.reference = RunReference(executor="recover", native_id="new-job")
+        self.backend_id = "new-job"
 
     def wait(self):
         self._done.wait()
@@ -93,9 +92,8 @@ def test_confirmed_absent_stale_submission_releases_namespace(tmp_path):
 
 
 def test_recovered_submission_keeps_duplicate_protection(tmp_path):
-    reference = RunReference(executor="recover", native_id="existing-job")
     executor = _RecoveringExecutor(
-        RunStatus(reference=reference, state=RunState.QUEUED)
+        RunStatus(state=RunState.QUEUED, backend_id="existing-job")
     )
     manager = ExecutionManager(
         RunStore(tmp_path / "runs"),
@@ -111,7 +109,7 @@ def test_recovered_submission_keeps_duplicate_protection(tmp_path):
 
     recovered = manager.store.get(uncertain.id)
     assert recovered.state == RunState.QUEUED
-    assert recovered.reference == reference
+    assert recovered.execution.backend_id == "existing-job"
 
 
 def test_unsupported_recovery_never_releases_submission(tmp_path):

@@ -6,7 +6,6 @@ from ase2sprkkr.execution import (
     ExecutorPool,
     LocalExecutor,
     RemoteEndpointExecutor,
-    RunReference,
     RunState,
     RunStore,
     SshTransport,
@@ -49,8 +48,8 @@ def test_run_store_roundtrips_endpoint(tmp_path):
 
     loaded = store.get(stored.id)
 
-    assert loaded.endpoint == endpoint
-    assert isinstance(loaded.endpoint, ExecutorEndpoint)
+    assert loaded.execution.endpoint == endpoint
+    assert isinstance(loaded.execution.endpoint, ExecutorEndpoint)
 
 
 def test_manager_reconstructs_local_executor_after_restart(tmp_path):
@@ -72,8 +71,8 @@ def test_manager_reconstructs_local_executor_after_restart(tmp_path):
 
 def test_attach_reconstructs_persisted_endpoint_without_task_reader(tmp_path):
     class AttachedRunner:
-        def __init__(self, reference):
-            self.reference = reference
+        def __init__(self, run):
+            self.backend_id = run.execution.backend_id
             self.state = RunState.RUNNING
             self.result = None
             self.exception = None
@@ -103,13 +102,13 @@ def test_attach_reconstructs_persisted_endpoint_without_task_reader(tmp_path):
 
         def attach(
             self,
-            reference,
+            run,
             callback=None,
             output_listener=None,
             start=True,
         ):
-            self.calls.append((reference, callback, output_listener, start))
-            runner = AttachedRunner(reference)
+            self.calls.append((run, callback, output_listener, start))
+            runner = AttachedRunner(run)
             if start:
                 runner.start()
             return runner
@@ -125,7 +124,6 @@ def test_attach_reconstructs_persisted_endpoint_without_task_reader(tmp_path):
 
     store = RunStore(tmp_path / "runs")
     endpoint = ExecutorEndpoint(executor="ssh", host="cluster")
-    reference = RunReference(executor="ssh", native_id="42", computer="cluster")
     first = ExecutionManager(store, executor_pool=ExecutorPool())
     record = first.new_record(
         task="DOS",
@@ -133,7 +131,7 @@ def test_attach_reconstructs_persisted_endpoint_without_task_reader(tmp_path):
         endpoint=endpoint,
     )
     store.save(record)
-    record = first.transition(record, state=RunState.RUNNING, reference=reference)
+    record = first.transition(record, state=RunState.RUNNING, execution=record.execution.submitted("42"))
 
     executor = ReconstructedExecutor()
     pool = RecordingPool(executor)
@@ -146,7 +144,7 @@ def test_attach_reconstructs_persisted_endpoint_without_task_reader(tmp_path):
 
     assert pool.endpoints == [endpoint]
     assert attached.executor is executor
-    assert executor.calls == [(reference, None, None, False)]
+    assert executor.calls == [(record, None, None, False)]
 
     attached.cancel()
 
