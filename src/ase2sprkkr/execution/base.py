@@ -176,8 +176,8 @@ class ResourceOwnedRunner:
         return self._runner.state
 
     @property
-    def reference(self):
-        return self._runner.reference
+    def backend_id(self):
+        return self._runner.backend_id
 
     @property
     def exception(self):
@@ -271,30 +271,13 @@ class ResourceOwnedRunner:
 
 
 @dataclass(frozen=True)
-class RunReference:
-    """Serializable information needed to reconnect to a persistent run.
-
-    ``native_id`` is an opaque backend identifier. ``context`` contains
-    client-owned reconnect data; the remote target never owns ASE2SPRKKR run
-    lifecycle state.
-    """
-
-    executor: str
-    native_id: str
-    computer: Optional[str] = None
-    directory: Optional[str] = None
-    input_file: Optional[str] = None
-    output_file: Optional[str] = None
-    error_file: Optional[str] = None
-    context: Any = None
-
-
-@dataclass(frozen=True)
 class RunStatus:
     """One backend status snapshot for a persistent run reference."""
 
-    reference: RunReference
     state: RunState
+    backend_id: Optional[str] = None
+    execution: Any = None
+    files: Any = None
     return_code: Optional[int] = None
     message: Optional[str] = None
     failure_phase: Optional[FailurePhase] = None
@@ -469,7 +452,7 @@ class Runner(Protocol):
     def state(self) -> RunState: ...
 
     @property
-    def reference(self) -> Optional[RunReference]: ...
+    def backend_id(self) -> Optional[str]: ...
 
     @property
     def exception(self) -> Optional[BaseException]: ...
@@ -491,7 +474,7 @@ class Executor:
     def supports_result_file_retrieval(cls):
         return cls.fetch_result_files is not Executor.fetch_result_files
 
-    def fetch_result_files(self, reference: RunReference, files):
+    def fetch_result_files(self, run, files):
         raise NotImplementedError(
             f"{type(self).__name__} cannot retrieve persistent result files"
         )
@@ -502,8 +485,8 @@ class Executor:
     def resolve_mpi(self, mpi=None):
         return LaunchSpec.from_mpi(mpi)
 
-    def status(self, *references: RunReference) -> Tuple[RunStatus, ...]:
-        if not references:
+    def status(self, *runs) -> Tuple[RunStatus, ...]:
+        if not runs:
             return ()
         raise NotImplementedError(
             f"{type(self).__name__} cannot query persistent run status"
@@ -526,7 +509,7 @@ class Executor:
 
     def attach(
         self,
-        reference: RunReference,
+        run,
         callback=None,
         output_listener=None,
         start=True,

@@ -39,8 +39,8 @@ class PostprocessingRunner:
         return self._runner.executor
 
     @property
-    def reference(self):
-        return self._runner.reference
+    def backend_id(self):
+        return self._runner.backend_id
 
     @property
     def exception(self):
