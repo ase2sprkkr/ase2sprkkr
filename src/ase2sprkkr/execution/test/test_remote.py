@@ -154,9 +154,9 @@ def test_remote_executor_local_transport_streams_output(tmp_path):
     assert result.output == b"HELLO\n"
     assert result.error == b""
     assert seen == [("HELLO\n", "out")]
-    assert runner.reference is not None
-    assert runner.reference.executor == "remote:local"
-    assert Path(runner.reference.directory) == remote_root
+    assert runner.backend_id is not None
+    assert runner.execution.endpoint is not None
+    assert Path(runner.execution.directory.remote) == remote_root
 
 
 def test_remote_executor_stages_declared_input_files(tmp_path):
