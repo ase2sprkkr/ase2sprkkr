@@ -1,38 +1,18 @@
 import os
 import sys
-from types import SimpleNamespace
 
 import pytest
 
-from ase2sprkkr.execution import ExecutionSpec, LocalExecutor, RunState
+from ase2sprkkr.execution import (
+    ExecutionSpec, LocalExecutor, RunState, RunRecord,
+    Execution, ExecutorEndpoint, WorkingDirectory, FileManifest, FileEntry,
+)
 
 
 pytestmark = pytest.mark.skipif(
     os.name == "nt",
     reason="the detached helper currently uses POSIX file locking",
 )
-
-
-class _Reader:
-    print_output = False
-
-    def create_result(self, output_file, input_file):
-        return SimpleNamespace(
-            output_file=getattr(output_file, "name", output_file),
-            input_file=getattr(input_file, "name", input_file),
-            stdout=None,
-            stderr=None,
-            return_code=None,
-        )
-
-    async def parse_streams(self, stdout, stderr, result):
-        return await stdout.read(), await stderr.read()
-
-    def complete_result(self, result, output, error, return_code):
-        result.stdout = output
-        result.stderr = error
-        result.return_code = return_code
-        return result
 
 
 def _spec(tmp_path):
@@ -49,38 +29,47 @@ def _spec(tmp_path):
     )
 
 
+def _record(tmp_path, backend_id):
+    return RunRecord(
+        id=backend_id,
+        state=RunState.RUNNING,
+        task="DOS",
+        created_at="2026-10-13T08:00:00+00:00",
+        updated_at="2026-10-13T08:00:00+00:00",
+        execution=Execution(
+            ExecutorEndpoint(), WorkingDirectory(str(tmp_path)), backend_id,
+        ),
+        files=FileManifest(
+            stdout=FileEntry(local_path=str(tmp_path / "calculation.out")),
+        ),
+    )
+
+
 def test_persistent_local_run_can_be_reattached_and_replayed(tmp_path):
     executor = LocalExecutor()
     runner = executor.create_persistent_run(
-        _Reader(), _spec(tmp_path), run_id="local-persistent"
+        _spec(tmp_path), run_id="local-persistent",
     )
     runner.submit()
-    reference = runner.reference
-    assert reference.native_id == "local-persistent"
+    assert runner.backend_id == "local-persistent"
 
     result = runner.wait()
     assert result.return_code == 0
-    assert result.stdout == b"before\nafter\n"
-    assert executor.status(reference)[0].state == RunState.FINISHED
+    assert (tmp_path / "calculation.out").read_bytes() == b"before\nafter\n"
+    record = _record(tmp_path, runner.backend_id)
+    assert executor.status(record)[0].state == RunState.FINISHED
 
-    # Reattach as a new client. Replaying the helper-owned stream must rebuild
-    # even a stale client-side output artifact and deliver all output to the
-    # listener installed atomically during attach.
+    # Reattach with only persisted execution and manifest information.
     (tmp_path / "calculation.out").write_text("stale\n")
     replay = []
     attached = LocalExecutor().attach(
-        reference,
-        _Reader(),
+        record,
         output_listener=lambda text, kind: replay.append((text, kind)),
         start=False,
     )
     assert replay == []
-
     attached.start()
-    attached_result = attached.wait()
-
-    assert attached_result.return_code == 0
-    assert attached_result.stdout == b"before\nafter\n"
+    assert attached.wait().return_code == 0
     assert (tmp_path / "calculation.out").read_bytes() == b"before\nafter\n"
     assert "".join(text for text, kind in replay if kind == "out") == "before\nafter\n"
 
@@ -88,21 +77,15 @@ def test_persistent_local_run_can_be_reattached_and_replayed(tmp_path):
 def test_persistent_local_submission_can_be_recovered_by_run_id(tmp_path):
     executor = LocalExecutor()
     runner = executor.create_persistent_run(
-        _Reader(), _spec(tmp_path), run_id="recover-local"
+        _spec(tmp_path), run_id="recover-local",
     )
     runner.submit()
-
     recovered = LocalExecutor().recover_submission(
-        "recover-local", SimpleNamespace(directory=str(tmp_path))
+        "recover-local", _record(tmp_path, None),
     )
-
     assert recovered is not None
-    assert recovered.reference.executor == "local"
-    assert recovered.reference.native_id == "recover-local"
-    assert recovered.reference.output_file == str(tmp_path / "calculation.out")
+    assert recovered.backend_id == "recover-local"
     assert recovered.state in {
-        RunState.SUBMITTING,
-        RunState.RUNNING,
-        RunState.FINISHED,
+        RunState.SUBMITTING, RunState.RUNNING, RunState.FINISHED,
     }
     runner.wait()
