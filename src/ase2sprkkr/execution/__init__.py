@@ -16,6 +16,7 @@ from .base import (
     RunState,
     RunStatus,
 )
+from . import _legacy_lifecycle_compat as _legacy_lifecycle_compat
 from .endpoint import ExecutorEndpoint
 from .local import LocalExecutor, LocalRunner
 from .manager import (
