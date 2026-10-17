@@ -8,9 +8,14 @@ from ...common.warnings import DataValidityError
 
 
 class _Definition:
-    def __init__(self, outcome):
+    def __init__(self, outcome, *, schema_adsi=None):
         self.outcome = outcome
+        self.schema_adsi = schema_adsi
         self.calls = 0
+
+    def __getitem__(self, name):
+        assert name == "CONTROL"
+        return {"ADSI": SimpleNamespace(default_value=self.schema_adsi)}
 
     def read_from_file(self, filename, allow_dangerous=False):
         self.calls += 1
@@ -75,7 +80,20 @@ def test_from_file_keeps_first_success_when_adsi_is_not_a_task():
 
     assert parameters.from_file("input.inp") is expected
     assert first.calls == 1
-    assert second.calls == 0
+    # Unknown ADSI can still be a schema discriminator; check all schemas
+    # before falling back to the first successfully parsed input.
+    assert second.calls == 1
+
+
+def test_from_file_prefers_schema_adsi_for_shared_task_family():
+    first = _Definition(_candidate("BLOCHSF", "ARPES"), schema_adsi="ARPES")
+    expected = _candidate("BLOCHSF", "BSFEK")
+    matching = _Definition(expected, schema_adsi="BLOCHSF")
+    parameters = _parameters_with({"arpes": first, "bsf": matching})
+
+    assert parameters.from_file("input.inp") is expected
+    assert first.calls == 1
+    assert matching.calls == 1
 
 
 @pytest.mark.parametrize("error", [

@@ -1,5 +1,7 @@
 import io
 
+import numpy as np
+
 from ..input_parameters import InputParameters
 
 
@@ -37,4 +39,4 @@ def test_from_file_detects_bsfkk_shared_schema_by_adsi():
     assert parsed.CONTROL.ADSI() == "BLOCHSF"
     assert parsed.TASK.NK1() == 45
     assert parsed.TASK.NK2() == 55
-    assert parsed.TASK.KA() == [0.0, 0.0, 0.0]
+    np.testing.assert_array_equal(parsed.TASK.KA(), [[0.0, 0.0, 0.0]])
