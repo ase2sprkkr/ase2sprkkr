@@ -11,6 +11,7 @@ from threading import Event, Lock, Thread
 from .base import (
     ExecutionSpec,
     Executor,
+    FailurePhase,
     OutputObservers,
     RunReference,
     RunState,
@@ -23,6 +24,7 @@ from .local_process import (
     start_local_process,
     stop_local_process,
 )
+from .outcome import ExecutionOutcome
 
 
 def _path(value, directory):
@@ -57,18 +59,13 @@ def _pid_running(pid):
 
 
 class LocalRunner:
-    """One local subprocess execution.
+    """One local subprocess execution without task-specific interpretation."""
 
-    The runner owns process lifecycle, cancellation, output-file writing and
-    delivery of raw stdout/stderr to listeners. The output reader only parses
-    streams and builds the TaskResult.
-    """
-
-    def __init__(self, reader, spec: ExecutionSpec, callback=None):
-        self.reader = reader
+    def __init__(self, spec: ExecutionSpec, callback=None, *, print_output=False):
         self.spec = spec
         self.callback = callback
-        self.result = reader.create_result(spec.output_file, spec.input_file)
+        self.print_output = bool(print_output)
+        self.result = ExecutionOutcome(spec.output_file, spec.input_file)
 
         self._state = RunState.NEW
         self._output_observers = OutputObservers()
@@ -84,6 +81,8 @@ class LocalRunner:
         self._stop_task = None
         self._exception = None
         self._callback_exception = None
+        self._failure_phase = None
+        self._failure_message = None
 
     @property
     def state(self):
@@ -92,6 +91,18 @@ class LocalRunner:
     @property
     def exception(self):
         return self._exception
+
+    @property
+    def return_code(self):
+        return self.result.return_code
+
+    @property
+    def failure_phase(self):
+        return self._failure_phase
+
+    @property
+    def failure_message(self):
+        return self._failure_message
 
     @property
     def reference(self):
@@ -107,23 +118,17 @@ class LocalRunner:
         )
 
     def add_output_listener(self, callback):
-        """Receive raw output as ``callback(text, kind)``.
-
-        ``kind`` is ``"out"`` or ``"err"``. Observer failures never affect the
-        subprocess lifecycle.
-        """
+        """Receive raw output as ``callback(text, kind)``."""
         self._output_observers.add(callback)
 
     def add_output_error_listener(self, callback):
-        """Receive ``callback(observer, exception)`` for failed output observers."""
         self._output_observers.add_error_listener(callback)
 
     def _emit_output(self, data, kind):
         if not data:
             return
-
         text = data.decode("utf8")
-        if self.reader.print_output:
+        if self.print_output:
             print(text, end="", file=sys.stderr if kind == "err" else sys.stdout)
         self._output_observers.emit(text, kind)
 
@@ -132,16 +137,12 @@ class LocalRunner:
             return self.spec.error_file
         return self.spec.output_file
 
-    def _write_output(self, data, kind):
+    def _forward_output(self, data, kind):
         target = self._output_target(kind)
         if target is not None:
             target.write(data)
             target.flush()
-
-    def _forward_output(self, data, target, kind):
-        self._write_output(data, kind)
         self._emit_output(data, kind)
-        target.feed_data(data)
 
     async def _stop_process(self):
         await stop_local_process(self._process)
@@ -157,19 +158,15 @@ class LocalRunner:
         self._ensure_stop_task()
 
     def cancel(self):
-        """Request cancellation from any thread."""
         self._cancel_requested.set()
-
         loop = self._loop
         if loop is None:
             if self._state == RunState.NEW:
                 self._state = RunState.CANCELLED
             return
-
         try:
             loop.call_soon_threadsafe(self._schedule_stop)
         except RuntimeError:
-            # The owning event loop has already stopped.
             pass
 
     def _close_output_files(self):
@@ -183,15 +180,18 @@ class LocalRunner:
 
     async def _execute(self):
         self._loop = asyncio.get_running_loop()
-        execution_finished = False
-
         if self._cancel_requested.is_set():
             self._state = RunState.CANCELLED
             self._started.set()
             raise RuntimeError("Run was cancelled before process start")
 
         try:
-            self._process = await start_local_process(self.spec)
+            try:
+                self._process = await start_local_process(self.spec)
+            except BaseException as exc:
+                self._failure_phase = FailurePhase.LAUNCH
+                self._failure_message = str(exc)
+                raise
             self._pid = self._process.pid
             self._state = RunState.RUNNING
             self._started.set()
@@ -201,59 +201,46 @@ class LocalRunner:
                 if stop_task is not None:
                     await stop_task
 
-            stdout = asyncio.StreamReader()
-            stderr = asyncio.StreamReader()
-            parse_task = asyncio.create_task(
-                self.reader.parse_streams(stdout, stderr, self.result)
-            )
             wait_task = asyncio.create_task(self._process.wait())
             stdout_task = asyncio.create_task(
                 pump_stream(
                     self._process.stdout,
-                    lambda data: self._forward_output(data, stdout, "out"),
-                    eof=stdout.feed_eof,
+                    lambda data: self._forward_output(data, "out"),
                 )
             )
             stderr_task = asyncio.create_task(
                 pump_stream(
                     self._process.stderr,
-                    lambda data: self._forward_output(data, stderr, "err"),
-                    eof=stderr.feed_eof,
+                    lambda data: self._forward_output(data, "err"),
                 )
             )
-            tasks = (parse_task, wait_task, stdout_task, stderr_task)
-
+            tasks = (wait_task, stdout_task, stderr_task)
             try:
-                return_code, _, _ = await asyncio.gather(
-                    wait_task, stdout_task, stderr_task
-                )
-                self._state = (
-                    RunState.CANCELLED
-                    if self._cancel_requested.is_set()
-                    else RunState.FINISHED
-                    if return_code == 0
-                    else RunState.FAILED
-                )
-                execution_finished = True
-                output, error = await parse_task
-                return self.reader.complete_result(
-                    self.result, output, error, return_code
-                )
+                return_code, _, _ = await asyncio.gather(*tasks)
             finally:
                 for task in tasks:
                     if not task.done():
                         task.cancel()
                 await asyncio.gather(*tasks, return_exceptions=True)
+
+            self.result.return_code = return_code
+            if self._cancel_requested.is_set():
+                self._state = RunState.CANCELLED
+            elif return_code == 0:
+                self._state = RunState.FINISHED
+            else:
+                self._state = RunState.FAILED
+                self._failure_phase = FailurePhase.EXECUTION
+                self._failure_message = f"Process exited with status {return_code}"
+            return self.result
         except BaseException:
             self._started.set()
-            if not execution_finished:
-                self._state = (
-                    RunState.CANCELLED
-                    if self._cancel_requested.is_set()
-                    else RunState.FAILED
-                )
-                if self._process is not None and self._process.returncode is None:
-                    await self._stop_process()
+            if self._state != RunState.CANCELLED:
+                self._state = RunState.FAILED
+            if self._failure_phase is None:
+                self._failure_phase = FailurePhase.EXECUTION
+            if self._process is not None and self._process.returncode is None:
+                await self._stop_process()
             raise
         finally:
             if self._stop_task is not None:
@@ -267,6 +254,8 @@ class LocalRunner:
             asyncio.run(self._execute())
         except BaseException as exc:
             self._exception = exc
+            if self._failure_message is None:
+                self._failure_message = str(exc)
         finally:
             try:
                 if self.callback:
@@ -282,7 +271,6 @@ class LocalRunner:
                 raise RuntimeError("Run was cancelled before submission")
             if self._state != RunState.NEW:
                 raise RuntimeError(f"Run is already {self._state.value}")
-
             self._state = RunState.SUBMITTING
             self._thread = Thread(target=self._thread_main, daemon=True)
             self._thread.start()
@@ -294,12 +282,11 @@ class LocalRunner:
                 raise SubmissionNotStarted(str(self._exception)) from self._exception
 
     def wait(self):
-        """Wait for a submitted run and return its TaskResult."""
+        """Wait for a submitted run and return its raw execution outcome."""
         if self._state == RunState.NEW:
             raise RuntimeError("Run has not been submitted")
         if self._state == RunState.CANCELLED and self._thread is None:
             raise RuntimeError("Run was cancelled before submission")
-
         self._done.wait()
         if self._exception is not None:
             raise self._exception
@@ -308,41 +295,44 @@ class LocalRunner:
         return self.result
 
     def run(self):
-        """Submit, if needed, and wait for completion."""
         if self._state == RunState.NEW:
             self.submit()
         return self.wait()
 
     async def run_async(self):
-        """Async wrapper around submit/wait."""
         if self._state == RunState.NEW:
             self.submit()
-        loop = asyncio.get_running_loop()
-        return await loop.run_in_executor(None, self.wait)
+        return await asyncio.to_thread(self.wait)
 
 
 class LocalExecutor(Executor):
-    """Create runners executed as local subprocesses."""
+    """Create parser-free runners executed as local subprocesses."""
 
     name = "local"
 
-    def create_run(self, reader, spec: ExecutionSpec, callback=None):
-        return LocalRunner(reader, materialize_local_spec(spec), callback=callback)
+    def create_run(self, spec: ExecutionSpec, callback=None, *, print_output=False):
+        return LocalRunner(
+            materialize_local_spec(spec),
+            callback=callback,
+            print_output=print_output,
+        )
 
     def create_persistent_run(
-        self, reader, spec: ExecutionSpec, *, run_id: str, callback=None
+        self,
+        spec: ExecutionSpec,
+        *,
+        run_id: str,
+        callback=None,
+        print_output=False,
     ):
-        # Persistent local jobs are owned by the same detached helper protocol
-        # used on remote targets. This leaves a reconnectable controller behind
-        # when the client process exits.
         from .local_persistent import LocalPersistentRunner
 
         return LocalPersistentRunner(
             self,
-            reader,
             spec,
             run_id=run_id,
             callback=callback,
+            print_output=print_output,
         )
 
     def recover_submission(self, run_id, submission, *, submitted_at=None):
@@ -353,20 +343,21 @@ class LocalExecutor(Executor):
     def attach(
         self,
         reference: RunReference,
-        reader,
         callback=None,
         output_listener=None,
         start=True,
+        *,
+        print_output=False,
     ):
         from .local_persistent import attach_local
 
         return attach_local(
             self,
             reference,
-            reader,
             callback=callback,
             output_listener=output_listener,
             start=start,
+            print_output=print_output,
         )
 
     def status(self, *references: RunReference):
@@ -384,14 +375,11 @@ class LocalExecutor(Executor):
             if detached is not None:
                 statuses.append(detached)
                 continue
-
             try:
                 pid = int(reference.native_id)
             except (TypeError, ValueError):
                 state = RunState.UNKNOWN
             else:
-                # Legacy records used a process PID as their only controller.
-                # Keep status compatibility, but such runs cannot be attached.
                 state = RunState.RUNNING if _pid_running(pid) else RunState.UNKNOWN
             statuses.append(RunStatus(reference, state))
         return tuple(statuses)
