@@ -405,6 +405,10 @@ def bsf_definition():
         ],
         executable="kkrgen",
         mpi=True,
+        output_file_templates=(
+            "{dataset}_BLOCHSF.bsf",
+            "{dataset}_BLOCHSF_spol.bsf",
+        ),
         info="BSF - Bloch spectral functions in the E-K or K-K plane",
         validators=_validate_bsf,
     )
