@@ -1,12 +1,13 @@
 """Crash boundary: remote staging metadata must be persisted before submit."""
 
+from ase2sprkkr.execution.remote_endpoint import _RemoteRun
 from ase2sprkkr.execution import (
     ExecutionManager, ExecutionSpec, FileEntry, FileManifest, FileMapping,
     LaunchSpec, RemoteEndpointExecutor, RunState, RunStore, LocalTransport,
 )
 
 
-def test_prepared_manifest_is_durable_before_remote_backend_submit(tmp_path):
+def test_prepared_manifest_is_durable_before_remote_backend_submit(tmp_path, monkeypatch):
     executor = RemoteEndpointExecutor(LocalTransport())
     manager = ExecutionManager(RunStore(tmp_path / "runs"))
     directory = tmp_path / "local"
@@ -25,14 +26,13 @@ def test_prepared_manifest_is_durable_before_remote_backend_submit(tmp_path):
     run = manager.create_run(
         executor, spec, task="DOS", process_result=lambda outcome: outcome,
     )
-    raw = run._runner._runner
     expected = FileManifest(
         stdout=FileEntry(str(output), "/target/prepared/run.out"),
         mapping=FileMapping(str(tmp_path), "/target/prepared"),
         availability_state="pending",
     )
 
-    async def prepare():
+    async def prepare(_runner):
         return {"directory": "/target/prepared", "id": run.id}, expected
 
     submitted = []
@@ -42,8 +42,8 @@ def test_prepared_manifest_is_durable_before_remote_backend_submit(tmp_path):
         submitted.append(current)
         return {"state": "running", "remote_id": "opaque-job"}
 
-    raw._prepare_async = prepare
-    raw._start_monitor = lambda: None
+    monkeypatch.setattr(_RemoteRun, "_prepare_async", prepare)
+    monkeypatch.setattr(_RemoteRun, "_start_monitor", lambda _runner: None)
     executor._submit = submit
 
     run.submit()
