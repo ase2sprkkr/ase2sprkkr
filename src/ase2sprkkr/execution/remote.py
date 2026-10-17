@@ -489,18 +489,24 @@ class RemoteRunner:
             return
 
         for local, (remote, before) in self._cache_targets.items():
-            after = await self.executor.transport.file_signature(remote)
-            if after is None or after == before:
-                continue
-            if policy == FileSyncPolicy.MISSING and local_file_digest(local) is not None:
-                continue
-            await self.executor.transport.get_file(remote, local)
+            try:
+                after = await self.executor.transport.file_signature(remote)
+                if after is None or after == before:
+                    self._set_file_availability(local, "skipped", kind="cache")
+                    continue
+                if policy == FileSyncPolicy.MISSING and local_file_digest(local) is not None:
+                    self._set_file_availability(local, "skipped", kind="cache")
+                    continue
+                await self.executor.transport.get_file(remote, local)
+                self._set_file_availability(local, "available", kind="cache")
+            except Exception as exc:
+                self._set_file_availability(local, "failed", str(exc), kind="cache")
+                raise
 
         if not self._cache_patterns:
             return
 
         remote_root = await self.executor._resolved_remote_root()
-        downloads = []
         selected = set()
         exact = {remote for remote, _ in self._cache_targets.values()}
         for pattern in self._cache_patterns:
@@ -508,18 +514,28 @@ class RemoteRunner:
                 if remote in selected or remote in exact:
                     continue
                 selected.add(remote)
-                after = await self.executor.transport.file_signature(remote)
-                if after is None or after == self._cache_before.get(remote):
-                    continue
                 local = os.fspath(await self.executor.unmap_path(remote))
-                if policy == FileSyncPolicy.MISSING and local_file_digest(local) is not None:
-                    continue
-                downloads.append(remote)
-
-        if downloads:
-            await self.executor.transport.get_files(
-                downloads, remote_root, self.executor.local_root
-            )
+                try:
+                    after = await self.executor.transport.file_signature(remote)
+                    if after is None or after == self._cache_before.get(remote):
+                        self._set_file_availability(
+                            local, "skipped", remote=remote, kind="cache",
+                        )
+                        continue
+                    if policy == FileSyncPolicy.MISSING and local_file_digest(local) is not None:
+                        self._set_file_availability(
+                            local, "skipped", remote=remote, kind="cache",
+                        )
+                        continue
+                    await self.executor.transport.get_file(remote, local)
+                    self._set_file_availability(
+                        local, "available", remote=remote, kind="cache",
+                    )
+                except Exception as exc:
+                    self._set_file_availability(
+                        local, "failed", str(exc), remote=remote, kind="cache",
+                    )
+                    raise
 
     def _remote_argv(self, argv, staged):
         directory = os.path.abspath(self.spec.directory)
