@@ -12,11 +12,10 @@ import ase2sprkkr.execution.manager as manager_module
 from ase2sprkkr.execution.base import FailurePhase, RunState
 from ase2sprkkr.execution.detached import run_detached_worker, status_detached, submit_detached
 from ase2sprkkr.execution.endpoint import ExecutorEndpoint
+from ase2sprkkr.execution.run_model import FileManifest, FileEntry
 from ase2sprkkr.execution.manager import (
     ExecutionManager,
-    ResultFilesRecord,
     RunStore,
-    SubmissionKey,
 )
 
 
@@ -131,12 +130,8 @@ def test_reserve_syncs_inputs_before_submitting_record(tmp_path, monkeypatch):
     record = manager.new_record(
         task="SCF",
         directory=tmp_path,
-        submission=SubmissionKey(
-            endpoint=ExecutorEndpoint(),
-            directory=str(tmp_path),
-            task="SCF",
-        ),
-        result_files=ResultFilesRecord(input_files=(str(input_file),)),
+        endpoint=ExecutorEndpoint(),
+        files=FileManifest(inputs=(FileEntry(local_path=str(input_file)),)),
     )
     events = []
 
@@ -168,10 +163,10 @@ def test_finalize_syncs_outputs_before_terminal_record(tmp_path, monkeypatch):
     record = manager.new_record(
         task="SCF",
         directory=tmp_path,
-        result_files=ResultFilesRecord(output_files=(str(output_file),)),
+        files=FileManifest(stdout=FileEntry(local_path=str(output_file))),
     )
     store.save(record)
-    record = manager.transition(record, state=RunState.FINALIZING)
+    record = manager.transition(record, state=RunState.POSTPROCESSING)
     events = []
 
     monkeypatch.setattr(
@@ -188,11 +183,11 @@ def test_finalize_syncs_outputs_before_terminal_record(tmp_path, monkeypatch):
 
     monkeypatch.setattr(manager, "transition", tracked_transition)
 
-    finalized = manager.finalize(record, state=RunState.FINISHED, return_code=0)
+    finalized = manager.complete(record, state=RunState.FINISHED, return_code=0, artifacts_available=True)
 
     assert finalized.state == RunState.FINISHED
     assert events[:2] == [("sync", "output.out"), ("state", "finished")]
-    assert len(finalized.result_files.output_versions) == 1
+    assert len(finalized.files.output_versions) == 1
 
 
 def _submit_local_without_helper(tmp_path, monkeypatch, run_id, output):
