@@ -5,7 +5,6 @@ from __future__ import annotations
 import io
 from functools import cache
 
-
 import pyparsing as pp
 
 from . import definitions, tasks
@@ -18,17 +17,60 @@ from ..sprkkr.configuration import (
 from ..common.configuration_containers import BaseConfigurationContainer
 from ..common.repeated_configuration_containers import RepeatedConfigurationContainer
 from ..common.decorators import cached_class_property
-from ..common.warnings import DataValidityError
+from ..common.grammar_types.grammar_type import GrammarType
 from ..potentials.potentials import Potential
+
+class _TaskSelectorGrammar(GrammarType):
+    """Select the positional task keyword, ignoring bare TASK flags.
+
+    SPR-KKR accepts flags before the positional selector, e.g.
+    ``TASK DMI JXC CLURAD=4.0``. This minimal grammar retains only the
+    selector. The actual IPD parses and validates all flags and options.
+    """
+
+    def __init__(self, selectors, flags):
+        self.selectors = frozenset(selectors)
+        keyword = pp.MatchFirst([
+            pp.CaselessKeyword(name)
+            for name in sorted(self.selectors, key=len, reverse=True)
+        ]).set_parse_action(lambda x: x[0].upper())
+        if flags:
+            ignored = pp.ZeroOrMore(pp.MatchFirst([
+                pp.CaselessKeyword(name)
+                for name in sorted(flags, key=len, reverse=True)
+            ])).suppress()
+            self._grammar = ignored + keyword + ignored.copy()
+        else:
+            self._grammar = keyword
+        super().__init__()
+
+    def convert(self, value):
+        return str(value).upper()
+
+    def _validate(self, value, why="set"):
+        return value in self.selectors or f"Unsupported TASK selector {value!r}"
+
 
 @cache
 def _task_selector_definition():
-    """Minimal, cached IPD: all sections except TASK.TASK remain custom."""
+    """Minimal, cached IPD containing only TASK.TASK."""
     from .input_parameters_definitions import (
         InputParametersDefinition,
         InputSectionDefinition,
         InputValueDefinition,
     )
+
+    selectors = InputParameters._task_selector_schemas
+    flags = set()
+    for definition in InputParameters.definitions.values():
+        try:
+            options = definition["TASK"].values
+        except KeyError:
+            continue
+        for name, option in options.items():
+            if name != "TASK" and option.type.missing_value()[0]:
+                flags.add(name.upper())
+    flags.difference_update(selectors)
 
     return InputParametersDefinition(
         "_TASK_SELECTOR",
@@ -37,7 +79,8 @@ def _task_selector_definition():
                 "TASK",
                 [
                     InputValueDefinition(
-                        "TASK", str, name_in_grammar=False, is_required=False
+                        "TASK", _TaskSelectorGrammar(selectors, flags),
+                        name_in_grammar=False, is_required=False,
                     ),
                 ],
                 is_optional=True,

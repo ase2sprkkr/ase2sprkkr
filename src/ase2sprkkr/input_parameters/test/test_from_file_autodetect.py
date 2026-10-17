@@ -44,6 +44,8 @@ def test_minimal_selector_ipd_is_cached_and_contains_only_task_task():
 
     parsed = a.read_from_string("TASK ARPES")
     assert parsed.TASK.TASK() == "ARPES"
+    assert a.read_from_string("TASK DMI JXC").TASK.TASK() == "JXC"
+    assert a.read_from_string("TASK JXC DMI").TASK.TASK() == "JXC"
     assert a.read_from_string("CONTROL ADSI=SCF").TASK.TASK() is None
 
 
@@ -57,6 +59,17 @@ def test_from_file_uses_only_selected_input_definition():
     assert parameters.from_file(io.StringIO("TASK ARPES")) is expected
     assert wrong.calls == 0
     assert correct.calls == 1
+
+
+def test_from_file_with_preceding_task_flag_selects_jxc():
+    expected = object()
+    jxc = _Definition(["JXC"], expected)
+    scf = _Definition(["SCF"], object())
+    parameters = _parameters_with({"scf": scf, "jxc": jxc})
+
+    assert parameters.from_file(io.StringIO("TASK DMI JXC")) is expected
+    assert jxc.calls == 1
+    assert scf.calls == 0
 
 
 def test_from_file_without_task_selects_scf_only():

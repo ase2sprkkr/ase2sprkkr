@@ -59,3 +59,13 @@ SITES NL={3}
     assert parsed.task_name == "SCF"
     assert parsed.CONTROL.ADSI() == "CUSTOM"
     assert parsed.SCF.NITER() == 80
+
+
+def test_from_file_jxc_example_with_preceding_dmi_flag():
+    from pathlib import Path
+
+    path = Path(__file__).parent.parent / "examples" / "jxc.in"
+    parsed = InputParameters.from_file(path)
+    assert parsed.definition_name == "JXC"
+    assert parsed.TASK.TASK() == "JXC"
+    assert parsed.TASK.DMI()
