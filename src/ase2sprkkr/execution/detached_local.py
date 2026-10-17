@@ -3,9 +3,9 @@
 from __future__ import annotations
 
 import asyncio
-import os
 from pathlib import Path
 
+from ._durability import durable_mkdir, durable_replace, sync_stream
 from .base import FailurePhase
 from .local_process import (
     materialize_local_spec,
@@ -22,7 +22,7 @@ def _output_path(directory, value, default):
     path = Path(value or default)
     if not path.is_absolute():
         path = directory / path
-    path.parent.mkdir(parents=True, exist_ok=True)
+    durable_mkdir(path.parent, parents=True, exist_ok=True)
     return path
 
 
@@ -88,11 +88,11 @@ async def _run_detached_local(directory, run_id, request):
                     )
                     try:
                         # There is no portable atomic rename for the stdout/stderr
-                        # pair. Each file is published atomically. Any failure
-                        # before RUNNING is durably persisted stops the process.
-                        os.replace(output_launch, output_path)
+                        # pair. Each file is published atomically and its directory
+                        # entry is durable before RUNNING is committed.
+                        durable_replace(output_launch, output_path)
                         if not merged:
-                            os.replace(error_launch, error_path)
+                            durable_replace(error_launch, error_path)
                         _write_state_unlocked(
                             directory,
                             run_id,
@@ -109,6 +109,27 @@ async def _run_detached_local(directory, run_id, request):
                     return_code = await process.wait()
                 except BaseException:
                     await stop_local_process(process, process_group=True)
+                    raise
+
+                try:
+                    # The terminal state is a commit marker for these streams.
+                    # Synchronize their final contents before publishing it.
+                    sync_stream(output)
+                    if error_context is not None:
+                        sync_stream(error_context)
+                except BaseException as exc:
+                    with _state_lock(directory, run_id):
+                        state = _read_state_unlocked(directory, run_id)
+                        if state.get("state") != "cancelled":
+                            _write_state_unlocked(
+                                directory,
+                                run_id,
+                                state="failed",
+                                return_code=return_code,
+                                error=repr(exc),
+                                failure_phase=FailurePhase.FINALIZATION.value,
+                                finished_at=state.get("finished_at") or _timestamp(),
+                            )
                     raise
             finally:
                 if error_context is not None:
