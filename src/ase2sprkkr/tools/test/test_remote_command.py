@@ -1,59 +1,56 @@
 import io
+import json
 from types import SimpleNamespace
 
-from ase2sprkkr.execution.remote import _write_state, status_remote
+import ase2sprkkr.execution.remote_service as remote_service
 from ase2sprkkr.tools.commands import remote as remote_command
-from ase2sprkkr.tools.commands.remote import _finalize_failed_worker_start
 
 
-def test_failed_worker_start_marks_prestart_run_failed(tmp_path):
-    run_id = "run-1"
-    _write_state(
-        tmp_path,
-        run_id,
-        id=run_id,
-        state="queued",
-        directory=str(tmp_path),
-        pid=None,
-        created_at="2026-10-13T08:00:00+00:00",
-        finished_at=None,
+def test_status_command_forwards_opaque_remote_handle(monkeypatch):
+    remote_id = "opaque-handle"
+    calls = []
+    monkeypatch.setattr(
+        remote_service,
+        "status_remote",
+        lambda value: calls.append(value) or {"state": "running"},
+    )
+    output = []
+    monkeypatch.setattr(remote_command, "_print_json", output.append)
+
+    remote_command.run(
+        SimpleNamespace(remote_action="status", remote_id=remote_id),
+        None,
     )
 
-    _finalize_failed_worker_start(
-        str(tmp_path),
-        {"id": run_id},
-        OSError("cannot start worker"),
+    assert calls == [remote_id]
+    assert output == [{"state": "running"}]
+
+
+def test_submit_command_passes_complete_request_to_stateless_service(monkeypatch):
+    calls = []
+    monkeypatch.setattr(
+        remote_service,
+        "submit_remote",
+        lambda request: calls.append(dict(request))
+        or {"remote_id": "opaque", "state": "running"},
+    )
+    monkeypatch.setattr(
+        remote_command.sys,
+        "stdin",
+        io.StringIO(json.dumps({"id": "run-1", "argv": ["true"]})),
+    )
+    output = []
+    monkeypatch.setattr(remote_command, "_print_json", output.append)
+
+    remote_command.run(
+        SimpleNamespace(remote_action="submit", directory="/remote/work"),
+        None,
     )
 
-    state = status_remote(tmp_path, run_id)
-    assert state["state"] == "failed"
-    assert "cannot start worker" in state["error"]
-    assert state["finished_at"] is not None
-
-
-def test_failed_worker_start_does_not_overwrite_started_run(tmp_path):
-    run_id = "run-1"
-    _write_state(
-        tmp_path,
-        run_id,
-        id=run_id,
-        state="running",
-        directory=str(tmp_path),
-        pid=1234,
-        created_at="2026-10-13T08:00:00+00:00",
-        finished_at=None,
-    )
-
-    _finalize_failed_worker_start(
-        str(tmp_path),
-        {"id": run_id},
-        OSError("late error"),
-    )
-
-    state = status_remote(tmp_path, run_id)
-    assert state["state"] == "running"
-    assert state["pid"] == 1234
-    assert state.get("error") is None
+    assert calls == [
+        {"id": "run-1", "argv": ["true"], "directory": "/remote/work"}
+    ]
+    assert output == [{"remote_id": "opaque", "state": "running"}]
 
 
 def test_resolve_mpi_command_preserves_integer_process_count(monkeypatch):
