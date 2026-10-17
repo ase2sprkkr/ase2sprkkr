@@ -73,6 +73,19 @@ class InputParametersDefinition(ConfigurationFileDefinition):
     )
     configuration_type_name = "INPUT PARAMETERS"
 
+    task_selector_aliases = ()
+    """Additional native TASK keywords accepted by this IPD."""
+
+    def task_selector_names(self):
+        """Native selectors handled by this schema, independently of tasks."""
+        names = list(self.task_selector_aliases)
+        try:
+            kind = self["TASK"]["TASK"].type
+        except KeyError:
+            return tuple(names)
+        names.extend(getattr(kind, "keywords", ()))
+        return tuple(dict.fromkeys(str(name).upper() for name in names))
+
     def task_definition_name(self, parameters):
         """Return the ASE2SPRKKR task name represented by *parameters*.
 

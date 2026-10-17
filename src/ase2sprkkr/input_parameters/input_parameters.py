@@ -18,59 +18,38 @@ from ..common.configuration_containers import BaseConfigurationContainer
 from ..common.repeated_configuration_containers import RepeatedConfigurationContainer
 from ..common.decorators import cached_class_property
 from ..common.grammar_types.grammar_type import GrammarType
+from ..common.warnings import DataValidityError
 from ..potentials.potentials import Potential
 
 class _TaskSelectorGrammar(GrammarType):
-    """Select the positional task keyword, ignoring bare TASK flags.
+    """Sequence of native TASK keywords, not a task identity."""
 
-    SPR-KKR accepts flags before the positional selector, e.g.
-    ``TASK DMI JXC CLURAD=4.0``. This minimal grammar retains only the
-    selector. The actual IPD parses and validates all flags and options.
-    """
-
-    def __init__(self, selectors, flags):
+    def __init__(self, selectors):
         self.selectors = frozenset(selectors)
-        keyword = pp.MatchFirst([
+        keywords = pp.MatchFirst([
             pp.CaselessKeyword(name)
             for name in sorted(self.selectors, key=len, reverse=True)
-        ]).set_parse_action(lambda x: x[0].upper())
-        if flags:
-            ignored = pp.ZeroOrMore(pp.MatchFirst([
-                pp.CaselessKeyword(name)
-                for name in sorted(flags, key=len, reverse=True)
-            ])).suppress()
-            self._grammar = ignored + keyword + ignored.copy()
-        else:
-            self._grammar = keyword
+        ]).set_parse_action(lambda tokens: tokens[0].upper())
+        self._grammar = pp.Group(pp.OneOrMore(keywords))
         super().__init__()
 
     def convert(self, value):
-        return str(value).upper()
+        if isinstance(value, str):
+            value = (value,)
+        return tuple(str(item).upper() for item in value)
 
     def _validate(self, value, why="set"):
-        return value in self.selectors or f"Unsupported TASK selector {value!r}"
+        return all(item in self.selectors for item in value) or "Unknown TASK selector"
 
 
 @cache
-def _task_selector_definition():
-    """Minimal, cached IPD containing only TASK.TASK."""
+def _task_selector_definition(parameters_class):
+    """Cached minimal IPD: only TASK.TASK, with repeated allowed keywords."""
     from .input_parameters_definitions import (
         InputParametersDefinition,
         InputSectionDefinition,
         InputValueDefinition,
     )
-
-    selectors = InputParameters._task_selector_schemas
-    flags = set()
-    for definition in InputParameters.definitions.values():
-        try:
-            options = definition["TASK"].values
-        except KeyError:
-            continue
-        for name, option in options.items():
-            if name != "TASK" and option.type.missing_value()[0]:
-                flags.add(name.upper())
-    flags.difference_update(selectors)
 
     return InputParametersDefinition(
         "_TASK_SELECTOR",
@@ -79,8 +58,10 @@ def _task_selector_definition():
                 "TASK",
                 [
                     InputValueDefinition(
-                        "TASK", _TaskSelectorGrammar(selectors, flags),
-                        name_in_grammar=False, is_required=False,
+                        "TASK",
+                        _TaskSelectorGrammar(parameters_class._task_selector_schemas),
+                        name_in_grammar=False,
+                        is_required=False,
                     ),
                 ],
                 is_optional=True,
@@ -355,47 +336,66 @@ class InputParameters(ConfigurationFile):
 
     @cached_class_property
     def _task_selector_schemas(cls):
-        """Map explicit TASK.TASK keywords to their input schemas, not tasks."""
+        """Resolve native TASK keywords to input definitions, never to tasks."""
         schemas = {}
         for definition in cls.definitions.values():
-            try:
-                selector_type = definition["TASK"]["TASK"].type
-            except (KeyError, TypeError):
-                continue
-            for keyword in getattr(selector_type, "keywords", ()):
-                name = str(keyword).strip().upper()
+            for selector in definition.task_selector_names():
+                name = selector.strip().upper()
                 existing = schemas.get(name)
                 if existing is not None and existing is not definition:
                     raise ValueError(
-                        f"TASK.TASK {name!r} selects multiple input "
-                        f"parameter definitions"
+                        f"TASK selector {name!r} selects multiple input definitions"
                     )
                 schemas[name] = definition
         return schemas
 
     @classmethod
     def from_file(cls, filename, allow_dangerous: bool = False):
-        """Read TASK.TASK with a cached minimal IPD and select one full IPD.
+        """Use the cached TASK preview, trying only its candidate IPDs.
 
-        Missing TASK.TASK means SCF. The chosen IPD is the only parser tried;
-        failures are propagated without fallbacks or ADSI-based inference.
+        Absent TASK selectors mean SCF. ADSI never selects an IPD.
         """
-        selected = _task_selector_definition().read_from_file(
-            filename, allow_dangerous=allow_dangerous
-        ).TASK.TASK()
-        selector = "SCF" if selected is None else selected.strip().upper()
-        try:
-            definition = cls._task_selector_schemas[selector]
-        except KeyError:
-            raise ValueError(
-                f"No input-parameter definition for TASK.TASK={selector!r}"
-            ) from None
-
-        if hasattr(filename, "seek"):
-            filename.seek(0)
-        return definition.read_from_file(
+        preview = _task_selector_definition(cls).read_from_file(
             filename, allow_dangerous=allow_dangerous
         )
+        selected = preview.TASK.TASK()
+        selectors = ("SCF",) if not selected else tuple(selected)
+        candidates = []
+        for name in selectors:
+            try:
+                definition = cls._task_selector_schemas[name]
+            except KeyError:
+                raise ValueError(f"No input definition for TASK selector {name!r}") from None
+            if not any(definition is candidate for candidate in candidates):
+                candidates.append(definition)
+
+        def parse(definition):
+            if hasattr(filename, "seek"):
+                filename.seek(0)
+            return definition.read_from_file(
+                filename, allow_dangerous=allow_dangerous
+            )
+
+        if len(candidates) == 1:
+            return parse(candidates[0])
+
+        successes = []
+        parse_errors = []
+        for definition in candidates:
+            try:
+                parsed = parse(definition)
+            except (pp.ParseBaseException, DataValidityError) as error:
+                parse_errors.append(error)
+            else:
+                successes.append((definition, parsed))
+        if len(successes) == 1:
+            return successes[0][1]
+        if len(successes) > 1:
+            names = ", ".join(definition.name for definition, _ in successes)
+            raise ValueError(f"Ambiguous TASK selectors: multiple IPDs accepted input: {names}")
+        raise ValueError(
+            f"No selected IPD could parse TASK selectors {selectors!r}"
+        ) from parse_errors[-1]
 
     def __repr__(self):
         task = self.task_definition

@@ -1,7 +1,6 @@
 """Input parsing selects one full IPD from TASK.TASK, defaulting to SCF."""
 
 import io
-from types import SimpleNamespace
 
 import pyparsing as pp
 import pytest
@@ -12,14 +11,12 @@ from ..input_parameters import InputParameters, _task_selector_definition
 class _Definition:
     def __init__(self, selectors, result):
         self.selectors = selectors
+        self.name = selectors[0]
         self.result = result
         self.calls = 0
 
-    def __getitem__(self, key):
-        assert key == "TASK"
-        return {"TASK": SimpleNamespace(
-            type=SimpleNamespace(keywords=self.selectors),
-        )}
+    def task_selector_names(self):
+        return self.selectors
 
     def read_from_file(self, filename, allow_dangerous=False):
         self.calls += 1
@@ -37,15 +34,15 @@ def _parameters_with(definitions):
 
 
 def test_minimal_selector_ipd_is_cached_and_contains_only_task_task():
-    a = _task_selector_definition()
-    assert a is _task_selector_definition()
+    a = _task_selector_definition(InputParameters)
+    assert a is _task_selector_definition(InputParameters)
     assert list(a.sections) == ["TASK"]
     assert list(a["TASK"].values) == ["TASK"]
 
     parsed = a.read_from_string("TASK ARPES")
-    assert parsed.TASK.TASK() == "ARPES"
-    assert a.read_from_string("TASK DMI JXC").TASK.TASK() == "JXC"
-    assert a.read_from_string("TASK JXC DMI").TASK.TASK() == "JXC"
+    assert tuple(parsed.TASK.TASK()) == ("ARPES",)
+    assert tuple(a.read_from_string("TASK DMI JXC").TASK.TASK()) == ("DMI", "JXC")
+    assert tuple(a.read_from_string("TASK JXC DMI").TASK.TASK()) == ("JXC", "DMI")
     assert a.read_from_string("CONTROL ADSI=SCF").TASK.TASK() is None
 
 
@@ -63,7 +60,7 @@ def test_from_file_uses_only_selected_input_definition():
 
 def test_from_file_with_preceding_task_flag_selects_jxc():
     expected = object()
-    jxc = _Definition(["JXC"], expected)
+    jxc = _Definition(["DMI", "JXC"], expected)
     scf = _Definition(["SCF"], object())
     parameters = _parameters_with({"scf": scf, "jxc": jxc})
 
@@ -125,3 +122,42 @@ def test_from_file_ignores_control_adsi():
     )) is result
     assert selected.calls == 1
     assert other.calls == 0
+
+
+def test_multiple_distinct_schema_candidates_try_only_the_selected_ipds():
+    first = _Definition(["DMI"], pp.ParseException("wrong definition"))
+    result = object()
+    second = _Definition(["JXC"], result)
+    unused = _Definition(["DOS"], object())
+    cls = _parameters_with({"a": first, "b": second, "unused": unused})
+
+    assert cls.from_file(io.StringIO("TASK DMI JXC")) is result
+    assert (first.calls, second.calls, unused.calls) == (1, 1, 0)
+
+
+def test_multiple_distinct_schema_candidates_reject_ambiguity():
+    first = _Definition(["DMI"], object())
+    second = _Definition(["JXC"], object())
+    cls = _parameters_with({"a": first, "b": second})
+    with pytest.raises(ValueError, match="Ambiguous TASK"):
+        cls.from_file(io.StringIO("TASK DMI JXC"))
+    assert (first.calls, second.calls) == (1, 1)
+
+
+def test_multiple_distinct_schema_candidates_do_not_hide_programming_error():
+    first = _Definition(["DMI"], TypeError("programming bug"))
+    second = _Definition(["JXC"], object())
+    cls = _parameters_with({"a": first, "b": second})
+    with pytest.raises(TypeError, match="programming bug"):
+        cls.from_file(io.StringIO("TASK DMI JXC"))
+    assert (first.calls, second.calls) == (1, 0)
+
+
+def test_multiple_distinct_schema_candidates_no_other_fallback():
+    first = _Definition(["DMI"], pp.ParseException("one"))
+    second = _Definition(["JXC"], pp.ParseException("two"))
+    unused = _Definition(["DOS"], object())
+    cls = _parameters_with({"a": first, "b": second, "unused": unused})
+    with pytest.raises(ValueError, match="No selected IPD could parse"):
+        cls.from_file(io.StringIO("TASK DMI JXC"))
+    assert (first.calls, second.calls, unused.calls) == (1, 1, 0)
