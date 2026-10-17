@@ -98,6 +98,16 @@ class PostprocessingRunner:
                     self._runner, "failure_message", None
                 )
                 return
+            if raw_state == RunState.UNKNOWN:
+                self.result = outcome
+                self._state = RunState.UNKNOWN
+                self._exception = RuntimeError(
+                    "Raw execution completed with unresolved backend state"
+                )
+                self._failure_message = getattr(
+                    self._runner, "failure_message", None
+                )
+                return
             if raw_state != RunState.FINISHED:
                 raise RuntimeError(
                     f"Raw runner completed wait() in unexpected state {raw_state.value}"

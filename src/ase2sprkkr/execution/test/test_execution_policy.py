@@ -86,6 +86,42 @@ def test_callback_failure_does_not_change_local_execution_state(tmp_path):
     assert runner.state == RunState.FINISHED
 
 
+class _UnknownRunner:
+    result = object()
+    reference = None
+    state = RunState.NEW
+    exception = None
+    failure_phase = None
+    failure_message = None
+
+    def submit(self):
+        self.state = RunState.UNKNOWN
+
+    def wait(self):
+        return self.result
+
+    def add_output_listener(self, callback):
+        pass
+
+    def add_output_error_listener(self, callback):
+        pass
+
+
+def test_unknown_raw_state_is_preserved_and_not_postprocessed():
+    raw = _UnknownRunner()
+    processed = []
+    runner = PostprocessingRunner(raw, lambda outcome: processed.append(outcome))
+
+    runner.submit()
+    with pytest.raises(RuntimeError, match="unresolved backend state"):
+        runner.wait()
+
+    assert processed == []
+    assert runner.result is raw.result
+    assert runner.state == RunState.UNKNOWN
+    assert runner.failure_phase is None
+
+
 class _NotStartedRunner:
     result = None
     reference = None
