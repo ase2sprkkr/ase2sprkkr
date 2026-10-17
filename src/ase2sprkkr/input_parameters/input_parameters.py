@@ -28,13 +28,11 @@ class InputValue(ConfigurationValue):
 
     @property
     def default_value(self):
-        """Return an instance-specific override of the definition default."""
         if hasattr(self, "_default_override"):
             return self._default_override
         return super().default_value
 
     def set_default(self, value):
-        """Override this instance's definition default without setting a value."""
         if self._definition.is_generated:
             raise TypeError("Generated options cannot have instance defaults")
         if self._definition.default_value is None:
@@ -44,7 +42,6 @@ class InputValue(ConfigurationValue):
         self._default_override = None if value is None else self._pack_value(value)
 
     def clear_default(self):
-        """Restore the default supplied by the input-parameter definition."""
         self.__dict__.pop("_default_override", None)
 
 
@@ -74,7 +71,7 @@ class InputParameters(ConfigurationFile):
     @property
     def task_name(self):
         """Return the ASE2SPRKKR task represented by the current values."""
-        name = self._definition.task_definition_name(self)
+        name = self._definition.task_name(self)
         if name is None:
             return None
         return str(name).strip().upper()
@@ -86,7 +83,6 @@ class InputParameters(ConfigurationFile):
         return None if name is None else self.task_registry[name]
 
     def task_definition_required(self):
-        """Return the task represented by the current values, failing if detached."""
         task = self.task_definition
         if task is None:
             raise RuntimeError(
@@ -96,16 +92,11 @@ class InputParameters(ConfigurationFile):
 
     @property
     def requested_task_name(self):
-        """Task requested when these parameters were created or last retargeted.
-
-        Shared input schemas may use this only as context for callable defaults.
-        Concrete parameter values remain authoritative for :attr:`task_name`.
-        """
+        """Task requested when these parameters were created or last retargeted."""
         return self._requested_task_name
 
     @property
     def definition_name(self):
-        """Return the normalized registered input-parameter schema name."""
         return self.input_parameters_registry.normalize_name(self._definition.name)
 
     @property
@@ -175,7 +166,6 @@ class InputParameters(ConfigurationFile):
         target._default_override = value
 
     def copy(self, copy_values: bool = False):
-        """Copy parameters, including instance-specific defaults."""
         values = self.as_dict(copy=copy_values, only_changed="explicit")
         out = self.__class__(
             definition=self._definition,
@@ -216,7 +206,6 @@ class InputParameters(ConfigurationFile):
         return self._task_files(directory, "cache")
 
     def output_reader(self, calculator=None, print_output=False, directory=None):
-        """Create the reader for the effective task represented by these values."""
         return self.task_definition_required().output_reader(
             input_parameters=self,
             calculator=calculator,
@@ -225,7 +214,6 @@ class InputParameters(ConfigurationFile):
         )
 
     def read_output_from_file(self, filename, directory=None):
-        """Read a completed output through the effective task's registered reader."""
         return self.task_definition_required().read_output_from_file(
             filename,
             input_parameters=self,
@@ -285,13 +273,7 @@ class InputParameters(ConfigurationFile):
 
     @classmethod
     def from_file(cls, filename, allow_dangerous: bool = False):
-        """Try registered schemas, preferring a task matching ``CONTROL.ADSI``.
-
-        SPR-KKR schemas intentionally overlap, so a permissive schema can parse
-        an input intended for another task. ``ADSI`` normally identifies the
-        task, but it is user-editable and therefore only disambiguates when it
-        names a registered task and disagrees with the first successful parse.
-        """
+        """Try registered schemas, preferring a task matching ``CONTROL.ADSI``."""
         last = None
         first_match = None
         is_stream = hasattr(filename, "seek")
