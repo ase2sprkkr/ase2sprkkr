@@ -9,6 +9,10 @@ from .decorators import maybeclassmethod
 from .file_utils import filename_from_file
 
 
+class OutputParseError(RuntimeError):
+    """Saved calculation output is structurally unreadable by the current parser."""
+
+
 class ProcessOutputParser:
     """Parse asynchronous stdout/stderr streams.
 
@@ -60,7 +64,12 @@ class ProcessOutputParser:
             with AsyncioFileReader(error) as air:
                 return await self.read_error(air, *read_args)
 
-        out_result, err_result = await asyncio.gather(read_output_file(), read_error_file())
+        try:
+            out_result, err_result = await asyncio.gather(
+                read_output_file(), read_error_file()
+            )
+        except (EOFError, asyncio.IncompleteReadError, UnicodeDecodeError) as exc:
+            raise OutputParseError(str(exc) or type(exc).__name__) from exc
         return self.result(out_result, err_result, return_code)
 
 
