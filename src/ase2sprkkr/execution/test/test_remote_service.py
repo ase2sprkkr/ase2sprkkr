@@ -7,11 +7,12 @@ from ase2sprkkr.execution import psij, remote_process_worker, remote_service
 
 
 def _process_handle(tmp_path):
-    outcome = tmp_path / "outcome.json"
+    outcome = tmp_path / "remote-outcomes" / ("a" * 32 + ".json")
     handle = {
         "kind": "process",
         "pid": 123,
         "start_time": "456",
+        "receipt_id": "a" * 32,
     }
     return handle, remote_service._encode_handle(handle), outcome
 
@@ -27,17 +28,8 @@ def _psij_handle(tmp_path):
 
 
 def _write_outcome(path, state, return_code, failure_phase=None):
-    path.write_text(
-        json.dumps(
-            {
-                "state": state.value,
-                "return_code": return_code,
-                "failure_phase": (
-                    None if failure_phase is None else failure_phase.value
-                ),
-            }
-        )
-    )
+    from ase2sprkkr.execution import remote_mailbox
+    return remote_mailbox.publish_outcome("a" * 32, state, return_code, failure_phase)
 
 
 def test_remote_id_is_opaque_backend_handle_without_lifecycle_state(tmp_path):
@@ -49,33 +41,36 @@ def test_remote_id_is_opaque_backend_handle_without_lifecycle_state(tmp_path):
     assert decoded["pid"] == 123
     assert "state" not in decoded
     assert "failure_phase" not in decoded
-    assert set(decoded) == {"kind", "pid", "start_time"}
+    assert set(decoded) == {"kind", "pid", "start_time", "receipt_id"}
 
 
-def test_direct_process_without_client_receipt_never_infers_success(tmp_path, monkeypatch):
+def test_mailbox_receipt_survives_until_client_ack(tmp_path, monkeypatch):
+    monkeypatch.setenv("ASE2SPRKKR_REMOTE_STATE_DIR", str(tmp_path))
     _, remote_id, outcome = _process_handle(tmp_path)
-    _write_outcome(outcome, RunState.FINISHED, 0)
     monkeypatch.setattr(remote_service, "_process_running", lambda _handle: False)
 
     assert remote_service.status_remote(remote_id)["state"] == RunState.UNKNOWN.value
-    assert remote_service.status_remote(remote_id, outcome_file=outcome) == {
-        "state": RunState.FINISHED.value,
-        "return_code": 0,
-        "failure_phase": None,
-    }
+    _write_outcome(outcome, RunState.FINISHED, 0)
+    assert remote_service.status_remote(remote_id)["state"] == RunState.FINISHED.value
+    assert remote_service.status_remote(remote_id)["state"] == RunState.FINISHED.value
+    assert remote_service.acknowledge_remote(remote_id) == {"acknowledged": True}
+    assert remote_service.acknowledge_remote(remote_id) == {"acknowledged": False}
+    assert not outcome.exists()
 
 
 def test_status_distinguishes_launch_and_execution_failure(tmp_path, monkeypatch):
     _, remote_id, outcome = _process_handle(tmp_path)
     monkeypatch.setattr(remote_service, "_process_running", lambda _handle: False)
 
+    monkeypatch.setenv("ASE2SPRKKR_REMOTE_STATE_DIR", str(tmp_path))
     _write_outcome(outcome, RunState.FAILED, 127, FailurePhase.LAUNCH)
-    launch = remote_service.status_remote(remote_id, outcome_file=outcome)
+    launch = remote_service.status_remote(remote_id)
     assert launch["state"] == RunState.FAILED.value
     assert launch["failure_phase"] == FailurePhase.LAUNCH.value
 
+    remote_service.acknowledge_remote(remote_id)
     _write_outcome(outcome, RunState.FAILED, 3, FailurePhase.EXECUTION)
-    execution = remote_service.status_remote(remote_id, outcome_file=outcome)
+    execution = remote_service.status_remote(remote_id)
     assert execution["state"] == RunState.FAILED.value
     assert execution["return_code"] == 3
     assert execution["failure_phase"] == FailurePhase.EXECUTION.value
@@ -137,7 +132,7 @@ def test_follow_returns_unknown_instead_of_waiting_forever(tmp_path, monkeypatch
     _, remote_id = _psij_handle(tmp_path)
     calls = []
 
-    def unknown(_remote_id, *, outcome_file=None):
+    def unknown(_remote_id):
         calls.append(_remote_id)
         return {"state": RunState.UNKNOWN.value}
 
@@ -154,33 +149,15 @@ def test_follow_returns_unknown_instead_of_waiting_forever(tmp_path, monkeypatch
     assert calls == [remote_id]
 
 
-def test_direct_process_outcome_uses_crash_durable_write(tmp_path, monkeypatch):
+def test_supervisor_writes_mailbox_receipt(monkeypatch):
     calls = []
     monkeypatch.setattr(
         remote_process_worker,
-        "durable_write_json",
-        lambda path, payload, **options: calls.append((path, payload, options)),
+        "publish_outcome",
+        lambda *args: calls.append(args),
     )
-    outcome = tmp_path / "outcome.json"
-
-    remote_process_worker._write_outcome(
-        outcome,
-        RunState.FAILED,
-        3,
-        FailurePhase.EXECUTION,
-    )
-
-    assert calls == [
-        (
-            outcome,
-            {
-                "state": RunState.FAILED.value,
-                "return_code": 3,
-                "failure_phase": FailurePhase.EXECUTION.value,
-            },
-            {"separators": (",", ":")},
-        )
-    ]
+    remote_process_worker._write_outcome("a" * 32, RunState.FAILED, 3, FailurePhase.EXECUTION)
+    assert calls == [("a" * 32, RunState.FAILED, 3, FailurePhase.EXECUTION)]
 
 
 def test_cancel_publishes_durable_cancelled_backend_outcome(
@@ -196,7 +173,8 @@ def test_cancel_publishes_durable_cancelled_backend_outcome(
         lambda pid, sig: signals.append((pid, sig)),
     )
 
-    cancelled = remote_service.cancel_remote(remote_id, outcome_file=outcome)
+    monkeypatch.setenv("ASE2SPRKKR_REMOTE_STATE_DIR", str(tmp_path))
+    cancelled = remote_service.cancel_remote(remote_id)
 
     assert signals == [(123, signal.SIGTERM)]
     assert cancelled["state"] == RunState.CANCELLED.value
@@ -205,7 +183,7 @@ def test_cancel_publishes_durable_cancelled_backend_outcome(
     # A later status query reads the durable backend outcome, rather than
     # regressing to UNKNOWN after the supervisor process is gone.
     assert outcome.is_file()
-    later = remote_service.status_remote(remote_id, outcome_file=outcome)
+    later = remote_service.status_remote(remote_id)
     assert later["state"] == RunState.CANCELLED.value
     assert later["failure_phase"] is None
 
@@ -222,6 +200,7 @@ def test_cancel_does_not_publish_terminal_fact_while_process_survives_sigkill(
         lambda pid, sig: signals.append(sig),
     )
 
+    monkeypatch.setenv("ASE2SPRKKR_REMOTE_STATE_DIR", str(tmp_path))
     status = remote_service.cancel_remote(remote_id, timeout=0)
 
     assert status["state"] == RunState.RUNNING.value

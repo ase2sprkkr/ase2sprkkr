@@ -72,7 +72,7 @@ def test_direct_remote_status_passes_client_owned_receipt_location():
         executor="remote:local",
         native_id="opaque-process",
         directory="/work/case",
-        context={"outcome_file": "/work/case/.run.outcome.json"},
+        context={},
     )
     (status,) = executor.status(reference)
 
@@ -80,7 +80,7 @@ def test_direct_remote_status_passes_client_owned_receipt_location():
     assert calls == [
         (
             "status",
-            ("opaque-process", "--outcome-file", "/work/case/.run.outcome.json"),
+            ("opaque-process",),
             None,
         )
     ]
