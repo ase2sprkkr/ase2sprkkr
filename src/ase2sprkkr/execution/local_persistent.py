@@ -30,6 +30,7 @@ from .detached import (
     status_detached,
     submit_detached,
 )
+from .outcome import ExecutionOutcome
 from .transport import AtomicLocalFile
 
 _FINAL_STATES = {RunState.FINISHED, RunState.FAILED, RunState.CANCELLED}
@@ -99,7 +100,6 @@ def recover_local_submission(run_id, submission):
         state = status_detached(directory, run_id)
         request = json.loads(_request_path(directory, run_id).read_text())
     except FileNotFoundError:
-        # Absence on this same filesystem proves that submission did not happen.
         return None
     reference = _reference_from_request(run_id, directory, request)
     return RunStatus(
@@ -112,17 +112,17 @@ def recover_local_submission(run_id, submission):
 
 
 class LocalPersistentRunner:
-    """Local runner whose calculation is owned by a detached helper process."""
+    """Detached local execution without task-specific output interpretation."""
 
     def __init__(
         self,
         executor,
-        reader,
         spec: ExecutionSpec,
         *,
         run_id=None,
         callback=None,
         output_listener=None,
+        print_output=False,
         start=False,
         reference=None,
         state=RunState.NEW,
@@ -130,10 +130,10 @@ class LocalPersistentRunner:
         failure_message=None,
     ):
         self.executor = executor
-        self.reader = reader
         self.spec = spec
         self.callback = callback
-        self.result = reader.create_result(spec.output_file, spec.input_file)
+        self.print_output = bool(print_output)
+        self.result = ExecutionOutcome(spec.output_file, spec.input_file)
 
         self._run_id = run_id or (reference.native_id if reference is not None else None)
         self._reference = reference
@@ -169,6 +169,7 @@ class LocalPersistentRunner:
             self._failure_message = status.message
             if status.return_code is not None:
                 self._return_code = status.return_code
+                self.result.return_code = status.return_code
         return self._state
 
     @property
@@ -197,7 +198,7 @@ class LocalPersistentRunner:
         if not data:
             return
         text = data.decode("utf8")
-        if self.reader.print_output:
+        if self.print_output:
             print(text, end="", file=sys.stderr if kind == "err" else sys.stdout)
         self._output_observers.emit(text, kind)
 
@@ -248,12 +249,10 @@ class LocalPersistentRunner:
             return b""
 
     async def _monitor(self):
-        stdout = asyncio.StreamReader()
-        stderr = asyncio.StreamReader()
-        parse_task = None
         offsets = {"out": 0, "err": 0}
         output_target = error_target = None
         mirrors_committed = False
+        started_streams = False
         try:
             while True:
                 status = status_detached(
@@ -262,25 +261,21 @@ class LocalPersistentRunner:
                 self._failure_phase = detached_failure_phase(status)
                 self._failure_message = status.get("error")
                 if detached_launch_failed(status):
-                    # No calculation process ever existed. In particular, do not
-                    # start the parser or touch client output files.
                     self._state = RunState.FAILED
                     self._return_code = None
                     return self.result
 
                 state = detached_run_state(status.get("state", "unknown"))
                 started = status.get("started_at") is not None
-                if started and parse_task is None:
+                if started and not started_streams:
                     output_target, error_target = self._open_mirrors()
-                    parse_task = asyncio.create_task(
-                        self.reader.parse_streams(stdout, stderr, self.result)
-                    )
+                    started_streams = True
 
                 had_data = False
                 if started:
-                    for kind, key, stream, target in (
-                        ("out", "output_file", stdout, output_target),
-                        ("err", "error_file", stderr, error_target),
+                    for kind, key, target in (
+                        ("out", "output_file", output_target),
+                        ("err", "error_file", error_target),
                     ):
                         data = self._read_new(
                             detached_stream_file(status, key), offsets[kind]
@@ -292,7 +287,6 @@ class LocalPersistentRunner:
                             target.write(data)
                             target.flush()
                         self._emit_output(data, kind)
-                        stream.feed_data(data)
                         had_data = True
 
                 if state in _FINAL_STATES and not had_data:
@@ -300,28 +294,17 @@ class LocalPersistentRunner:
                     self._return_code = status.get("return_code")
                     if self._return_code is None and started:
                         self._return_code = 0 if state == RunState.FINISHED else 1
-                    if not started:
-                        return self.result
-                    break
+                    self.result.return_code = self._return_code
+                    if started_streams:
+                        self._finish_mirrors(
+                            output_target, error_target, commit=True
+                        )
+                        mirrors_committed = True
+                    return self.result
                 if not had_data:
                     await asyncio.sleep(0.05)
-
-            stdout.feed_eof()
-            stderr.feed_eof()
-            self._finish_mirrors(output_target, error_target, commit=True)
-            mirrors_committed = True
-            output, error = await parse_task
-            return self.reader.complete_result(
-                self.result, output, error, self._return_code
-            )
         finally:
-            stdout.feed_eof()
-            stderr.feed_eof()
-            if parse_task is not None:
-                if not parse_task.done():
-                    parse_task.cancel()
-                await asyncio.gather(parse_task, return_exceptions=True)
-            if not mirrors_committed:
+            if started_streams and not mirrors_committed:
                 self._finish_mirrors(output_target, error_target, commit=False)
 
     def _close_output_files(self):
@@ -338,6 +321,12 @@ class LocalPersistentRunner:
             asyncio.run(self._monitor())
         except BaseException as exc:
             self._exception = exc
+            if self._failure_message is None:
+                self._failure_message = str(exc)
+            if self._failure_phase is None:
+                self._failure_phase = FailurePhase.EXECUTION
+            if self._state != RunState.CANCELLED:
+                self._state = RunState.FAILED
         finally:
             self._close_output_files()
             try:
@@ -375,8 +364,6 @@ class LocalPersistentRunner:
             "launch": asdict(self.spec.launch),
             "input_file": _file_path(self.spec.input_file, directory),
             "stdin": _file_path(self.spec.stdin, directory),
-            # The helper owns private streams. The monitor mirrors them to the
-            # user-facing output paths and can replay them after a restart.
             "output_file": os.fspath(run_directory / "stdout"),
             "error_file": os.fspath(run_directory / "stderr"),
             "client_input_file": _file_path(self.spec.input_file, directory),
@@ -407,6 +394,7 @@ class LocalPersistentRunner:
                 )
             self._state = detached_run_state(status.get("state", "submitting"))
             self._return_code = status.get("return_code")
+            self.result.return_code = self._return_code
             self._failure_phase = detached_failure_phase(status)
             self._failure_message = status.get("error")
             self._reference = _reference(self._run_id, self.spec)
@@ -443,16 +431,17 @@ class LocalPersistentRunner:
         self._failure_message = state.get("error")
         if state.get("return_code") is not None:
             self._return_code = state["return_code"]
+            self.result.return_code = self._return_code
 
 
 def attach_local(
     executor,
     reference,
-    reader,
     *,
     callback=None,
     output_listener=None,
     start=True,
+    print_output=False,
 ):
     if reference.executor != "local":
         raise ValueError(
@@ -470,10 +459,10 @@ def attach_local(
     )
     runner = LocalPersistentRunner(
         executor,
-        reader,
         spec,
         callback=callback,
         output_listener=output_listener,
+        print_output=print_output,
         start=False,
         reference=reference,
         state=status.state,
@@ -481,6 +470,7 @@ def attach_local(
         failure_message=status.message,
     )
     runner._return_code = status.return_code
+    runner.result.return_code = status.return_code
     if start:
         runner.start()
     return runner
