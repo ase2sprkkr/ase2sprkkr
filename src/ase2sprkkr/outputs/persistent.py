@@ -5,6 +5,7 @@ from __future__ import annotations
 import pyparsing as pp
 
 from ..common.module_registry import RegistryEntryNotFound
+from ..common.process_output_reader import OutputParseError
 from ..common.warnings import DataValidityError
 from ..execution import FileState, RunState
 from ..input_parameters.input_parameters import InputParameters
@@ -168,12 +169,17 @@ def _load_result(manager, record, reader=None):
     ):
         input_file = result_files.input_file
 
-    result = reader.read_from_file(
-        output_file,
-        return_code=return_code,
-        input_file=input_file,
-        directory=record.directory,
-    )
+    try:
+        result = reader.read_from_file(
+            output_file,
+            return_code=return_code,
+            input_file=input_file,
+            directory=record.directory,
+        )
+    except OutputParseError as exc:
+        raise PersistentResultMismatchError(
+            record, f"persisted output cannot be parsed: {exc}"
+        ) from exc
     return record, result
 
 
@@ -187,7 +193,6 @@ def check_persistent_result(manager, run, *, reader=None):
     """
     record = _record(manager, run)
     if record.state == RunState.FINISHED:
-        # Compatibility with records written before AVAILABLE/CHECKED existed.
         record = manager.mark_available(record)
     if record.state not in (RunState.AVAILABLE, RunState.CHECKED):
         raise PersistentResultUnavailableError(
@@ -220,15 +225,15 @@ def load_persistent_result(manager, run, *, reader=None):
         raise PersistentResultUnavailableError(
             record, "result finalization failed; retry finalization first"
         )
-    if record.state in (RunState.EXECUTION_FAILED, RunState.CANCELLED):
-        raise PersistentResultUnavailableError(
-            record, f"run ended as {record.state.value}; result checking is disabled"
-        )
-    if record.state == RunState.FAILED:
+    if record.state in (
+        RunState.EXECUTION_FAILED,
+        RunState.FAILED,
+        RunState.CANCELLED,
+    ):
+        reason = f": {record.failure_reason}" if record.failure_reason else ""
         raise PersistentResultUnavailableError(
             record,
-            "result processing failed permanently"
-            + (f": {record.failure_reason}" if record.failure_reason else ""),
+            f"run ended as {record.state.value}; result checking is disabled{reason}",
         )
 
     return check_persistent_result(manager, record, reader=reader)
