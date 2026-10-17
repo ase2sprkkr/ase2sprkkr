@@ -8,7 +8,6 @@ from ase2sprkkr.execution import (
     ExecutionOutcome,
     Executor,
     FailurePhase,
-    RunReference,
     RunState,
     RunStore,
 )
@@ -21,7 +20,7 @@ from ase2sprkkr.outputs.persistent import (
 class _RawRunner:
     def __init__(self):
         self.state = RunState.NEW
-        self.reference = None
+        self.backend_id = None
         self.result = ExecutionOutcome(return_code=0)
         self.exception = None
         self.failure_phase = None
@@ -32,7 +31,7 @@ class _RawRunner:
         return self.result.return_code
 
     def submit(self):
-        self.reference = RunReference(executor="test", native_id="job-1")
+        self.backend_id = "job-1"
         self.state = RunState.FINISHED
 
     def wait(self):
@@ -134,7 +133,7 @@ def test_transient_attach_failure_keeps_postprocessing_active(tmp_path, monkeypa
     record = manager.transition(
         record,
         state=RunState.POSTPROCESSING,
-        reference=RunReference(executor="test", native_id="job-1"),
+        execution=record.execution.submitted("job-1"),
     )
 
     monkeypatch.setattr(
