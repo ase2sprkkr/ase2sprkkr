@@ -22,6 +22,7 @@ from ..common.file_locks import FileLock
 from ..common.file_versions import FileState, FileVersion
 from .base import (
     Executor,
+    FailurePhase,
     RunReference,
     RunState,
     RunStatus,
@@ -50,6 +51,7 @@ _STATE_RANK = {
     RunState.CANCELLED: 5,
 }
 _UNCHANGED = object()
+_NO_FINALIZATION_FAILURES = {FailurePhase.SUBMISSION, FailurePhase.LAUNCH}
 
 
 def _now():
@@ -83,17 +85,29 @@ def _unique(values):
     return tuple(dict.fromkeys(value for value in values if value is not None))
 
 
-def _state_from_backend(state):
+def _failure_phase(value):
+    if value is None or isinstance(value, FailurePhase):
+        return value
+    return FailurePhase(value)
+
+
+def _state_from_backend(state, failure_phase=None):
     """Map one backend status into the authoritative persistent lifecycle."""
     state = RunState(state)
+    failure_phase = _failure_phase(failure_phase)
+    if state == RunState.EXECUTION_FAILED and failure_phase in _NO_FINALIZATION_FAILURES:
+        return RunState.EXECUTION_FAILED
     if state in (RunState.FINISHED, RunState.EXECUTION_FAILED):
         return RunState.FINALIZING
     return state
 
 
-def _completion_state(backend_state, error):
+def _completion_state(backend_state, error, failure_phase=None):
     """Resolve the terminal lifecycle state after result finalization."""
     backend_state = RunState(backend_state)
+    failure_phase = _failure_phase(failure_phase)
+    if failure_phase in _NO_FINALIZATION_FAILURES:
+        return RunState.EXECUTION_FAILED
     if backend_state in (RunState.FINISHED, RunState.EXECUTION_FAILED):
         if error is not None:
             return RunState.FINALIZATION_FAILED
@@ -102,7 +116,7 @@ def _completion_state(backend_state, error):
         return RunState.CANCELLED
     if error is not None:
         return RunState.EXECUTION_FAILED
-    return _state_from_backend(backend_state)
+    return _state_from_backend(backend_state, failure_phase)
 
 
 class CorruptRunRecord(RuntimeError):
@@ -251,10 +265,10 @@ class RunRecord:
     and reconstruct those values.
 
     ``state`` is the single authoritative lifecycle state. A terminal backend
-    outcome advances it to ``FINALIZING`` while result processing completes;
-    successful execution then advances to ``FINISHED``, failed execution to
-    ``EXECUTION_FAILED``, and any failure of post-processing to
-    ``FINALIZATION_FAILED``.
+    outcome normally advances it to ``FINALIZING`` while result processing
+    completes. Submission/launch failures are already terminal because no
+    calculation output exists to finalize. ``failure_phase`` records that
+    distinction without introducing a second state machine.
 
     ``finished_at`` records the current terminal lifecycle transition. Explicit
     retry of failed finalization reopens the lifecycle at ``FINALIZING`` and
@@ -279,6 +293,7 @@ class RunRecord:
     message: Optional[str] = None
     result_files: Optional[ResultFilesRecord] = None
     input_definition: Optional[str] = None
+    failure_phase: Optional[FailurePhase] = None
     schema_version: int = _RUN_RECORD_SCHEMA_VERSION
 
     def __post_init__(self):
@@ -299,6 +314,12 @@ class RunRecord:
             )
         if not isinstance(self.state, RunState):
             object.__setattr__(self, "state", RunState(self.state))
+        if self.failure_phase is not None and not isinstance(
+            self.failure_phase, FailurePhase
+        ):
+            object.__setattr__(
+                self, "failure_phase", FailurePhase(self.failure_phase)
+            )
         if self.schema_version != _RUN_RECORD_SCHEMA_VERSION:
             raise ValueError(
                 f"unsupported schema version {self.schema_version}; "
@@ -352,8 +373,6 @@ class RunStore:
                     f"unsupported schema version {version!r}; "
                     f"expected {_RUN_RECORD_SCHEMA_VERSION}"
                 )
-            # Version 1 briefly persisted requested-task provenance. It was never
-            # part of reconstruction identity, so accept and discard that key.
             data.pop("requested_task", None)
             return RunRecord(**data)
         except CorruptRunRecord:
@@ -686,6 +705,7 @@ class ExecutionManager:
         reference=_UNCHANGED,
         return_code=_UNCHANGED,
         message=_UNCHANGED,
+        failure_phase=_UNCHANGED,
         result_files=_UNCHANGED,
     ):
         """Merge one lifecycle update into the latest persisted record."""
@@ -715,6 +735,10 @@ class ExecutionManager:
             if message is not _UNCHANGED and message is not None:
                 if not final_locked or latest.message is None:
                     changes["message"] = message
+            if failure_phase is not _UNCHANGED:
+                normalized = _failure_phase(failure_phase)
+                if not final_locked or latest.failure_phase is None:
+                    changes["failure_phase"] = normalized
             return replace(latest, **changes)
 
         return self.store.update(record, merge)
@@ -728,6 +752,7 @@ class ExecutionManager:
             record,
             state=RunState.FINALIZATION_FAILED,
             message=str(error),
+            failure_phase=FailurePhase.FINALIZATION,
         )
 
     def retry_finalization(self, record):
@@ -744,6 +769,7 @@ class ExecutionManager:
                 updated_at=_now(),
                 finished_at=None,
                 message=None,
+                failure_phase=None,
             )
 
         return self.store.update(record, retry)
@@ -783,6 +809,7 @@ class ExecutionManager:
                 updated_at=now,
                 finished_at=now,
                 message="Stale submission was not found by its execution backend",
+                failure_phase=FailurePhase.SUBMISSION,
             )
 
         return self.store.update(record, mark_absent)
@@ -829,15 +856,21 @@ class ExecutionManager:
     def update(self, record, status: RunStatus):
         """Persist a backend status in the authoritative lifecycle graph."""
         backend_state = RunState(status.state)
+        phase = _failure_phase(status.failure_phase)
         return_code = status.return_code
-        if backend_state == RunState.EXECUTION_FAILED and return_code is None:
+        if (
+            backend_state == RunState.EXECUTION_FAILED
+            and return_code is None
+            and phase not in _NO_FINALIZATION_FAILURES
+        ):
             return_code = 1
         return self.transition(
             record,
-            state=_state_from_backend(backend_state),
+            state=_state_from_backend(backend_state, phase),
             reference=status.reference,
             return_code=return_code,
             message=status.message,
+            failure_phase=phase,
         )
 
     def finalize(
@@ -848,11 +881,15 @@ class ExecutionManager:
         reference=None,
         return_code=None,
         message=None,
+        failure_phase=None,
     ):
         """Finish one lifecycle after result processing has completed or failed."""
         state = RunState(state)
+        phase = _failure_phase(failure_phase)
+        if state == RunState.FINALIZATION_FAILED and phase is None:
+            phase = FailurePhase.FINALIZATION
         result_files = record.result_files
-        if state != RunState.FINALIZATION_FAILED:
+        if state != RunState.FINALIZATION_FAILED and phase not in _NO_FINALIZATION_FAILURES:
             result_files = self._capture_result_files(result_files)
         return self.transition(
             record,
@@ -860,6 +897,7 @@ class ExecutionManager:
             reference=reference,
             return_code=return_code,
             message=message,
+            failure_phase=phase,
             result_files=result_files,
         )
 
@@ -1073,7 +1111,8 @@ class PersistentRunner:
     @property
     def state(self):
         backend_state = self._runner.state
-        state = _state_from_backend(backend_state)
+        phase = _failure_phase(getattr(self._runner, "failure_phase", None))
+        state = _state_from_backend(backend_state, phase)
         if backend_state == RunState.NEW and self._record.state != RunState.NEW:
             state = self._record.state
         if self._record.state != RunState.NEW and state != self._record.state:
@@ -1081,6 +1120,7 @@ class PersistentRunner:
                 self._record,
                 state=state,
                 reference=self.reference,
+                failure_phase=phase,
             )
             state = self._record.state
         return state
@@ -1098,10 +1138,15 @@ class PersistentRunner:
         try:
             result = self._runner.submit()
         except SubmissionNotStarted as exc:
+            phase = _failure_phase(
+                getattr(self._runner, "failure_phase", None)
+            ) or FailurePhase.SUBMISSION
+            message = getattr(self._runner, "failure_message", None) or str(exc)
             self._record = self.manager.transition(
                 self._record,
                 state=RunState.EXECUTION_FAILED,
-                message=str(exc),
+                message=message,
+                failure_phase=phase,
             )
             raise
         except BaseException:
@@ -1109,11 +1154,13 @@ class PersistentRunner:
             if reference is not None:
                 backend_state = self._runner.state
                 if backend_state == RunState.NEW:
-                    backend_state = RunState.QUEUED
+                    backend_state = RunState.SUBMITTING
+                phase = _failure_phase(getattr(self._runner, "failure_phase", None))
                 self._record = self.manager.transition(
                     self._record,
-                    state=_state_from_backend(backend_state),
+                    state=_state_from_backend(backend_state, phase),
                     reference=reference,
+                    failure_phase=phase,
                 )
             raise
 
@@ -1127,16 +1174,21 @@ class PersistentRunner:
         )
         backend_state = self._runner.state
         if backend_state == RunState.NEW:
-            backend_state = RunState.QUEUED
+            backend_state = RunState.SUBMITTING
+        phase = _failure_phase(getattr(self._runner, "failure_phase", None))
         self._record = self.manager.transition(
             self._record,
-            state=_state_from_backend(backend_state),
+            state=_state_from_backend(backend_state, phase),
             reference=reference,
+            failure_phase=phase,
         )
         self._sync_file_retrieval()
         return result
 
     def _sync_file_retrieval(self):
+        phase = _failure_phase(getattr(self._runner, "failure_phase", None))
+        if phase in _NO_FINALIZATION_FAILURES:
+            return
         state = getattr(self._runner, "file_retrieval_state", None)
         if state is None:
             return
@@ -1147,16 +1199,36 @@ class PersistentRunner:
         )
 
     def _sync_completion(self, result):
-        self._sync_file_retrieval()
         backend_state = self._runner.state
+        phase = _failure_phase(getattr(self._runner, "failure_phase", None))
+        message = getattr(self._runner, "failure_message", None)
+        if phase in _NO_FINALIZATION_FAILURES:
+            self._record = self.manager.transition(
+                self._record,
+                state=RunState.EXECUTION_FAILED,
+                reference=self.reference,
+                return_code=getattr(result, "return_code", None),
+                message=message,
+                failure_phase=phase,
+            )
+            return
+
+        self._sync_file_retrieval()
         error = self._runner.exception
-        state = _completion_state(backend_state, error)
+        state = _completion_state(backend_state, error, phase)
+        if error is not None:
+            message = str(error)
+        if state == RunState.FINALIZATION_FAILED:
+            phase = FailurePhase.FINALIZATION
+        elif state == RunState.EXECUTION_FAILED and phase is None:
+            phase = FailurePhase.EXECUTION
         self._record = self.manager.finalize(
             self._record,
             state=state,
             reference=self.reference,
             return_code=getattr(result, "return_code", None),
-            message=None if error is None else str(error),
+            message=message,
+            failure_phase=phase,
         )
 
     def wait(self):
@@ -1185,8 +1257,10 @@ class PersistentRunner:
             return self._runner.cancel()
         finally:
             if self._record.state != RunState.NEW:
+                phase = _failure_phase(getattr(self._runner, "failure_phase", None))
                 self._record = self.manager.transition(
                     self._record,
-                    state=_state_from_backend(self._runner.state),
+                    state=_state_from_backend(self._runner.state, phase),
                     reference=self.reference,
+                    failure_phase=phase,
                 )

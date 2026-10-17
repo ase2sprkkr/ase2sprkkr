@@ -10,6 +10,9 @@ from ..remote_psij import (
 )
 
 
+_SUBMITTED_AT = "2026-10-13T08:00:00+00:00"
+
+
 def _request(workspace):
     return {
         "executor": "psij",
@@ -23,7 +26,14 @@ def _request(workspace):
     }
 
 
-def _record(workspace, run_id, *, state="queued", backend_reference=None):
+def _record(
+    workspace,
+    run_id,
+    *,
+    state=RunState.SUBMITTING.value,
+    backend_reference=None,
+    submitted_at=None,
+):
     run_dir = _run_directory(workspace, run_id)
     run_dir.mkdir(parents=True)
     request = dict(_request(workspace), id=run_id)
@@ -36,7 +46,8 @@ def _record(workspace, run_id, *, state="queued", backend_reference=None):
         directory=str(workspace),
         pid=None,
         backend_reference=backend_reference,
-        created_at="2026-10-13T08:00:00+00:00",
+        created_at=_SUBMITTED_AT,
+        submitted_at=submitted_at,
         started_at=None,
         finished_at=None,
     )
@@ -163,6 +174,7 @@ def test_remote_psij_agent_recovers_existing_scheduler_job(tmp_path, monkeypatch
             "output_file": reference.output_file,
             "error_file": reference.error_file,
         },
+        submitted_at=_SUBMITTED_AT,
     )
 
     executor = _FakeExecutor(workspace)
@@ -200,6 +212,7 @@ def test_remote_psij_attach_failure_preserves_running_state(tmp_path, monkeypatc
             "output_file": reference.output_file,
             "error_file": reference.error_file,
         },
+        submitted_at=_SUBMITTED_AT,
     )
     executor = _FakeExecutor(workspace)
     executor.attach_error = RuntimeError("scheduler temporarily unavailable")
@@ -220,7 +233,7 @@ def test_remote_psij_agent_recovers_submit_crash_without_resubmitting(
     tmp_path, monkeypatch
 ):
     workspace = tmp_path / "workspace"
-    _record(workspace, "run-1", state=RunState.SUBMITTING.value)
+    _record(workspace, "run-1", submitted_at=_SUBMITTED_AT)
     reference = RunReference(
         executor="psij:slurm",
         native_id="job-recovered",
@@ -240,7 +253,7 @@ def test_remote_psij_agent_recovers_submit_crash_without_resubmitting(
     state = status_remote(workspace, "run-1")
     assert executor.created == []
     assert executor.recovery_calls == [
-        ("run-1", str(workspace), "2026-10-13T08:00:00+00:00")
+        ("run-1", str(workspace), _SUBMITTED_AT)
     ]
     assert state["backend_reference"]["native_id"] == "job-recovered"
     assert state["state"] == RunState.RUNNING.value
@@ -249,7 +262,7 @@ def test_remote_psij_agent_recovers_submit_crash_without_resubmitting(
 
 def test_remote_psij_recovery_failure_stays_submitting(tmp_path, monkeypatch):
     workspace = tmp_path / "workspace"
-    _record(workspace, "run-1", state=RunState.SUBMITTING.value)
+    _record(workspace, "run-1", submitted_at=_SUBMITTED_AT)
     executor = _FakeExecutor(workspace)
     executor.recovery_status = RuntimeError("scheduler temporarily unavailable")
     monkeypatch.setattr(
@@ -261,6 +274,7 @@ def test_remote_psij_recovery_failure_stays_submitting(tmp_path, monkeypatch):
 
     state = status_remote(workspace, "run-1")
     assert state["state"] == RunState.SUBMITTING.value
+    assert state["submitted_at"] == _SUBMITTED_AT
     assert state["backend_reference"] is None
     assert "scheduler temporarily unavailable" in state["recovery_error"]
     assert state["finished_at"] is None
@@ -295,7 +309,12 @@ def test_remote_psij_cancel_is_serviced_by_shared_agent(tmp_path, monkeypatch):
 
 def test_remote_psij_status_recovery_starts_agent_for_active_run(tmp_path, monkeypatch):
     workspace = tmp_path / "workspace"
-    _record(workspace, "run-1", state="running")
+    _record(
+        workspace,
+        "run-1",
+        state="running",
+        submitted_at=_SUBMITTED_AT,
+    )
     spawned = []
 
     monkeypatch.setattr(
