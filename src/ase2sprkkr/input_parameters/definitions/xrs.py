@@ -2,7 +2,7 @@
 import numpy as np
 from ...common.grammar_types import Integer, Keyword, SetOf
 from ...common.warnings import DataValidityError, DataValidityWarning
-from ._file_manifests import TauCacheInputParametersDefinition
+from ._file_manifests import XrayRateInputParametersDefinition
 from ..input_parameters_definitions import InputValueDefinition as V
 from ._sections import CONTROL, ENERGY, MODE, SITES, TASK, TAU
 
@@ -53,9 +53,8 @@ def input_parameters():
         V("FRAMEPHI", float, is_optional=True, info="Frame Euler angle in degrees."),
         V("FRAMEGAM", float, is_optional=True, info="Frame Euler angle in degrees."),
     ])
-    return TauCacheInputParametersDefinition("xrs", [CONTROL("XRS"), TAU, MODE, energy, task, SITES],
-        executable="kkrgen", mpi=False,
-        output_file_templates=("{dataset}*.rat",), validators=_validate,
+    return XrayRateInputParametersDefinition("xrs", [CONTROL("XRS"), TAU, MODE, energy, task, SITES],
+        executable="kkrgen", mpi=False, validators=_validate,
         info="X-ray resonant scattering through the common XRAYSPEC workflow.",
         description="Three-integration resonant scattering tensor; requires NE matching the first TAU contour. "
                     "Native SIG is only partly initialized, so numerical results require Fortran repair. "

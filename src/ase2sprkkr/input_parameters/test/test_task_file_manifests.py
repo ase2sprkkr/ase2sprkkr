@@ -55,9 +55,9 @@ def test_non_tau_cache_roles(tmp_path):
         ("FMAG", {f"{DATASET}_fmag_*.agr", f"{DATASET}_dens_*.agr"}),
         ("SCF", {"*_SCFSTART.dos"}),
         ("SIGMA", {"sigma?????.dat"}),
-        ("XAS", {f"{DATASET}*.rat"}),
-        ("XES", {f"{DATASET}*.rat"}),
-        ("XRS", {f"{DATASET}*.rat"}),
+        ("XAS", {f"{DATASET}_*_L23.rat"}),
+        ("XES", {f"{DATASET}_*_L23.rat"}),
+        ("XRS", {f"{DATASET}_*_L23.rat"}),
     ],
 )
 def test_audited_output_manifests(task, expected, tmp_path):
@@ -71,6 +71,9 @@ def test_audited_output_manifests(task, expected, tmp_path):
         ("CLXPS", "3D", f"{DATASET}*.M45.xps"),
         ("APS", "2S", f"{DATASET}.*.L1.aps"),
         ("NRAES", "5F", f"{DATASET}.*.O67.aes"),
+        ("XAS", "1S", f"{DATASET}_*_K.rat"),
+        ("XES", "3D", f"{DATASET}_*_M45.rat"),
+        ("XRS", "5F", f"{DATASET}_*_O67.rat"),
     ],
 )
 def test_core_level_output_manifest_tracks_selected_shell(task, core_level, expected, tmp_path):

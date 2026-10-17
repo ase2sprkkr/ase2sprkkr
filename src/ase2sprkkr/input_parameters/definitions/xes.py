@@ -2,7 +2,7 @@
 import numpy as np
 from ...common.grammar_types import Integer, Keyword, SetOf
 from ...common.warnings import DataValidityError, DataValidityWarning
-from ._file_manifests import TauCacheInputParametersDefinition
+from ._file_manifests import XrayRateInputParametersDefinition
 from ..input_parameters_definitions import InputValueDefinition as V
 from ._sections import CONTROL, ENERGY, MODE, SITES, TASK, TAU
 
@@ -49,9 +49,8 @@ def input_parameters():
         V("FRAMEPHI", float, is_optional=True, info="Frame Euler angle in degrees."),
         V("FRAMEGAM", float, is_optional=True, info="Frame Euler angle in degrees."),
     ])
-    return TauCacheInputParametersDefinition("xes", [CONTROL("XES"), TAU, MODE, energy, task, SITES],
-        executable="kkrgen", mpi=False,
-        output_file_templates=("{dataset}*.rat",), validators=_validate,
+    return XrayRateInputParametersDefinition("xes", [CONTROL("XES"), TAU, MODE, energy, task, SITES],
+        executable="kkrgen", mpi=False, validators=_validate,
         info="X-ray emission through the common XRAYSPEC workflow.",
         description="Requires an occupied-state TAU directory with NE matching ENERGY.NE, or a workflow producing it. "
                     "Native XES forces EMAX=EF. RXES shares the calculation with RXAS; numerical emission "

@@ -68,6 +68,18 @@ class TauCacheInputParametersDefinition(InputParametersDefinition):
         return (tau_file(parameters, directory), *super().cache_files(parameters, directory))
 
 
+class XrayRateInputParametersDefinition(TauCacheInputParametersDefinition):
+    """XRAYSPEC definition with its native atom/core-shell rate filename."""
+
+    def output_files(self, parameters, directory):
+        files = list(super().output_files(parameters, directory))
+        name = core_level_output_name(
+            parameters, "rat", type_separator="_", shell_separator="_"
+        )
+        files.append(resolve_file(directory, name))
+        return tuple(files)
+
+
 class NrSpectroscopyInputParametersDefinition(InputParametersDefinition):
     """Shared native output contract for NRAPS/NRAES convolution tasks."""
 

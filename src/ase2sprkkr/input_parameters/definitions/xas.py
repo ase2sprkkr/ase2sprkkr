@@ -2,7 +2,7 @@
 import numpy as np
 from ...common.grammar_types import Integer, Keyword, SetOf
 from ...common.warnings import DataValidityError, DataValidityWarning
-from ._file_manifests import TauCacheInputParametersDefinition
+from ._file_manifests import XrayRateInputParametersDefinition
 from ._sections import CONTROL, TASK, TAU, ENERGY, SITES, MODE
 from ..input_parameters_definitions import InputValueDefinition as V
 
@@ -33,7 +33,7 @@ def input_parameters():
     energy = ENERGY(emax=(4.0, "Upper bound in Ry; native XAS default", None),
                     defaults={"ImE": 0.01, "GRID": 6, "NE": 180})
     energy.copy_member("NE", type=SetOf(Integer(min=2), min_length=1, max_length=2))
-    return TauCacheInputParametersDefinition("xas", [CONTROL("XAS"), TAU, MODE, energy,
+    return XrayRateInputParametersDefinition("xas", [CONTROL("XAS"), TAU, MODE, energy,
         TASK("XAS").copy([
             V("IT", Integer(min=1), 1, info="Atom type index, not site index."),
             V("CL", Keyword(*(f"{n}{s}" for n in range(1, 6) for s in "SPDF")), "2P", info="Initial core shell."),
@@ -47,7 +47,7 @@ def input_parameters():
             V("FRAMEPHI", float, 0.0, is_expert=True, is_optional=True, info="Frame Euler azimuth in degrees."),
             V("FRAMEGAM", float, 0.0, is_expert=True, is_optional=True, info="Third frame Euler angle in degrees."),
         ]), SITES], executable="kkrgen", mpi=False,
-        output_file_templates=("{dataset}*.rat",), validators=_validate_xas,
+        validators=_validate_xas,
         info="Calculates X-ray absorption spectra",
         description="Requires NE to match the first TAU contour and a valid core shell in the potential. "
                     "Frame angles rotate the polarization frame. Native MPI exits before XRAYSPEC. "
