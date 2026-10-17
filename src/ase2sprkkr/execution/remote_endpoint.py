@@ -121,7 +121,6 @@ class _RemoteRun(RemoteRunner):
             "client_sync": request.get("client_sync") or {},
             "local_sync": local_sync,
         }
-        context["outcome_file"] = request.get("outcome_file")
         return remote_id, context, status, request
 
     def submit(self):
@@ -511,23 +510,18 @@ class RemoteEndpointExecutor(Executor):
             "submit", request["directory"], payload=request
         )
 
-    @staticmethod
-    def _receipt_args(reference):
-        path = (reference.context or {}).get("outcome_file") if reference else None
-        return () if not path else ("--outcome-file", os.fspath(path))
-
     async def _status(self, directory, remote_id, reference=None):
         return await self._json_request(
-            "status", remote_id, *self._receipt_args(reference)
+            "status", remote_id
         )
 
     async def _cancel(self, directory, remote_id, reference=None):
         return await self._json_request(
-            "cancel", remote_id, *self._receipt_args(reference)
+            "cancel", remote_id
         )
 
     async def _follow(self, directory, remote_id, reference=None):
-        options = list(self._receipt_args(reference))
+        options = []
         if reference is not None:
             if reference.output_file:
                 options.extend(("--stdout-path", reference.output_file))
@@ -537,6 +531,11 @@ class RemoteEndpointExecutor(Executor):
             (*self.command, "follow", str(remote_id), *options, "--framed")
         )
         return FramedRunningCommand(process)
+
+    def acknowledge(self, reference):
+        """Release a delivered backend receipt after RunRecord persistence."""
+        self._validate_reference(reference)
+        return _run_sync(self._json_request("ack", reference.native_id))
 
     def status(self, *references: RunReference):
         for reference in references:
