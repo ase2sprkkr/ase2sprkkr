@@ -92,11 +92,22 @@ class _LifecycleExecutor(Executor):
         return self.runner
 
 
+class _RecordingManager(ExecutionManager):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.finalizing_seen = False
+
+    def finalize(self, record, **kwargs):
+        assert self.store.get(record.id).state == RunState.FINALIZING
+        self.finalizing_seen = True
+        return super().finalize(record, **kwargs)
+
+
 def _live_run(tmp_path, reader):
     output = tmp_path / "run.out"
     output.write_text("captured output")
     store = RunStore(tmp_path / "runs")
-    manager = ExecutionManager(store)
+    manager = _RecordingManager(store)
     executor = _LifecycleExecutor()
     run = manager.create_run(
         executor,
@@ -133,11 +144,12 @@ def _available_record(tmp_path):
 
 def test_successful_finalization_checks_only_after_available(tmp_path):
     reader = _ResultReader()
-    store, _manager, executor, run = _live_run(tmp_path, reader)
+    store, manager, executor, run = _live_run(tmp_path, reader)
 
     executor.runner.complete()
 
     record = store.get(run.id)
+    assert manager.finalizing_seen
     assert reader.calls == 1
     assert record.state == RunState.CHECKED
     assert record.failure_reason is None
@@ -153,6 +165,7 @@ def test_retryable_first_check_stays_available_until_explicit_retry(tmp_path):
         executor.runner.complete()
 
     available = store.get(run.id)
+    assert manager.finalizing_seen
     assert reader.calls == 1
     assert available.state == RunState.AVAILABLE
     assert "truncated output" in available.failure_reason
@@ -186,11 +199,12 @@ def test_unexpected_first_check_failure_is_terminal_failed(tmp_path):
 
 def test_failed_execution_is_not_result_checked(tmp_path):
     reader = _ResultReader()
-    store, _manager, executor, run = _live_run(tmp_path, reader)
+    store, manager, executor, run = _live_run(tmp_path, reader)
 
     executor.runner.complete(RunState.FAILED)
 
     record = store.get(run.id)
+    assert manager.finalizing_seen
     assert record.state == RunState.FAILED
     assert record.return_code == 1
     assert reader.calls == 0
@@ -198,15 +212,32 @@ def test_failed_execution_is_not_result_checked(tmp_path):
 
 def test_post_backend_finalization_failure_does_not_check_result(tmp_path):
     reader = _ResultReader()
-    store, _manager, executor, run = _live_run(tmp_path, reader)
+    store, manager, executor, run = _live_run(tmp_path, reader)
 
     executor.runner.complete(error=OSError("result directory disappeared"))
 
     record = store.get(run.id)
+    assert manager.finalizing_seen
     assert record.state == RunState.FINALIZATION_FAILED
     assert record.failure_reason == "result directory disappeared"
     assert record.result_files.captured_at is None
     assert reader.calls == 0
+
+
+def test_successful_finalization_clears_stale_failure_reason(tmp_path):
+    store = RunStore(tmp_path / "runs")
+    manager = ExecutionManager(store)
+    record = manager.new_record(task="DOS", directory=tmp_path)
+    record = manager.transition(
+        record,
+        state=RunState.FINALIZING,
+        message="temporary backend message",
+    )
+
+    record = manager.finalize(record, state=RunState.AVAILABLE, return_code=0)
+
+    assert record.state == RunState.AVAILABLE
+    assert record.failure_reason is None
 
 
 def test_retryable_historical_reconstruction_error_stays_available(tmp_path):
@@ -234,7 +265,9 @@ def test_retryable_historical_reconstruction_error_stays_available(tmp_path):
 def test_successful_on_demand_check_marks_checked_and_clears_error(tmp_path):
     store, manager, record = _available_record(tmp_path)
     record = manager.record_result_check_failure(
-        record, PersistentResultUnavailableError(record, "temporary parser problem"), retryable=True
+        record,
+        PersistentResultUnavailableError(record, "temporary parser problem"),
+        retryable=True,
     )
     reader = _ResultReader(store)
     reader.run_id = record.id
