@@ -26,6 +26,7 @@ from .detached import (
     detached_failure_phase,
     detached_launch_failed,
     detached_run_state,
+    detached_stream_file,
     status_detached,
     submit_detached,
 )
@@ -281,7 +282,9 @@ class LocalPersistentRunner:
                         ("out", "output_file", stdout, output_target),
                         ("err", "error_file", stderr, error_target),
                     ):
-                        data = self._read_new(status.get(key), offsets[kind])
+                        data = self._read_new(
+                            detached_stream_file(status, key), offsets[kind]
+                        )
                         if not data:
                             continue
                         offsets[kind] += len(data)

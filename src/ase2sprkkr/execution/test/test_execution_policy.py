@@ -226,9 +226,13 @@ def test_process_group_cancel_checks_group_not_only_leader(tmp_path, monkeypatch
         lambda directory, run_id: {"state": "cancelled"},
     )
 
-    state = _terminate_process_group(tmp_path, "run", 1234, timeout=1.0)
+    state, stopped, signalled = _terminate_process_group(
+        tmp_path, "run", 1234, timeout=1.0
+    )
 
     assert state["state"] == "cancelled"
+    assert stopped is True
+    assert signalled is True
     assert calls[0][0] == 1234
     assert any(sig == 0 for _, sig in calls)
 

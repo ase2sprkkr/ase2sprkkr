@@ -902,7 +902,18 @@ class ExecutionManager:
             phase = FailurePhase.FINALIZATION
         result_files = record.result_files
         if state != RunState.FINALIZATION_FAILED and phase not in _NO_FINALIZATION_FAILURES:
-            result_files = self._capture_result_files(result_files)
+            try:
+                result_files = self._capture_result_files(result_files)
+            except OSError as exc:
+                self.transition(
+                    record,
+                    state=RunState.FINALIZATION_FAILED,
+                    reference=reference,
+                    return_code=return_code,
+                    message=str(exc),
+                    failure_phase=FailurePhase.FINALIZATION,
+                )
+                raise
         return self.transition(
             record,
             state=state,

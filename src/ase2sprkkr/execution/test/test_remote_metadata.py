@@ -184,6 +184,10 @@ def test_remote_cancel_waits_for_launch_handoff(tmp_path, monkeypatch):
 
     def fake_killpg(pid, sig):
         killed.append((pid, sig))
+        if sig == 0:
+            if terminated.is_set():
+                raise ProcessLookupError
+            return
         terminated.set()
 
     monkeypatch.setattr(detached_local, "start_local_process", fake_start_local_process)

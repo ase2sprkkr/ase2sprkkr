@@ -469,14 +469,9 @@ class _RemotePsijAgent:
                 raise RuntimeError("Recovered PSI/J submission lacks a job reference")
             recovered_state = RunState(status.state)
             phase = getattr(status, "failure_phase", None)
-            execution_evidence = (
-                recovered_state == RunState.RUNNING
-                or recovered_state == RunState.FINISHED
-                or (
-                    recovered_state == RunState.FAILED
-                    and status.return_code is not None
-                    and phase not in (FailurePhase.SUBMISSION, FailurePhase.LAUNCH)
-                )
+            execution_evidence = recovered_state in (
+                RunState.RUNNING,
+                RunState.FINISHED,
             )
             with _state_lock(self.directory, run_id):
                 latest = _read_state_unlocked(self.directory, run_id)
@@ -612,7 +607,6 @@ class _RemotePsijAgent:
                 state.get("started_at") is not None
                 or active.last_state == RunState.RUNNING
                 or final == RunState.FINISHED
-                or (final == RunState.FAILED and return_code is not None)
             )
             changes = {
                 "state": final.value,

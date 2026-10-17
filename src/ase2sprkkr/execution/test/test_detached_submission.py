@@ -83,6 +83,34 @@ def test_detached_helper_launch_failure_is_terminal_without_output(tmp_path, mon
     assert status_detached(tmp_path, "launch-failure") == state
 
 
+def test_detached_helper_exit_before_handoff_is_terminal_launch_failure(
+    tmp_path, monkeypatch
+):
+    class ExitedWorker:
+        def poll(self):
+            return 7
+
+    monkeypatch.setattr(
+        detached,
+        "_spawn_detached_worker",
+        lambda *args: ExitedWorker(),
+    )
+
+    state = submit_detached(
+        {
+            "id": "helper-exit-before-handoff",
+            "executor": "local",
+            "directory": str(tmp_path),
+            "argv": ["unused"],
+        }
+    )
+
+    assert state["state"] == "failed"
+    assert state["failure_phase"] == "launch"
+    assert state["started_at"] is None
+    assert "return code 7" in state["error"]
+
+
 def test_calculation_process_failure_does_not_publish_or_overwrite_output(
     tmp_path, monkeypatch
 ):
@@ -114,8 +142,11 @@ def test_calculation_process_failure_does_not_publish_or_overwrite_output(
     assert output.read_text() == "previous result\n"
 
 
-def test_running_state_persistence_failure_stops_spawned_process(tmp_path, monkeypatch):
+def test_running_state_persistence_failure_stops_process_and_preserves_output(
+    tmp_path, monkeypatch
+):
     output = tmp_path / "calculation.out"
+    output.write_text("previous result\n")
     run_id = "running-state-failure"
     monkeypatch.setattr(detached, "_spawn_detached_worker", lambda *args: object())
     submit_detached(
@@ -152,12 +183,96 @@ def test_running_state_persistence_failure_stops_spawned_process(tmp_path, monke
     assert processes[0].returncode is not None
     assert processes[0].stdout is None
     assert processes[0].stderr is None
+    assert output.read_text() == "previous result\n"
 
     state = status_detached(tmp_path, run_id)
     assert state["state"] == "failed"
     assert state["failure_phase"] == "launch"
     assert state["pid"] is None
     assert state["started_at"] is None
+
+
+def test_finalization_sync_failure_preserves_private_stream(tmp_path, monkeypatch):
+    run_id = "finalization-sync-failure"
+    output = tmp_path / "calculation.out"
+    monkeypatch.setattr(detached, "_spawn_detached_worker", lambda *args: object())
+    submit_detached(
+        {
+            "id": run_id,
+            "executor": "local",
+            "directory": str(tmp_path),
+            "argv": [sys.executable, "-c", "print('final output')"],
+            "output_file": str(output),
+        }
+    )
+
+    def fail_sync(_stream):
+        raise OSError("stream fsync failed")
+
+    monkeypatch.setattr(detached_local, "sync_stream", fail_sync)
+
+    with pytest.raises(OSError, match="stream fsync failed"):
+        run_detached_worker(tmp_path, run_id)
+
+    state = status_detached(tmp_path, run_id)
+    assert state["state"] == "failed"
+    assert state["failure_phase"] == FailurePhase.FINALIZATION.value
+    stream = detached.detached_stream_file(state, "output_file")
+    assert stream == state["stream_output_file"]
+    assert os.path.isfile(stream)
+    with open(stream) as file:
+        assert file.read() == "final output\n"
+    assert not output.exists()
+
+
+def test_partial_publish_failure_keeps_each_stream_replayable(tmp_path, monkeypatch):
+    run_id = "partial-publish-failure"
+    output = tmp_path / "calculation.out"
+    error = tmp_path / "calculation.err"
+    monkeypatch.setattr(detached, "_spawn_detached_worker", lambda *args: object())
+    submit_detached(
+        {
+            "id": run_id,
+            "executor": "local",
+            "directory": str(tmp_path),
+            "argv": [
+                sys.executable,
+                "-c",
+                "import sys; print('stdout'); print('stderr', file=sys.stderr)",
+            ],
+            "output_file": str(output),
+            "error_file": str(error),
+        }
+    )
+
+    real_replace = detached_local.durable_replace
+    replacements = []
+
+    def fail_second_replace(source, destination):
+        replacements.append((source, destination))
+        if len(replacements) == 2:
+            raise OSError("stderr publish failed")
+        return real_replace(source, destination)
+
+    monkeypatch.setattr(detached_local, "durable_replace", fail_second_replace)
+
+    with pytest.raises(OSError, match="stderr publish failed"):
+        run_detached_worker(tmp_path, run_id)
+
+    state = status_detached(tmp_path, run_id)
+    assert state["state"] == "failed"
+    assert state["failure_phase"] == FailurePhase.FINALIZATION.value
+
+    replay_output = detached.detached_stream_file(state, "output_file")
+    replay_error = detached.detached_stream_file(state, "error_file")
+    assert replay_output == str(output)
+    assert replay_error == state["stream_error_file"]
+    assert os.path.isfile(replay_output)
+    assert os.path.isfile(replay_error)
+    with open(replay_output) as file:
+        assert file.read() == "stdout\n"
+    with open(replay_error) as file:
+        assert file.read() == "stderr\n"
 
 
 def test_local_persistent_launch_failure_is_submission_not_started(tmp_path, monkeypatch):
@@ -219,7 +334,7 @@ def test_local_persistent_metadata_failure_is_submission_failure(tmp_path, monke
     assert "state metadata could not be written" in record.message
 
 
-def test_calculation_launch_failure_skips_parser_and_output_finalization(tmp_path):
+def test_calculation_launch_failure_is_reported_by_submit(tmp_path):
     output = tmp_path / "calculation.out"
     reader = _Reader()
     runner = LocalExecutor().create_persistent_run(
@@ -233,12 +348,12 @@ def test_calculation_launch_failure_skips_parser_and_output_finalization(tmp_pat
         run_id="calculation-popen-failure",
     )
 
-    runner.submit()
-    result = runner.wait()
+    with pytest.raises(SubmissionNotStarted, match="Detached worker launch failed"):
+        runner.submit()
 
     assert runner.state == RunState.FAILED
     assert runner.failure_phase == FailurePhase.LAUNCH
-    assert result.return_code is None
+    assert runner.reference is None
     assert reader.parse_calls == 0
     assert reader.complete_calls == 0
     assert not output.exists()
@@ -287,7 +402,7 @@ def test_launch_failure_releases_persistent_submission_namespace(tmp_path, monke
     assert replacement.wait().return_code == 0
 
 
-def test_calculation_launch_failure_with_reference_never_enters_finalizing(tmp_path):
+def test_calculation_launch_failure_never_enters_finalizing(tmp_path):
     manager = ExecutionManager(RunStore(tmp_path / "runs"))
     executor = LocalExecutor()
     reader = _Reader()
@@ -303,26 +418,16 @@ def test_calculation_launch_failure_with_reference_never_enters_finalizing(tmp_p
         task="SCF",
     )
 
-    run.submit()
-    reference = run.reference
-    assert reference is not None
+    with pytest.raises(SubmissionNotStarted, match="Detached worker launch failed"):
+        run.submit()
 
-    result = run.wait()
-    assert result.return_code is None
     record = manager.store.get(run.id)
     assert record.state == RunState.EXECUTION_FAILED
     assert record.failure_phase == FailurePhase.LAUNCH
+    assert record.reference is None
     assert record.result_files.captured_at is None
     assert reader.parse_calls == 0
     assert reader.complete_calls == 0
-
-    # Simulate a fresh process refreshing the already-referenced failed run.
-    recovered_manager = ExecutionManager(manager.store)
-    recovered_manager.register_executor(executor, record.endpoint, reference)
-    refreshed = recovered_manager.refresh((record,))[0]
-    assert refreshed.state == RunState.EXECUTION_FAILED
-    assert refreshed.failure_phase == FailurePhase.LAUNCH
-    assert refreshed.result_files.captured_at is None
 
 
 def test_psij_detached_submission_is_submitting_before_scheduler_acceptance(
