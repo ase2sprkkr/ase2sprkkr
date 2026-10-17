@@ -8,22 +8,23 @@ from ase2sprkkr.execution.psij import PsijExecutor, PsijRunner
 from ase2sprkkr.execution.remote_endpoint import _RemoteRun, _RemoteRunContext
 
 
-class _Reader:
-    print_output = False
-
-    def create_result(self, output_file, input_file):
-        return SimpleNamespace(return_code=None)
-
-
 class _AttachedRunner:
-    def __init__(self, reference, callback=None):
+    def __init__(self, reference):
         self.reference = reference
-        self.callback = callback
-        self.result = SimpleNamespace(return_code=None)
+        self.result = SimpleNamespace(return_code=0)
         self.state = RunState.RUNNING
+        self.exception = None
+        self.failure_phase = None
+        self.failure_message = None
 
     def add_output_listener(self, callback):
         pass
+
+    def add_output_error_listener(self, callback):
+        pass
+
+    def start(self):
+        self.state = RunState.FINISHED
 
     def wait(self):
         return self.result
@@ -33,10 +34,13 @@ class _AttachedRunner:
 
 
 class _AttachExecutor(LocalExecutor):
-    def attach(self, reference, reader, callback=None, output_listener=None, start=True):
+    def attach(self, reference, callback=None, output_listener=None, start=True):
         if output_listener is not None:
             output_listener("manager replay\n", "out")
-        return _AttachedRunner(reference, callback=callback)
+        runner = _AttachedRunner(reference)
+        if start:
+            runner.start()
+        return runner
 
 
 def test_manager_attach_forwards_initial_output_listener(tmp_path):
@@ -51,12 +55,13 @@ def test_manager_attach_forwards_initial_output_listener(tmp_path):
     manager.store.save(record)
 
     output = []
-    manager.attach(
+    runner = manager.attach(
         record,
         executor=_AttachExecutor(),
-        reader=_Reader(),
+        process_result=lambda result: result,
         output_listener=lambda text, kind: output.append((text, kind)),
     )
+    runner.wait()
 
     assert output == [("manager replay\n", "out")]
 
@@ -90,17 +95,19 @@ def _remote_context(tmp_path):
         directory="/remote/work",
         input_file="/remote/work/input.inp",
         output_file="/remote/work/output.out",
-    )
-    request = {
-        "executor": "local",
-        "client_sync": {
-            "output_file": "/remote/work/output.out",
-            "error_file": None,
-            "output_files": (),
-            "cache_files": (),
+        context={
+            "client_sync": {
+                "output_file": None,
+                "error_file": None,
+                "output_files": (),
+                "cache_files": (),
+                "output_patterns": (),
+                "cache_patterns": (),
+                "cache_before": (),
+            }
         },
-    }
-    return context, reference, request
+    )
+    return context, reference
 
 
 def test_remote_attach_installs_listener_before_monitor(monkeypatch, tmp_path):
@@ -113,17 +120,15 @@ def test_remote_attach_installs_listener_before_monitor(monkeypatch, tmp_path):
         self._done.set()
 
     monkeypatch.setattr(_RemoteRun, "_thread_main", immediate_monitor)
-    context, reference, request = _remote_context(tmp_path)
+    context, reference = _remote_context(tmp_path)
 
     import asyncio
 
     runner = asyncio.run(
         context.attach(
             reference,
-            _Reader(),
             callback=lambda result: events.append(("finished", None)),
             output_listener=lambda text, kind: events.append((text, kind)),
-            request=request,
         )
     )
     runner._done.wait(1)
@@ -139,17 +144,15 @@ def test_remote_attach_can_defer_monitor_start(monkeypatch, tmp_path):
         self._done.set()
 
     monkeypatch.setattr(_RemoteRun, "_thread_main", immediate_monitor)
-    context, reference, request = _remote_context(tmp_path)
+    context, reference = _remote_context(tmp_path)
 
     import asyncio
 
     runner = asyncio.run(
         context.attach(
             reference,
-            _Reader(),
             output_listener=lambda text, kind: events.append((text, kind)),
             start=False,
-            request=request,
         )
     )
 
@@ -204,7 +207,6 @@ def test_psij_attach_installs_listener_before_monitor(monkeypatch, tmp_path):
 
     runner = _psij_executor().attach(
         _psij_reference(tmp_path),
-        _Reader(),
         callback=lambda result: events.append(("finished", None)),
         output_listener=lambda text, kind: events.append((text, kind)),
     )
@@ -224,7 +226,6 @@ def test_psij_attach_can_defer_monitor_start(monkeypatch, tmp_path):
 
     runner = _psij_executor().attach(
         _psij_reference(tmp_path),
-        _Reader(),
         output_listener=lambda text, kind: events.append((text, kind)),
         start=False,
     )
