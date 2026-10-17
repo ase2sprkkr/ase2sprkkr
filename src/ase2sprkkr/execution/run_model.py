@@ -1,0 +1,106 @@
+"""Persistent, non-redundant identity and file layout of one execution.
+
+Submission intent and lifecycle are properties of a RunRecord, not backend
+references.  This module contains only serializable value objects.
+"""
+
+from __future__ import annotations
+
+from dataclasses import dataclass
+from typing import Optional
+
+from .endpoint import ExecutorEndpoint
+
+
+@dataclass(frozen=True)
+class WorkingDirectory:
+    """Local working directory and its optional target-side counterpart."""
+
+    local: str
+    remote: Optional[str] = None
+
+    def __post_init__(self):
+        import os
+
+        object.__setattr__(self, "local", os.fspath(self.local))
+        if self.remote is not None:
+            object.__setattr__(self, "remote", os.fspath(self.remote))
+
+    @property
+    def target(self):
+        return self.remote if self.remote is not None else self.local
+
+
+@dataclass(frozen=True)
+class Execution:
+    """Backend identity plus the directory in which the job executes."""
+
+    endpoint: ExecutorEndpoint
+    directory: WorkingDirectory
+    backend_id: Optional[str] = None
+
+    def __post_init__(self):
+        if isinstance(self.endpoint, dict):
+            object.__setattr__(self, "endpoint", ExecutorEndpoint(**self.endpoint))
+        if isinstance(self.directory, dict):
+            object.__setattr__(self, "directory", WorkingDirectory(**self.directory))
+        if self.backend_id is not None:
+            identifier = str(self.backend_id)
+            if not identifier:
+                raise ValueError("backend_id cannot be empty")
+            object.__setattr__(self, "backend_id", identifier)
+
+
+@dataclass(frozen=True)
+class FileEntry:
+    """Location of one file, with no assumptions about its content."""
+
+    local_path: Optional[str] = None
+    remote_path: Optional[str] = None
+
+    def __post_init__(self):
+        import os
+
+        for name in ("local_path", "remote_path"):
+            value = getattr(self, name)
+            if value is not None:
+                object.__setattr__(self, name, os.fspath(value))
+        if self.local_path is None and self.remote_path is None:
+            raise ValueError("A file entry must have at least one location")
+
+
+@dataclass(frozen=True)
+class CacheEntry:
+    """Cache identity and its pre-execution remote signature."""
+
+    file: FileEntry
+    before: Optional[tuple] = None
+
+    def __post_init__(self):
+        if isinstance(self.file, dict):
+            object.__setattr__(self, "file", FileEntry(**self.file))
+        if self.before is not None:
+            object.__setattr__(self, "before", tuple(self.before))
+
+
+@dataclass(frozen=True)
+class FileManifest:
+    """All paths and cache baselines required for transfer and reconnect."""
+
+    inputs: tuple[FileEntry, ...] = ()
+    outputs: tuple[FileEntry, ...] = ()
+    caches: tuple[CacheEntry, ...] = ()
+    stdout: Optional[FileEntry] = None
+    stderr: Optional[FileEntry] = None
+
+    def __post_init__(self):
+        for name, cls in (("inputs", FileEntry), ("outputs", FileEntry), ("caches", CacheEntry)):
+            items = getattr(self, name)
+            object.__setattr__(
+                self, name,
+                tuple(item if isinstance(item, cls) else cls(**item) for item in items),
+            )
+        for name in ("stdout", "stderr"):
+            item = getattr(self, name)
+            if isinstance(item, dict):
+                object.__setattr__(self, name, FileEntry(**item))
