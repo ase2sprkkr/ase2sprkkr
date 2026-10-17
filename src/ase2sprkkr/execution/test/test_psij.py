@@ -4,7 +4,10 @@ from types import SimpleNamespace
 
 import pytest
 
-from ase2sprkkr.execution.base import ExecutionSpec, LaunchSpec, RunReference, RunState
+from ase2sprkkr.execution.base import ExecutionSpec, LaunchSpec, RunState
+from ase2sprkkr.execution import (
+    RunRecord, Execution, WorkingDirectory, ExecutorEndpoint, FileManifest, FileEntry,
+)
 from ase2sprkkr.execution import psij as psij_backend
 
 
@@ -139,6 +142,23 @@ def _executor(monkeypatch, backend):
     )
 
 
+def _psij_run(directory, backend_id=None):
+    return RunRecord(
+        id="psij-run", task="DOS", state=RunState.RUNNING,
+        created_at="2026-10-13T08:00:00+00:00",
+        updated_at="2026-10-13T08:00:00+00:00",
+        execution=Execution(
+            ExecutorEndpoint(executor="psij", psij_backend="slurm"),
+            WorkingDirectory(str(directory)), backend_id,
+        ),
+        files=FileManifest(
+            inputs=(FileEntry(local_path=str(directory / "run.inp")),),
+            stdout=FileEntry(local_path=str(directory / "run.out")),
+            stderr=FileEntry(local_path=str(directory / "run.err")),
+        ),
+    )
+
+
 def test_psij_runner_submits_and_streams_output(monkeypatch, tmp_path):
     backend = _Backend()
     executor = _executor(monkeypatch, backend)
@@ -152,12 +172,12 @@ def test_psij_runner_submits_and_streams_output(monkeypatch, tmp_path):
         directory=str(tmp_path),
         stdin=input_file,
     )
-    runner = executor.create_run(_Reader(), spec)
+    runner = executor.create_run(spec)
     seen = []
     runner.add_output_listener(lambda text, kind: seen.append((kind, text)))
 
     runner.submit()
-    reference = runner.reference
+    backend_id = runner.backend_id
     result = runner.wait()
 
     assert backend.submitted.spec.executable == "program"
@@ -166,11 +186,10 @@ def test_psij_runner_submits_and_streams_output(monkeypatch, tmp_path):
     assert backend.submitted.spec.stdout_path == str(tmp_path / "run.out")
     assert backend.submitted.spec.resources is None
     assert backend.submitted.spec.launcher is None
-    assert reference.executor == "psij:slurm"
-    assert reference.native_id == "123"
+    assert backend_id == "123"
     assert runner.state == RunState.FINISHED
-    assert result.output == b"hello\n"
-    assert result.error_output == b"warning\n"
+    assert (tmp_path / "run.out").read_bytes() == b"hello\n"
+    assert (tmp_path / "run.out.err").read_bytes() == b"warning\n"
     assert result.return_code == 0
     assert ("out", "hello\n") in seen
     assert ("err", "warning\n") in seen
@@ -192,7 +211,7 @@ def test_psij_mpi_process_count_becomes_resource_spec(monkeypatch, tmp_path):
         stdin=input_file,
     )
 
-    runner = executor.create_run(_Reader(), spec)
+    runner = executor.create_run(spec)
     job_spec = runner._job.spec
 
     assert job_spec.executable == "programMPI"
@@ -219,7 +238,7 @@ def test_psij_auto_uses_mpi_without_fixed_process_count(monkeypatch, tmp_path):
         stdin=input_file,
     )
 
-    runner = executor.create_run(_Reader(), spec)
+    runner = executor.create_run(spec)
     job_spec = runner._job.spec
 
     assert job_spec.executable == "programMPI"
@@ -242,7 +261,7 @@ def test_psij_persistent_run_exposes_recovery_metadata(monkeypatch, tmp_path):
     )
 
     runner = executor.create_persistent_run(
-        _Reader(), spec, run_id="persistent-run"
+        spec, run_id="persistent-run"
     )
 
     assert runner._job.spec.environment == {
@@ -262,22 +281,14 @@ def test_psij_executor_attaches_to_native_job(monkeypatch, tmp_path):
     error = tmp_path / "run.err"
     output.write_bytes(b"old output\n")
     error.write_bytes(b"")
-    reference = RunReference(
-        executor="psij:slurm",
-        native_id="456",
-        directory=str(tmp_path),
-        input_file=str(tmp_path / "run.inp"),
-        output_file=str(output),
-        error_file=str(error),
-    )
-
-    runner = executor.attach(reference, _Reader())
+    run = _psij_run(tmp_path, "456")
+    runner = executor.attach(run)
     result = runner.wait()
 
     assert backend.attached == "456"
-    assert runner.reference.native_id == "456"
+    assert runner.backend_id == "456"
     assert runner.state == RunState.FINISHED
-    assert result.output == b"old output\n"
+    assert (tmp_path / "run.out").read_bytes() == b"old output\n"
 
 
 def test_psij_recovers_live_slurm_submission_by_run_id(monkeypatch, tmp_path):
@@ -423,7 +434,7 @@ def test_psij_submit_is_serialized_across_threads(monkeypatch, tmp_path):
         directory=str(tmp_path),
         stdin=input_file,
     )
-    runner = executor.create_run(_Reader(), spec)
+    runner = executor.create_run(spec)
     errors = []
 
     def submit():
