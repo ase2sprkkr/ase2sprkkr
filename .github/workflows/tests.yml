@@ -52,8 +52,7 @@ jobs:
         "remote_executor_over_ssh or remote_executor_runs_psij_slurm_over_ssh"
 
   guy4ase-compatibility:
-    if: github.event_name == 'push' && github.ref == 'refs/heads/workflow'
-    needs: [build, execution-integration]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/tmp-task-section-reserved-names-ci'
     uses: ase2sprkkr/guy4kkr/.github/workflows/backend-compatibility.yml@master
     with:
-      ase2sprkkr_ref: ${{ github.sha }}
+      ase2sprkkr_ref: d4e22ca1b564a64543935e2ea62ed19e025e5272
