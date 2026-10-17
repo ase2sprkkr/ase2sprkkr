@@ -656,8 +656,8 @@ class ExecutionManager:
             if return_code is not _UNCHANGED and return_code is not None:
                 if not final_locked or latest.return_code is None:
                     changes["return_code"] = return_code
-            if message is not _UNCHANGED and message is not None:
-                if not final_locked or latest.message is None:
+            if message is not _UNCHANGED:
+                if message is None or not final_locked or latest.message is None:
                     changes["message"] = message
             return replace(latest, **changes)
         return self.store.update(record, merge)
@@ -691,7 +691,12 @@ class ExecutionManager:
                 raise RuntimeError(
                     f"Run {latest.id} is {latest.state.value}, not legacy finished"
                 )
-            return replace(latest, state=RunState.AVAILABLE, updated_at=_now())
+            return replace(
+                latest,
+                state=RunState.AVAILABLE,
+                updated_at=_now(),
+                message=None,
+            )
         return self.store.update(record, update)
 
     def mark_checked(self, record):
@@ -1092,12 +1097,30 @@ class PersistentRunner:
     def _sync_completion(self, result):
         previous = self.manager.store.get(self._record.id)
         self._sync_file_retrieval()
-        backend_state = self._runner.state
+        backend_state = RunState(self._runner.state)
         error = self._runner.exception
         state = _completion_state(backend_state, error)
         return_code = getattr(result, "return_code", None)
         if return_code is None:
             return_code = getattr(self._runner, "return_code", None)
+
+        current = self.manager.store.get(self._record.id)
+        if (
+            backend_state
+            in (RunState.FINISHED, RunState.EXECUTION_FAILED, RunState.FAILED)
+            and current.state not in _FINAL_STATES
+            and current.state != RunState.FINALIZING
+        ):
+            self._record = self.manager.transition(
+                current,
+                state=RunState.FINALIZING,
+                reference=self.reference,
+                return_code=return_code,
+                message=None if error is None else str(error),
+            )
+        else:
+            self._record = current
+
         self._record = self.manager.finalize(
             self._record,
             state=state,
