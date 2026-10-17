@@ -13,7 +13,7 @@ import sys
 from pathlib import Path
 from uuid import uuid4
 
-from .base import FailurePhase
+from .base import FailurePhase, RunState
 
 
 _SPEC_ENV = "ASE2SPRKKR_REMOTE_PROCESS_SPEC"
@@ -21,12 +21,14 @@ _START_FD_ENV = "ASE2SPRKKR_REMOTE_PROCESS_START_FD"
 _LAUNCH_FAILURE_RETURN_CODE = 127
 
 
-def _write_outcome(path, return_code, failure_phase=None):
+def _write_outcome(path, state, return_code, failure_phase=None):
+    """Atomically publish one immutable backend terminal outcome."""
     path = Path(path)
     temporary = path.with_name(f".{path.name}.{uuid4().hex}.tmp")
     payload = {
-        "return_code": int(return_code),
-        "failure_phase": None if failure_phase is None else failure_phase.value,
+        "state": RunState(state).value,
+        "return_code": None if return_code is None else int(return_code),
+        "failure_phase": None if failure_phase is None else FailurePhase(failure_phase).value,
     }
     try:
         temporary.write_text(json.dumps(payload, separators=(",", ":")))
@@ -60,6 +62,7 @@ def main():
     opened = []
     stdin = subprocess.DEVNULL
     return_code = _LAUNCH_FAILURE_RETURN_CODE
+    state = RunState.FAILED
     failure_phase = FailurePhase.LAUNCH
     try:
         if spec.get("stdin"):
@@ -85,16 +88,16 @@ def main():
             )
         except OSError:
             return_code = _LAUNCH_FAILURE_RETURN_CODE
+            state = RunState.FAILED
             failure_phase = FailurePhase.LAUNCH
         else:
             return_code = process.wait()
-            failure_phase = (
-                None if return_code == 0 else FailurePhase.EXECUTION
-            )
+            state = RunState.FINISHED if return_code == 0 else RunState.FAILED
+            failure_phase = None if return_code == 0 else FailurePhase.EXECUTION
     finally:
         for file in opened:
             file.close()
-        _write_outcome(spec["outcome_file"], return_code, failure_phase)
+        _write_outcome(spec["outcome_file"], state, return_code, failure_phase)
 
     return return_code
 
