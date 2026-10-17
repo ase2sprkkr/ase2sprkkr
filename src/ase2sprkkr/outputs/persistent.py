@@ -35,7 +35,7 @@ def _task_definition_for_record(record):
 
 
 def _input_parameters_for_record(manager, record, task_definition):
-    result_files = record.result_files
+    result_files = record.files
     input_file = None if result_files is None else result_files.input_file
     if input_file is None or not manager.input_file_is_current(record):
         return None
@@ -73,7 +73,7 @@ def _reader_for_record(manager, record):
     return reader_class(
         parameters,
         None,
-        record.directory,
+        record.execution.directory.local,
         task_name=record.task,
     )
 
@@ -88,7 +88,7 @@ def _result_processor_for_record(manager, record):
             outcome.error_file,
             return_code=(0 if outcome.return_code is None else outcome.return_code),
             input_file=outcome.input_file,
-            directory=record.directory,
+            directory=record.execution.directory.local,
         )
 
     return process_result
@@ -143,7 +143,7 @@ def load_persistent_result(manager, run):
 
     record = manager.retrieve_result_files(record)
     record = manager.check_result_files(record)
-    result_files = record.result_files
+    result_files = record.files
     if result_files is None or result_files.output_file is None:
         raise PersistentResultUnavailableError(
             record, "no persisted output result file"
@@ -181,7 +181,7 @@ def load_persistent_result(manager, run):
         output_file,
         return_code=return_code,
         input_file=input_file,
-        directory=record.directory,
+        directory=record.execution.directory.local,
     )
     result.run_record = record
     return result
