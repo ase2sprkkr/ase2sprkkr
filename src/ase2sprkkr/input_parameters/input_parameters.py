@@ -285,12 +285,14 @@ class InputParameters(ConfigurationFile):
 
     @classmethod
     def from_file(cls, filename, allow_dangerous: bool = False):
-        """Try registered schemas, preferring a task matching ``CONTROL.ADSI``.
+        """Try registered schemas, preferring matching task or schema ADSI.
 
         SPR-KKR schemas intentionally overlap, so a permissive schema can parse
-        an input intended for another task. ``ADSI`` normally identifies the
-        task, but it is user-editable and therefore only disambiguates when it
-        names a registered task and disagrees with the first successful parse.
+        an input intended for another task. ``ADSI`` may identify either a task
+        (for example ``SCF``) or an input schema (for example ``BLOCHSF`` for
+        the shared BSF schema). Because ADSI is user-editable, an unmatched
+        value remains only a weak signal and falls back to the first successful
+        parse after all schemas have been considered.
         """
         last = None
         first_match = None
@@ -306,20 +308,31 @@ class InputParameters(ConfigurationFile):
                 last = e
                 continue
 
+            if first_match is None:
+                first_match = parsed
+
             try:
                 adsi = parsed.CONTROL.ADSI()
             except (AttributeError, KeyError):
-                return parsed
+                continue
             if not isinstance(adsi, str):
+                continue
+
+            normalized_adsi = cls.task_registry.normalize_name(adsi)
+            if (
+                normalized_adsi in cls.task_registry
+                and parsed.task_name == normalized_adsi
+            ):
                 return parsed
 
-            adsi = cls.task_registry.normalize_name(adsi)
-            if adsi not in cls.task_registry:
+            try:
+                schema_adsi = definition["CONTROL"]["ADSI"].default_value
+            except (KeyError, AttributeError):
+                continue
+            if isinstance(schema_adsi, str) and (
+                cls.task_registry.normalize_name(schema_adsi) == normalized_adsi
+            ):
                 return parsed
-            if parsed.task_name == adsi:
-                return parsed
-            if first_match is None:
-                first_match = parsed
 
         if first_match is not None:
             return first_match
