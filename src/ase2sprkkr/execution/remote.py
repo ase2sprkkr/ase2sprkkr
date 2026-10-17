@@ -52,7 +52,7 @@ def _run_sync(coro):
 
 
 class RemoteRunner:
-    """Client-side raw execution identified by an opaque remote reference.
+    """Client-side raw execution identified by an opaque backend ID.
 
     The remote target owns only backend facts. This runner owns staging,
     streaming and the explicit ``DOWNLOADING`` phase in which declared artifacts
@@ -67,7 +67,9 @@ class RemoteRunner:
         *,
         output_listener=None,
         start=False,
-        reference=None,
+        backend_id=None,
+        remote_directory=None,
+        files=None,
         state=RunState.NEW,
         output_targets=None,
         cache_targets=None,
@@ -79,7 +81,9 @@ class RemoteRunner:
         self.spec = spec
         self.callback = callback
         self._state = RunState(state)
-        self._reference = reference
+        self._backend_id = backend_id
+        self._remote_directory = remote_directory
+        self._files = files
         self._output_observers = OutputObservers(output_listener)
         self._lock = Lock()
         self._done = Event()
@@ -105,8 +109,24 @@ class RemoteRunner:
             self.start()
 
     @property
-    def reference(self):
-        return self._reference
+    def backend_id(self):
+        return self._backend_id
+
+    @property
+    def files(self):
+        return self._files
+
+    @property
+    def execution(self):
+        if self._backend_id is None:
+            return None
+        from .endpoint import endpoint_for_executor
+        from .run_model import Execution, WorkingDirectory
+        return Execution(
+            endpoint_for_executor(self.executor.endpoint),
+            WorkingDirectory(os.path.abspath(self.spec.directory), self._remote_directory),
+            backend_id=self._backend_id,
+        )
 
     @property
     def state(self):
@@ -115,7 +135,7 @@ class RemoteRunner:
         # expose FINISHED before artifacts are locally available.
         if self._thread is not None:
             return self._state
-        if self._reference is None or self._state in (
+        if self._backend_id is None or self._state in (
             RunState.NEW,
             RunState.DOWNLOADING,
             RunState.FINISHED,
@@ -125,9 +145,9 @@ class RemoteRunner:
             return self._state
         status = _run_sync(
             self.executor._status(
-                self._reference.directory,
-                self._reference.native_id,
-                self._reference,
+                self._remote_directory,
+                self._backend_id,
+                self._files,
             )
         )
         self._state = RunState(status.get("state", "unknown"))
@@ -574,9 +594,9 @@ class RemoteRunner:
         outputs_committed = False
         try:
             self._follow_process = await self.executor._follow(
-                self._reference.directory,
-                self._reference.native_id,
-                self._reference,
+                self._remote_directory,
+                self._backend_id,
+                self._files,
             )
             stdout_task = asyncio.create_task(
                 self._pump(self._follow_process.stdout, "out")
@@ -589,9 +609,9 @@ class RemoteRunner:
             )
 
             status = await self.executor._status(
-                self._reference.directory,
-                self._reference.native_id,
-                self._reference,
+                self._remote_directory,
+                self._backend_id,
+                self._files,
             )
             backend_state = RunState(status.get("state", "unknown"))
             self._return_code = status.get("return_code")
@@ -700,13 +720,13 @@ class RemoteRunner:
         with self._lock:
             if self._thread is not None:
                 return
-            if self._reference is None:
+            if self._backend_id is None:
                 raise RuntimeError("Run has no backend reference")
             self._thread = Thread(target=self._thread_main, daemon=True)
             self._thread.start()
 
     def start(self):
-        if self._reference is None:
+        if self._backend_id is None:
             return self.submit()
         return self._start_monitor()
 
@@ -736,12 +756,12 @@ class RemoteRunner:
         return await asyncio.to_thread(self.run)
 
     def cancel(self):
-        if self._reference is None:
+        if self._backend_id is None:
             raise RuntimeError("Run has not been submitted")
         status = _run_sync(
             self.executor._cancel(
-                self._reference.directory,
-                self._reference.native_id,
+                self._remote_directory,
+                self._backend_id,
             )
         )
         self._state = RunState(status.get("state", "cancelled"))
