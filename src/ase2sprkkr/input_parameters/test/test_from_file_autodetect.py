@@ -1,163 +1,124 @@
-"""Input parsing selects one full IPD from TASK.TASK, defaulting to SCF."""
+"""Strict TASK-selector input autodetection, with a declarative cached IPD."""
 
 import io
+from pathlib import Path
 
 import pyparsing as pp
 import pytest
 
-from ..input_parameters import InputParameters, _task_selector_definition
+from ..input_parameters import InputParameters
+from ..input_parameters_definitions import (
+    InputParametersDefinition,
+    MAX_INPUT_FILE_SIZE,
+    _read_input_text,
+    _task_preparse_definition,
+    _task_selector_map,
+)
 
 
-class _Definition:
-    def __init__(self, selectors, result):
-        self.selectors = selectors
-        self.name = selectors[0]
-        self.result = result
-        self.calls = 0
-
-    def task_selector_names(self):
-        return self.selectors
-
-    def read_from_file(self, filename, allow_dangerous=False):
-        self.calls += 1
-        if isinstance(self.result, Exception):
-            raise self.result
-        return self.result
+_EXAMPLES = Path(__file__).parent.parent / "examples"
 
 
-def _parameters_with(definitions):
-    class Parameters(InputParameters):
-        pass
-
-    Parameters.definitions = definitions
-    return Parameters
-
-
-def test_minimal_selector_ipd_is_cached_and_contains_only_task_task():
-    a = _task_selector_definition(InputParameters)
-    assert a is _task_selector_definition(InputParameters)
+def test_preparse_ipd_is_cached_and_contains_only_repeated_task():
+    a = _task_preparse_definition()
+    assert a is _task_preparse_definition()
+    assert a.grammar() is a.grammar()
     assert list(a.sections) == ["TASK"]
     assert list(a["TASK"].values) == ["TASK"]
+    assert a["TASK"]["TASK"].is_repeated
+    assert a["TASK"]["TASK"].type.keywords
 
-    parsed = a.read_from_string("TASK ARPES")
-    assert tuple(parsed.TASK.TASK()) == ("ARPES",)
-    assert tuple(a.read_from_string("TASK DMI JXC").TASK.TASK()) == ("DMI", "JXC")
-    assert tuple(a.read_from_string("TASK JXC DMI").TASK.TASK()) == ("JXC", "DMI")
-    assert a.read_from_string("CONTROL ADSI=SCF").TASK.TASK() is None
-
-
-def test_from_file_uses_only_selected_input_definition():
-    expected = object()
-    wrong = _Definition(["DOS"], object())
-    correct = _Definition(["ARPES", "SPLEED"], expected)
-    parameters = _parameters_with({"wrong": wrong, "right": correct})
-    parameters.task_registry = object()
-
-    assert parameters.from_file(io.StringIO("TASK ARPES")) is expected
-    assert wrong.calls == 0
-    assert correct.calls == 1
+    one = a.read_from_string("TASK ARPES")
+    assert list(one.TASK.TASK()) == ["ARPES"]
+    both = a.read_from_string("TASK DMI JXC")
+    assert list(both.TASK.TASK()) == ["DMI", "JXC"]
+    none = a.read_from_string("CONTROL ADSI=unrelated")
+    assert not none.TASK.TASK()
 
 
-def test_from_file_with_preceding_task_flag_selects_jxc():
-    expected = object()
-    jxc = _Definition(["DMI", "JXC"], expected)
-    scf = _Definition(["SCF"], object())
-    parameters = _parameters_with({"scf": scf, "jxc": jxc})
-
-    assert parameters.from_file(io.StringIO("TASK DMI JXC")) is expected
-    assert jxc.calls == 1
-    assert scf.calls == 0
-
-
-def test_from_file_without_task_selects_scf_only():
-    expected = object()
-    scf = _Definition(["SCF"], expected)
-    other = _Definition(["DOS"], object())
-    parameters = _parameters_with({"scf": scf, "other": other})
-
-    assert parameters.from_file(io.StringIO("CONTROL ADSI=DOS")) is expected
-    assert scf.calls == 1
-    assert other.calls == 0
+def test_mapping_is_declarative_and_independent_of_adsi():
+    mapping = _task_selector_map()
+    assert mapping["JXC"] == mapping["DMI"]
+    assert mapping["ARPES"] == mapping["SPLEED"]
+    assert mapping["ARPES"] == mapping["AIPES"]
+    assert mapping["ARPES"] == mapping["BAND"]
+    assert mapping["BSF"] == (InputParameters.definition("BSF"),)
+    for definition in InputParameters.definitions.values():
+        assert definition.accepted_task_selectors()
 
 
-def test_from_file_propagates_selected_parser_error_without_fallback():
-    failure = pp.ParseException("invalid selected schema")
-    chosen = _Definition(["ARPES"], failure)
-    other = _Definition(["DOS"], object())
-    parameters = _parameters_with({"chosen": chosen, "other": other})
+def test_class_vs_instance_from_file():
+    path = _EXAMPLES / "jxc.in"
+    selected = InputParametersDefinition.from_file(path)
+    explicit = InputParameters.definition("JXC").from_file(path)
+    conventional = InputParameters.from_file(path)
+    assert selected.definition_name == "JXC"
+    assert conventional.definition_name == "JXC"
+    assert explicit.definition_name == "JXC"
+    assert selected.TASK.DMI()
 
-    with pytest.raises(pp.ParseException, match="invalid selected schema"):
-        parameters.from_file(io.StringIO("TASK ARPES"))
-    assert chosen.calls == 1
-    assert other.calls == 0
+
+def test_missing_task_selects_scf_and_not_adsi():
+    path = _EXAMPLES / "scf.in"
+    text = path.read_text()
+    assert InputParameters.from_file(io.StringIO(text)).definition_name == "SCF"
 
 
-def test_from_file_unknown_task_never_guesses():
-    candidate = _Definition(["ARPES"], object())
-    parameters = _parameters_with({"candidate": candidate})
-
+def test_explicit_ipd_never_autodetects():
+    path = _EXAMPLES / "jxc.in"
+    scf = InputParameters.definition("SCF")
     with pytest.raises(pp.ParseBaseException):
-        parameters.from_file(io.StringIO("TASK UNKNOWN"))
-    assert candidate.calls == 0
+        scf.from_file(path)
 
 
-def test_from_file_rejects_ambiguous_selector():
-    first = _Definition(["ARPES"], object())
-    second = _Definition(["ARPES"], object())
-    parameters = _parameters_with({"first": first, "second": second})
-
-    with pytest.raises(ValueError, match="multiple input parameter definitions"):
-        parameters.from_file(io.StringIO("TASK ARPES"))
-    assert first.calls == second.calls == 0
-
-
-def test_from_file_ignores_control_adsi():
-    result = object()
-    selected = _Definition(["ARPES"], result)
-    other = _Definition(["DOS"], object())
-    parameters = _parameters_with({"selected": selected, "other": other})
-
-    assert parameters.from_file(io.StringIO(
-        "CONTROL ADSI=DOS\nTASK ARPES"
-    )) is result
-    assert selected.calls == 1
-    assert other.calls == 0
+def test_limit_from_path_and_binary_and_text_stream(tmp_path):
+    data = b"x" * (MAX_INPUT_FILE_SIZE + 1)
+    path = tmp_path / "oversize.inp"
+    path.write_bytes(data)
+    for source in (path, io.BytesIO(data), io.StringIO("x" * (MAX_INPUT_FILE_SIZE + 1))):
+        with pytest.raises(ValueError, match="exceeds"):
+            InputParametersDefinition.from_file(source)
+    assert _read_input_text(io.BytesIO(b"abc")) == "abc"
 
 
-def test_multiple_distinct_schema_candidates_try_only_the_selected_ipds():
-    first = _Definition(["DMI"], pp.ParseException("wrong definition"))
-    result = object()
-    second = _Definition(["JXC"], result)
-    unused = _Definition(["DOS"], object())
-    cls = _parameters_with({"a": first, "b": second, "unused": unused})
-
-    assert cls.from_file(io.StringIO("TASK DMI JXC")) is result
-    assert (first.calls, second.calls, unused.calls) == (1, 1, 0)
+def test_unknown_selector_never_guesses():
+    with pytest.raises(pp.ParseBaseException):
+        InputParametersDefinition.from_file(io.StringIO("TASK UNKNOWN"))
 
 
-def test_multiple_distinct_schema_candidates_reject_ambiguity():
-    first = _Definition(["DMI"], object())
-    second = _Definition(["JXC"], object())
-    cls = _parameters_with({"a": first, "b": second})
-    with pytest.raises(ValueError, match="Ambiguous TASK"):
-        cls.from_file(io.StringIO("TASK DMI JXC"))
-    assert (first.calls, second.calls) == (1, 1)
+def test_selected_parser_failure_never_falls_back():
+    with pytest.raises(pp.ParseBaseException):
+        InputParametersDefinition.from_file(io.StringIO("TASK ARPES INVALID"))
 
 
-def test_multiple_distinct_schema_candidates_do_not_hide_programming_error():
-    first = _Definition(["DMI"], TypeError("programming bug"))
-    second = _Definition(["JXC"], object())
-    cls = _parameters_with({"a": first, "b": second})
-    with pytest.raises(TypeError, match="programming bug"):
-        cls.from_file(io.StringIO("TASK DMI JXC"))
-    assert (first.calls, second.calls) == (1, 0)
+def test_error_policy_with_multiple_candidate_ipds(monkeypatch):
+    from .. import input_parameters_definitions as mod
 
+    class FakeDefinition:
+        def __init__(self, name, outcome):
+            self.name, self.outcome, self.calls = name, outcome, 0
 
-def test_multiple_distinct_schema_candidates_no_other_fallback():
-    first = _Definition(["DMI"], pp.ParseException("one"))
-    second = _Definition(["JXC"], pp.ParseException("two"))
-    unused = _Definition(["DOS"], object())
-    cls = _parameters_with({"a": first, "b": second, "unused": unused})
-    with pytest.raises(ValueError, match="No selected IPD could parse"):
-        cls.from_file(io.StringIO("TASK DMI JXC"))
-    assert (first.calls, second.calls, unused.calls) == (1, 1, 0)
+        def read_from_string(self, text, allow_dangerous=False):
+            self.calls += 1
+            if isinstance(self.outcome, Exception):
+                raise self.outcome
+            return self.outcome
+
+    first = FakeDefinition("FIRST", pp.ParseException("mismatch"))
+    success = object()
+    second = FakeDefinition("SECOND", success)
+    unrelated = FakeDefinition("OTHER", object())
+    monkeypatch.setattr(mod, "_task_selector_map", lambda: {
+        "FIRST": (first,), "SECOND": (second,), "OTHER": (unrelated,),
+    })
+
+    assert mod._read_selected_definitions("content", ("FIRST", "SECOND")) is success
+    assert (first.calls, second.calls, unrelated.calls) == (1, 1, 0)
+
+    first.outcome = object()
+    with pytest.raises(ValueError, match="Ambiguous"):
+        mod._read_selected_definitions("content", ("FIRST", "SECOND"))
+
+    first.outcome = TypeError("programmer error")
+    with pytest.raises(TypeError, match="programmer error"):
+        mod._read_selected_definitions("content", ("FIRST", "SECOND"))

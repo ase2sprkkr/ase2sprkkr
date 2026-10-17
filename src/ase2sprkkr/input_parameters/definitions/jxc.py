@@ -8,7 +8,7 @@ from ...common.grammar_types import flag
 
 
 class JxcInputParametersDefinition(InputParametersDefinition):
-    task_selector_aliases = ("DMI",)
+    task_selectors = ("JXC", "DMI")
 
     def initialize_from_result(self, parameters, result):
         parameters.ENERGY.EMIN.set_default(result.last_iteration.energy.EMIN())

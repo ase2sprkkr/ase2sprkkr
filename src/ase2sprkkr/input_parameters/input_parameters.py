@@ -3,10 +3,6 @@
 from __future__ import annotations
 
 import io
-from functools import cache
-
-import pyparsing as pp
-
 from . import definitions, tasks
 from .task_definition import InputParametersRegistry, TaskRegistry
 from ..sprkkr.configuration import (
@@ -17,58 +13,7 @@ from ..sprkkr.configuration import (
 from ..common.configuration_containers import BaseConfigurationContainer
 from ..common.repeated_configuration_containers import RepeatedConfigurationContainer
 from ..common.decorators import cached_class_property
-from ..common.grammar_types.grammar_type import GrammarType
-from ..common.warnings import DataValidityError
 from ..potentials.potentials import Potential
-
-class _TaskSelectorGrammar(GrammarType):
-    """Sequence of native TASK keywords, not a task identity."""
-
-    def __init__(self, selectors):
-        self.selectors = frozenset(selectors)
-        keywords = pp.MatchFirst([
-            pp.CaselessKeyword(name)
-            for name in sorted(self.selectors, key=len, reverse=True)
-        ]).set_parse_action(lambda tokens: tokens[0].upper())
-        self._grammar = pp.Group(pp.OneOrMore(keywords))
-        super().__init__()
-
-    def convert(self, value):
-        if isinstance(value, str):
-            value = (value,)
-        return tuple(str(item).upper() for item in value)
-
-    def _validate(self, value, why="set"):
-        return all(item in self.selectors for item in value) or "Unknown TASK selector"
-
-
-@cache
-def _task_selector_definition(parameters_class):
-    """Cached minimal IPD: only TASK.TASK, with repeated allowed keywords."""
-    from .input_parameters_definitions import (
-        InputParametersDefinition,
-        InputSectionDefinition,
-        InputValueDefinition,
-    )
-
-    return InputParametersDefinition(
-        "_TASK_SELECTOR",
-        [
-            InputSectionDefinition(
-                "TASK",
-                [
-                    InputValueDefinition(
-                        "TASK",
-                        _TaskSelectorGrammar(parameters_class._task_selector_schemas),
-                        name_in_grammar=False,
-                        is_required=False,
-                    ),
-                ],
-                is_optional=True,
-            ),
-        ],
-    )
-
 
 class InputSection(ConfigurationSection):
     """Input parameters sections have nothing special yet."""
@@ -334,68 +279,14 @@ class InputParameters(ConfigurationFile):
     def default_parameters(cls):
         return cls.create("SCF")
 
-    @cached_class_property
-    def _task_selector_schemas(cls):
-        """Resolve native TASK keywords to input definitions, never to tasks."""
-        schemas = {}
-        for definition in cls.definitions.values():
-            for selector in definition.task_selector_names():
-                name = selector.strip().upper()
-                existing = schemas.get(name)
-                if existing is not None and existing is not definition:
-                    raise ValueError(
-                        f"TASK selector {name!r} selects multiple input definitions"
-                    )
-                schemas[name] = definition
-        return schemas
-
     @classmethod
     def from_file(cls, filename, allow_dangerous: bool = False):
-        """Use the cached TASK preview, trying only its candidate IPDs.
+        """Read with the IPD class-level selector autodetection."""
+        from .input_parameters_definitions import InputParametersDefinition
 
-        Absent TASK selectors mean SCF. ADSI never selects an IPD.
-        """
-        preview = _task_selector_definition(cls).read_from_file(
+        return InputParametersDefinition.from_file(
             filename, allow_dangerous=allow_dangerous
         )
-        selected = preview.TASK.TASK()
-        selectors = ("SCF",) if not selected else tuple(selected)
-        candidates = []
-        for name in selectors:
-            try:
-                definition = cls._task_selector_schemas[name]
-            except KeyError:
-                raise ValueError(f"No input definition for TASK selector {name!r}") from None
-            if not any(definition is candidate for candidate in candidates):
-                candidates.append(definition)
-
-        def parse(definition):
-            if hasattr(filename, "seek"):
-                filename.seek(0)
-            return definition.read_from_file(
-                filename, allow_dangerous=allow_dangerous
-            )
-
-        if len(candidates) == 1:
-            return parse(candidates[0])
-
-        successes = []
-        parse_errors = []
-        for definition in candidates:
-            try:
-                parsed = parse(definition)
-            except (pp.ParseBaseException, DataValidityError) as error:
-                parse_errors.append(error)
-            else:
-                successes.append((definition, parsed))
-        if len(successes) == 1:
-            return successes[0][1]
-        if len(successes) > 1:
-            names = ", ".join(definition.name for definition, _ in successes)
-            raise ValueError(f"Ambiguous TASK selectors: multiple IPDs accepted input: {names}")
-        raise ValueError(
-            f"No selected IPD could parse TASK selectors {selectors!r}"
-        ) from parse_errors[-1]
 
     def __repr__(self):
         task = self.task_definition
