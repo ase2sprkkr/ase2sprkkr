@@ -6,7 +6,7 @@ references.  This module contains only serializable value objects.
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from typing import Optional
 
 from ..common.file_versions import FileState, FileVersion
@@ -51,6 +51,17 @@ class Execution:
             if not identifier:
                 raise ValueError("backend_id cannot be empty")
             object.__setattr__(self, "backend_id", identifier)
+
+
+    def submitted(self, backend_id: str):
+        """Return the execution bound to its immutable backend identity."""
+        backend_id = str(backend_id)
+        if not backend_id:
+            raise ValueError("backend_id cannot be empty")
+        if self.backend_id is not None and self.backend_id != backend_id:
+            raise ValueError("Cannot replace an assigned backend identity")
+        return replace(self, backend_id=backend_id)
+
 
 
 @dataclass(frozen=True)
