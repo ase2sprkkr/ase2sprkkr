@@ -8,7 +8,6 @@ from ase2sprkkr.execution import (
     ExecutorPool,
     FailurePhase,
     PostprocessingRunner,
-    RunReference,
     RunState,
     RunStatus,
     RunStore,
@@ -21,10 +20,10 @@ class _Executor(Executor):
     def __init__(self, status):
         self.status_value = status
 
-    def status(self, *references):
+    def status(self, *runs):
         return tuple(
             RunStatus(
-                reference=reference,
+                backend_id=run.execution.backend_id,
                 state=self.status_value,
                 return_code=0 if self.status_value == RunState.FINISHED else 1,
                 failure_phase=(
@@ -33,7 +32,7 @@ class _Executor(Executor):
                     else None
                 ),
             )
-            for reference in references
+            for run in runs
         )
 
 
@@ -41,7 +40,7 @@ class _RawRunner:
     def __init__(self):
         self.result = ExecutionOutcome(return_code=0)
         self.state = RunState.NEW
-        self.reference = RunReference(executor="raw", native_id="job-1")
+        self.backend_id = "job-1"
         self.exception = None
         self.failure_phase = None
         self._done = Event()
@@ -81,7 +80,7 @@ def _record(tmp_path, executor, state=RunState.RUNNING):
     record = manager.transition(
         record,
         state=state,
-        reference=RunReference(executor=executor.name, native_id="job-1"),
+        execution=record.execution.submitted("job-1"),
     )
     return manager, record
 
