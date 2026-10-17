@@ -51,7 +51,9 @@ def input_parameters():
                 V("FRAMETET", float, is_optional=True, info="Response-frame Euler polar angle in degrees."),
                 V("FRAMEPHI", float, is_optional=True, info="Response-frame Euler azimuth in degrees."),
                 V("FRAMEGAM", float, is_optional=True, info="Response-frame third Euler angle in degrees."),
-            ]), SITES], executable="kkrchi", mpi=False, validators=_validate_optabs,
+            ]), SITES], executable="kkrchi", mpi=False,
+        output_file_templates=("sig_?????_ISPR??_NV.dat", "sig_?????_ISPR??_VC.dat"),
+        validators=_validate_optabs,
         info="Absorptive optical conductivity",
         description="Standard periodic ASA FREL OPTABS. Native task name becomes OPTICS-ABS. "
                     "TASK.NEB controls energy and photon grids; initialization ENERGY bounds are unused by OPT_ABS. "
