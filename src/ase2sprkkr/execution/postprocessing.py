@@ -43,6 +43,14 @@ class PostprocessingRunner:
         return self._runner.backend_id
 
     @property
+    def execution(self):
+        return getattr(self._runner, 'execution', None)
+
+    @property
+    def files(self):
+        return getattr(self._runner, 'files', None)
+
+    @property
     def exception(self):
         return self._exception or self._runner.exception
 
