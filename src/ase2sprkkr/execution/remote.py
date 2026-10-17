@@ -116,14 +116,19 @@ class RemoteRunner:
     def files(self):
         return self._files
 
-    def _set_artifact_availability(self, state, message=None):
-        """Keep transfer outcome independent of the backend execution outcome."""
+    def _set_file_availability(self, local, state, message=None, *, remote=None, kind="output"):
         if self._files is not None:
-            self._files = replace(
-                self._files,
-                availability_state=state,
-                availability_message=message,
+            self._files = self._files.with_file_availability(
+                local, state, message, remote_path=remote, kind=kind,
             )
+
+    def _set_pending_failed(self, message):
+        """Record a transfer-wide failure on still-pending output artifacts."""
+        if self._files is None:
+            return
+        for entry in self._files.artifacts:
+            if entry.availability_state in (None, "pending"):
+                self._set_file_availability(entry.local_path, "failed", message)
 
     @property
     def execution(self):
@@ -403,9 +408,63 @@ class RemoteRunner:
     async def _sync_output_files(self, required):
         policy = self.executor.output_files
         if policy == FileSyncPolicy.NEVER:
+            for entry in (() if self._files is None else self._files.artifacts):
+                if entry.availability_state == "pending":
+                    self._set_file_availability(entry.local_path, "skipped")
             return
 
         for local, remote in self._output_targets.items():
+            try:
+                await self._sync_one_output(local, remote, required)
+            except Exception as exc:
+                self._set_file_availability(local, "failed", str(exc))
+                raise
+            else:
+                self._set_file_availability(local, "available")
+
+        if not self._output_patterns:
+            return
+
+        remote_root = await self.executor._resolved_remote_root()
+        primary = {
+            path
+            for path in (self.result.output_file, self.result.error_file)
+            if path is not None
+        }
+        selected = set()
+        for pattern in self._output_patterns:
+            matches = await self.executor.transport.expand_files(pattern, remote_root)
+            if not matches:
+                if required:
+                    self._set_file_availability(
+                        os.fspath(await self.executor.unmap_path(pattern)), "failed",
+                        f"Declared remote output pattern did not match any files: {pattern}",
+                        remote=pattern,
+                    )
+                    raise FileNotFoundError(
+                        f"Declared remote output pattern did not match any files: {pattern}"
+                    )
+                continue
+            for remote in matches:
+                if remote in selected:
+                    continue
+                selected.add(remote)
+                local = os.fspath(await self.executor.unmap_path(remote))
+                if local in primary:
+                    continue
+                try:
+                    await self._sync_one_output(local, remote, required)
+                except Exception as exc:
+                    self._set_file_availability(
+                        local, "failed", str(exc), remote=remote,
+                    )
+                    raise
+                else:
+                    self._set_file_availability(
+                        local, "available", remote=remote,
+                    )
+
+    async def _sync_one_output(self, local, remote, required):
             remote_digest = await self.executor.transport.file_digest(remote)
             if remote_digest is None:
                 if required:
@@ -423,48 +482,6 @@ class RemoteRunner:
             elif local_digest != remote_digest:
                 await self.executor.transport.get_file(remote, local)
 
-        if not self._output_patterns:
-            return
-
-        remote_root = await self.executor._resolved_remote_root()
-        primary = {
-            path
-            for path in (self.result.output_file, self.result.error_file)
-            if path is not None
-        }
-        downloads = []
-        selected = set()
-        for pattern in self._output_patterns:
-            matches = await self.executor.transport.expand_files(pattern, remote_root)
-            if not matches:
-                if required:
-                    raise FileNotFoundError(
-                        f"Declared remote output pattern did not match any files: {pattern}"
-                    )
-                continue
-            for remote in matches:
-                if remote in selected:
-                    continue
-                local = os.fspath(await self.executor.unmap_path(remote))
-                if local in primary:
-                    selected.add(remote)
-                    continue
-                download = policy == FileSyncPolicy.ALWAYS
-                if not download:
-                    local_digest = local_file_digest(local)
-                    if policy == FileSyncPolicy.MISSING:
-                        download = local_digest is None
-                    else:
-                        remote_digest = await self.executor.transport.file_digest(remote)
-                        download = local_digest != remote_digest
-                if download:
-                    downloads.append(remote)
-                selected.add(remote)
-
-        if downloads:
-            await self.executor.transport.get_files(
-                downloads, remote_root, self.executor.local_root
-            )
 
     async def _sync_cache_files(self):
         policy = self.executor.output_files
@@ -670,7 +687,7 @@ class RemoteRunner:
                 await self._sync_cache_files()
                 self._finish_output_files(commit=True)
             except Exception as exc:
-                self._set_artifact_availability("failed", str(exc))
+                self._set_pending_failed(str(exc))
                 if backend_state == RunState.FINISHED:
                     # A successful calculation with unavailable artifacts is a
                     # failed run, even though its backend return code is zero.
@@ -686,7 +703,10 @@ class RemoteRunner:
                 return self.result
 
             outputs_committed = True
-            self._set_artifact_availability("available")
+            if self._files is not None:
+                for entry in self._files.artifacts:
+                    if entry.availability_state == "pending":
+                        self._set_file_availability(entry.local_path, "available")
             self._state = backend_state
             if self._state == RunState.FAILED and self._failure_phase is None:
                 self._failure_phase = FailurePhase.EXECUTION
