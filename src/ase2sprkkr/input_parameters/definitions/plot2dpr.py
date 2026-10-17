@@ -55,6 +55,21 @@ def input_parameters():
     return InputParameters(
         "plot2dpr", [CONTROL("PLOT2DPR"), TAU, MODE, STRCONST, energy, task, SITES],
         executable="kkrgen", mpi=False, validators=_validate_plot2dpr,
+        output_file_templates=(
+            "PLY-V-ASA-*.ply",
+            "POT-ASA-LINES.ply",
+            "PLY-V-FP-*.ply",
+            "PLY-V-MT-*.ply",
+            "PLY-FP-RWS-*.ply",
+            "PLY-FP-RATM-*.ply",
+            "PLY-V-IS.ply",
+            "PLY-FP-CELL-*.ply",
+            "PLY-FP-RMT.ply",
+            "PLY-FP-CELL-BOUND-V.ply",
+            "PLY-FP-CELL-BOUND-0.ply",
+            "PLY-FP-RATM.ply",
+            "PLY-FP-RWS.ply",
+        ),
         info="2D windows for stored potential/density data (serial).",
         description="Select PLOT2DPOT or PLOT2DRHO through TASK.TASK. The ASA routine writes "
                     "only potential PLY files and ignores the density selection. FULLPOT first calls "

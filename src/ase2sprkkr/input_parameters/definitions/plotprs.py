@@ -28,6 +28,13 @@ def input_parameters():
     return InputParameters(
         "plotprs", [CONTROL("PLOTPRS"), TAU, MODE, STRCONST, energy, TASK("PLOTPRS"), SITES],
         executable="kkrgen", mpi=False, validators=_validate_plotprs,
+        output_file_templates=(
+            "{dataset}_V_*.agr",
+            "{dataset}_VNS_*.agr",
+            "{dataset}_RHO_*.agr",
+            "{dataset}_RNS_*.agr",
+            "{dataset}_SFN_M*.agr",
+        ),
         info="Plot existing radial potentials, densities and full-potential shape functions (serial).",
         description="PLOTPRS enables all three plot groups. ASA writes spherical potentials and "
                     "densities; FULLPOT adds nonspherical components and shape functions per radial mesh. "
