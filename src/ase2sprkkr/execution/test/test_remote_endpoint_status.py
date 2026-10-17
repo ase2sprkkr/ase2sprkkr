@@ -59,6 +59,33 @@ def test_remote_endpoint_status_queries_opaque_handles_individually():
     assert "missing executable" in statuses[1].message
 
 
+def test_direct_remote_status_passes_client_owned_receipt_location():
+    executor = RemoteEndpointExecutor(_Transport(), backend="local")
+    calls = []
+
+    async def request(action, *args, payload=None):
+        calls.append((action, args, payload))
+        return {"state": "finished", "return_code": 0}
+
+    executor._json_request = request
+    reference = RunReference(
+        executor="remote:local",
+        native_id="opaque-process",
+        directory="/work/case",
+        context={"outcome_file": "/work/case/.run.outcome.json"},
+    )
+    (status,) = executor.status(reference)
+
+    assert status.state == RunState.DOWNLOADING
+    assert calls == [
+        (
+            "status",
+            ("opaque-process", "--outcome-file", "/work/case/.run.outcome.json"),
+            None,
+        )
+    ]
+
+
 def test_remote_endpoint_status_rejects_reference_for_other_backend():
     executor = RemoteEndpointExecutor(_Transport(), backend="local")
 

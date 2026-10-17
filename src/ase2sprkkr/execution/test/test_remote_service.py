@@ -52,6 +52,19 @@ def test_remote_id_is_opaque_backend_handle_without_lifecycle_state(tmp_path):
     assert set(decoded) == {"kind", "pid", "start_time"}
 
 
+def test_direct_process_without_client_receipt_never_infers_success(tmp_path, monkeypatch):
+    _, remote_id, outcome = _process_handle(tmp_path)
+    _write_outcome(outcome, RunState.FINISHED, 0)
+    monkeypatch.setattr(remote_service, "_process_running", lambda _handle: False)
+
+    assert remote_service.status_remote(remote_id)["state"] == RunState.UNKNOWN.value
+    assert remote_service.status_remote(remote_id, outcome_file=outcome) == {
+        "state": RunState.FINISHED.value,
+        "return_code": 0,
+        "failure_phase": None,
+    }
+
+
 def test_status_distinguishes_launch_and_execution_failure(tmp_path, monkeypatch):
     _, remote_id, outcome = _process_handle(tmp_path)
     monkeypatch.setattr(remote_service, "_process_running", lambda _handle: False)

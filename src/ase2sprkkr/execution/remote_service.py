@@ -108,7 +108,10 @@ def _local_submit(request):
     Path(error_path).parent.mkdir(parents=True, exist_ok=True)
 
     run_id = str(request.get("id") or uuid4().hex)
-    outcome_file = os.fspath(request.get("outcome_file") or directory / f".{run_id}.outcome.json")
+    outcome_file = _absolute(
+        directory, request.get("outcome_file") or f".{run_id}.outcome.json"
+    )
+    Path(outcome_file).parent.mkdir(parents=True, exist_ok=True)
     try:
         os.unlink(outcome_file)
     except FileNotFoundError:
