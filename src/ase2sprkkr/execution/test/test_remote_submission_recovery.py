@@ -58,10 +58,6 @@ def test_psij_recovery_uses_backend_native_identity(monkeypatch):
         "backend": "slurm",
         "url": None,
         "native_id": "scheduler-42",
-        "directory": "/scratch/case",
-        "input_file": "/scratch/case/run.inp",
-        "output_file": "/scratch/case/run.out",
-        "error_file": "/scratch/case/run.err",
     }
 
 
