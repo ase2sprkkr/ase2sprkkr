@@ -3,12 +3,12 @@
 import numpy as np
 from ...common.grammar_types import real, Keyword, Integer
 from ...common.warnings import DataValidityError
-from ._file_manifests import resolve_file
+from ._file_manifests import TauCacheInputParametersDefinition, resolve_file
 from ._sections import CONTROL, TAU, ENERGY, SITES, TASK, MODE, CPA, STRCONST
-from ..input_parameters_definitions import InputParametersDefinition, InputValueDefinition as V
+from ..input_parameters_definitions import InputValueDefinition as V
 
 
-class GilbertInputParametersDefinition(InputParametersDefinition):
+class GilbertInputParametersDefinition(TauCacheInputParametersDefinition):
     def input_files(self, parameters, directory):
         files = list(super().input_files(parameters, directory))
         if parameters.TASK.SETFLUCT() == "M_T" and parameters.TASK.FLUCTFIL():
@@ -109,6 +109,11 @@ def input_parameters():
             ),
         ],
         executable="kkrchi",
+        output_file_templates=(
+            "{dataset}alfa_x.dat",
+            "{dataset}alfa_T.dat",
+            "{dataset}_alfa_T.agr",
+        ),
         validators=_validate_gilbert,
         description="Standard periodic magnetic FREL Gilbert damping at EF. Native GIL requires KMROT=0. "
                     "RDTAU is set by native INITVAR; compatible initialization TAU data may be required. "
