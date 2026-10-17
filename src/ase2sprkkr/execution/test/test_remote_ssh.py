@@ -70,7 +70,7 @@ def test_remote_executor_over_ssh(docker_execution_image):
         RunStore,
         SshTransport,
     )
-    from ase2sprkkr.outputs.persistent import attach_persistent_run
+    from ase2sprkkr.outputs.persistent import load_persistent_result
     from ase2sprkkr.sprkkr.calculator import SPRKKR
     from ase2sprkkr.sprkkr.profile import SPRKKRProfile
 
@@ -211,20 +211,24 @@ def test_remote_executor_over_ssh(docker_execution_image):
                 check=True,
             )
 
-            # Simulate a client restart. A fresh manager/pool knows only the
-            # persisted run id; it must reconstruct SSH endpoint identity,
-            # task reader and the saved per-run LaunchSpec before replaying the
-            # finished output.
+            # Simulate a client restart after the result has already been checked.
+            # A completed run is loaded, not attached. Remove the captured output
+            # first so the fresh manager must reconstruct the persisted SSH
+            # endpoint and retrieve the exact historical result file on demand.
             run_id = runner.id
             restarted = ExecutionManager(
                 RunStore(tmp / "runs"), executor_pool=ExecutorPool()
             )
-            attached = attach_persistent_run(restarted, run_id)
-            replayed = attached.wait()
+            record = restarted.store.get(run_id)
+            Path(record.result_files.output_file).unlink()
+            replayed = load_persistent_result(restarted, run_id)
+            reconstructed_executor = restarted.executor_for(
+                restarted.store.get(run_id)
+            )
 
-            assert attached.executor is not executor
-            assert attached.executor.transport.host == "tester@127.0.0.1"
-            assert attached.executor.transport.options == options
+            assert reconstructed_executor is not executor
+            assert reconstructed_executor.transport.host == "tester@127.0.0.1"
+            assert reconstructed_executor.transport.options == options
             assert replayed.return_code == 0
             assert len(replayed.iterations) > 0
         finally:
