@@ -48,7 +48,12 @@ _STATE_RANK = {
     RunState.CANCELLED: 6,
 }
 _UNCHANGED = object()
-_NO_ARTIFACTS_FAILURES = {FailurePhase.SUBMISSION, FailurePhase.LAUNCH}
+_NO_ARTIFACTS_FAILURES = {
+    FailurePhase.SUBMISSION,
+    FailurePhase.LAUNCH,
+    FailurePhase.ARTIFACTS,
+    FailurePhase.DOWNLOAD,
+}
 
 
 def _now():
@@ -745,11 +750,12 @@ class ExecutionManager:
     def update(self, record, status: RunStatus):
         phase = _failure_phase(status.failure_phase)
         return_code = status.return_code
-        if status.state == RunState.FAILED and return_code is None:
+        state = RunState.POSTPROCESSING if status.state == RunState.FINISHED else status.state
+        if state == RunState.FAILED and return_code is None:
             return_code = 1
         return self.transition(
             record,
-            state=status.state,
+            state=state,
             reference=status.reference,
             return_code=return_code,
             message=status.message,
@@ -788,7 +794,7 @@ class ExecutionManager:
                     availability_state=ArtifactAvailabilityState.FAILED,
                     availability_message=str(exc),
                 )
-        elif phase == FailurePhase.DOWNLOAD and result_files is not None:
+        elif phase in (FailurePhase.ARTIFACTS, FailurePhase.DOWNLOAD) and result_files is not None:
             result_files = replace(
                 result_files,
                 availability_state=ArtifactAvailabilityState.FAILED,
@@ -1053,10 +1059,7 @@ class PersistentRunner:
         if state == RunState.FAILED and phase is None:
             phase = FailurePhase.EXECUTION
 
-        artifacts_available = (
-            phase not in _NO_ARTIFACTS_FAILURES
-            and phase != FailurePhase.DOWNLOAD
-        )
+        artifacts_available = phase not in _NO_ARTIFACTS_FAILURES
         self._record = self.manager.complete(
             self._record,
             state=state,
