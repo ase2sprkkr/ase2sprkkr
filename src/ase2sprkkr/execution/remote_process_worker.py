@@ -1,8 +1,7 @@
 """Minimal direct-process supervisor used by the stateless remote service.
 
-It owns no ASE2SPRKKR lifecycle state. Its only durable output beyond the
-calculation streams is the immutable process return code, which a bare POSIX
-PID cannot provide after the process has been reaped.
+It owns no ASE2SPRKKR lifecycle state. Its only durable metadata is the backend
+outcome needed after the supervised process has disappeared.
 """
 
 from __future__ import annotations
@@ -14,17 +13,23 @@ import sys
 from pathlib import Path
 from uuid import uuid4
 
+from .base import FailurePhase
+
 
 _SPEC_ENV = "ASE2SPRKKR_REMOTE_PROCESS_SPEC"
 _START_FD_ENV = "ASE2SPRKKR_REMOTE_PROCESS_START_FD"
 _LAUNCH_FAILURE_RETURN_CODE = 127
 
 
-def _write_return_code(path, return_code):
+def _write_outcome(path, return_code, failure_phase=None):
     path = Path(path)
     temporary = path.with_name(f".{path.name}.{uuid4().hex}.tmp")
+    payload = {
+        "return_code": int(return_code),
+        "failure_phase": None if failure_phase is None else failure_phase.value,
+    }
     try:
-        temporary.write_text(str(int(return_code)))
+        temporary.write_text(json.dumps(payload, separators=(",", ":")))
         os.replace(temporary, path)
     finally:
         try:
@@ -55,6 +60,7 @@ def main():
     opened = []
     stdin = subprocess.DEVNULL
     return_code = _LAUNCH_FAILURE_RETURN_CODE
+    failure_phase = FailurePhase.LAUNCH
     try:
         if spec.get("stdin"):
             stdin = open(spec["stdin"], "rb")
@@ -79,12 +85,16 @@ def main():
             )
         except OSError:
             return_code = _LAUNCH_FAILURE_RETURN_CODE
+            failure_phase = FailurePhase.LAUNCH
         else:
             return_code = process.wait()
+            failure_phase = (
+                None if return_code == 0 else FailurePhase.EXECUTION
+            )
     finally:
         for file in opened:
             file.close()
-        _write_return_code(spec["return_code_file"], return_code)
+        _write_outcome(spec["outcome_file"], return_code, failure_phase)
 
     return return_code
 
