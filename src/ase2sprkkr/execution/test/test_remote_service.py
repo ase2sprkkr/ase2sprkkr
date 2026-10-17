@@ -208,3 +208,22 @@ def test_cancel_publishes_durable_cancelled_backend_outcome(
     later = remote_service.status_remote(remote_id, outcome_file=outcome)
     assert later["state"] == RunState.CANCELLED.value
     assert later["failure_phase"] is None
+
+
+def test_cancel_does_not_publish_terminal_fact_while_process_survives_sigkill(
+    tmp_path, monkeypatch
+):
+    _, remote_id, outcome = _process_handle(tmp_path)
+    monkeypatch.setattr(remote_service, "_same_process", lambda _handle: True)
+    monkeypatch.setattr(remote_service, "_process_running", lambda _handle: True)
+    signals = []
+    monkeypatch.setattr(
+        remote_service.os, "killpg",
+        lambda pid, sig: signals.append(sig),
+    )
+
+    status = remote_service.cancel_remote(remote_id, timeout=0)
+
+    assert status["state"] == RunState.RUNNING.value
+    assert signals == [signal.SIGTERM, signal.SIGKILL]
+    assert not outcome.exists()

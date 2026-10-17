@@ -382,6 +382,12 @@ def cancel_remote(remote_id, timeout=1.0, *, outcome_file=None):
                 os.killpg(int(handle["pid"]), signal.SIGKILL)
             except ProcessLookupError:
                 pass
+            # SIGKILL is a request, not proof of process termination.
+            deadline = time.monotonic() + timeout
+            while time.monotonic() < deadline and _process_running(handle):
+                time.sleep(0.05)
+            if _process_running(handle):
+                return status_remote(remote_id)
 
         # A natural completion racing with cancellation wins. Otherwise publish
         # cancellation as the durable backend outcome so future status queries
