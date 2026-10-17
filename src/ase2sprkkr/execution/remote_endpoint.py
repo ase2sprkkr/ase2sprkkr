@@ -68,6 +68,7 @@ class _RemoteRun(RemoteRunner):
     def __init__(self, *args, run_id=None, **kwargs):
         super().__init__(*args, **kwargs)
         self._run_id = run_id
+        self._prepared = None
 
     async def _monitor(self):
         local_output = self.result.output_file
@@ -131,19 +132,41 @@ class _RemoteRun(RemoteRunner):
             availability_state="pending",
         )
 
-    async def _submit_async(self):
+    async def _prepare_async(self):
         run_id = self._run_id or uuid4().hex
-        try:
-            remote_directory = await self.executor.map_directory(self.spec.directory)
-            await self.executor.transport.run(("mkdir", "-p", "--", remote_directory))
-            request = await self._prepare_request(run_id, remote_directory)
-            # All manifest computation must finish before starting the backend.
-            # Failure after submit could otherwise lose its durable identity.
-            manifest = await self._submitted_manifest(request)
-        except Exception as exc:
-            self._failure_phase = FailurePhase.SUBMISSION
-            self._failure_message = str(exc)
-            raise SubmissionNotStarted(str(exc)) from exc
+        remote_directory = await self.executor.map_directory(self.spec.directory)
+        await self.executor.transport.run(("mkdir", "-p", "--", remote_directory))
+        request = await self._prepare_request(run_id, remote_directory)
+        manifest = await self._submitted_manifest(request)
+        return request, manifest
+
+    def prepare_submission(self):
+        """Complete all staging before the client commits SUBMITTING metadata."""
+        with self._lock:
+            if self._state != RunState.NEW:
+                raise RuntimeError(f"Run is already {self._state.value}")
+            if self._prepared is not None:
+                return
+            try:
+                request, manifest = _run_sync(self._prepare_async())
+            except Exception as exc:
+                self._failure_phase = FailurePhase.SUBMISSION
+                self._failure_message = str(exc)
+                raise SubmissionNotStarted(str(exc)) from exc
+            self._prepared = (request, manifest)
+            self._remote_directory = request["directory"]
+            self._files = manifest
+
+    async def _submit_async(self):
+        if self._prepared is None:
+            try:
+                request, manifest = await self._prepare_async()
+            except Exception as exc:
+                self._failure_phase = FailurePhase.SUBMISSION
+                self._failure_message = str(exc)
+                raise SubmissionNotStarted(str(exc)) from exc
+        else:
+            request, manifest = self._prepared
 
         status = await self.executor._submit(request)
         remote_id = status.get("remote_id")
