@@ -170,7 +170,7 @@ class AsyncioFileReader:
 async def readline(stdout):
     line = await stdout.readline()
     if not line:
-        raise EOFError()
+        raise OutputParseError("The output ends unexpectedly")
     return line.decode("utf8")
 
 
@@ -180,7 +180,7 @@ async def readline_until(stdout, cond, can_end=True):
         if not line:
             if can_end:
                 return None
-            raise EOFError()
+            raise OutputParseError("The output ends unexpectedly")
         if cond(line):
             return line.decode("utf8")
 
