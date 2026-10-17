@@ -40,6 +40,13 @@ def input_parameters():
             ]), SITES],
         executable="kkrchi", mpi=False,
         cache_file_templates=("{dataset}.tau", "TKTK_tables"),
+        output_file_templates=(
+            "{dataset}*_dens.agr",
+            "{dataset}*_chifmag.agr",
+            "{dataset}_*_GAMMA-OP.dat",
+            "{dataset}_*_CHI-r.dat",
+            "{dataset}_*_*_I-spin.dat",
+        ),
         validators=_validate_chi,
         info="Magnetic susceptibility in the serial ASA workflow",
         description="Periodic ASA FREL CHI, one pass only. Native MPI terminates as under construction; "
