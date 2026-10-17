@@ -20,6 +20,7 @@ from platformdirs import user_state_dir
 
 from ..common.file_locks import FileLock
 from ..common.file_versions import FileState, FileVersion
+from ._durability import durable_mkdir, durable_write_json, sync_file
 from .base import (
     Executor,
     FailurePhase,
@@ -394,30 +395,22 @@ class RunStore:
         raise TypeError(f"Object of type {type(value).__name__} is not JSON serializable")
 
     def _write_unlocked(self, record):
-        self.directory.mkdir(parents=True, exist_ok=True, mode=0o700)
+        durable_mkdir(self.directory, parents=True, exist_ok=True, mode=0o700)
         path = self._path(record)
-        path.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
-        temporary = path.with_name(f".{path.name}.{uuid4().hex}.tmp")
-        try:
-            temporary.write_text(
-                json.dumps(asdict(record), sort_keys=True, default=self._json_default)
-            )
-            try:
-                os.chmod(temporary, 0o600)
-            except OSError:
-                pass
-            os.replace(temporary, path)
-        finally:
-            try:
-                temporary.unlink()
-            except FileNotFoundError:
-                pass
+        durable_mkdir(path.parent, parents=True, exist_ok=True, mode=0o700)
+        durable_write_json(
+            path,
+            asdict(record),
+            mode=0o600,
+            sort_keys=True,
+            default=self._json_default,
+        )
         return record
 
     @contextmanager
     def submission_lock(self):
         """Serialize duplicate checking and the SUBMITTING record creation."""
-        self.directory.mkdir(parents=True, exist_ok=True, mode=0o700)
+        durable_mkdir(self.directory, parents=True, exist_ok=True, mode=0o700)
         with self._lock, FileLock(self.directory / ".submit.lock"):
             yield
 
@@ -557,8 +550,8 @@ class ExecutionManager:
         )
 
     @staticmethod
-    def _result_files_snapshot(manifests):
-        versions = []
+    def _concrete_result_files(manifests):
+        paths = []
         seen = set()
         for manifest in manifests:
             matches = (
@@ -571,8 +564,22 @@ class ExecutionManager:
                 if path in seen or not os.path.isfile(path):
                     continue
                 seen.add(path)
-                versions.append(FileVersion.capture(path, require_digest=True))
+                paths.append(path)
+        return tuple(paths)
+
+    @classmethod
+    def _result_files_snapshot(cls, manifests, *, sync=False):
+        versions = []
+        for path in cls._concrete_result_files(manifests):
+            if sync:
+                sync_file(path)
+            versions.append(FileVersion.capture(path, require_digest=True))
         return tuple(sorted(versions, key=lambda value: os.fspath(value.path)))
+
+    @classmethod
+    def _sync_result_files(cls, manifests):
+        for path in cls._concrete_result_files(manifests):
+            sync_file(path)
 
     @classmethod
     def _file_is_current(cls, result_files, path, versions):
@@ -618,7 +625,10 @@ class ExecutionManager:
         return replace(
             result_files,
             input_versions=self._result_files_snapshot(result_files.input_files),
-            output_versions=self._result_files_snapshot(result_files.output_files),
+            output_versions=self._result_files_snapshot(
+                result_files.output_files,
+                sync=True,
+            ),
             captured_at=_now(),
         )
 
@@ -830,6 +840,8 @@ class ExecutionManager:
                     and record.submission.conflicts_with(active.submission)
                 )
                 if not conflicts:
+                    if record.result_files is not None:
+                        self._sync_result_files(record.result_files.input_files)
                     return self.transition(
                         record,
                         state=RunState.SUBMITTING,
