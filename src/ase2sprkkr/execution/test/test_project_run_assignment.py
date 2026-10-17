@@ -6,7 +6,6 @@ from ase2sprkkr.execution import (
     ExecutionManager,
     Executor,
     ProjectRepository,
-    RunReference,
     RunState,
     RunStore,
 )
@@ -16,7 +15,7 @@ class _Runner:
     def __init__(self, callback=None):
         self.callback = callback
         self.state = RunState.NEW
-        self.reference = None
+        self.backend_id = None
         self.result = SimpleNamespace(return_code=None)
         self.exception = None
         self.on_submit = None
@@ -26,7 +25,7 @@ class _Runner:
         self.submit_calls += 1
         if self.on_submit is not None:
             self.on_submit()
-        self.reference = RunReference(executor="project-test", native_id="native-1")
+        self.backend_id = "native-1"
         self.state = RunState.QUEUED
 
     def wait(self):
@@ -48,7 +47,7 @@ class _Executor(Executor):
     def __init__(self):
         self.runners = []
 
-    def create_run(self, reader, spec, callback=None):
+    def create_run(self, spec, callback=None):
         runner = _Runner(callback=callback)
         self.runners.append(runner)
         return runner
