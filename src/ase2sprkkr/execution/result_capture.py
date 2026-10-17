@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import asyncio
 from dataclasses import dataclass
+from typing import Optional
 
 
 @dataclass
@@ -12,7 +13,7 @@ class CapturedResult:
 
     output_file: object = None
     input_file: object = None
-    return_code: int | None = None
+    return_code: Optional[int] = None
 
     def complete(self, _potential, return_code):
         self.return_code = return_code
