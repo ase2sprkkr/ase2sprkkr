@@ -1,4 +1,4 @@
-"""Rehydrate SPR-KKR results from persistent execution records."""
+"""Rehydrate and check SPR-KKR results from persistent execution records."""
 
 from __future__ import annotations
 
@@ -13,7 +13,7 @@ from .reader_registry import reader_registry
 
 
 class PersistentResultUnavailableError(RuntimeError):
-    """A stored run cannot be reconstructed as its historical TaskResult."""
+    """A stored run cannot currently be reconstructed as its historical TaskResult."""
 
     def __init__(self, record, message):
         self.record = record
@@ -25,7 +25,7 @@ class PersistentResultMismatchError(PersistentResultUnavailableError):
 
 
 class UnrecoverablePersistentResultError(PersistentResultMismatchError):
-    """Retrying reconstruction with unchanged persisted data cannot succeed."""
+    """Persisted metadata cannot be reconstructed by the current code version."""
 
 
 def _record(manager, run):
@@ -102,21 +102,23 @@ def attach_persistent_run(
     callback=None,
     output_listener=None,
 ):
-    """Attach to or explicitly retry result processing of one stored run."""
+    """Attach to one active stored run.
+
+    Result reconstruction is deliberately not part of attach. A backend terminal
+    state first completes execution finalization and only then becomes AVAILABLE;
+    result checking happens in a separate phase.
+    """
     record = _record(manager, run)
-    if record.state in (RunState.FINALIZATION_FAILED, RunState.RESULT_MISMATCH):
+    if record.state == RunState.FINALIZATION_FAILED:
         record = manager.retry_finalization(record)
+    if record.state in (RunState.AVAILABLE, RunState.CHECKED, RunState.FAILED):
+        raise RuntimeError(
+            f"Run {record.id} is {record.state.value}; use result loading/checking, not attach"
+        )
 
     if reader is None:
-        try:
-            reader = _reader_for_record(manager, record)
-        except PersistentResultMismatchError as exc:
-            if record.state == RunState.FINALIZING:
-                manager.mark_result_mismatch(record, exc)
-            raise
+        reader = _reader_for_record(manager, record)
 
-    # Attach/transport failures are deliberately not classified as result
-    # mismatches. They may be transient and leave FINALIZING retryable.
     return manager.attach(
         record,
         reader=reader,
@@ -126,23 +128,8 @@ def attach_persistent_run(
     )
 
 
-def load_persistent_result(manager, run, *, reader=None):
-    """Reconstruct the historical TaskResult of one terminal persistent run.
-
-    Reader selection is determined by the persisted task. When the historical
-    input file is still current and its exact input definition was persisted,
-    parameters are reconstructed from that definition.
-    """
-    record = _record(manager, run)
-    if record.state == RunState.FINALIZATION_FAILED:
-        raise PersistentResultUnavailableError(
-            record, "result finalization failed; retry result processing first"
-        )
-    if record.state == RunState.RESULT_MISMATCH:
-        raise PersistentResultUnavailableError(
-            record, "persisted result mismatch; retry result processing first"
-        )
-
+def _load_result(manager, record, reader=None):
+    """Parse one locally available persistent result without changing run state."""
     record = manager.retrieve_result_files(record)
     record = manager.check_result_files(record)
     result_files = record.result_files
@@ -162,8 +149,7 @@ def load_persistent_result(manager, run, *, reader=None):
         raise PersistentResultUnavailableError(record, message)
 
     output_file = result_files.output_file
-    output_available = manager.output_file_is_current(record)
-    if not output_available and record.state == RunState.FINISHED:
+    if not manager.output_file_is_current(record):
         raise PersistentResultUnavailableError(
             record, "output result file is unavailable"
         )
@@ -174,11 +160,7 @@ def load_persistent_result(manager, run, *, reader=None):
 
     return_code = record.return_code
     if return_code is None:
-        return_code = (
-            0
-            if record.state in (RunState.FINALIZING, RunState.FINISHED)
-            else 1
-        )
+        return_code = 0
 
     input_file = None
     if manager.input_file_is_current(record) and (
@@ -186,16 +168,67 @@ def load_persistent_result(manager, run, *, reader=None):
     ):
         input_file = result_files.input_file
 
-    if output_available:
-        result = reader.read_from_file(
-            output_file,
-            return_code=return_code,
-            input_file=input_file,
-            directory=record.directory,
-        )
-    else:
-        result = reader.create_result(output_file, input_file)
-        result.complete(None, return_code)
+    result = reader.read_from_file(
+        output_file,
+        return_code=return_code,
+        input_file=input_file,
+        directory=record.directory,
+    )
+    return record, result
 
-    result.run_record = record
+
+def check_persistent_result(manager, run, *, reader=None):
+    """Check/parse an AVAILABLE result and persist the outcome.
+
+    Known reconstruction and availability failures are retryable: the run stays
+    AVAILABLE and ``failure_reason`` records the last failed check. Unexpected
+    exceptions make the run FAILED. A successful check advances it to CHECKED
+    and clears the previous failure reason.
+    """
+    record = _record(manager, run)
+    if record.state == RunState.FINISHED:
+        # Compatibility with records written before AVAILABLE/CHECKED existed.
+        record = manager.mark_available(record)
+    if record.state not in (RunState.AVAILABLE, RunState.CHECKED):
+        raise PersistentResultUnavailableError(
+            record, f"result cannot be checked while run is {record.state.value}"
+        )
+
+    try:
+        loaded_record, result = _load_result(manager, record, reader=reader)
+    except PersistentResultUnavailableError as exc:
+        manager.record_result_check_failure(record, exc, retryable=True)
+        raise
+    except Exception as exc:
+        manager.record_result_check_failure(record, exc, retryable=False)
+        raise
+
+    checked = manager.mark_checked(loaded_record)
+    result.run_record = checked
     return result
+
+
+def load_persistent_result(manager, run, *, reader=None):
+    """Load a persistent TaskResult, checking it on demand when necessary.
+
+    The first successful result retrieval is checked automatically by the live
+    persistent runner. Calling this function is an explicit/on-demand check and
+    therefore also retries an AVAILABLE result whose previous check failed.
+    """
+    record = _record(manager, run)
+    if record.state == RunState.FINALIZATION_FAILED:
+        raise PersistentResultUnavailableError(
+            record, "result finalization failed; retry finalization first"
+        )
+    if record.state in (RunState.EXECUTION_FAILED, RunState.CANCELLED):
+        raise PersistentResultUnavailableError(
+            record, f"run ended as {record.state.value}; result checking is disabled"
+        )
+    if record.state == RunState.FAILED:
+        raise PersistentResultUnavailableError(
+            record,
+            "result processing failed permanently"
+            + (f": {record.failure_reason}" if record.failure_reason else ""),
+        )
+
+    return check_persistent_result(manager, record, reader=reader)
