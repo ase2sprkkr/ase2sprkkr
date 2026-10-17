@@ -590,61 +590,47 @@ class RemoteEndpointExecutor(Executor):
             spec, callback=callback, run_id=run_id
         )
 
-    async def _fetch_result_files(self, reference, files):
-        self._validate_reference(reference)
-        context_data = _reference_context(reference)
-        launch = LaunchSpec(**(context_data.get("launch") or {}))
-        context = self._context(self, launch)
+    async def _fetch_result_files(self, run, files):
+        self._validate_run(run)
+        context = self._context(self, self._launch_from_manifest(run.files))
         remote_root = await context._resolved_remote_root()
-
         for value in files:
             local = os.path.abspath(os.fspath(value))
-            remote = await context.map_path(local)
+            entry = next(
+                (item for item in (
+                    *run.files.inputs,
+                    *run.files.outputs,
+                    *(cache.file for cache in run.files.caches),
+                    run.files.stdout,
+                    run.files.stderr,
+                ) if item is not None and item.local_path == local),
+                None,
+            )
+            remote = entry.remote_path if entry is not None else None
+            if remote is None:
+                remote = await context.map_path(local)
             if glob.has_magic(local):
-                for matched_remote in await self.transport.expand_files(
-                    remote, remote_root
-                ):
-                    matched_local = await context.unmap_path(matched_remote)
-                    if not matched_local.is_file():
-                        await self.transport.get_file(matched_remote, matched_local)
+                for matched in await self.transport.expand_files(remote, remote_root):
+                    destination = await context.unmap_path(matched)
+                    if not destination.is_file():
+                        await self.transport.get_file(matched, destination)
                 continue
             if os.path.isfile(local):
                 continue
             if await self.transport.file_signature(remote) is not None:
                 await self.transport.get_file(remote, local)
 
-    def fetch_result_files(self, reference, files):
-        return _run_sync(self._fetch_result_files(reference, files))
+    def fetch_result_files(self, run, files):
+        return _run_sync(self._fetch_result_files(run, files))
 
-    async def _attach(
-        self,
-        reference,
-        callback=None,
-        output_listener=None,
-        start=True,
-    ):
-        self._validate_reference(reference)
-        context_data = _reference_context(reference)
-        launch = LaunchSpec(**(context_data.get("launch") or {}))
+    async def _attach(self, run, callback=None, output_listener=None, start=True):
+        self._validate_run(run)
+        launch = self._launch_from_manifest(run.files)
         return await self._context(self, launch).attach(
-            reference,
-            callback=callback,
-            output_listener=output_listener,
-            start=start,
+            run, callback=callback, output_listener=output_listener, start=start,
         )
 
-    def attach(
-        self,
-        reference: RunReference,
-        callback=None,
-        output_listener=None,
-        start=True,
-    ):
-        return _run_sync(
-            self._attach(
-                reference,
-                callback=callback,
-                output_listener=output_listener,
-                start=start,
-            )
-        )
+    def attach(self, run, callback=None, output_listener=None, start=True):
+        return _run_sync(self._attach(
+            run, callback=callback, output_listener=output_listener, start=start,
+        ))
