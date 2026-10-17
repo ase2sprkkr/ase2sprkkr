@@ -5,7 +5,8 @@ from ase2sprkkr.execution import (
     ArtifactAvailabilityState,
     ExecutionManager,
     FailurePhase,
-    ResultFilesRecord,
+    FileManifest,
+    FileEntry,
     RunState,
     RunStore,
 )
@@ -43,6 +44,6 @@ def test_result_snapshot_sync_failure_is_artifact_failure(tmp_path, monkeypatch)
     assert failed.failure_phase == FailurePhase.ARTIFACTS
     assert failed.return_code == 0
     assert failed.finished_at is not None
-    assert failed.result_files.captured_at is None
-    assert failed.result_files.availability_state == ArtifactAvailabilityState.FAILED
+    assert failed.files.captured_at is None
+    assert failed.files.availability_state == ArtifactAvailabilityState.FAILED
     assert "cannot synchronize result snapshot" in failed.message
