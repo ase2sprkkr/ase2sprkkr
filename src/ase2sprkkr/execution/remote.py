@@ -465,23 +465,23 @@ class RemoteRunner:
                     )
 
     async def _sync_one_output(self, local, remote, required):
-            remote_digest = await self.executor.transport.file_digest(remote)
-            if remote_digest is None:
-                if required:
-                    raise FileNotFoundError(
-                        f"Declared remote output file was not created: {remote}"
-                    )
-                continue
-            if policy == FileSyncPolicy.ALWAYS:
+        policy = self.executor.output_files
+        remote_digest = await self.executor.transport.file_digest(remote)
+        if remote_digest is None:
+            if required:
+                raise FileNotFoundError(
+                    f"Declared remote output file was not created: {remote}"
+                )
+            return
+        if policy == FileSyncPolicy.ALWAYS:
+            await self.executor.transport.get_file(remote, local)
+            return
+        local_digest = local_file_digest(local)
+        if policy == FileSyncPolicy.MISSING:
+            if local_digest is None:
                 await self.executor.transport.get_file(remote, local)
-                continue
-            local_digest = local_file_digest(local)
-            if policy == FileSyncPolicy.MISSING:
-                if local_digest is None:
-                    await self.executor.transport.get_file(remote, local)
-            elif local_digest != remote_digest:
-                await self.executor.transport.get_file(remote, local)
-
+        elif local_digest != remote_digest:
+            await self.executor.transport.get_file(remote, local)
 
     async def _sync_cache_files(self):
         policy = self.executor.output_files
