@@ -5,6 +5,7 @@ from __future__ import annotations
 from ..common.module_registry import RegistryEntryNotFound
 from ..execution import FileState, RunState
 from ..input_parameters.input_parameters import InputParameters
+from ..input_parameters.task_definition import TaskMismatchError
 from .reader_registry import reader_registry
 
 
@@ -34,7 +35,7 @@ def _task_definition_for_record(record):
         ) from None
 
 
-def _input_parameters_for_record(manager, record):
+def _input_parameters_for_record(manager, record, task_definition):
     """Reconstruct parameters from the exact persisted input schema."""
     result_files = record.result_files
     input_file = None if result_files is None else result_files.input_file
@@ -43,33 +44,33 @@ def _input_parameters_for_record(manager, record):
     if record.input_definition is None:
         return None
 
+    input_registry = InputParameters.input_parameters_registry
     try:
-        definition = InputParameters.input_parameters_registry[record.input_definition]
+        definition = input_registry[record.input_definition]
     except RegistryEntryNotFound:
         raise UnrecoverablePersistentResultError(
             record,
             f"unknown persisted input definition {record.input_definition!r}",
         ) from None
 
-    parameters = definition.read_from_file(
-        input_file,
-        requested_task_name=record.task,
-    )
-    task_definition = parameters.task_definition
-    if task_definition is None or task_definition.name != record.task:
-        actual = None if task_definition is None else task_definition.name
+    try:
+        return input_registry.read_for_task(
+            task_definition,
+            input_file,
+            input_definition=definition,
+        )
+    except TaskMismatchError as exc:
         raise UnrecoverablePersistentResultError(
             record,
             "persisted task does not match historical input "
-            f"({record.task!r} != {actual!r})",
-        )
-    return parameters
+            f"({record.task!r} != {exc.task_name!r})",
+        ) from exc
 
 
 def _reader_for_record(manager, record):
     """Create the reader declared by the persisted task."""
     task_definition = _task_definition_for_record(record)
-    parameters = _input_parameters_for_record(manager, record)
+    parameters = _input_parameters_for_record(manager, record, task_definition)
     reader_class = reader_registry.class_for_task(task_definition)
 
     return reader_class(

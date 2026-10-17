@@ -177,6 +177,18 @@ class TaskDefinition:
         )
 
 
+class TaskMismatchError(ValueError):
+    """Parsed input values represent a different task than expected."""
+
+    def __init__(self, expected_task_name, task_name):
+        self.expected_task_name = expected_task_name
+        self.task_name = task_name
+        super().__init__(
+            f"Input file read for task {expected_task_name!r} represents "
+            f"task {task_name!r}"
+        )
+
+
 class InputParametersRegistry(ModuleRegistry):
     """Registry and factory service for input-parameter schemas and values."""
 
@@ -254,17 +266,51 @@ class InputParametersRegistry(ModuleRegistry):
             outputfile=outputfile,
         )
 
-    def read_for_task(self, task, file, *, allow_dangerous=False):
-        """Read parameters and require the parsed values to represent *task*."""
-        out = self.create_for_task(task, inputfile=file)
-        out.read_from_file(file, allow_dangerous=allow_dangerous)
+    def read_for_task(
+        self,
+        task,
+        file,
+        *,
+        input_definition=None,
+        allow_dangerous=False,
+    ):
+        """Read input with an exact schema and require it to represent *task*.
 
-        parsed_task_name = out.task_name
-        if parsed_task_name != task.name:
-            raise ValueError(
-                f"Input file read for task {task.name!r} represents "
-                f"task {parsed_task_name!r}"
+        ``input_definition`` is primarily for historical reconstruction: when
+        omitted, the task's current declared schema is used. Passing a schema
+        name or definition selects that exact schema. An explicit definition
+        object may intentionally be unregistered, which supports experimental
+        or custom parsers while retaining the task-identity check.
+
+        The expected task is deliberately *not* supplied as parsing context.
+        Shared-schema defaults must therefore identify the file independently
+        of what the caller expected. ``requested_task_name`` is provenance and
+        is attached only after the parsed identity has been verified.
+        """
+        from .input_parameters_definitions import InputParametersDefinition
+
+        if input_definition is None:
+            definition = self.definition_for_task(task)
+        elif isinstance(input_definition, str):
+            definition = self[input_definition]
+        elif isinstance(input_definition, InputParametersDefinition):
+            definition = input_definition
+        else:
+            raise TypeError(
+                "input_definition must be an InputParametersDefinition, string, or None"
             )
+
+        out = definition.read_from_file(
+            file,
+            allow_dangerous=allow_dangerous,
+            inputfile=file,
+        )
+
+        task_name = out.task_name
+        if task_name != task.name:
+            raise TaskMismatchError(task.name, task_name)
+
+        out._requested_task_name = task.name
         return out
 
     def create_from_result(self, task, result):
@@ -297,15 +343,15 @@ class InputParametersRegistry(ModuleRegistry):
 class TaskRegistry:
     """Authoritative namespace and resolver for SPR-KKR task identities.
 
-    Task declarations intentionally have two sources.  A schema with exactly
+    Task declarations intentionally have two sources. A schema with exactly
     one canonical task may co-locate its :class:`TaskDefinition` on the
     ``InputParametersDefinition`` as ``_task_definition``; this keeps the
-    common one-schema/one-task case simple and declarative.  Tasks sharing one
+    common one-schema/one-task case simple and declarative. Tasks sharing one
     input schema are declared separately in the extra task package and refer
     to that schema by name.
 
     The registry owns the task namespace and resolution rules, not necessarily
-    the physical location of each declaration.  Consumers should resolve task
+    the physical location of each declaration. Consumers should resolve task
     identities through this registry rather than reading ``_task_definition``
     directly.
     """
@@ -388,11 +434,6 @@ class TaskRegistry:
         return tuple(self[name] for name in self.names())
 
     def task_for_parameters(self, parameters):
-        """Resolve the task identity represented by concrete parameter values."""
-        definition = parameters._definition
-        if definition._task_definition is not None:
-            return definition._task_definition
-        name = definition.task_definition_name(parameters)
-        if name is None:
-            return None
-        return self[name]
+        """Resolve the task represented by concrete parameter values."""
+        name = parameters.task_name
+        return None if name is None else self[name]
