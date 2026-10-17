@@ -2,7 +2,7 @@ from types import SimpleNamespace
 
 import pytest
 
-import ase2sprkkr.outputs.persistent as persistent_output
+from ase2sprkkr.common.process_output_reader import OutputParseError
 from ase2sprkkr.execution import (
     ExecutionManager,
     Executor,
@@ -15,12 +15,38 @@ from ase2sprkkr.outputs.persistent import (
     PersistentResultMismatchError,
     PersistentResultUnavailableError,
     UnrecoverablePersistentResultError,
-    attach_persistent_run,
+    check_persistent_result,
     load_persistent_result,
 )
 
 
-class _FinalizationRunner:
+class _ResultReader:
+    print_output = False
+
+    def __init__(self, store=None, *, errors=()):
+        self.store = store
+        self.run_id = None
+        self.errors = list(errors)
+        self.calls = 0
+
+    def create_result(self, output_file, input_file=None):
+        return SimpleNamespace(
+            output_file=output_file,
+            input_file=input_file,
+            return_code=None,
+            complete=lambda *_args: None,
+        )
+
+    def read_from_file(self, filename, **_kwargs):
+        self.calls += 1
+        if self.store is not None and self.run_id is not None:
+            assert self.store.get(self.run_id).state == RunState.AVAILABLE
+        if self.errors:
+            raise self.errors.pop(0)
+        return SimpleNamespace(filename=filename, run_record=None)
+
+
+class _LifecycleRunner:
     def __init__(self, callback):
         self.callback = callback
         self.state = RunState.NEW
@@ -36,10 +62,10 @@ class _FinalizationRunner:
         self.reference = RunReference(executor="test", native_id="job-1")
         self.state = RunState.QUEUED
 
-    def fail_after_backend_completion(self, *, backend_state=RunState.FINISHED):
-        self.state = backend_state
-        self.result.return_code = 0 if backend_state == RunState.FINISHED else 1
-        self._exception = ValueError("result parsing failed")
+    def complete(self, state=RunState.FINISHED, *, error=None):
+        self.state = state
+        self.result.return_code = 0 if state == RunState.FINISHED else 1
+        self._exception = error
         self.callback(self.result)
 
     def wait(self):
@@ -53,154 +79,172 @@ class _FinalizationRunner:
     def add_output_listener(self, callback):
         pass
 
+    def add_output_error_listener(self, callback):
+        pass
 
-class _FinalizationExecutor(Executor):
+
+class _LifecycleExecutor(Executor):
     name = "test"
 
     def create_run(self, reader, spec, callback=None):
-        self.runner = _FinalizationRunner(callback)
+        self.capture_reader = reader
+        self.runner = _LifecycleRunner(callback)
         return self.runner
 
 
-def _run(tmp_path):
+def _live_run(tmp_path, reader):
+    output = tmp_path / "run.out"
+    output.write_text("captured output")
     store = RunStore(tmp_path / "runs")
     manager = ExecutionManager(store)
-    executor = _FinalizationExecutor()
+    executor = _LifecycleExecutor()
     run = manager.create_run(
         executor,
-        reader=object(),
-        spec=SimpleNamespace(directory=str(tmp_path)),
+        reader=reader,
+        spec=SimpleNamespace(
+            directory=str(tmp_path),
+            input_file=None,
+            output_file=str(output),
+            input_files=(),
+            output_files=(),
+        ),
         task="DOS",
     )
+    reader.store = store
+    reader.run_id = run.id
     run.submit()
     return store, manager, executor, run
 
 
-def test_post_backend_failure_is_finalization_failure(tmp_path):
-    store, _manager, executor, run = _run(tmp_path)
-
-    executor.runner.fail_after_backend_completion()
-
-    record = store.get(run.id)
-    assert record.state == RunState.FINALIZATION_FAILED
-    assert record.message == "result parsing failed"
-    assert record.finished_at is not None
-    assert record.result_files.captured_at is None
-    assert not hasattr(record, "backend_state")
-
-
-def test_parser_failure_after_failed_execution_is_still_finalization_failure(tmp_path):
-    store, _manager, executor, run = _run(tmp_path)
-
-    executor.runner.fail_after_backend_completion(
-        backend_state=RunState.EXECUTION_FAILED
-    )
-
-    record = store.get(run.id)
-    assert record.state == RunState.FINALIZATION_FAILED
-    assert record.return_code == 1
-    assert record.message == "result parsing failed"
-
-
-def test_unrecoverable_reconstruction_becomes_result_mismatch_and_can_be_retried(
-    tmp_path,
-):
-    store = RunStore(tmp_path / "runs")
-    manager = ExecutionManager(store)
-    record = manager.new_record(task="NO_SUCH_TASK", directory=tmp_path)
-    record = manager.transition(record, state=RunState.FINALIZING)
-
-    with pytest.raises(UnrecoverablePersistentResultError):
-        attach_persistent_run(manager, record)
-
-    mismatch = store.get(record.id)
-    assert mismatch.state == RunState.RESULT_MISMATCH
-    assert mismatch.finished_at is not None
-    assert "unknown persisted task" in mismatch.message
-    assert record.id not in {item.id for item in store.runs(active=True)}
-
-    # Calling attach explicitly is also the retry operation: RESULT_MISMATCH is
-    # reopened to FINALIZING first, so a parser/registry bug fixed by a newer
-    # version can reconstruct the same persisted data later.
-    with pytest.raises(UnrecoverablePersistentResultError):
-        attach_persistent_run(manager, mismatch)
-
-    mismatch_again = store.get(record.id)
-    assert mismatch_again.state == RunState.RESULT_MISMATCH
-    assert mismatch_again.finished_at is not None
-    assert "unknown persisted task" in mismatch_again.message
-
-
-def test_invalid_persisted_input_becomes_result_mismatch(tmp_path):
-    input_file = tmp_path / "run.inp"
-    input_file.write_text("not valid SPR-KKR input")
-
+def _available_record(tmp_path):
+    output = tmp_path / "run.out"
+    output.write_text("captured output")
     store = RunStore(tmp_path / "runs")
     manager = ExecutionManager(store)
     record = manager.new_record(
         task="DOS",
         directory=tmp_path,
-        input_definition="DOS",
-        result_files=ResultFilesRecord(input_file=str(input_file)),
+        result_files=ResultFilesRecord(output_file=str(output), output_files=(str(output),)),
     )
     record = manager.transition(record, state=RunState.FINALIZING)
+    record = manager.finalize(record, state=RunState.AVAILABLE, return_code=0)
+    return store, manager, record
 
-    with pytest.raises(PersistentResultMismatchError, match="cannot be reconstructed"):
-        attach_persistent_run(manager, record)
 
-    mismatch = store.get(record.id)
-    assert mismatch.state == RunState.RESULT_MISMATCH
-    assert mismatch.finished_at is not None
-    assert "cannot be reconstructed" in mismatch.message
+def test_successful_finalization_checks_only_after_available(tmp_path):
+    reader = _ResultReader()
+    store, _manager, executor, run = _live_run(tmp_path, reader)
+
+    executor.runner.complete()
+
+    record = store.get(run.id)
+    assert reader.calls == 1
+    assert record.state == RunState.CHECKED
+    assert record.failure_reason is None
+    assert record.finished_at is not None
+    assert record.result_files.captured_at is not None
+
+
+def test_retryable_first_check_stays_available_until_explicit_retry(tmp_path):
+    reader = _ResultReader(errors=(OutputParseError("truncated output"),))
+    store, manager, executor, run = _live_run(tmp_path, reader)
+
+    with pytest.raises(PersistentResultMismatchError, match="truncated output"):
+        executor.runner.complete()
+
+    available = store.get(run.id)
+    assert reader.calls == 1
+    assert available.state == RunState.AVAILABLE
+    assert "truncated output" in available.failure_reason
+
+    # Nothing retries merely because the record is inspected/reloaded.
+    assert store.get(run.id).state == RunState.AVAILABLE
+    assert reader.calls == 1
+
+    result = load_persistent_result(manager, available, reader=reader)
+    checked = store.get(run.id)
+    assert reader.calls == 2
+    assert result.run_record.state == RunState.CHECKED
+    assert checked.state == RunState.CHECKED
+    assert checked.failure_reason is None
+
+
+def test_unexpected_first_check_failure_is_terminal_failed(tmp_path):
+    error = RuntimeError("reader bug")
+    reader = _ResultReader(errors=(error,))
+    store, _manager, executor, run = _live_run(tmp_path, reader)
+
+    with pytest.raises(RuntimeError, match="reader bug") as exc_info:
+        executor.runner.complete()
+
+    assert exc_info.value is error
+    failed = store.get(run.id)
+    assert failed.state == RunState.FAILED
+    assert failed.failure_reason == "reader bug"
+    assert reader.calls == 1
+
+
+def test_failed_execution_is_not_result_checked(tmp_path):
+    reader = _ResultReader()
+    store, _manager, executor, run = _live_run(tmp_path, reader)
+
+    executor.runner.complete(RunState.FAILED)
+
+    record = store.get(run.id)
+    assert record.state == RunState.FAILED
+    assert record.return_code == 1
+    assert reader.calls == 0
+
+
+def test_post_backend_finalization_failure_does_not_check_result(tmp_path):
+    reader = _ResultReader()
+    store, _manager, executor, run = _live_run(tmp_path, reader)
+
+    executor.runner.complete(error=OSError("result directory disappeared"))
+
+    record = store.get(run.id)
+    assert record.state == RunState.FINALIZATION_FAILED
+    assert record.failure_reason == "result directory disappeared"
+    assert record.result_files.captured_at is None
+    assert reader.calls == 0
+
+
+def test_retryable_historical_reconstruction_error_stays_available(tmp_path):
+    output = tmp_path / "run.out"
+    output.write_text("captured output")
+    store = RunStore(tmp_path / "runs")
+    manager = ExecutionManager(store)
+    record = manager.new_record(
+        task="NO_SUCH_TASK",
+        directory=tmp_path,
+        result_files=ResultFilesRecord(output_file=str(output), output_files=(str(output),)),
+    )
+    record = manager.transition(record, state=RunState.FINALIZING)
+    record = manager.finalize(record, state=RunState.AVAILABLE, return_code=0)
+
+    with pytest.raises(UnrecoverablePersistentResultError, match="unknown persisted task"):
+        check_persistent_result(manager, record)
+
+    current = store.get(record.id)
+    assert current.state == RunState.AVAILABLE
+    assert "unknown persisted task" in current.failure_reason
     assert record.id not in {item.id for item in store.runs(active=True)}
 
 
-def test_reader_reconstruction_programming_error_is_not_classified_as_finalization_failure(
-    tmp_path, monkeypatch
-):
-    store = RunStore(tmp_path / "runs")
-    manager = ExecutionManager(store)
-    record = manager.new_record(task="DOS", directory=tmp_path)
-    record = manager.transition(record, state=RunState.FINALIZING)
-    error = RuntimeError("reader constructor failed")
-
-    class BrokenReader:
-        def __init__(self, *_args, **_kwargs):
-            raise error
-
-    monkeypatch.setattr(
-        persistent_output.reader_registry,
-        "class_for_task",
-        lambda _task_definition: BrokenReader,
+def test_successful_on_demand_check_marks_checked_and_clears_error(tmp_path):
+    store, manager, record = _available_record(tmp_path)
+    record = manager.record_result_check_failure(
+        record, PersistentResultUnavailableError(record, "temporary parser problem"), retryable=True
     )
+    reader = _ResultReader(store)
+    reader.run_id = record.id
 
-    with pytest.raises(RuntimeError, match="reader constructor failed") as exc_info:
-        attach_persistent_run(manager, record)
-
-    assert exc_info.value is error
-    current = store.get(record.id)
-    assert current.state == RunState.FINALIZING
-    assert current.message is None
-    assert current.finished_at is None
-
-
-def test_transient_attach_failure_keeps_finalization_retryable(tmp_path, monkeypatch):
-    store = RunStore(tmp_path / "runs")
-    manager = ExecutionManager(store)
-    record = manager.new_record(task="DOS", directory=tmp_path)
-    record = manager.transition(record, state=RunState.FINALIZING)
-
-    def fail_attach(*_args, **_kwargs):
-        raise OSError("temporary ssh failure")
-
-    monkeypatch.setattr(manager, "attach", fail_attach)
-
-    with pytest.raises(OSError, match="temporary ssh failure"):
-        attach_persistent_run(manager, record, reader=object())
+    result = check_persistent_result(manager, record, reader=reader)
 
     current = store.get(record.id)
-    assert current.state == RunState.FINALIZING
-    assert current.finished_at is None
+    assert result.run_record.state == RunState.CHECKED
+    assert current.state == RunState.CHECKED
+    assert current.failure_reason is None
 
 
 def test_failed_finalization_must_be_retried_before_result_load(tmp_path):
@@ -212,24 +256,30 @@ def test_failed_finalization_must_be_retried_before_result_load(tmp_path):
 
     with pytest.raises(
         PersistentResultUnavailableError,
-        match="retry result processing first",
+        match="retry finalization first",
     ):
         load_persistent_result(manager, record, reader=object())
 
     assert store.get(record.id).state == RunState.FINALIZATION_FAILED
 
 
-def test_result_mismatch_must_be_explicitly_retried_before_result_load(tmp_path):
+def test_legacy_finished_record_is_upgraded_and_checked_on_demand(tmp_path):
+    output = tmp_path / "run.out"
+    output.write_text("legacy output")
     store = RunStore(tmp_path / "runs")
     manager = ExecutionManager(store)
-    record = manager.new_record(task="DOS", directory=tmp_path)
-    record = manager.transition(record, state=RunState.FINALIZING)
-    record = manager.mark_result_mismatch(record, ValueError("old parser mismatch"))
+    record = manager.new_record(
+        task="DOS",
+        directory=tmp_path,
+        result_files=ResultFilesRecord(output_file=str(output), output_files=(str(output),)),
+    )
+    record = manager.transition(record, state=RunState.FINISHED, return_code=0)
+    reader = _ResultReader(store)
+    reader.run_id = record.id
 
-    with pytest.raises(
-        PersistentResultUnavailableError,
-        match="persisted result mismatch.*retry result processing first",
-    ):
-        load_persistent_result(manager, record, reader=object())
+    result = load_persistent_result(manager, record, reader=reader)
 
-    assert store.get(record.id).state == RunState.RESULT_MISMATCH
+    current = store.get(record.id)
+    assert result.run_record.state == RunState.CHECKED
+    assert current.state == RunState.CHECKED
+    assert reader.calls == 1
