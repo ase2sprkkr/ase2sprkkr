@@ -62,3 +62,13 @@ def test_manifest_versions_and_availability_roundtrip():
     assert restored.all_versions == ()
     with pytest.raises(ValueError, match="availability"):
         FileManifest(availability_state="inconsistent")
+
+
+def test_execution_backend_id_is_write_once():
+    execution = Execution(ExecutorEndpoint(), WorkingDirectory("/tmp"))
+    submitted = execution.submitted("job-12")
+    assert execution.backend_id is None
+    assert submitted.backend_id == "job-12"
+    assert submitted.submitted("job-12") is submitted or submitted.submitted("job-12") == submitted
+    with pytest.raises(ValueError, match="Cannot replace"):
+        submitted.submitted("job-13")
