@@ -29,7 +29,7 @@ def input_parameters():
     return InputParameters(
         "jalf", [CONTROL("JALF"), TAU, MODE, STRCONST, energy, TASK("JALF"), SITES],
         executable="kkrgen", mpi=False,
-        output_file_templates=("{dataset}0_JALF.dat", "curdns1", "curdns2", "curdns3"),
+        output_file_templates=("{dataset}_JALF.dat", "curdns1", "curdns2", "curdns3"),
         validators=_validate_jalf,
         info="Valence current density from Dirac alpha matrices, with magnetic moment.",
         description="No task-specific options are read. JALF becomes E-INTEGRAL internally. "

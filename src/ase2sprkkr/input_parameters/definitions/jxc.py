@@ -13,10 +13,27 @@ class JxcInputParametersDefinition(InputParametersDefinition):
     def output_files(self, parameters, directory):
         files = list(super().output_files(parameters, directory))
         dataset = parameters.CONTROL.DATASET()
-        if parameters.TASK.JXC() and parameters.MODE.MODE() != "SP-SREL":
-            files.append(resolve_file(directory, f"{dataset}_XCPLTEN_Jij.dat"))
-        if parameters.TASK.DMI():
-            files.append(resolve_file(directory, f"{dataset}_DMIVEC_Dij.dat"))
+        jxc = parameters.TASK.JXC()
+        dmi = parameters.TASK.DMI()
+
+        if jxc:
+            if parameters.MODE.MODE() == "SP-SREL":
+                files.extend((
+                    resolve_file(directory, f"{dataset}_J_ij.dat"),
+                    resolve_file(directory, f"{dataset}_Jij_*.agr"),
+                ))
+            else:
+                files.extend((
+                    resolve_file(directory, f"{dataset}_XCPLTEN_Jij.dat"),
+                    resolve_file(directory, f"{dataset}_XCPLTEN_Jij_*.agr"),
+                    resolve_file(directory, f"{dataset}_XCPLTEN_Dij.dat"),
+                    resolve_file(directory, f"{dataset}_XCPLTEN_Dij_[xyz]_*.agr"),
+                ))
+        if dmi:
+            files.extend((
+                resolve_file(directory, f"{dataset}_DMIVEC_Dij.dat"),
+                resolve_file(directory, f"{dataset}_DMIVEC_Dij_[xyz]_*.agr"),
+            ))
         return tuple(files)
 
 
@@ -89,20 +106,11 @@ def input_parameters():
     tau = TAU.copy()
     tau.copy_member("BZINT", default_value="POINTS")
 
-    # JXC and DMI are native flags selecting the same E-INTEGRAL family.  Keep
-    # TASK.TASK only as an internal canonical dispatch key; it must not be
-    # parsed from or written to the SPR-KKR input file.
-
     task = [
         V("JXC", bool, _jxc_default, info="Calculate exchange couplings/tensor."),
         V("DMI", bool, _dmi_default, info="Additionally or independently run the DMIVECTOR calculation."),
         GeneratedValueDefinition("TASK", _task_name),
-        V(
-            "CLURAD",
-            2.2,
-            info="The radius of a sphere restricting the cluster "
-                 "of atoms for which the exchange coupling "
-                 "constants will be calculated (radius in ALAT units)"),
+        V("CLURAD", 2.2, info="Radius restricting the exchange-coupling cluster in ALAT units."),
         V("NSHLCLU", Integer(min=0), is_optional=True, info="Shell count; overrides CLURAD."),
         V("SELECT", SetOf(str, min_length=1, max_length=100), is_optional=True, info="Included element symbols."),
         V("EXCLUDE", SetOf(str, min_length=1, max_length=100), is_optional=True, info="Excluded element symbols."),
@@ -112,19 +120,8 @@ def input_parameters():
 
     input_parameters = JxcInputParametersDefinition(
         "jxc",
-        [
-            CONTROL("JXC"),
-            tau,
-            MODE.copy(add=[mmode]),
-            STRCONST,
-            energy,
-            task,
-            SITES,
-        ],
-        executable="kkrgen",
-        mpi=True,
-        info="JXC / DMI",
-        validators=_validate_jxc,
+        [CONTROL("JXC"), tau, MODE.copy(add=[mmode]), STRCONST, energy, task, SITES],
+        executable="kkrgen", mpi=True, info="JXC / DMI", validators=_validate_jxc,
         description="Standard periodic magnetic E-INTEGRAL workflow. JXC selects exchange couplings: "
                     "FREL tensor or SP-SREL scalar Jij. DMI selects DMIVECTOR and therefore requires FREL; "
                     "both flags may be enabled together. Native code requires KMROT=0; FREL also checks "
@@ -134,4 +131,5 @@ def input_parameters():
     input_parameters["CONTROL"]["NONMAG"].warning_condition = _nonmag_warning_condition
     return input_parameters
 
-aliases = [ 'dmi' ]
+
+aliases = ["dmi"]
