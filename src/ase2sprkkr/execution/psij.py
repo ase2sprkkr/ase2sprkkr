@@ -7,6 +7,7 @@ import os
 import shlex
 import subprocess
 from datetime import datetime
+from dataclasses import replace
 from pathlib import Path
 from threading import Event, Lock, Thread
 
@@ -16,7 +17,6 @@ from .base import (
     Executor,
     FailurePhase,
     OutputObservers,
-    RunReference,
     RunState,
     RunStatus,
     SubmissionNotStarted,
@@ -301,19 +301,9 @@ class PsijRunner:
         return self._failure_message
 
     @property
-    def reference(self):
+    def backend_id(self):
         native_id = getattr(self._job, "native_id", None)
-        if native_id is None:
-            return None
-        return RunReference(
-            executor=f"psij:{self.executor.backend}",
-            native_id=str(native_id),
-            computer=self.executor.url,
-            directory=os.fspath(self.spec.directory),
-            input_file=self.result.input_file,
-            output_file=self._stdout_path,
-            error_file=self._stderr_path,
-        )
+        return None if native_id is None else str(native_id)
 
     def add_output_listener(self, callback):
         self._output_observers.add(callback)
@@ -503,54 +493,49 @@ class PsijExecutor(Executor):
             run_id=run_id,
         )
 
-    def status(self, *references: RunReference):
-        expected = f"psij:{self.backend}"
-        for reference in references:
-            if reference.executor != expected:
-                raise ValueError(
-                    f"Run reference belongs to {reference.executor!r}, not {expected!r}"
-                )
-
+    def status(self, *runs):
+        expected_backend = self.backend
         statuses = []
-        for reference in references:
+        for run in runs:
+            endpoint = run.execution.endpoint
+            if endpoint.executor != "psij" or endpoint.psij_backend != expected_backend:
+                raise ValueError("Run does not belong to this PSI/J backend")
+            backend_id = run.execution.backend_id
             attached = False
-            job = self._status_jobs.get(reference.native_id)
+            job = self._status_jobs.get(backend_id)
             if job is None:
                 job = self._psij.Job()
-                self._job_executor.attach(job, reference.native_id)
-                self._status_jobs[reference.native_id] = job
+                self._job_executor.attach(job, backend_id)
+                self._status_jobs[backend_id] = job
                 attached = True
             status = getattr(job, "status", None)
-            state = getattr(status, "state", None)
-            state_name = getattr(state, "name", None)
-            run_state = (
+            name = getattr(getattr(status, "state", None), "name", None)
+            state = (
                 RunState.UNKNOWN
-                if attached and state_name == "NEW"
-                else _STATE_MAP.get(state_name, RunState.UNKNOWN)
+                if attached and name == "NEW"
+                else _STATE_MAP.get(name, RunState.UNKNOWN)
             )
-            statuses.append(
-                RunStatus(
-                    reference,
-                    run_state,
-                    return_code=getattr(status, "exit_code", None),
-                    message=getattr(status, "message", None),
-                    failure_phase=(
-                        FailurePhase.EXECUTION if run_state == RunState.FAILED else None
-                    ),
-                )
-            )
+            statuses.append(RunStatus(
+                state=state,
+                backend_id=backend_id,
+                return_code=getattr(status, "exit_code", None),
+                message=getattr(status, "message", None),
+                failure_phase=FailurePhase.EXECUTION if state == RunState.FAILED else None,
+            ))
         return tuple(statuses)
 
     @staticmethod
-    def _recovered_reference(backend, url, native_id, directory, output_file, error_file):
-        return RunReference(
-            executor=f"psij:{backend}",
-            native_id=str(native_id),
-            computer=url,
-            directory=directory or None,
-            output_file=output_file or None,
-            error_file=error_file or None,
-        )
+    def _recovered_files(files, stdout, stderr):
+        from .run_model import FileEntry
+        changes = {}
+        for field, remote in (("stdout", stdout), ("stderr", stderr)):
+            if remote:
+                previous = getattr(files, field)
+                changes[field] = FileEntry(
+                    local_path=None if previous is None else previous.local_path,
+                    remote_path=remote,
+                )
+        return replace(files, **changes) if changes else files
 
     def recover_submission(self, run_id, submission, *, submitted_at=None):
         if self.backend.lower() != "slurm":
@@ -566,18 +551,25 @@ class PsijExecutor(Executor):
         if matches:
             native_id, state, directory = matches[0]
             details = _slurm_details(native_id)
-            reference = self._recovered_reference(
-                self.backend,
-                self.url,
-                native_id,
-                details.get("WorkDir") or directory or submission.directory,
-                details.get("StdOut"),
-                details.get("StdErr"),
+            recovered_directory = details.get("WorkDir") or directory
+            execution = submission.execution.submitted(native_id)
+            if recovered_directory and recovered_directory != execution.directory.target:
+                from .run_model import WorkingDirectory
+                execution = replace(
+                    execution,
+                    directory=WorkingDirectory(
+                        execution.directory.local, recovered_directory,
+                    ),
+                )
+            files = self._recovered_files(
+                submission.files, details.get("StdOut"), details.get("StdErr"),
             )
             run_state = _slurm_state(state)
             return RunStatus(
-                reference,
                 run_state,
+                backend_id=str(native_id),
+                execution=execution,
+                files=files,
                 failure_phase=(
                     FailurePhase.EXECUTION if run_state == RunState.FAILED else None
                 ),
@@ -596,18 +588,20 @@ class PsijExecutor(Executor):
             )
         if accounting:
             native_id, state, directory, stdout, stderr, return_code = accounting[0]
-            reference = self._recovered_reference(
-                self.backend,
-                self.url,
-                native_id,
-                directory or submission.directory,
-                stdout,
-                stderr,
-            )
+            execution = submission.execution.submitted(native_id)
+            if directory and directory != execution.directory.target:
+                from .run_model import WorkingDirectory
+                execution = replace(
+                    execution,
+                    directory=WorkingDirectory(execution.directory.local, directory),
+                )
+            files = self._recovered_files(submission.files, stdout, stderr)
             run_state = _slurm_state(state)
             return RunStatus(
-                reference,
                 run_state,
+                backend_id=str(native_id),
+                execution=execution,
+                files=files,
                 return_code=return_code,
                 failure_phase=(
                     FailurePhase.EXECUTION if run_state == RunState.FAILED else None
@@ -615,36 +609,23 @@ class PsijExecutor(Executor):
             )
         return None
 
-    def attach(
-        self,
-        reference: RunReference,
-        callback=None,
-        output_listener=None,
-        start=True,
-    ):
-        expected = f"psij:{self.backend}"
-        if reference.executor != expected:
-            raise ValueError(
-                f"Run reference belongs to {reference.executor!r}, not {expected!r}"
-            )
-        if not reference.directory or not reference.output_file:
-            raise ValueError("PSI/J run reference lacks output location")
-
+    def attach(self, run, callback=None, output_listener=None, start=True):
+        endpoint = run.execution.endpoint
+        if endpoint.executor != "psij" or endpoint.psij_backend != self.backend:
+            raise ValueError("Run does not belong to this PSI/J backend")
+        backend_id = run.execution.backend_id
+        if not backend_id or not run.files.output_file:
+            raise ValueError("PSI/J run lacks backend ID or output location")
         job = self._psij.Job()
-        self._job_executor.attach(job, reference.native_id)
+        self._job_executor.attach(job, backend_id)
         spec = ExecutionSpec(
             argv=(),
-            input_file=reference.input_file,
-            output_file=reference.output_file,
-            error_file=reference.error_file,
-            directory=reference.directory,
+            input_file=run.files.input_file,
+            output_file=run.files.output_file,
+            error_file=None if run.files.stderr is None else run.files.stderr.local_path,
+            directory=run.execution.directory.local,
         )
         return PsijRunner(
-            self,
-            spec,
-            callback=callback,
-            output_listener=output_listener,
-            start=start,
-            job=job,
-            attached=True,
+            self, spec, callback=callback, output_listener=output_listener,
+            start=start, job=job, attached=True,
         )
