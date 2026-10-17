@@ -484,11 +484,11 @@ class ExecutionManager:
         record,
         *,
         state=None,
-        reference=_UNCHANGED,
+        execution=_UNCHANGED,
         return_code=_UNCHANGED,
         message=_UNCHANGED,
         failure_phase=_UNCHANGED,
-        result_files=_UNCHANGED,
+        files=_UNCHANGED,
     ):
         def merge(latest):
             final_locked = latest.state in _FINAL_STATES
@@ -497,15 +497,13 @@ class ExecutionManager:
             changes = {"state": merged_state, "updated_at": now}
             if latest.state not in _FINAL_STATES and merged_state in _FINAL_STATES:
                 changes["finished_at"] = now
-            merged_result_files = self._merged_result_files(latest, result_files)
+            merged_result_files = self._merged_result_files(latest, files)
             if merged_result_files is not latest.files:
                 changes["files"] = merged_result_files
-            if (
-                reference is not _UNCHANGED
-                and reference is not None
-                and latest.reference is None
-            ):
-                changes["reference"] = reference
+            if execution is not _UNCHANGED and execution is not None:
+                if latest.execution.backend_id is not None and execution.backend_id != latest.execution.backend_id:
+                    raise ValueError("Backend identity cannot change")
+                changes["execution"] = execution
             if return_code is not _UNCHANGED and return_code is not None:
                 if not final_locked or latest.return_code is None:
                     changes["return_code"] = return_code
@@ -530,7 +528,7 @@ class ExecutionManager:
             return replace(
                 latest,
                 updated_at=_now(),
-                result_files=replace(
+                files=replace(
                     result_files,
                     availability_state=state,
                     availability_message=message,
@@ -540,7 +538,7 @@ class ExecutionManager:
         return self.store.update(record, update)
 
     def _is_stale_submitting(self, record, *, now=None):
-        if record.state != RunState.SUBMITTING or record.reference is not None:
+        if record.state != RunState.SUBMITTING or record.execution.backend_id is not None:
             return False
         now = now or datetime.now(timezone.utc)
         return (
@@ -555,7 +553,7 @@ class ExecutionManager:
         try:
             status = executor.recover_submission(
                 record.id,
-                record.submission,
+                record,
                 submitted_at=record.updated_at,
             )
         except NotImplementedError:
@@ -564,7 +562,7 @@ class ExecutionManager:
             return self.update(record, status)
 
         def mark_absent(latest):
-            if latest.state != RunState.SUBMITTING or latest.reference is not None:
+            if latest.state != RunState.SUBMITTING or latest.execution.backend_id is not None:
                 return latest
             now = _now()
             return replace(
@@ -579,9 +577,6 @@ class ExecutionManager:
         return self.store.update(record, mark_absent)
 
     def reserve(self, record):
-        if record.submission is None:
-            raise ValueError("Persistent run lacks a submission key")
-
         attempted_recovery = set()
         while True:
             with self.store.submission_lock():
@@ -589,8 +584,7 @@ class ExecutionManager:
                     active
                     for active in self.store.runs(active=True)
                     if active.id != record.id
-                    and active.submission is not None
-                    and record.submission.conflicts_with(active.submission)
+                    and submission_conflicts(record, active)
                 )
                 if not conflicts:
                     if record.files is not None:
@@ -598,7 +592,6 @@ class ExecutionManager:
                     return self.transition(
                         record,
                         state=RunState.SUBMITTING,
-                        reference=None,
                     )
                 stale = tuple(
                     conflict
@@ -613,7 +606,7 @@ class ExecutionManager:
             for conflict in stale:
                 attempted_recovery.add(conflict.id)
                 recovered = self.recover_submitting(conflict)
-                if recovered.state != RunState.SUBMITTING or recovered.reference is not None:
+                if recovered.state != RunState.SUBMITTING or recovered.execution.backend_id is not None:
                     progressed = True
             if not progressed:
                 raise DuplicateSubmissionError(record, conflicts)
@@ -627,7 +620,7 @@ class ExecutionManager:
         return self.transition(
             record,
             state=state,
-            reference=status.reference,
+            execution=status.execution,
             return_code=return_code,
             message=status.message,
             failure_phase=phase,
@@ -638,7 +631,7 @@ class ExecutionManager:
         record,
         *,
         state,
-        reference=None,
+        execution=None,
         return_code=None,
         message=None,
         failure_phase=None,
@@ -675,11 +668,11 @@ class ExecutionManager:
         return self.transition(
             record,
             state=state,
-            reference=reference,
+            execution=execution,
             return_code=return_code,
             message=message,
             failure_phase=phase,
-            result_files=result_files,
+            files=result_files,
         )
 
     def check_result_files(self, run):
@@ -691,14 +684,14 @@ class ExecutionManager:
             raise RuntimeError(f"Run {record.id} is not finished")
 
         missing = self._missing_result_files(record.files)
-        if not missing or record.reference is None:
+        if not missing or record.execution.backend_id is None:
             return record
 
         executor = self.executor_for(record)
         if not executor.supports_result_file_retrieval:
             return record
 
-        executor.fetch_result_files(record.reference, missing)
+        executor.fetch_result_files(record, missing)
         refreshed = self.store.get(record.id)
         remaining = self._missing_result_files(refreshed.files)
         if not remaining:
@@ -735,21 +728,17 @@ class ExecutionManager:
     ):
         """Create a persistent run from raw execution plus generic processing."""
         endpoint = endpoint_for_executor(executor)
-        submission = SubmissionKey(
-            endpoint=endpoint,
-            directory=executor.submission_directory(spec),
-            task=task,
-            dataset=dataset,
-            context=self._submission_context(executor, spec),
-        )
         record = self.new_record(
             task=task,
             input_definition=input_definition,
             dataset=dataset,
             directory=spec.directory,
             endpoint=endpoint,
-            submission=submission,
-            result_files=self._result_files_for_spec(spec),
+            remote_directory=(
+                executor.submission_directory(spec)
+                if endpoint.executor not in ("local", "psij") else None
+            ),
+            files=self._result_files_for_spec(spec),
             run_id=run_id,
         )
         self.register_executor(executor, endpoint)
@@ -767,13 +756,13 @@ class ExecutionManager:
         current = {record.id: record for record in records}
         groups = {}
         for record in records:
-            if record.reference is None:
+            if record.execution.backend_id is None:
                 continue
             executor = self.executor_for(record)
             groups.setdefault(executor, []).append(record)
 
         for executor, group in groups.items():
-            statuses = executor.status(*(record.reference for record in group))
+            statuses = executor.status(*group)
             if len(statuses) != len(group):
                 raise RuntimeError("Executor returned wrong number of run statuses")
             for record, status in zip(group, statuses):
@@ -791,16 +780,16 @@ class ExecutionManager:
     ):
         """Attach raw execution, then resume client-side postprocessing."""
         record = self.store.get(run) if isinstance(run, str) else run
-        if record.reference is None:
+        if record.execution.backend_id is None:
             raise RuntimeError(f"Run {record.id} has no backend reference")
         if executor is None:
             executor = self.executor_for(record)
         else:
-            endpoint = record.endpoint or endpoint_for_executor(executor)
+            endpoint = record.execution.endpoint
             self.register_executor(executor, endpoint)
 
         raw = executor.attach(
-            record.reference,
+            record,
             output_listener=output_listener,
             start=False,
         )
@@ -835,8 +824,8 @@ class PersistentRunner:
         return self._runner.result
 
     @property
-    def reference(self):
-        return self._runner.reference
+    def backend_id(self):
+        return self._runner.backend_id
 
     @property
     def exception(self):
@@ -855,7 +844,7 @@ class PersistentRunner:
             self._record = self.manager.transition(
                 self._record,
                 state=state,
-                reference=self.reference,
+                execution=self._record.execution.submitted(self.backend_id),
                 failure_phase=self.failure_phase,
             )
         return self._record.state if self._record.state != RunState.NEW else state
@@ -886,35 +875,35 @@ class PersistentRunner:
         except BaseException:
             # No reference means submission may be uncertain. Keep SUBMITTING so
             # recover_submitting() can resolve it instead of inventing failure.
-            reference = self.reference
-            if reference is not None:
+            backend_id = self.backend_id
+            if backend_id is not None:
                 self._record = self.manager.transition(
                     self._record,
                     state=self._runner.state,
-                    reference=reference,
+                    execution=self._record.execution.submitted(backend_id),
                     failure_phase=self.failure_phase,
                 )
             raise
 
-        reference = self.reference
-        if reference is None:
+        backend_id = self.backend_id
+        if backend_id is None:
             raise RuntimeError("Executor submit returned without a run reference")
-        self.manager.register_executor(self.executor, self._record.endpoint)
+        self.manager.register_executor(self.executor, self._record.execution.endpoint)
         self._record = self.manager.transition(
             self._record,
             state=self._runner.state,
-            reference=reference,
+            execution=self._record.execution.submitted(backend_id),
             failure_phase=self.failure_phase,
         )
         return result
 
     def start(self):
         self._runner.start()
-        if self.reference is not None:
+        if self.backend_id is not None:
             self._record = self.manager.transition(
                 self._record,
                 state=self._runner.state,
-                reference=self.reference,
+                execution=self._record.execution.submitted(self.backend_id),
                 failure_phase=self.failure_phase,
             )
 
@@ -934,7 +923,7 @@ class PersistentRunner:
         self._record = self.manager.complete(
             self._record,
             state=state,
-            reference=self.reference,
+            execution=self._record.execution.submitted(self.backend_id),
             return_code=getattr(self._runner, "return_code", None),
             message=message,
             failure_phase=phase,
@@ -943,11 +932,11 @@ class PersistentRunner:
         # ACK is strictly after RunStore's crash-durable terminal transition.
         # A lost ACK reply is harmless: backend receipts are idempotently deleted.
         # Keep the persisted result even if the acknowledgement cannot be sent.
-        if self._record.state in _FINAL_STATES and self.reference is not None:
+        if self._record.state in _FINAL_STATES and self.backend_id is not None:
             acknowledge = getattr(self.executor, "acknowledge", None)
             if acknowledge is not None:
                 try:
-                    acknowledge(self.reference)
+                    acknowledge(self._record)
                 except (OSError, RuntimeError):
                     pass
 
@@ -978,6 +967,6 @@ class PersistentRunner:
                 self._record = self.manager.transition(
                     self._record,
                     state=self._runner.state,
-                    reference=self.reference,
+                    execution=self._record.execution.submitted(self.backend_id),
                     failure_phase=self.failure_phase,
                 )
