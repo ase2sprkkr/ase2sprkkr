@@ -182,10 +182,10 @@ def test_remote_executor_over_ssh(docker_execution_image):
             except subprocess.CalledProcessError as exc:
                 _remote_error(exc)
 
-            assert runner.reference is not None
-            assert runner.reference.computer == "tester@127.0.0.1"
+            assert runner.backend_id is not None
+            assert runner.execution.endpoint.host == "tester@127.0.0.1"
             assert (
-                runner.reference.directory
+                runner.execution.directory.remote
                 == "/home/tester/ase2sprkkr-runs/calculation"
             )
             _wait_for_live_output(runner, output_seen, output)
@@ -202,7 +202,7 @@ def test_remote_executor_over_ssh(docker_execution_image):
             remote_potential = (
                 potfil
                 if posixpath.isabs(potfil)
-                else posixpath.join(runner.reference.directory, potfil)
+                else posixpath.join(runner.execution.directory.remote, potfil)
             )
             remote_pot_new = remote_potential + "_new"
             subprocess.run(ssh + ["test", "-s", remote_pot_new], check=True)
