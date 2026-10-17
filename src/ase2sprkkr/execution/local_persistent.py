@@ -13,7 +13,6 @@ from .base import (
     ExecutionSpec,
     FailurePhase,
     OutputObservers,
-    RunReference,
     RunState,
     RunStatus,
     SubmissionNotStarted,
@@ -49,56 +48,30 @@ def _file_path(value, directory=None):
     return os.path.abspath(path)
 
 
-def _reference(run_id, spec):
-    directory = os.path.abspath(os.fspath(spec.directory))
-    return RunReference(
-        executor="local",
-        native_id=run_id,
-        directory=directory,
-        input_file=_file_path(spec.input_file, directory),
-        output_file=_file_path(spec.output_file, directory),
-        error_file=_file_path(spec.error_file, directory),
-    )
-
-
-def _reference_from_request(run_id, directory, request):
-    return RunReference(
-        executor="local",
-        native_id=run_id,
-        directory=os.path.abspath(os.fspath(directory)),
-        input_file=request.get("input_file"),
-        output_file=request.get("output_file"),
-        error_file=request.get("error_file"),
-    )
-
-
-def detached_local_status(reference):
-    if not reference.directory:
-        return None
+def detached_local_status(run):
+    execution = run.execution
     try:
-        state = status_detached(reference.directory, reference.native_id)
+        status = status_detached(execution.directory.local, execution.backend_id)
     except (FileNotFoundError, json.JSONDecodeError):
         return None
     return RunStatus(
-        reference,
-        detached_run_state(state.get("state", "unknown")),
-        return_code=state.get("return_code"),
-        message=state.get("error"),
-        failure_phase=detached_failure_phase(state),
+        state=detached_run_state(status.get("state", "unknown")),
+        backend_id=execution.backend_id,
+        return_code=status.get("return_code"),
+        message=status.get("error"),
+        failure_phase=detached_failure_phase(status),
     )
 
 
-def recover_local_submission(run_id, submission):
-    directory = os.path.abspath(os.fspath(submission.directory))
+def recover_local_submission(run_id, run):
+    directory = run.execution.directory.local
     try:
         state = status_detached(directory, run_id)
-        request = json.loads(_request_path(directory, run_id).read_text())
     except FileNotFoundError:
         return None
-    reference = _reference_from_request(run_id, directory, request)
     return RunStatus(
-        reference,
-        detached_run_state(state.get("state", "unknown")),
+        state=detached_run_state(state.get("state", "unknown")),
+        backend_id=run_id,
         return_code=state.get("return_code"),
         message=state.get("error"),
         failure_phase=detached_failure_phase(state),
@@ -117,7 +90,7 @@ class LocalPersistentRunner:
         callback=None,
         output_listener=None,
         start=False,
-        reference=None,
+        backend_id=None,
         state=RunState.NEW,
         failure_phase=None,
         failure_message=None,
@@ -125,8 +98,8 @@ class LocalPersistentRunner:
         self.executor = executor
         self.spec = spec
         self.callback = callback
-        self._run_id = run_id or (reference.native_id if reference is not None else None)
-        self._reference = reference
+        self._run_id = run_id or backend_id
+        self._backend_id = backend_id
         self.result = ExecutionOutcome(
             output_file=_file_path(spec.output_file, spec.directory),
             input_file=_file_path(spec.input_file, spec.directory),
@@ -150,14 +123,21 @@ class LocalPersistentRunner:
             self.start()
 
     @property
-    def reference(self):
-        return self._reference
+    def backend_id(self):
+        return self._backend_id
 
     @property
     def state(self):
-        if self._reference is None or self._state in _FINAL_STATES:
+        if self._backend_id is None or self._state in _FINAL_STATES:
             return self._state
-        status = detached_local_status(self._reference)
+        from .run_model import Execution, WorkingDirectory
+        from .endpoint import ExecutorEndpoint
+        from types import SimpleNamespace
+        run = SimpleNamespace(execution=Execution(
+            ExecutorEndpoint(), WorkingDirectory(os.path.abspath(self.spec.directory)),
+            self._backend_id,
+        ))
+        status = detached_local_status(run)
         self._state = RunState.UNKNOWN if status is None else status.state
         if status is not None:
             self._failure_phase = status.failure_phase
@@ -208,7 +188,7 @@ class LocalPersistentRunner:
         offsets = {"out": 0, "err": 0}
         while True:
             status = status_detached(
-                self._reference.directory, self._reference.native_id
+                self.spec.directory, self._backend_id
             )
             self._failure_phase = detached_failure_phase(status)
             self._failure_message = status.get("error")
@@ -279,13 +259,13 @@ class LocalPersistentRunner:
         with self._lock:
             if self._thread is not None:
                 return
-            if self._reference is None:
+            if self._backend_id is None:
                 raise RuntimeError("Run has no backend reference")
             self._thread = Thread(target=self._thread_main, daemon=True)
             self._thread.start()
 
     def start(self):
-        if self._reference is None:
+        if self._backend_id is None:
             return self.submit()
         return self._start_monitor()
 
@@ -336,7 +316,7 @@ class LocalPersistentRunner:
             self.result.return_code = self._return_code
             self._failure_phase = detached_failure_phase(status)
             self._failure_message = status.get("error")
-            self._reference = _reference(self._run_id, self.spec)
+            self._backend_id = self._run_id
         self._start_monitor()
 
     def wait(self):
@@ -360,10 +340,10 @@ class LocalPersistentRunner:
         return await asyncio.to_thread(self.run)
 
     def cancel(self):
-        if self._reference is None:
+        if self._backend_id is None:
             raise RuntimeError("Run has not been submitted")
         state = cancel_detached(
-            self._reference.directory, self._reference.native_id
+            self.spec.directory, self._backend_id
         )
         self._state = detached_run_state(state.get("state", "cancelled"))
         self._failure_phase = detached_failure_phase(state)
@@ -373,38 +353,24 @@ class LocalPersistentRunner:
             self.result.return_code = self._return_code
 
 
-def attach_local(
-    executor,
-    reference,
-    *,
-    callback=None,
-    output_listener=None,
-    start=True,
-):
-    if reference.executor != "local":
-        raise ValueError(
-            f"Run reference belongs to {reference.executor!r}, not 'local'"
-        )
-    status = detached_local_status(reference)
+def attach_local(executor, run, *, callback=None, output_listener=None, start=True):
+    if run.execution.endpoint.executor != "local":
+        raise ValueError("Run does not belong to the local backend")
+    status = detached_local_status(run)
     if status is None:
         raise NotImplementedError("PID-only local runs cannot be reattached")
+    files = run.files
     spec = ExecutionSpec(
         argv=(),
-        input_file=reference.input_file,
-        output_file=reference.output_file,
-        error_file=reference.error_file,
-        directory=reference.directory or ".",
+        input_file=files.input_file,
+        output_file=files.output_file,
+        error_file=None if files.stderr is None else files.stderr.local_path,
+        directory=run.execution.directory.local,
     )
     runner = LocalPersistentRunner(
-        executor,
-        spec,
-        callback=callback,
-        output_listener=output_listener,
-        start=False,
-        reference=reference,
-        state=status.state,
-        failure_phase=status.failure_phase,
-        failure_message=status.message,
+        executor, spec, callback=callback, output_listener=output_listener,
+        start=False, backend_id=run.execution.backend_id, state=status.state,
+        failure_phase=status.failure_phase, failure_message=status.message,
     )
     runner._return_code = status.return_code
     runner.result.return_code = status.return_code

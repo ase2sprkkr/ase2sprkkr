@@ -13,7 +13,6 @@ from .base import (
     Executor,
     FailurePhase,
     OutputObservers,
-    RunReference,
     RunState,
     RunStatus,
     SubmissionNotStarted,
@@ -99,17 +98,8 @@ class LocalRunner:
         return self._exception
 
     @property
-    def reference(self):
-        if self._pid is None:
-            return None
-        return RunReference(
-            executor="local",
-            native_id=str(self._pid),
-            directory=os.path.abspath(self.spec.directory),
-            input_file=self.result.input_file,
-            output_file=self.result.output_file,
-            error_file=self.result.error_file,
-        )
+    def backend_id(self):
+        return None if self._pid is None else str(self._pid)
 
     @property
     def failure_phase(self):
@@ -332,7 +322,7 @@ class LocalExecutor(Executor):
 
     def attach(
         self,
-        reference: RunReference,
+        run,
         callback=None,
         output_listener=None,
         start=True,
@@ -341,32 +331,28 @@ class LocalExecutor(Executor):
 
         return attach_local(
             self,
-            reference,
+            run,
             callback=callback,
             output_listener=output_listener,
             start=start,
         )
 
-    def status(self, *references: RunReference):
+    def status(self, *runs):
         from .local_persistent import detached_local_status
 
-        for reference in references:
-            if reference.executor != self.name:
-                raise ValueError(
-                    f"Run reference belongs to {reference.executor!r}, not {self.name!r}"
-                )
-
         statuses = []
-        for reference in references:
-            detached = detached_local_status(reference)
+        for run in runs:
+            if run.execution.endpoint.executor != "local":
+                raise ValueError("Run does not belong to the local backend")
+            detached = detached_local_status(run)
             if detached is not None:
                 statuses.append(detached)
                 continue
             try:
-                pid = int(reference.native_id)
+                pid = int(run.execution.backend_id)
             except (TypeError, ValueError):
                 state = RunState.UNKNOWN
             else:
                 state = RunState.RUNNING if _pid_running(pid) else RunState.UNKNOWN
-            statuses.append(RunStatus(reference, state))
+            statuses.append(RunStatus(state=state, backend_id=run.execution.backend_id))
         return tuple(statuses)
