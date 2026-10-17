@@ -50,8 +50,7 @@ def test_manifest_versions_and_availability_roundtrip():
         outputs=(FileEntry("/local/data", "/remote/data"),),
         stdout=FileEntry("/local/stdout", "/remote/stdout"),
         stderr=FileEntry("/local/stderr", "/remote/stderr"),
-        availability_state="pending",
-    )
+    ).initialize_availability()
     restored = FileManifest(**asdict(manifest))
     assert restored == manifest
     assert restored.input_file == "/local/in"
@@ -61,7 +60,7 @@ def test_manifest_versions_and_availability_roundtrip():
     assert restored.manifests == ("/local/in", "/local/stdout", "/local/stderr", "/local/data")
     assert restored.all_versions == ()
     with pytest.raises(ValueError, match="availability"):
-        FileManifest(availability_state="inconsistent")
+        FileEntry("/local/test", availability_state="inconsistent")
 
 
 def test_execution_backend_id_is_write_once():
@@ -72,3 +71,36 @@ def test_execution_backend_id_is_write_once():
     assert submitted.submitted("job-12") == submitted
     with pytest.raises(ValueError, match="Cannot replace"):
         submitted.submitted("job-13")
+
+def test_each_artifact_tracks_its_own_transfer_outcome():
+    manifest = FileManifest(
+        outputs=(
+            FileEntry("/local/one", "/remote/one", "pending"),
+            FileEntry("/local/two", "/remote/two", "pending"),
+        )
+    )
+    manifest = manifest.with_file_availability("/local/one", "available")
+    manifest = manifest.with_file_availability(
+        "/local/two", "failed", "connection lost",
+    )
+    assert manifest.outputs[0].availability_state == "available"
+    assert manifest.outputs[1].availability_state == "failed"
+    assert manifest.failed_artifacts == (manifest.outputs[1],)
+    assert manifest.availability_state == "failed"
+    assert FileManifest(**asdict(manifest)) == manifest
+
+
+def test_individual_wildcard_matches_are_recorded_separately():
+    manifest = FileManifest(
+        outputs=(FileEntry("/local/*.dat", "/remote/*.dat", "pending"),)
+    )
+    manifest = manifest.with_file_availability(
+        "/local/one.dat", "available", remote_path="/remote/one.dat",
+    )
+    manifest = manifest.with_file_availability(
+        "/local/two.dat", "failed", "I/O error", remote_path="/remote/two.dat",
+    )
+    assert len(manifest.outputs) == 3
+    assert manifest.outputs[1].availability_state == "available"
+    assert manifest.outputs[2].availability_state == "failed"
+    assert FileManifest(**asdict(manifest)) == manifest
