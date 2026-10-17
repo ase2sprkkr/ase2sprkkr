@@ -13,7 +13,7 @@ from datetime import datetime, timezone
 from enum import Enum
 from pathlib import Path
 from threading import RLock
-from typing import Optional
+from typing import Any, Optional
 from uuid import uuid4
 
 from platformdirs import user_state_dir
@@ -31,28 +31,29 @@ from .base import (
 )
 from .endpoint import ExecutorEndpoint, endpoint_for_executor
 from .pool import default_executor_pool
+from .postprocessing import PostprocessingRunner
 
 
-_RUN_RECORD_SCHEMA_VERSION = 1
-_FINAL_STATES = {
-    RunState.FINISHED,
-    RunState.EXECUTION_FAILED,
-    RunState.FINALIZATION_FAILED,
-    RunState.CANCELLED,
-}
+_RUN_RECORD_SCHEMA_VERSION = 2
+_FINAL_STATES = {RunState.FINISHED, RunState.FAILED, RunState.CANCELLED}
 _STATE_RANK = {
     RunState.NEW: 0,
     RunState.SUBMITTING: 1,
     RunState.QUEUED: 2,
     RunState.RUNNING: 3,
-    RunState.FINALIZING: 4,
-    RunState.FINISHED: 5,
-    RunState.EXECUTION_FAILED: 5,
-    RunState.FINALIZATION_FAILED: 5,
-    RunState.CANCELLED: 5,
+    RunState.DOWNLOADING: 4,
+    RunState.POSTPROCESSING: 5,
+    RunState.FINISHED: 6,
+    RunState.FAILED: 6,
+    RunState.CANCELLED: 6,
 }
 _UNCHANGED = object()
-_NO_FINALIZATION_FAILURES = {FailurePhase.SUBMISSION, FailurePhase.LAUNCH}
+_NO_ARTIFACTS_FAILURES = {
+    FailurePhase.SUBMISSION,
+    FailurePhase.LAUNCH,
+    FailurePhase.ARTIFACTS,
+    FailurePhase.DOWNLOAD,
+}
 
 
 def _now():
@@ -67,7 +68,6 @@ def _timestamp(value):
 
 
 def _result_file_path(value, directory):
-    """Return a stable absolute local path for a declared result file."""
     if value is None:
         return None
     value = getattr(value, "name", value)
@@ -92,34 +92,6 @@ def _failure_phase(value):
     return FailurePhase(value)
 
 
-def _state_from_backend(state, failure_phase=None):
-    """Map one backend status into the authoritative persistent lifecycle."""
-    state = RunState(state)
-    failure_phase = _failure_phase(failure_phase)
-    if state == RunState.EXECUTION_FAILED and failure_phase in _NO_FINALIZATION_FAILURES:
-        return RunState.EXECUTION_FAILED
-    if state in (RunState.FINISHED, RunState.EXECUTION_FAILED):
-        return RunState.FINALIZING
-    return state
-
-
-def _completion_state(backend_state, error, failure_phase=None):
-    """Resolve the terminal lifecycle state after result finalization."""
-    backend_state = RunState(backend_state)
-    failure_phase = _failure_phase(failure_phase)
-    if failure_phase in _NO_FINALIZATION_FAILURES:
-        return RunState.EXECUTION_FAILED
-    if backend_state in (RunState.FINISHED, RunState.EXECUTION_FAILED):
-        if error is not None:
-            return RunState.FINALIZATION_FAILED
-        return backend_state
-    if backend_state == RunState.CANCELLED:
-        return RunState.CANCELLED
-    if error is not None:
-        return RunState.EXECUTION_FAILED
-    return _state_from_backend(backend_state, failure_phase)
-
-
 class CorruptRunRecord(RuntimeError):
     """A persisted run record cannot be decoded or validated."""
 
@@ -128,8 +100,8 @@ class CorruptRunRecord(RuntimeError):
         super().__init__(f"Corrupt run record {self.path}: {message}")
 
 
-class FileRetrievalState(str, Enum):
-    """Availability of requested remote files in the local workspace."""
+class ArtifactAvailabilityState(str, Enum):
+    """Whether this run's declared artifacts are locally usable."""
 
     PENDING = "pending"
     AVAILABLE = "available"
@@ -138,16 +110,7 @@ class FileRetrievalState(str, Enum):
 
 @dataclass(frozen=True)
 class ResultFilesRecord:
-    """Persistent manifests and exact file versions captured at finalization.
-
-    Manifests describe which files belong to the calculation. ``input_versions``
-    and ``output_versions`` are immutable snapshots of the concrete files found
-    when the run was finalized. Their SHA-256 digests are authoritative content
-    identity; cheap filesystem metadata only avoids re-hashing unchanged files.
-
-    Cache files are intentionally absent because reusable caches may legitimately
-    be updated by later calculations.
-    """
+    """Declared result files and immutable versions captured at completion."""
 
     input_file: Optional[str] = None
     output_file: Optional[str] = None
@@ -156,8 +119,8 @@ class ResultFilesRecord:
     input_versions: tuple[FileVersion, ...] = ()
     output_versions: tuple[FileVersion, ...] = ()
     captured_at: Optional[str] = None
-    retrieval_state: Optional[FileRetrievalState] = None
-    retrieval_message: Optional[str] = None
+    availability_state: Optional[ArtifactAvailabilityState] = None
+    availability_message: Optional[str] = None
 
     def __post_init__(self):
         for name in ("input_file", "output_file"):
@@ -179,13 +142,13 @@ class ResultFilesRecord:
                     for value in getattr(self, name)
                 ),
             )
-        if self.retrieval_state is not None and not isinstance(
-            self.retrieval_state, FileRetrievalState
+        if self.availability_state is not None and not isinstance(
+            self.availability_state, ArtifactAvailabilityState
         ):
             object.__setattr__(
                 self,
-                "retrieval_state",
-                FileRetrievalState(self.retrieval_state),
+                "availability_state",
+                ArtifactAvailabilityState(self.availability_state),
             )
 
     @property
@@ -206,7 +169,6 @@ class ResultFilesRecord:
 
     @property
     def state(self):
-        """Current aggregate state of the captured output files."""
         if self.captured_at is None:
             return FileState.CURRENT
         states = tuple(version.state() for version in self.output_versions)
@@ -221,12 +183,13 @@ class ResultFilesRecord:
 
 @dataclass(frozen=True)
 class SubmissionKey:
-    """Persistent namespace used only for duplicate-submit protection."""
+    """Persistent duplicate-submission identity and recovery context."""
 
     endpoint: ExecutorEndpoint
     directory: str
     task: str
     dataset: Optional[str] = None
+    context: Any = None
 
     def __post_init__(self):
         if isinstance(self.endpoint, dict):
@@ -259,25 +222,7 @@ class DuplicateSubmissionError(RuntimeError):
 
 @dataclass(frozen=True)
 class RunRecord:
-    """Persistent identity and last known lifecycle state of one run.
-
-    ``task`` is the ASE2SPRKKR task represented by the concrete input values.
-    ``input_definition`` independently identifies the input schema used to parse
-    and reconstruct those values.
-
-    ``state`` is the single authoritative lifecycle state. A terminal backend
-    outcome normally advances it to ``FINALIZING`` while result processing
-    completes. Submission/launch failures are already terminal because no
-    calculation output exists to finalize. ``failure_phase`` records that
-    distinction without introducing a second state machine.
-
-    ``finished_at`` records the current terminal lifecycle transition. Explicit
-    retry of failed finalization reopens the lifecycle at ``FINALIZING`` and
-    clears it until the retry reaches another terminal state. Later metadata
-    changes, including remote file retrieval, update ``updated_at`` but do not
-    otherwise alter lifecycle timestamps. Result-file freshness is derived from
-    immutable :class:`FileVersion` snapshots.
-    """
+    """Persistent identity and authoritative lifecycle state of one run."""
 
     id: str
     state: RunState
@@ -329,7 +274,7 @@ class RunRecord:
 
 
 class RunStore:
-    """Persistent run history stored as date-sharded atomic JSON files."""
+    """Persistent run history stored as date-sharded durable JSON files."""
 
     def __init__(self, directory=None):
         if directory is None:
@@ -374,7 +319,6 @@ class RunStore:
                     f"unsupported schema version {version!r}; "
                     f"expected {_RUN_RECORD_SCHEMA_VERSION}"
                 )
-            data.pop("requested_task", None)
             return RunRecord(**data)
         except CorruptRunRecord:
             raise
@@ -409,18 +353,15 @@ class RunStore:
 
     @contextmanager
     def submission_lock(self):
-        """Serialize duplicate checking and the SUBMITTING record creation."""
         durable_mkdir(self.directory, parents=True, exist_ok=True, mode=0o700)
         with self._lock, FileLock(self.directory / ".submit.lock"):
             yield
 
     def save(self, record: RunRecord):
-        """Atomically store a complete record supplied by the caller."""
         with self._lock:
             return self._write_unlocked(record)
 
     def update(self, record: RunRecord, updater):
-        """Read latest, merge under a per-run lock, and atomically replace it."""
         with self._lock, FileLock(self._run_lock_path(record)):
             path = self._path(record)
             latest = self._decode(path) if path.is_file() else record
@@ -448,7 +389,6 @@ class RunStore:
         return sorted(records, key=lambda record: record.created_at, reverse=newest)
 
     def runs(self, *, active=None, limit=None, newest=False):
-        """Return stored runs without querying backends or touching result files."""
         if limit is not None and limit < 0:
             raise ValueError("limit must be non-negative")
         if limit == 0:
@@ -469,13 +409,7 @@ class RunStore:
 
 
 class ExecutionManager:
-    """Orchestrate optional persistent run bookkeeping.
-
-    The manager owns persistent records, not live runners. Returned
-    :class:`PersistentRunner` objects remain owned by their callers. Executors
-    are process-wide pooled by persisted endpoint identity, independently of
-    this manager and its store.
-    """
+    """Persist public run lifecycle without task-specific knowledge."""
 
     def __init__(self, store=None, *, executor_pool=None, submitting_grace=60.0):
         if submitting_grace < 0:
@@ -485,39 +419,15 @@ class ExecutionManager:
             executor_pool if executor_pool is not None else default_executor_pool()
         )
         self.submitting_grace = float(submitting_grace)
-        self._legacy_executors = {}
-        self._lock = RLock()
 
-    @staticmethod
-    def _reference_key(reference):
-        return reference.executor, reference.computer
-
-    def register_executor(self, executor: Executor, endpoint=None, reference=None):
-        """Register a live executor in the independent endpoint pool."""
+    def register_executor(self, executor: Executor, endpoint=None):
         endpoint = endpoint or endpoint_for_executor(executor)
-        pooled = self.executor_pool.get(endpoint, lambda: executor)
-        if reference is not None:
-            with self._lock:
-                self._legacy_executors[self._reference_key(reference)] = pooled
-        return pooled
+        return self.executor_pool.get(endpoint, lambda: executor)
 
     def executor_for(self, record):
-        """Return or reconstruct the executor needed for a persisted run."""
-        if record.endpoint is not None:
-            return self.executor_pool.for_endpoint(record.endpoint)
-        reference = record.reference
-        if reference is None:
-            raise KeyError(f"Run {record.id} has neither endpoint nor backend reference")
-        with self._lock:
-            executor = self._legacy_executors.get(self._reference_key(reference))
-            if executor is None and reference.computer is not None:
-                executor = self._legacy_executors.get((reference.executor, None))
-        if executor is None:
-            raise KeyError(
-                f"Run {record.id} predates persisted endpoint identity and no live "
-                "executor is registered for it"
-            )
-        return executor
+        if record.endpoint is None:
+            raise KeyError(f"Run {record.id} has no persisted execution endpoint")
+        return self.executor_pool.for_endpoint(record.endpoint)
 
     @staticmethod
     def _result_files_for_spec(spec):
@@ -547,6 +457,7 @@ class ExecutionManager:
             output_file=output_file,
             input_files=input_files,
             output_files=output_files,
+            availability_state=ArtifactAvailabilityState.PENDING,
         )
 
     @staticmethod
@@ -595,10 +506,8 @@ class ExecutionManager:
 
     @staticmethod
     def _missing_result_files(result_files):
-        """Return the concrete historical files that should be restored."""
         if result_files is None:
             return ()
-
         if result_files.captured_at is not None:
             return tuple(
                 os.fspath(item.path)
@@ -615,10 +524,6 @@ class ExecutionManager:
                 missing.append(manifest)
         return _unique(missing)
 
-    @classmethod
-    def _result_files_missing(cls, result_files):
-        return bool(cls._missing_result_files(result_files))
-
     def _capture_result_files(self, result_files):
         if result_files is None or result_files.captured_at is not None:
             return result_files
@@ -626,14 +531,12 @@ class ExecutionManager:
             result_files,
             input_versions=self._result_files_snapshot(result_files.input_files),
             output_versions=self._result_files_snapshot(
-                result_files.output_files,
-                sync=True,
+                result_files.output_files, sync=True
             ),
             captured_at=_now(),
         )
 
     def input_file_is_current(self, run):
-        """Whether the primary historical input is safe to use for reconstruction."""
         record = self.store.get(run) if isinstance(run, str) else self.store.get(run.id)
         result_files = record.result_files
         return self._file_is_current(
@@ -643,7 +546,6 @@ class ExecutionManager:
         )
 
     def output_file_is_current(self, run):
-        """Whether the primary historical output belongs to the captured run."""
         record = self.store.get(run) if isinstance(run, str) else self.store.get(run.id)
         result_files = record.result_files
         return self._file_is_current(
@@ -664,7 +566,6 @@ class ExecutionManager:
         input_definition=None,
         run_id=None,
     ):
-        """Create the in-memory identity of an unsubmitted persistent run."""
         now = _now()
         return RunRecord(
             id=run_id or uuid4().hex,
@@ -718,16 +619,11 @@ class ExecutionManager:
         failure_phase=_UNCHANGED,
         result_files=_UNCHANGED,
     ):
-        """Merge one lifecycle update into the latest persisted record."""
-
         def merge(latest):
             final_locked = latest.state in _FINAL_STATES
             now = _now()
             merged_state = self._merged_state(latest, state)
-            changes = {
-                "state": merged_state,
-                "updated_at": now,
-            }
+            changes = {"state": merged_state, "updated_at": now}
             if latest.state not in _FINAL_STATES and merged_state in _FINAL_STATES:
                 changes["finished_at"] = now
             merged_result_files = self._merged_result_files(latest, result_files)
@@ -753,36 +649,24 @@ class ExecutionManager:
 
         return self.store.update(record, merge)
 
-    def fail_finalization(self, record, error):
-        """Make a failed finalization attempt terminal without backend heuristics."""
-        record = self.store.get(record.id)
-        if record.state != RunState.FINALIZING:
-            return record
-        return self.finalize(
-            record,
-            state=RunState.FINALIZATION_FAILED,
-            message=str(error),
-            failure_phase=FailurePhase.FINALIZATION,
-        )
+    def update_artifact_availability(self, record, state, message=None):
+        state = ArtifactAvailabilityState(state)
 
-    def retry_finalization(self, record):
-        """Explicitly reopen a failed finalization attempt."""
-
-        def retry(latest):
-            if latest.state != RunState.FINALIZATION_FAILED:
-                raise RuntimeError(
-                    f"Run {latest.id} is {latest.state.value}, not finalization_failed"
-                )
+        def update(latest):
+            result_files = latest.result_files
+            if result_files is None:
+                return latest
             return replace(
                 latest,
-                state=RunState.FINALIZING,
                 updated_at=_now(),
-                finished_at=None,
-                message=None,
-                failure_phase=None,
+                result_files=replace(
+                    result_files,
+                    availability_state=state,
+                    availability_message=message,
+                ),
             )
 
-        return self.store.update(record, retry)
+        return self.store.update(record, update)
 
     def _is_stale_submitting(self, record, *, now=None):
         if record.state != RunState.SUBMITTING or record.reference is not None:
@@ -793,7 +677,6 @@ class ExecutionManager:
         ).total_seconds() >= self.submitting_grace
 
     def recover_submitting(self, record):
-        """Recover one stale SUBMITTING record without guessing on uncertainty."""
         record = self.store.get(record.id)
         if not self._is_stale_submitting(record):
             return record
@@ -815,7 +698,7 @@ class ExecutionManager:
             now = _now()
             return replace(
                 latest,
-                state=RunState.EXECUTION_FAILED,
+                state=RunState.FAILED,
                 updated_at=now,
                 finished_at=now,
                 message="Stale submission was not found by its execution backend",
@@ -825,7 +708,6 @@ class ExecutionManager:
         return self.store.update(record, mark_absent)
 
     def reserve(self, record):
-        """Atomically reserve *record*'s persistent submission namespace."""
         if record.submission is None:
             raise ValueError("Persistent run lacks a submission key")
 
@@ -866,26 +748,21 @@ class ExecutionManager:
                 raise DuplicateSubmissionError(record, conflicts)
 
     def update(self, record, status: RunStatus):
-        """Persist a backend status in the authoritative lifecycle graph."""
-        backend_state = RunState(status.state)
         phase = _failure_phase(status.failure_phase)
         return_code = status.return_code
-        if (
-            backend_state == RunState.EXECUTION_FAILED
-            and return_code is None
-            and phase not in _NO_FINALIZATION_FAILURES
-        ):
+        state = RunState.POSTPROCESSING if status.state == RunState.FINISHED else status.state
+        if state == RunState.FAILED and return_code is None:
             return_code = 1
         return self.transition(
             record,
-            state=_state_from_backend(backend_state, phase),
+            state=state,
             reference=status.reference,
             return_code=return_code,
             message=status.message,
             failure_phase=phase,
         )
 
-    def finalize(
+    def complete(
         self,
         record,
         *,
@@ -894,26 +771,36 @@ class ExecutionManager:
         return_code=None,
         message=None,
         failure_phase=None,
+        artifacts_available=False,
     ):
-        """Finish one lifecycle after result processing has completed or failed."""
         state = RunState(state)
         phase = _failure_phase(failure_phase)
-        if state == RunState.FINALIZATION_FAILED and phase is None:
-            phase = FailurePhase.FINALIZATION
         result_files = record.result_files
-        if state != RunState.FINALIZATION_FAILED and phase not in _NO_FINALIZATION_FAILURES:
+
+        if artifacts_available and result_files is not None:
+            result_files = replace(
+                result_files,
+                availability_state=ArtifactAvailabilityState.AVAILABLE,
+                availability_message=None,
+            )
             try:
                 result_files = self._capture_result_files(result_files)
             except OSError as exc:
-                self.transition(
-                    record,
-                    state=RunState.FINALIZATION_FAILED,
-                    reference=reference,
-                    return_code=return_code,
-                    message=str(exc),
-                    failure_phase=FailurePhase.FINALIZATION,
+                state = RunState.FAILED
+                phase = FailurePhase.POSTPROCESSING
+                message = str(exc)
+                result_files = replace(
+                    result_files,
+                    availability_state=ArtifactAvailabilityState.FAILED,
+                    availability_message=str(exc),
                 )
-                raise
+        elif phase in (FailurePhase.ARTIFACTS, FailurePhase.DOWNLOAD) and result_files is not None:
+            result_files = replace(
+                result_files,
+                availability_state=ArtifactAvailabilityState.FAILED,
+                availability_message=message,
+            )
+
         return self.transition(
             record,
             state=state,
@@ -924,32 +811,10 @@ class ExecutionManager:
             result_files=result_files,
         )
 
-    def update_file_retrieval(self, record, state, message=None):
-        """Persist local file availability without changing calculation state."""
-        state = FileRetrievalState(state)
-
-        def update(latest):
-            result_files = latest.result_files
-            if result_files is None:
-                return latest
-            return replace(
-                latest,
-                updated_at=_now(),
-                result_files=replace(
-                    result_files,
-                    retrieval_state=state,
-                    retrieval_message=message,
-                ),
-            )
-
-        return self.store.update(record, update)
-
     def check_result_files(self, run):
-        """Return the latest record; file freshness is derived from FileVersion."""
         return self.store.get(run) if isinstance(run, str) else self.store.get(run.id)
 
     def retrieve_result_files(self, run):
-        """Restore locally missing files belonging to one terminal persistent run."""
         record = self.store.get(run) if isinstance(run, str) else self.store.get(run.id)
         if record.state not in _FINAL_STATES:
             raise RuntimeError(f"Run {record.id} is not finished")
@@ -963,18 +828,21 @@ class ExecutionManager:
             return record
 
         executor.fetch_result_files(record.reference, missing)
-
         refreshed = self.store.get(record.id)
         remaining = self._missing_result_files(refreshed.result_files)
         if not remaining:
-            return self.update_file_retrieval(refreshed, FileRetrievalState.AVAILABLE)
-        if refreshed.state == RunState.FINISHED:
-            return self.update_file_retrieval(
-                refreshed,
-                FileRetrievalState.FAILED,
-                "Captured remote files are still missing: " + ", ".join(remaining),
+            return self.update_artifact_availability(
+                refreshed, ArtifactAvailabilityState.AVAILABLE
             )
-        return refreshed
+        return self.update_artifact_availability(
+            refreshed,
+            ArtifactAvailabilityState.FAILED,
+            "Captured artifacts are still missing: " + ", ".join(remaining),
+        )
+
+    def _submission_context(self, executor, spec):
+        provider = getattr(executor, "submission_context", None)
+        return None if provider is None else provider(spec)
 
     @staticmethod
     def _complete(persistent, result, callback):
@@ -982,48 +850,26 @@ class ExecutionManager:
         if callback is not None:
             callback(result)
 
-    def _wrap_runner(self, executor, record, factory, callback):
-        """Create a persistent wrapper without assuming callback timing."""
-        guard = RLock()
-        holder = {"runner": None, "pending": _UNCHANGED}
-
-        def completed(result):
-            with guard:
-                persistent = holder["runner"]
-                if persistent is None:
-                    holder["pending"] = result
-                    return
-            self._complete(persistent, result, callback)
-
-        runner = factory(completed)
-        persistent = PersistentRunner(self, executor, runner, record)
-        with guard:
-            holder["runner"] = persistent
-            pending = holder["pending"]
-            holder["pending"] = _UNCHANGED
-        if pending is not _UNCHANGED:
-            self._complete(persistent, pending, callback)
-        return persistent
-
     def create_run(
         self,
         executor,
-        reader,
         spec,
         *,
+        process_result,
         task,
         input_definition=None,
         dataset=None,
         callback=None,
         run_id=None,
     ):
-        """Create a caller-owned runner whose lifecycle is persisted."""
+        """Create a persistent run from raw execution plus generic processing."""
         endpoint = endpoint_for_executor(executor)
         submission = SubmissionKey(
             endpoint=endpoint,
             directory=executor.submission_directory(spec),
             task=task,
             dataset=dataset,
+            context=self._submission_context(executor, spec),
         )
         record = self.new_record(
             task=task,
@@ -1036,20 +882,16 @@ class ExecutionManager:
             run_id=run_id,
         )
         self.register_executor(executor, endpoint)
-        return self._wrap_runner(
-            executor,
-            record,
-            lambda completed: executor.create_persistent_run(
-                reader,
-                spec,
-                run_id=record.id,
-                callback=completed,
-            ),
-            callback,
+
+        raw = executor.create_persistent_run(spec, run_id=record.id)
+        processed = PostprocessingRunner(raw, process_result)
+        persistent = PersistentRunner(self, executor, processed, record)
+        processed.callback = lambda result: self._complete(
+            persistent, result, callback
         )
+        return persistent
 
     def refresh(self, records=None):
-        """Refresh referenced runs, reconstructing endpoints when necessary."""
         records = tuple(self.store.runs(active=True) if records is None else records)
         current = {record.id: record for record in records}
         groups = {}
@@ -1071,20 +913,12 @@ class ExecutionManager:
         self,
         run,
         *,
-        reader,
+        process_result,
         executor=None,
         callback=None,
         output_listener=None,
     ):
-        """Attach to a stored run using an explicitly supplied output reader.
-
-        ``executor`` is retained as an explicit override for records whose
-        endpoint cannot be reconstructed from :class:`ExecutorEndpoint` alone.
-
-        ``output_listener`` is installed by the backend before monitoring starts.
-        Attached runners therefore cannot lose output replayed immediately during
-        attach, including output from an already completed run.
-        """
+        """Attach raw execution, then resume client-side postprocessing."""
         record = self.store.get(run) if isinstance(run, str) else run
         if record.reference is None:
             raise RuntimeError(f"Run {record.id} has no backend reference")
@@ -1092,22 +926,24 @@ class ExecutionManager:
             executor = self.executor_for(record)
         else:
             endpoint = record.endpoint or endpoint_for_executor(executor)
-            self.register_executor(executor, endpoint, record.reference)
-        return self._wrap_runner(
-            executor,
-            record,
-            lambda completed: executor.attach(
-                record.reference,
-                reader,
-                callback=completed,
-                output_listener=output_listener,
-            ),
-            callback,
+            self.register_executor(executor, endpoint)
+
+        raw = executor.attach(
+            record.reference,
+            output_listener=output_listener,
+            start=False,
         )
+        processed = PostprocessingRunner(raw, process_result)
+        persistent = PersistentRunner(self, executor, processed, record)
+        processed.callback = lambda result: self._complete(
+            persistent, result, callback
+        )
+        persistent.start()
+        return persistent
 
 
 class PersistentRunner:
-    """Caller-owned runner that persists execution lifecycle transitions."""
+    """Caller-owned runner that persists the public lifecycle directly."""
 
     def __init__(self, manager, executor, runner, record):
         self.manager = manager
@@ -1132,21 +968,26 @@ class PersistentRunner:
         return self._runner.reference
 
     @property
+    def exception(self):
+        return self._runner.exception
+
+    @property
+    def failure_phase(self):
+        return _failure_phase(getattr(self._runner, "failure_phase", None))
+
+    @property
     def state(self):
-        backend_state = self._runner.state
-        phase = _failure_phase(getattr(self._runner, "failure_phase", None))
-        state = _state_from_backend(backend_state, phase)
-        if backend_state == RunState.NEW and self._record.state != RunState.NEW:
-            state = self._record.state
+        state = self._runner.state
+        if state == RunState.NEW and self._record.state != RunState.NEW:
+            return self._record.state
         if self._record.state != RunState.NEW and state != self._record.state:
             self._record = self.manager.transition(
                 self._record,
                 state=state,
                 reference=self.reference,
-                failure_phase=phase,
+                failure_phase=self.failure_phase,
             )
-            state = self._record.state
-        return state
+        return self._record.state if self._record.state != RunState.NEW else state
 
     def add_output_listener(self, callback):
         return self._runner.add_output_listener(callback)
@@ -1161,97 +1002,72 @@ class PersistentRunner:
         try:
             result = self._runner.submit()
         except SubmissionNotStarted as exc:
-            phase = _failure_phase(
-                getattr(self._runner, "failure_phase", None)
-            ) or FailurePhase.SUBMISSION
+            phase = self.failure_phase or FailurePhase.SUBMISSION
             message = getattr(self._runner, "failure_message", None) or str(exc)
-            self._record = self.manager.transition(
+            self._record = self.manager.complete(
                 self._record,
-                state=RunState.EXECUTION_FAILED,
+                state=RunState.FAILED,
                 message=message,
                 failure_phase=phase,
+                artifacts_available=False,
             )
             raise
         except BaseException:
+            # No reference means submission may be uncertain. Keep SUBMITTING so
+            # recover_submitting() can resolve it instead of inventing failure.
             reference = self.reference
             if reference is not None:
-                backend_state = self._runner.state
-                if backend_state == RunState.NEW:
-                    backend_state = RunState.SUBMITTING
-                phase = _failure_phase(getattr(self._runner, "failure_phase", None))
                 self._record = self.manager.transition(
                     self._record,
-                    state=_state_from_backend(backend_state, phase),
+                    state=self._runner.state,
                     reference=reference,
-                    failure_phase=phase,
+                    failure_phase=self.failure_phase,
                 )
             raise
 
         reference = self.reference
         if reference is None:
             raise RuntimeError("Executor submit returned without a run reference")
-        self.manager.register_executor(
-            self.executor,
-            self._record.endpoint,
-            reference,
-        )
-        backend_state = self._runner.state
-        if backend_state == RunState.NEW:
-            backend_state = RunState.SUBMITTING
-        phase = _failure_phase(getattr(self._runner, "failure_phase", None))
+        self.manager.register_executor(self.executor, self._record.endpoint)
         self._record = self.manager.transition(
             self._record,
-            state=_state_from_backend(backend_state, phase),
+            state=self._runner.state,
             reference=reference,
-            failure_phase=phase,
+            failure_phase=self.failure_phase,
         )
-        self._sync_file_retrieval()
         return result
 
-    def _sync_file_retrieval(self):
-        phase = _failure_phase(getattr(self._runner, "failure_phase", None))
-        if phase in _NO_FINALIZATION_FAILURES:
-            return
-        state = getattr(self._runner, "file_retrieval_state", None)
-        if state is None:
-            return
-        self._record = self.manager.update_file_retrieval(
-            self._record,
-            state,
-            getattr(self._runner, "file_retrieval_message", None),
-        )
-
-    def _sync_completion(self, result):
-        backend_state = self._runner.state
-        phase = _failure_phase(getattr(self._runner, "failure_phase", None))
-        message = getattr(self._runner, "failure_message", None)
-        if phase in _NO_FINALIZATION_FAILURES:
+    def start(self):
+        self._runner.start()
+        if self.reference is not None:
             self._record = self.manager.transition(
                 self._record,
-                state=RunState.EXECUTION_FAILED,
+                state=self._runner.state,
                 reference=self.reference,
-                return_code=getattr(result, "return_code", None),
-                message=message,
-                failure_phase=phase,
+                failure_phase=self.failure_phase,
             )
-            return
 
-        self._sync_file_retrieval()
+    def _sync_completion(self, result):
+        state = self._runner.state
+        phase = self.failure_phase
+        message = getattr(self._runner, "failure_message", None)
         error = self._runner.exception
-        state = _completion_state(backend_state, error, phase)
         if error is not None:
             message = str(error)
-        if state == RunState.FINALIZATION_FAILED:
-            phase = FailurePhase.FINALIZATION
-        elif state == RunState.EXECUTION_FAILED and phase is None:
+        if state not in _FINAL_STATES:
+            return
+        if state == RunState.FAILED and phase is None:
             phase = FailurePhase.EXECUTION
-        self._record = self.manager.finalize(
+
+        artifacts_available = phase not in _NO_ARTIFACTS_FAILURES
+        self._record = self.manager.complete(
             self._record,
             state=state,
             reference=self.reference,
-            return_code=getattr(result, "return_code", None),
+            return_code=getattr(self._runner, "return_code", None),
             message=message,
             failure_phase=phase,
+            artifacts_available=artifacts_available,
         )
 
     def wait(self):
@@ -1267,11 +1083,9 @@ class PersistentRunner:
         return self.wait()
 
     async def run_async(self):
-        loop = asyncio.get_running_loop()
-        return await loop.run_in_executor(None, self.run)
+        return await asyncio.to_thread(self.run)
 
     def refresh(self):
-        """Refresh this run's persisted backend status."""
         self._record = self.manager.refresh((self._record,))[0]
         return self._record
 
@@ -1280,10 +1094,9 @@ class PersistentRunner:
             return self._runner.cancel()
         finally:
             if self._record.state != RunState.NEW:
-                phase = _failure_phase(getattr(self._runner, "failure_phase", None))
                 self._record = self.manager.transition(
                     self._record,
-                    state=_state_from_backend(self._runner.state, phase),
+                    state=self._runner.state,
                     reference=self.reference,
-                    failure_phase=phase,
+                    failure_phase=self.failure_phase,
                 )

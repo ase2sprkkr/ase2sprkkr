@@ -28,9 +28,6 @@ def _output_path(directory, value, default):
 
 
 async def _run_detached_local(directory, run_id, request):
-    # Imported lazily by detached.run_detached_worker(), after the protocol
-    # module is initialized. Keeping state handling there prevents this backend
-    # from becoming a second detached lifecycle implementation.
     from .detached import (
         _FINAL_STATES,
         _read_state_unlocked,
@@ -63,7 +60,7 @@ async def _run_detached_local(directory, run_id, request):
     return_code = None
     preserve_launch_paths = False
 
-    def record_finalization_failure(exc):
+    def record_artifact_failure(exc):
         nonlocal preserve_launch_paths
         preserve_launch_paths = True
         with _state_lock(directory, run_id):
@@ -75,7 +72,7 @@ async def _run_detached_local(directory, run_id, request):
                     state="failed",
                     return_code=return_code,
                     error=repr(exc),
-                    failure_phase=FailurePhase.FINALIZATION.value,
+                    failure_phase=FailurePhase.ARTIFACTS.value,
                     finished_at=state.get("finished_at") or _timestamp(),
                 )
 
@@ -107,9 +104,6 @@ async def _run_detached_local(directory, run_id, request):
                         start_new_session=True,
                     )
                     try:
-                        # RUNNING is the direct-launch handoff point. Keep output
-                        # in run-specific stream files until execution is over so
-                        # a failed handoff cannot overwrite an older result.
                         _write_state_unlocked(
                             directory,
                             run_id,
@@ -131,26 +125,24 @@ async def _run_detached_local(directory, run_id, request):
                     raise
 
                 try:
-                    # The terminal state is a commit marker for these streams.
-                    # Synchronize their final contents before publishing them.
                     sync_stream(output)
                     if error_context is not None:
                         sync_stream(error_context)
                 except BaseException as exc:
-                    record_finalization_failure(exc)
+                    record_artifact_failure(exc)
                     raise
             finally:
                 if error_context is not None:
                     error_context.close()
 
         try:
-            # Publish canonical artifacts only after execution completed. A
-            # launch failure therefore cannot destroy a previous result file.
+            # Publication is part of artifact availability, not result parsing.
+            # FINISHED is written only after these durable replacements succeed.
             durable_replace(output_launch, output_path)
             if not merged:
                 durable_replace(error_launch, error_path)
         except BaseException as exc:
-            record_finalization_failure(exc)
+            record_artifact_failure(exc)
             raise
 
         with _state_lock(directory, run_id):
