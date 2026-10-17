@@ -44,6 +44,20 @@ class InputSectionDefinition(ConfigurationSectionDefinition):
         CustomConfigurationValue.factory(InputValueDefinition, mixed)
     )
 
+    def __new__(cls, name, *args, **kwargs):
+        """Use the stricter task-section definition for the TASK section."""
+        if cls is InputSectionDefinition and str(name).upper() == "TASK":
+            cls = TaskSectionDefinition
+        return super().__new__(cls)
+
+    def excluded_custom_names(self):
+        """Names that the generic custom-value grammar must not consume."""
+        yield from super().all_member_names()
+
+    def all_member_names(self):
+        """Expose custom exclusions to the common custom-member grammar."""
+        yield from self.excluded_custom_names()
+
     @cached_class_property
     def delimiter():
         with generate_grammar():
@@ -51,6 +65,29 @@ class InputSectionDefinition(ConfigurationSectionDefinition):
             return out.set_name("\n")
 
     do_not_skip_whitespaces_before_name = True
+
+
+class TaskSectionDefinition(InputSectionDefinition):
+    """TASK section whose task selector cannot be parsed as a custom flag."""
+
+    @staticmethod
+    @cache
+    def _all_tasks_names():
+        """Lazily collect every task token accepted by registered input schemas."""
+        names = set()
+        for definition in InputParameters.input_parameters_registry.values():
+            try:
+                task = definition["TASK"]["TASK"]
+            except KeyError:
+                continue
+            task_type = task.type
+            names.update(str(name).upper() for name in getattr(task_type, "keywords", ()))
+            names.update(str(name).upper() for name in getattr(task_type, "aliases", ()))
+        return frozenset(names)
+
+    def excluded_custom_names(self):
+        yield from super().excluded_custom_names()
+        yield from self._all_tasks_names()
 
 
 class InputParametersDefinition(ConfigurationFileDefinition):

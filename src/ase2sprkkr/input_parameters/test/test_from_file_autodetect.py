@@ -94,3 +94,45 @@ def test_from_file_does_not_mask_programming_errors(error):
 
     assert broken.calls == 1
     assert fallback.calls == 0
+
+
+def _arpes_input_text():
+    parameters = InputParameters.create("ARPES")
+    parameters.CONTROL.POTFIL.set("Fe.pot")
+    return parameters.to_string(validate=False)
+
+
+def test_task_section_rejects_another_registered_task_as_custom_flag():
+    text = _arpes_input_text().replace(
+        "\nTASK\n\tARPES\n",
+        "\nTASK\n\tBSF\n",
+        1,
+    )
+
+    with pytest.raises(pp.ParseBaseException):
+        InputParameters.definition("ARPES").read_from_string(text)
+
+
+def test_task_section_still_allows_user_custom_flags():
+    text = _arpes_input_text().replace(
+        "\nTASK\n\tARPES\n",
+        "\nTASK\n\tARPES\n\tMY_CUSTOM_FLAG\n",
+        1,
+    )
+
+    parsed = InputParameters.definition("ARPES").read_from_string(text)
+
+    assert parsed.TASK["MY_CUSTOM_FLAG"]() is True
+
+
+def test_from_file_detects_bsf_from_task_selector(tmp_path):
+    parameters = InputParameters.create("BSFEK")
+    parameters.CONTROL.POTFIL.set("Fe.pot")
+    parameters.TASK.KPATH.set("6")
+    filename = tmp_path / "bsf.inp"
+    filename.write_text(parameters.to_string(validate=False))
+
+    parsed = InputParameters.from_file(filename)
+
+    assert parsed.task_name == "BSFEK"
+    assert parsed.TASK.KPATH() == "6"
