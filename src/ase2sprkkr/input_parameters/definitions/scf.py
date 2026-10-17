@@ -23,6 +23,7 @@ class SCFInputParametersDefinition(InputParametersDefinition):
         potfil = parameters.CONTROL.POTFIL()
         if potfil:
             files.append(resolve_file(directory, f"{potfil}_new"))
+        files.append(resolve_file(directory, "*_SCFSTART.dos"))
         return tuple(files)
 
 

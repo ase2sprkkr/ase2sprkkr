@@ -51,6 +51,7 @@ def test_non_tau_cache_roles(tmp_path):
         ("APS", {f"{DATASET}.aps"}),
         ("CLXPS", {f"{DATASET}.pes"}),
         ("FMAG", {f"{DATASET}_fmag_*.agr", f"{DATASET}_dens_*.agr"}),
+        ("SCF", {"*_SCFSTART.dos"}),
         ("SIGMA", {"sigma?????.dat"}),
         ("XAS", {f"{DATASET}*.rat"}),
         ("XES", {f"{DATASET}*.rat"}),
