@@ -71,7 +71,6 @@ class PostprocessingRunner:
             return RunState.POSTPROCESSING
         raw = self._runner.state
         if raw == RunState.FINISHED and self._submitted:
-            # The execution boundary has completed, but this wrapper has not.
             return RunState.POSTPROCESSING
         return raw
 
@@ -143,7 +142,15 @@ class PostprocessingRunner:
             if self._submitted or self._state != RunState.NEW:
                 raise RuntimeError(f"Run is already {self.state.value}")
             try:
-                self._runner.submit()
+                if self._runner.state == RunState.NEW:
+                    self._runner.submit()
+                else:
+                    start = getattr(self._runner, "start", None)
+                    if start is None:
+                        raise RuntimeError(
+                            f"Attached raw runner cannot be started from {self._runner.state.value}"
+                        )
+                    start()
             except SubmissionNotStarted:
                 raise
             self._submitted = True
