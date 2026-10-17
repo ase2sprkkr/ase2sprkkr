@@ -151,6 +151,27 @@ def test_wfplot_output_variants(tmp_path):
     assert not any("WF_match" in name for name in names)
 
 
+def test_vbpes_final_state_tau_cache(tmp_path):
+    p = parameters("VBPES")
+    assert not any(".tau.dir.F_" in name for name in basenames(p._definition.cache_files(p, tmp_path)))
+    assert not any(".dos.F_" in name for name in basenames(p._definition.output_files(p, tmp_path)))
+
+    p.TASK.USETAUNN = True
+    assert f"{DATASET}.tau.dir.F_1253" in basenames(p._definition.cache_files(p, tmp_path))
+    assert f"{DATASET}.dos.F_1253" in basenames(p._definition.output_files(p, tmp_path))
+
+    p.TASK.EPHOT = 750.9
+    assert f"{DATASET}.tau.dir.F_750" in basenames(p._definition.cache_files(p, tmp_path))
+    assert f"{DATASET}.dos.F_750" in basenames(p._definition.output_files(p, tmp_path))
+
+    p.TASK.EPHOT = 1.0
+    assert f"{DATASET}.tau.dir.F_1253" in basenames(p._definition.cache_files(p, tmp_path))
+
+    p.TASK.USETFIN = True
+    assert not any(".tau.dir.F_" in name for name in basenames(p._definition.cache_files(p, tmp_path)))
+    assert not any(".dos.F_" in name for name in basenames(p._definition.output_files(p, tmp_path)))
+
+
 def test_posani_previous_result_is_required_input(tmp_path):
     assert f"{DATASET}_pos_dat.pan" in manifest("POSANI", "input", tmp_path)
 

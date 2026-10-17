@@ -1,10 +1,48 @@
 """Angle-integrated valence photoemission in KKRGEN (SPR-KKR 9.7)."""
+import math
 import numpy as np
 from ...common.grammar_types import Integer, Keyword, SetOf
 from ...common.warnings import DataValidityError, DataValidityWarning
 from ..input_parameters_definitions import InputValueDefinition as V
-from ._file_manifests import RequiredTauInputParametersDefinition
+from ._file_manifests import RequiredTauInputParametersDefinition, resolve_file
 from ._sections import CONTROL, ENERGY, MODE, SITES, STRCONST, TASK, TAU
+
+
+def _fortran_nint(value):
+    """Match Fortran NINT for the VBPES EPHOT aliases."""
+    return math.floor(value + 0.5) if value >= 0 else math.ceil(value - 0.5)
+
+
+def _final_state_photon_label(parameters):
+    """Return the integer photon-energy label used in VBPES final-state files."""
+    photon_energy = parameters.TASK.EPHOT()
+    rounded = _fortran_nint(photon_energy)
+    if rounded == 1:
+        photon_energy = 1253.6
+    elif rounded == 2:
+        photon_energy = 1486.6
+    return int(photon_energy)
+
+
+class VbpesInputParametersDefinition(RequiredTauInputParametersDefinition):
+    """VBPES definition with optional reusable final-state TAU data."""
+
+    def _uses_final_state_tau(self, parameters):
+        return parameters.TASK.USETAUNN() and not parameters.TASK.USETFIN()
+
+    def cache_files(self, parameters, directory):
+        files = list(super().cache_files(parameters, directory))
+        if self._uses_final_state_tau(parameters):
+            label = _final_state_photon_label(parameters)
+            files.append(resolve_file(directory, f"{parameters.CONTROL.DATASET()}.tau.dir.F_{label}"))
+        return tuple(files)
+
+    def output_files(self, parameters, directory):
+        files = list(super().output_files(parameters, directory))
+        if self._uses_final_state_tau(parameters):
+            label = _final_state_photon_label(parameters)
+            files.append(resolve_file(directory, f"{parameters.CONTROL.DATASET()}.dos.F_{label}"))
+        return tuple(files)
 
 
 def _validate_vbpes(parameters, _values, why):
@@ -14,6 +52,8 @@ def _validate_vbpes(parameters, _values, why):
     issues = []
     if parameters.MODE.MODE() is not None:
         issues.append(DataValidityError("VBPES requires fully relativistic IREL=3."))
+    if not np.isfinite(task.EPHOT()):
+        issues.append(DataValidityError("TASK.EPHOT must be finite."))
     for name in ("QVEC", "QVECPH", "NSPIN"):
         value = task[name]()
         if value is not None and (not np.all(np.isfinite(value)) or np.linalg.norm(value) == 0):
@@ -40,7 +80,7 @@ def input_parameters():
                     defaults={"GRID": 3, "NE": 300, "ImE": 0.01},
                     add=[V("ERANGE", float, is_optional=True, info="Occupied energy window below EF, in eV; overrides EMIN.")])
     energy.copy_member("EMAX", is_optional=True)
-    return RequiredTauInputParametersDefinition(
+    return VbpesInputParametersDefinition(
         "vbpes", [CONTROL("VBPES"), TAU, MODE, STRCONST, energy,
         TASK("VBPES", [
             V("EPHOT", float, 1253.6, is_always_added=False, info="Photon energy in eV; values rounding to 1/2 select 1253.6/1486.6 eV."),
