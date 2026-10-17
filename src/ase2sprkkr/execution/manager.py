@@ -787,7 +787,7 @@ class ExecutionManager:
                 result_files = self._capture_result_files(result_files)
             except OSError as exc:
                 state = RunState.FAILED
-                phase = FailurePhase.POSTPROCESSING
+                phase = FailurePhase.ARTIFACTS
                 message = str(exc)
                 result_files = replace(
                     result_files,
