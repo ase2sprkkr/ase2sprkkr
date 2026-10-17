@@ -17,5 +17,16 @@ class ResultFileDefinitionRegistry(ModuleRegistry):
             for definition in self.values(include_aliases=False)
         }
 
+    def definition_for_task_file(self, task_file):
+        """Return the structured result definition declared by *task_file*."""
+        return None if task_file.type is None else self[task_file.type]
+
+    def info_for_task_file(self, task_file):
+        """Return task-specific info or the referenced result-format description."""
+        if task_file.info is not None:
+            return task_file.info
+        definition = self.definition_for_task_file(task_file)
+        return None if definition is None else definition.info
+
 
 result_file_definition_registry = ResultFileDefinitionRegistry()

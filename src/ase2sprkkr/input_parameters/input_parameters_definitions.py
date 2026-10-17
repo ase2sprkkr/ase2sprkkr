@@ -87,18 +87,6 @@ class InputParametersDefinition(ConfigurationFileDefinition):
     def initialize_from_result(self, parameters, result):
         """Initialize instance-specific defaults derived from a previous result."""
 
-    def input_files(self, parameters, directory):
-        """Return schema-specific auxiliary input files."""
-        return ()
-
-    def output_files(self, parameters, directory):
-        """Return schema-specific output files."""
-        return ()
-
-    def cache_files(self, parameters, directory):
-        """Return schema-specific optional cache files."""
-        return ()
-
     @classmethod
     @cache
     def custom_value_grammar(cls):

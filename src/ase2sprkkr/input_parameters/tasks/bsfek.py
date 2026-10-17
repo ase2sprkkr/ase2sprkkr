@@ -1,4 +1,5 @@
-from ..task_definition import TaskDefinition
+from ..definitions._file_manifests import tau_file
+from ..task_definition import TaskDefinition, TaskFile
 
 
 def task_definition():
@@ -8,4 +9,5 @@ def task_definition():
         executable="kkrgen",
         mpi=True,
         output_reader="BSF",
+        cache_files=(TaskFile(tau_file, info="Reusable TAU-directory cache file"),),
     )

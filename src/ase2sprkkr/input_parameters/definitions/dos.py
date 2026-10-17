@@ -2,7 +2,7 @@
 
 from .sections import CONTROL, TAU, ENERGY, TASK, SITES
 from ..input_parameters_definitions import InputParametersDefinition
-from ..task_definition import TaskDefinition
+from ..task_definition import TaskDefinition, TaskFile
 
 
 def input_parameters_definition():
@@ -26,6 +26,6 @@ def input_parameters_definition():
         executable="kkrgen",
         mpi=True,
         output_reader="DOS",
-        output_file_templates=("{dataset}.dos",),
+        output_files=(TaskFile("{dataset}.dos", type="DOS"),),
     )
     return schema
