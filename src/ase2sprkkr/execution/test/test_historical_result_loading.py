@@ -8,7 +8,6 @@ from ase2sprkkr.execution import (
     Executor,
     ExecutorPool,
     FileState,
-    RunReference,
     RunState,
     RunStore,
 )
@@ -29,9 +28,9 @@ class _HistoryExecutor(Executor):
         self.output_file = None
         self.restored_output = "original output"
 
-    def fetch_result_files(self, reference, files):
+    def fetch_result_files(self, run, files):
         files = tuple(files)
-        self.fetch_calls.append((reference, files))
+        self.fetch_calls.append((run.id, files))
         if self.output_file is None or self.output_file not in files:
             return
         with open(self.output_file, "w") as output:
@@ -67,23 +66,17 @@ def _terminal_run(tmp_path, *, state=RunState.FINISHED, return_code=0, task="DOS
 
     endpoint = endpoint_for_executor(executor)
     manager.register_executor(executor, endpoint)
-    reference = RunReference(
-        executor="history",
-        native_id="job-1",
-        directory=str(tmp_path),
-        output_file=str(output_file),
-    )
     record = manager.new_record(
         task=task,
         directory=tmp_path,
         endpoint=endpoint,
-        result_files=manager._result_files_for_spec(spec),
+        files=manager._result_files_for_spec(spec),
     )
     record = manager.store.save(record)
     record = manager.complete(
         record,
         state=state,
-        reference=reference,
+        execution=record.execution.submitted("job-1"),
         return_code=return_code,
         artifacts_available=True,
     )
@@ -126,15 +119,15 @@ def test_load_persistent_result_restores_exact_missing_historical_output(
     result = load_persistent_result(manager, record.id)
 
     assert executor.fetch_calls == [
-        (record.reference, (str(tmp_path / "run.out"),))
+        (record.id, (str(tmp_path / "run.out"),))
     ]
     assert (tmp_path / "run.out").read_text() == "original output"
     assert parsed[0][0] == str(tmp_path / "run.out")
     assert result.return_code == 0
     assert result.run_record.state == RunState.FINISHED
-    assert result.run_record.result_files.state == FileState.CURRENT
+    assert result.run_record.files.state == FileState.CURRENT
     assert (
-        result.run_record.result_files.availability_state
+        result.run_record.files.availability_state
         == ArtifactAvailabilityState.AVAILABLE
     )
 
@@ -161,7 +154,7 @@ def test_restored_changed_content_is_rejected_as_overwritten(tmp_path, monkeypat
 
     stored = manager.store.get(record.id)
     assert stored.state == RunState.FINISHED
-    assert stored.result_files.state == FileState.OVERWRITTEN
+    assert stored.files.state == FileState.OVERWRITTEN
 
 
 def test_retrieval_programming_error_is_not_persisted_as_artifact_failure(tmp_path):
@@ -178,7 +171,7 @@ def test_retrieval_programming_error_is_not_persisted_as_artifact_failure(tmp_pa
 
     stored = manager.store.get(record.id)
     assert (
-        stored.result_files.availability_state
+        stored.files.availability_state
         is ArtifactAvailabilityState.AVAILABLE
     )
 
@@ -190,7 +183,7 @@ def test_finished_history_without_available_output_is_not_synthesized(tmp_path):
     record = manager.new_record(
         task="DOS",
         directory=tmp_path,
-        result_files=manager._result_files_for_spec(spec),
+        files=manager._result_files_for_spec(spec),
     )
     record = manager.store.save(record)
     record = manager.complete(
