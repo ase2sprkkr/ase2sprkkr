@@ -242,30 +242,50 @@ def status_detached(directory, run_id):
     return _read_state(Path(directory).expanduser().resolve(), run_id)
 
 
+def _process_group_running(pid):
+    try:
+        os.killpg(pid, 0)
+    except ProcessLookupError:
+        return False
+    except PermissionError:
+        return True
+    return True
+
+
+def _wait_process_group_exit(pid, timeout):
+    deadline = time.monotonic() + timeout
+    while time.monotonic() < deadline:
+        if not _process_group_running(pid):
+            return True
+        time.sleep(0.05)
+    return not _process_group_running(pid)
+
+
 def _terminate_process_group(directory, run_id, pid, timeout):
+    """Stop one process group without publishing a terminal state prematurely.
+
+    Returns ``(state, stopped, signalled)``.  ``signalled`` distinguishes a
+    process that disappeared before cancellation from one we actually asked to
+    terminate; callers must not relabel a naturally completed run as cancelled.
+    """
     if not pid:
-        return _read_state(directory, run_id)
+        return _read_state(directory, run_id), True, False
 
     try:
         os.killpg(pid, signal.SIGTERM)
     except ProcessLookupError:
-        return _read_state(directory, run_id)
+        return _read_state(directory, run_id), True, False
 
-    deadline = time.monotonic() + timeout
-    while time.monotonic() < deadline:
-        try:
-            os.killpg(pid, 0)
-        except ProcessLookupError:
-            return _read_state(directory, run_id)
-        except PermissionError:
-            pass
-        time.sleep(0.05)
+    if _wait_process_group_exit(pid, timeout):
+        return _read_state(directory, run_id), True, True
 
     try:
         os.killpg(pid, signal.SIGKILL)
     except ProcessLookupError:
-        pass
-    return _read_state(directory, run_id)
+        return _read_state(directory, run_id), True, True
+
+    stopped = _wait_process_group_exit(pid, timeout)
+    return _read_state(directory, run_id), stopped, True
 
 
 def cancel_detached(directory, run_id, timeout=1.0):
@@ -281,12 +301,35 @@ def cancel_detached(directory, run_id, timeout=1.0):
         state = _read_state_unlocked(directory, run_id)
         if state.get("state") in _FINAL_STATES:
             return state
-        state = _write_state_unlocked(
-            directory, run_id, state="cancelled", finished_at=_timestamp()
-        )
         pid = state.get("pid")
+        if not pid:
+            # Local process creation and PID publication happen while holding
+            # this same lock. Therefore no process can appear after this
+            # terminal marker without first observing that cancellation won.
+            return _write_state_unlocked(
+                directory, run_id, state="cancelled", finished_at=_timestamp()
+            )
 
-    return _terminate_process_group(directory, run_id, pid, timeout)
+    state, stopped, signalled = _terminate_process_group(
+        directory, run_id, pid, timeout
+    )
+    if not stopped or not signalled:
+        return state
+
+    # Only publish CANCELLED after the process group is known to be gone. A hard
+    # crash before this point may leave stale active metadata, but can never
+    # leave a live calculation behind a durable terminal cancellation marker.
+    with _state_lock(directory, run_id):
+        state = _read_state_unlocked(directory, run_id)
+        if state.get("state") == "cancelled":
+            return state
+        return _write_state_unlocked(
+            directory,
+            run_id,
+            state="cancelled",
+            failure_phase=None,
+            finished_at=state.get("finished_at") or _timestamp(),
+        )
 
 
 def follow_detached(
