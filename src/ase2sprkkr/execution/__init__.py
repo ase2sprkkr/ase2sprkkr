@@ -28,7 +28,9 @@ from .manager import (
     RunStore,
     SubmissionKey,
 )
+from .outcome import ExecutionCapture, ExecutionOutcome
 from .pool import ExecutorPool, default_executor_pool
+from .postprocessing import PostprocessingRunner
 from .projects import (
     Project,
     ProjectConflictError,
@@ -38,16 +40,17 @@ from .projects import (
     default_projects_directory,
 )
 from .project_manager import ExecutionManager
-from .psij import PsijExecutor, PsijRunner
+from .psij import PsijRunner
+from .psij_raw import PsijExecutor
 from .remote import FileSyncPolicy, RemoteRunner
-from .remote_endpoint import RemoteEndpointExecutor
+from .remote_raw import RemoteEndpointExecutor
 from .transport import LocalTransport, RunningCommand, SshTransport, Transport
 
-# Public remote executors represent reusable endpoint identity only. Per-run
-# filesystem mapping and synchronization are carried by LaunchSpec.
 RemoteExecutor = RemoteEndpointExecutor
 
 __all__ = [
+    "ExecutionCapture",
+    "ExecutionOutcome",
     "ExecutionResources",
     "ExecutionSpec",
     "Executor",
@@ -56,6 +59,7 @@ __all__ = [
     "LaunchSpec",
     "MpiSpec",
     "MpiNotFoundWarning",
+    "PostprocessingRunner",
     "ResourceOwnedRunner",
     "Runner",
     "RunReference",
