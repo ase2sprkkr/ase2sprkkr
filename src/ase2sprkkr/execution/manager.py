@@ -878,8 +878,7 @@ class PersistentRunner:
         self._record = self.manager.reserve(self._record)
         try:
             prepare = getattr(self._runner, "prepare_submission", None)
-            if prepare is not None:
-                prepare()
+            if prepare is not None and prepare():
                 # Persist the exact staged file map and target directory before
                 # calling the backend. A lost submit reply can then be recovered
                 # without depending on live runner state.

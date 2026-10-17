@@ -163,8 +163,10 @@ class PostprocessingRunner:
     def prepare_submission(self):
         """Delegate side-effect-free-of-process launch preparation to raw runner."""
         prepare = getattr(self._runner, "prepare_submission", None)
-        if prepare is not None:
-            prepare()
+        if prepare is None:
+            return False
+        prepare()
+        return True
 
     def submit(self):
         with self._lock:
