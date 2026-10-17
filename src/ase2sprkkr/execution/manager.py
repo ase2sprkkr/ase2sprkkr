@@ -1069,6 +1069,16 @@ class PersistentRunner:
             failure_phase=phase,
             artifacts_available=artifacts_available,
         )
+        # ACK is strictly after RunStore's crash-durable terminal transition.
+        # A lost ACK reply is harmless: backend receipts are idempotently deleted.
+        # Keep the persisted result even if the acknowledgement cannot be sent.
+        if self._record.state in _FINAL_STATES and self.reference is not None:
+            acknowledge = getattr(self.executor, "acknowledge", None)
+            if acknowledge is not None:
+                try:
+                    acknowledge(self.reference)
+                except (OSError, RuntimeError):
+                    pass
 
     def wait(self):
         try:
