@@ -155,7 +155,7 @@ def test_reserve_syncs_inputs_before_submitting_record(tmp_path, monkeypatch):
     assert events[:2] == [("sync", "input.inp"), ("state", "submitting")]
 
 
-def test_finalize_syncs_outputs_before_terminal_record(tmp_path, monkeypatch):
+def test_artifact_publication_syncs_outputs_before_terminal_record(tmp_path, monkeypatch):
     output_file = tmp_path / "output.out"
     output_file.write_text("result")
     store = RunStore(tmp_path / "runs")
@@ -266,7 +266,7 @@ def test_detached_local_syncs_streams_before_terminal_state(tmp_path, monkeypatc
     assert status_detached(tmp_path, run_id)["state"] == "finished"
 
 
-def test_detached_stream_sync_failure_is_finalization_failure(tmp_path, monkeypatch):
+def test_detached_stream_sync_failure_is_artifact_failure(tmp_path, monkeypatch):
     output = tmp_path / "calculation.out"
     run_id = "stream-sync-failure"
     _submit_local_without_helper(tmp_path, monkeypatch, run_id, output)
@@ -281,5 +281,5 @@ def test_detached_stream_sync_failure_is_finalization_failure(tmp_path, monkeypa
 
     state = status_detached(tmp_path, run_id)
     assert state["state"] == "failed"
-    assert state["failure_phase"] == FailurePhase.FINALIZATION.value
+    assert state["failure_phase"] == FailurePhase.ARTIFACTS.value
     assert state["return_code"] == 0
