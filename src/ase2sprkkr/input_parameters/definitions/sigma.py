@@ -51,7 +51,8 @@ def input_parameters():
                 V("FRAMETET", float, is_optional=True, info="Response-frame Euler polar angle in degrees."),
                 V("FRAMEPHI", float, is_optional=True, info="Response-frame Euler azimuth in degrees."),
                 V("FRAMEGAM", float, is_optional=True, info="Response-frame third Euler angle in degrees."),
-            ]), SITES], executable="kkrchi", mpi=False, validators=_validate_sigma,
+            ]), SITES], executable="kkrchi", mpi=False,
+        output_file_templates=("sigma?????.dat",), validators=_validate_sigma,
         info="DC conductivity and selected response tensors",
         description="Standard periodic ASA FREL Kubo-Streda SIGMA. Default NE=1 omits the Fermi-sea integral; "
                     "use GRID=5 and NE>1 to include it. Native surface point is EF+i*ImE. "

@@ -50,7 +50,8 @@ def input_parameters():
         V("FRAMEGAM", float, is_optional=True, info="Frame Euler angle in degrees."),
     ])
     return TauCacheInputParametersDefinition("xes", [CONTROL("XES"), TAU, MODE, energy, task, SITES],
-        executable="kkrgen", mpi=False, validators=_validate,
+        executable="kkrgen", mpi=False,
+        output_file_templates=("{dataset}*.rat",), validators=_validate,
         info="X-ray emission through the common XRAYSPEC workflow.",
         description="Requires an occupied-state TAU directory with NE matching ENERGY.NE, or a workflow producing it. "
                     "Native XES forces EMAX=EF. RXES shares the calculation with RXAS; numerical emission "

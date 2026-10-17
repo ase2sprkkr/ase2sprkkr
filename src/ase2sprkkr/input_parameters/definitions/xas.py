@@ -46,7 +46,8 @@ def input_parameters():
             V("FRAMETET", float, 0.0, is_expert=True, is_optional=True, info="Frame Euler polar angle in degrees."),
             V("FRAMEPHI", float, 0.0, is_expert=True, is_optional=True, info="Frame Euler azimuth in degrees."),
             V("FRAMEGAM", float, 0.0, is_expert=True, is_optional=True, info="Third frame Euler angle in degrees."),
-        ]), SITES], executable="kkrgen", mpi=False, validators=_validate_xas,
+        ]), SITES], executable="kkrgen", mpi=False,
+        output_file_templates=("{dataset}*.rat",), validators=_validate_xas,
         info="Calculates X-ray absorption spectra",
         description="Requires NE to match the first TAU contour and a valid core shell in the potential. "
                     "Frame angles rotate the polarization frame. Native MPI exits before XRAYSPEC. "

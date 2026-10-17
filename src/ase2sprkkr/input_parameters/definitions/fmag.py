@@ -25,7 +25,9 @@ def input_parameters():
     energy.copy_member("NE", type=SetOf(Integer(min=1), min_length=1, max_length=2))
     return InputParameters(
         "fmag", [CONTROL("FMAG"), TAU, MODE, STRCONST, energy, TASK("FMAG"), SITES],
-        executable="kkrgen", mpi=True, validators=_validate_fmag,
+        executable="kkrgen", mpi=True,
+        output_file_templates=("{dataset}_fmag_*.agr", "{dataset}_dens_*.agr"),
+        validators=_validate_fmag,
         info="Magnetic form factor from charge, spin and orbital densities (ASA).",
         description="No task-specific form-factor options are read. FMAG becomes E-INTEGRAL internally. "
                     "The momentum mesh is fixed to 100 points. FULLPOT stops in GEN. "

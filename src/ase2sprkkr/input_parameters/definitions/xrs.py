@@ -54,7 +54,8 @@ def input_parameters():
         V("FRAMEGAM", float, is_optional=True, info="Frame Euler angle in degrees."),
     ])
     return TauCacheInputParametersDefinition("xrs", [CONTROL("XRS"), TAU, MODE, energy, task, SITES],
-        executable="kkrgen", mpi=False, validators=_validate,
+        executable="kkrgen", mpi=False,
+        output_file_templates=("{dataset}*.rat",), validators=_validate,
         info="X-ray resonant scattering through the common XRAYSPEC workflow.",
         description="Three-integration resonant scattering tensor; requires NE matching the first TAU contour. "
                     "Native SIG is only partly initialized, so numerical results require Fortran repair. "

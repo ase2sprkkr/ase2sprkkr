@@ -3,8 +3,16 @@ import numpy as np
 from ...common.grammar_types import Integer, SetOf
 from ...common.warnings import DataValidityError, DataValidityWarning
 from ._sections import TASK, CONTROL, TAU, ENERGY, SITES, STRCONST, MODE, CPA
-from ._file_manifests import RequiredTauInputParametersDefinition
+from ._file_manifests import RequiredTauInputParametersDefinition, resolve_file
 from ..input_parameters_definitions import InputValueDefinition as V
+
+
+class PosaniInputParametersDefinition(RequiredTauInputParametersDefinition):
+    def output_files(self, parameters, directory):
+        files = list(super().output_files(parameters, directory))
+        if parameters.TASK.MD2D() or parameters.TASK.EMD2D():
+            files.append(resolve_file(directory, f"{parameters.CONTROL.DATASET()}*_pan2D*"))
+        return tuple(files)
 
 
 def _validate_posani(p, _values, why):
@@ -81,7 +89,7 @@ def input_parameters():
                 for name in ("PNVEC", "PPVEC1", "PPVEC2")]
     members += [V(name, False) for name in ("MD2D", "EMD2D", "SHFT", "SHFT_PP", "SHFT_PN", "INSIDE_SPHERE", "SQQ_RESOLVED")]
     control = CONTROL("POSANI").copy(add=[V("RDTAU", True, is_always_added=True, info="Use existing electron TAU data.")])
-    return RequiredTauInputParametersDefinition("posani", [control, tau, MODE, STRCONST, CPA,
+    return PosaniInputParametersDefinition("posani", [control, tau, MODE, STRCONST, CPA,
                            energy, TASK("POSANI").copy(members), SITES],
                            executable="kkrgen", mpi=True,
                            input_file_templates=("{dataset}_pos_dat.pan",),
