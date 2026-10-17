@@ -2,6 +2,8 @@ import io
 import json
 import signal
 
+import pytest
+
 from ase2sprkkr.execution import FailurePhase, RunState
 from ase2sprkkr.execution import psij, remote_process_worker, remote_service
 
@@ -206,3 +208,14 @@ def test_cancel_does_not_publish_terminal_fact_while_process_survives_sigkill(
     assert status["state"] == RunState.RUNNING.value
     assert signals == [signal.SIGTERM, signal.SIGKILL]
     assert not outcome.exists()
+
+
+def test_supervisor_requires_parent_launch_release(monkeypatch):
+    import os
+
+    read_fd, write_fd = os.pipe()
+    os.close(write_fd)
+    monkeypatch.setenv(remote_process_worker._START_FD_ENV, str(read_fd))
+
+    with pytest.raises(RuntimeError, match="not released"):
+        remote_process_worker._wait_for_parent_release()

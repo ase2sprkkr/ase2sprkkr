@@ -30,7 +30,8 @@ def _wait_for_parent_release():
         return
     fd = int(value)
     try:
-        os.read(fd, 1)
+        if os.read(fd, 1) != b"1":
+            raise RuntimeError("Remote supervisor launch was not released by parent")
     finally:
         os.close(fd)
 

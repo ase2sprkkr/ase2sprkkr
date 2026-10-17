@@ -59,7 +59,7 @@ def test_remote_endpoint_status_queries_opaque_handles_individually():
     assert "missing executable" in statuses[1].message
 
 
-def test_direct_remote_status_passes_client_owned_receipt_location():
+def test_direct_remote_status_uses_opaque_handle_without_client_receipt_path():
     executor = RemoteEndpointExecutor(_Transport(), backend="local")
     calls = []
 

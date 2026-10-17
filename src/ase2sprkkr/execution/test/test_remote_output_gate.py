@@ -25,10 +25,10 @@ class _Executor:
         self.backend_state = RunState(state)
         self.sync_calls = 0
 
-    async def _follow(self, directory, run_id):
+    async def _follow(self, directory, run_id, reference=None):
         return _Follow()
 
-    async def _status(self, directory, run_id):
+    async def _status(self, directory, run_id, reference=None):
         return {
             "state": self.backend_state.value,
             "return_code": 0 if self.backend_state == RunState.FINISHED else None,
