@@ -342,8 +342,7 @@ class ExecutionManager:
             caches=tuple(CacheEntry(FileEntry(local_path=x)) for x in caches if x is not None),
             stdout=None if primary_output is None else FileEntry(local_path=primary_output),
             stderr=None if error is None else FileEntry(local_path=error),
-            availability_state=ArtifactAvailabilityState.PENDING,
-        )
+        ).initialize_availability()
 
     @staticmethod
     def _concrete_result_files(manifests):
@@ -518,20 +517,16 @@ class ExecutionManager:
 
         return self.store.update(record, merge)
 
-    def update_artifact_availability(self, record, state, message=None):
+    def update_artifact_availability(self, record, path, state, message=None):
+        """Persist availability of one artifact without changing the run outcome."""
         state = ArtifactAvailabilityState(state)
 
         def update(latest):
-            result_files = latest.files
-            if result_files is None:
-                return latest
             return replace(
                 latest,
                 updated_at=_now(),
-                files=replace(
-                    result_files,
-                    availability_state=state,
-                    availability_message=message,
+                files=latest.files.with_file_availability(
+                    path, state.value, message
                 ),
             )
 
@@ -646,41 +641,22 @@ class ExecutionManager:
         phase = _failure_phase(failure_phase)
         result_files = record.files if files is None else files
 
-        if (
-            result_files is not None
-            and result_files.availability_state == ArtifactAvailabilityState.FAILED
-        ):
+        if result_files is not None and result_files.failed_artifacts:
             artifacts_available = False
             if state == RunState.FINISHED:
-                # The backend succeeded, but its required artifacts did not
-                # become available locally. Do not report a successful run.
+                # The successful backend does not excuse a required download
+                # failure; the failed file retains the specific diagnostics.
                 state = RunState.FAILED
                 phase = FailurePhase.DOWNLOAD
                 message = result_files.availability_message or message
 
         if artifacts_available and result_files is not None:
-            result_files = replace(
-                result_files,
-                availability_state=ArtifactAvailabilityState.AVAILABLE,
-                availability_message=None,
-            )
             try:
                 result_files = self._capture_result_files(result_files)
             except OSError as exc:
                 state = RunState.FAILED
                 phase = FailurePhase.ARTIFACTS
                 message = str(exc)
-                result_files = replace(
-                    result_files,
-                    availability_state=ArtifactAvailabilityState.FAILED,
-                    availability_message=str(exc),
-                )
-        elif phase in (FailurePhase.ARTIFACTS, FailurePhase.DOWNLOAD) and result_files is not None:
-            result_files = replace(
-                result_files,
-                availability_state=ArtifactAvailabilityState.FAILED,
-                availability_message=message,
-            )
 
         return self.transition(
             record,
@@ -708,18 +684,25 @@ class ExecutionManager:
         if not executor.supports_result_file_retrieval:
             return record
 
-        executor.fetch_result_files(record, missing)
-        refreshed = self.store.get(record.id)
-        remaining = self._missing_result_files(refreshed.files)
-        if not remaining:
-            return self.update_artifact_availability(
-                refreshed, ArtifactAvailabilityState.AVAILABLE
-            )
-        return self.update_artifact_availability(
-            refreshed,
-            ArtifactAvailabilityState.FAILED,
-            "Captured artifacts are still missing: " + ", ".join(remaining),
-        )
+        for path in missing:
+            try:
+                executor.fetch_result_files(record, (path,))
+            except OSError as exc:
+                self.update_artifact_availability(
+                    record, path, ArtifactAvailabilityState.FAILED, str(exc),
+                )
+                raise
+            refreshed = self.store.get(record.id)
+            if path in self._missing_result_files(refreshed.files):
+                record = self.update_artifact_availability(
+                    refreshed, path, ArtifactAvailabilityState.FAILED,
+                    "Historical artifact is still missing",
+                )
+            else:
+                record = self.update_artifact_availability(
+                    refreshed, path, ArtifactAvailabilityState.AVAILABLE,
+                )
+        return record
 
     def _submission_context(self, executor, spec):
         provider = getattr(executor, "submission_context", None)

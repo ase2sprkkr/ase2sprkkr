@@ -129,8 +129,7 @@ class _RemoteRun(RemoteRunner):
             stdout=None if self.result.output_file is None else FileEntry(self.result.output_file, sync.get("output_file")),
             stderr=None if self.result.error_file is None else FileEntry(self.result.error_file, sync.get("error_file")),
             mapping=mapping,
-            availability_state="pending",
-        )
+        ).initialize_availability()
 
     async def _prepare_async(self):
         run_id = self._run_id or uuid4().hex

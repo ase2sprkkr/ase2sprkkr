@@ -70,6 +70,8 @@ class FileEntry:
 
     local_path: Optional[str] = None
     remote_path: Optional[str] = None
+    availability_state: Optional[str] = None
+    availability_message: Optional[str] = None
 
     def __post_init__(self):
         import os
@@ -80,6 +82,12 @@ class FileEntry:
                 object.__setattr__(self, name, os.fspath(value))
         if self.local_path is None and self.remote_path is None:
             raise ValueError("A file entry must have at least one location")
+        if self.availability_state is not None and self.availability_state not in (
+            "pending", "available", "failed", "skipped"
+        ):
+            raise ValueError("Invalid per-file availability state")
+        if self.availability_message is not None and self.availability_state != "failed":
+            raise ValueError("An availability error belongs to a failed file")
 
 
 @dataclass(frozen=True)
@@ -128,8 +136,6 @@ class FileManifest:
     input_versions: tuple[FileVersion, ...] = ()
     output_versions: tuple[FileVersion, ...] = ()
     captured_at: Optional[str] = None
-    availability_state: Optional[str] = None
-    availability_message: Optional[str] = None
 
     def __post_init__(self):
         for name, cls in (("inputs", FileEntry), ("outputs", FileEntry), ("caches", CacheEntry)):
@@ -152,10 +158,85 @@ class FileManifest:
                     for version in getattr(self, name)
                 ),
             )
-        if self.availability_state is not None:
-            allowed = {"pending", "available", "failed"}
-            if self.availability_state not in allowed:
-                raise ValueError("Invalid artifact availability state")
+    @property
+    def artifacts(self):
+        """Output streams, declared outputs and caches (one status per local file)."""
+        entries = (self.stdout, self.stderr, *self.outputs, *(x.file for x in self.caches))
+        unique = {}
+        for entry in entries:
+            if entry is not None and entry.local_path is not None:
+                unique[entry.local_path] = entry
+        return tuple(unique.values())
+
+    @property
+    def failed_artifacts(self):
+        return tuple(x for x in self.artifacts if x.availability_state == "failed")
+
+    @property
+    def availability_state(self):
+        """Derived summary for callers; never stored independently."""
+        statuses = tuple(x.availability_state for x in self.artifacts)
+        if "failed" in statuses:
+            return "failed"
+        if not statuses or None in statuses or "pending" in statuses:
+            return "pending"
+        if all(x == "skipped" for x in statuses):
+            return "skipped"
+        return "available"
+
+    @property
+    def availability_message(self):
+        failures = self.failed_artifacts
+        return None if not failures else failures[0].availability_message
+
+    def initialize_availability(self):
+        """Mark declared downloadable files pending without marking inputs."""
+        return self._map_artifacts(
+            lambda item: replace(item, availability_state="pending")
+            if item.availability_state is None else item
+        )
+
+    def _map_artifacts(self, transform):
+        return replace(
+            self,
+            stdout=None if self.stdout is None else transform(self.stdout),
+            stderr=None if self.stderr is None else transform(self.stderr),
+            outputs=tuple(transform(x) for x in self.outputs),
+            caches=tuple(replace(x, file=transform(x.file)) for x in self.caches),
+        )
+
+    def with_file_availability(
+        self, local_path, state, message=None, *, remote_path=None, kind="output",
+    ):
+        """Update one resolved artifact, or register a wildcard match.
+
+        Duplicate stream/output declarations of the same path are updated
+        together. Cache entries are optional and remain distinct from outputs.
+        """
+        import os
+        path = os.fspath(local_path)
+        if state not in ("pending", "available", "failed", "skipped"):
+            raise ValueError("Invalid per-file availability state")
+        if message is not None and state != "failed":
+            raise ValueError("An availability error belongs to a failed file")
+        matches = any(x.local_path == path for x in self.artifacts)
+        if matches:
+            return self._map_artifacts(
+                lambda item: replace(
+                    item,
+                    availability_state=state,
+                    availability_message=message,
+                ) if item.local_path == path else item
+            )
+        file = FileEntry(
+            local_path=path, remote_path=remote_path,
+            availability_state=state, availability_message=message,
+        )
+        if kind == "output":
+            return replace(self, outputs=(*self.outputs, file))
+        if kind == "cache":
+            return replace(self, caches=(*self.caches, CacheEntry(file)))
+        raise ValueError(f"Unknown artifact kind: {kind!r}")
 
     @property
     def input_file(self):
