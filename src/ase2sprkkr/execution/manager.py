@@ -617,10 +617,14 @@ class ExecutionManager:
         state = RunState.POSTPROCESSING if status.state == RunState.FINISHED else status.state
         if state == RunState.FAILED and return_code is None:
             return_code = 1
+        execution = status.execution
+        if execution is None and status.backend_id is not None:
+            execution = record.execution.submitted(status.backend_id)
         return self.transition(
             record,
             state=state,
-            execution=status.execution,
+            execution=execution,
+            files=status.files if status.files is not None else _UNCHANGED,
             return_code=return_code,
             message=status.message,
             failure_phase=phase,
@@ -828,6 +832,19 @@ class PersistentRunner:
         return self._runner.backend_id
 
     @property
+    def execution(self):
+        proposed = getattr(self._runner, "execution", None)
+        if proposed is not None:
+            return proposed
+        if self.backend_id is None:
+            return None
+        return self._record.execution.submitted(self.backend_id)
+
+    @property
+    def files(self):
+        return getattr(self._runner, "files", None)
+
+    @property
     def exception(self):
         return self._runner.exception
 
@@ -844,7 +861,7 @@ class PersistentRunner:
             self._record = self.manager.transition(
                 self._record,
                 state=state,
-                execution=self._record.execution.submitted(self.backend_id),
+                execution=self.execution,
                 failure_phase=self.failure_phase,
             )
         return self._record.state if self._record.state != RunState.NEW else state
@@ -873,27 +890,28 @@ class PersistentRunner:
             )
             raise
         except BaseException:
-            # No reference means submission may be uncertain. Keep SUBMITTING so
+            # No backend ID means submission may be uncertain. Keep SUBMITTING so
             # recover_submitting() can resolve it instead of inventing failure.
             backend_id = self.backend_id
             if backend_id is not None:
                 self._record = self.manager.transition(
                     self._record,
                     state=self._runner.state,
-                    execution=self._record.execution.submitted(backend_id),
+                    execution=self.execution,
                     failure_phase=self.failure_phase,
                 )
             raise
 
         backend_id = self.backend_id
         if backend_id is None:
-            raise RuntimeError("Executor submit returned without a run reference")
+            raise RuntimeError("Executor submit returned without a backend ID")
         self.manager.register_executor(self.executor, self._record.execution.endpoint)
         self._record = self.manager.transition(
             self._record,
             state=self._runner.state,
-            execution=self._record.execution.submitted(backend_id),
+            execution=self.execution,
             failure_phase=self.failure_phase,
+            files=self.files if self.files is not None else _UNCHANGED,
         )
         return result
 
@@ -903,7 +921,7 @@ class PersistentRunner:
             self._record = self.manager.transition(
                 self._record,
                 state=self._runner.state,
-                execution=self._record.execution.submitted(self.backend_id),
+                execution=self.execution,
                 failure_phase=self.failure_phase,
             )
 
@@ -923,7 +941,7 @@ class PersistentRunner:
         self._record = self.manager.complete(
             self._record,
             state=state,
-            execution=self._record.execution.submitted(self.backend_id),
+            execution=self.execution,
             return_code=getattr(self._runner, "return_code", None),
             message=message,
             failure_phase=phase,
@@ -967,6 +985,6 @@ class PersistentRunner:
                 self._record = self.manager.transition(
                     self._record,
                     state=self._runner.state,
-                    execution=self._record.execution.submitted(self.backend_id),
+                    execution=self.execution,
                     failure_phase=self.failure_phase,
                 )
