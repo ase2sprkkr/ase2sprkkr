@@ -137,3 +137,44 @@ def test_merged_stdout_stderr_has_only_one_file_status():
     assert manifest.stdout.availability_state == "available"
     assert manifest.stderr.availability_state == "available"
     assert FileManifest(**asdict(manifest)) == manifest
+
+
+def test_wildcard_parent_remains_pending_until_completion():
+    manifest = FileManifest(
+        outputs=(FileEntry("/local/*.dat", "/remote/*.dat", "pending"),)
+    )
+    manifest = manifest.with_file_availability(
+        "/local/one.dat", "pending", remote_path="/remote/one.dat",
+        source_pattern="/local/*.dat",
+    )
+    assert manifest.outputs[0].availability_state == "pending"
+    assert manifest.outputs[1].source_pattern == "/local/*.dat"
+    manifest = manifest.with_file_availability("/local/one.dat", "available")
+    assert manifest.outputs[0].availability_state == "pending"
+    manifest = manifest.with_file_availability(
+        "/local/two.dat", "failed", "transfer failed",
+        remote_path="/remote/two.dat", source_pattern="/local/*.dat",
+    )
+    manifest = manifest.with_file_availability(
+        "/local/*.dat", "failed", "transfer failed",
+    )
+    assert [entry.availability_state for entry in manifest.outputs] == [
+        "failed", "available", "failed",
+    ]
+    assert FileManifest(**asdict(manifest)) == manifest
+
+
+def test_wildcard_parent_completed_after_all_files():
+    manifest = FileManifest(
+        outputs=(FileEntry("/local/*.dat", "/remote/*.dat", "pending"),)
+    )
+    for item in ("one", "two"):
+        manifest = manifest.with_file_availability(
+            f"/local/{item}.dat", "pending",
+            remote_path=f"/remote/{item}.dat", source_pattern="/local/*.dat",
+        )
+        manifest = manifest.with_file_availability(f"/local/{item}.dat", "available")
+        assert manifest.outputs[0].availability_state == "pending"
+    manifest = manifest.with_file_availability("/local/*.dat", "available")
+    assert manifest.availability_state == "available"
+    assert len(manifest.outputs) == 3
