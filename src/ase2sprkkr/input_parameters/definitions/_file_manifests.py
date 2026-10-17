@@ -18,11 +18,28 @@ def _optional_value(section, name):
         return None
 
 
+def native_dataset(parameters):
+    """Return SPR-KKR's effective ``DATSET`` value.
+
+    Native executables preserve ``CONTROL.DATASET`` separately as ``DATSET0``
+    and append ``_' + CONTROL.ADSI`` to ``DATSET`` when ADSI is non-empty.
+    Most calculation-generated files use the latter value.
+    """
+    dataset = os.fspath(parameters.CONTROL.DATASET())
+    adsi = _optional_value(parameters.CONTROL, "ADSI")
+    return f"{dataset}_{adsi}" if adsi else dataset
+
+
+def native_file(parameters, directory, suffix):
+    """Resolve a file whose name is ``DATSET + suffix`` in SPR-KKR."""
+    return resolve_file(directory, f"{native_dataset(parameters)}{suffix}")
+
+
 def tau_file(parameters, directory):
-    """Return the effective native TAU-directory file path."""
+    """Return the effective native TAU-directory path."""
     filename = _optional_value(parameters.TAU, "TAUDIR")
     if not filename:
-        filename = f"{parameters.CONTROL.DATASET()}.tau.dir"
+        filename = f"{native_dataset(parameters)}.tau.dir"
 
     filename = os.fspath(filename)
     if os.path.isabs(filename):
