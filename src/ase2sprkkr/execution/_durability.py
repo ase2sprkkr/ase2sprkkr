@@ -83,15 +83,28 @@ def durable_write_text(path, text, *, encoding="utf-8", mode=None):
     """Atomically replace text after synchronizing contents and its new name."""
     path = Path(path)
     temporary = path.with_name(f".{path.name}.{uuid4().hex}.tmp")
+    descriptor = None
     try:
-        with temporary.open("x", encoding=encoding) as stream:
-            stream.write(text)
-            if mode is not None:
+        flags = os.O_WRONLY | os.O_CREAT | os.O_EXCL
+        descriptor = os.open(temporary, flags, 0o666 if mode is None else mode)
+        if mode is not None:
+            # Preserve the old best-effort permission contract.  Supplying the
+            # mode to os.open prevents a wider-permission window before chmod,
+            # while filesystems that reject chmod must not turn an otherwise
+            # durable state write into a lifecycle failure.
+            try:
                 os.chmod(temporary, mode)
+            except OSError:
+                pass
+        with os.fdopen(descriptor, "w", encoding=encoding) as stream:
+            descriptor = None
+            stream.write(text)
             stream.flush()
             os.fsync(stream.fileno())
         durable_replace(temporary, path)
     finally:
+        if descriptor is not None:
+            os.close(descriptor)
         try:
             temporary.unlink()
         except FileNotFoundError:
