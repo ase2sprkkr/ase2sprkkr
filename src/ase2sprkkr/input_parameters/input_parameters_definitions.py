@@ -84,7 +84,6 @@ def _task_preparse_definition():
                 is_optional=True,
                 is_required=False,
                 is_repeated=True,
-                repeated_with_name=True,
                 repeated_delimiter=pp.Empty(),
             )],
             is_optional=True,
