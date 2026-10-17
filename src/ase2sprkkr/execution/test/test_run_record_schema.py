@@ -68,6 +68,7 @@ def test_run_record_has_only_one_execution_identity(tmp_path):
 
 
 def test_persisted_execution_identity_cannot_be_replaced(tmp_path):
+    from dataclasses import replace
     from ase2sprkkr.execution.manager import ExecutionManager
 
     manager = ExecutionManager(RunStore(tmp_path / "runs"))
@@ -79,8 +80,6 @@ def test_persisted_execution_identity_cannot_be_replaced(tmp_path):
     assert manager.store.get(record.id).execution.backend_id == "job-42"
     with pytest.raises(ValueError, match="Backend identity"):
         manager.transition(
-            first, execution=first.execution.submitted("job-42").__class__(
-                first.execution.endpoint, first.execution.directory, "job-43"
-            ),
+            first, execution=replace(first.execution, backend_id="job-43"),
         )
     assert manager.store.get(record.id).execution.backend_id == "job-42"
