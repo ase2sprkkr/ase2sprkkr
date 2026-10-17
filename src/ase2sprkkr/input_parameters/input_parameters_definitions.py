@@ -61,7 +61,7 @@ class InputParametersDefinition(ConfigurationFileDefinition):
 
     This is declaration-time metadata for the simple case where one input
     schema represents exactly one task. Schemas shared by multiple tasks leave
-    it as ``None`` and override :meth:`task_definition_name` using their values.
+    it as ``None`` and override :meth:`task_name` using their values.
 
     The association is internal and must not be changed after registration.
     """
@@ -69,11 +69,11 @@ class InputParametersDefinition(ConfigurationFileDefinition):
     child_class = InputSectionDefinition
     result_class = InputParameters
     custom_class = staticmethod(
-        CustomConfigurationSection.factory(InputSectionDefinition)
+        CustomConfigurationSection.factory(InputSectionDefinition, mixed)
     )
     configuration_type_name = "INPUT PARAMETERS"
 
-    def task_definition_name(self, parameters):
+    def task_name(self, parameters):
         """Return the ASE2SPRKKR task name represented by *parameters*.
 
         The standard one-schema/one-task case is answered directly by the
