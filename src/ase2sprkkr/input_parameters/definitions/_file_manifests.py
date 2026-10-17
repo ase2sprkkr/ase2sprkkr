@@ -22,6 +22,14 @@ def _optional_value(section, name):
         return None
 
 
+def orbital_label(angular_momentum):
+    """Return SPR-KKR's one-character FUNTXTL label for orbital angular momentum."""
+    angular_momentum = int(angular_momentum)
+    if angular_momentum <= 2:
+        return "spd"[angular_momentum]
+    return chr(ord("f") + angular_momentum - 3)
+
+
 def xray_shell_label(core_level):
     """Return the native K/L/M/N/O filename label for a core shell."""
     principal = int(core_level[:-1])

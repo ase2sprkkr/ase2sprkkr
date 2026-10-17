@@ -8,7 +8,35 @@ fixes m_j=1/2 and polarization q=0; neither is an input parameter.
 from ...common.grammar_types import Integer, Keyword, SetOf
 from ...common.warnings import DataValidityError, DataValidityWarning
 from ..input_parameters_definitions import InputParametersDefinition as InputParameters, InputValueDefinition as V
+from ._file_manifests import orbital_label, resolve_file
 from ._sections import CONTROL, ENERGY, MODE, SITES, STRCONST, TASK, TAU
+
+
+class MeplotInputParametersDefinition(InputParameters):
+    """MEPLOT definition with its native state/self-energy XMGR outputs."""
+
+    def output_files(self, parameters, directory):
+        files = list(super().output_files(parameters, directory))
+        dataset = parameters.CONTROL.DATASET()
+        task = parameters.TASK
+
+        if task.INITIALSTATE() == "CORE":
+            state_label = task.CL()
+        else:
+            angular_momentum = task.L()
+            state_label = "VB" if angular_momentum is None else orbital_label(angular_momentum)
+
+        sefin = task.SEFIN()
+        if sefin:
+            state_label = f"{state_label}_SE{sefin}"
+        files.append(resolve_file(directory, f"{dataset}_{state_label}_*.agr"))
+
+        if sefin:
+            files.extend((
+                resolve_file(directory, f"{dataset}_SEfin_E_SE{sefin}_*.agr"),
+                resolve_file(directory, f"{dataset}_SEfin_r_SE{sefin}_*.agr"),
+            ))
+        return tuple(files)
 
 
 def _iprint_default(option):
@@ -74,7 +102,7 @@ def input_parameters():
                     defaults={"GRID": 3, "NE": 300, "ImE": 0.01})
     energy.copy_member("EMAX", is_optional=True)
     energy.copy_member("NE", type=SetOf(Integer(min=1), min_length=1, max_length=2))
-    return InputParameters(
+    return MeplotInputParametersDefinition(
         "meplot",
         [CONTROL("MEPLOT"), TAU, MODE, STRCONST, energy,
          TASK("MEPLOT", [

@@ -8,7 +8,29 @@ only ETAB(1, 1), not a spectrum over the supplied energy mesh.
 from ...common.grammar_types import Integer, Keyword, SetOf
 from ...common.warnings import DataValidityError, DataValidityWarning
 from ..input_parameters_definitions import InputParametersDefinition as InputParameters, InputValueDefinition as V
+from ._file_manifests import orbital_label, resolve_file
 from ._sections import CONTROL, ENERGY, MODE, SITES, STRCONST, TASK, TAU
+
+
+class WfplotInputParametersDefinition(InputParameters):
+    """WFPLOT definition with native CORE/BAND wave-function plot outputs."""
+
+    def output_files(self, parameters, directory):
+        files = list(super().output_files(parameters, directory))
+        dataset = parameters.CONTROL.DATASET()
+        task = parameters.TASK
+
+        if task.STATE() == "CORE":
+            files.append(resolve_file(directory, f"{dataset}_{task.CL()}_*.agr"))
+            return tuple(files)
+
+        angular_momentum = task.L()
+        label = "?" if angular_momentum is None else orbital_label(angular_momentum)
+        files.extend((
+            resolve_file(directory, f"{dataset}_{label}_*.agr"),
+            resolve_file(directory, f"{dataset}_WF_match_l{label}_*.agr"),
+        ))
+        return tuple(files)
 
 
 def _print_default(option):
@@ -56,7 +78,7 @@ def _validate_wfplot(parameters, _values, why):
 def input_parameters():
     energy = ENERGY(emax="emin", defaults={"GRID": 3, "NE": 1, "ImE": 0.01})
     energy.copy_member("NE", type=SetOf(Integer(min=1), min_length=1, max_length=2))
-    return InputParameters(
+    return WfplotInputParametersDefinition(
         "wfplot",
         [
             CONTROL("WFPLOT"),

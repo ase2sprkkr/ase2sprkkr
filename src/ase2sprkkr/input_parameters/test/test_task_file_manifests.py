@@ -53,9 +53,11 @@ def test_non_tau_cache_roles(tmp_path):
         ("NRAES", {f"{DATASET}.*.L23.aes"}),
         ("CLXPS", {f"{DATASET}*.L23.xps"}),
         ("FMAG", {f"{DATASET}_fmag_*.agr", f"{DATASET}_dens_*.agr"}),
+        ("MEPLOT", {f"{DATASET}_VB_*.agr"}),
         ("SCF", {"*_SCFSTART.dos"}),
         ("SIGMA", {"sigma?????.dat"}),
         ("SOCPAR", {f"{DATASET}_soc_*.agr", f"{DATASET}_exc_*.agr"}),
+        ("WFPLOT", {f"{DATASET}_?_*.agr", f"{DATASET}_WF_match_l?_*.agr"}),
         ("XAS", {f"{DATASET}_*_L23.rat"}),
         ("XES", {f"{DATASET}_*_L23.rat"}),
         ("XRS", {f"{DATASET}_*_L23.rat"}),
@@ -116,6 +118,37 @@ def test_pshift_branch_outputs(tmp_path):
     assert f"{DATASET}_pshift_*.agr" in names
     assert f"{DATASET}_t-matrix_*.agr" in names
     assert f"{DATASET}_logdrv_*.agr" not in names
+
+
+def test_meplot_output_variants(tmp_path):
+    p = parameters("MEPLOT")
+    p.TASK.L = 2
+    assert f"{DATASET}_d_*.agr" in basenames(p._definition.output_files(p, tmp_path))
+
+    p.TASK.SEFIN = 2
+    names = basenames(p._definition.output_files(p, tmp_path))
+    assert f"{DATASET}_d_SE2_*.agr" in names
+    assert f"{DATASET}_SEfin_E_SE2_*.agr" in names
+    assert f"{DATASET}_SEfin_r_SE2_*.agr" in names
+
+    p.TASK.INITIALSTATE = "CORE"
+    p.TASK.CL = "3D"
+    p.TASK.SEFIN = 0
+    assert f"{DATASET}_3D_*.agr" in basenames(p._definition.output_files(p, tmp_path))
+
+
+def test_wfplot_output_variants(tmp_path):
+    p = parameters("WFPLOT")
+    p.TASK.L = 3
+    names = basenames(p._definition.output_files(p, tmp_path))
+    assert f"{DATASET}_f_*.agr" in names
+    assert f"{DATASET}_WF_match_lf_*.agr" in names
+
+    p.TASK.STATE = "CORE"
+    p.TASK.CL = "3D"
+    names = basenames(p._definition.output_files(p, tmp_path))
+    assert f"{DATASET}_3D_*.agr" in names
+    assert not any("WF_match" in name for name in names)
 
 
 def test_posani_previous_result_is_required_input(tmp_path):
