@@ -55,6 +55,7 @@ def test_non_tau_cache_roles(tmp_path):
         ("FMAG", {f"{DATASET}_fmag_*.agr", f"{DATASET}_dens_*.agr"}),
         ("SCF", {"*_SCFSTART.dos"}),
         ("SIGMA", {"sigma?????.dat"}),
+        ("SOCPAR", {f"{DATASET}_soc_*.agr", f"{DATASET}_exc_*.agr"}),
         ("XAS", {f"{DATASET}_*_L23.rat"}),
         ("XES", {f"{DATASET}_*_L23.rat"}),
         ("XRS", {f"{DATASET}_*_L23.rat"}),
@@ -101,6 +102,20 @@ def test_nr_spectroscopy_conditional_outputs(tmp_path):
     names = basenames(nraes._definition.output_files(nraes, tmp_path))
     assert f"{DATASET}.*.L23.aes.??" in names
     assert {"D??[UD][UD]", "E??[UD][UD]", "DE??", "W??[UD][UD]"} <= names
+
+
+def test_pshift_branch_outputs(tmp_path):
+    p = parameters("PSHIFT")
+    names = basenames(p._definition.output_files(p, tmp_path))
+    assert f"{DATASET}_pshift_*.agr" in names
+    assert f"{DATASET}_logdrv_*.agr" in names
+    assert f"{DATASET}_t-matrix_*.agr" not in names
+
+    p.MODE.MODE = "SREL"
+    names = basenames(p._definition.output_files(p, tmp_path))
+    assert f"{DATASET}_pshift_*.agr" in names
+    assert f"{DATASET}_t-matrix_*.agr" in names
+    assert f"{DATASET}_logdrv_*.agr" not in names
 
 
 def test_posani_previous_result_is_required_input(tmp_path):

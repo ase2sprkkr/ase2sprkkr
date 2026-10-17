@@ -2,7 +2,22 @@
 from ...common.grammar_types import Integer, SetOf
 from ...common.warnings import DataValidityError, DataValidityWarning
 from ..input_parameters_definitions import InputParametersDefinition as InputParameters
+from ._file_manifests import resolve_file
 from ._sections import CONTROL, ENERGY, MODE, SITES, STRCONST, TASK, TAU
+
+
+class PshiftInputParametersDefinition(InputParameters):
+    """PSHIFT definition with branch-dependent native XMGR outputs."""
+
+    def output_files(self, parameters, directory):
+        files = list(super().output_files(parameters, directory))
+        dataset = parameters.CONTROL.DATASET()
+        files.append(resolve_file(directory, f"{dataset}_pshift_*.agr"))
+        if parameters.MODE.MODE() is None:
+            files.append(resolve_file(directory, f"{dataset}_logdrv_*.agr"))
+        else:
+            files.append(resolve_file(directory, f"{dataset}_t-matrix_*.agr"))
+        return tuple(files)
 
 
 def _validate_pshift(parameters, _values, why):
@@ -41,7 +56,7 @@ def input_parameters():
     energy = ENERGY(emax=(1.0, "Upper absolute energy in Ry; 1 Ry includes the resonance search window", None),
                     defaults={"GRID": 1, "NE": 300, "ImE": 0.0})
     energy.copy_member("NE", type=SetOf(Integer(min=1), min_length=1, max_length=2))
-    return InputParameters(
+    return PshiftInputParametersDefinition(
         "pshift", [CONTROL("PSHIFT"), TAU, MODE, STRCONST, energy, TASK("PSHIFT"), SITES],
         executable="kkrgen", mpi=False, validators=_validate_pshift,
         info="Calculate single-site phase shifts and resonance diagnostics (ASA, serial).",

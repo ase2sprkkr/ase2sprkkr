@@ -44,6 +44,7 @@ def input_parameters():
     return InputParameters(
         "socpar", [CONTROL("SOCPAR"), TAU, MODE, STRCONST, energy, TASK("SOCPAR"), SITES],
         executable="kkrgen", mpi=False, validators=_validate_socpar,
+        output_file_templates=("{dataset}_soc_*.agr", "{dataset}_exc_*.agr"),
         info="Calculate single-site spin-orbit and exchange parameters (ASA, serial).",
         description="All atomic types and l=1..NL-1 are evaluated; no task-specific options are read. "
                     "SPR-KKR forces BS-SOC, suppresses the magnetic field and sets SOC scaling to 1e-3. "
