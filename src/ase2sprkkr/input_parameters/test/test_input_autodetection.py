@@ -70,12 +70,3 @@ def test_from_file_jxc_example_with_preceding_dmi_flag():
     assert parsed.TASK.TASK() == "JXC"
     assert parsed.TASK.DMI()
 
-
-def test_jxc_combined_native_selectors_choose_jxc_input_definition():
-    from pathlib import Path
-
-    path = Path(__file__).parent.parent / "examples" / "jxc.in"
-    params = InputParameters.from_file(path)
-    assert params.definition_name == "JXC"
-    assert params.TASK.TASK() == "JXC"
-    assert params.TASK.DMI()

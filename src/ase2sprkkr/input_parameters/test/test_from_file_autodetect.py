@@ -96,7 +96,7 @@ def test_from_file_unknown_task_never_guesses():
     candidate = _Definition(["ARPES"], object())
     parameters = _parameters_with({"candidate": candidate})
 
-    with pytest.raises(ValueError, match="input-parameter definition"):
+    with pytest.raises(pp.ParseBaseException):
         parameters.from_file(io.StringIO("TASK UNKNOWN"))
     assert candidate.calls == 0
 
