@@ -1,8 +1,6 @@
-from types import SimpleNamespace
-
 import pytest
 
-from ase2sprkkr.execution import RunReference, RunState, RunStatus
+from ase2sprkkr.execution import RunState
 from ase2sprkkr.execution import remote_service
 
 
@@ -21,17 +19,16 @@ def test_psij_recovery_uses_backend_native_identity(monkeypatch):
         backend = "slurm"
         url = None
 
-        def recover_submission(self, run_id, submission, *, submitted_at=None):
-            calls.append((run_id, submission.directory, submitted_at))
-            reference = RunReference(
-                executor="psij:slurm",
-                native_id="scheduler-42",
-                directory="/scratch/case",
-                input_file="/scratch/case/run.inp",
-                output_file="/scratch/case/run.out",
-                error_file="/scratch/case/run.err",
-            )
-            return RunStatus(reference, RunState.RUNNING)
+        def recover_native(self, run_id, directory, *, submitted_at=None):
+            calls.append((run_id, directory, submitted_at))
+            return {
+                "native_id": "scheduler-42",
+                "state": RunState.RUNNING,
+                "directory": "/scratch/case",
+                "stdout": "/scratch/case/run.out",
+                "stderr": "/scratch/case/run.err",
+                "return_code": None,
+            }
 
     monkeypatch.setattr(remote_service, "_psij_executor", lambda options: Backend())
 
@@ -66,7 +63,7 @@ def test_psij_recovery_returns_none_when_backend_has_no_match(monkeypatch):
         backend = "slurm"
         url = None
 
-        def recover_submission(self, run_id, submission, *, submitted_at=None):
+        def recover_native(self, run_id, directory, *, submitted_at=None):
             return None
 
     monkeypatch.setattr(remote_service, "_psij_executor", lambda options: Backend())

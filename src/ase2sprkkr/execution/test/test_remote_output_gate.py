@@ -1,6 +1,6 @@
 import asyncio
 
-from ase2sprkkr.execution import ExecutionSpec, RunReference, RunState
+from ase2sprkkr.execution import ExecutionSpec, RunState, FileManifest, FileEntry
 from ase2sprkkr.execution.remote import FileSyncPolicy, RemoteRunner
 from ase2sprkkr.execution.transport import AtomicLocalFile
 
@@ -59,13 +59,9 @@ def _run(tmp_path, state, *, original=b"old\n"):
             output_file=output,
             directory=str(tmp_path),
         ),
-        reference=RunReference(
-            executor="remote:local",
-            native_id="opaque-handle",
-            computer="cluster",
-            directory="/work/case",
-            output_file="/work/case/calculation.out",
-        ),
+        backend_id="opaque-handle",
+        remote_directory="/work/case",
+        files=FileManifest(stdout=FileEntry(str(destination), "/work/case/calculation.out")),
         state=RunState.RUNNING,
     )
     return runner, executor, destination, output
