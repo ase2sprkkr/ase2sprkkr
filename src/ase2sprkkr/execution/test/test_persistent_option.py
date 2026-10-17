@@ -4,7 +4,6 @@ from ase2sprkkr.execution import (
     ExecutionManager,
     Executor,
     ProjectRepository,
-    RunReference,
     RunState,
     RunStore,
 )
@@ -19,12 +18,12 @@ class _Runner:
     def __init__(self, callback=None):
         self._callback = callback
         self.state = RunState.NEW
-        self.reference = None
+        self.backend_id = None
         self.result = SimpleNamespace(return_code=0)
         self.exception = None
 
     def submit(self):
-        self.reference = RunReference(executor="fake", native_id="job-1")
+        self.backend_id = "job-1"
         self.state = RunState.QUEUED
 
     def wait(self):
@@ -53,7 +52,7 @@ class _Executor(Executor):
     def resolve_mpi(self, mpi=None):
         return False
 
-    def create_run(self, reader, spec, callback=None):
+    def create_run(self, spec, callback=None):
         runner = _Runner(callback)
         self.runners.append(runner)
         return runner
