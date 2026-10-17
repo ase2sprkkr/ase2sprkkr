@@ -6,6 +6,7 @@ from .persistent import (
     PersistentResultUnavailableError,
     UnrecoverablePersistentResultError,
     attach_persistent_run,
+    check_persistent_result,
     load_persistent_result,
 )
 from .task_result import TaskResult
@@ -17,5 +18,6 @@ __all__ = [
     "TaskResult",
     "attach_persistent_run",
     "capture_result_file_versions",
+    "check_persistent_result",
     "load_persistent_result",
 ]
