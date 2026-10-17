@@ -2,7 +2,7 @@ import json
 import signal
 
 from ase2sprkkr.execution import FailurePhase, RunState
-from ase2sprkkr.execution import remote_process_worker, remote_service
+from ase2sprkkr.execution import psij, remote_process_worker, remote_service
 
 
 def _process_handle(tmp_path):
@@ -18,6 +18,20 @@ def _process_handle(tmp_path):
         "error_file": str(tmp_path / "error"),
     }
     return handle, remote_service._encode_handle(handle), outcome
+
+
+def _psij_handle(tmp_path):
+    handle = {
+        "kind": "psij",
+        "backend": "slurm",
+        "url": None,
+        "native_id": "42",
+        "directory": str(tmp_path),
+        "input_file": str(tmp_path / "input"),
+        "output_file": str(tmp_path / "output"),
+        "error_file": str(tmp_path / "error"),
+    }
+    return handle, remote_service._encode_handle(handle)
 
 
 def _write_outcome(path, state, return_code, failure_phase=None):
@@ -59,6 +73,58 @@ def test_status_distinguishes_launch_and_execution_failure(tmp_path, monkeypatch
     assert execution["state"] == RunState.FAILED.value
     assert execution["return_code"] == 3
     assert execution["failure_phase"] == FailurePhase.EXECUTION.value
+
+
+def test_slurm_status_is_native_and_does_not_use_psij_job_cache(tmp_path, monkeypatch):
+    _, remote_id = _psij_handle(tmp_path)
+    monkeypatch.setattr(
+        psij,
+        "_slurm_details",
+        lambda native_id: {"JobState": "RUNNING", "ExitCode": "0:0"},
+    )
+
+    def forbidden_executor(_options):
+        raise AssertionError("stateless Slurm status must not create a PSI/J Job")
+
+    monkeypatch.setattr(remote_service, "_psij_executor", forbidden_executor)
+
+    status = remote_service.status_remote(remote_id)
+
+    assert status["state"] == RunState.RUNNING.value
+    assert status["return_code"] == 0
+    assert status["failure_phase"] is None
+
+
+def test_slurm_status_falls_back_to_exact_accounting_record(tmp_path, monkeypatch):
+    _, remote_id = _psij_handle(tmp_path)
+    monkeypatch.setattr(psij, "_slurm_details", lambda _native_id: {})
+    monkeypatch.setattr(
+        remote_service,
+        "_slurm_accounting_status",
+        lambda native_id: (RunState.FINISHED, 0),
+    )
+
+    status = remote_service.status_remote(remote_id)
+
+    assert status["state"] == RunState.FINISHED.value
+    assert status["return_code"] == 0
+    assert status["failure_phase"] is None
+
+
+def test_slurm_failed_accounting_record_is_execution_failure(tmp_path, monkeypatch):
+    _, remote_id = _psij_handle(tmp_path)
+    monkeypatch.setattr(psij, "_slurm_details", lambda _native_id: {})
+    monkeypatch.setattr(
+        remote_service,
+        "_slurm_accounting_status",
+        lambda native_id: (RunState.FAILED, 7),
+    )
+
+    status = remote_service.status_remote(remote_id)
+
+    assert status["state"] == RunState.FAILED.value
+    assert status["return_code"] == 7
+    assert status["failure_phase"] == FailurePhase.EXECUTION.value
 
 
 def test_direct_process_outcome_uses_crash_durable_write(tmp_path, monkeypatch):
