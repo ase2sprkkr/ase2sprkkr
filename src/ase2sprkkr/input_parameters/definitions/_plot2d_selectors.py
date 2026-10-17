@@ -6,6 +6,23 @@ from ...common.warnings import DataValidityError
 from ..input_parameters_definitions import InputParametersDefinition, InputSectionDefinition as Section, InputValueDefinition as V
 
 
+_PLY_OUTPUTS = (
+    "PLY-V-ASA-*.ply",
+    "POT-ASA-LINES.ply",
+    "PLY-V-FP-*.ply",
+    "PLY-V-MT-*.ply",
+    "PLY-FP-RWS-*.ply",
+    "PLY-FP-RATM-*.ply",
+    "PLY-V-IS.ply",
+    "PLY-FP-CELL-*.ply",
+    "PLY-FP-RMT.ply",
+    "PLY-FP-CELL-BOUND-V.ply",
+    "PLY-FP-CELL-BOUND-0.ply",
+    "PLY-FP-RATM.ply",
+    "PLY-FP-RWS.ply",
+)
+
+
 def _validate_plot2d(p, _container, why):
     if why == "set":
         return None
@@ -31,6 +48,7 @@ def plot2d_parameters(task):
     return InputParametersDefinition(task.lower(), [CONTROL(task), TAU,
         ENERGY(emin=None, emax=None, defaults={"GRID": 0, "NE": 1, "ImE": 0.0}), t, SITES, scf],
         executable="kkrgen", mpi=False, validators=_validate_plot2d,
+        output_file_templates=_PLY_OUTPUTS,
         info=f"{task}: native plane-window graphics from an existing potential. ASA supports potential only. "
              "FULLPOT invokes the native test PLY writer, produces both potential/density data regardless of the "
              "selector, then terminates before the ordinary plane-grid writer. This is not a complete selective plotting implementation.",

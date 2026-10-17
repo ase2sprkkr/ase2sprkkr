@@ -4,6 +4,13 @@ from ...common.warnings import DataValidityError
 from ..input_parameters_definitions import InputParametersDefinition, InputSectionDefinition as Section, InputValueDefinition as V
 
 
+_OUTPUTS = {
+    "PLOTPOT": ("{dataset}_V_*.agr", "{dataset}_VNS_*.agr"),
+    "PLOTRHO": ("{dataset}_RHO_*.agr", "{dataset}_RNS_*.agr"),
+    "PLOTSFN": ("{dataset}_SFN_M*.agr",),
+}
+
+
 def _validate_plot(p, _container, why):
     if why != "set" and p.TASK.TASK() == "PLOTSFN" and not p.SCF.FULLPOT():
         return [DataValidityError("PLOTSFN requires FULLPOT data; native ASA writes no shape functions.")]
@@ -16,5 +23,6 @@ def plot_parameters(task, info):
     return InputParametersDefinition(task.lower(), [CONTROL(task), TAU,
         ENERGY(emin=None, emax=None, defaults={"GRID": 0, "NE": 1, "ImE": 0.0}), TASK(task), SITES, scf],
         executable="kkrgen", mpi=False, validators=_validate_plot, info=info,
+        output_file_templates=_OUTPUTS[task],
         description="Selective native PLOTPRS output from the existing potential, without an SCF or DOS calculation. "
                     "Native initialization maps this selector to internal TASK=PLOTPRS while retaining its output flag.")
