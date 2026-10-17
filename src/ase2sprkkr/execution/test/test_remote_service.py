@@ -91,7 +91,7 @@ def test_slurm_status_is_native_and_does_not_use_psij_job_cache(tmp_path, monkey
     status = remote_service.status_remote(remote_id)
 
     assert status["state"] == RunState.RUNNING.value
-    assert status["return_code"] == 0
+    assert status["return_code"] is None
     assert status["failure_phase"] is None
 
 
