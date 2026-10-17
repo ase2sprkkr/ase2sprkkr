@@ -3,7 +3,11 @@
 
 from ...common.grammar_types import SetOf, DefKeyword, flag, energy, Integer, Keyword
 
-from ..input_parameters_definitions import InputSectionDefinition as Section, InputValueDefinition as V
+from ..input_parameters_definitions import (
+    InputSectionDefinition as Section,
+    InputValueDefinition as V,
+    TaskSectionDefinition,
+)
 from ...sprkkr.sprkkr_grammar_types import Site, AtomicType
 from functools import partial
 from ...common.warnings import DataValidityError
@@ -684,12 +688,12 @@ def TASK(task, add=[]):
 
     Return
     ------
-    TASK: InputSectionDefinition
+    TASK: TaskSectionDefinition
     """
     if isinstance(task, str):
         task = DefKeyword(task)
 
-    return Section("TASK", [
+    return TaskSectionDefinition("TASK", [
       V(
         "TASK", task, name_in_grammar=False
       ),

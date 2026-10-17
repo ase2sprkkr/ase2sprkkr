@@ -6,6 +6,7 @@ from ..input_parameters_definitions import (
     InputParametersDefinition as InputParameters,
     InputValueDefinition as V,
     InputSectionDefinition as Section,
+    TaskSectionDefinition,
 )
 from ...sprkkr.sprkkr_grammar_types import Site
 from ...common.warnings import DataValidityError
@@ -79,7 +80,7 @@ def input_parameters_definition():
                 defaults={"GRID": 1, "NE": 300},
             ),
             SITES.copy(defaults={"NL": 4}),
-            Section(
+            TaskSectionDefinition(
                 "TASK",
                 [
                     V(

@@ -1,9 +1,12 @@
+import pickle
 from types import SimpleNamespace
 
 import pyparsing as pp
 import pytest
 
+from ..definitions.sections import TASK
 from ..input_parameters import InputParameters
+from ..input_parameters_definitions import InputValueDefinition, TaskSectionDefinition
 from ...common.warnings import DataValidityError
 
 
@@ -94,3 +97,75 @@ def test_from_file_does_not_mask_programming_errors(error):
 
     assert broken.calls == 1
     assert fallback.calls == 0
+
+
+def _arpes_input_text():
+    parameters = InputParameters.create("ARPES")
+    parameters.CONTROL.POTFIL.set("Fe.pot")
+    return parameters.to_string(validate=False)
+
+
+def test_task_helper_and_arpes_use_explicit_task_section_definition():
+    assert isinstance(TASK("SCF"), TaskSectionDefinition)
+    assert isinstance(InputParameters.definition("ARPES")["TASK"], TaskSectionDefinition)
+
+
+def test_task_section_definition_survives_pickle():
+    section = TASK("SCF")
+    restored = pickle.loads(pickle.dumps(section))
+
+    assert isinstance(restored, TaskSectionDefinition)
+    assert restored["TASK"].type.keywords == ["SCF"]
+
+
+def test_task_section_rejects_another_registered_task_as_custom_flag():
+    text = _arpes_input_text().replace(
+        "\nTASK\n\tARPES\n",
+        "\nTASK\n\tBSF\n",
+        1,
+    )
+
+    with pytest.raises(pp.ParseBaseException):
+        InputParameters.definition("ARPES").read_from_string(text)
+
+
+def test_task_section_still_allows_user_custom_flags():
+    text = _arpes_input_text().replace(
+        "\nTASK\n\tARPES\n",
+        "\nTASK\n\tARPES\n\tMY_CUSTOM_FLAG\n",
+        1,
+    )
+
+    parsed = InputParameters.definition("ARPES").read_from_string(text)
+
+    assert parsed.TASK["MY_CUSTOM_FLAG"]() is True
+
+
+def test_from_file_does_not_let_arpes_consume_bsf_selector(tmp_path):
+    parameters = InputParameters.create("BSFEK")
+    parameters.CONTROL.POTFIL.set("Fe.pot")
+    parameters.TASK.KPATH.set("3")
+    filename = tmp_path / "bsf.inp"
+    filename.write_text(parameters.to_string(validate=False))
+
+    parsed = InputParameters.from_file(filename)
+
+    assert parsed.task_name == "BSFEK"
+    assert parsed.TASK.KPATH() == "3"
+
+
+def test_task_section_rejects_non_keyword_selector():
+    section = TaskSectionDefinition(
+        "TASK",
+        [InputValueDefinition("TASK", str, name_in_grammar=False)],
+    )
+
+    with pytest.raises(TypeError, match="must use Keyword grammar"):
+        tuple(section.excluded_custom_names())
+
+
+def test_task_section_rejects_missing_selector():
+    section = TaskSectionDefinition("TASK", [])
+
+    with pytest.raises(ValueError, match="has no TASK selector"):
+        tuple(section.excluded_custom_names())

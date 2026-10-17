@@ -462,10 +462,14 @@ class ContainerDefinition(RealItemDefinition):
         for i in self:
             yield from i.all_names_in_grammar()
 
+    def excluded_custom_names(self):
+        """Names that the generic custom-member grammar must not consume."""
+        yield from self.all_member_names()
+
     def excluded_names_condition(self):
         """Add the condition to the element, that
         its value is not any of given names"""
-        names = set((_ending_numbers.sub("", i).upper() for i in self.all_member_names()))
+        names = set((_ending_numbers.sub("", i).upper() for i in self.excluded_custom_names()))
 
         if not names:
             return

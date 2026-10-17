@@ -9,7 +9,7 @@ from ..sprkkr.configuration import (
     CustomConfigurationValue,
     CustomConfigurationSection,
 )
-from ..common.grammar_types import mixed, flag
+from ..common.grammar_types import Keyword, mixed, flag
 from ..common.grammar import generate_grammar, delimitedList
 from ..common.decorators import cached_class_property, cache
 from .input_parameters import InputParameters, InputSection, InputValue
@@ -51,6 +51,41 @@ class InputSectionDefinition(ConfigurationSectionDefinition):
             return out.set_name("\n")
 
     do_not_skip_whitespaces_before_name = True
+
+
+class TaskSectionDefinition(InputSectionDefinition):
+    """TASK section whose registered selector names are not custom flags."""
+
+    @staticmethod
+    def _registered_selector_names():
+        """Yield task/schema names without materializing registry values."""
+        yield from InputParameters.input_parameters_registry.names()
+        yield from InputParameters.task_registry.extra_tasks.names()
+
+    def _selector_names(self):
+        """Yield and validate selector tokens declared by this TASK section."""
+        try:
+            task = self["TASK"]
+        except KeyError as exc:
+            raise ValueError("TASK section has no TASK selector") from exc
+
+        task_type = task.type
+        if not isinstance(task_type, Keyword):
+            raise TypeError(
+                f"TASK.TASK must use Keyword grammar, got {type(task_type).__name__}"
+            )
+
+        for name in (*task_type.keywords, *task_type.aliases.keys()):
+            if not isinstance(name, str):
+                raise TypeError(
+                    f"TASK selector names must be strings, got {type(name).__name__}"
+                )
+            yield name.upper()
+
+    def excluded_custom_names(self):
+        yield from super().excluded_custom_names()
+        yield from self._registered_selector_names()
+        yield from self._selector_names()
 
 
 class InputParametersDefinition(ConfigurationFileDefinition):
