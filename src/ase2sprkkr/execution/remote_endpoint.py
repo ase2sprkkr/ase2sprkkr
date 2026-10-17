@@ -52,6 +52,25 @@ def _local_path(value, directory):
     return os.path.abspath(path)
 
 
+def _client_status_state(state):
+    """Translate target backend facts to the remote executor's client lifecycle."""
+    backend_state = RunState(state.get("state", "unknown"))
+    raw_phase = state.get("failure_phase")
+    phase = None if raw_phase is None else FailurePhase(raw_phase)
+
+    if backend_state == RunState.FINISHED:
+        return RunState.DOWNLOADING
+    if backend_state == RunState.FAILED and phase not in (
+        FailurePhase.SUBMISSION,
+        FailurePhase.LAUNCH,
+    ):
+        # Execution failures may still have useful declared artifacts. The
+        # remote executor therefore remains active until their transfer has
+        # either completed or failed.
+        return RunState.DOWNLOADING
+    return backend_state
+
+
 class _RemoteRun(RemoteRunner):
     """One remote run whose persistent lifecycle is owned by the client."""
 
@@ -96,7 +115,7 @@ class _RemoteRun(RemoteRunner):
             self._failure_message = str(exc)
             raise SubmissionNotStarted(str(exc)) from exc
 
-        # A transport failure here is intentionally *not* SubmissionNotStarted:
+        # A transport failure here is intentionally not SubmissionNotStarted:
         # the target may already have accepted the job. Persistent recovery owns
         # that uncertainty boundary.
         status = await self.executor._submit(request)
@@ -272,6 +291,8 @@ class _RemoteRunContext:
         if not reference.native_id or not reference.directory:
             raise ValueError("Remote run reference lacks remote id or directory")
 
+        # Use target-side facts here, not the public client status mapping. The
+        # attached runner itself must still perform the pending download.
         status = await self._status(reference.directory, reference.native_id)
         sync = await self._client_sync(reference)
         local_directory = await self.unmap_path(reference.directory)
@@ -522,7 +543,7 @@ class RemoteEndpointExecutor(Executor):
                 result.append(
                     RunStatus(
                         reference,
-                        RunState(state.get("state", "unknown")),
+                        _client_status_state(state),
                         return_code=state.get("return_code"),
                         message=state.get("error"),
                         failure_phase=state.get("failure_phase"),
@@ -566,7 +587,7 @@ class RemoteEndpointExecutor(Executor):
         )
         return RunStatus(
             reference,
-            RunState(state.get("state", "unknown")),
+            _client_status_state(state),
             return_code=state.get("return_code"),
             message=state.get("error"),
             failure_phase=state.get("failure_phase"),
