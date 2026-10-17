@@ -160,6 +160,12 @@ class PostprocessingRunner:
         self._thread = Thread(target=self._finish, daemon=True)
         self._thread.start()
 
+    def prepare_submission(self):
+        """Delegate side-effect-free-of-process launch preparation to raw runner."""
+        prepare = getattr(self._runner, "prepare_submission", None)
+        if prepare is not None:
+            prepare()
+
     def submit(self):
         with self._lock:
             if self._started or self._runner.state != RunState.NEW:
