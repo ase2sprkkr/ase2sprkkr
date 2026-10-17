@@ -537,77 +537,93 @@ class PsijExecutor(Executor):
                 )
         return replace(files, **changes) if changes else files
 
-    def recover_submission(self, run_id, submission, *, submitted_at=None):
+    def status_native(self, native_id):
+        """Query a native PSI/J job without constructing a client run record."""
+        job = self._status_jobs.get(native_id)
+        attached = job is None
+        if attached:
+            job = self._psij.Job()
+            self._job_executor.attach(job, native_id)
+            self._status_jobs[native_id] = job
+        status = getattr(job, "status", None)
+        name = getattr(getattr(status, "state", None), "name", None)
+        state = (
+            RunState.UNKNOWN
+            if attached and name == "NEW"
+            else _STATE_MAP.get(name, RunState.UNKNOWN)
+        )
+        return RunStatus(
+            state=state, backend_id=str(native_id),
+            return_code=getattr(status, "exit_code", None),
+            message=getattr(status, "message", None),
+            failure_phase=FailurePhase.EXECUTION if state == RunState.FAILED else None,
+        )
+
+    def recover_native(self, run_id, directory, *, submitted_at=None):
+        """Return Slurm's native recovery facts without a client RunRecord."""
         if self.backend.lower() != "slurm":
             raise NotImplementedError(
                 f"PSI/J backend {self.backend!r} cannot recover uncertain submissions"
             )
-
         matches = _slurm_current_matches(run_id)
         if len(matches) > 1:
             raise RuntimeError(
                 f"Multiple live Slurm jobs carry ASE2SPRKKR run id {run_id!r}"
             )
         if matches:
-            native_id, state, directory = matches[0]
+            native_id, state, workdir = matches[0]
             details = _slurm_details(native_id)
-            recovered_directory = details.get("WorkDir") or directory
-            execution = submission.execution.submitted(native_id)
-            if recovered_directory and recovered_directory != execution.directory.target:
-                from .run_model import WorkingDirectory
-                execution = replace(
-                    execution,
-                    directory=WorkingDirectory(
-                        execution.directory.local, recovered_directory,
-                    ),
-                )
-            files = self._recovered_files(
-                submission.files, details.get("StdOut"), details.get("StdErr"),
-            )
             run_state = _slurm_state(state)
-            return RunStatus(
-                run_state,
-                backend_id=str(native_id),
-                execution=execution,
-                files=files,
-                failure_phase=(
-                    FailurePhase.EXECUTION if run_state == RunState.FAILED else None
-                ),
-            )
+            return {
+                "native_id": str(native_id), "state": run_state,
+                "directory": details.get("WorkDir") or workdir or directory,
+                "stdout": details.get("StdOut"), "stderr": details.get("StdErr"),
+                "return_code": None,
+            }
 
         if submitted_at is None or not _slurm_accounting_stores_comments():
             raise NotImplementedError(
                 "Slurm cannot safely determine whether this submission already "
                 "finished because job comments are unavailable in accounting"
             )
-
         accounting = _slurm_accounting_matches(run_id, submitted_at)
         if len(accounting) > 1:
             raise RuntimeError(
                 f"Multiple Slurm accounting records carry ASE2SPRKKR run id {run_id!r}"
             )
-        if accounting:
-            native_id, state, directory, stdout, stderr, return_code = accounting[0]
-            execution = submission.execution.submitted(native_id)
-            if directory and directory != execution.directory.target:
-                from .run_model import WorkingDirectory
-                execution = replace(
-                    execution,
-                    directory=WorkingDirectory(execution.directory.local, directory),
-                )
-            files = self._recovered_files(submission.files, stdout, stderr)
-            run_state = _slurm_state(state)
-            return RunStatus(
-                run_state,
-                backend_id=str(native_id),
-                execution=execution,
-                files=files,
-                return_code=return_code,
-                failure_phase=(
-                    FailurePhase.EXECUTION if run_state == RunState.FAILED else None
-                ),
+        if not accounting:
+            return None
+        native_id, state, workdir, stdout, stderr, return_code = accounting[0]
+        return {
+            "native_id": str(native_id), "state": _slurm_state(state),
+            "directory": workdir or directory, "stdout": stdout,
+            "stderr": stderr, "return_code": return_code,
+        }
+
+    def recover_submission(self, run_id, submission, *, submitted_at=None):
+        facts = self.recover_native(
+            run_id, submission.execution.directory.target, submitted_at=submitted_at,
+        )
+        if facts is None:
+            return None
+        execution = submission.execution.submitted(facts["native_id"])
+        directory = facts["directory"]
+        if directory != execution.directory.target:
+            from .run_model import WorkingDirectory
+            execution = replace(
+                execution,
+                directory=WorkingDirectory(execution.directory.local, directory),
             )
-        return None
+        files = self._recovered_files(
+            submission.files, facts["stdout"], facts["stderr"],
+        )
+        state = facts["state"]
+        return RunStatus(
+            state=state, backend_id=facts["native_id"],
+            execution=execution, files=files,
+            return_code=facts["return_code"],
+            failure_phase=FailurePhase.EXECUTION if state == RunState.FAILED else None,
+        )
 
     def attach(self, run, callback=None, output_listener=None, start=True):
         endpoint = run.execution.endpoint
