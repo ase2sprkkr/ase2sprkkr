@@ -54,6 +54,14 @@ def detached_launch_failed(state):
     )
 
 
+def detached_stream_file(state, key):
+    """Return the readable live stream path, or the final artifact path."""
+    stream = state.get(f"stream_{key}")
+    if stream and os.path.exists(stream):
+        return stream
+    return state.get(key)
+
+
 def _timestamp():
     return datetime.now(timezone.utc).isoformat()
 
@@ -122,10 +130,6 @@ def _write_state_unlocked(workspace, run_id, **changes):
     try:
         _sync_result_files_before_final_state(state)
     except OSError as exc:
-        # The calculation has reached a result-bearing terminal state, but its
-        # artifacts could not be made durable. Persist that distinction before
-        # propagating the barrier error. FINALIZATION failures deliberately skip
-        # result syncing, so recovery can record the same diagnostic safely.
         failure = dict(state)
         failure.update(
             state="failed",
@@ -171,6 +175,40 @@ def _spawn_detached_worker(directory, run_id):
     )
 
 
+def _wait_for_direct_launch(worker, directory, run_id, poll_interval=0.01):
+    """Wait until a direct helper proves launch success or exits before it."""
+    poll = getattr(worker, "poll", None)
+    if poll is None:
+        return _read_state(directory, run_id)
+
+    while True:
+        state = _read_state(directory, run_id)
+        if state.get("state") != RunState.SUBMITTING.value:
+            return state
+
+        return_code = poll()
+        if return_code is None:
+            time.sleep(poll_interval)
+            continue
+
+        with _state_lock(directory, run_id):
+            state = _read_state_unlocked(directory, run_id)
+            if state.get("state") != RunState.SUBMITTING.value:
+                return state
+            return _write_state_unlocked(
+                directory,
+                run_id,
+                state="failed",
+                error=(
+                    "Detached worker exited before calculation launch completed "
+                    f"with return code {return_code}"
+                ),
+                failure_phase=FailurePhase.LAUNCH.value,
+                return_code=None,
+                finished_at=state.get("finished_at") or _timestamp(),
+            )
+
+
 def submit_detached(request):
     """Start a detached target-side executor and return its initial state."""
     executor = request.get("executor", "local")
@@ -191,15 +229,9 @@ def submit_detached(request):
     output_file = _absolute_file(directory, request.get("output_file"))
     error_file = _absolute_file(directory, request.get("error_file"))
 
-    # The durable submission marker may only reference input that has already
-    # crossed its own persistence barrier. Missing input remains a backend
-    # validation concern, exactly as before.
     if input_file is not None and os.path.isfile(input_file):
         sync_file(input_file)
     durable_write_json(_request_path(directory, run_id), request)
-    # A target request is still submitting until its execution backend proves
-    # otherwise. In particular PSI/J becomes QUEUED only after scheduler
-    # submission has returned a persistent job reference.
     state = _write_state(
         directory,
         run_id,
@@ -209,6 +241,8 @@ def submit_detached(request):
         input_file=input_file,
         output_file=output_file,
         error_file=error_file,
+        stream_output_file=None,
+        stream_error_file=None,
         return_code=None,
         error=None,
         failure_phase=None,
@@ -221,11 +255,8 @@ def submit_detached(request):
     )
 
     try:
-        _spawn_detached_worker(directory, run_id)
+        worker = _spawn_detached_worker(directory, run_id)
     except Exception as exc:
-        # A persisted submission proof must never survive as an active run when
-        # the helper itself did not start. Keep the metadata for diagnostics,
-        # but close the lifecycle deterministically.
         return _write_state(
             directory,
             run_id,
@@ -235,6 +266,9 @@ def submit_detached(request):
             return_code=None,
             finished_at=_timestamp(),
         )
+
+    if executor == "local":
+        return _wait_for_direct_launch(worker, directory, run_id)
     return state
 
 
@@ -264,7 +298,7 @@ def _wait_process_group_exit(pid, timeout):
 def _terminate_process_group(directory, run_id, pid, timeout):
     """Stop one process group without publishing a terminal state prematurely.
 
-    Returns ``(state, stopped, signalled)``.  ``signalled`` distinguishes a
+    Returns ``(state, stopped, signalled)``. ``signalled`` distinguishes a
     process that disappeared before cancellation from one we actually asked to
     terminate; callers must not relabel a naturally completed run as cancelled.
     """
@@ -303,9 +337,6 @@ def cancel_detached(directory, run_id, timeout=1.0):
             return state
         pid = state.get("pid")
         if not pid:
-            # Local process creation and PID publication happen while holding
-            # this same lock. Therefore no process can appear after this
-            # terminal marker without first observing that cancellation won.
             return _write_state_unlocked(
                 directory, run_id, state="cancelled", finished_at=_timestamp()
             )
@@ -316,9 +347,6 @@ def cancel_detached(directory, run_id, timeout=1.0):
     if not stopped or not signalled:
         return state
 
-    # Only publish CANCELLED after the process group is known to be gone. A hard
-    # crash before this point may leave stale active metadata, but can never
-    # leave a live calculation behind a durable terminal cancellation marker.
     with _state_lock(directory, run_id):
         state = _read_state_unlocked(directory, run_id)
         if state.get("state") == "cancelled":
@@ -356,7 +384,7 @@ def follow_detached(
         had_data = False
         seen_paths = set()
         for kind, key in (("out", "output_file"), ("err", "error_file")):
-            path = state.get(key)
+            path = detached_stream_file(state, key)
             if not path or path in seen_paths:
                 continue
             seen_paths.add(path)

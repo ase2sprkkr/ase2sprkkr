@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import asyncio
+import os
 from pathlib import Path
 
 from ._durability import durable_mkdir, durable_replace, sync_stream
@@ -59,6 +60,25 @@ async def _run_detached_local(directory, run_id, request):
         stdin = asyncio.subprocess.DEVNULL
 
     process = None
+    return_code = None
+    preserve_launch_paths = False
+
+    def record_finalization_failure(exc):
+        nonlocal preserve_launch_paths
+        preserve_launch_paths = True
+        with _state_lock(directory, run_id):
+            state = _read_state_unlocked(directory, run_id)
+            if state.get("state") != "cancelled":
+                _write_state_unlocked(
+                    directory,
+                    run_id,
+                    state="failed",
+                    return_code=return_code,
+                    error=repr(exc),
+                    failure_phase=FailurePhase.FINALIZATION.value,
+                    finished_at=state.get("finished_at") or _timestamp(),
+                )
+
     try:
         with output_launch.open("wb") as output:
             if merged:
@@ -87,18 +107,17 @@ async def _run_detached_local(directory, run_id, request):
                         start_new_session=True,
                     )
                     try:
-                        # There is no portable atomic rename for the stdout/stderr
-                        # pair. Each file is published atomically and its directory
-                        # entry is durable before RUNNING is committed.
-                        durable_replace(output_launch, output_path)
-                        if not merged:
-                            durable_replace(error_launch, error_path)
+                        # RUNNING is the direct-launch handoff point. Keep output
+                        # in run-specific stream files until execution is over so
+                        # a failed handoff cannot overwrite an older result.
                         _write_state_unlocked(
                             directory,
                             run_id,
                             state="running",
                             pid=process.pid,
                             failure_phase=None,
+                            stream_output_file=os.fspath(output_launch),
+                            stream_error_file=os.fspath(error_launch),
                             started_at=_timestamp(),
                         )
                     except BaseException:
@@ -113,51 +132,55 @@ async def _run_detached_local(directory, run_id, request):
 
                 try:
                     # The terminal state is a commit marker for these streams.
-                    # Synchronize their final contents before publishing it.
+                    # Synchronize their final contents before publishing them.
                     sync_stream(output)
                     if error_context is not None:
                         sync_stream(error_context)
                 except BaseException as exc:
-                    with _state_lock(directory, run_id):
-                        state = _read_state_unlocked(directory, run_id)
-                        if state.get("state") != "cancelled":
-                            _write_state_unlocked(
-                                directory,
-                                run_id,
-                                state="failed",
-                                return_code=return_code,
-                                error=repr(exc),
-                                failure_phase=FailurePhase.FINALIZATION.value,
-                                finished_at=state.get("finished_at") or _timestamp(),
-                            )
+                    record_finalization_failure(exc)
                     raise
             finally:
                 if error_context is not None:
                     error_context.close()
+
+        try:
+            # Publish canonical artifacts only after execution completed. A
+            # launch failure therefore cannot destroy a previous result file.
+            durable_replace(output_launch, output_path)
+            if not merged:
+                durable_replace(error_launch, error_path)
+        except BaseException as exc:
+            record_finalization_failure(exc)
+            raise
+
+        with _state_lock(directory, run_id):
+            state = _read_state_unlocked(directory, run_id)
+            final_state = state.get("state")
+            if final_state != "cancelled":
+                final_state = "finished" if return_code == 0 else "failed"
+            _write_state_unlocked(
+                directory,
+                run_id,
+                state=final_state,
+                output_file=os.fspath(output_path),
+                error_file=os.fspath(error_path),
+                stream_output_file=None,
+                stream_error_file=None,
+                return_code=return_code,
+                failure_phase=(
+                    FailurePhase.EXECUTION.value if final_state == "failed" else None
+                ),
+                finished_at=state.get("finished_at") or _timestamp(),
+            )
     finally:
         if stdin is not asyncio.subprocess.DEVNULL:
             stdin.close()
-        for path in launch_paths:
-            try:
-                path.unlink()
-            except FileNotFoundError:
-                pass
-
-    with _state_lock(directory, run_id):
-        state = _read_state_unlocked(directory, run_id)
-        final_state = state.get("state")
-        if final_state != "cancelled":
-            final_state = "finished" if return_code == 0 else "failed"
-        _write_state_unlocked(
-            directory,
-            run_id,
-            state=final_state,
-            return_code=return_code,
-            failure_phase=(
-                FailurePhase.EXECUTION.value if final_state == "failed" else None
-            ),
-            finished_at=state.get("finished_at") or _timestamp(),
-        )
+        if not preserve_launch_paths:
+            for path in launch_paths:
+                try:
+                    path.unlink()
+                except FileNotFoundError:
+                    pass
 
 
 def run_detached_local(directory, run_id, request):
