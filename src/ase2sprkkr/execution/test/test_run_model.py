@@ -104,3 +104,36 @@ def test_individual_wildcard_matches_are_recorded_separately():
     assert manifest.outputs[1].availability_state == "available"
     assert manifest.outputs[2].availability_state == "failed"
     assert FileManifest(**asdict(manifest)) == manifest
+
+def test_partial_download_preserves_completed_files_and_cache_status():
+    manifest = FileManifest(
+        outputs=(
+            FileEntry("/local/one", "/remote/one", "pending"),
+            FileEntry("/local/two", "/remote/two", "pending"),
+        ),
+        caches=(CacheEntry(FileEntry("/local/cache", "/remote/cache", "pending")),),
+    )
+    manifest = manifest.with_file_availability("/local/one", "available")
+    manifest = manifest.with_file_availability(
+        "/local/two", "failed", "lost connection",
+    )
+    manifest = manifest.with_file_availability(
+        "/local/cache", "skipped", kind="cache",
+    )
+    assert [x.availability_state for x in manifest.artifacts] == [
+        "available", "failed", "skipped",
+    ]
+    assert manifest.failed_artifacts[0].local_path == "/local/two"
+    assert manifest.availability_message == "lost connection"
+
+
+def test_merged_stdout_stderr_has_only_one_file_status():
+    manifest = FileManifest(
+        stdout=FileEntry("/local/combined", "/remote/combined", "pending"),
+        stderr=FileEntry("/local/combined", "/remote/combined", "pending"),
+    )
+    manifest = manifest.with_file_availability("/local/combined", "available")
+    assert len(manifest.artifacts) == 1
+    assert manifest.stdout.availability_state == "available"
+    assert manifest.stderr.availability_state == "available"
+    assert FileManifest(**asdict(manifest)) == manifest
