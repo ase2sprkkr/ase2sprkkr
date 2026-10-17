@@ -57,8 +57,8 @@ def test_manifest_versions_and_availability_roundtrip():
     assert restored.input_file == "/local/in"
     assert restored.output_file == "/local/stdout"
     assert restored.input_files == ("/local/in",)
-    assert restored.output_files == ("/local/stdout", "/local/data")
-    assert restored.manifests == ("/local/in", "/local/stdout", "/local/data")
+    assert restored.output_files == ("/local/stdout", "/local/stderr", "/local/data")
+    assert restored.manifests == ("/local/in", "/local/stdout", "/local/stderr", "/local/data")
     assert restored.all_versions == ()
     with pytest.raises(ValueError, match="availability"):
         FileManifest(availability_state="inconsistent")
