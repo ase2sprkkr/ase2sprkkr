@@ -1,5 +1,3 @@
-import json
-
 from ase2sprkkr.execution import LocalTransport, RemoteExecutor, RunReference
 
 
@@ -27,27 +25,19 @@ def test_remote_executor_fetches_only_requested_historical_files(tmp_path):
     local_first = local_directory / "result-1.dat"
     local_first.write_text("keep-local")
 
-    run_id = "historical-run"
-    metadata = remote_directory / ".ase2sprkkr" / "runs" / run_id
-    metadata.mkdir(parents=True)
-    (metadata / "request.json").write_text(
-        json.dumps(
-            {
-                "launch": {
-                    "local_root": str(local_root),
-                    "remote_root": str(remote_root),
-                    "input_sync": "changed",
-                    "output_sync": "changed",
-                }
-            }
-        )
-    )
-
     executor = RemoteExecutor(LocalTransport())
     reference = RunReference(
         executor="remote:local",
-        native_id=run_id,
+        native_id="opaque-historical-handle",
         directory=str(remote_directory),
+        context={
+            "launch": {
+                "local_root": str(local_root),
+                "remote_root": str(remote_root),
+                "input_sync": "changed",
+                "output_sync": "changed",
+            }
+        },
     )
     local_input = local_directory / "run.inp"
     local_potential = local_directory / "start.pot"
