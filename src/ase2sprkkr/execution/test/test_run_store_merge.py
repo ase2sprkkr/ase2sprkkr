@@ -1,7 +1,6 @@
 from ase2sprkkr.execution import (
     ExecutionManager,
     ExecutorEndpoint,
-    RunReference,
     RunState,
     RunStore,
 )
@@ -19,23 +18,21 @@ def test_stale_transition_cannot_regress_newer_lifecycle_state(tmp_path):
     manager = ExecutionManager(RunStore(tmp_path / "runs"))
     original = _record(manager, tmp_path)
     submitting = manager.transition(original, state=RunState.SUBMITTING)
-    reference = RunReference(executor="local", native_id="123")
     running = manager.transition(
         submitting,
         state=RunState.RUNNING,
-        reference=reference,
+        execution=submitting.execution.submitted("123"),
     )
 
     merged = manager.transition(
         submitting,
         state=RunState.QUEUED,
-        reference=None,
     )
 
     assert merged.state == RunState.RUNNING
-    assert merged.reference == reference
+    assert merged.execution.backend_id == "123"
     assert manager.store.get(original.id) == merged
-    assert running.reference == reference
+    assert running.execution.backend_id == "123"
 
 
 def test_none_does_not_erase_known_completion_metadata(tmp_path):
