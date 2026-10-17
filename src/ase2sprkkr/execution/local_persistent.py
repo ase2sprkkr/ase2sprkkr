@@ -27,7 +27,11 @@ from .detached import (
 )
 from .transport import AtomicLocalFile
 
-_FINAL_STATES = {RunState.FINISHED, RunState.FAILED, RunState.CANCELLED}
+_FINAL_STATES = {
+    RunState.FINISHED,
+    RunState.EXECUTION_FAILED,
+    RunState.CANCELLED,
+}
 
 
 def _file_path(value, directory=None):
@@ -225,14 +229,9 @@ class LocalPersistentRunner:
             return b""
 
     async def _monitor(self):
-        stdout = asyncio.StreamReader()
-        stderr = asyncio.StreamReader()
-        parse_task = asyncio.create_task(
-            self.reader.parse_streams(stdout, stderr, self.result)
-        )
+        """Replay complete raw output; parsing belongs to the later CHECK phase."""
         offsets = {"out": 0, "err": 0}
         output_target, error_target = self._open_mirrors()
-        status = None
         mirrors_committed = False
         try:
             while True:
@@ -240,9 +239,9 @@ class LocalPersistentRunner:
                     self._reference.directory, self._reference.native_id
                 )
                 had_data = False
-                for kind, key, stream, target in (
-                    ("out", "output_file", stdout, output_target),
-                    ("err", "error_file", stderr, error_target),
+                for kind, key, target in (
+                    ("out", "output_file", output_target),
+                    ("err", "error_file", error_target),
                 ):
                     data = self._read_new(status.get(key), offsets[kind])
                     if not data:
@@ -252,7 +251,6 @@ class LocalPersistentRunner:
                         target.write(data)
                         target.flush()
                     self._emit_output(data, kind)
-                    stream.feed_data(data)
                     had_data = True
 
                 state = RunState(status.get("state", "unknown"))
@@ -265,22 +263,11 @@ class LocalPersistentRunner:
                 if not had_data:
                     await asyncio.sleep(0.05)
 
-            stdout.feed_eof()
-            stderr.feed_eof()
-            # Replay becomes authoritative once the detached execution and full
-            # stream replay have completed. Parsing is deliberately separate.
             self._finish_mirrors(output_target, error_target, commit=True)
             mirrors_committed = True
-            output, error = await parse_task
-            return self.reader.complete_result(
-                self.result, output, error, self._return_code
-            )
+            self.result.complete(None, self._return_code)
+            return self.result
         finally:
-            stdout.feed_eof()
-            stderr.feed_eof()
-            if not parse_task.done():
-                parse_task.cancel()
-            await asyncio.gather(parse_task, return_exceptions=True)
             if not mirrors_committed:
                 self._finish_mirrors(output_target, error_target, commit=False)
 
@@ -335,8 +322,6 @@ class LocalPersistentRunner:
             "launch": asdict(self.spec.launch),
             "input_file": _file_path(self.spec.input_file, directory),
             "stdin": _file_path(self.spec.stdin, directory),
-            # The helper owns private streams. The monitor mirrors them to the
-            # user-facing output paths and can replay them after a restart.
             "output_file": os.fspath(run_directory / "stdout"),
             "error_file": os.fspath(run_directory / "stderr"),
             "client_input_file": _file_path(self.spec.input_file, directory),
@@ -354,9 +339,6 @@ class LocalPersistentRunner:
                 request = self._request()
             except Exception as exc:
                 raise SubmissionNotStarted(str(exc)) from exc
-            # submit_detached creates recoverable target state before spawning
-            # the helper. An exception from it is therefore conservatively
-            # treated as uncertain by ExecutionManager.
             status = submit_detached(request)
             self._state = RunState(status.get("state", "queued"))
             self._return_code = status.get("return_code")
