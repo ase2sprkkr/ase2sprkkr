@@ -270,14 +270,17 @@ class ResourceOwnedRunner:
         return self._runner.add_output_error_listener(callback)
 
 
+from .run_model import Execution, FileManifest
+
+
 @dataclass(frozen=True)
 class RunStatus:
-    """One backend status snapshot for a persistent run reference."""
+    """Backend status facts; the client owns durable RunRecord state."""
 
     state: RunState
     backend_id: Optional[str] = None
-    execution: Any = None
-    files: Any = None
+    execution: Optional[Execution] = None
+    files: Optional[FileManifest] = None
     return_code: Optional[int] = None
     message: Optional[str] = None
     failure_phase: Optional[FailurePhase] = None
