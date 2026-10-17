@@ -309,14 +309,14 @@ def test_psij_recovers_live_slurm_submission_by_run_id(monkeypatch, tmp_path):
     monkeypatch.setattr(psij_backend, "_scheduler_output", scheduler_output)
 
     status = executor.recover_submission(
-        "run-1", SimpleNamespace(directory=str(tmp_path))
+        "run-1", _psij_run(tmp_path)
     )
 
     assert status.state == RunState.RUNNING
-    assert status.reference.native_id == "123"
-    assert status.reference.directory == str(tmp_path)
-    assert status.reference.output_file == str(tmp_path / "run.out")
-    assert status.reference.error_file == str(tmp_path / "run.err")
+    assert status.backend_id == "123"
+    assert status.execution.directory.local == str(tmp_path)
+    assert status.files.stdout.remote_path == str(tmp_path / "run.out")
+    assert status.files.stderr.remote_path == str(tmp_path / "run.err")
     assert calls[0][0] == "squeue"
 
 
@@ -339,14 +339,14 @@ def test_psij_recovers_completed_slurm_submission_from_accounting(monkeypatch, t
 
     status = executor.recover_submission(
         "run-2",
-        SimpleNamespace(directory=str(tmp_path)),
+        _psij_run(tmp_path),
         submitted_at="2026-10-13T08:00:00+02:00",
     )
 
     assert status.state == RunState.FINISHED
     assert status.return_code == 0
-    assert status.reference.native_id == "456"
-    assert status.reference.output_file == str(tmp_path / "run.out")
+    assert status.backend_id == "456"
+    assert status.files.stdout.remote_path == str(tmp_path / "run.out")
 
 
 def test_psij_accounting_confirms_missing_submission(monkeypatch, tmp_path):
@@ -365,7 +365,7 @@ def test_psij_accounting_confirms_missing_submission(monkeypatch, tmp_path):
 
     assert executor.recover_submission(
         "missing",
-        SimpleNamespace(directory=str(tmp_path)),
+        _psij_run(tmp_path),
         submitted_at="2026-10-13T08:00:00+02:00",
     ) is None
 
@@ -385,7 +385,7 @@ def test_psij_missing_accounting_history_keeps_submission_uncertain(monkeypatch,
     with pytest.raises(NotImplementedError, match="comments are unavailable"):
         executor.recover_submission(
             "uncertain",
-            SimpleNamespace(directory=str(tmp_path)),
+            _psij_run(tmp_path),
             submitted_at="2026-10-13T08:00:00+02:00",
         )
 
@@ -403,7 +403,7 @@ def test_psij_recovery_rejects_ambiguous_live_jobs(monkeypatch, tmp_path):
 
     with pytest.raises(RuntimeError, match="Multiple live Slurm jobs"):
         executor.recover_submission(
-            "duplicate", SimpleNamespace(directory=str(tmp_path))
+            "duplicate", _psij_run(tmp_path)
         )
 
 
