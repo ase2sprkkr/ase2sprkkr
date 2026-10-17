@@ -23,10 +23,33 @@ class KKRSpecInputParametersDefinition(InputParametersDefinition):
             files.append(resolve_file(directory, "struc.inp"))
         return tuple(files)
 
+    @staticmethod
+    def _effective_npol(parameters):
+        """Return the NPOL value after SPEC_INPUT applies POL_P precedence."""
+        pol = parameters.SPEC_PH.POL_P()
+        if pol in ("P", "C+"):
+            return 1
+        if pol in ("S", "C-"):
+            return 2
+        return int(parameters.SPEC_PH.NPOL())
+
     def output_files(self, parameters, directory):
         files = list(super().output_files(parameters, directory))
-        if parameters.TASK.TASK() == "ARPES":
-            files.append(resolve_file(directory, f"{parameters.CONTROL.DATASET()}_ARPES_data.spc"))
+        dataset = parameters.CONTROL.DATASET()
+        task = parameters.TASK.TASK()
+
+        # SPEC_RSLAB always opens this task log on rank zero.
+        files.append(resolve_file(directory, f"{dataset}_SPEC.out"))
+
+        # BAND has no photon-polarization branch. SPLEED has no SPEC_PH
+        # section in the modern definition and SPEC_INPUT defaults NPOL=1.
+        if task in ("BAND", "SPLEED") or self._effective_npol(parameters) == 1:
+            files.append(resolve_file(directory, f"{dataset}_data.spc"))
+        else:
+            files.extend((
+                resolve_file(directory, f"{dataset}_data_pol1.spc"),
+                resolve_file(directory, f"{dataset}_data_pol2.spc"),
+            ))
         return tuple(files)
 
 
