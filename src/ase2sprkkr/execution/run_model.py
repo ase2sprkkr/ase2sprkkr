@@ -171,8 +171,13 @@ class FileManifest:
 
     @property
     def output_files(self):
-        entries = (self.stdout,) if self.stdout is not None else ()
-        return tuple(entry.local_path for entry in (*entries, *self.outputs) if entry.local_path is not None)
+        streams = (self.stdout, self.stderr)
+        entries = tuple(entry for entry in streams if entry is not None)
+        return tuple(dict.fromkeys(
+            entry.local_path
+            for entry in (*entries, *self.outputs)
+            if entry.local_path is not None
+        ))
 
     @property
     def manifests(self):
