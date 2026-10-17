@@ -62,7 +62,8 @@ def input_parameters():
             V("NKDIR", Integer(min=0, max=9), 0, is_always_added=False, info="Manual segments, each requires KAi and KEi; native maximum 9."),
         ] + [V(f"{name}{i}", SetOf(float, length=3), is_optional=True,
                 info="Manual segment endpoint in Cartesian multiples of 2*pi/a.")
-             for i in range(1, 10) for name in ("KA", "KE")]), SITES], executable="kkrgen", mpi=True, validators=_validate_ekrel,
+             for i in range(1, 10) for name in ("KA", "KE")]), SITES], executable="kkrgen", mpi=True,
+        output_file_templates=("{dataset}.bnd",), validators=_validate_ekrel,
         info="E(k) bands or Fermi-surface search for ordered systems.",
         description="CPA alloys are rejected by SPR-KKR: use BSF for disorder. TASK sets the actual "
                     "energy search and k-path; ENERGY is used for initialization. KDIRTAB is called "
