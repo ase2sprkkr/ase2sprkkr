@@ -1,0 +1,57 @@
+"""Crash boundary: remote staging metadata must be persisted before submit."""
+
+from ase2sprkkr.execution import (
+    ExecutionManager, ExecutionSpec, FileEntry, FileManifest, FileMapping,
+    LaunchSpec, RemoteEndpointExecutor, RunState, RunStore, LocalTransport,
+)
+
+
+def test_prepared_manifest_is_durable_before_remote_backend_submit(tmp_path):
+    executor = RemoteEndpointExecutor(LocalTransport())
+    manager = ExecutionManager(RunStore(tmp_path / "runs"))
+    directory = tmp_path / "local"
+    directory.mkdir()
+    output = directory / "run.out"
+    spec = ExecutionSpec(
+        argv=("ignored",),
+        directory=str(directory),
+        input_file=None,
+        output_file=str(output),
+        launch=LaunchSpec(
+            local_root=str(tmp_path),
+            remote_root=str(tmp_path / "target"),
+        ),
+    )
+    run = manager.create_run(
+        executor, spec, task="DOS", process_result=lambda outcome: outcome,
+    )
+    raw = run._runner._runner
+    expected = FileManifest(
+        stdout=FileEntry(str(output), "/target/prepared/run.out"),
+        mapping=FileMapping(str(tmp_path), "/target/prepared"),
+        availability_state="pending",
+    )
+
+    async def prepare():
+        return {"directory": "/target/prepared", "id": run.id}, expected
+
+    submitted = []
+
+    async def submit(_request):
+        current = manager.store.get(run.id)
+        submitted.append(current)
+        return {"state": "running", "remote_id": "opaque-job"}
+
+    raw._prepare_async = prepare
+    raw._start_monitor = lambda: None
+    executor._submit = submit
+
+    run.submit()
+
+    assert len(submitted) == 1
+    snapshot = submitted[0]
+    assert snapshot.state == RunState.SUBMITTING
+    assert snapshot.execution.backend_id is None
+    assert snapshot.execution.directory.remote == "/target/prepared"
+    assert snapshot.files == expected
+    assert manager.store.get(run.id).execution.backend_id == "opaque-job"
