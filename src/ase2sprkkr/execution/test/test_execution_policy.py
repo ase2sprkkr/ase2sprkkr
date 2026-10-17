@@ -17,11 +17,10 @@ from ase2sprkkr.execution.manager import (
     ArtifactAvailabilityState,
     ExecutionManager,
     PersistentRunner,
-    ResultFilesRecord,
     RunStore,
-    SubmissionKey,
 )
 from ase2sprkkr.execution.postprocessing import PostprocessingRunner
+from ase2sprkkr.execution.run_model import FileManifest, FileEntry
 from ase2sprkkr.execution.transport import AtomicLocalFile, LocalTransport
 
 
@@ -88,7 +87,7 @@ def test_callback_failure_does_not_change_local_execution_state(tmp_path):
 
 class _UnknownRunner:
     result = object()
-    reference = None
+    backend_id = None
     state = RunState.NEW
     exception = None
     failure_phase = None
@@ -149,12 +148,10 @@ def _persistent_wrapper(tmp_path, runner):
     manager = ExecutionManager(RunStore(tmp_path / "runs"))
     executor = LocalExecutor()
     endpoint = endpoint_for_executor(executor)
-    submission = SubmissionKey(endpoint, str(tmp_path), "SCF")
     record = manager.new_record(
         task="SCF",
         directory=tmp_path,
         endpoint=endpoint,
-        submission=submission,
     )
     return manager, PersistentRunner(manager, executor, runner, record)
 
@@ -168,7 +165,7 @@ def test_definite_pre_submit_failure_becomes_submission_failure(tmp_path):
     record = manager.store.get(runner.id)
     assert record.state == RunState.FAILED
     assert record.failure_phase == FailurePhase.SUBMISSION
-    assert record.reference is None
+    assert record.execution.backend_id is None
     assert record.message == "input staging failed"
 
 
@@ -180,7 +177,7 @@ def test_uncertain_submit_without_reference_stays_submitting(tmp_path):
 
     record = manager.store.get(runner.id)
     assert record.state == RunState.SUBMITTING
-    assert record.reference is None
+    assert record.execution.backend_id is None
 
 
 def test_artifact_availability_failure_does_not_change_finished_state(tmp_path):
@@ -188,7 +185,7 @@ def test_artifact_availability_failure_does_not_change_finished_state(tmp_path):
     record = manager.new_record(
         task="SCF",
         directory=tmp_path,
-        result_files=ResultFilesRecord(output_file=str(tmp_path / "out")),
+        files=FileManifest(stdout=FileEntry(local_path=str(tmp_path / "out"))),
     )
     record = manager.store.save(record)
     record = manager.transition(record, state=RunState.FINISHED)
@@ -199,10 +196,10 @@ def test_artifact_availability_failure_does_not_change_finished_state(tmp_path):
 
     assert record.state == RunState.FINISHED
     assert (
-        record.result_files.availability_state
+        record.files.availability_state
         == ArtifactAvailabilityState.FAILED
     )
-    assert record.result_files.availability_message == "ssh disconnected"
+    assert record.files.availability_message == "ssh disconnected"
 
 
 def test_atomic_local_file_preserves_old_destination_until_commit(tmp_path):
