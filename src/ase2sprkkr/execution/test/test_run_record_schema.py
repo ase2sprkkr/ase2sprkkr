@@ -50,3 +50,37 @@ def test_current_schema_round_trips_without_legacy_fields(tmp_path):
     assert loaded.schema_version == 3
     assert not hasattr(loaded, "backend_state")
     assert not hasattr(loaded, "requested_task")
+
+
+def test_run_record_has_only_one_execution_identity(tmp_path):
+    record = RunRecord(
+        id="native", task="DOS", state=RunState.RUNNING,
+        created_at="2026-10-17T12:34:56+00:00",
+        updated_at="2026-10-17T12:34:56+00:00",
+        execution=Execution(
+            ExecutorEndpoint(), WorkingDirectory(str(tmp_path)), "backend-42"
+        ),
+        files=FileManifest(),
+    )
+    assert record.execution.backend_id == "backend-42"
+    for obsolete in ("reference", "submission", "endpoint", "directory", "result_files"):
+        assert not hasattr(record, obsolete)
+
+
+def test_persisted_execution_identity_cannot_be_replaced(tmp_path):
+    from ase2sprkkr.execution.manager import ExecutionManager
+
+    manager = ExecutionManager(RunStore(tmp_path / "runs"))
+    record = manager.new_record(task="DOS", directory=tmp_path)
+    first = manager.transition(
+        record, state=RunState.RUNNING,
+        execution=record.execution.submitted("job-42"),
+    )
+    assert manager.store.get(record.id).execution.backend_id == "job-42"
+    with pytest.raises(ValueError, match="Backend identity"):
+        manager.transition(
+            first, execution=first.execution.submitted("job-42").__class__(
+                first.execution.endpoint, first.execution.directory, "job-43"
+            ),
+        )
+    assert manager.store.get(record.id).execution.backend_id == "job-42"
