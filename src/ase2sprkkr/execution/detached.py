@@ -19,10 +19,12 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from ..common.file_locks import FileLock
+from ._durability import durable_mkdir, durable_write_json, sync_file
 from .base import ExecutionSpec, FailurePhase, LaunchSpec, RunState
 
 
 _FINAL_STATES = {"finished", "failed", RunState.EXECUTION_FAILED.value, "cancelled"}
+_RESULT_FINAL_STATES = {"finished", "failed", RunState.EXECUTION_FAILED.value}
 _METADATA_DIR = ".ase2sprkkr"
 _RUNS_DIR = "runs"
 _STATE_FILE = "state.json"
@@ -86,6 +88,30 @@ def _read_state(directory, run_id):
     return _read_state_unlocked(directory, run_id)
 
 
+def _sync_result_files_before_final_state(state):
+    """Make result-bearing detached terminal states a filesystem commit point."""
+    if state.get("state") not in _RESULT_FINAL_STATES:
+        return
+    if state.get("failure_phase") in {
+        FailurePhase.SUBMISSION.value,
+        FailurePhase.LAUNCH.value,
+        FailurePhase.FINALIZATION.value,
+    }:
+        return
+
+    seen = set()
+    for key in ("output_file", "error_file"):
+        path = state.get(key)
+        if path is None:
+            continue
+        path = os.fspath(path)
+        if path in seen:
+            continue
+        seen.add(path)
+        if os.path.isfile(path):
+            sync_file(path)
+
+
 def _write_state_unlocked(workspace, run_id, **changes):
     path = _state_path(workspace, run_id)
     try:
@@ -93,9 +119,23 @@ def _write_state_unlocked(workspace, run_id, **changes):
     except FileNotFoundError:
         state = {}
     state.update(changes)
-    temporary = path.with_suffix(path.suffix + ".tmp")
-    temporary.write_text(json.dumps(state))
-    os.replace(temporary, path)
+    try:
+        _sync_result_files_before_final_state(state)
+    except OSError as exc:
+        # The calculation has reached a result-bearing terminal state, but its
+        # artifacts could not be made durable. Persist that distinction before
+        # propagating the barrier error. FINALIZATION failures deliberately skip
+        # result syncing, so recovery can record the same diagnostic safely.
+        failure = dict(state)
+        failure.update(
+            state="failed",
+            error=repr(exc),
+            failure_phase=FailurePhase.FINALIZATION.value,
+            finished_at=state.get("finished_at") or _timestamp(),
+        )
+        durable_write_json(path, failure)
+        raise
+    durable_write_json(path, state)
     return state
 
 
@@ -138,19 +178,25 @@ def submit_detached(request):
         raise ValueError(f"Unsupported detached executor: {executor!r}")
 
     directory = Path(request["directory"]).expanduser().resolve()
-    directory.mkdir(parents=True, exist_ok=True)
+    durable_mkdir(directory, parents=True, exist_ok=True)
     run_id = request["id"]
     run_directory = _run_directory(directory, run_id)
     try:
-        run_directory.mkdir(parents=True)
+        durable_mkdir(run_directory, parents=True)
     except FileExistsError as exc:
         raise RuntimeError(f"Detached run already exists: {run_id}") from exc
 
     request = dict(request, directory=os.fspath(directory))
+    input_file = _absolute_file(directory, request.get("input_file"))
     output_file = _absolute_file(directory, request.get("output_file"))
     error_file = _absolute_file(directory, request.get("error_file"))
 
-    _request_path(directory, run_id).write_text(json.dumps(request))
+    # The durable submission marker may only reference input that has already
+    # crossed its own persistence barrier. Missing input remains a backend
+    # validation concern, exactly as before.
+    if input_file is not None and os.path.isfile(input_file):
+        sync_file(input_file)
+    durable_write_json(_request_path(directory, run_id), request)
     # A target request is still submitting until its execution backend proves
     # otherwise. In particular PSI/J becomes QUEUED only after scheduler
     # submission has returned a persistent job reference.
@@ -160,7 +206,7 @@ def submit_detached(request):
         id=run_id,
         state=RunState.SUBMITTING.value,
         directory=os.fspath(directory),
-        input_file=_absolute_file(directory, request.get("input_file")),
+        input_file=input_file,
         output_file=output_file,
         error_file=error_file,
         return_code=None,
@@ -386,7 +432,7 @@ def run_detached_worker(directory, run_id):
                     state="failed",
                     error=repr(exc),
                     failure_phase=state.get("failure_phase") or phase.value,
-                    return_code=None,
-                    finished_at=_timestamp(),
+                    return_code=state.get("return_code"),
+                    finished_at=state.get("finished_at") or _timestamp(),
                 )
         raise

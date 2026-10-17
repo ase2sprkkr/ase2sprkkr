@@ -4,8 +4,6 @@ from __future__ import annotations
 
 import json
 import logging
-import os
-import tempfile
 from contextlib import contextmanager
 from dataclasses import dataclass, replace
 from pathlib import Path
@@ -16,6 +14,7 @@ from uuid import UUID, uuid4
 from platformdirs import user_state_dir
 
 from ..common.file_locks import FileLock
+from ._durability import durable_mkdir, durable_write_json, fsync_directory
 
 logger = logging.getLogger(__name__)
 
@@ -172,56 +171,6 @@ def validate_hierarchy(projects: tuple[Project, ...]) -> None:
 
     for project_id in by_id:
         visit(project_id)
-
-
-def _fsync_directory(directory: Path) -> None:
-    """Best-effort durability barrier for an updated directory entry."""
-    flags = os.O_RDONLY
-    if hasattr(os, "O_DIRECTORY"):
-        flags |= os.O_DIRECTORY
-    try:
-        descriptor = os.open(directory, flags)
-    except OSError:
-        return
-    try:
-        try:
-            os.fsync(descriptor)
-        except OSError:
-            pass
-    finally:
-        os.close(descriptor)
-
-
-def _atomic_write_json(path: Path, data: dict) -> None:
-    """Atomically replace one project JSON document."""
-    path.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
-    temporary: Path | None = None
-    try:
-        with tempfile.NamedTemporaryFile(
-            mode="w",
-            encoding="utf-8",
-            dir=path.parent,
-            prefix=f".{path.name}.",
-            suffix=".tmp",
-            delete=False,
-        ) as stream:
-            temporary = Path(stream.name)
-            json.dump(data, stream, indent=2)
-            stream.flush()
-            os.fsync(stream.fileno())
-        try:
-            os.chmod(temporary, 0o600)
-        except OSError:
-            pass
-        os.replace(temporary, path)
-        temporary = None
-        _fsync_directory(path.parent)
-    finally:
-        if temporary is not None:
-            try:
-                temporary.unlink()
-            except FileNotFoundError:
-                pass
 
 
 class ProjectRepository:
@@ -390,6 +339,7 @@ class ProjectRepository:
                 raise ProjectDeleteError("Projects with child projects cannot be deleted")
             try:
                 self._json_path(canonical).unlink()
+                fsync_directory(self.directory)
             except OSError as exc:
                 raise ProjectRepositoryError(
                     f"Cannot delete project {canonical!r}: {exc}"
@@ -457,8 +407,8 @@ class ProjectRepository:
 
     def _write(self, project: Project) -> None:
         try:
-            self.directory.mkdir(parents=True, exist_ok=True, mode=0o700)
-            _atomic_write_json(
+            durable_mkdir(self.directory, parents=True, exist_ok=True, mode=0o700)
+            durable_write_json(
                 self._json_path(project.id),
                 {
                     "schema_version": _PROJECT_SCHEMA_VERSION,
@@ -468,6 +418,8 @@ class ProjectRepository:
                     "parent_id": project.parent_id,
                     "persistent_refs": list(project.persistent_refs),
                 },
+                mode=0o600,
+                indent=2,
             )
         except OSError as exc:
             raise ProjectRepositoryError(
