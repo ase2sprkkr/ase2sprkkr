@@ -3,17 +3,59 @@
 from __future__ import annotations
 
 import asyncio
+import os
 from threading import Event, Lock, Thread
 
 from .base import FailurePhase, RunState, SubmissionNotStarted
 
 
+def reader_postprocessor(reader, spec):
+    """Adapt a task output reader to the generic postprocessing contract.
+
+    This is the only compatibility seam for the historical ``reader`` execution
+    API.  The reader is consumed on the client after raw execution and artifact
+    availability; it is never passed to the backend runner.
+    """
+
+    directory = os.path.abspath(os.fspath(spec.directory))
+
+    def path(value):
+        if value is None:
+            return None
+        value = getattr(value, "name", value)
+        if isinstance(value, int):
+            return None
+        try:
+            value = os.fspath(value)
+        except TypeError:
+            return None
+        if not os.path.isabs(value):
+            value = os.path.join(directory, value)
+        return os.path.abspath(value)
+
+    output_file = path(spec.output_file)
+    input_file = path(spec.input_file)
+
+    def postprocess(outcome):
+        return_code = getattr(outcome, "return_code", None)
+        if return_code is None:
+            return_code = 0
+        return reader.read_from_file(
+            output_file,
+            return_code=return_code,
+            input_file=input_file,
+            directory=directory,
+        )
+
+    return postprocess
+
+
 class PostprocessingRunner:
     """Turn a raw execution outcome into the caller-visible result.
 
-    The wrapped runner owns execution and artifact availability.  This wrapper
+    The wrapped runner owns execution and artifact availability. This wrapper
     owns only task-independent orchestration around a supplied ``postprocess``
-    callable.  The callable runs after successful execution, when all required
+    callable. The callable runs after successful execution, when all required
     artifacts are local, and is therefore the only layer that may construct a
     task-specific result.
     """
