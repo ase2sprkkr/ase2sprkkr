@@ -10,7 +10,7 @@ def _roundtrip(parameters):
     return InputParameters.from_file(stream)
 
 
-def test_from_file_detects_bsfek_shared_schema_by_adsi():
+def test_from_file_detects_bsfek_from_task_selector():
     parameters = InputParameters.create("BSFEK")
     parameters.CONTROL.POTFIL = "Fe.pot"
     parameters.TASK.KPATH = 6
@@ -23,7 +23,7 @@ def test_from_file_detects_bsfek_shared_schema_by_adsi():
     assert parsed.TASK.KPATH() == "6"
 
 
-def test_from_file_detects_bsfkk_shared_schema_by_adsi():
+def test_from_file_detects_bsfkk_from_task_selector():
     parameters = InputParameters.create("BSFKK")
     parameters.CONTROL.POTFIL = "Fe.pot"
     parameters.TASK.NK1 = 45
@@ -40,3 +40,22 @@ def test_from_file_detects_bsfkk_shared_schema_by_adsi():
     assert parsed.TASK.NK1() == 45
     assert parsed.TASK.NK2() == 55
     np.testing.assert_array_equal(parsed.TASK.KA(), [[0.0, 0.0, 0.0]])
+
+
+def test_from_file_without_task_section_uses_scf_schema():
+    text = """CONTROL DATASET=Fe
+        ADSI=CUSTOM
+        POTFIL=Fe.pot
+TAU BZINT=POINTS
+    NKTAB=250
+ENERGY GRID={5}
+    NE={32}
+SCF NITER=80
+    MIX=0.2
+SITES NL={3}
+"""
+    parsed = InputParameters.from_file(io.StringIO(text))
+    assert parsed.definition_name == "SCF"
+    assert parsed.task_name == "SCF"
+    assert parsed.CONTROL.ADSI() == "CUSTOM"
+    assert parsed.SCF.NITER() == 80

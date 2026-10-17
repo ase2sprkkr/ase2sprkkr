@@ -1,4 +1,4 @@
-"""Pre-parsing resolves an input definition, never a task or ADSI."""
+"""Input parsing selects one full IPD from TASK.TASK, defaulting to SCF."""
 
 import io
 from types import SimpleNamespace
@@ -41,8 +41,10 @@ def test_minimal_selector_ipd_is_cached_and_contains_only_task_task():
     assert a is _task_selector_definition()
     assert list(a.sections) == ["TASK"]
     assert list(a["TASK"].values) == ["TASK"]
+
     parsed = a.read_from_string("TASK ARPES")
     assert parsed.TASK.TASK() == "ARPES"
+    assert a.read_from_string("CONTROL ADSI=SCF").TASK.TASK() is None
 
 
 def test_from_file_uses_only_selected_input_definition():
@@ -57,29 +59,35 @@ def test_from_file_uses_only_selected_input_definition():
     assert correct.calls == 1
 
 
+def test_from_file_without_task_selects_scf_only():
+    expected = object()
+    scf = _Definition(["SCF"], expected)
+    other = _Definition(["DOS"], object())
+    parameters = _parameters_with({"scf": scf, "other": other})
+
+    assert parameters.from_file(io.StringIO("CONTROL ADSI=DOS")) is expected
+    assert scf.calls == 1
+    assert other.calls == 0
+
+
 def test_from_file_propagates_selected_parser_error_without_fallback():
     failure = pp.ParseException("invalid selected schema")
     chosen = _Definition(["ARPES"], failure)
-    fallback = _Definition(["DOS"], object())
-    parameters = _parameters_with({"chosen": chosen, "fallback": fallback})
+    other = _Definition(["DOS"], object())
+    parameters = _parameters_with({"chosen": chosen, "other": other})
 
     with pytest.raises(pp.ParseException, match="invalid selected schema"):
         parameters.from_file(io.StringIO("TASK ARPES"))
     assert chosen.calls == 1
-    assert fallback.calls == 0
+    assert other.calls == 0
 
 
-@pytest.mark.parametrize("source", [
-    "CONTROL ADSI=ARPES",
-    "TASK UNKNOWN",
-    "TASK ARPES\\nTASK DOS",
-])
-def test_from_file_rejects_missing_unknown_or_duplicate_selector(source):
+def test_from_file_unknown_task_never_guesses():
     candidate = _Definition(["ARPES"], object())
     parameters = _parameters_with({"candidate": candidate})
 
-    with pytest.raises(ValueError, match="TASK\\.TASK|input-parameter definition"):
-        parameters.from_file(io.StringIO(source))
+    with pytest.raises(ValueError, match="input-parameter definition"):
+        parameters.from_file(io.StringIO("TASK UNKNOWN"))
     assert candidate.calls == 0
 
 
@@ -96,9 +104,11 @@ def test_from_file_rejects_ambiguous_selector():
 def test_from_file_ignores_control_adsi():
     result = object()
     selected = _Definition(["ARPES"], result)
-    parameters = _parameters_with({"selected": selected})
+    other = _Definition(["DOS"], object())
+    parameters = _parameters_with({"selected": selected, "other": other})
 
     assert parameters.from_file(io.StringIO(
-        "CONTROL ADSI=DOS\\nTASK ARPES"
+        "CONTROL ADSI=DOS\nTASK ARPES"
     )) is result
     assert selected.calls == 1
+    assert other.calls == 0

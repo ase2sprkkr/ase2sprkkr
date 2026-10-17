@@ -4,8 +4,7 @@ from __future__ import annotations
 
 import io
 from functools import cache
-from pathlib import Path
-import re
+
 
 import pyparsing as pp
 
@@ -22,16 +21,9 @@ from ..common.decorators import cached_class_property
 from ..common.warnings import DataValidityError
 from ..potentials.potentials import Potential
 
-# Extract only the positional TASK.TASK selector. The minimal IPD below
-# validates its syntax; other sections are left to the selected full IPD.
-_TASK_SELECTOR_LINE = re.compile(
-    r"(?im)^[ \\t]*TASK(?:[ \\t]+|\\r?\\n[ \\t]+)([A-Za-z][A-Za-z0-9_-]*)\\b"
-)
-
-
 @cache
 def _task_selector_definition():
-    """A cached, unregistered IPD containing exactly TASK.TASK."""
+    """Minimal, cached IPD: all sections except TASK.TASK remain custom."""
     from .input_parameters_definitions import (
         InputParametersDefinition,
         InputSectionDefinition,
@@ -43,24 +35,15 @@ def _task_selector_definition():
         [
             InputSectionDefinition(
                 "TASK",
-                [InputValueDefinition("TASK", str, name_in_grammar=False,
-                                      is_required=True)],
+                [
+                    InputValueDefinition(
+                        "TASK", str, name_in_grammar=False, is_required=False
+                    ),
+                ],
+                is_optional=True,
             ),
         ],
     )
-
-
-def _selector_source(filename):
-    """Read the source once for pre-parsing, preserving stream position."""
-    if hasattr(filename, "read"):
-        position = filename.tell()
-        try:
-            filename.seek(0)
-            source = filename.read()
-        finally:
-            filename.seek(position)
-        return source
-    return Path(filename).read_text(encoding="utf-8")
 
 
 class InputSection(ConfigurationSection):
@@ -349,23 +332,15 @@ class InputParameters(ConfigurationFile):
 
     @classmethod
     def from_file(cls, filename, allow_dangerous: bool = False):
-        """Pre-parse TASK.TASK, then read with its exact input definition.
+        """Read TASK.TASK with a cached minimal IPD and select one full IPD.
 
-        ADSI is unrelated to selection. Missing or unsupported selectors and
-        errors from the selected definition propagate: no parser guessing.
+        Missing TASK.TASK means SCF. The chosen IPD is the only parser tried;
+        failures are propagated without fallbacks or ADSI-based inference.
         """
-        source = _selector_source(filename)
-        matches = list(_TASK_SELECTOR_LINE.finditer(source))
-        if len(matches) != 1:
-            raise ValueError(
-                "Expected exactly one TASK.TASK selector in the input file"
-            )
-
-        selector_text = "TASK " + matches[0].group(1)
-        preview = _task_selector_definition().read_from_string(
-            selector_text, allow_dangerous=allow_dangerous
-        )
-        selector = preview.TASK.TASK().strip().upper()
+        selected = _task_selector_definition().read_from_file(
+            filename, allow_dangerous=allow_dangerous
+        ).TASK.TASK()
+        selector = "SCF" if selected is None else selected.strip().upper()
         try:
             definition = cls._task_selector_schemas[selector]
         except KeyError:
