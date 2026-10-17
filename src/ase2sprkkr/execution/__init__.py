@@ -3,6 +3,7 @@
 from ..common.file_fingerprints import FileFingerprint
 from ..common.file_versions import FileState, FileVersion, FileVersionCaptureError
 from .base import (
+    ExecutionOutcome,
     ExecutionResources,
     ExecutionSpec,
     Executor,
@@ -19,9 +20,9 @@ from .base import (
 from .endpoint import ExecutorEndpoint
 from .local import LocalExecutor, LocalRunner
 from .manager import (
+    ArtifactAvailabilityState,
     CorruptRunRecord,
     DuplicateSubmissionError,
-    FileRetrievalState,
     PersistentRunner,
     ResultFilesRecord,
     RunRecord,
@@ -29,6 +30,7 @@ from .manager import (
     SubmissionKey,
 )
 from .pool import ExecutorPool, default_executor_pool
+from .postprocessing import PostprocessingRunner
 from .projects import (
     Project,
     ProjectConflictError,
@@ -43,11 +45,11 @@ from .remote import FileSyncPolicy, RemoteRunner
 from .remote_endpoint import RemoteEndpointExecutor
 from .transport import LocalTransport, RunningCommand, SshTransport, Transport
 
-# Public remote executors represent reusable endpoint identity only. Per-run
-# filesystem mapping and synchronization are carried by LaunchSpec.
 RemoteExecutor = RemoteEndpointExecutor
 
 __all__ = [
+    "ArtifactAvailabilityState",
+    "ExecutionOutcome",
     "ExecutionResources",
     "ExecutionSpec",
     "Executor",
@@ -56,6 +58,7 @@ __all__ = [
     "LaunchSpec",
     "MpiSpec",
     "MpiNotFoundWarning",
+    "PostprocessingRunner",
     "ResourceOwnedRunner",
     "Runner",
     "RunReference",
@@ -67,7 +70,6 @@ __all__ = [
     "FileState",
     "FileVersion",
     "FileVersionCaptureError",
-    "FileRetrievalState",
     "ResultFilesRecord",
     "RunRecord",
     "RunStore",

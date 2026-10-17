@@ -22,6 +22,7 @@ from ..common.file_utils import Directory
 from ..common.temporary import temporary_option_value
 from ..execution.base import ExecutionResources, ResourceOwnedRunner
 from ..execution.persistence import resolve_execution_manager
+from ..execution.postprocessing import PostprocessingRunner
 from ..input_parameters.input_parameters import InputParameters
 from ..potentials.potentials import Potential
 from .profile import SPRKKRProfile, executor_from_profile
@@ -297,8 +298,6 @@ def _resolve_input_parameters(
                 and not task
                 and input_file is None
             ):
-                # An unmodified parsed input can be used directly. Rewriting it
-                # would also change the reference base of a relative POTFIL.
                 save_input = False
 
             if not save_input and (options or task or input_file is not None):
@@ -307,8 +306,6 @@ def _resolve_input_parameters(
             if save_input is False:
                 input_file = parameter_filename
             elif potential_missing and potential_file is None and source_potential:
-                # Preserve the original POTFIL meaning if the parsed input must
-                # be materialized into another file/directory.
                 potential_file = source_potential
             value = parsed
 
@@ -317,8 +314,6 @@ def _resolve_input_parameters(
     if value is None:
         raise ValueError("No input parameters are available for the calculation")
 
-    # A prepared calculation is a snapshot, not a mutable view of calculator
-    # defaults or of a caller-owned InputParameters instance.
     input_parameters = value.copy(copy_values=True)
     if task:
         input_parameters.change_task(task)
@@ -373,9 +368,6 @@ def _resolve_empty_spheres(
     if not isinstance(empty_spheres, collections.abc.Mapping):
         empty_spheres = {}
 
-    # Empty spheres intentionally become part of the selected physical
-    # structure. Their addition can require recomputing SPR-KKR site/symmetry
-    # state, so this is canonical preprocessing rather than a write-time overlay.
     add_empty_spheres(atoms, **empty_spheres)
 
 
@@ -615,10 +607,6 @@ class PreparedCalculation:
                 )
                 _own_file(file_resources, owned_file_ids, potential_handle)
 
-                # Do not put close() in a finally block: if serialization fails,
-                # outer cleanup must preserve that primary exception. On
-                # success a temporary wrapper closes only its descriptor here;
-                # its pathname is removed when preparation ownership ends.
                 if scf_status_override is None:
                     potential.save_to_file(
                         potential_handle, atoms, restart_scf=restart_scf
@@ -693,8 +681,6 @@ class PreparedCalculation:
                 _temporary_potential=temporary_potential,
             )
         except BaseException:
-            # Cleanup failures must not hide the preparation error that caused
-            # the cleanup. Successful explicit close() still reports errors.
             try:
                 file_resources.close()
             except BaseException:
@@ -848,20 +834,12 @@ def _create_sprkkr_run(
     error_file=None,
     create_subdirs=False,
 ):
-    """Adapt a prepared SPR-KKR calculation to an unstarted generic runner.
+    """Adapt a prepared SPR-KKR calculation to the execution subsystem.
 
-    This function contains SPR-KKR-specific execution policy: task metadata,
-    output-reader construction, calculation file manifests and MPI capability.
-    Concrete runner construction remains the responsibility of the selected
-    executor or persistence manager.
-
-    Ownership of ``prepared`` is transferred to the returned runner. If runner
-    construction fails before that handoff, all owned resources are closed here.
-
-    ``callback`` follows the generic runner's terminal-callback contract: it is
-    invoked when backend execution terminates and may therefore receive a
-    partially populated result if execution or parsing failed. Resource cleanup
-    happens before the user callback and is independent of its success.
+    This SPR-KKR layer owns task metadata, reader construction and TaskResult
+    reconstruction. Executors see only :class:`ExecutionSpec` and produce raw
+    :class:`ExecutionOutcome` values; the generic postprocessing layer merely
+    invokes the callable defined here.
     """
     try:
         opened_error, owns_error = _prepare_error_file(
@@ -936,18 +914,33 @@ def _create_sprkkr_run(
             gdb=gdb,
         )
 
+        def process_result(outcome):
+            return reader.read_from_file(
+                outcome.output_file,
+                outcome.error_file,
+                return_code=(
+                    0 if outcome.return_code is None else outcome.return_code
+                ),
+                input_file=outcome.input_file,
+            )
+
         def finalized(out):
             resources.close(suppress_errors=True)
             if callback:
                 callback(out)
 
         if manager is None:
-            runner = executor.create_run(reader, spec, callback=finalized)
+            raw_runner = executor.create_run(spec)
+            runner = PostprocessingRunner(
+                raw_runner,
+                process_result,
+                callback=finalized,
+            )
         else:
             runner = manager.create_run(
                 executor,
-                reader,
                 spec,
+                process_result=process_result,
                 task=task.name,
                 input_definition=input_parameters.definition_name,
                 dataset=input_parameters.CONTROL.DATASET.result,

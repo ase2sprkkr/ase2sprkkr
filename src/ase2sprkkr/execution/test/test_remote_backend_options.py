@@ -1,5 +1,4 @@
 import asyncio
-from types import SimpleNamespace
 
 from ase2sprkkr.execution import (
     ExecutionSpec,
@@ -8,13 +7,6 @@ from ase2sprkkr.execution import (
     MpiSpec,
     RemoteExecutor,
 )
-
-
-class _Reader:
-    print_output = False
-
-    def create_result(self, output_file, input_file):
-        return SimpleNamespace()
 
 
 def test_remote_request_carries_target_executor_options(tmp_path):
@@ -48,7 +40,7 @@ def test_remote_request_carries_target_executor_options(tmp_path):
         stdin=input_file,
         input_files=(input_file, potential),
     )
-    runner = executor.create_run(_Reader(), spec)
+    runner = executor.create_run(spec)
     context = runner.executor
 
     remote_directory = asyncio.run(context.map_directory(directory))

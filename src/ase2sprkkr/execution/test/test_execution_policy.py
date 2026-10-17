@@ -1,12 +1,12 @@
 import asyncio
 import os
 import sys
-from types import SimpleNamespace
 
 import pytest
 
 from ase2sprkkr.execution.base import (
     ExecutionSpec,
+    FailurePhase,
     RunState,
     SubmissionNotStarted,
 )
@@ -14,35 +14,15 @@ from ase2sprkkr.execution.detached import _terminate_process_group
 from ase2sprkkr.execution.endpoint import endpoint_for_executor
 from ase2sprkkr.execution.local import LocalExecutor, LocalRunner
 from ase2sprkkr.execution.manager import (
+    ArtifactAvailabilityState,
     ExecutionManager,
-    FileRetrievalState,
     PersistentRunner,
     ResultFilesRecord,
     RunStore,
     SubmissionKey,
 )
-from ase2sprkkr.execution.remote_psij import _RemotePsijAgent
+from ase2sprkkr.execution.postprocessing import PostprocessingRunner
 from ase2sprkkr.execution.transport import AtomicLocalFile, LocalTransport
-
-
-class _Reader:
-    print_output = False
-
-    def __init__(self, parser_error=None):
-        self.parser_error = parser_error
-
-    def create_result(self, output_file, input_file):
-        return SimpleNamespace(return_code=None)
-
-    async def parse_streams(self, stdout, stderr, result):
-        output, error = await asyncio.gather(stdout.read(), stderr.read())
-        if self.parser_error is not None:
-            raise self.parser_error
-        return output, error
-
-    def complete_result(self, result, output, error, return_code):
-        result.return_code = return_code
-        return result
 
 
 def _local_spec(tmp_path, code="print('ok')"):
@@ -56,7 +36,7 @@ def _local_spec(tmp_path, code="print('ok')"):
 
 
 def test_output_observer_failure_is_reported_but_does_not_fail_process(tmp_path):
-    runner = LocalRunner(_Reader(), _local_spec(tmp_path))
+    runner = LocalRunner(_local_spec(tmp_path))
     observer_errors = []
 
     def broken_observer(*_):
@@ -76,22 +56,25 @@ def test_output_observer_failure_is_reported_but_does_not_fail_process(tmp_path)
     assert str(observer_errors[0][1]) == "observer failed"
 
 
-def test_parser_failure_does_not_change_local_execution_state(tmp_path):
-    runner = LocalRunner(
-        _Reader(ValueError("parser failed")),
-        _local_spec(tmp_path),
-    )
+def test_postprocessing_failure_does_not_change_raw_execution_state(tmp_path):
+    raw = LocalRunner(_local_spec(tmp_path))
 
+    def fail(_outcome):
+        raise ValueError("parser failed")
+
+    runner = PostprocessingRunner(raw, fail)
     runner.submit()
+
     with pytest.raises(ValueError, match="parser failed"):
         runner.wait()
 
-    assert runner.state == RunState.FINISHED
+    assert raw.state == RunState.FINISHED
+    assert runner.state == RunState.FAILED
+    assert runner.failure_phase == FailurePhase.POSTPROCESSING
 
 
 def test_callback_failure_does_not_change_local_execution_state(tmp_path):
     runner = LocalRunner(
-        _Reader(),
         _local_spec(tmp_path),
         callback=lambda result: (_ for _ in ()).throw(ValueError("callback failed")),
     )
@@ -103,10 +86,49 @@ def test_callback_failure_does_not_change_local_execution_state(tmp_path):
     assert runner.state == RunState.FINISHED
 
 
-class _NotStartedRunner:
-    result = SimpleNamespace(return_code=None)
+class _UnknownRunner:
+    result = object()
     reference = None
     state = RunState.NEW
+    exception = None
+    failure_phase = None
+    failure_message = None
+
+    def submit(self):
+        self.state = RunState.UNKNOWN
+
+    def wait(self):
+        return self.result
+
+    def add_output_listener(self, callback):
+        pass
+
+    def add_output_error_listener(self, callback):
+        pass
+
+
+def test_unknown_raw_state_is_preserved_and_not_postprocessed():
+    raw = _UnknownRunner()
+    processed = []
+    runner = PostprocessingRunner(raw, lambda outcome: processed.append(outcome))
+
+    runner.submit()
+    with pytest.raises(RuntimeError, match="unresolved backend state"):
+        runner.wait()
+
+    assert processed == []
+    assert runner.result is raw.result
+    assert runner.state == RunState.UNKNOWN
+    assert runner.failure_phase is None
+
+
+class _NotStartedRunner:
+    result = None
+    reference = None
+    state = RunState.NEW
+    exception = None
+    failure_phase = None
+    failure_message = None
 
     def submit(self):
         raise SubmissionNotStarted("input staging failed")
@@ -137,15 +159,15 @@ def _persistent_wrapper(tmp_path, runner):
     return manager, PersistentRunner(manager, executor, runner, record)
 
 
-def test_definite_pre_submit_failure_becomes_execution_failed(tmp_path):
+def test_definite_pre_submit_failure_becomes_submission_failure(tmp_path):
     manager, runner = _persistent_wrapper(tmp_path, _NotStartedRunner())
 
     with pytest.raises(SubmissionNotStarted, match="input staging failed"):
         runner.submit()
 
     record = manager.store.get(runner.id)
-    assert record.state == RunState.EXECUTION_FAILED
-    assert not hasattr(record, "backend_state")
+    assert record.state == RunState.FAILED
+    assert record.failure_phase == FailurePhase.SUBMISSION
     assert record.reference is None
     assert record.message == "input staging failed"
 
@@ -161,7 +183,7 @@ def test_uncertain_submit_without_reference_stays_submitting(tmp_path):
     assert record.reference is None
 
 
-def test_file_retrieval_failure_does_not_change_finished_state(tmp_path):
+def test_artifact_availability_failure_does_not_change_finished_state(tmp_path):
     manager = ExecutionManager(RunStore(tmp_path / "runs"))
     record = manager.new_record(
         task="SCF",
@@ -171,13 +193,16 @@ def test_file_retrieval_failure_does_not_change_finished_state(tmp_path):
     record = manager.store.save(record)
     record = manager.transition(record, state=RunState.FINISHED)
 
-    record = manager.update_file_retrieval(
-        record, FileRetrievalState.FAILED, "ssh disconnected"
+    record = manager.update_artifact_availability(
+        record, ArtifactAvailabilityState.FAILED, "ssh disconnected"
     )
 
     assert record.state == RunState.FINISHED
-    assert record.result_files.retrieval_state == FileRetrievalState.FAILED
-    assert record.result_files.retrieval_message == "ssh disconnected"
+    assert (
+        record.result_files.availability_state
+        == ArtifactAvailabilityState.FAILED
+    )
+    assert record.result_files.availability_message == "ssh disconnected"
 
 
 def test_atomic_local_file_preserves_old_destination_until_commit(tmp_path):
@@ -235,21 +260,3 @@ def test_process_group_cancel_checks_group_not_only_leader(tmp_path, monkeypatch
     assert signalled is True
     assert calls[0][0] == 1234
     assert any(sig == 0 for _, sig in calls)
-
-
-def test_psij_retry_uses_exponential_backoff(tmp_path, monkeypatch):
-    now = [100.0]
-    monkeypatch.setattr(
-        "ase2sprkkr.execution.remote_psij.time.monotonic", lambda: now[0]
-    )
-    agent = _RemotePsijAgent(tmp_path)
-
-    agent._schedule_retry("run")
-    assert not agent._retry_ready("run")
-    first_deadline = agent._retry["run"][1]
-    assert first_deadline == pytest.approx(100.5)
-
-    now[0] = first_deadline
-    assert agent._retry_ready("run")
-    agent._schedule_retry("run")
-    assert agent._retry["run"][1] == pytest.approx(first_deadline + 1.0)

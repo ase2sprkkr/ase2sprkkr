@@ -1,105 +1,96 @@
 import asyncio
-from types import SimpleNamespace
 
-import pytest
-
-from ase2sprkkr.execution import ExecutionSpec, FailurePhase, RunReference, RunState
-from ase2sprkkr.execution.base import SubmissionNotStarted
-from ase2sprkkr.execution.remote import RemoteRunner
-from ase2sprkkr.execution.remote_endpoint import _RemoteRun
+from ase2sprkkr.execution import ExecutionSpec, RunReference, RunState
+from ase2sprkkr.execution.remote import FileSyncPolicy, RemoteRunner
+from ase2sprkkr.execution.transport import AtomicLocalFile
 
 
-class _Reader:
-    print_output = False
+class _Follow:
+    def __init__(self, output=b"streamed\n", error=b""):
+        self.stdout = asyncio.StreamReader()
+        self.stderr = asyncio.StreamReader()
+        self.stdout.feed_data(output)
+        self.stdout.feed_eof()
+        self.stderr.feed_data(error)
+        self.stderr.feed_eof()
 
-    def create_result(self, output_file, input_file):
-        return SimpleNamespace(return_code=None)
-
-
-class _Transport:
-    def __init__(self):
-        self.signature_calls = []
-
-    async def run(self, argv):
-        return SimpleNamespace(returncode=0, stdout=b"", stderr=b"")
-
-    async def file_signature(self, path):
-        self.signature_calls.append(path)
-        return None
+    async def wait(self):
+        return 0
 
 
 class _Executor:
-    backend = "local"
-    computer = "cluster"
+    output_files = FileSyncPolicy.NEVER
 
-    def __init__(self):
-        self.transport = _Transport()
+    def __init__(self, state):
+        self.backend_state = RunState(state)
+        self.sync_calls = 0
 
-    async def _status(self, directory, run_id):
+    async def _follow(self, directory, run_id, reference=None):
+        return _Follow()
+
+    async def _status(self, directory, run_id, reference=None):
         return {
-            "state": "cancelled",
-            "started_at": "execution-time",
+            "state": self.backend_state.value,
+            "return_code": 0 if self.backend_state == RunState.FINISHED else None,
+            "failure_phase": None,
         }
 
 
-def _run(tmp_path, executor=None):
-    executor = executor or _Executor()
-    return _RemoteRun(
+class _GateRunner(RemoteRunner):
+    async def _sync_output_files(self, required):
+        self.executor.sync_calls += 1
+        await super()._sync_output_files(required)
+
+    async def _sync_cache_files(self):
+        self.executor.sync_calls += 1
+        await super()._sync_cache_files()
+
+
+def _run(tmp_path, state, *, original=b"old\n"):
+    destination = tmp_path / "calculation.out"
+    destination.write_bytes(original)
+    output = AtomicLocalFile(destination)
+    executor = _Executor(state)
+    runner = _GateRunner(
         executor,
-        _Reader(),
         ExecutionSpec(
             argv=(),
             input_file=None,
-            output_file=str(tmp_path / "calculation.out"),
+            output_file=output,
             directory=str(tmp_path),
         ),
         reference=RunReference(
             executor="remote:local",
-            native_id="job-cancelled",
+            native_id="opaque-handle",
             computer="cluster",
             directory="/work/case",
             output_file="/work/case/calculation.out",
         ),
-        state=RunState.CANCELLED,
+        state=RunState.RUNNING,
     )
+    return runner, executor, destination, output
 
 
-def test_remote_post_output_handling_is_allowed_after_running(tmp_path, monkeypatch):
-    executor = _Executor()
-    run = _run(tmp_path, executor)
+def test_terminal_remote_state_may_publish_streamed_output(tmp_path):
+    runner, executor, destination, output = _run(tmp_path, RunState.FINISHED)
 
-    async def base_monitor(self):
-        return self.result
+    result = asyncio.run(runner._monitor())
 
-    monkeypatch.setattr(RemoteRunner, "_monitor", base_monitor)
-    asyncio.run(run._monitor())
+    assert runner.state == RunState.FINISHED
+    assert result.return_code == 0
+    assert destination.read_bytes() == b"streamed\n"
+    assert output._finished is True
+    assert executor.sync_calls == 2
 
-    assert executor.transport.signature_calls == ["/work/case/calculation.out"]
 
+def test_unknown_remote_state_does_not_publish_or_download_output(tmp_path):
+    runner, executor, destination, output = _run(tmp_path, RunState.UNKNOWN)
 
-def test_remote_helper_failure_preserves_launch_phase(tmp_path, monkeypatch):
-    executor = _Executor()
-    run = _run(tmp_path, executor)
-    run._reference = None
-    run._run_id = "remote-launch-failure"
+    asyncio.run(runner._monitor())
 
-    async def map_directory(directory):
-        return "/work/case"
-
-    async def prepare_request(run_id, remote_directory):
-        return {"id": run_id, "directory": remote_directory}
-
-    async def fail_submit(request):
-        raise SubmissionNotStarted(
-            "Remote detached worker launch failed: OSError('missing helper')"
-        )
-
-    executor.map_directory = map_directory
-    executor._submit = fail_submit
-    monkeypatch.setattr(run, "_prepare_request", prepare_request)
-
-    with pytest.raises(SubmissionNotStarted, match="missing helper"):
-        asyncio.run(run._submit_async())
-
-    assert run.failure_phase == FailurePhase.LAUNCH
-    assert "missing helper" in run.failure_message
+    assert runner.state == RunState.UNKNOWN
+    assert runner.failure_phase is None
+    assert destination.read_bytes() == b"old\n"
+    assert output._finished is True
+    assert not output.temporary_path.exists()
+    assert executor.sync_calls == 0
