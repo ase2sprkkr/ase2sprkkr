@@ -39,7 +39,7 @@ class ExecutorEndpoint:
 
 def endpoint_for_executor(executor) -> ExecutorEndpoint:
     """Describe a live executor without persisting launch/staging policy."""
-    from .local import LocalExecutor
+    from .local_api import LocalExecutor
     from .psij_raw import PsijExecutor
     from .remote_raw import RemoteEndpointExecutor
     from .transport import SshTransport
@@ -95,7 +95,7 @@ def endpoint_for_executor(executor) -> ExecutorEndpoint:
 
 def create_executor_from_endpoint(endpoint: ExecutorEndpoint):
     """Reconstruct a standard parser-free executor from persisted identity."""
-    from .local import LocalExecutor
+    from .local_api import LocalExecutor
     from .psij_raw import PsijExecutor
     from .remote_raw import RemoteEndpointExecutor
     from .transport import SshTransport
