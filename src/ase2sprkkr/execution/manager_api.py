@@ -5,23 +5,33 @@ from __future__ import annotations
 from .endpoint import endpoint_for_executor
 from .manager import ExecutionManager as _ExecutionManager
 from .manager import SubmissionKey
-from .postprocessing import PostprocessingRunner
+from .postprocessing import PostprocessingRunner, reader_postprocessor
 
 
 class ExecutionManager(_ExecutionManager):
     """Persist a raw execution runner plus client-side postprocessing.
 
-    The durable store remains task-agnostic. ``postprocess`` is a caller-owned
-    callable that turns an execution outcome into the public result after local
-    artifacts are available; it is never passed to an execution backend.
+    New callers pass ``spec`` plus ``postprocess=...``.  The historical
+    ``(reader, spec)`` form remains temporarily accepted at this facade only;
+    the reader is immediately converted to a client-side postprocessor and is
+    never forwarded to the executor.
     """
+
+    @staticmethod
+    def _normalize_postprocess(reader_or_spec, spec, postprocess):
+        if spec is None:
+            return reader_or_spec, postprocess
+        if postprocess is not None:
+            raise TypeError("postprocess cannot be combined with legacy reader argument")
+        return spec, reader_postprocessor(reader_or_spec, spec)
 
     def create_run(
         self,
         executor,
-        spec,
+        reader_or_spec,
+        spec=None,
         *,
-        postprocess,
+        postprocess=None,
         print_output=False,
         task,
         input_definition=None,
@@ -29,6 +39,12 @@ class ExecutionManager(_ExecutionManager):
         callback=None,
         run_id=None,
     ):
+        spec, postprocess = self._normalize_postprocess(
+            reader_or_spec, spec, postprocess
+        )
+        if postprocess is None:
+            raise TypeError("postprocess is required for persistent execution")
+
         endpoint = endpoint_for_executor(executor)
         submission = SubmissionKey(
             endpoint=endpoint,
@@ -61,8 +77,9 @@ class ExecutionManager(_ExecutionManager):
     def attach(
         self,
         run,
+        reader=None,
         *,
-        postprocess,
+        postprocess=None,
         print_output=False,
         executor=None,
         callback=None,
@@ -77,6 +94,22 @@ class ExecutionManager(_ExecutionManager):
         else:
             endpoint = record.endpoint or endpoint_for_executor(executor)
             self.register_executor(executor, endpoint, record.reference)
+
+        if postprocess is None:
+            if reader is None:
+                raise TypeError("postprocess or legacy reader is required")
+            # Reattached raw runners reconstruct their ExecutionSpec from the
+            # persisted reference, so build an equivalent lightweight spec here.
+            from .base import ExecutionSpec
+
+            spec = ExecutionSpec(
+                argv=(),
+                input_file=record.reference.input_file,
+                output_file=record.reference.output_file,
+                error_file=record.reference.error_file,
+                directory=record.directory,
+            )
+            postprocess = reader_postprocessor(reader, spec)
 
         def factory(completed):
             raw = executor.attach(
