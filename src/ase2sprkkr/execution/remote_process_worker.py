@@ -11,7 +11,7 @@ import os
 import subprocess
 import sys
 
-from ._durability import durable_write_json
+from .remote_mailbox import publish_outcome
 from .base import FailurePhase, RunState
 
 
@@ -20,14 +20,8 @@ _START_FD_ENV = "ASE2SPRKKR_REMOTE_PROCESS_START_FD"
 _LAUNCH_FAILURE_RETURN_CODE = 127
 
 
-def _write_outcome(path, state, return_code, failure_phase=None):
-    """Atomically and durably publish one immutable backend terminal outcome."""
-    payload = {
-        "state": RunState(state).value,
-        "return_code": None if return_code is None else int(return_code),
-        "failure_phase": None if failure_phase is None else FailurePhase(failure_phase).value,
-    }
-    durable_write_json(path, payload, separators=(",", ":"))
+def _write_outcome(receipt_id, state, return_code, failure_phase=None):
+    publish_outcome(receipt_id, state, return_code, failure_phase)
 
 
 def _wait_for_parent_release():
@@ -87,7 +81,7 @@ def main():
     finally:
         for file in opened:
             file.close()
-        _write_outcome(spec["outcome_file"], state, return_code, failure_phase)
+        _write_outcome(spec["receipt_id"], state, return_code, failure_phase)
 
     return return_code
 

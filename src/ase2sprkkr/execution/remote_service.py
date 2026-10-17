@@ -19,7 +19,8 @@ from types import SimpleNamespace
 from uuid import uuid4
 
 from .base import ExecutionSpec, FailurePhase, LaunchSpec, RunReference, RunState
-from .remote_process_worker import _SPEC_ENV, _START_FD_ENV, _write_outcome
+from .remote_process_worker import _SPEC_ENV, _START_FD_ENV
+from .remote_mailbox import publish_outcome, read_outcome, acknowledge_outcome
 
 
 _FINAL_STATES = {RunState.FINISHED, RunState.FAILED, RunState.CANCELLED}
@@ -108,14 +109,7 @@ def _local_submit(request):
     Path(error_path).parent.mkdir(parents=True, exist_ok=True)
 
     run_id = str(request.get("id") or uuid4().hex)
-    outcome_file = _absolute(
-        directory, request.get("outcome_file") or f".{run_id}.outcome.json"
-    )
-    Path(outcome_file).parent.mkdir(parents=True, exist_ok=True)
-    try:
-        os.unlink(outcome_file)
-    except FileNotFoundError:
-        pass
+    receipt_id = uuid4().hex
 
     worker_spec = {
         "argv": list(spec.argv),
@@ -123,7 +117,7 @@ def _local_submit(request):
         "stdin": _absolute(directory, spec.stdin),
         "output_file": output_path,
         "error_file": error_path,
-        "outcome_file": outcome_file,
+        "receipt_id": receipt_id,
     }
     env = os.environ.copy()
     env["ASE2SPRKKR_RUN_ID"] = run_id
@@ -164,6 +158,7 @@ def _local_submit(request):
             "kind": "process",
             "pid": process.pid,
             "start_time": start_time,
+            "receipt_id": receipt_id,
         }
     )
     return {
@@ -234,13 +229,10 @@ def _reference(handle):
     )
 
 
-def _process_outcome(path):
-    try:
-        data = json.loads(Path(path).read_text())
-    except FileNotFoundError:
+def _process_outcome(receipt_id):
+    data = read_outcome(receipt_id)
+    if data is None:
         return None
-    except (KeyError, ValueError, json.JSONDecodeError) as exc:
-        raise RuntimeError("Invalid remote process outcome artifact") from exc
     try:
         state = RunState(data["state"])
         return_code = data.get("return_code")
@@ -315,22 +307,17 @@ def _slurm_psij_status(handle):
     }
 
 
-def status_remote(remote_id, *, outcome_file=None):
+def status_remote(remote_id):
     """Query backend facts; the client supplies any terminal receipt path."""
     handle = _decode_handle(remote_id)
     if handle["kind"] == "process":
-        if _process_running(handle):
-            state = RunState.RUNNING
+        outcome = _process_outcome(handle["receipt_id"])
+        if outcome is not None:
+            state, return_code, failure_phase = outcome
+        else:
+            state = RunState.RUNNING if _process_running(handle) else RunState.UNKNOWN
             return_code = None
             failure_phase = None
-        else:
-            outcome = None if outcome_file is None else _process_outcome(outcome_file)
-            if outcome is None:
-                state = RunState.UNKNOWN
-                return_code = None
-                failure_phase = None
-            else:
-                state, return_code, failure_phase = outcome
         return {
             "state": state.value,
             "return_code": return_code,
@@ -361,18 +348,16 @@ def status_remote(remote_id, *, outcome_file=None):
     raise ValueError("Unsupported remote execution id")
 
 
-def cancel_remote(remote_id, timeout=1.0, *, outcome_file=None):
+def cancel_remote(remote_id, timeout=1.0):
     handle = _decode_handle(remote_id)
     if handle["kind"] == "process":
-        if outcome_file is None:
-            raise ValueError("Direct-process cancellation requires its outcome path")
         if not _same_process(handle):
-            return status_remote(remote_id, outcome_file=outcome_file)
+            return status_remote(remote_id)
 
         try:
             os.killpg(int(handle["pid"]), signal.SIGTERM)
         except ProcessLookupError:
-            return status_remote(remote_id, outcome_file=outcome_file)
+            return status_remote(remote_id)
 
         deadline = time.monotonic() + timeout
         while time.monotonic() < deadline and _process_running(handle):
@@ -392,16 +377,16 @@ def cancel_remote(remote_id, timeout=1.0, *, outcome_file=None):
         # A natural completion racing with cancellation wins. Otherwise publish
         # cancellation as the durable backend outcome so future status queries
         # cannot regress to FAILED/UNKNOWN after the supervisor disappears.
-        current = status_remote(remote_id, outcome_file=outcome_file)
+        current = status_remote(remote_id)
         if current["state"] in (RunState.FINISHED.value, RunState.FAILED.value):
             return current
-        _write_outcome(
-            outcome_file,
+        publish_outcome(
+            handle["receipt_id"],
             RunState.CANCELLED,
             current.get("return_code"),
             None,
         )
-        return status_remote(remote_id, outcome_file=outcome_file)
+        return status_remote(remote_id)
 
     if handle["kind"] == "psij":
         executor = _psij_executor(
@@ -410,12 +395,20 @@ def cancel_remote(remote_id, timeout=1.0, *, outcome_file=None):
         job = executor._psij.Job()
         executor._job_executor.attach(job, handle["native_id"])
         job.cancel()
-        state = status_remote(remote_id, outcome_file=outcome_file)
+        state = status_remote(remote_id)
         if state["state"] not in {item.value for item in _FINAL_STATES}:
             state["state"] = RunState.CANCELLED.value
             state["failure_phase"] = None
         return state
     raise ValueError("Unsupported remote execution id")
+
+
+def acknowledge_remote(remote_id):
+    """Drop the terminal receipt only after the client persists its run state."""
+    handle = _decode_handle(remote_id)
+    if handle["kind"] != "process":
+        return {"acknowledged": False}
+    return {"acknowledged": acknowledge_outcome(handle["receipt_id"])}
 
 
 def recover_remote(run_id, request, *, submitted_at=None):
@@ -471,7 +464,6 @@ def follow_remote(
     poll_interval=0.1,
     stdout_path=None,
     stderr_path=None,
-    outcome_file=None,
 ):
     """Tail client-selected stream files until backend termination."""
     handle = _decode_handle(remote_id)
@@ -502,7 +494,7 @@ def follow_remote(
                 offsets[kind] += len(data)
                 had_data = True
 
-        state = status_remote(remote_id, outcome_file=outcome_file)
+        state = status_remote(remote_id)
         terminal = state["state"] in {item.value for item in _FINAL_STATES}
         unresolved = state["state"] == RunState.UNKNOWN.value
         if (terminal or unresolved) and not had_data:
