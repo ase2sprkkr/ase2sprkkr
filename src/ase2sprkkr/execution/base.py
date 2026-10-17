@@ -80,10 +80,12 @@ class RunState(str, Enum):
     SUBMITTING = "submitting"
     QUEUED = "queued"
     RUNNING = "running"
+    FINISHING = "finishing"
     FINALIZING = "finalizing"
-    FINISHING = "finalizing"
     FINISHED = "finished"
     EXECUTION_FAILED = "execution_failed"
+    # Backward-compatibility alias for the same execution-failure state. Unlike
+    # FINISHING/FINALIZING this does not collapse two lifecycle phases.
     FAILED = "execution_failed"
     FINALIZATION_FAILED = "finalization_failed"
     CANCELLED = "cancelled"
