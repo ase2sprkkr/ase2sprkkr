@@ -32,7 +32,13 @@ def input_parameters():
         energy.copy_member(name, is_optional=True)
     return TauCacheInputParametersDefinition(
         "stoner", [CONTROL("STONER"), TAU, MODE, STRCONST, energy, TASK("STONER"), SITES],
-        executable="kkrgen", mpi=False, validators=_validate_stoner,
+        executable="kkrgen", mpi=False,
+        output_file_templates=(
+            "{dataset}_*_g-spin.dat",
+            "{dataset}_*_g-orb.dat",
+            "{dataset}_*_VWN_A-xc.dat",
+        ),
+        validators=_validate_stoner,
         info="Stoner parameter from the DOS and radial wave functions at EF.",
         description="No task-specific input options. Uses the VWN susceptibility kernel. "
                     "Native STONER enables reading a TAU directory and falls back to the normal KKRGEN calculation when no reusable TAU cache is available. "
