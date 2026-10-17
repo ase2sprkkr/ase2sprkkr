@@ -38,7 +38,9 @@ def input_parameters():
     energy.copy_member("NE", type=SetOf(Integer(min=1), min_length=1, max_length=2))
     return InputParameters(
         "fscat", [CONTROL("FSCAT"), TAU, MODE, STRCONST, energy, TASK("FSCAT"), SITES],
-        executable="kkrgen", mpi=False, validators=_validate_fscat,
+        executable="kkrgen", mpi=False,
+        output_file_templates=("{dataset}_GEO?_*.agr",),
+        validators=_validate_fscat,
         info="Scattering amplitude matrices for three fixed backscattering geometries (ASA, serial).",
         description="All atomic types are evaluated. Initial directions are [001], [100], "
                     "and [111]; final directions are their opposites. No task-specific options are read. "
