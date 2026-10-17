@@ -69,7 +69,7 @@ class InputParametersDefinition(ConfigurationFileDefinition):
     child_class = InputSectionDefinition
     result_class = InputParameters
     custom_class = staticmethod(
-        CustomConfigurationSection.factory(InputSectionDefinition, mixed)
+        CustomConfigurationSection.factory(InputSectionDefinition)
     )
     configuration_type_name = "INPUT PARAMETERS"
 
