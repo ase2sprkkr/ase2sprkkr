@@ -118,7 +118,7 @@ class RemoteRunner:
 
     @property
     def execution(self):
-        if self._backend_id is None:
+        if self._backend_id is None and self._remote_directory is None:
             return None
         from .endpoint import endpoint_for_executor
         from .run_model import Execution, WorkingDirectory
