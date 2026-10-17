@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from .base import RunState
-from .manager import ExecutionManager as _ExecutionManager
+from .manager_api import ExecutionManager as _ExecutionManager
 from .projects import Project, ProjectConflictError, ProjectRepository
 
 
@@ -46,11 +46,9 @@ class ExecutionManager(_ExecutionManager):
 
     @property
     def project_id(self):
-        """Project associated with runs created through this manager context."""
         return self._project_id
 
     def for_project(self, project):
-        """Return a manager context assigning newly persisted runs to *project*."""
         current = self.projects.project(self._project_identity(project))
         if self._project_id is not None and current.id != self._project_id:
             raise ValueError(
@@ -69,9 +67,10 @@ class ExecutionManager(_ExecutionManager):
     def create_run(
         self,
         executor,
-        reader,
         spec,
         *,
+        postprocess,
+        print_output=False,
         task,
         input_definition=None,
         dataset=None,
@@ -84,8 +83,9 @@ class ExecutionManager(_ExecutionManager):
         return _ExecutionManager.create_run(
             manager,
             executor,
-            reader,
             spec,
+            postprocess=postprocess,
+            print_output=print_output,
             task=task,
             input_definition=input_definition,
             dataset=dataset,
@@ -115,14 +115,6 @@ class ExecutionManager(_ExecutionManager):
                     raise
 
     def reserve(self, record):
-        """Persist the run and establish requested project membership before submit.
-
-        The run record and project live in separate atomic files, so there is no
-        filesystem transaction spanning both. The ordering is deliberate: first
-        create the authoritative persistent run identity, then add that identity
-        to the project, and only after both succeed may the backend submit. If
-        project assignment fails, the reserved run is terminally marked failed.
-        """
         reserved = super().reserve(record)
         if self._project_id is None:
             return reserved
