@@ -82,11 +82,12 @@ class RunState(str, Enum):
     RUNNING = "running"
     FINALIZING = "finalizing"
     FINISHING = "finalizing"
-    FINISHED = "finished"
+    AVAILABLE = "available"
+    CHECKED = "checked"
+    FINISHED = "finished"  # legacy persisted state
     EXECUTION_FAILED = "execution_failed"
-    FAILED = "execution_failed"
     FINALIZATION_FAILED = "finalization_failed"
-    RESULT_MISMATCH = "result_mismatch"
+    FAILED = "failed"
     CANCELLED = "cancelled"
     UNKNOWN = "unknown"
 
