@@ -3,6 +3,10 @@
 from __future__ import annotations
 
 import io
+from functools import cache
+from pathlib import Path
+import re
+
 import pyparsing as pp
 
 from . import definitions, tasks
@@ -17,6 +21,46 @@ from ..common.repeated_configuration_containers import RepeatedConfigurationCont
 from ..common.decorators import cached_class_property
 from ..common.warnings import DataValidityError
 from ..potentials.potentials import Potential
+
+# Extract only the positional TASK.TASK selector. The minimal IPD below
+# validates its syntax; other sections are left to the selected full IPD.
+_TASK_SELECTOR_LINE = re.compile(
+    r"(?im)^[ \\t]*TASK(?:[ \\t]+|\\r?\\n[ \\t]+)([A-Za-z][A-Za-z0-9_-]*)\\b"
+)
+
+
+@cache
+def _task_selector_definition():
+    """A cached, unregistered IPD containing exactly TASK.TASK."""
+    from .input_parameters_definitions import (
+        InputParametersDefinition,
+        InputSectionDefinition,
+        InputValueDefinition,
+    )
+
+    return InputParametersDefinition(
+        "_TASK_SELECTOR",
+        [
+            InputSectionDefinition(
+                "TASK",
+                [InputValueDefinition("TASK", str, name_in_grammar=False,
+                                      is_required=True)],
+            ),
+        ],
+    )
+
+
+def _selector_source(filename):
+    """Read the source once for pre-parsing, preserving stream position."""
+    if hasattr(filename, "read"):
+        position = filename.tell()
+        try:
+            filename.seek(0)
+            source = filename.read()
+        finally:
+            filename.seek(position)
+        return source
+    return Path(filename).read_text(encoding="utf-8")
 
 
 class InputSection(ConfigurationSection):
@@ -283,62 +327,57 @@ class InputParameters(ConfigurationFile):
     def default_parameters(cls):
         return cls.create("SCF")
 
+    @cached_class_property
+    def _task_selector_schemas(cls):
+        """Map explicit TASK.TASK keywords to their input schemas, not tasks."""
+        schemas = {}
+        for definition in cls.definitions.values():
+            try:
+                selector_type = definition["TASK"]["TASK"].type
+            except (KeyError, TypeError):
+                continue
+            for keyword in getattr(selector_type, "keywords", ()):
+                name = str(keyword).strip().upper()
+                existing = schemas.get(name)
+                if existing is not None and existing is not definition:
+                    raise ValueError(
+                        f"TASK.TASK {name!r} selects multiple input "
+                        f"parameter definitions"
+                    )
+                schemas[name] = definition
+        return schemas
+
     @classmethod
     def from_file(cls, filename, allow_dangerous: bool = False):
-        """Try registered schemas, preferring matching task or schema ADSI.
+        """Pre-parse TASK.TASK, then read with its exact input definition.
 
-        SPR-KKR schemas intentionally overlap, so a permissive schema can parse
-        an input intended for another task. ``ADSI`` may identify either a task
-        (for example ``SCF``) or an input schema (for example ``BLOCHSF`` for
-        the shared BSF schema). Because ADSI is user-editable, an unmatched
-        value remains only a weak signal and falls back to the first successful
-        parse after all schemas have been considered.
+        ADSI is unrelated to selection. Missing or unsupported selectors and
+        errors from the selected definition propagate: no parser guessing.
         """
-        last = None
-        first_match = None
-        is_stream = hasattr(filename, "seek")
-        for definition in cls.definitions.values():
-            if is_stream:
-                filename.seek(0)
-            try:
-                parsed = definition.read_from_file(
-                    filename, allow_dangerous=allow_dangerous
-                )
-            except (pp.ParseBaseException, DataValidityError) as e:
-                last = e
-                continue
+        source = _selector_source(filename)
+        matches = list(_TASK_SELECTOR_LINE.finditer(source))
+        if len(matches) != 1:
+            raise ValueError(
+                "Expected exactly one TASK.TASK selector in the input file"
+            )
 
-            if first_match is None:
-                first_match = parsed
+        selector_text = "TASK " + matches[0].group(1)
+        preview = _task_selector_definition().read_from_string(
+            selector_text, allow_dangerous=allow_dangerous
+        )
+        selector = preview.TASK.TASK().strip().upper()
+        try:
+            definition = cls._task_selector_schemas[selector]
+        except KeyError:
+            raise ValueError(
+                f"No input-parameter definition for TASK.TASK={selector!r}"
+            ) from None
 
-            try:
-                adsi = parsed.CONTROL.ADSI()
-            except (AttributeError, KeyError):
-                continue
-            if not isinstance(adsi, str):
-                continue
-
-            normalized_adsi = cls.task_registry.normalize_name(adsi)
-            if (
-                normalized_adsi in cls.task_registry
-                and parsed.task_name == normalized_adsi
-            ):
-                return parsed
-
-            try:
-                schema_adsi = definition["CONTROL"]["ADSI"].default_value
-            except (KeyError, AttributeError):
-                continue
-            if isinstance(schema_adsi, str) and (
-                cls.task_registry.normalize_name(schema_adsi) == normalized_adsi
-            ):
-                return parsed
-
-        if first_match is not None:
-            return first_match
-        if last is None:
-            raise ValueError("No SPR-KKR input-parameter definitions are available")
-        raise last
+        if hasattr(filename, "seek"):
+            filename.seek(0)
+        return definition.read_from_file(
+            filename, allow_dangerous=allow_dangerous
+        )
 
     def __repr__(self):
         task = self.task_definition

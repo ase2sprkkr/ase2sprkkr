@@ -1,27 +1,31 @@
+"""Pre-parsing resolves an input definition, never a task or ADSI."""
+
+import io
 from types import SimpleNamespace
 
 import pyparsing as pp
 import pytest
 
-from ..input_parameters import InputParameters
-from ...common.warnings import DataValidityError
+from ..input_parameters import InputParameters, _task_selector_definition
 
 
 class _Definition:
-    def __init__(self, outcome, *, schema_adsi=None):
-        self.outcome = outcome
-        self.schema_adsi = schema_adsi
+    def __init__(self, selectors, result):
+        self.selectors = selectors
+        self.result = result
         self.calls = 0
 
-    def __getitem__(self, name):
-        assert name == "CONTROL"
-        return {"ADSI": SimpleNamespace(default_value=self.schema_adsi)}
+    def __getitem__(self, key):
+        assert key == "TASK"
+        return {"TASK": SimpleNamespace(
+            type=SimpleNamespace(keywords=self.selectors),
+        )}
 
     def read_from_file(self, filename, allow_dangerous=False):
         self.calls += 1
-        if isinstance(self.outcome, BaseException):
-            raise self.outcome
-        return self.outcome
+        if isinstance(self.result, Exception):
+            raise self.result
+        return self.result
 
 
 def _parameters_with(definitions):
@@ -32,83 +36,69 @@ def _parameters_with(definitions):
     return Parameters
 
 
-def _candidate(adsi, task_name):
-    return SimpleNamespace(
-        CONTROL=SimpleNamespace(ADSI=lambda: adsi),
-        task_name=task_name,
-    )
+def test_minimal_selector_ipd_is_cached_and_contains_only_task_task():
+    a = _task_selector_definition()
+    assert a is _task_selector_definition()
+    assert list(a.sections) == ["TASK"]
+    assert list(a["TASK"].values) == ["TASK"]
+    parsed = a.read_from_string("TASK ARPES")
+    assert parsed.TASK.TASK() == "ARPES"
 
 
-def test_from_file_tries_next_definition_after_parse_mismatch():
-    mismatch = _Definition(pp.ParseException("not this task"))
+def test_from_file_uses_only_selected_input_definition():
     expected = object()
-    match = _Definition(expected)
-    parameters = _parameters_with({"first": mismatch, "second": match})
+    wrong = _Definition(["DOS"], object())
+    correct = _Definition(["ARPES", "SPLEED"], expected)
+    parameters = _parameters_with({"wrong": wrong, "right": correct})
+    parameters.task_registry = object()
 
-    assert parameters.from_file("input.inp") is expected
-    assert mismatch.calls == 1
-    assert match.calls == 1
-
-
-def test_from_file_tries_next_definition_after_data_validity_error():
-    mismatch = _Definition(DataValidityError("invalid parsed data"))
-    expected = object()
-    match = _Definition(expected)
-    parameters = _parameters_with({"first": mismatch, "second": match})
-
-    assert parameters.from_file("input.inp") is expected
-    assert mismatch.calls == 1
-    assert match.calls == 1
+    assert parameters.from_file(io.StringIO("TASK ARPES")) is expected
+    assert wrong.calls == 0
+    assert correct.calls == 1
 
 
-def test_from_file_prefers_success_matching_registered_adsi_task():
-    permissive = _Definition(_candidate("SCF", "ARPES"))
-    expected = _candidate("SCF", "SCF")
-    exact = _Definition(expected)
-    parameters = _parameters_with({"first": permissive, "second": exact})
+def test_from_file_propagates_selected_parser_error_without_fallback():
+    failure = pp.ParseException("invalid selected schema")
+    chosen = _Definition(["ARPES"], failure)
+    fallback = _Definition(["DOS"], object())
+    parameters = _parameters_with({"chosen": chosen, "fallback": fallback})
 
-    assert parameters.from_file("input.inp") is expected
-    assert permissive.calls == 1
-    assert exact.calls == 1
+    with pytest.raises(pp.ParseException, match="invalid selected schema"):
+        parameters.from_file(io.StringIO("TASK ARPES"))
+    assert chosen.calls == 1
+    assert fallback.calls == 0
 
 
-def test_from_file_keeps_first_success_when_adsi_is_not_a_task():
-    expected = _candidate("custom label", "ARPES")
-    first = _Definition(expected)
-    second = _Definition(_candidate("another label", "SCF"))
+@pytest.mark.parametrize("source", [
+    "CONTROL ADSI=ARPES",
+    "TASK UNKNOWN",
+    "TASK ARPES\\nTASK DOS",
+])
+def test_from_file_rejects_missing_unknown_or_duplicate_selector(source):
+    candidate = _Definition(["ARPES"], object())
+    parameters = _parameters_with({"candidate": candidate})
+
+    with pytest.raises(ValueError, match="TASK\\.TASK|input-parameter definition"):
+        parameters.from_file(io.StringIO(source))
+    assert candidate.calls == 0
+
+
+def test_from_file_rejects_ambiguous_selector():
+    first = _Definition(["ARPES"], object())
+    second = _Definition(["ARPES"], object())
     parameters = _parameters_with({"first": first, "second": second})
 
-    assert parameters.from_file("input.inp") is expected
-    assert first.calls == 1
-    # Unknown ADSI can still be a schema discriminator; check all schemas
-    # before falling back to the first successfully parsed input.
-    assert second.calls == 1
+    with pytest.raises(ValueError, match="multiple input parameter definitions"):
+        parameters.from_file(io.StringIO("TASK ARPES"))
+    assert first.calls == second.calls == 0
 
 
-def test_from_file_prefers_schema_adsi_for_shared_task_family():
-    first = _Definition(_candidate("BLOCHSF", "ARPES"), schema_adsi="ARPES")
-    expected = _candidate("BLOCHSF", "BSFEK")
-    matching = _Definition(expected, schema_adsi="BLOCHSF")
-    parameters = _parameters_with({"arpes": first, "bsf": matching})
+def test_from_file_ignores_control_adsi():
+    result = object()
+    selected = _Definition(["ARPES"], result)
+    parameters = _parameters_with({"selected": selected})
 
-    assert parameters.from_file("input.inp") is expected
-    assert first.calls == 1
-    assert matching.calls == 1
-
-
-@pytest.mark.parametrize("error", [
-    AttributeError("parser bug"),
-    TypeError("parser bug"),
-    ValueError("parser bug"),
-    KeyError("parser bug"),
-])
-def test_from_file_does_not_mask_programming_errors(error):
-    broken = _Definition(error)
-    fallback = _Definition(object())
-    parameters = _parameters_with({"broken": broken, "fallback": fallback})
-
-    with pytest.raises(type(error), match="parser bug"):
-        parameters.from_file("input.inp")
-
-    assert broken.calls == 1
-    assert fallback.calls == 0
+    assert parameters.from_file(io.StringIO(
+        "CONTROL ADSI=DOS\\nTASK ARPES"
+    )) is result
+    assert selected.calls == 1
