@@ -11,6 +11,7 @@ from threading import Event, Lock
 from typing import Any, Optional, Protocol, Sequence, Tuple
 
 from ..common.decorators import class_property
+from .run_model import Execution, FileManifest
 
 
 class MpiNotFoundWarning(UserWarning):
@@ -268,9 +269,6 @@ class ResourceOwnedRunner:
 
     def add_output_error_listener(self, callback):
         return self._runner.add_output_error_listener(callback)
-
-
-from .run_model import Execution, FileManifest
 
 
 @dataclass(frozen=True)
