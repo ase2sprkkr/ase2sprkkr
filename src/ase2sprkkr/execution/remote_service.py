@@ -15,10 +15,9 @@ import subprocess
 import sys
 import time
 from pathlib import Path
-from types import SimpleNamespace
 from uuid import uuid4
 
-from .base import ExecutionSpec, FailurePhase, LaunchSpec, RunReference, RunState
+from .base import ExecutionSpec, FailurePhase, LaunchSpec, RunState
 from .remote_process_worker import _SPEC_ENV, _START_FD_ENV
 from .remote_mailbox import publish_outcome, read_outcome, acknowledge_outcome
 
@@ -187,24 +186,24 @@ def _psij_submit(request):
         run_id=request.get("id"),
     )
     runner.submit()
-    reference = runner.reference
-    if reference is None:
+    backend_id = runner.backend_id
+    if backend_id is None:
         raise RuntimeError("PSI/J submission did not return a backend id")
     remote_id = _encode_handle(
         {
             "kind": "psij",
             "backend": executor.backend,
             "url": executor.url,
-            "native_id": reference.native_id,
+            "native_id": backend_id,
         }
     )
     return {
         "remote_id": remote_id,
         "state": runner.state.value,
-        "directory": reference.directory,
-        "input_file": reference.input_file,
-        "output_file": reference.output_file,
-        "error_file": reference.error_file,
+        "directory": request["directory"],
+        "input_file": request.get("input_file"),
+        "output_file": runner.result.output_file,
+        "error_file": runner.result.error_file,
         "return_code": runner.return_code,
         "failure_phase": (
             None if runner.failure_phase is None else runner.failure_phase.value
@@ -219,14 +218,6 @@ def submit_remote(request):
     if executor == "psij":
         return _psij_submit(request)
     raise ValueError(f"Unsupported remote executor: {executor!r}")
-
-
-def _reference(handle):
-    return RunReference(
-        executor=f"psij:{handle['backend']}",
-        native_id=str(handle["native_id"]),
-        computer=handle.get("url"),
-    )
 
 
 def _process_outcome(receipt_id):
@@ -336,7 +327,7 @@ def status_remote(remote_id):
         executor = _psij_executor(
             {"backend": handle["backend"], "url": handle.get("url")}
         )
-        status = executor.status(_reference(handle))[0]
+        status = executor.status_native(handle["native_id"])
         return {
             "state": status.state.value,
             "return_code": status.return_code,
@@ -423,34 +414,27 @@ def recover_remote(run_id, request, *, submitted_at=None):
         raise ValueError(f"Unsupported remote executor: {executor!r}")
 
     backend = _psij_executor(request.get("executor_options"))
-    status = backend.recover_submission(
-        run_id,
-        SimpleNamespace(directory=request["directory"]),
-        submitted_at=submitted_at,
+    facts = backend.recover_native(
+        run_id, request["directory"], submitted_at=submitted_at,
     )
-    if status is None:
+    if facts is None:
         return None
-    reference = status.reference
-    remote_id = _encode_handle(
-        {
-            "kind": "psij",
-            "backend": backend.backend,
-            "url": backend.url,
-            "native_id": reference.native_id,
-        }
-    )
+    native_id = facts["native_id"]
+    remote_id = _encode_handle({
+        "kind": "psij", "backend": backend.backend,
+        "url": backend.url, "native_id": native_id,
+    })
+    state = facts["state"]
     return {
         "remote_id": remote_id,
-        "state": status.state.value,
-        "return_code": status.return_code,
-        "error": status.message,
+        "state": state.value,
+        "return_code": facts["return_code"],
         "failure_phase": (
-            None if status.failure_phase is None else status.failure_phase.value
+            FailurePhase.EXECUTION.value if state == RunState.FAILED else None
         ),
-        "directory": reference.directory,
-        "input_file": reference.input_file,
-        "output_file": reference.output_file,
-        "error_file": reference.error_file,
+        "directory": facts["directory"],
+        "output_file": facts["stdout"],
+        "error_file": facts["stderr"],
     }
 
 
