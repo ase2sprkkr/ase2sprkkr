@@ -1,3 +1,4 @@
+from threading import Event
 from types import SimpleNamespace
 
 import pytest
@@ -20,22 +21,26 @@ class _Runner:
         self.reference = None
         self.result = SimpleNamespace(return_code=None)
         self.exception = None
+        self.failure_phase = None
+        self.failure_message = None
+        self._done = Event()
 
     def submit(self):
         self.state = RunState.QUEUED
         self.reference = RunReference(executor="recover", native_id="new-job")
 
     def wait(self):
+        self._done.wait()
         return self.result
-
-    def run(self):
-        self.submit()
-        return self.wait()
 
     def cancel(self):
         self.state = RunState.CANCELLED
+        self._done.set()
 
     def add_output_listener(self, callback):
+        pass
+
+    def add_output_error_listener(self, callback):
         pass
 
 
@@ -46,7 +51,7 @@ class _RecoveringExecutor(Executor):
         self.recovered = recovered
         self.recovery_calls = []
 
-    def create_run(self, reader, spec, callback=None):
+    def create_persistent_run(self, spec, *, run_id, callback=None):
         return _Runner()
 
     def recover_submission(self, run_id, submission, *, submitted_at=None):
@@ -59,8 +64,8 @@ class _RecoveringExecutor(Executor):
 def _run(manager, executor, tmp_path):
     return manager.create_run(
         executor,
-        reader=object(),
         spec=SimpleNamespace(directory=str(tmp_path)),
+        process_result=lambda outcome: outcome,
         task="DOS",
         dataset="case",
     )
