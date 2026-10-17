@@ -115,14 +115,14 @@ def _diagnostic_command(ssh, title, *command):
     return "\n".join(parts)
 
 
-def _remote_run_diagnostics(ssh, reference):
+def _remote_run_diagnostics(ssh, runner):
     """Return diagnostics available through the stateless target service."""
     status = _ssh_capture(
         ssh,
         "ase2sprkkr",
         "remote",
         "status",
-        reference.native_id,
+        runner.backend_id,
     )
     if status.returncode:
         return (
@@ -246,11 +246,10 @@ def test_remote_executor_runs_psij_slurm_over_ssh(docker_execution_image):
                 runner.submit()
             except subprocess.CalledProcessError as exc:
                 _remote_error(exc)
-            reference = runner.reference
-            assert reference is not None
-            assert reference.executor == "remote:psij"
-            assert reference.computer == "tester@127.0.0.1"
-            assert reference.directory == "/home/tester/ase2sprkkr-runs/calculation"
+            assert runner.backend_id is not None
+                        assert runner.execution.endpoint.psij_backend == "slurm"
+            assert runner.execution.endpoint.host == "tester@127.0.0.1"
+            assert runner.execution.directory.remote == "/home/tester/ase2sprkkr-runs/calculation"
 
             try:
                 result = runner.wait()
@@ -271,7 +270,7 @@ def test_remote_executor_runs_psij_slurm_over_ssh(docker_execution_image):
                         "ase2sprkkr",
                         "remote",
                         "status",
-                        reference.native_id,
+                        runner.backend_id,
                     ],
                     text=True,
                 )
