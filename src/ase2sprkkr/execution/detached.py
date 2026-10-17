@@ -1,9 +1,7 @@
-"""Shared detached execution protocol for local and remote persistent runs.
+"""Crash-durable detached protocol for persistent local execution.
 
-This module owns the target-side state files and worker lifecycle.  It is
-independent of how a target is reached: local persistent execution uses it on
-the current machine, while remote execution invokes the same protocol through
-a transport.
+This protocol is intentionally local-only. Remote execution uses the stateless
+``remote_service`` and never stores ASE2SPRKKR lifecycle records on the target.
 """
 
 from __future__ import annotations
@@ -23,31 +21,27 @@ from ._durability import durable_mkdir, durable_write_json, sync_file
 from .base import ExecutionSpec, FailurePhase, LaunchSpec, RunState
 
 
-_FINAL_STATES = {"finished", "failed", RunState.EXECUTION_FAILED.value, "cancelled"}
-_RESULT_FINAL_STATES = {"finished", "failed", RunState.EXECUTION_FAILED.value}
+_FINAL_STATES = {"finished", "failed", "cancelled"}
+_RESULT_FINAL_STATES = {"finished", "failed"}
 _METADATA_DIR = ".ase2sprkkr"
 _RUNS_DIR = "runs"
 _STATE_FILE = "state.json"
 _STATE_LOCK_FILE = "state.lock"
 _REQUEST_FILE = "request.json"
-_DETACHED_EXECUTORS = {"local", "psij"}
 
 
 def detached_run_state(value):
-    """Translate one target-side detached state to the public run state."""
     if value == "failed":
         return RunState.FAILED
     return RunState(value)
 
 
 def detached_failure_phase(state):
-    """Translate target-side failure metadata to the public failure phase."""
     value = state.get("failure_phase")
     return None if value is None else FailurePhase(value)
 
 
 def detached_launch_failed(state):
-    """Return whether target metadata proves that no calculation was launched."""
     return (
         detached_run_state(state.get("state", "unknown")) == RunState.FAILED
         and detached_failure_phase(state) == FailurePhase.LAUNCH
@@ -55,7 +49,6 @@ def detached_launch_failed(state):
 
 
 def detached_stream_file(state, key):
-    """Return the readable live stream path, or the final artifact path."""
     stream = state.get(f"stream_{key}")
     if stream and os.path.exists(stream):
         return stream
@@ -83,7 +76,6 @@ def _request_path(directory, run_id):
 
 
 def _state_lock(directory, run_id):
-    """Return the inter-process lock guarding one detached run state."""
     return FileLock(_state_lock_path(directory, run_id))
 
 
@@ -97,13 +89,13 @@ def _read_state(directory, run_id):
 
 
 def _sync_result_files_before_final_state(state):
-    """Make result-bearing detached terminal states a filesystem commit point."""
+    """Make local terminal publication a durable filesystem boundary."""
     if state.get("state") not in _RESULT_FINAL_STATES:
         return
     if state.get("failure_phase") in {
         FailurePhase.SUBMISSION.value,
         FailurePhase.LAUNCH.value,
-        FailurePhase.FINALIZATION.value,
+        FailurePhase.ARTIFACTS.value,
     }:
         return
 
@@ -134,7 +126,7 @@ def _write_state_unlocked(workspace, run_id, **changes):
         failure.update(
             state="failed",
             error=repr(exc),
-            failure_phase=FailurePhase.FINALIZATION.value,
+            failure_phase=FailurePhase.ARTIFACTS.value,
             finished_at=state.get("finished_at") or _timestamp(),
         )
         durable_write_json(path, failure)
@@ -158,12 +150,11 @@ def _absolute_file(directory, path):
 
 
 def _spawn_detached_worker(directory, run_id):
-    """Start the target-side helper process for one persisted request."""
     return subprocess.Popen(
         [
             sys.executable,
             "-m",
-            "ase2sprkkr.execution.remote_worker",
+            "ase2sprkkr.execution.detached_worker",
             os.fspath(directory),
             run_id,
         ],
@@ -176,7 +167,6 @@ def _spawn_detached_worker(directory, run_id):
 
 
 def _wait_for_direct_launch(worker, directory, run_id, poll_interval=0.01):
-    """Wait until a direct helper proves launch success or exits before it."""
     poll = getattr(worker, "poll", None)
     if poll is None:
         return _read_state(directory, run_id)
@@ -210,10 +200,12 @@ def _wait_for_direct_launch(worker, directory, run_id, poll_interval=0.01):
 
 
 def submit_detached(request):
-    """Start a detached target-side executor and return its initial state."""
+    """Start one crash-surviving local calculation."""
     executor = request.get("executor", "local")
-    if executor not in _DETACHED_EXECUTORS:
-        raise ValueError(f"Unsupported detached executor: {executor!r}")
+    if executor != "local":
+        raise ValueError(
+            f"Detached persistence supports only local execution, got {executor!r}"
+        )
 
     directory = Path(request["directory"]).expanduser().resolve()
     durable_mkdir(directory, parents=True, exist_ok=True)
@@ -224,7 +216,7 @@ def submit_detached(request):
     except FileExistsError as exc:
         raise RuntimeError(f"Detached run already exists: {run_id}") from exc
 
-    request = dict(request, directory=os.fspath(directory))
+    request = dict(request, directory=os.fspath(directory), executor="local")
     input_file = _absolute_file(directory, request.get("input_file"))
     output_file = _absolute_file(directory, request.get("output_file"))
     error_file = _absolute_file(directory, request.get("error_file"))
@@ -232,7 +224,7 @@ def submit_detached(request):
     if input_file is not None and os.path.isfile(input_file):
         sync_file(input_file)
     durable_write_json(_request_path(directory, run_id), request)
-    state = _write_state(
+    _write_state(
         directory,
         run_id,
         id=run_id,
@@ -247,7 +239,6 @@ def submit_detached(request):
         error=None,
         failure_phase=None,
         pid=None,
-        backend_reference=None,
         created_at=_timestamp(),
         submitted_at=None,
         started_at=None,
@@ -267,9 +258,7 @@ def submit_detached(request):
             finished_at=_timestamp(),
         )
 
-    if executor == "local":
-        return _wait_for_direct_launch(worker, directory, run_id)
-    return state
+    return _wait_for_direct_launch(worker, directory, run_id)
 
 
 def status_detached(directory, run_id):
@@ -296,12 +285,6 @@ def _wait_process_group_exit(pid, timeout):
 
 
 def _terminate_process_group(directory, run_id, pid, timeout):
-    """Stop one process group without publishing a terminal state prematurely.
-
-    Returns ``(state, stopped, signalled)``. ``signalled`` distinguishes a
-    process that disappeared before cancellation from one we actually asked to
-    terminate; callers must not relabel a naturally completed run as cancelled.
-    """
     if not pid:
         return _read_state(directory, run_id), True, False
 
@@ -323,14 +306,7 @@ def _terminate_process_group(directory, run_id, pid, timeout):
 
 
 def cancel_detached(directory, run_id, timeout=1.0):
-    """Cancel a detached run through its target-side executor."""
     directory = Path(directory).expanduser().resolve()
-    request = json.loads(_request_path(directory, run_id).read_text())
-    if request.get("executor", "local") == "psij":
-        from .remote_psij import cancel_remote_psij
-
-        return cancel_remote_psij(directory, run_id, request, timeout=timeout)
-
     with _state_lock(directory, run_id):
         state = _read_state_unlocked(directory, run_id)
         if state.get("state") in _FINAL_STATES:
@@ -338,7 +314,11 @@ def cancel_detached(directory, run_id, timeout=1.0):
         pid = state.get("pid")
         if not pid:
             return _write_state_unlocked(
-                directory, run_id, state="cancelled", finished_at=_timestamp()
+                directory,
+                run_id,
+                state="cancelled",
+                failure_phase=None,
+                finished_at=_timestamp(),
             )
 
     state, stopped, signalled = _terminate_process_group(
@@ -349,7 +329,7 @@ def cancel_detached(directory, run_id, timeout=1.0):
 
     with _state_lock(directory, run_id):
         state = _read_state_unlocked(directory, run_id)
-        if state.get("state") == "cancelled":
+        if state.get("state") in _FINAL_STATES:
             return state
         return _write_state_unlocked(
             directory,
@@ -370,12 +350,6 @@ def follow_detached(
     stderr_offset=0,
     poll_interval=0.1,
 ):
-    """Forward newly written stdout/stderr until the detached run is final.
-
-    If both state entries name the same physical file, it is an explicitly
-    merged stream. Forward it once as stdout; the original stdout/stderr
-    distinction no longer exists after such a merge.
-    """
     directory = Path(directory).expanduser().resolve()
     offsets = {"out": stdout_offset, "err": stderr_offset}
     streams = {"out": stdout, "err": stderr}
@@ -407,7 +381,6 @@ def follow_detached(
 
 
 def list_detached_runs(directory):
-    """Return states of detached runs recorded in a workspace."""
     directory = Path(directory).expanduser().resolve()
     runs_directory = directory / _METADATA_DIR / _RUNS_DIR
     if not runs_directory.is_dir():
@@ -425,7 +398,6 @@ def list_detached_runs(directory):
 
 
 def clean_detached_runs(directory, older_than=None):
-    """Remove completed detached metadata without touching workspace artifacts."""
     directory = Path(directory).expanduser().resolve()
     now = datetime.now(timezone.utc)
     removed = []
@@ -452,12 +424,10 @@ def clean_detached_runs(directory, older_than=None):
 
 
 def resolve_detached_mpi(mpi):
-    """Resolve MPI configuration supplied through the detached target CLI."""
     return LaunchSpec.from_mpi(mpi)
 
 
 def _request_spec(directory, request):
-    """Materialize one detached wire request as an execution specification."""
     mpi_argv = request.get("mpi_argv")
     return ExecutionSpec(
         argv=tuple(request["argv"]),
@@ -472,22 +442,14 @@ def _request_spec(directory, request):
 
 
 def run_detached_worker(directory, run_id):
-    """Dispatch one persisted detached request to its target-side backend."""
     directory = Path(directory).expanduser().resolve()
     try:
         request = json.loads(_request_path(directory, run_id).read_text())
-        executor = request.get("executor", "local")
-        if executor == "local":
-            from .detached_local import run_detached_local
+        if request.get("executor", "local") != "local":
+            raise ValueError("Detached worker received a non-local request")
+        from .detached_local import run_detached_local
 
-            run_detached_local(directory, run_id, request)
-            return
-        if executor == "psij":
-            from .remote_psij import run_remote_psij_worker
-
-            run_remote_psij_worker(directory, run_id, request)
-            return
-        raise ValueError(f"Unsupported detached executor: {executor!r}")
+        run_detached_local(directory, run_id, request)
     except BaseException as exc:
         with _state_lock(directory, run_id):
             state = _read_state_unlocked(directory, run_id)
@@ -495,14 +457,15 @@ def run_detached_worker(directory, run_id):
                 phase = (
                     FailurePhase.LAUNCH
                     if state.get("state") in {"submitting", "queued"}
-                    else FailurePhase.EXECUTION
+                    else state.get("failure_phase")
+                    or FailurePhase.EXECUTION.value
                 )
                 _write_state_unlocked(
                     directory,
                     run_id,
                     state="failed",
                     error=repr(exc),
-                    failure_phase=state.get("failure_phase") or phase.value,
+                    failure_phase=(phase.value if isinstance(phase, FailurePhase) else phase),
                     return_code=state.get("return_code"),
                     finished_at=state.get("finished_at") or _timestamp(),
                 )
