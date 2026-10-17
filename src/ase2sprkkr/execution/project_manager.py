@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from .base import RunState
+from .base import FailurePhase, RunState
 from .manager import ExecutionManager as _ExecutionManager
 from .projects import Project, ProjectConflictError, ProjectRepository
 
@@ -11,13 +11,7 @@ _PROJECT_ASSIGNMENT_ATTEMPTS = 3
 
 
 class ExecutionManager(_ExecutionManager):
-    """Persist runs and optionally assign them to an ASE2SPRKKR project.
-
-    Project membership is part of creating a persistent run, not GUI
-    post-processing. A project-bound manager shares the run store, executor pool
-    and project repository with its parent. The run is first reserved as
-    ``SUBMITTING`` and then added to the project before backend submission starts.
-    """
+    """Persist runs and optionally assign them to an ASE2SPRKKR project."""
 
     def __init__(
         self,
@@ -46,11 +40,9 @@ class ExecutionManager(_ExecutionManager):
 
     @property
     def project_id(self):
-        """Project associated with runs created through this manager context."""
         return self._project_id
 
     def for_project(self, project):
-        """Return a manager context assigning newly persisted runs to *project*."""
         current = self.projects.project(self._project_identity(project))
         if self._project_id is not None and current.id != self._project_id:
             raise ValueError(
@@ -69,9 +61,9 @@ class ExecutionManager(_ExecutionManager):
     def create_run(
         self,
         executor,
-        reader,
         spec,
         *,
+        process_result,
         task,
         input_definition=None,
         dataset=None,
@@ -79,13 +71,12 @@ class ExecutionManager(_ExecutionManager):
         run_id=None,
         project=None,
     ):
-        """Create a persistent runner, optionally assigning it to *project*."""
         manager = self if project is None else self.for_project(project)
         return _ExecutionManager.create_run(
             manager,
             executor,
-            reader,
             spec,
+            process_result=process_result,
             task=task,
             input_definition=input_definition,
             dataset=dataset,
@@ -115,14 +106,6 @@ class ExecutionManager(_ExecutionManager):
                     raise
 
     def reserve(self, record):
-        """Persist the run and establish requested project membership before submit.
-
-        The run record and project live in separate atomic files, so there is no
-        filesystem transaction spanning both. The ordering is deliberate: first
-        create the authoritative persistent run identity, then add that identity
-        to the project, and only after both succeed may the backend submit. If
-        project assignment fails, the reserved run is terminally marked failed.
-        """
         reserved = super().reserve(record)
         if self._project_id is None:
             return reserved
@@ -130,13 +113,15 @@ class ExecutionManager(_ExecutionManager):
             self._assign_run_to_project(reserved.id)
         except Exception as exc:
             try:
-                super().transition(
+                super().complete(
                     reserved,
                     state=RunState.FAILED,
                     message=(
                         f"Cannot assign persistent run to project "
                         f"{self._project_id}: {exc}"
                     ),
+                    failure_phase=FailurePhase.SUBMISSION,
+                    artifacts_available=False,
                 )
             except Exception:
                 pass
