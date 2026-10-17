@@ -106,6 +106,7 @@ class ArtifactAvailabilityState(str, Enum):
     PENDING = "pending"
     AVAILABLE = "available"
     FAILED = "failed"
+    SKIPPED = "skipped"
 
 
 class DuplicateSubmissionError(RuntimeError):
