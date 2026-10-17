@@ -42,7 +42,7 @@ def input_parameters():
             V("GAMMA", float, is_optional=True, info="Native parameter printed in eV; positive values enable DOS broadening."),
         ]), SITES], executable="kkrgen", mpi=False,
         input_file_templates=("{dataset}.dos",),
-        output_file_templates=("{dataset}.*.*.aps",),
+        output_file_templates=("{dataset}.aps",),
         validators=_validate_aps,
         info="Appearance-potential spectroscopy from existing DATASET.dos (ASA).",
         description="Requires old-format spin-polarized DOS on a uniform increasing mesh starting at EF. "
