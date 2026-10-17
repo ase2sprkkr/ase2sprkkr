@@ -1,232 +1,137 @@
-import asyncio
 from types import SimpleNamespace
 
 import pytest
 
-from ase2sprkkr.execution import ExecutionSpec, FailurePhase, RunReference, RunState
-from ase2sprkkr.execution.base import SubmissionNotStarted
-from ase2sprkkr.execution.remote_endpoint import RemoteEndpointExecutor, _RemoteRun
+from ase2sprkkr.execution import FailurePhase, RunReference, RunState
+from ase2sprkkr.execution.remote_endpoint import (
+    RemoteEndpointExecutor,
+    _client_status_state,
+)
 
 
 class _Transport:
     host = "cluster"
 
 
-class _Reader:
-    print_output = False
 
-    def create_result(self, output_file, input_file):
-        return SimpleNamespace(return_code=None)
+def _reference(native_id, *, backend="psij"):
+    return RunReference(
+        executor=f"remote:{backend}",
+        native_id=native_id,
+        computer="cluster",
+        directory="/work/case",
+    )
 
 
-def test_remote_endpoint_status_uses_pooled_endpoint_backend():
+def test_remote_endpoint_status_queries_opaque_handles_individually():
     executor = RemoteEndpointExecutor(_Transport(), backend="psij")
     calls = []
+    replies = {
+        "job-1": {"state": "running", "return_code": None},
+        "job-2": {
+            "state": "failed",
+            "return_code": None,
+            "failure_phase": "launch",
+            "error": "FileNotFoundError('missing executable')",
+        },
+    }
 
     async def request(action, *args, payload=None):
         calls.append((action, args, payload))
-        return [
-            {"state": "running", "return_code": None},
-            {
-                "state": "failed",
-                "return_code": None,
-                "failure_phase": "launch",
-                "error": "FileNotFoundError('missing executable')",
-            },
-        ]
+        return replies[args[0]]
 
     executor._json_request = request
-    references = (
-        RunReference(
-            executor="remote:psij",
-            native_id="job-1",
-            computer="cluster",
-            directory="/work/case",
-        ),
-        RunReference(
-            executor="remote:psij",
-            native_id="job-2",
-            computer="cluster",
-            directory="/work/case",
-        ),
-    )
+    references = (_reference("job-1"), _reference("job-2"))
 
     statuses = executor.status(*references)
 
-    assert calls == [("status", ("/work/case", "job-1", "job-2"), None)]
+    assert calls == [
+        ("status", ("job-1",), None),
+        ("status", ("job-2",), None),
+    ]
     assert tuple(status.reference for status in statuses) == references
     assert tuple(status.state for status in statuses) == (
         RunState.RUNNING,
-        RunState.EXECUTION_FAILED,
+        RunState.FAILED,
     )
     assert statuses[1].return_code is None
     assert statuses[1].failure_phase == FailurePhase.LAUNCH
     assert "missing executable" in statuses[1].message
 
 
-def test_remote_endpoint_rejects_missing_status_rows():
-    executor = RemoteEndpointExecutor(_Transport())
+def test_remote_endpoint_status_rejects_reference_for_other_backend():
+    executor = RemoteEndpointExecutor(_Transport(), backend="local")
 
-    async def request(action, *args, payload=None):
-        return [{"state": "running"}]
-
-    executor._json_request = request
-    references = tuple(
-        RunReference(
-            executor="remote:local",
-            native_id=f"job-{index}",
-            computer="cluster",
-            directory="/work/case",
-        )
-        for index in range(2)
-    )
-
-    with pytest.raises(RuntimeError, match="wrong number"):
-        executor.status(*references)
+    with pytest.raises(ValueError, match="belongs to"):
+        executor.status(_reference("job", backend="psij"))
 
 
-def test_remote_recovery_accepts_submission_timestamp(monkeypatch):
+def test_remote_recovery_passes_submission_timestamp_to_stateless_service():
     executor = RemoteEndpointExecutor(_Transport())
     calls = []
 
-    async def recover(run_id, submission):
-        calls.append((run_id, submission.directory))
-        return None
-
-    monkeypatch.setattr(executor, "_recover_submission", recover)
-
-    assert executor.recover_submission(
-        "run-1",
-        SimpleNamespace(directory="/work/case"),
-        submitted_at="2026-10-13T08:00:00+02:00",
-    ) is None
-    assert calls == [("run-1", "/work/case")]
-
-
-def test_remote_detached_helper_failure_includes_remote_reason():
-    executor = RemoteEndpointExecutor(_Transport())
-
     async def request(action, *args, payload=None):
-        assert action == "submit"
+        calls.append((action, args, payload))
         return {
-            "state": "failed",
-            "failure_phase": "launch",
-            "error": "OSError('remote helper missing')",
+            "state": "running",
+            "remote_id": "opaque-job",
+            "directory": "/work/case",
         }
 
     executor._json_request = request
+    submission = SimpleNamespace(directory="/work/case", context=None)
 
-    with pytest.raises(
-        SubmissionNotStarted,
-        match="Remote detached worker launch failed.*remote helper missing",
-    ):
-        asyncio.run(executor._submit({"directory": "/work/case"}))
-
-
-def _remote_run_with_statuses(tmp_path, statuses):
-    class Executor:
-        async def _status(self, directory, run_id):
-            return statuses.pop(0)
-
-    reference = RunReference(
-        executor="remote:psij",
-        native_id="job-1",
-        computer="cluster",
-        directory="/work/case",
+    status = executor.recover_submission(
+        "run-1",
+        submission,
+        submitted_at="2026-10-13T08:00:00+02:00",
     )
-    run = _RemoteRun(
-        Executor(),
-        _Reader(),
-        ExecutionSpec(
-            argv=(),
-            input_file=None,
-            output_file=None,
-            directory=str(tmp_path),
-        ),
-        reference=reference,
-        state=RunState.QUEUED,
-    )
-    return run
 
-
-def test_remote_waits_for_running_evidence(tmp_path, monkeypatch):
-    statuses = [
-        {"state": "queued", "submitted_at": "submission-time", "started_at": None},
-        {"state": "running", "started_at": "execution-time"},
+    assert calls == [
+        (
+            "recover",
+            ("/work/case", "run-1"),
+            {
+                "executor": "local",
+                "executor_options": {},
+                "submitted_at": "2026-10-13T08:00:00+02:00",
+            },
+        )
     ]
-    run = _remote_run_with_statuses(tmp_path, statuses)
-
-    async def no_sleep(_delay):
-        return None
-
-    monkeypatch.setattr("ase2sprkkr.execution.remote.asyncio.sleep", no_sleep)
-    status = asyncio.run(run._wait_until_started())
-
-    assert status["state"] == "running"
-    assert status["started_at"] == "execution-time"
-    assert statuses == []
+    assert status.reference.native_id == "opaque-job"
+    assert status.state == RunState.RUNNING
 
 
-def test_remote_cancel_before_running_is_not_treated_as_started(tmp_path):
-    run = _remote_run_with_statuses(
-        tmp_path,
-        [{"state": "cancelled", "submitted_at": "submission-time", "started_at": None}],
-    )
+def test_remote_recovery_can_report_unsupported_backend_recovery():
+    executor = RemoteEndpointExecutor(_Transport())
 
-    status = asyncio.run(run._wait_until_started())
+    async def request(action, *args, payload=None):
+        return {"unsupported": True, "error": "identity cannot be reconstructed"}
 
-    assert status["state"] == "cancelled"
-    assert status["started_at"] is None
+    executor._json_request = request
 
-
-def test_remote_cancel_after_running_keeps_execution_evidence(tmp_path):
-    run = _remote_run_with_statuses(
-        tmp_path,
-        [{"state": "cancelled", "started_at": "execution-time"}],
-    )
-
-    status = asyncio.run(run._wait_until_started())
-
-    assert status["state"] == "cancelled"
-    assert status["started_at"] == "execution-time"
+    with pytest.raises(NotImplementedError, match="cannot be reconstructed"):
+        executor.recover_submission(
+            "run-1", SimpleNamespace(directory="/work/case", context=None)
+        )
 
 
-def test_remote_cancel_before_running_skips_post_output_handling(tmp_path):
-    class Transport:
-        async def file_signature(self, path):
-            raise AssertionError("output must not be inspected before RUNNING")
+@pytest.mark.parametrize(
+    "backend_state, phase, expected",
+    [
+        ("running", None, RunState.RUNNING),
+        ("finished", None, RunState.DOWNLOADING),
+        ("failed", "execution", RunState.DOWNLOADING),
+        ("failed", "download", RunState.DOWNLOADING),
+        ("failed", "launch", RunState.FAILED),
+        ("failed", "submission", RunState.FAILED),
+        ("cancelled", None, RunState.CANCELLED),
+        ("unknown", None, RunState.UNKNOWN),
+    ],
+)
+def test_backend_status_is_mapped_to_client_owned_lifecycle(
+    backend_state, phase, expected
+):
+    state = {"state": backend_state, "failure_phase": phase}
 
-    class Executor:
-        transport = Transport()
-
-        async def _status(self, directory, run_id):
-            return {
-                "state": "cancelled",
-                "submitted_at": "submission-time",
-                "started_at": None,
-            }
-
-    run = _RemoteRun(
-        Executor(),
-        _Reader(),
-        ExecutionSpec(
-            argv=(),
-            input_file=None,
-            output_file=str(tmp_path / "calculation.out"),
-            directory=str(tmp_path),
-        ),
-        reference=RunReference(
-            executor="remote:psij",
-            native_id="job-cancelled",
-            computer="cluster",
-            directory="/work/case",
-            output_file="/work/case/calculation.out",
-        ),
-        state=RunState.QUEUED,
-    )
-
-    result = asyncio.run(run._monitor())
-
-    assert result.return_code is None
-    assert run.state == RunState.CANCELLED
-    assert not (tmp_path / "calculation.out").exists()
+    assert _client_status_state(state) == expected
