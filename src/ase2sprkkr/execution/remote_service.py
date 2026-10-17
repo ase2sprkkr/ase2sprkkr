@@ -261,6 +261,72 @@ def _process_outcome(handle):
     return state, return_code, failure_phase
 
 
+def _slurm_accounting_status(native_id):
+    """Return exact scheduler facts for one Slurm id after it left scontrol."""
+    from .psij import _scheduler_output, _slurm_exit_code, _slurm_state
+
+    try:
+        output = _scheduler_output(
+            (
+                "sacct",
+                "-X",
+                "-n",
+                "-P",
+                "-j",
+                str(native_id),
+                "--format=JobIDRaw,State,ExitCode",
+            )
+        )
+    except (FileNotFoundError, subprocess.CalledProcessError):
+        return None
+
+    for line in output.splitlines():
+        fields = line.rstrip("|").split("|")
+        if len(fields) != 3 or fields[0].strip() != str(native_id):
+            continue
+        state = _slurm_state(fields[1])
+        return state, _slurm_exit_code(fields[2].strip())
+    return None
+
+
+def _slurm_psij_status(handle):
+    """Query Slurm directly; no PSI/J object may be target-side state memory."""
+    from .psij import _slurm_details, _slurm_exit_code, _slurm_state
+
+    native_id = str(handle["native_id"])
+    try:
+        details = _slurm_details(native_id)
+    except (FileNotFoundError, subprocess.CalledProcessError):
+        details = None
+
+    if details:
+        state = _slurm_state(details.get("JobState"))
+        return_code = _slurm_exit_code(details.get("ExitCode"))
+    else:
+        accounted = _slurm_accounting_status(native_id)
+        if accounted is None:
+            state = RunState.UNKNOWN
+            return_code = None
+        else:
+            state, return_code = accounted
+
+    if state == RunState.FINISHED and return_code is None:
+        return_code = 0
+    failure_phase = FailurePhase.EXECUTION if state == RunState.FAILED else None
+    return {
+        "state": state.value,
+        "return_code": return_code,
+        "error": None,
+        "failure_phase": (
+            None if failure_phase is None else failure_phase.value
+        ),
+        "directory": handle.get("directory"),
+        "input_file": handle.get("input_file"),
+        "output_file": handle.get("output_file"),
+        "error_file": handle.get("error_file"),
+    }
+
+
 def status_remote(remote_id):
     """Query backend facts for an opaque target id."""
     handle = _decode_handle(remote_id)
@@ -290,6 +356,12 @@ def status_remote(remote_id):
         }
 
     if handle["kind"] == "psij":
+        # PSI/J attach is asynchronous: a freshly attached Job initially reports
+        # NEW and only later gets its real state. A stateless CLI process cannot
+        # keep that Job object between requests. Slurm therefore has to be
+        # queried by its native id instead of using PSI/J as target-side memory.
+        if str(handle.get("backend", "")).lower() == "slurm":
+            return _slurm_psij_status(handle)
         executor = _psij_executor(
             {"backend": handle["backend"], "url": handle.get("url")}
         )
