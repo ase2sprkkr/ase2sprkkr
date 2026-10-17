@@ -3,8 +3,27 @@ import numpy as np
 from ...common.grammar_types import Integer, SetOf
 from ...common.warnings import DataValidityError, DataValidityWarning
 from ._sections import TASK, CONTROL, TAU, ENERGY, SITES, STRCONST, MODE, CPA
-from ._file_manifests import RequiredTauInputParametersDefinition
+from ._file_manifests import RequiredTauInputParametersDefinition, resolve_file
 from ..input_parameters_definitions import InputValueDefinition as V
+
+
+class ComptonInputParametersDefinition(RequiredTauInputParametersDefinition):
+    """COMPTON definition with native 1D/2D momentum-density outputs."""
+
+    def output_files(self, parameters, directory):
+        files = list(super().output_files(parameters, directory))
+        dataset = parameters.CONTROL.DATASET()
+        task = parameters.TASK
+        if task.MD2D() or task.EMD2D():
+            suffix = "emd2d.dat" if task.EMD2D() else "mcp2d.dat"
+            files.extend(resolve_file(directory, f"{dataset}_{part}_{suffix}")
+                         for part in ("BND", "COR", "TOT"))
+        else:
+            files.extend(resolve_file(directory, f"{dataset}_{part}.mcp")
+                         for part in ("BND", "COR", "TOT"))
+            if parameters.CONTROL.PRINT() > 0:
+                files.append(resolve_file(directory, f"{dataset}_data.mcp"))
+        return tuple(files)
 
 
 def _validate_compton(p, _values, why):
@@ -76,10 +95,9 @@ def input_parameters():
     members += [V(name, SetOf(float, min_length=3, max_length=3), is_optional=True)
                 for name in ("PNVEC", "PPVEC1", "PPVEC2")]
     members += [V(name, False) for name in ("MD2D", "EMD2D", "SHFT", "SHFT_PP", "SHFT_PN", "INSIDE_SPHERE", "SQQ_RESOLVED")]
-    return RequiredTauInputParametersDefinition("compton", [CONTROL("COMPTON"), tau, MODE, STRCONST, CPA,
+    return ComptonInputParametersDefinition("compton", [CONTROL("COMPTON"), tau, MODE, STRCONST, CPA,
                            energy, TASK("COMPTON").copy(members), SITES],
                            executable="kkrgen", mpi=True,
-                           output_file_templates=("{dataset}_BND.mcp", "{dataset}_COR.mcp", "{dataset}_TOT.mcp"),
                            validators=_validate_compton,
                            info="Compton momentum density and profiles",
                            description="Periodic FREL split-contour workflow using an existing compatible TAU directory. "

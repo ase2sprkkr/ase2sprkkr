@@ -52,8 +52,10 @@ def test_non_tau_cache_roles(tmp_path):
         ("APS", {f"{DATASET}.*.L23.aps"}),
         ("NRAES", {f"{DATASET}.*.L23.aes"}),
         ("CLXPS", {f"{DATASET}*.L23.xps"}),
+        ("COMPTON", {f"{DATASET}_BND.mcp", f"{DATASET}_COR.mcp", f"{DATASET}_TOT.mcp"}),
         ("FMAG", {f"{DATASET}_fmag_*.agr", f"{DATASET}_dens_*.agr"}),
         ("MEPLOT", {f"{DATASET}_VB_*.agr"}),
+        ("POSANI", {f"{DATASET}_BND.mpa", f"{DATASET}_COR.mpa", f"{DATASET}_TOT.mpa"}),
         ("SCF", {"*_SCFSTART.dos"}),
         ("SIGMA", {"sigma?????.dat"}),
         ("SOCPAR", {f"{DATASET}_soc_*.agr", f"{DATASET}_exc_*.agr"}),
@@ -104,6 +106,32 @@ def test_nr_spectroscopy_conditional_outputs(tmp_path):
     names = basenames(nraes._definition.output_files(nraes, tmp_path))
     assert f"{DATASET}.*.L23.aes.??" in names
     assert {"D??[UD][UD]", "E??[UD][UD]", "DE??", "W??[UD][UD]"} <= names
+
+
+def test_momentum_density_output_variants(tmp_path):
+    compton = parameters("COMPTON")
+    compton.TASK.MD2D = True
+    names = basenames(compton._definition.output_files(compton, tmp_path))
+    assert {f"{DATASET}_{part}_mcp2d.dat" for part in ("BND", "COR", "TOT")} <= names
+    assert f"{DATASET}_BND.mcp" not in names
+
+    compton.TASK.MD2D = False
+    compton.TASK.EMD2D = True
+    names = basenames(compton._definition.output_files(compton, tmp_path))
+    assert {f"{DATASET}_{part}_emd2d.dat" for part in ("BND", "COR", "TOT")} <= names
+
+    posani = parameters("POSANI")
+    posani.TASK.MD2D = True
+    names = basenames(posani._definition.output_files(posani, tmp_path))
+    assert {f"{DATASET}_{part}_pan2d.dat" for part in ("BND", "COR", "TOT")} <= names
+    assert f"{DATASET}_BND.mpa" not in names
+
+
+def test_momentum_density_debug_output(tmp_path):
+    for task, extension in (("COMPTON", "mcp"), ("POSANI", "mpa")):
+        p = parameters(task)
+        p.CONTROL.PRINT = 1
+        assert f"{DATASET}_data.{extension}" in basenames(p._definition.output_files(p, tmp_path))
 
 
 def test_pshift_branch_outputs(tmp_path):
@@ -174,10 +202,3 @@ def test_vbpes_final_state_tau_cache(tmp_path):
 
 def test_posani_previous_result_is_required_input(tmp_path):
     assert f"{DATASET}_pos_dat.pan" in manifest("POSANI", "input", tmp_path)
-
-
-def test_posani_2d_output_is_conditional(tmp_path):
-    p = parameters("POSANI")
-    assert not any("pan2D" in name for name in basenames(p._definition.output_files(p, tmp_path)))
-    p.TASK.MD2D = True
-    assert f"{DATASET}*_pan2D*" in basenames(p._definition.output_files(p, tmp_path))

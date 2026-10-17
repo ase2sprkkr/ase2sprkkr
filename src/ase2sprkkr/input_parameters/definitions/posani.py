@@ -8,10 +8,20 @@ from ..input_parameters_definitions import InputValueDefinition as V
 
 
 class PosaniInputParametersDefinition(RequiredTauInputParametersDefinition):
+    """POSANI definition with native 1D/2D momentum-density outputs."""
+
     def output_files(self, parameters, directory):
         files = list(super().output_files(parameters, directory))
-        if parameters.TASK.MD2D() or parameters.TASK.EMD2D():
-            files.append(resolve_file(directory, f"{parameters.CONTROL.DATASET()}*_pan2D*"))
+        dataset = parameters.CONTROL.DATASET()
+        task = parameters.TASK
+        if task.MD2D() or task.EMD2D():
+            files.extend(resolve_file(directory, f"{dataset}_{part}_pan2d.dat")
+                         for part in ("BND", "COR", "TOT"))
+        else:
+            files.extend(resolve_file(directory, f"{dataset}_{part}.mpa")
+                         for part in ("BND", "COR", "TOT"))
+            if parameters.CONTROL.PRINT() > 0:
+                files.append(resolve_file(directory, f"{dataset}_data.mpa"))
         return tuple(files)
 
 
@@ -93,7 +103,6 @@ def input_parameters():
                            energy, TASK("POSANI").copy(members), SITES],
                            executable="kkrgen", mpi=True,
                            input_file_templates=("{dataset}_pos_dat.pan",),
-                           output_file_templates=("{dataset}_BND.mpa", "{dataset}_COR.mpa", "{dataset}_TOT.mpa"),
                            validators=_validate_posani,
                            info="Positron annihilation momentum density and profiles",
                            description="Periodic FREL workflow using electron potential, electron TAU data and DATASET_pos_dat.pan from POSANIPREP. Native TAUQQ reader/writer assumes NQ=NT; other systems are unsafe. "
