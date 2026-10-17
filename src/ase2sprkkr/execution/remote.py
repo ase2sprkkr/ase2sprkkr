@@ -5,7 +5,7 @@ from __future__ import annotations
 import asyncio
 import os
 import posixpath
-from dataclasses import asdict
+from dataclasses import asdict, replace
 from enum import Enum
 from threading import Event, Lock, Thread
 
@@ -115,6 +115,15 @@ class RemoteRunner:
     @property
     def files(self):
         return self._files
+
+    def _set_artifact_availability(self, state, message=None):
+        """Keep transfer outcome independent of the backend execution outcome."""
+        if self._files is not None:
+            self._files = replace(
+                self._files,
+                availability_state=state,
+                availability_message=message,
+            )
 
     @property
     def execution(self):
@@ -659,14 +668,25 @@ class RemoteRunner:
             try:
                 await self._sync_output_files(required=backend_state == RunState.FINISHED)
                 await self._sync_cache_files()
-            except BaseException as exc:
-                self._state = RunState.FAILED
-                self._failure_phase = FailurePhase.DOWNLOAD
-                self._failure_message = str(exc)
-                raise
+                self._finish_output_files(commit=True)
+            except Exception as exc:
+                self._set_artifact_availability("failed", str(exc))
+                if backend_state == RunState.FINISHED:
+                    # A successful calculation with unavailable artifacts is a
+                    # failed run, even though its backend return code is zero.
+                    self._state = RunState.FAILED
+                    self._failure_phase = FailurePhase.DOWNLOAD
+                    self._failure_message = str(exc)
+                    raise
+                # Diagnostic download failure cannot replace the original
+                # failed/cancelled backend outcome or its failure reason.
+                self._state = backend_state
+                if backend_state == RunState.FAILED and self._failure_phase is None:
+                    self._failure_phase = FailurePhase.EXECUTION
+                return self.result
 
-            self._finish_output_files(commit=True)
             outputs_committed = True
+            self._set_artifact_availability("available")
             self._state = backend_state
             if self._state == RunState.FAILED and self._failure_phase is None:
                 self._failure_phase = FailurePhase.EXECUTION

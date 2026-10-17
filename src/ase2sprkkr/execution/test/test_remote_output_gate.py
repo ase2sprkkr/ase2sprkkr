@@ -1,5 +1,7 @@
 import asyncio
 
+import pytest
+
 from ase2sprkkr.execution import ExecutionSpec, RunState, FileManifest, FileEntry
 from ase2sprkkr.execution.remote import FileSyncPolicy, RemoteRunner
 from ase2sprkkr.execution.transport import AtomicLocalFile
@@ -90,3 +92,67 @@ def test_unknown_remote_state_does_not_publish_or_download_output(tmp_path):
     assert output._finished is True
     assert not output.temporary_path.exists()
     assert executor.sync_calls == 0
+
+
+async def _unavailable_output(_required):
+    raise OSError("remote output could not be downloaded")
+
+
+def test_successful_backend_with_failed_download_fails_run(tmp_path):
+    runner, executor, destination, output = _run(tmp_path, RunState.FINISHED)
+    runner._sync_output_files = _unavailable_output
+
+    with pytest.raises(OSError, match="could not be downloaded"):
+        asyncio.run(runner._monitor())
+
+    assert runner.state == RunState.FAILED
+    assert runner.failure_phase.value == "download"
+    assert runner.return_code == 0
+    assert runner.files.availability_state == "failed"
+    assert "could not be downloaded" in runner.files.availability_message
+    assert destination.read_bytes() == b"old\n"
+    assert output._finished is True
+
+
+def test_failed_backend_keeps_execution_failure_when_diagnostics_cannot_download(tmp_path):
+    runner, executor, destination, output = _run(tmp_path, RunState.FAILED)
+    runner._sync_output_files = _unavailable_output
+
+    async def failed_status(*_args):
+        return {
+            "state": "failed",
+            "return_code": 17,
+            "failure_phase": "execution",
+            "error": "SPR-KKR exited with status 17",
+        }
+
+    executor._status = failed_status
+    result = asyncio.run(runner._monitor())
+
+    assert runner.state == RunState.FAILED
+    assert runner.failure_phase.value == "execution"
+    assert runner.failure_message == "SPR-KKR exited with status 17"
+    assert result.return_code == 17
+    assert runner.files.availability_state == "failed"
+    assert "could not be downloaded" in runner.files.availability_message
+    assert destination.read_bytes() == b"old\n"
+    assert output._finished is True
+
+
+def test_completed_remote_download_marks_files_available(tmp_path):
+    runner, _, destination, _ = _run(tmp_path, RunState.FINISHED)
+    asyncio.run(runner._monitor())
+    assert runner.state == RunState.FINISHED
+    assert runner.files.availability_state == "available"
+    assert runner.files.availability_message is None
+    assert destination.read_bytes() == b"streamed\n"
+
+
+def test_cancelled_backend_survives_diagnostic_download_failure(tmp_path):
+    runner, _, destination, _ = _run(tmp_path, RunState.CANCELLED)
+    runner._sync_output_files = _unavailable_output
+    asyncio.run(runner._monitor())
+    assert runner.state == RunState.CANCELLED
+    assert runner.failure_phase is None
+    assert runner.files.availability_state == "failed"
+    assert destination.read_bytes() == b"old\n"

@@ -640,10 +640,23 @@ class ExecutionManager:
         message=None,
         failure_phase=None,
         artifacts_available=False,
+        files=None,
     ):
         state = RunState(state)
         phase = _failure_phase(failure_phase)
-        result_files = record.files
+        result_files = record.files if files is None else files
+
+        if (
+            result_files is not None
+            and result_files.availability_state == ArtifactAvailabilityState.FAILED
+        ):
+            artifacts_available = False
+            if state == RunState.FINISHED:
+                # The backend succeeded, but its required artifacts did not
+                # become available locally. Do not report a successful run.
+                state = RunState.FAILED
+                phase = FailurePhase.DOWNLOAD
+                message = result_files.availability_message or message
 
         if artifacts_available and result_files is not None:
             result_files = replace(
@@ -940,7 +953,7 @@ class PersistentRunner:
         phase = self.failure_phase
         message = getattr(self._runner, "failure_message", None)
         error = self._runner.exception
-        if error is not None:
+        if message is None and error is not None:
             message = str(error)
         if state not in _FINAL_STATES:
             return
@@ -956,6 +969,7 @@ class PersistentRunner:
             message=message,
             failure_phase=phase,
             artifacts_available=artifacts_available,
+            files=self.files,
         )
         # ACK is strictly after RunStore's crash-durable terminal transition.
         # A lost ACK reply is harmless: backend receipts are idempotently deleted.
