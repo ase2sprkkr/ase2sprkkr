@@ -19,7 +19,7 @@ from types import SimpleNamespace
 from uuid import uuid4
 
 from .base import ExecutionSpec, FailurePhase, LaunchSpec, RunReference, RunState
-from .remote_process_worker import _SPEC_ENV, _START_FD_ENV
+from .remote_process_worker import _SPEC_ENV, _START_FD_ENV, _write_outcome
 
 
 _FINAL_STATES = {RunState.FINISHED, RunState.FAILED, RunState.CANCELLED}
@@ -251,7 +251,14 @@ def _process_outcome(handle):
         return None
     except (KeyError, ValueError, json.JSONDecodeError) as exc:
         raise RuntimeError("Invalid remote process outcome artifact") from exc
-    return data
+    try:
+        state = RunState(data["state"])
+        return_code = data.get("return_code")
+        raw_phase = data.get("failure_phase")
+        failure_phase = None if raw_phase is None else FailurePhase(raw_phase)
+    except (KeyError, TypeError, ValueError) as exc:
+        raise RuntimeError("Invalid remote process outcome artifact") from exc
+    return state, return_code, failure_phase
 
 
 def status_remote(remote_id):
@@ -269,12 +276,7 @@ def status_remote(remote_id):
                 return_code = None
                 failure_phase = None
             else:
-                return_code = outcome.get("return_code")
-                raw_phase = outcome.get("failure_phase")
-                failure_phase = (
-                    None if raw_phase is None else FailurePhase(raw_phase)
-                )
-                state = RunState.FINISHED if return_code == 0 else RunState.FAILED
+                state, return_code, failure_phase = outcome
         return {
             "state": state.value,
             "return_code": return_code,
@@ -327,10 +329,19 @@ def cancel_remote(remote_id, timeout=1.0):
             except ProcessLookupError:
                 pass
 
-        state = status_remote(remote_id)
-        state["state"] = RunState.CANCELLED.value
-        state["failure_phase"] = None
-        return state
+        # A natural completion racing with cancellation wins. Otherwise publish
+        # cancellation as the durable backend outcome so future status queries
+        # cannot regress to FAILED/UNKNOWN after the supervisor disappears.
+        current = status_remote(remote_id)
+        if current["state"] in (RunState.FINISHED.value, RunState.FAILED.value):
+            return current
+        _write_outcome(
+            handle["outcome_file"],
+            RunState.CANCELLED,
+            current.get("return_code"),
+            None,
+        )
+        return status_remote(remote_id)
 
     if handle["kind"] == "psij":
         executor = _psij_executor(
