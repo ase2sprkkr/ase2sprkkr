@@ -45,3 +45,36 @@ class TauCacheInputParametersDefinition(InputParametersDefinition):
 
     def cache_files(self, parameters, directory):
         return (tau_file(parameters, directory), *super().cache_files(parameters, directory))
+
+
+class NrSpectroscopyInputParametersDefinition(InputParametersDefinition):
+    """Shared native output contract for NRAPS/NRAES convolution tasks."""
+
+    def __init__(self, *args, output_extension, broadened_dos=False, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.output_extension = output_extension
+        self.broadened_dos = broadened_dos
+
+    def output_files(self, parameters, directory):
+        files = list(super().output_files(parameters, directory))
+        dataset = parameters.CONTROL.DATASET()
+        extension = self.output_extension
+
+        # Native naming may insert ADSI / atom / shell information before the
+        # extension, so retain that dynamic middle part as a constrained glob.
+        files.append(resolve_file(directory, f"{dataset}*.{extension}"))
+
+        if parameters.TASK.CALCLS():
+            files.append(resolve_file(directory, f"{dataset}*.{extension}.??"))
+
+        if parameters.TASK.OUTGNU():
+            # L1,L2 are one-character angular-momentum labels; S1,S2 are U/D.
+            files.extend(resolve_file(directory, f"{prefix}??[UD][UD]")
+                         for prefix in ("D", "E", "DE", "W"))
+
+        if self.broadened_dos:
+            gamma = _optional_value(parameters.TASK, "GAMMA")
+            if gamma is not None and gamma > 0:
+                files.append(resolve_file(directory, f"{dataset}.dos.brd"))
+
+        return tuple(files)

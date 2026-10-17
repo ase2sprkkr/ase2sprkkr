@@ -1,7 +1,8 @@
 """NRAES postprocessing of existing DOS (SPR-KKR 9.7 NRAES)."""
 from ...common.grammar_types import Integer, Keyword
 from ...common.warnings import DataValidityError, DataValidityWarning
-from ..input_parameters_definitions import InputParametersDefinition as InputParameters, InputValueDefinition as V
+from ..input_parameters_definitions import InputValueDefinition as V
+from ._file_manifests import NrSpectroscopyInputParametersDefinition
 from ._sections import CONTROL, ENERGY, MODE, SITES, STRCONST, TASK, TAU
 
 
@@ -24,7 +25,7 @@ def _validate_nraes(parameters, _values, why):
 def input_parameters():
     mode = MODE.copy()
     mode.copy_member("MODE", default_value="SREL")
-    return InputParameters(
+    return NrSpectroscopyInputParametersDefinition(
         "nraes", [CONTROL("NRAES"), TAU, mode, STRCONST,
         ENERGY(emin=None, defaults={"GRID": 1, "NE": 300, "ImE": 0.0}),
         TASK("NRAES", [
@@ -33,7 +34,8 @@ def input_parameters():
             V("CALCLS", False, info="Calculate (l,s)-resolved spectra."),
             V("OUTGNU", False, info="Write additional gnuplot data."),
         ]), SITES], executable="kkrgen", mpi=False,
-        input_file_templates=("{dataset}.dos",), validators=_validate_nraes,
+        input_file_templates=("{dataset}.dos",), output_extension="aes",
+        validators=_validate_nraes,
         info="Nonrelativistic Auger electron spectroscopy from existing DATASET.dos (ASA).",
         description="Requires old-format spin-polarized DOS on a uniform increasing mesh covering occupied states up to EF. "
                     "ENERGY.NE supplies allocation capacity; actual energies come from DOS. "

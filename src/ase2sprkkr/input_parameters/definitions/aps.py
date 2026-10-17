@@ -2,7 +2,8 @@
 import numpy as np
 from ...common.grammar_types import Integer, Keyword
 from ...common.warnings import DataValidityError, DataValidityWarning
-from ..input_parameters_definitions import InputParametersDefinition as InputParameters, InputValueDefinition as V
+from ..input_parameters_definitions import InputValueDefinition as V
+from ._file_manifests import NrSpectroscopyInputParametersDefinition
 from ._sections import CONTROL, ENERGY, MODE, SITES, STRCONST, TASK, TAU
 
 
@@ -31,18 +32,18 @@ def _validate_aps(parameters, _values, why):
 def input_parameters():
     mode = MODE.copy()
     mode.copy_member("MODE", default_value="SREL")
-    return InputParameters(
+    return NrSpectroscopyInputParametersDefinition(
         "aps", [CONTROL("APS"), TAU, mode, STRCONST,
         ENERGY(emin=None, defaults={"GRID": 1, "NE": 300, "ImE": 0.0}),
         TASK("APS", [
             V("IT", Integer(min=1), 1, is_always_added=False),
-            V("CL", Keyword(*(f"{n}{s}" for n in range(1, 7) for s in "SPDF")), "2P", is_always_added=False),
+            V("CL", Keyword(*(f"{n}{s}" for n in range(1, 6) for s in "SPDF")), "2P", is_always_added=False),
             V("CALCLS", False, info="Calculate (l,s)-resolved spectra."),
             V("OUTGNU", False, info="Write additional gnuplot data."),
             V("GAMMA", float, is_optional=True, info="Native parameter printed in eV; positive values enable DOS broadening."),
         ]), SITES], executable="kkrgen", mpi=False,
         input_file_templates=("{dataset}.dos",),
-        output_file_templates=("{dataset}.aps",),
+        output_extension="aps", broadened_dos=True,
         validators=_validate_aps,
         info="Appearance-potential spectroscopy from existing DATASET.dos (ASA).",
         description="Requires old-format spin-polarized DOS on a uniform increasing mesh starting at EF. "

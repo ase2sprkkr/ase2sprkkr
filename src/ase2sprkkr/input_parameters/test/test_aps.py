@@ -37,6 +37,12 @@ def test_invalid_shell():
         p.validate("save")
 
 
+def test_unsupported_sixth_shell():
+    p = parameters()
+    with pytest.raises(ValueError):
+        p.TASK.CL = "6S"
+
+
 @pytest.mark.parametrize("op", ["DMFT", "LDA+U"])
 def test_correlations_rejected(op):
     p = parameters()
