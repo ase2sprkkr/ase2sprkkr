@@ -6,7 +6,6 @@ import asyncio
 import json
 import os
 from dataclasses import asdict
-from pathlib import Path
 from threading import Event, Lock, Thread
 
 from .base import (
@@ -21,7 +20,6 @@ from .base import (
 )
 from .detached import (
     _request_path,
-    _run_directory,
     cancel_detached,
     detached_failure_phase,
     detached_launch_failed,
@@ -30,7 +28,6 @@ from .detached import (
     status_detached,
     submit_detached,
 )
-from .transport import AtomicLocalFile
 
 _FINAL_STATES = {RunState.FINISHED, RunState.FAILED, RunState.CANCELLED}
 
@@ -69,9 +66,9 @@ def _reference_from_request(run_id, directory, request):
         executor="local",
         native_id=run_id,
         directory=os.path.abspath(os.fspath(directory)),
-        input_file=request.get("client_input_file") or request.get("input_file"),
-        output_file=request.get("client_output_file"),
-        error_file=request.get("client_error_file"),
+        input_file=request.get("input_file"),
+        output_file=request.get("output_file"),
+        error_file=request.get("error_file"),
     )
 
 
@@ -109,7 +106,7 @@ def recover_local_submission(run_id, submission):
 
 
 class LocalPersistentRunner:
-    """Detached local execution with replayable raw output."""
+    """Detached local execution with durable helper-owned artifact publication."""
 
     def __init__(
         self,
@@ -130,7 +127,6 @@ class LocalPersistentRunner:
         self.callback = callback
         self._run_id = run_id or (reference.native_id if reference is not None else None)
         self._reference = reference
-        self._attached = reference is not None
         self.result = ExecutionOutcome(
             output_file=_file_path(spec.output_file, spec.directory),
             input_file=_file_path(spec.input_file, spec.directory),
@@ -197,39 +193,6 @@ class LocalPersistentRunner:
         if data:
             self._output_observers.emit(data.decode("utf8"), kind)
 
-    def _open_target(self, path):
-        if path is None:
-            return None
-        path = Path(path)
-        path.parent.mkdir(parents=True, exist_ok=True)
-        if self._attached:
-            return AtomicLocalFile(path)
-        return path.open("wb")
-
-    def _open_mirrors(self):
-        output = self._open_target(self.result.output_file)
-        if self.result.error_file is None or self.result.error_file == self.result.output_file:
-            error = output
-        else:
-            error = self._open_target(self.result.error_file)
-        return output, error
-
-    @staticmethod
-    def _finish_target(target, *, commit):
-        if target is None:
-            return
-        method = getattr(target, "commit" if commit else "discard", None)
-        if method is not None:
-            method()
-        else:
-            target.close()
-
-    @classmethod
-    def _finish_mirrors(cls, output, error, *, commit):
-        if error is not None and error is not output:
-            cls._finish_target(error, commit=commit)
-        cls._finish_target(output, commit=commit)
-
     @staticmethod
     def _read_new(path, offset):
         if not path:
@@ -243,64 +206,47 @@ class LocalPersistentRunner:
 
     async def _monitor(self):
         offsets = {"out": 0, "err": 0}
-        output_target = error_target = None
-        mirrors_open = False
-        mirrors_committed = False
-        try:
-            while True:
-                status = status_detached(
-                    self._reference.directory, self._reference.native_id
-                )
-                self._failure_phase = detached_failure_phase(status)
-                self._failure_message = status.get("error")
-                if detached_launch_failed(status):
-                    self._state = RunState.FAILED
-                    self._return_code = None
-                    self._failure_phase = FailurePhase.LAUNCH
-                    return self.result
+        while True:
+            status = status_detached(
+                self._reference.directory, self._reference.native_id
+            )
+            self._failure_phase = detached_failure_phase(status)
+            self._failure_message = status.get("error")
+            if detached_launch_failed(status):
+                self._state = RunState.FAILED
+                self._return_code = None
+                self._failure_phase = FailurePhase.LAUNCH
+                return self.result
 
-                state = detached_run_state(status.get("state", "unknown"))
-                started = status.get("started_at") is not None
-                if started and not mirrors_open:
-                    output_target, error_target = self._open_mirrors()
-                    mirrors_open = True
+            state = detached_run_state(status.get("state", "unknown"))
+            started = status.get("started_at") is not None
+            had_data = False
+            if started:
+                seen = set()
+                for kind, key in (("out", "output_file"), ("err", "error_file")):
+                    path = detached_stream_file(status, key)
+                    if not path or path in seen:
+                        continue
+                    seen.add(path)
+                    data = self._read_new(path, offsets[kind])
+                    if not data:
+                        continue
+                    offsets[kind] += len(data)
+                    self._emit_output(data, kind)
+                    had_data = True
 
-                had_data = False
-                if started:
-                    for kind, key, target in (
-                        ("out", "output_file", output_target),
-                        ("err", "error_file", error_target),
-                    ):
-                        data = self._read_new(
-                            detached_stream_file(status, key), offsets[kind]
-                        )
-                        if not data:
-                            continue
-                        offsets[kind] += len(data)
-                        if target is not None:
-                            target.write(data)
-                            target.flush()
-                        self._emit_output(data, kind)
-                        had_data = True
+            if state in _FINAL_STATES and not had_data:
+                self._state = state
+                self._return_code = status.get("return_code")
+                if self._return_code is None and started:
+                    self._return_code = 0 if state == RunState.FINISHED else 1
+                self.result.return_code = self._return_code
+                return self.result
 
-                if state in _FINAL_STATES and not had_data:
-                    self._state = state
-                    self._return_code = status.get("return_code")
-                    if self._return_code is None and started:
-                        self._return_code = 0 if state == RunState.FINISHED else 1
-                    self.result.return_code = self._return_code
-                    if mirrors_open:
-                        self._finish_mirrors(output_target, error_target, commit=True)
-                        mirrors_committed = True
-                    return self.result
+            if not had_data:
+                await asyncio.sleep(0.05)
 
-                if not had_data:
-                    await asyncio.sleep(0.05)
-        finally:
-            if mirrors_open and not mirrors_committed:
-                self._finish_mirrors(output_target, error_target, commit=False)
-
-    def _close_output_files(self):
+    def _close_owned_files(self):
         closed = set()
         for file in (self.spec.output_file, self.spec.error_file):
             if file is None or id(file) in closed:
@@ -321,7 +267,7 @@ class LocalPersistentRunner:
             if self._state != RunState.CANCELLED:
                 self._state = RunState.FAILED
         finally:
-            self._close_output_files()
+            self._close_owned_files()
             try:
                 if self.callback:
                     self.callback(self.result)
@@ -345,7 +291,6 @@ class LocalPersistentRunner:
 
     def _request(self):
         directory = os.path.abspath(os.fspath(self.spec.directory))
-        run_directory = _run_directory(directory, self._run_id)
         return {
             "id": self._run_id,
             "executor": "local",
@@ -355,13 +300,13 @@ class LocalPersistentRunner:
             if self.spec.mpi_argv is None
             else list(self.spec.mpi_argv),
             "launch": asdict(self.spec.launch),
-            "input_file": _file_path(self.spec.input_file, directory),
+            "input_file": self.result.input_file,
             "stdin": _file_path(self.spec.stdin, directory),
-            "output_file": os.fspath(run_directory / "stdout"),
-            "error_file": os.fspath(run_directory / "stderr"),
-            "client_input_file": self.result.input_file,
-            "client_output_file": self.result.output_file,
-            "client_error_file": self.result.error_file,
+            # The detached helper is the single owner of durable publication.
+            # It writes run-specific launch streams and atomically replaces these
+            # canonical paths before publishing FINISHED.
+            "output_file": self.result.output_file,
+            "error_file": self.result.error_file,
         }
 
     def submit(self):
