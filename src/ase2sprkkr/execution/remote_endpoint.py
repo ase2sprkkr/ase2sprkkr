@@ -7,7 +7,7 @@ import json
 import os
 import posixpath
 import warnings
-from dataclasses import asdict
+from dataclasses import asdict, replace
 from pathlib import Path, PurePosixPath
 from uuid import uuid4
 
@@ -25,6 +25,7 @@ from .remote import FileSyncPolicy, RemoteRunner, _run_sync
 from .stream_protocol import FramedRunningCommand
 from .transport import AtomicLocalFile
 from .run_model import FileEntry, CacheEntry, FileManifest, FileMapping, WorkingDirectory
+from .endpoint import endpoint_for_executor
 
 
 _REMOTE_BACKENDS = {"local", "psij"}
@@ -405,14 +406,21 @@ class RemoteEndpointExecutor(Executor):
             launch = LaunchSpec(**dict(launch))
         return _RemoteRunContext(endpoint, launch)
 
-    def _validate_reference(self, reference):
-        expected = f"remote:{self.backend}"
-        if reference.executor != expected:
-            raise ValueError(
-                f"Run reference belongs to {reference.executor!r}, not {expected!r}"
-            )
-        if not reference.native_id or not reference.directory:
-            raise ValueError("Remote run reference lacks remote id or directory")
+    def _validate_run(self, run):
+        if run.execution.endpoint != endpoint_for_executor(self):
+            raise ValueError("Run belongs to a different remote endpoint")
+        if not run.execution.backend_id or not run.execution.directory.remote:
+            raise ValueError("Remote run lacks backend identity or working directory")
+
+    @staticmethod
+    def _launch_from_manifest(files):
+        mapping = files.mapping
+        if mapping is None:
+            raise ValueError("Remote run has no persisted file mapping")
+        return LaunchSpec(
+            local_root=mapping.local_root, remote_root=mapping.remote_root,
+            input_sync=mapping.input_sync, output_sync=mapping.output_sync,
+        )
 
     async def _resolve_submission_directory(self, directory):
         directory = posixpath.normpath(os.fspath(directory))
@@ -447,30 +455,6 @@ class RemoteEndpointExecutor(Executor):
             return remote_root
         return posixpath.join(remote_root, *PurePosixPath(*relative.parts).parts)
 
-    def submission_context(self, spec):
-        directory = os.path.abspath(os.fspath(spec.directory))
-        return {
-            "launch": asdict(spec.launch),
-            "local_sync": {
-                "output_file": _local_path(spec.output_file, directory),
-                "error_file": _local_path(spec.error_file, directory),
-                "output_files": [
-                    path
-                    for path in (
-                        _local_path(value, directory) for value in spec.output_files
-                    )
-                    if path is not None
-                ],
-                "cache_files": [
-                    path
-                    for path in (
-                        _local_path(value, directory) for value in spec.cache_files
-                    )
-                    if path is not None
-                ],
-            },
-        }
-
     async def _submit(self, request):
         launch = request.get("launch") or {}
         mpi = launch.get("mpi") or {}
@@ -494,58 +478,55 @@ class RemoteEndpointExecutor(Executor):
             "submit", request["directory"], payload=request
         )
 
-    async def _status(self, directory, remote_id, reference=None):
-        return await self._json_request(
-            "status", remote_id
-        )
+    async def _status(self, directory, backend_id, files=None):
+        return await self._json_request("status", backend_id)
 
-    async def _cancel(self, directory, remote_id, reference=None):
-        return await self._json_request(
-            "cancel", remote_id
-        )
+    async def _cancel(self, directory, backend_id, files=None):
+        return await self._json_request("cancel", backend_id)
 
-    async def _follow(self, directory, remote_id, reference=None):
+    async def _follow(self, directory, backend_id, files=None):
         options = []
-        if reference is not None:
-            if reference.output_file:
-                options.extend(("--stdout-path", reference.output_file))
-            if reference.error_file:
-                options.extend(("--stderr-path", reference.error_file))
+        if files is not None:
+            if files.stdout and files.stdout.remote_path:
+                options.extend(("--stdout-path", files.stdout.remote_path))
+            if files.stderr and files.stderr.remote_path:
+                options.extend(("--stderr-path", files.stderr.remote_path))
         process = await self.transport.start(
-            (*self.command, "follow", str(remote_id), *options, "--framed")
+            (*self.command, "follow", str(backend_id), *options, "--framed")
         )
         return FramedRunningCommand(process)
 
-    def acknowledge(self, reference):
-        """Release a delivered backend receipt after RunRecord persistence."""
-        self._validate_reference(reference)
-        return _run_sync(self._json_request("ack", reference.native_id))
+    def acknowledge(self, run):
+        """Release a delivered receipt only after durable RunRecord completion."""
+        self._validate_run(run)
+        return _run_sync(self._json_request("ack", run.execution.backend_id))
 
-    def status(self, *references: RunReference):
-        for reference in references:
-            self._validate_reference(reference)
-        if not references:
+    def status(self, *runs):
+        for run in runs:
+            self._validate_run(run)
+        if not runs:
             return ()
 
         async def query():
             result = []
-            for reference in references:
-                state = await self._status(reference.directory, reference.native_id, reference)
-                result.append(
-                    RunStatus(
-                        reference,
-                        _client_status_state(state),
-                        return_code=state.get("return_code"),
-                        message=state.get("error"),
-                        failure_phase=state.get("failure_phase"),
-                    )
+            for run in runs:
+                execution = run.execution
+                state = await self._status(
+                    execution.directory.remote, execution.backend_id, run.files
                 )
+                result.append(RunStatus(
+                    _client_status_state(state),
+                    backend_id=execution.backend_id,
+                    return_code=state.get("return_code"),
+                    message=state.get("error"),
+                    failure_phase=state.get("failure_phase"),
+                ))
             return tuple(result)
 
         return _run_sync(query())
 
     async def _recover_submission(self, run_id, submission, *, submitted_at=None):
-        directory = await self._resolve_submission_directory(submission.directory)
+        directory = await self._resolve_submission_directory(submission.execution.directory.target)
         state = await self._json_request(
             "recover",
             directory,
@@ -566,19 +547,29 @@ class RemoteEndpointExecutor(Executor):
         if not remote_id:
             raise RuntimeError("Recovered remote submission has no remote_id")
 
-        reference = RunReference(
-            executor=f"remote:{self.backend}",
-            native_id=str(remote_id),
-            computer=self.computer,
-            directory=state.get("directory") or directory,
-            input_file=state.get("input_file"),
-            output_file=state.get("output_file"),
-            error_file=state.get("error_file"),
-            context=getattr(submission, "context", None),
+        execution = submission.execution.submitted(remote_id)
+        target_directory = state.get("directory") or directory
+        execution = replace(
+            execution, directory=WorkingDirectory(
+                execution.directory.local, target_directory,
+            ),
         )
+        files = submission.files
+        changes = {}
+        for field, key in (("stdout", "output_file"), ("stderr", "error_file")):
+            remote = state.get(key)
+            if remote is not None:
+                old = getattr(files, field)
+                changes[field] = FileEntry(
+                    None if old is None else old.local_path, remote,
+                )
+        if changes:
+            files = replace(files, **changes)
         return RunStatus(
-            reference,
             _client_status_state(state),
+            backend_id=str(remote_id),
+            execution=execution,
+            files=files,
             return_code=state.get("return_code"),
             message=state.get("error"),
             failure_phase=state.get("failure_phase"),
