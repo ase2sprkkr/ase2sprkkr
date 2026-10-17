@@ -877,6 +877,17 @@ class PersistentRunner:
             raise RuntimeError(f"Run is already {self._record.state.value}")
         self._record = self.manager.reserve(self._record)
         try:
+            prepare = getattr(self._runner, "prepare_submission", None)
+            if prepare is not None:
+                prepare()
+                # Persist the exact staged file map and target directory before
+                # calling the backend. A lost submit reply can then be recovered
+                # without depending on live runner state.
+                self._record = self.manager.transition(
+                    self._record,
+                    execution=self.execution,
+                    files=self.files if self.files is not None else _UNCHANGED,
+                )
             result = self._runner.submit()
         except SubmissionNotStarted as exc:
             phase = self.failure_phase or FailurePhase.SUBMISSION
