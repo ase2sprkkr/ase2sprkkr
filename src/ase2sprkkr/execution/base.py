@@ -26,7 +26,7 @@ class SubmissionNotStarted(RuntimeError):
 
 
 class OutputObservers:
-    """Deliver output without allowing observers to control execution outcome."""
+    """Deliver raw output without allowing observers to affect execution."""
 
     def __init__(self, listener=None):
         self._listeners = [] if listener is None else [listener]
@@ -74,42 +74,42 @@ class OutputObservers:
 
 
 class RunState(str, Enum):
-    """Backend-independent state of a calculation run."""
+    """Single authoritative lifecycle state of one calculation run."""
 
     NEW = "new"
     SUBMITTING = "submitting"
     QUEUED = "queued"
     RUNNING = "running"
-    FINALIZING = "finalizing"
-    FINISHING = "finalizing"
+    DOWNLOADING = "downloading"
+    POSTPROCESSING = "postprocessing"
     FINISHED = "finished"
-    EXECUTION_FAILED = "execution_failed"
-    FAILED = "execution_failed"
-    FINALIZATION_FAILED = "finalization_failed"
+    FAILED = "failed"
     CANCELLED = "cancelled"
     UNKNOWN = "unknown"
 
 
 class FailurePhase(str, Enum):
-    """Stage in which a terminal failure occurred.
-
-    This is diagnostic lifecycle detail, not a second state machine. In
-    particular, ``LAUNCH`` means that no calculation process ever reached the
-    running state, so no output parsing/finalization belongs to that run.
-    """
+    """Phase in which a run entered :attr:`RunState.FAILED`."""
 
     SUBMISSION = "submission"
     LAUNCH = "launch"
     EXECUTION = "execution"
-    FINALIZATION = "finalization"
+    DOWNLOAD = "download"
+    POSTPROCESSING = "postprocessing"
+
+
+@dataclass
+class ExecutionOutcome:
+    """Raw execution facts available before task-specific interpretation."""
+
+    output_file: Any = None
+    input_file: Any = None
+    error_file: Any = None
+    return_code: Optional[int] = None
 
 
 class ExecutionResources:
-    """Closable resources whose ownership is transferred to a calculation run.
-
-    Closing is idempotent and thread-safe. Duplicate objects are closed only
-    once, which matters when two execution roles reference the same file handle.
-    """
+    """Closable resources whose ownership is transferred to a calculation run."""
 
     def __init__(self, *resources):
         self._resources = tuple(resources)
@@ -149,27 +149,13 @@ class ExecutionResources:
 
 
 class ResourceOwnedRunner:
-    """Runner proxy owning resources and the public submit/cancel boundary.
-
-    Resources remain owned by the caller until this proxy is constructed. From
-    that point they are released on completion, on a synchronous submission
-    failure, or explicitly through :meth:`close` while the run is still new.
-
-    Cancellation is latched and thread-safe even before submission. If
-    :meth:`cancel` wins the race with :meth:`submit`, the backend runner is not
-    submitted and ``submit()`` raises :class:`asyncio.CancelledError`. If the
-    request arrives while backend submission is already in progress, cancellation
-    is dispatched exactly once after that submission boundary completes.
-    """
+    """Runner proxy owning resources and the public submit/cancel boundary."""
 
     def __init__(self, runner, resources: ExecutionResources):
         self._runner = runner
         self._resources = resources
         self._submission_lock = Lock()
         self._cancel_requested = Event()
-        # A proxy may also be constructed around an already-started runner.
-        # Only NEW unambiguously means the backend submission boundary has not
-        # been crossed; for every other state cancellation must be delegated.
         self._submitted = runner.state != RunState.NEW
         self._cancel_dispatched = False
 
@@ -218,7 +204,6 @@ class ResourceOwnedRunner:
                 raise
             self._submitted = True
             cancel_after_submit = self._cancel_requested.is_set()
-
         if cancel_after_submit:
             self.cancel()
         return result
@@ -268,7 +253,6 @@ class ResourceOwnedRunner:
             return result
 
     def close(self):
-        """Release resources belonging to a run that has not been started."""
         if self._resources.closed:
             return
         state = self.state
@@ -287,7 +271,12 @@ class ResourceOwnedRunner:
 
 @dataclass(frozen=True)
 class RunReference:
-    """Serializable information needed to reconnect to a persistent run."""
+    """Serializable information needed to reconnect to a persistent run.
+
+    ``native_id`` is an opaque backend identifier. ``context`` contains
+    client-owned reconnect data; the remote target never owns ASE2SPRKKR run
+    lifecycle state.
+    """
 
     executor: str
     native_id: str
@@ -296,6 +285,7 @@ class RunReference:
     input_file: Optional[str] = None
     output_file: Optional[str] = None
     error_file: Optional[str] = None
+    context: Any = None
 
 
 @dataclass(frozen=True)
@@ -321,13 +311,7 @@ class RunStatus:
 
 @dataclass(frozen=True)
 class MpiSpec:
-    """Portable MPI launch semantics independent of the execution host.
-
-    ``autodetect`` requests host-specific launcher discovery. ``required``
-    distinguishes mandatory MPI from ``auto`` mode, which may fall back to
-    serial execution. An explicit ``launcher`` disables autodetection.
-    ``process_count`` is kept portable until the launcher is materialized.
-    """
+    """Portable MPI launch semantics independent of the execution host."""
 
     required: bool = False
     autodetect: bool = False
@@ -352,7 +336,6 @@ class MpiSpec:
 
     @classmethod
     def from_value(cls, mpi, *, process_count=None, warning=True):
-        """Translate public ``mpi`` syntax into normalized portable semantics."""
         if isinstance(mpi, cls):
             if process_count is not None or warning is not True:
                 raise ValueError("MPI options cannot override an existing MpiSpec")
@@ -383,10 +366,7 @@ class MpiSpec:
                 process_count=process_count,
                 warning=warning,
             )
-        if isinstance(mpi, str):
-            launcher = (mpi,)
-        else:
-            launcher = tuple(os.fspath(part) for part in mpi)
+        launcher = (mpi,) if isinstance(mpi, str) else tuple(os.fspath(part) for part in mpi)
         return cls(
             required=True,
             launcher=launcher,
@@ -396,24 +376,16 @@ class MpiSpec:
 
     @property
     def requested(self) -> bool:
-        """Whether the calculation requests an MPI launch."""
         return self.required or self.autodetect or bool(self.launcher)
 
     @property
     def allows_serial_fallback(self) -> bool:
-        """Whether failure to find MPI may fall back to serial execution."""
         return self.autodetect and not self.required
 
 
 @dataclass(frozen=True)
 class LaunchSpec:
-    """Portable launch and staging parameters for one concrete run.
-
-    MPI semantics are represented by :class:`MpiSpec`; host-independent MPI
-    intent therefore stays grouped instead of being spread over parallel launch
-    fields. The remaining fields describe remote filesystem mapping and
-    synchronization for this run.
-    """
+    """Portable launch and staging parameters for one concrete run."""
 
     mpi: MpiSpec = MpiSpec()
     local_root: Optional[str] = None
@@ -428,7 +400,6 @@ class LaunchSpec:
         elif not isinstance(mpi, MpiSpec):
             raise TypeError("LaunchSpec.mpi must be an MpiSpec")
         object.__setattr__(self, "mpi", mpi)
-
         for name in ("local_root", "remote_root"):
             value = getattr(self, name)
             if value is not None:
@@ -438,19 +409,16 @@ class LaunchSpec:
             object.__setattr__(self, name, getattr(value, "value", value))
 
     def __bool__(self):
-        """Whether this run requests MPI."""
         return self.mpi.requested
 
     @classmethod
     def from_mpi(cls, mpi):
-        """Translate public ``mpi`` syntax without probing an execution host."""
         if isinstance(mpi, cls):
             return mpi
         return cls(mpi=MpiSpec.from_value(mpi))
 
 
 def _pathlike(value):
-    """Normalize path-like values without touching open file objects."""
     if isinstance(value, os.PathLike):
         return os.fspath(value)
     return value
@@ -458,7 +426,7 @@ def _pathlike(value):
 
 @dataclass(frozen=True)
 class ExecutionSpec:
-    """A command and launch intent ready to be handed to an execution backend."""
+    """Command, files and launch intent handed to an execution backend."""
 
     argv: Sequence[str]
     input_file: Any
@@ -492,7 +460,7 @@ class ExecutionSpec:
 
 
 class Runner(Protocol):
-    """One concrete calculation execution."""
+    """One concrete calculation run."""
 
     result: Any
 
@@ -506,58 +474,34 @@ class Runner(Protocol):
     def exception(self) -> Optional[BaseException]: ...
 
     def submit(self) -> None: ...
-
     def wait(self) -> Any: ...
-
     def run(self) -> Any: ...
-
     def cancel(self) -> None: ...
-
     def add_output_listener(self, callback) -> None: ...
-
     def add_output_error_listener(self, callback) -> None: ...
 
 
 class Executor:
-    """Factory/backend for calculation runners."""
+    """Execution backend. It never knows task readers or TaskResult types."""
 
     name = None
 
     @class_property
     def supports_result_file_retrieval(cls):
-        """Whether this executor can restore files belonging to a stored run."""
         return cls.fetch_result_files is not Executor.fetch_result_files
 
     def fetch_result_files(self, reference: RunReference, files):
-        """Restore requested local files belonging to a persistent run.
-
-        ``files`` contains the concrete historical local paths, or pre-capture
-        patterns, selected by the persistence layer. Backends only map and
-        retrieve those requested files; they must not rediscover a historical
-        result by re-expanding their own current output manifests.
-        """
         raise NotImplementedError(
             f"{type(self).__name__} cannot retrieve persistent result files"
         )
 
     def submission_directory(self, spec: ExecutionSpec) -> str:
-        """Return this run's directory in the backend filesystem namespace."""
         return os.path.abspath(os.fspath(spec.directory))
 
     def resolve_mpi(self, mpi=None):
-        """Convert profile MPI syntax to portable launch intent.
-
-        No host probing is done here. The executor that actually starts the
-        calculation decides how to materialize the returned launch request.
-        """
         return LaunchSpec.from_mpi(mpi)
 
     def status(self, *references: RunReference) -> Tuple[RunStatus, ...]:
-        """Return ordered status snapshots for persistent run references.
-
-        Backends override this method directly. There is deliberately one API
-        for one or many jobs so scheduler-backed executors can batch queries.
-        """
         if not references:
             return ()
         raise NotImplementedError(
@@ -567,50 +511,25 @@ class Executor:
     def recover_submission(
         self, run_id, submission, *, submitted_at=None
     ) -> Optional[RunStatus]:
-        """Recover a submit whose backend reference was not persisted.
-
-        ``submitted_at`` is the timestamp at which ASE2SPRKKR reserved the
-        submission. Scheduler backends may use it to bound accounting-history
-        queries after a job has left the live queue.
-
-        Return a status with a reconstructed backend reference when the submit
-        is found, ``None`` only when the backend can positively establish that
-        it does not exist, and raise :class:`NotImplementedError` when this
-        backend cannot perform such recovery. Transport/backend failures should
-        propagate rather than being mistaken for absence.
-        """
         raise NotImplementedError(
             f"{type(self).__name__} cannot recover an uncertain submission"
         )
 
     def create_persistent_run(
-        self, reader, spec: ExecutionSpec, *, run_id: str, callback=None
+        self, spec: ExecutionSpec, *, run_id: str, callback=None
     ) -> Runner:
-        """Create a run with an ASE2SPRKKR identity known before submission.
+        return self.create_run(spec, callback=callback)
 
-        Backends that can expose the identity to an external scheduler or helper
-        override this method. Other backends use the normal runner unchanged.
-        """
-        return self.create_run(reader, spec, callback=callback)
-
-    def create_run(self, reader, spec: ExecutionSpec, callback=None) -> Runner:
+    def create_run(self, spec: ExecutionSpec, callback=None) -> Runner:
         raise NotImplementedError
 
     def attach(
         self,
         reference: RunReference,
-        reader,
         callback=None,
         output_listener=None,
         start=True,
     ) -> Runner:
-        """Reconnect to a persistent run.
-
-        ``output_listener`` is part of runner construction, while ``start``
-        controls the lifecycle side effect. Backends must install the listener
-        before honoring ``start=True`` so immediately replayed output is never
-        lost.
-        """
         raise NotImplementedError(
             f"{type(self).__name__} cannot attach to an existing run"
         )
