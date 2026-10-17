@@ -2,7 +2,7 @@ import json
 import signal
 
 from ase2sprkkr.execution import FailurePhase, RunState
-from ase2sprkkr.execution import remote_service
+from ase2sprkkr.execution import remote_process_worker, remote_service
 
 
 def _process_handle(tmp_path):
@@ -59,6 +59,35 @@ def test_status_distinguishes_launch_and_execution_failure(tmp_path, monkeypatch
     assert execution["state"] == RunState.FAILED.value
     assert execution["return_code"] == 3
     assert execution["failure_phase"] == FailurePhase.EXECUTION.value
+
+
+def test_direct_process_outcome_uses_crash_durable_write(tmp_path, monkeypatch):
+    calls = []
+    monkeypatch.setattr(
+        remote_process_worker,
+        "durable_write_json",
+        lambda path, payload, **options: calls.append((path, payload, options)),
+    )
+    outcome = tmp_path / "outcome.json"
+
+    remote_process_worker._write_outcome(
+        outcome,
+        RunState.FAILED,
+        3,
+        FailurePhase.EXECUTION,
+    )
+
+    assert calls == [
+        (
+            outcome,
+            {
+                "state": RunState.FAILED.value,
+                "return_code": 3,
+                "failure_phase": FailurePhase.EXECUTION.value,
+            },
+            {"separators": (",", ":")},
+        )
+    ]
 
 
 def test_cancel_publishes_durable_cancelled_backend_outcome(

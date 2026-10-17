@@ -10,9 +10,8 @@ import json
 import os
 import subprocess
 import sys
-from pathlib import Path
-from uuid import uuid4
 
+from ._durability import durable_write_json
 from .base import FailurePhase, RunState
 
 
@@ -22,22 +21,13 @@ _LAUNCH_FAILURE_RETURN_CODE = 127
 
 
 def _write_outcome(path, state, return_code, failure_phase=None):
-    """Atomically publish one immutable backend terminal outcome."""
-    path = Path(path)
-    temporary = path.with_name(f".{path.name}.{uuid4().hex}.tmp")
+    """Atomically and durably publish one immutable backend terminal outcome."""
     payload = {
         "state": RunState(state).value,
         "return_code": None if return_code is None else int(return_code),
         "failure_phase": None if failure_phase is None else FailurePhase(failure_phase).value,
     }
-    try:
-        temporary.write_text(json.dumps(payload, separators=(",", ":")))
-        os.replace(temporary, path)
-    finally:
-        try:
-            temporary.unlink()
-        except FileNotFoundError:
-            pass
+    durable_write_json(path, payload, separators=(",", ":"))
 
 
 def _wait_for_parent_release():
