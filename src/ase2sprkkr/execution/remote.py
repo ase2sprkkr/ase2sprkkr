@@ -445,6 +445,11 @@ class RemoteRunner:
                         f"Declared remote output pattern did not match any files: {pattern}"
                     )
                 continue
+            # The pattern is a declaration, not another concrete output.
+            # Expanded files have their own independent transfer states.
+            self._set_file_availability(
+                os.fspath(await self.executor.unmap_path(pattern)), "skipped",
+            )
             for remote in matches:
                 if remote in selected:
                     continue
