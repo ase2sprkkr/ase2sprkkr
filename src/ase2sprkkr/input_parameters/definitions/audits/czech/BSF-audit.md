@@ -36,3 +36,9 @@ Při native čtení TAU cache může BLOCHSF převzít počet energií z cache; 
 Příkaz: `PYTHONPATH=src ASE2SPRKKR_NO_USER_PROFILE=1 ../test-env/bin/python -m pytest src/ase2sprkkr/input_parameters/test -q`.
 
 Zdroje: blochsf.f:220–268,310–357,419–455,939–940; init_mod_energy.f:182; epath.f (GRID=3 jednobodová větev). ASE baseline 267512c4b8ccbbfd37af7ede898febc066b7e3ee. Samostatný patch pouze pro BSF. Žádný numerický SPR-KKR běh.
+
+## Aktuální integrační stav (2026-10-17)
+
+Source audit výše zůstává historickým záznamem původního baseline definice. Na větvi `tasks` nyní společná definice `bsf` modeluje TAU directory jako volitelnou reusable cache a explicitně manifestuje nativní persistentní výsledky `{dataset}_BLOCHSF.bsf` a `{dataset}_BLOCHSF_spol.bsf` pro `BSF`, `BSFEK` i `BSFKK`. Aliasy nemají vlastní odlišná jména souborů, protože všechny tři volí nativní `ADSI=BLOCHSF`.
+
+Tato integrace souborového kontraktu je přítomná v commitu `032d932b2e05aa3a540ce232c98522b1fb7065c6`. Historický počet testů výše nepřepisuji; pozdější regresní test manifestu pokrývá všechna tři veřejná jména tasku.

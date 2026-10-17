@@ -36,3 +36,9 @@ At native reading TAU cache can take BLOCHSF energy from cache; the consistency 
 Command: `PYTHONPATH=src ASE2SPRKKR_NO_USER_PROFILE=1 ../test-env/bin/python -m pytest src/ase2sprkkr/input_parameters/test -q`.
 
 Sources: blochsf.f:220–268,310–357,419–455,939–940; init_mod_energy.f:182; epath.f (GRID=3 single point branch). ASE baseline 267512c4b8ccbbfd37af7ede898febc066b7e3ee. Single patch only for BSF. No numerical SPR-KKR run.
+
+## Current integration status (2026-10-17)
+
+The source audit above remains a historical record of the original definition baseline. On branch `tasks`, the shared `bsf` definition now models the TAU directory as an optional reusable cache and explicitly manifests the native persistent results `{dataset}_BLOCHSF.bsf` and `{dataset}_BLOCHSF_spol.bsf` for `BSF`, `BSFEK`, and `BSFKK`. The aliases do not get separate filenames because all three select native `ADSI=BLOCHSF`.
+
+This file-contract integration is present at commit `032d932b2e05aa3a540ce232c98522b1fb7065c6`. The historical test count above has not been rewritten; the later manifest regression test covers all three public names.
