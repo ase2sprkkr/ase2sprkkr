@@ -1,29 +1,14 @@
-import asyncio
 import sys
 import time
+from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
 
 from ..base import ExecutionSpec, LaunchSpec, RunReference, RunState
+from ..postprocessing import PostprocessingRunner
 from ..remote_endpoint import RemoteEndpointExecutor
 from ..transport import LocalTransport
-
-
-class _Reader:
-    print_output = False
-
-    def create_result(self, output_file, input_file):
-        return SimpleNamespace(return_code=None, output=None, error=None)
-
-    async def parse_streams(self, stdout, stderr, result):
-        return await asyncio.gather(stdout.read(), stderr.read())
-
-    def complete_result(self, result, output, error, return_code):
-        result.output = output
-        result.error = error
-        result.return_code = return_code
-        return result
 
 
 def _executor(*, backend="local"):
@@ -36,6 +21,27 @@ def _executor(*, backend="local"):
 
 def _launch(local_root, remote_root):
     return LaunchSpec(local_root=local_root, remote_root=remote_root)
+
+
+def _processed(raw):
+    def process(outcome):
+        return SimpleNamespace(
+            return_code=outcome.return_code,
+            output=(
+                b""
+                if outcome.output_file is None
+                else Path(outcome.output_file).read_bytes()
+            ),
+            error=(
+                b""
+                if outcome.error_file is None
+                else Path(outcome.error_file).read_bytes()
+            ),
+        )
+
+    runner = PostprocessingRunner(raw, process)
+    runner.start()
+    return runner
 
 
 def _wait_for_state(runner, expected, timeout=5):
@@ -85,16 +91,17 @@ def test_remote_executor_attach_reconnects_running_run_and_restores_stage_out(tm
         cache_files=(cache,),
         launch=_launch(local_root, remote_root),
     )
-    original = first_executor.create_run(_Reader(), spec)
+    original_raw = first_executor.create_run(spec)
+    original = PostprocessingRunner(original_raw, lambda outcome: outcome)
     original.submit()
     _wait_for_state(original, RunState.RUNNING)
 
     reference = original.reference
     assert reference is not None
 
-    # A fresh endpoint object must be able to reconstruct all per-run staging
-    # policy from the persisted request; no live runner state is required.
-    attached = _executor().attach(reference, _Reader())
+    # A fresh endpoint object reconstructs per-run staging policy solely from
+    # persisted reference context; no task reader or live runner state is used.
+    attached = _processed(_executor().attach(reference, start=False))
     (remote_root / "calculation" / "release").write_text("go")
 
     assert attached.reference == reference
@@ -132,12 +139,12 @@ def test_remote_executor_attach_replays_finished_run(tmp_path):
         output_files=(output_file,),
         launch=_launch(local_root, remote_root),
     )
-    original = first_executor.create_run(_Reader(), spec)
+    original = first_executor.create_run(spec)
     assert original.run().return_code == 0
     reference = original.reference
     assert reference is not None
 
-    attached = _executor().attach(reference, _Reader())
+    attached = _processed(_executor().attach(reference, start=False))
     result = attached.wait()
 
     assert attached.state == RunState.FINISHED
@@ -155,4 +162,4 @@ def test_remote_executor_attach_rejects_reference_for_other_backend(tmp_path):
     )
 
     with pytest.raises(ValueError, match="belongs to"):
-        executor.attach(reference, _Reader())
+        executor.attach(reference)
