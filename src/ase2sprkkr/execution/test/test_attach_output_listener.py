@@ -1,7 +1,10 @@
 from dataclasses import replace
 from types import SimpleNamespace
 
-from ase2sprkkr.execution.base import LaunchSpec, RunReference, RunState
+from ase2sprkkr.execution.base import LaunchSpec, RunState
+from ase2sprkkr.execution.manager import RunRecord
+from ase2sprkkr.execution.run_model import Execution, WorkingDirectory, FileManifest, FileEntry, FileMapping
+from ase2sprkkr.execution.endpoint import ExecutorEndpoint
 from ase2sprkkr.execution.local import LocalExecutor
 from ase2sprkkr.execution.manager import ExecutionManager, RunStore
 from ase2sprkkr.execution.psij import PsijExecutor, PsijRunner
@@ -9,8 +12,8 @@ from ase2sprkkr.execution.remote_endpoint import _RemoteRun, _RemoteRunContext
 
 
 class _AttachedRunner:
-    def __init__(self, reference):
-        self.reference = reference
+    def __init__(self, run):
+        self.backend_id = run.execution.backend_id
         self.result = SimpleNamespace(return_code=0)
         self.state = RunState.RUNNING
         self.exception = None
@@ -34,10 +37,10 @@ class _AttachedRunner:
 
 
 class _AttachExecutor(LocalExecutor):
-    def attach(self, reference, callback=None, output_listener=None, start=True):
+    def attach(self, run, callback=None, output_listener=None, start=True):
         if output_listener is not None:
             output_listener("manager replay\n", "out")
-        runner = _AttachedRunner(reference)
+        runner = _AttachedRunner(run)
         if start:
             runner.start()
         return runner
@@ -45,13 +48,11 @@ class _AttachExecutor(LocalExecutor):
 
 def test_manager_attach_forwards_initial_output_listener(tmp_path):
     manager = ExecutionManager(RunStore(tmp_path / "runs"))
-    reference = RunReference(
-        executor="local",
-        native_id="123",
-        directory=str(tmp_path),
-    )
     record = manager.new_record(task="SCF", directory=tmp_path)
-    record = replace(record, state=RunState.RUNNING, reference=reference)
+    record = replace(
+        record, state=RunState.RUNNING,
+        execution=record.execution.submitted("123"),
+    )
     manager.store.save(record)
 
     output = []
@@ -77,7 +78,7 @@ def _remote_context(tmp_path):
         async def _remote_home(self):
             return "/remote"
 
-        async def _status(self, directory, run_id):
+        async def _status(self, directory, run_id, files=None):
             return {
                 "state": "running",
                 "input_file": "/remote/work/input.inp",
