@@ -48,15 +48,14 @@ def _file_path(value, directory=None):
     return os.path.abspath(path)
 
 
-def detached_local_status(run):
-    execution = run.execution
+def detached_local_status(directory, backend_id):
     try:
-        status = status_detached(execution.directory.local, execution.backend_id)
+        status = status_detached(directory, backend_id)
     except (FileNotFoundError, json.JSONDecodeError):
         return None
     return RunStatus(
         state=detached_run_state(status.get("state", "unknown")),
-        backend_id=execution.backend_id,
+        backend_id=backend_id,
         return_code=status.get("return_code"),
         message=status.get("error"),
         failure_phase=detached_failure_phase(status),
@@ -130,14 +129,7 @@ class LocalPersistentRunner:
     def state(self):
         if self._backend_id is None or self._state in _FINAL_STATES:
             return self._state
-        from .run_model import Execution, WorkingDirectory
-        from .endpoint import ExecutorEndpoint
-        from types import SimpleNamespace
-        run = SimpleNamespace(execution=Execution(
-            ExecutorEndpoint(), WorkingDirectory(os.path.abspath(self.spec.directory)),
-            self._backend_id,
-        ))
-        status = detached_local_status(run)
+        status = detached_local_status(self.spec.directory, self._backend_id)
         self._state = RunState.UNKNOWN if status is None else status.state
         if status is not None:
             self._failure_phase = status.failure_phase
@@ -356,7 +348,7 @@ class LocalPersistentRunner:
 def attach_local(executor, run, *, callback=None, output_listener=None, start=True):
     if run.execution.endpoint.executor != "local":
         raise ValueError("Run does not belong to the local backend")
-    status = detached_local_status(run)
+    status = detached_local_status(run.execution.directory.local, run.execution.backend_id)
     if status is None:
         raise NotImplementedError("PID-only local runs cannot be reattached")
     files = run.files

@@ -344,7 +344,7 @@ class LocalExecutor(Executor):
         for run in runs:
             if run.execution.endpoint.executor != "local":
                 raise ValueError("Run does not belong to the local backend")
-            detached = detached_local_status(run)
+            detached = detached_local_status(run.execution.directory.local, run.execution.backend_id)
             if detached is not None:
                 statuses.append(detached)
                 continue
