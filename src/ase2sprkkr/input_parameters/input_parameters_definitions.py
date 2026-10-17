@@ -1,11 +1,11 @@
 """Definitions of SPR-KKR input-parameter file formats."""
 
 import os
+from io import StringIO
 from functools import cache
 
 import pyparsing as pp
 from ..common.grammar_types import Keyword
-from ..common.decorators import maybeclassmethod
 from ..common.warnings import DataValidityError
 from ..common.container_definitions import dict_from_parsed
 from ..sprkkr.configuration import (
@@ -17,7 +17,8 @@ from ..sprkkr.configuration import (
 )
 from ..common.grammar_types import mixed, flag
 from ..common.grammar import generate_grammar, delimitedList
-from ..common.decorators import cached_class_property, cache
+from ..common.decorators import cached_class_property, cache, maybeclassmethod
+from ..common.file_utils import filename_from_file
 from .input_parameters import InputParameters, InputSection, InputValue
 
 with generate_grammar():
@@ -51,6 +52,14 @@ def _read_input_text(file):
             f"SPR-KKR input exceeds {MAX_INPUT_FILE_SIZE} bytes"
         )
     return content.decode("utf-8")
+
+
+def _snapshot_stream(text, filename):
+    """Reparse the same bytes without losing the origin of a named input."""
+    stream = StringIO(text)
+    if filename is not None:
+        stream.name = filename
+    return stream
 
 
 @cache
@@ -93,7 +102,7 @@ def _task_preparse_definition():
     return ipd
 
 
-def _read_selected_definitions(text, selectors, *, allow_dangerous=False):
+def _read_selected_definitions(text, selectors, *, filename=None, allow_dangerous=False):
     """Try only IPDs nominated by detected native TASK keywords."""
     mapping = _task_selector_map()
     candidates = []
@@ -106,8 +115,9 @@ def _read_selected_definitions(text, selectors, *, allow_dangerous=False):
                 candidates.append(ipd)
 
     def parse(definition):
-        return definition.read_from_string(
-            text, allow_dangerous=allow_dangerous
+        return definition.read_from_file(
+            _snapshot_stream(text, filename),
+            allow_dangerous=allow_dangerous,
         )
 
     if len(candidates) == 1:
@@ -128,8 +138,13 @@ def _read_selected_definitions(text, selectors, *, allow_dangerous=False):
         names = ", ".join(definition.name for definition, _ in successful)
         raise ValueError(f"Ambiguous TASK selectors, multiple IPDs accept input: {names}")
     if failures:
-        names = ", ".join(definition.name for definition, _ in failures)
-        raise ValueError(f"No selected IPD can parse the input: {names}") from failures[-1][1]
+        details = "\n".join(
+            f"  {definition.name}: {type(error).__name__}: {error}"
+            for definition, error in failures
+        )
+        raise ValueError(
+            f"No selected IPD can parse the input:\n{details}"
+        ) from failures[-1][1]
     raise ValueError("No input-parameter definition selected")
 
 
@@ -205,18 +220,24 @@ class InputParametersDefinition(ConfigurationFileDefinition):
         Read a bounded snapshot of the input once, independently of path/stream.
         A missing TASK selector selects SCF, not an ADSI-derived definition.
         """
+        filename = filename_from_file(file, None)
         text = _read_input_text(file)
         if self is not None:
-            return self.read_from_string(text, allow_dangerous=allow_dangerous)
+            return self.read_from_file(
+                _snapshot_stream(text, filename),
+                allow_dangerous=allow_dangerous,
+            )
 
         preview = _task_preparse_definition().read_from_string(
-            text, allow_dangerous=allow_dangerous
+            text, allow_dangerous=False
         )
-        selectors = preview.TASK.TASK()
+        selected = preview.TASK.TASK()
+        selectors = tuple(selected) if selected is not None else ()
         if not selectors:
             selectors = ("SCF",)
         return _read_selected_definitions(
-            text, selectors, allow_dangerous=allow_dangerous
+            text, selectors, filename=filename,
+            allow_dangerous=allow_dangerous,
         )
 
     def task_definition_name(self, parameters):

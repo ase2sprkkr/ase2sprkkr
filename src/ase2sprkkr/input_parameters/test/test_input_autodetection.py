@@ -70,3 +70,13 @@ def test_from_file_jxc_example_with_preceding_dmi_flag():
     assert parsed.TASK.TASK() == "JXC"
     assert parsed.TASK.DMI()
 
+
+
+def test_jxc_combined_selectors_separated_by_other_task_options():
+    # The unordered TASK section must recognize both native keywords, even
+    # when a non-selector parameter appears between them.
+    from ..input_parameters_definitions import _task_preparse_definition
+
+    preview = _task_preparse_definition()
+    parsed = preview.read_from_string("TASK DMI CLURAD=4.0 JXC")
+    assert list(parsed.TASK.TASK()) == ["DMI", "JXC"]
