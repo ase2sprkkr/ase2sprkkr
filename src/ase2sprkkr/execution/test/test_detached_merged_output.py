@@ -23,10 +23,8 @@ def test_detached_worker_and_follow_handle_merged_output_once(tmp_path, monkeypa
         "mpi_argv": None,
     }
 
-    real_popen = detached.subprocess.Popen
-    monkeypatch.setattr(detached.subprocess, "Popen", lambda *args, **kwargs: None)
+    monkeypatch.setattr(detached, "_spawn_detached_worker", lambda *args: None)
     detached.submit_detached(request)
-    monkeypatch.setattr(detached.subprocess, "Popen", real_popen)
 
     detached.run_detached_worker(tmp_path, "merged")
 

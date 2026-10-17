@@ -13,7 +13,7 @@ from pathlib import Path
 from types import SimpleNamespace
 
 from ..common.file_locks import FileLock
-from .base import ExecutionSpec, LaunchSpec, RunReference, RunState
+from .base import ExecutionSpec, FailurePhase, LaunchSpec, RunReference, RunState
 from .psij import PsijExecutor
 
 
@@ -214,11 +214,19 @@ class _RemotePsijAgent:
         with _state_lock(self.directory, run_id):
             state = _read_state_unlocked(self.directory, run_id)
             if state.get("state") not in _FINAL_STATE_NAMES:
+                phase = (
+                    FailurePhase.EXECUTION
+                    if state.get("started_at") is not None
+                    else FailurePhase.SUBMISSION
+                    if state.get("backend_reference") is None
+                    else FailurePhase.LAUNCH
+                )
                 _write_state_unlocked(
                     self.directory,
                     run_id,
                     state=RunState.FAILED.value,
                     error=repr(exc),
+                    failure_phase=phase.value,
                     return_code=None,
                     finished_at=state.get("finished_at") or _timestamp(),
                 )
@@ -226,20 +234,53 @@ class _RemotePsijAgent:
         self._clear_retry(run_id)
 
     def _record_retryable_error(self, run_id, field, exc):
+        """Persist retry diagnostics when possible without changing lifecycle."""
         from .detached import (
             _read_state_unlocked,
             _state_lock,
             _write_state_unlocked,
         )
 
-        with _state_lock(self.directory, run_id):
-            state = _read_state_unlocked(self.directory, run_id)
-            if state.get("state") not in _FINAL_STATE_NAMES:
+        try:
+            with _state_lock(self.directory, run_id):
+                state = _read_state_unlocked(self.directory, run_id)
+                if state.get("state") not in _FINAL_STATE_NAMES:
+                    _write_state_unlocked(
+                        self.directory,
+                        run_id,
+                        **{field: repr(exc), "error": repr(exc)},
+                    )
+        except OSError:
+            return False
+        return True
+
+    def _clear_retryable_error(self, run_id, field):
+        """Clear one recovered diagnostic without overwriting unrelated errors."""
+        from .detached import (
+            _read_state_unlocked,
+            _state_lock,
+            _write_state_unlocked,
+        )
+
+        try:
+            with _state_lock(self.directory, run_id):
+                state = _read_state_unlocked(self.directory, run_id)
+                if state.get("state") in _FINAL_STATE_NAMES:
+                    return True
+                message = state.get(field)
+                if message is None:
+                    return True
                 _write_state_unlocked(
                     self.directory,
                     run_id,
-                    **{field: repr(exc), "error": repr(exc)},
+                    **{
+                        field: None,
+                        "error": None if state.get("error") == message else state.get("error"),
+                    },
                 )
+        except OSError:
+            return False
+        return True
 
     def _submit(self, run_id, request):
         from .detached import (
@@ -269,19 +310,26 @@ class _RemotePsijAgent:
                     finished_at=state.get("finished_at") or _timestamp(),
                 )
                 return True
-            if state.get("state") != RunState.QUEUED.value:
+            if (
+                state.get("state") != RunState.SUBMITTING.value
+                or state.get("submitted_at") is not None
+            ):
                 raise RuntimeError(
                     f"Cannot submit remote PSI/J run {run_id!r} from state "
-                    f"{state.get('state')!r}"
+                    f"{state.get('state')!r} with submitted_at="
+                    f"{state.get('submitted_at')!r}"
                 )
-            started_at = state.get("started_at") or _timestamp()
+            submitted_at = _timestamp()
             _write_state_unlocked(
                 self.directory,
                 run_id,
-                state=RunState.SUBMITTING.value,
                 pid=os.getpid(),
-                started_at=started_at,
+                submitted_at=submitted_at,
+                started_at=None,
                 submission_error=None,
+                recovery_error=None,
+                error=None,
+                failure_phase=None,
             )
 
         try:
@@ -291,51 +339,55 @@ class _RemotePsijAgent:
             # have accepted the job even if the client call raised. Keep the
             # explicit SUBMITTING state and let recovery by persistent run id
             # decide whether a scheduler job exists before releasing the run.
-            with _state_lock(self.directory, run_id):
-                latest = _read_state_unlocked(self.directory, run_id)
-                if (
-                    latest.get("state") == RunState.SUBMITTING.value
-                    and latest.get("backend_reference") is None
-                ):
-                    _write_state_unlocked(
-                        self.directory,
-                        run_id,
-                        submission_error=repr(exc),
-                        error=repr(exc),
-                    )
+            self._record_retryable_error(run_id, "submission_error", exc)
+            self._schedule_retry(run_id)
             return True
 
-        reference = runner.reference
-        if reference is None:
+        try:
+            reference = runner.reference
+            if reference is None:
+                exc = RuntimeError(
+                    "PSI/J did not provide a persistent job reference"
+                )
+                self._record_retryable_error(run_id, "recovery_error", exc)
+                self._schedule_retry(run_id)
+                return True
+
+            current = runner.state
+            published = (
+                current
+                if current in (RunState.QUEUED, RunState.RUNNING)
+                else RunState.QUEUED
+            )
             with _state_lock(self.directory, run_id):
+                latest = _read_state_unlocked(self.directory, run_id)
+                now = _timestamp()
                 _write_state_unlocked(
                     self.directory,
                     run_id,
-                    submission_error="PSI/J did not provide a persistent job reference",
-                    error="PSI/J did not provide a persistent job reference",
+                    state=published.value,
+                    pid=os.getpid(),
+                    backend_reference=asdict(reference),
+                    submitted_at=latest.get("submitted_at") or now,
+                    started_at=(
+                        latest.get("started_at") or now
+                        if published == RunState.RUNNING
+                        else latest.get("started_at")
+                    ),
+                    submission_error=None,
+                    recovery_error=None,
+                    attach_error=None,
+                    error=None,
+                    failure_phase=None,
                 )
+        except BaseException as exc:
+            # Once submit() returned, a scheduler job may already exist. Any
+            # failure while reading or persisting its identity is therefore an
+            # uncertain handoff, not a terminal submission/launch failure.
+            # Leave SUBMITTING intact and recover by persistent run id.
+            self._record_retryable_error(run_id, "recovery_error", exc)
+            self._schedule_retry(run_id)
             return True
-
-        current = runner.state
-        published = (
-            current
-            if current in (RunState.QUEUED, RunState.RUNNING)
-            else RunState.QUEUED
-        )
-        with _state_lock(self.directory, run_id):
-            latest = _read_state_unlocked(self.directory, run_id)
-            _write_state_unlocked(
-                self.directory,
-                run_id,
-                state=published.value,
-                pid=os.getpid(),
-                backend_reference=asdict(reference),
-                started_at=latest.get("started_at") or _timestamp(),
-                submission_error=None,
-                recovery_error=None,
-                attach_error=None,
-                error=None,
-            )
 
         self._clear_retry(run_id)
         self._active[run_id] = _ActiveRun(runner, current)
@@ -350,15 +402,15 @@ class _RemotePsijAgent:
             _write_state_unlocked,
         )
 
-        executor = self._executor_for(request)
         submission = SimpleNamespace(
             directory=request.get("directory") or os.fspath(self.directory)
         )
         try:
+            executor = self._executor_for(request)
             status = executor.recover_submission(
                 run_id,
                 submission,
-                submitted_at=state.get("started_at") or state.get("created_at"),
+                submitted_at=state.get("submitted_at"),
             )
         except NotImplementedError:
             # Absence cannot be proven. Leaving SUBMITTING is deliberately safer
@@ -369,8 +421,8 @@ class _RemotePsijAgent:
             self._schedule_retry(run_id)
             return False
 
-        self._clear_retry(run_id)
         if status is None:
+            self._clear_retry(run_id)
             with _state_lock(self.directory, run_id):
                 latest = _read_state_unlocked(self.directory, run_id)
                 if (
@@ -391,42 +443,79 @@ class _RemotePsijAgent:
                         self.directory,
                         run_id,
                         state=RunState.FAILED.value,
+                        failure_phase=FailurePhase.SUBMISSION.value,
                         return_code=None,
                         finished_at=latest.get("finished_at") or _timestamp(),
                         recovery_error=None,
                     )
                 else:
+                    # A post-submit handoff failed, but recovery proves that no
+                    # scheduler job exists. Reset only the submission attempt;
+                    # the next discovery pass may submit it again.
                     _write_state_unlocked(
                         self.directory,
                         run_id,
-                        state=RunState.QUEUED.value,
+                        state=RunState.SUBMITTING.value,
                         pid=None,
+                        submitted_at=None,
                         recovery_error=None,
+                        error=None,
                     )
             return True
 
-        reference = status.reference
-        if reference is None:
-            raise RuntimeError("Recovered PSI/J submission lacks a job reference")
-        recovered_state = RunState(status.state)
-        with _state_lock(self.directory, run_id):
-            latest = _read_state_unlocked(self.directory, run_id)
-            if latest.get("state") != RunState.SUBMITTING.value:
-                return False
-            changes = {
-                "state": recovered_state.value,
-                "backend_reference": asdict(reference),
-                "pid": os.getpid(),
-                "submission_error": None,
-                "recovery_error": None,
-                "error": status.message,
-            }
-            if status.return_code is not None:
-                changes["return_code"] = status.return_code
-            if recovered_state in _FINAL_RUN_STATES:
-                changes["finished_at"] = latest.get("finished_at") or _timestamp()
-            recovered = _write_state_unlocked(self.directory, run_id, **changes)
+        try:
+            reference = status.reference
+            if reference is None:
+                raise RuntimeError("Recovered PSI/J submission lacks a job reference")
+            recovered_state = RunState(status.state)
+            phase = getattr(status, "failure_phase", None)
+            execution_evidence = (
+                recovered_state == RunState.RUNNING
+                or recovered_state == RunState.FINISHED
+                or (
+                    recovered_state == RunState.FAILED
+                    and status.return_code is not None
+                    and phase not in (FailurePhase.SUBMISSION, FailurePhase.LAUNCH)
+                )
+            )
+            with _state_lock(self.directory, run_id):
+                latest = _read_state_unlocked(self.directory, run_id)
+                if latest.get("state") != RunState.SUBMITTING.value:
+                    return False
+                now = _timestamp()
+                changes = {
+                    "state": recovered_state.value,
+                    "backend_reference": asdict(reference),
+                    "pid": os.getpid(),
+                    "submission_error": None,
+                    "recovery_error": None,
+                    "error": status.message,
+                    "failure_phase": None if phase is None else phase.value,
+                    "submitted_at": latest.get("submitted_at") or now,
+                }
+                if execution_evidence:
+                    changes["started_at"] = latest.get("started_at") or now
+                if status.return_code is not None:
+                    changes["return_code"] = status.return_code
+                if recovered_state in _FINAL_RUN_STATES:
+                    if recovered_state == RunState.FAILED and phase is None:
+                        changes["failure_phase"] = (
+                            FailurePhase.EXECUTION.value
+                            if execution_evidence
+                            else FailurePhase.LAUNCH.value
+                        )
+                    changes["finished_at"] = latest.get("finished_at") or now
+                recovered = _write_state_unlocked(self.directory, run_id, **changes)
+        except Exception as exc:
+            # A non-None recovery status proves that the scheduler knows this
+            # job. Failure to normalize or persist the recovered identity must
+            # therefore stay retryable; treating it as SUBMISSION failure could
+            # release the persistent namespace and create a duplicate job.
+            self._record_retryable_error(run_id, "recovery_error", exc)
+            self._schedule_retry(run_id)
+            return False
 
+        self._clear_retry(run_id)
         if recovered_state in _FINAL_RUN_STATES:
             return True
         return self._attach(run_id, recovered, request)
@@ -435,8 +524,8 @@ class _RemotePsijAgent:
         reference = state.get("backend_reference")
         if reference is None:
             return False
-        executor = self._executor_for(request)
         try:
+            executor = self._executor_for(request)
             runner = executor.attach(RunReference(**reference), _RemoteReader())
         except Exception as exc:
             self._record_retryable_error(run_id, "attach_error", exc)
@@ -472,10 +561,17 @@ class _RemotePsijAgent:
             try:
                 if state.get("backend_reference") is not None:
                     activity = self._attach(run_id, state, request) or activity
-                elif state.get("state") == RunState.QUEUED.value:
-                    activity = self._submit(run_id, request) or activity
                 elif state.get("state") == RunState.SUBMITTING.value:
-                    activity = self._recover_submitting(run_id, state, request) or activity
+                    if state.get("submitted_at") is None:
+                        activity = self._submit(run_id, request) or activity
+                    else:
+                        activity = (
+                            self._recover_submitting(run_id, state, request) or activity
+                        )
+                elif state.get("state") == RunState.QUEUED.value:
+                    raise RuntimeError(
+                        f"Queued PSI/J run {run_id!r} has no backend reference"
+                    )
             except BaseException as exc:
                 self._fail(run_id, exc)
                 activity = True
@@ -511,13 +607,29 @@ class _RemotePsijAgent:
             state = _read_state_unlocked(self.directory, run_id)
             if state.get("cancel_requested") or requested_cancel:
                 final = RunState.CANCELLED
-            _write_state_unlocked(
-                self.directory,
-                run_id,
-                state=final.value,
-                return_code=return_code,
-                finished_at=state.get("finished_at") or _timestamp(),
+            now = _timestamp()
+            execution_evidence = (
+                state.get("started_at") is not None
+                or active.last_state == RunState.RUNNING
+                or final == RunState.FINISHED
+                or (final == RunState.FAILED and return_code is not None)
             )
+            changes = {
+                "state": final.value,
+                "return_code": return_code,
+                "finished_at": state.get("finished_at") or now,
+            }
+            if execution_evidence:
+                changes["started_at"] = state.get("started_at") or now
+            if final == RunState.FAILED:
+                changes["failure_phase"] = (
+                    FailurePhase.EXECUTION.value
+                    if execution_evidence
+                    else FailurePhase.LAUNCH.value
+                )
+            elif final != RunState.CANCELLED:
+                changes["failure_phase"] = None
+            _write_state_unlocked(self.directory, run_id, **changes)
         self._active.pop(run_id, None)
         self._clear_retry(run_id)
 
@@ -526,44 +638,82 @@ class _RemotePsijAgent:
             _read_state,
             _read_state_unlocked,
             _state_lock,
+            _timestamp,
             _write_state_unlocked,
         )
 
         activity = False
         for run_id, active in tuple(self._active.items()):
+            if not self._retry_ready(run_id):
+                continue
+
             try:
                 state = _read_state(self.directory, run_id)
-                requested_cancel = bool(state.get("cancel_requested"))
+            except OSError as exc:
+                self._record_retryable_error(run_id, "poll_error", exc)
+                self._schedule_retry(run_id)
+                activity = True
+                continue
+
+            requested_cancel = bool(state.get("cancel_requested"))
+            try:
                 current = active.runner.state
-                if current in _FINAL_RUN_STATES:
-                    self._finish(run_id, active, requested_cancel)
+            except Exception as exc:
+                self._record_retryable_error(run_id, "poll_error", exc)
+                self._schedule_retry(run_id)
+                activity = True
+                continue
+
+            if current in _FINAL_RUN_STATES:
+                self._clear_retry(run_id)
+                self._clear_retryable_error(run_id, "poll_error")
+                self._finish(run_id, active, requested_cancel)
+                activity = True
+                continue
+
+            if requested_cancel and not active.cancel_sent:
+                try:
+                    active.runner.cancel()
+                    current = active.runner.state
+                except Exception as exc:
+                    self._record_retryable_error(run_id, "poll_error", exc)
+                    self._schedule_retry(run_id)
                     activity = True
                     continue
+                active.cancel_sent = True
+                activity = True
+                if current in _FINAL_RUN_STATES:
+                    self._clear_retry(run_id)
+                    self._clear_retryable_error(run_id, "poll_error")
+                    self._finish(run_id, active, requested_cancel)
+                    continue
 
-                if requested_cancel and not active.cancel_sent:
-                    active.runner.cancel()
-                    active.cancel_sent = True
-                    activity = True
-                    current = active.runner.state
-                    if current in _FINAL_RUN_STATES:
-                        self._finish(run_id, active, requested_cancel)
-                        continue
-
-                if (
-                    current in (RunState.QUEUED, RunState.RUNNING)
-                    and current != active.last_state
-                ):
+            if (
+                current in (RunState.QUEUED, RunState.RUNNING)
+                and current != active.last_state
+            ):
+                try:
                     with _state_lock(self.directory, run_id):
                         current_state = _read_state_unlocked(self.directory, run_id)
                         if current_state.get("state") not in _FINAL_STATE_NAMES:
+                            changes = {"state": current.value}
+                            if current == RunState.RUNNING:
+                                changes["started_at"] = (
+                                    current_state.get("started_at") or _timestamp()
+                                )
                             _write_state_unlocked(
-                                self.directory, run_id, state=current.value
+                                self.directory, run_id, **changes
                             )
+                except OSError as exc:
+                    self._record_retryable_error(run_id, "poll_error", exc)
+                    self._schedule_retry(run_id)
                     activity = True
-                active.last_state = current
-            except BaseException as exc:
-                self._fail(run_id, exc)
+                    continue
                 activity = True
+
+            active.last_state = current
+            self._clear_retry(run_id)
+            self._clear_retryable_error(run_id, "poll_error")
         return activity
 
     def run(self):

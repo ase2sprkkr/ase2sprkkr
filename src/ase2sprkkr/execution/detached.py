@@ -19,16 +19,37 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from ..common.file_locks import FileLock
-from .base import ExecutionSpec, LaunchSpec
+from .base import ExecutionSpec, FailurePhase, LaunchSpec, RunState
 
 
-_FINAL_STATES = {"finished", "failed", "cancelled"}
+_FINAL_STATES = {"finished", "failed", RunState.EXECUTION_FAILED.value, "cancelled"}
 _METADATA_DIR = ".ase2sprkkr"
 _RUNS_DIR = "runs"
 _STATE_FILE = "state.json"
 _STATE_LOCK_FILE = "state.lock"
 _REQUEST_FILE = "request.json"
 _DETACHED_EXECUTORS = {"local", "psij"}
+
+
+def detached_run_state(value):
+    """Translate one target-side detached state to the public run state."""
+    if value == "failed":
+        return RunState.FAILED
+    return RunState(value)
+
+
+def detached_failure_phase(state):
+    """Translate target-side failure metadata to the public failure phase."""
+    value = state.get("failure_phase")
+    return None if value is None else FailurePhase(value)
+
+
+def detached_launch_failed(state):
+    """Return whether target metadata proves that no calculation was launched."""
+    return (
+        detached_run_state(state.get("state", "unknown")) == RunState.FAILED
+        and detached_failure_phase(state) == FailurePhase.LAUNCH
+    )
 
 
 def _timestamp():
@@ -92,6 +113,24 @@ def _absolute_file(directory, path):
     return os.fspath(path)
 
 
+def _spawn_detached_worker(directory, run_id):
+    """Start the target-side helper process for one persisted request."""
+    return subprocess.Popen(
+        [
+            sys.executable,
+            "-m",
+            "ase2sprkkr.execution.remote_worker",
+            os.fspath(directory),
+            run_id,
+        ],
+        stdin=subprocess.DEVNULL,
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+        start_new_session=True,
+        close_fds=True,
+    )
+
+
 def submit_detached(request):
     """Start a detached target-side executor and return its initial state."""
     executor = request.get("executor", "local")
@@ -110,48 +149,46 @@ def submit_detached(request):
     request = dict(request, directory=os.fspath(directory))
     output_file = _absolute_file(directory, request.get("output_file"))
     error_file = _absolute_file(directory, request.get("error_file"))
-    cleared = set()
-    for path in (output_file, error_file):
-        if path is None or path in cleared:
-            continue
-        cleared.add(path)
-        path = Path(path)
-        path.parent.mkdir(parents=True, exist_ok=True)
-        path.write_bytes(b"")
 
     _request_path(directory, run_id).write_text(json.dumps(request))
+    # A target request is still submitting until its execution backend proves
+    # otherwise. In particular PSI/J becomes QUEUED only after scheduler
+    # submission has returned a persistent job reference.
     state = _write_state(
         directory,
         run_id,
         id=run_id,
-        state="queued",
+        state=RunState.SUBMITTING.value,
         directory=os.fspath(directory),
         input_file=_absolute_file(directory, request.get("input_file")),
         output_file=output_file,
         error_file=error_file,
         return_code=None,
         error=None,
+        failure_phase=None,
         pid=None,
         backend_reference=None,
         created_at=_timestamp(),
+        submitted_at=None,
         started_at=None,
         finished_at=None,
     )
 
-    subprocess.Popen(
-        [
-            sys.executable,
-            "-m",
-            "ase2sprkkr.execution.remote_worker",
-            os.fspath(directory),
+    try:
+        _spawn_detached_worker(directory, run_id)
+    except Exception as exc:
+        # A persisted submission proof must never survive as an active run when
+        # the helper itself did not start. Keep the metadata for diagnostics,
+        # but close the lifecycle deterministically.
+        return _write_state(
+            directory,
             run_id,
-        ],
-        stdin=subprocess.DEVNULL,
-        stdout=subprocess.DEVNULL,
-        stderr=subprocess.DEVNULL,
-        start_new_session=True,
-        close_fds=True,
-    )
+            state="failed",
+            error=repr(exc),
+            failure_phase=FailurePhase.LAUNCH.value,
+            return_code=None,
+            finished_at=_timestamp(),
+        )
     return state
 
 
@@ -225,7 +262,6 @@ def follow_detached(
     directory = Path(directory).expanduser().resolve()
     offsets = {"out": stdout_offset, "err": stderr_offset}
     streams = {"out": stdout, "err": stderr}
-
     while True:
         state = _read_state(directory, run_id)
         had_data = False
@@ -299,11 +335,12 @@ def clean_detached_runs(directory, older_than=None):
 
 
 def resolve_detached_mpi(mpi):
-    """Compatibility helper for the detached target-side CLI."""
+    """Resolve MPI configuration supplied through the detached target CLI."""
     return LaunchSpec.from_mpi(mpi)
 
 
 def _request_spec(directory, request):
+    """Materialize one detached wire request as an execution specification."""
     mpi_argv = request.get("mpi_argv")
     return ExecutionSpec(
         argv=tuple(request["argv"]),
@@ -318,101 +355,37 @@ def _request_spec(directory, request):
 
 
 def run_detached_worker(directory, run_id):
-    """Execute one run using the executor selected by the detached request."""
-    from .local import materialize_local_spec
-
+    """Dispatch one persisted detached request to its target-side backend."""
     directory = Path(directory).expanduser().resolve()
     try:
         request = json.loads(_request_path(directory, run_id).read_text())
         executor = request.get("executor", "local")
+        if executor == "local":
+            from .detached_local import run_detached_local
+
+            run_detached_local(directory, run_id, request)
+            return
         if executor == "psij":
             from .remote_psij import run_remote_psij_worker
 
             run_remote_psij_worker(directory, run_id, request)
             return
-        if executor != "local":
-            raise ValueError(f"Unsupported detached executor: {executor!r}")
-
-        spec = materialize_local_spec(_request_spec(directory, request))
-        output_path = Path(spec.output_file or "stdout")
-        error_path = Path(spec.error_file or "stderr")
-        if not output_path.is_absolute():
-            output_path = directory / output_path
-        if not error_path.is_absolute():
-            error_path = directory / error_path
-        output_path.parent.mkdir(parents=True, exist_ok=True)
-        error_path.parent.mkdir(parents=True, exist_ok=True)
-
-        if spec.stdin:
-            stdin_path = Path(spec.stdin)
-            if not stdin_path.is_absolute():
-                stdin_path = directory / stdin_path
-            stdin = stdin_path.open("rb")
-        else:
-            stdin = subprocess.DEVNULL
-
-        def run_process(output, error):
-            with _state_lock(directory, run_id):
-                state = _read_state_unlocked(directory, run_id)
-                if state.get("state") in _FINAL_STATES:
-                    return None
-                if state.get("state") != "queued":
-                    raise RuntimeError(
-                        f"Cannot start detached run {run_id!r} from state "
-                        f"{state.get('state')!r}"
-                    )
-                process = subprocess.Popen(
-                    spec.argv,
-                    cwd=directory,
-                    stdin=stdin,
-                    stdout=output,
-                    stderr=error,
-                    start_new_session=True,
-                )
-                _write_state_unlocked(
-                    directory,
-                    run_id,
-                    state="running",
-                    pid=process.pid,
-                    started_at=_timestamp(),
-                )
-            return process.wait()
-
-        try:
-            with output_path.open("wb") as output:
-                if error_path == output_path:
-                    return_code = run_process(output, subprocess.STDOUT)
-                else:
-                    with error_path.open("wb") as error:
-                        return_code = run_process(output, error)
-        finally:
-            if stdin is not subprocess.DEVNULL:
-                stdin.close()
-
-        if return_code is None:
-            return
-
-        with _state_lock(directory, run_id):
-            state = _read_state_unlocked(directory, run_id)
-            final_state = state.get("state")
-            if final_state != "cancelled":
-                final_state = "finished" if return_code == 0 else "failed"
-            _write_state_unlocked(
-                directory,
-                run_id,
-                state=final_state,
-                return_code=return_code,
-                finished_at=state.get("finished_at") or _timestamp(),
-            )
+        raise ValueError(f"Unsupported detached executor: {executor!r}")
     except BaseException as exc:
         with _state_lock(directory, run_id):
             state = _read_state_unlocked(directory, run_id)
             if state.get("state") != "cancelled":
+                phase = (
+                    FailurePhase.LAUNCH
+                    if state.get("state") in {"submitting", "queued"}
+                    else FailurePhase.EXECUTION
+                )
                 _write_state_unlocked(
                     directory,
                     run_id,
                     state="failed",
                     error=repr(exc),
+                    failure_phase=state.get("failure_phase") or phase.value,
                     return_code=None,
                     finished_at=_timestamp(),
                 )

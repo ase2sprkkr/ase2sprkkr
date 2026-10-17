@@ -6,59 +6,23 @@ import asyncio
 import errno
 import os
 import sys
-import warnings
-from dataclasses import replace
 from threading import Event, Lock, Thread
 
 from .base import (
     ExecutionSpec,
     Executor,
-    MpiNotFoundWarning,
     OutputObservers,
     RunReference,
     RunState,
     RunStatus,
     SubmissionNotStarted,
 )
-from .mpi import resolve_mpi_command
-
-
-def _mpi_command(launch):
-    """Materialize portable MPI intent for this machine."""
-    mpi = launch.mpi
-    command = resolve_mpi_command(mpi)
-    if not command:
-        if mpi.allows_serial_fallback:
-            if mpi.warning:
-                warnings.warn(
-                    "MPI autodetection did not find an MPI launcher; "
-                    "the calculation will run without MPI.",
-                    MpiNotFoundWarning,
-                    stacklevel=3,
-                )
-            return None
-        raise FileNotFoundError(
-            errno.ENOENT,
-            "MPI was requested but no MPI launcher was found",
-        )
-    return command
-
-
-def materialize_local_spec(spec: ExecutionSpec) -> ExecutionSpec:
-    """Choose serial/MPI argv immediately before local process creation."""
-    if not spec.launch or spec.mpi_argv is None:
-        return spec
-
-    launcher = _mpi_command(spec.launch)
-    if launcher is None:
-        # ``auto`` may fall back to the serial command on this machine.
-        return spec
-
-    return replace(
-        spec,
-        argv=(*launcher, *spec.mpi_argv),
-        stdin=None,
-    )
+from .local_process import (
+    materialize_local_spec,
+    pump_stream,
+    start_local_process,
+    stop_local_process,
+)
 
 
 def _path(value, directory):
@@ -174,35 +138,13 @@ class LocalRunner:
             target.write(data)
             target.flush()
 
-    async def _pump(self, source, target, kind):
-        try:
-            while data := await source.read(65536):
-                self._write_output(data, kind)
-                self._emit_output(data, kind)
-                target.feed_data(data)
-        finally:
-            target.feed_eof()
+    def _forward_output(self, data, target, kind):
+        self._write_output(data, kind)
+        self._emit_output(data, kind)
+        target.feed_data(data)
 
     async def _stop_process(self):
-        process = self._process
-        if process is None or process.returncode is not None:
-            return
-
-        try:
-            process.terminate()
-        except ProcessLookupError:
-            return
-
-        try:
-            await asyncio.wait_for(process.wait(), 0.1)
-        except asyncio.TimeoutError:
-            if process.returncode is not None:
-                return
-            try:
-                process.kill()
-            except ProcessLookupError:
-                return
-            await process.wait()
+        await stop_local_process(self._process)
 
     def _ensure_stop_task(self):
         if self._process is None or self._process.returncode is not None:
@@ -249,13 +191,7 @@ class LocalRunner:
             raise RuntimeError("Run was cancelled before process start")
 
         try:
-            self._process = await asyncio.create_subprocess_exec(
-                *self.spec.argv,
-                stdin=self.spec.stdin,
-                stdout=asyncio.subprocess.PIPE,
-                stderr=asyncio.subprocess.PIPE,
-                cwd=self.spec.directory,
-            )
+            self._process = await start_local_process(self.spec)
             self._pid = self._process.pid
             self._state = RunState.RUNNING
             self._started.set()
@@ -272,10 +208,18 @@ class LocalRunner:
             )
             wait_task = asyncio.create_task(self._process.wait())
             stdout_task = asyncio.create_task(
-                self._pump(self._process.stdout, stdout, "out")
+                pump_stream(
+                    self._process.stdout,
+                    lambda data: self._forward_output(data, stdout, "out"),
+                    eof=stdout.feed_eof,
+                )
             )
             stderr_task = asyncio.create_task(
-                self._pump(self._process.stderr, stderr, "err")
+                pump_stream(
+                    self._process.stderr,
+                    lambda data: self._forward_output(data, stderr, "err"),
+                    eof=stderr.feed_eof,
+                )
             )
             tasks = (parse_task, wait_task, stdout_task, stderr_task)
 
@@ -339,7 +283,7 @@ class LocalRunner:
             if self._state != RunState.NEW:
                 raise RuntimeError(f"Run is already {self._state.value}")
 
-            self._state = RunState.QUEUED
+            self._state = RunState.SUBMITTING
             self._thread = Thread(target=self._thread_main, daemon=True)
             self._thread.start()
 

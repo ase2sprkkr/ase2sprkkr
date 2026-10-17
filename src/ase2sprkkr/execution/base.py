@@ -90,6 +90,20 @@ class RunState(str, Enum):
     UNKNOWN = "unknown"
 
 
+class FailurePhase(str, Enum):
+    """Stage in which a terminal failure occurred.
+
+    This is diagnostic lifecycle detail, not a second state machine. In
+    particular, ``LAUNCH`` means that no calculation process ever reached the
+    running state, so no output parsing/finalization belongs to that run.
+    """
+
+    SUBMISSION = "submission"
+    LAUNCH = "launch"
+    EXECUTION = "execution"
+    FINALIZATION = "finalization"
+
+
 class ExecutionResources:
     """Closable resources whose ownership is transferred to a calculation run.
 
@@ -292,6 +306,17 @@ class RunStatus:
     state: RunState
     return_code: Optional[int] = None
     message: Optional[str] = None
+    failure_phase: Optional[FailurePhase] = None
+
+    def __post_init__(self):
+        if not isinstance(self.state, RunState):
+            object.__setattr__(self, "state", RunState(self.state))
+        if self.failure_phase is not None and not isinstance(
+            self.failure_phase, FailurePhase
+        ):
+            object.__setattr__(
+                self, "failure_phase", FailurePhase(self.failure_phase)
+            )
 
 
 @dataclass(frozen=True)

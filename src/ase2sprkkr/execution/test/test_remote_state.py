@@ -1,4 +1,5 @@
-from ..remote import _read_state, _run_directory, _write_state
+from ..base import RunState
+from ..detached import _read_state, _run_directory, _write_state
 
 
 def test_remote_state_accepts_directory_field(tmp_path):
@@ -8,7 +9,7 @@ def test_remote_state_accepts_directory_field(tmp_path):
     state = _write_state(
         tmp_path,
         run_id,
-        state="queued",
+        state=RunState.SUBMITTING.value,
         directory="/remote/workspace",
     )
 

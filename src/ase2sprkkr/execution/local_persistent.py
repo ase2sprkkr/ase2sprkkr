@@ -12,6 +12,7 @@ from threading import Event, Lock, Thread
 
 from .base import (
     ExecutionSpec,
+    FailurePhase,
     OutputObservers,
     RunReference,
     RunState,
@@ -22,6 +23,9 @@ from .detached import (
     _request_path,
     _run_directory,
     cancel_detached,
+    detached_failure_phase,
+    detached_launch_failed,
+    detached_run_state,
     status_detached,
     submit_detached,
 )
@@ -80,9 +84,10 @@ def detached_local_status(reference):
         return None
     return RunStatus(
         reference,
-        RunState(state.get("state", "unknown")),
+        detached_run_state(state.get("state", "unknown")),
         return_code=state.get("return_code"),
         message=state.get("error"),
+        failure_phase=detached_failure_phase(state),
     )
 
 
@@ -93,15 +98,15 @@ def recover_local_submission(run_id, submission):
         state = status_detached(directory, run_id)
         request = json.loads(_request_path(directory, run_id).read_text())
     except FileNotFoundError:
-        # ``submit_detached`` creates the state before it starts the helper, so
-        # absence on this same filesystem proves that submission did not happen.
+        # Absence on this same filesystem proves that submission did not happen.
         return None
     reference = _reference_from_request(run_id, directory, request)
     return RunStatus(
         reference,
-        RunState(state.get("state", "unknown")),
+        detached_run_state(state.get("state", "unknown")),
         return_code=state.get("return_code"),
         message=state.get("error"),
+        failure_phase=detached_failure_phase(state),
     )
 
 
@@ -120,6 +125,8 @@ class LocalPersistentRunner:
         start=False,
         reference=None,
         state=RunState.NEW,
+        failure_phase=None,
+        failure_message=None,
     ):
         self.executor = executor
         self.reader = reader
@@ -132,6 +139,10 @@ class LocalPersistentRunner:
         self._attached = reference is not None
         self._state = RunState(state)
         self._return_code = None
+        self._failure_phase = (
+            None if failure_phase is None else FailurePhase(failure_phase)
+        )
+        self._failure_message = failure_message
         self._output_observers = OutputObservers(output_listener)
         self._lock = Lock()
         self._done = Event()
@@ -152,8 +163,11 @@ class LocalPersistentRunner:
             return self._state
         status = detached_local_status(self._reference)
         self._state = RunState.UNKNOWN if status is None else status.state
-        if status is not None and status.return_code is not None:
-            self._return_code = status.return_code
+        if status is not None:
+            self._failure_phase = status.failure_phase
+            self._failure_message = status.message
+            if status.return_code is not None:
+                self._return_code = status.return_code
         return self._state
 
     @property
@@ -163,6 +177,14 @@ class LocalPersistentRunner:
     @property
     def return_code(self):
         return self._return_code
+
+    @property
+    def failure_phase(self):
+        return self._failure_phase
+
+    @property
+    def failure_message(self):
+        return self._failure_message
 
     def add_output_listener(self, callback):
         self._output_observers.add(callback)
@@ -227,48 +249,62 @@ class LocalPersistentRunner:
     async def _monitor(self):
         stdout = asyncio.StreamReader()
         stderr = asyncio.StreamReader()
-        parse_task = asyncio.create_task(
-            self.reader.parse_streams(stdout, stderr, self.result)
-        )
+        parse_task = None
         offsets = {"out": 0, "err": 0}
-        output_target, error_target = self._open_mirrors()
-        status = None
+        output_target = error_target = None
         mirrors_committed = False
         try:
             while True:
                 status = status_detached(
                     self._reference.directory, self._reference.native_id
                 )
-                had_data = False
-                for kind, key, stream, target in (
-                    ("out", "output_file", stdout, output_target),
-                    ("err", "error_file", stderr, error_target),
-                ):
-                    data = self._read_new(status.get(key), offsets[kind])
-                    if not data:
-                        continue
-                    offsets[kind] += len(data)
-                    if target is not None:
-                        target.write(data)
-                        target.flush()
-                    self._emit_output(data, kind)
-                    stream.feed_data(data)
-                    had_data = True
+                self._failure_phase = detached_failure_phase(status)
+                self._failure_message = status.get("error")
+                if detached_launch_failed(status):
+                    # No calculation process ever existed. In particular, do not
+                    # start the parser or touch client output files.
+                    self._state = RunState.FAILED
+                    self._return_code = None
+                    return self.result
 
-                state = RunState(status.get("state", "unknown"))
+                state = detached_run_state(status.get("state", "unknown"))
+                started = status.get("started_at") is not None
+                if started and parse_task is None:
+                    output_target, error_target = self._open_mirrors()
+                    parse_task = asyncio.create_task(
+                        self.reader.parse_streams(stdout, stderr, self.result)
+                    )
+
+                had_data = False
+                if started:
+                    for kind, key, stream, target in (
+                        ("out", "output_file", stdout, output_target),
+                        ("err", "error_file", stderr, error_target),
+                    ):
+                        data = self._read_new(status.get(key), offsets[kind])
+                        if not data:
+                            continue
+                        offsets[kind] += len(data)
+                        if target is not None:
+                            target.write(data)
+                            target.flush()
+                        self._emit_output(data, kind)
+                        stream.feed_data(data)
+                        had_data = True
+
                 if state in _FINAL_STATES and not had_data:
                     self._state = state
                     self._return_code = status.get("return_code")
-                    if self._return_code is None:
+                    if self._return_code is None and started:
                         self._return_code = 0 if state == RunState.FINISHED else 1
+                    if not started:
+                        return self.result
                     break
                 if not had_data:
                     await asyncio.sleep(0.05)
 
             stdout.feed_eof()
             stderr.feed_eof()
-            # Replay becomes authoritative once the detached execution and full
-            # stream replay have completed. Parsing is deliberately separate.
             self._finish_mirrors(output_target, error_target, commit=True)
             mirrors_committed = True
             output, error = await parse_task
@@ -278,9 +314,10 @@ class LocalPersistentRunner:
         finally:
             stdout.feed_eof()
             stderr.feed_eof()
-            if not parse_task.done():
-                parse_task.cancel()
-            await asyncio.gather(parse_task, return_exceptions=True)
+            if parse_task is not None:
+                if not parse_task.done():
+                    parse_task.cancel()
+                await asyncio.gather(parse_task, return_exceptions=True)
             if not mirrors_committed:
                 self._finish_mirrors(output_target, error_target, commit=False)
 
@@ -352,14 +389,23 @@ class LocalPersistentRunner:
                 raise RuntimeError("Persistent local run has no run id")
             try:
                 request = self._request()
-            except Exception as exc:
+                status = submit_detached(request)
+            except OSError as exc:
+                self._failure_phase = FailurePhase.SUBMISSION
+                self._failure_message = str(exc)
                 raise SubmissionNotStarted(str(exc)) from exc
-            # submit_detached creates recoverable target state before spawning
-            # the helper. An exception from it is therefore conservatively
-            # treated as uncertain by ExecutionManager.
-            status = submit_detached(request)
-            self._state = RunState(status.get("state", "queued"))
+            if detached_launch_failed(status):
+                self._state = RunState.FAILED
+                self._failure_phase = FailurePhase.LAUNCH
+                self._failure_message = status.get("error")
+                detail = self._failure_message or "unknown error"
+                raise SubmissionNotStarted(
+                    f"Detached worker launch failed: {detail}"
+                )
+            self._state = detached_run_state(status.get("state", "submitting"))
             self._return_code = status.get("return_code")
+            self._failure_phase = detached_failure_phase(status)
+            self._failure_message = status.get("error")
             self._reference = _reference(self._run_id, self.spec)
         self._start_monitor()
 
@@ -389,7 +435,9 @@ class LocalPersistentRunner:
         state = cancel_detached(
             self._reference.directory, self._reference.native_id
         )
-        self._state = RunState(state.get("state", "cancelled"))
+        self._state = detached_run_state(state.get("state", "cancelled"))
+        self._failure_phase = detached_failure_phase(state)
+        self._failure_message = state.get("error")
         if state.get("return_code") is not None:
             self._return_code = state["return_code"]
 
@@ -426,6 +474,8 @@ def attach_local(
         start=False,
         reference=reference,
         state=status.state,
+        failure_phase=status.failure_phase,
+        failure_message=status.message,
     )
     runner._return_code = status.return_code
     if start:

@@ -13,12 +13,17 @@ from uuid import uuid4
 
 from .base import (
     Executor,
+    FailurePhase,
     LaunchSpec,
     MpiNotFoundWarning,
     RunReference,
-    RunState,
     RunStatus,
     SubmissionNotStarted,
+)
+from .detached import (
+    detached_failure_phase,
+    detached_launch_failed,
+    detached_run_state,
 )
 from .remote import (
     FileSyncPolicy,
@@ -46,6 +51,13 @@ class _RemoteRun(RemoteRunner):
         # monitor commits/closes it before returning.
         local_output = self._local_path(self.spec.output_file)
         result = await super()._monitor()
+        if self.failure_phase in (FailurePhase.SUBMISSION, FailurePhase.LAUNCH):
+            return result
+        status = await self.executor._status(
+            self._reference.directory, self._reference.native_id
+        )
+        if status.get("started_at") is None:
+            return result
         remote_output = None if self.reference is None else self.reference.output_file
         if local_output is not None and remote_output is not None:
             signature = await self.executor.transport.file_signature(remote_output)
@@ -67,7 +79,15 @@ class _RemoteRun(RemoteRunner):
             request = await self._prepare_request(run_id, remote_directory)
         except Exception as exc:
             raise SubmissionNotStarted(str(exc)) from exc
-        status = await self.executor._submit(request)
+        try:
+            status = await self.executor._submit(request)
+        except SubmissionNotStarted as exc:
+            # The request reached the target and target metadata proved that its
+            # detached helper could not start. Preserve that distinction for the
+            # persistent lifecycle before propagating the submission exception.
+            self._failure_phase = FailurePhase.LAUNCH
+            self._failure_message = str(exc)
+            raise
         return run_id, status
 
 
@@ -254,7 +274,9 @@ class _RemoteRunContext:
                 output_listener=output_listener,
                 start=start,
                 reference=reference,
-                state=RunState(status.get("state", "unknown")),
+                state=detached_run_state(status.get("state", "unknown")),
+                failure_phase=detached_failure_phase(status),
+                failure_message=status.get("error"),
                 output_targets=output_targets,
                 cache_targets=cache_targets,
                 output_patterns=output_patterns,
@@ -314,7 +336,16 @@ class RemoteEndpointExecutor(Executor):
                     MpiNotFoundWarning,
                     stacklevel=3,
                 )
-        return await self._json_request("submit", request["directory"], payload=request)
+        status = await self._json_request(
+            "submit", request["directory"], payload=request
+        )
+        if detached_launch_failed(status):
+            detail = status.get("error")
+            message = "Remote detached worker launch failed"
+            if detail:
+                message += f": {detail}"
+            raise SubmissionNotStarted(message)
+        return status
 
     async def _status(self, directory, run_id):
         return await self._json_request("status", directory, run_id)
@@ -400,9 +431,10 @@ class RemoteEndpointExecutor(Executor):
                 for (index, reference), state in zip(items, states):
                     result[index] = RunStatus(
                         reference,
-                        RunState(state.get("state", "unknown")),
+                        detached_run_state(state.get("state", "unknown")),
                         return_code=state.get("return_code"),
                         message=state.get("error"),
+                        failure_phase=detached_failure_phase(state),
                     )
             return tuple(result)
 
@@ -421,8 +453,11 @@ class RemoteEndpointExecutor(Executor):
             error_file=state.get("error_file"),
         )
         return RunStatus(
-            reference=reference, state=RunState(state.get("state", "unknown")),
-            return_code=state.get("return_code"), message=state.get("error"),
+            reference=reference,
+            state=detached_run_state(state.get("state", "unknown")),
+            return_code=state.get("return_code"),
+            message=state.get("error"),
+            failure_phase=detached_failure_phase(state),
         )
 
     def recover_submission(self, run_id, submission, *, submitted_at=None):

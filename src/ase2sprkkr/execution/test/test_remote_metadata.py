@@ -1,9 +1,12 @@
+import asyncio
 import json
 from datetime import datetime, timedelta, timezone
 from threading import Event, Thread
 
 import pytest
 
+import ase2sprkkr.execution.detached as detached
+import ase2sprkkr.execution.detached_local as detached_local
 from ..remote import (
     _run_directory,
     _write_state,
@@ -31,7 +34,7 @@ def _request(workspace, run_id, output_name):
 
 def test_remote_run_metadata_is_isolated_per_run(tmp_path, monkeypatch):
     workspace = tmp_path / "workspace"
-    monkeypatch.setattr("ase2sprkkr.execution.detached.subprocess.Popen", lambda *a, **k: None)
+    monkeypatch.setattr(detached, "_spawn_detached_worker", lambda *a: None)
 
     first = submit_remote(_request(workspace, "run-one", "one.out"))
     second = submit_remote(_request(workspace, "run-two", "two.out"))
@@ -133,7 +136,7 @@ def test_remote_clean_without_age_removes_all_completed_runs(tmp_path):
 
 def test_remote_submit_rejects_duplicate_run_id(tmp_path, monkeypatch):
     workspace = tmp_path / "workspace"
-    monkeypatch.setattr("ase2sprkkr.execution.detached.subprocess.Popen", lambda *a, **k: None)
+    monkeypatch.setattr(detached, "_spawn_detached_worker", lambda *a: None)
     request = _request(workspace, "same", "out")
 
     submit_remote(request)
@@ -152,14 +155,14 @@ def test_remote_cancel_waits_for_launch_handoff(tmp_path, monkeypatch):
         workspace,
         run_id,
         id=run_id,
-        state="queued",
+        state="submitting",
         directory=str(workspace),
         pid=None,
         finished_at=None,
     )
 
-    popen_entered = Event()
-    allow_popen = Event()
+    process_start_entered = Event()
+    allow_process_start = Event()
     terminated = Event()
     cancel_done = Event()
     worker_errors = []
@@ -167,22 +170,24 @@ def test_remote_cancel_waits_for_launch_handoff(tmp_path, monkeypatch):
 
     class FakeProcess:
         pid = 4321
+        returncode = None
 
-        def wait(self):
-            assert terminated.wait(2)
-            return -15
+        async def wait(self):
+            assert await asyncio.to_thread(terminated.wait, 2)
+            self.returncode = -15
+            return self.returncode
 
-    def fake_popen(*args, **kwargs):
-        popen_entered.set()
-        assert allow_popen.wait(2)
+    async def fake_start_local_process(*args, **kwargs):
+        process_start_entered.set()
+        assert await asyncio.to_thread(allow_process_start.wait, 2)
         return FakeProcess()
 
     def fake_killpg(pid, sig):
         killed.append((pid, sig))
         terminated.set()
 
-    monkeypatch.setattr("ase2sprkkr.execution.detached.subprocess.Popen", fake_popen)
-    monkeypatch.setattr("ase2sprkkr.execution.detached.os.killpg", fake_killpg)
+    monkeypatch.setattr(detached_local, "start_local_process", fake_start_local_process)
+    monkeypatch.setattr(detached.os, "killpg", fake_killpg)
 
     def worker():
         try:
@@ -192,7 +197,7 @@ def test_remote_cancel_waits_for_launch_handoff(tmp_path, monkeypatch):
 
     worker_thread = Thread(target=worker)
     worker_thread.start()
-    assert popen_entered.wait(2)
+    assert process_start_entered.wait(2)
 
     cancel_result = []
 
@@ -204,7 +209,7 @@ def test_remote_cancel_waits_for_launch_handoff(tmp_path, monkeypatch):
     cancel_thread.start()
 
     assert not cancel_done.wait(0.1)
-    allow_popen.set()
+    allow_process_start.set()
 
     cancel_thread.join(2)
     worker_thread.join(2)
