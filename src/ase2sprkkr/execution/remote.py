@@ -544,7 +544,6 @@ class RemoteRunner:
 
         return {
             "id": run_id,
-            "outcome_file": posixpath.join(remote_directory, f".{run_id}.outcome.json"),
             "executor": self.executor.backend,
             "executor_options": self.executor.backend_options,
             "directory": remote_directory,
