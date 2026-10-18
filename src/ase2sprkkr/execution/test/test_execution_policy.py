@@ -15,7 +15,7 @@ from ase2sprkkr.execution.local import LocalExecutor, LocalRunner
 from ase2sprkkr.execution.manager import (
     ArtifactAvailabilityState,
     ExecutionManager,
-    PersistentRunner,
+    ProjectRunner,
     RunStore,
 )
 from ase2sprkkr.execution.postprocessing import PostprocessingRunner
@@ -122,7 +122,6 @@ def test_unknown_raw_state_is_preserved_and_not_postprocessed():
 
 class _NotStartedRunner:
     result = None
-    reference = None
     state = RunState.NEW
     exception = None
     failure_phase = None
@@ -143,7 +142,7 @@ class _UncertainRunner(_NotStartedRunner):
         raise OSError("connection lost during submit")
 
 
-def _persistent_wrapper(tmp_path, runner):
+def _project_wrapper(tmp_path, runner):
     manager = ExecutionManager(RunStore(tmp_path / "runs"))
     executor = LocalExecutor()
     endpoint = endpoint_for_executor(executor)
@@ -152,11 +151,11 @@ def _persistent_wrapper(tmp_path, runner):
         directory=tmp_path,
         endpoint=endpoint,
     )
-    return manager, PersistentRunner(manager, executor, runner, record)
+    return manager, ProjectRunner(manager, executor, runner, record)
 
 
 def test_definite_pre_submit_failure_becomes_submission_failure(tmp_path):
-    manager, runner = _persistent_wrapper(tmp_path, _NotStartedRunner())
+    manager, runner = _project_wrapper(tmp_path, _NotStartedRunner())
 
     with pytest.raises(SubmissionNotStarted, match="input staging failed"):
         runner.submit()
@@ -169,7 +168,7 @@ def test_definite_pre_submit_failure_becomes_submission_failure(tmp_path):
 
 
 def test_uncertain_submit_without_reference_stays_submitting(tmp_path):
-    manager, runner = _persistent_wrapper(tmp_path, _UncertainRunner())
+    manager, runner = _project_wrapper(tmp_path, _UncertainRunner())
 
     with pytest.raises(OSError, match="connection lost during submit"):
         runner.submit()
@@ -190,7 +189,7 @@ def test_artifact_availability_failure_does_not_change_finished_state(tmp_path):
     record = manager.transition(record, state=RunState.FINISHED)
 
     record = manager.update_artifact_availability(
-        record, ArtifactAvailabilityState.FAILED, "ssh disconnected"
+        record, str(tmp_path / "out"), ArtifactAvailabilityState.FAILED, "ssh disconnected"
     )
 
     assert record.state == RunState.FINISHED
