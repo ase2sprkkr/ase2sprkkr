@@ -14,6 +14,21 @@ from ..common.module_registry import (
 )
 
 
+class DeclaredFile(str):
+    """A path declaration with explicit existence requirements.
+
+    Optional files may legitimately be absent after a successful run. The
+    string subclass keeps existing path APIs and file manifests compatible.
+    """
+
+    def __new__(cls, path, *, optional=False):
+        if not isinstance(optional, bool):
+            raise TypeError("optional must be a boolean")
+        obj = super().__new__(cls, os.fspath(path))
+        obj.optional = optional
+        return obj
+
+
 _FilePath = Union[str, os.PathLike[str]]
 _FileTemplate = Union[_FilePath, Callable[[object], Optional[_FilePath]]]
 
@@ -66,7 +81,7 @@ def _normalize_file_templates(
                 f"{field}[{index}] must resolve to a string, "
                 f"got {type(path).__name__}"
             )
-        normalized.append(path)
+        normalized.append(DeclaredFile(path, optional=item.optional) if isinstance(item, DeclaredFile) else path)
     return tuple(normalized)
 
 
@@ -337,8 +352,9 @@ class InputParametersRegistry(ModuleRegistry):
             if not isinstance(path, str):
                 raise TypeError("File callback must return a path or None")
             path = path.format(dataset=dataset)
-            files.append(path if os.path.isabs(path)
-                         else os.path.join(directory, path))
+            resolved = path if os.path.isabs(path) else os.path.join(directory, path)
+            optional = getattr(value, "optional", getattr(template, "optional", False))
+            files.append(DeclaredFile(resolved, optional=optional))
         return tuple(files)
 
     def files_for_task(self, task, parameters, directory, kind):

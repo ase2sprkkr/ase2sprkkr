@@ -106,6 +106,8 @@ class RemoteRunner:
         output_patterns=None,
         cache_patterns=None,
         cache_before=None,
+        optional_output_targets=None,
+        optional_output_patterns=None,
     ):
         self.executor = executor
         self.reader = reader
@@ -132,6 +134,8 @@ class RemoteRunner:
         self._output_targets = dict(output_targets or {})
         self._cache_targets = dict(cache_targets or {})
         self._output_patterns = tuple(output_patterns or ())
+        self._optional_output_targets = set(optional_output_targets or ())
+        self._optional_output_patterns = set(optional_output_patterns or ())
         self._cache_patterns = tuple(cache_patterns or ())
         self._cache_before = dict(cache_before or {})
 
@@ -289,6 +293,8 @@ class RemoteRunner:
         source = self._local_path(value)
         matches = expand_local_files(source, self.executor.local_root)
         if not matches:
+            if getattr(value, "optional", False):
+                return
             raise FileNotFoundError(
                 f"Local input pattern did not match any files: {source}"
             )
@@ -389,6 +395,8 @@ class RemoteRunner:
         patterns = []
         remote_root = await self.executor._resolved_remote_root()
         removable = set()
+        optional_targets = set()
+        optional_patterns = set()
 
         for value in self.spec.output_files:
             local = self._local_path(value)
@@ -400,6 +408,8 @@ class RemoteRunner:
                 if remote in patterns:
                     continue
                 patterns.append(remote)
+                if getattr(value, "optional", False):
+                    optional_patterns.add(remote)
                 for match in await self.executor.transport.expand_files(
                     remote, remote_root
                 ):
@@ -410,6 +420,8 @@ class RemoteRunner:
             if local in targets:
                 continue
             targets[local] = remote
+            if getattr(value, "optional", False):
+                optional_targets.add(remote)
             if remote not in input_targets:
                 await self.executor.transport.run(("rm", "-f", "--", remote))
 
@@ -419,6 +431,8 @@ class RemoteRunner:
             )
         self._output_targets = targets
         self._output_patterns = tuple(patterns)
+        self._optional_output_targets = optional_targets
+        self._optional_output_patterns = optional_patterns
 
     async def _sync_output_files(self, required):
         policy = self.executor.output_files
@@ -428,7 +442,7 @@ class RemoteRunner:
         for local, remote in self._output_targets.items():
             remote_digest = await self.executor.transport.file_digest(remote)
             if remote_digest is None:
-                if required:
+                if required and remote not in self._optional_output_targets:
                     raise FileNotFoundError(
                         f"Declared remote output file was not created: {remote}"
                     )
@@ -461,7 +475,7 @@ class RemoteRunner:
         for pattern in self._output_patterns:
             matches = await self.executor.transport.expand_files(pattern, remote_root)
             if not matches:
-                if required:
+                if required and pattern not in self._optional_output_patterns:
                     raise FileNotFoundError(
                         f"Declared remote output pattern did not match any files: {pattern}"
                     )
@@ -556,7 +570,7 @@ class RemoteRunner:
             if source is not None and has_file_magic(source):
                 await self._stage_input_pattern(value, used)
             else:
-                await self._stage_file(value, used)
+                await self._stage_file(value, used, required=not getattr(value, "optional", False))
         staged = {source: target for target, source in used.items()}
 
         input_name = self._file_name(self.spec.input_file)
@@ -600,6 +614,8 @@ class RemoteRunner:
                 for remote, before in self._cache_targets.values()
             ],
             "output_patterns": list(self._output_patterns),
+            "optional_output_patterns": list(self._optional_output_patterns),
+            "optional_output_targets": list(self._optional_output_targets),
             "cache_patterns": list(self._cache_patterns),
             "cache_before": [
                 {"path": remote, "signature": before}
