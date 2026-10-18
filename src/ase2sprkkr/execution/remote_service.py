@@ -448,49 +448,29 @@ def follow_remote(
         return _follow_scheduler(remote_id, streams, paths, offsets, poll_interval)
     if handle["kind"] != "process":
         raise ValueError("Unknown execution backend")
-    from .remote_supervisor_stream import MAGIC, _HEADER
+    from .remote_supervisor_stream import follow_socket
     path = handle.get("socket_path")
     if path is None:
         raise RuntimeError("Backend handle contains no follow socket")
 
-    def drain_from_socket():
-        with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as sock:
-            sock.connect(path)
-            offsets = {"out": stdout_offset, "err": stderr_offset}
-            if stdout_path is not None and stdout_path == stderr_path:
-                offsets.pop("err")
-            sock.sendall(json.dumps({"command": "follow", "offsets": offsets}).encode() + b"\n")
+    # Use the same frame decoder for the local socket and the remote CLI.
+    # A merged stream has only one logical channel.
+    def on_chunk(kind, offset, data):
+        previous = offsets[kind]
+        if previous is not None and offset != previous and paths[kind] is not None:
+            raise RuntimeError("Supervisor FOLLOW offset mismatch")
+        offsets[kind] = offset + len(data)
+        streams[kind].write(data)
+        streams[kind].flush()
 
-            def read_exactly(n):
-                parts = []
-                while n:
-                    part = sock.recv(n)
-                    if not part:
-                        raise ConnectionError("Supervisor FOLLOW ended before terminal state")
-                    parts.append(part)
-                    n -= len(part)
-                return b"".join(parts)
-
-            if read_exactly(len(MAGIC)) != MAGIC:
-                raise RuntimeError("Unknown supervisor protocol")
-            while True:
-                channel, offset, size = _HEADER.unpack(read_exactly(_HEADER.size))
-                if channel == b"T":
-                    return json.loads(read_exactly(size))
-                if channel not in (b"O", b"E") or size > 65536:
-                    raise RuntimeError("Invalid supervisor FOLLOW frame")
-                kind = "out" if channel == b"O" else "err"
-                data = read_exactly(size)
-                # Live-only streams are intentionally non-replayable and may
-                # start after bytes have already been emitted.
-                if offsets[kind] is not None and offset != offsets[kind] and paths[kind] is not None:
-                    raise RuntimeError("Supervisor FOLLOW offset mismatch")
-                offsets[kind] = offset + len(data)
-                streams[kind].write(data)
-                streams[kind].flush()
+    async def drain_from_socket():
+        requested = dict(offsets)
+        if stdout_path is not None and stdout_path == stderr_path:
+            requested.pop("err")
+        return await follow_socket(path, requested, on_chunk)
 
     try:
-        return drain_from_socket()
+        return asyncio.run(drain_from_socket())
     except (FileNotFoundError, ConnectionRefusedError):
         # A completed supervisor has removed its transient socket. Replay
         # declared spools once, without the historical polling lifecycle.

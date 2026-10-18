@@ -278,3 +278,84 @@ def test_uncertain_submit_uses_only_temporary_identity_ticket(tmp_path, monkeypa
     assert remote_service.acknowledge_submission(run_id) == {"acknowledged": True}
     assert remote_service.recover_remote(run_id, {"executor": "local"}) is None
     assert remote_service.acknowledge_submission(run_id) == {"acknowledged": False}
+
+
+def test_direct_follow_uses_shared_socket_protocol(tmp_path, monkeypatch):
+    """The target command and the supervisor must agree on frames and offsets."""
+    import asyncio
+    import os
+    import sys
+
+    async def exercise():
+        monkeypatch.setattr(
+            remote_process_worker, "publish_outcome", lambda *args, **kwargs: None,
+        )
+        rd, wr = os.pipe()
+        spec = {
+            "argv": [sys.executable, "-c",
+                     "import sys,time; print('stdout', flush=True); "
+                     "print('stderr', file=sys.stderr, flush=True); time.sleep(.1)"],
+            "directory": str(tmp_path),
+            "output_file": str(tmp_path / "stdout"),
+            "error_file": str(tmp_path / "stderr"),
+            "receipt_id": "a" * 32,
+            "socket_fd": wr,
+            "detached": True,
+        }
+        worker = asyncio.create_task(remote_process_worker._run(spec))
+        with os.fdopen(rd, "rb") as source:
+            socket_path = (await asyncio.to_thread(source.readline)).decode().strip()
+        remote_id = remote_service._encode_handle({
+            "kind": "process", "socket_path": socket_path,
+            "pid": os.getpid(), "start_time": "0", "receipt_id": "a" * 32,
+        })
+        out, err = io.BytesIO(), io.BytesIO()
+        terminal = await asyncio.to_thread(
+            remote_service.follow_remote, remote_id, out, err,
+            stdout_path=spec["output_file"], stderr_path=spec["error_file"],
+        )
+        assert terminal["state"] == "finished"
+        assert out.getvalue() == b"stdout\\n"
+        assert err.getvalue() == b"stderr\\n"
+        assert await worker == 0
+
+    asyncio.run(exercise())
+
+
+def test_direct_follow_without_stream_files_is_live_only(tmp_path, monkeypatch):
+    import asyncio
+    import os
+    import sys
+
+    async def exercise():
+        monkeypatch.setattr(
+            remote_process_worker, "publish_outcome", lambda *args, **kwargs: None,
+        )
+        rd, wr = os.pipe()
+        spec = {
+            "argv": [sys.executable, "-c",
+                     "import time; print('live', flush=True); time.sleep(.2)"],
+            "directory": str(tmp_path),
+            "output_file": None, "error_file": None,
+            "receipt_id": "b" * 32,
+            "socket_fd": wr, "detached": True,
+        }
+        worker = asyncio.create_task(remote_process_worker._run(spec))
+        with os.fdopen(rd, "rb") as source:
+            socket_path = (await asyncio.to_thread(source.readline)).decode().strip()
+        remote_id = remote_service._encode_handle({
+            "kind": "process", "socket_path": socket_path,
+            "pid": os.getpid(), "start_time": "0", "receipt_id": "b" * 32,
+        })
+        out, err = io.BytesIO(), io.BytesIO()
+        terminal = await asyncio.to_thread(
+            remote_service.follow_remote, remote_id, out, err,
+            stdout_offset=0, stderr_offset=0,
+        )
+        assert terminal["state"] == "finished"
+        assert out.getvalue() == b"live\\n"
+        assert err.getvalue() == b""
+        assert await worker == 0
+        assert list(tmp_path.iterdir()) == []
+
+    asyncio.run(exercise())
