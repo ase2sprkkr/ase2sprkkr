@@ -501,8 +501,13 @@ def follow_remote(
                     if kind not in (b"O", b"E") or size > 65536:
                         raise RuntimeError("Invalid supervisor FOLLOW frame")
                     stream = stdout if kind == b"O" else stderr
-                    stream.write(read_exactly(size))
+                    payload = read_exactly(size)
+                    channel = "out" if kind == b"O" else "err"
+                    if offset != offsets[channel]:
+                        raise RuntimeError("Supervisor FOLLOW offset mismatch")
+                    stream.write(payload)
                     stream.flush()
+                    offsets[channel] += len(payload)
         except (FileNotFoundError, ConnectionRefusedError):
             # A completed supervisor has already closed its transient socket.
             # Its output files and acknowledged backend outcome remain readable.
