@@ -1,4 +1,4 @@
-"""Persistent run history and lifecycle orchestration."""
+"""Project run history and lifecycle orchestration."""
 
 from __future__ import annotations
 
@@ -16,7 +16,6 @@ from threading import RLock
 from typing import Any, Optional
 from uuid import uuid4
 
-from platformdirs import user_state_dir
 
 from ..common.file_locks import FileLock
 from ..common.file_versions import FileState, FileVersion
@@ -110,13 +109,13 @@ class ArtifactAvailabilityState(str, Enum):
 
 
 class DuplicateSubmissionError(RuntimeError):
-    """A persistent run would duplicate an active calculation namespace."""
+    """A project run would duplicate an active calculation namespace."""
 
     def __init__(self, record, conflicts):
         self.record = record
         self.conflicts = tuple(conflicts)
         super().__init__(
-            "Run conflicts with {} active persistent run{}".format(
+            "Run conflicts with {} active project run{}".format(
                 len(self.conflicts), "" if len(self.conflicts) == 1 else "s"
             )
         )
@@ -173,11 +172,10 @@ def submission_conflicts(left: RunRecord, right: RunRecord) -> bool:
 
 
 class RunStore:
-    """Persistent run history stored as date-sharded durable JSON files."""
+    """Project run history stored as date-sharded durable JSON files."""
 
-    def __init__(self, directory=None):
-        if directory is None:
-            directory = Path(user_state_dir("ase2sprkkr")) / "runs"
+    def __init__(self, directory):
+        """A run store belongs to exactly one project directory."""
         self.directory = Path(directory).expanduser()
         self._lock = RLock()
         self._warned_corrupt = set()
@@ -313,7 +311,7 @@ class ExecutionManager:
     def __init__(self, store=None, *, executor_pool=None, submitting_grace=60.0):
         if submitting_grace < 0:
             raise ValueError("submitting_grace must be non-negative")
-        self.store = store if store is not None else RunStore()
+        self.store = store
         self.executor_pool = (
             executor_pool if executor_pool is not None else default_executor_pool()
         )
@@ -616,7 +614,7 @@ class ExecutionManager:
         execution = status.execution
         if execution is None and status.backend_id is not None:
             execution = record.execution.submitted(status.backend_id)
-        return self.transition(
+        updated = self.transition(
             record,
             state=state,
             execution=execution,
@@ -625,6 +623,8 @@ class ExecutionManager:
             message=status.message,
             failure_phase=phase,
         )
+        self._acknowledge_submission(self.executor_for(updated), updated)
+        return updated
 
     def complete(
         self,
@@ -705,13 +705,26 @@ class ExecutionManager:
                 )
         return record
 
+    @staticmethod
+    def _acknowledge_submission(executor, record):
+        """Discard the temporary backend PID only after RunStore is durable."""
+        if record.execution.backend_id is None:
+            return
+        acknowledge = getattr(executor, "acknowledge_submission", None)
+        if acknowledge is not None:
+            try:
+                acknowledge(record)
+            except (OSError, RuntimeError):
+                # The receipt remains recoverable until a subsequent refresh.
+                pass
+
     def _submission_context(self, executor, spec):
         provider = getattr(executor, "submission_context", None)
         return None if provider is None else provider(spec)
 
     @staticmethod
-    def _complete(persistent, result, callback):
-        persistent._sync_completion(result)
+    def _complete(project_run, result, callback):
+        project_run._sync_completion(result)
         if callback is not None:
             callback(result)
 
@@ -727,7 +740,7 @@ class ExecutionManager:
         callback=None,
         run_id=None,
     ):
-        """Create a persistent run from raw execution plus generic processing."""
+        """Create a project run from raw execution plus generic processing."""
         endpoint = endpoint_for_executor(executor)
         record = self.new_record(
             task=task,
@@ -744,18 +757,18 @@ class ExecutionManager:
         )
         self.register_executor(executor, endpoint)
 
-        raw = executor.create_persistent_run(spec, run_id=record.id)
+        raw = executor.create_project_run(spec, run_id=record.id)
         # The manifest is owned by RunRecord. Local execution observes its
         # publication outcomes, without persisting an independent file list.
         set_manifest = getattr(raw, "set_manifest", None)
         if set_manifest is not None:
             set_manifest(record.files)
         processed = PostprocessingRunner(raw, process_result)
-        persistent = PersistentRunner(self, executor, processed, record)
+        project_run = ProjectRunner(self, executor, processed, record)
         processed.callback = lambda result: self._complete(
-            persistent, result, callback
+            project_run, result, callback
         )
-        return persistent
+        return project_run
 
     def refresh(self, records=None):
         records = tuple(self.store.runs(active=True) if records is None else records)
@@ -800,15 +813,15 @@ class ExecutionManager:
             start=False,
         )
         processed = PostprocessingRunner(raw, process_result)
-        persistent = PersistentRunner(self, executor, processed, record)
+        project_run = ProjectRunner(self, executor, processed, record)
         processed.callback = lambda result: self._complete(
-            persistent, result, callback
+            project_run, result, callback
         )
-        persistent.start()
-        return persistent
+        project_run.start()
+        return project_run
 
 
-class PersistentRunner:
+class ProjectRunner:
     """Caller-owned runner that persists the public lifecycle directly."""
 
     def __init__(self, manager, executor, runner, record):
@@ -925,6 +938,7 @@ class PersistentRunner:
             failure_phase=self.failure_phase,
             files=self.files if self.files is not None else _UNCHANGED,
         )
+        self.manager._acknowledge_submission(self.executor, self._record)
         return result
 
     def start(self):

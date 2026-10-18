@@ -613,7 +613,7 @@ class RemoteEndpointExecutor(Executor):
     def create_run(self, spec, callback=None):
         return self._context(self, spec.launch).create_run(spec, callback=callback)
 
-    def create_persistent_run(self, spec, *, run_id, callback=None):
+    def create_project_run(self, spec, *, run_id, callback=None):
         return self._context(self, spec.launch).create_run(
             spec, callback=callback, run_id=run_id
         )

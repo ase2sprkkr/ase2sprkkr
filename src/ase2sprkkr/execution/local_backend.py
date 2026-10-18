@@ -87,6 +87,8 @@ def query(directory, identifier):
         return RunStatus(state=RunState.UNKNOWN, backend_id=identifier)
     outcome = _receipt(directory, identity["run_id"], "outcome.json")
     if outcome is not None:
+        if outcome.get("identity") != identity:
+            raise ValueError("Local outcome belongs to a different process")
         return RunStatus(
             state=(RunState.CANCELLED if outcome["cancelled"] else
                    RunState.FAILED if outcome["phase"] is not None or outcome["return_code"] != 0
@@ -105,12 +107,45 @@ def query(directory, identifier):
 
 
 def recover(directory, run_id):
-    identity = _receipt(directory, run_id, "identity.json")
+    identity = _receipt(directory, run_id, "handoff.json")
     if identity is None:
         return None
     if identity["run_id"] != run_id:
         raise ValueError("Local backend identity does not match the run")
     return query(directory, _backend_id(identity))
+
+
+
+def acknowledge_handoff(directory, identifier):
+    """Delete the temporary PID receipt after durable client submission."""
+    identity = _parse_id(identifier)
+    if identity is None:
+        return
+    path = _run_dir(directory, identity["run_id"]) / "handoff.json"
+    try:
+        with path.open(encoding="utf8") as source:
+            recorded = json.load(source)
+    except FileNotFoundError:
+        return
+    if recorded != identity:
+        raise ValueError("Cannot acknowledge a different local process")
+    path.unlink()
+    from ._durability import fsync_directory
+    fsync_directory(path.parent)
+
+
+def acknowledge_outcome(directory, identifier):
+    """Drop raw backend facts only after durable client finalization."""
+    identity = _parse_id(identifier)
+    if identity is None:
+        return
+    path = _run_dir(directory, identity["run_id"]) / "outcome.json"
+    try:
+        path.unlink()
+    except FileNotFoundError:
+        return
+    from ._durability import fsync_directory
+    fsync_directory(path.parent)
 
 
 def _absolute(directory, value):
@@ -189,7 +224,7 @@ def submit(directory, run_id, request):
     # The worker persists its identity *before* starting the calculation.
     # A lost reply can recover by run_id, without a second lifecycle store.
     while True:
-        identity = _receipt(directory, run_id, "identity.json")
+        identity = _receipt(directory, run_id, "handoff.json")
         if identity is not None:
             if identity["pid"] != child.pid or identity["run_id"] != run_id:
                 raise RuntimeError("Mismatched local worker identity")
@@ -217,7 +252,7 @@ def _worker(directory, run_id, request):
                 pass
 
     signal.signal(signal.SIGTERM, on_cancel)
-    durable_write_json(meta / "identity.json", identity)
+    durable_write_json(meta / "handoff.json", identity)
 
     code = None
     phase = None
@@ -240,6 +275,9 @@ def _worker(directory, run_id, request):
             from .local_process import materialize_local_spec
             spec = materialize_local_spec(ExecutionSpec(
                 argv=request["argv"], directory=directory,
+                input_file=request.get("input_file"),
+                output_file=request.get("output_file"),
+                error_file=request.get("error_file"),
                 mpi_argv=request.get("mpi_argv"), stdin=request.get("stdin"),
                 launch=LaunchSpec(**request["launch"]),
             ))
@@ -312,6 +350,7 @@ def _worker(directory, run_id, request):
         "message": message,
         "cancelled": cancelled,
         "published": published,
+        "identity": identity,
     })
 
 

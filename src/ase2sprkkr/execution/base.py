@@ -500,7 +500,7 @@ class Executor:
             f"{type(self).__name__} cannot recover an uncertain submission"
         )
 
-    def create_persistent_run(
+    def create_project_run(
         self, spec: ExecutionSpec, *, run_id: str, callback=None
     ) -> Runner:
         return self.create_run(spec, callback=callback)

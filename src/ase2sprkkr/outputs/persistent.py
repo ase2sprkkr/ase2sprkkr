@@ -9,7 +9,7 @@ from ..input_parameters.task_definition import TaskMismatchError
 from .reader_registry import reader_registry
 
 
-class PersistentResultUnavailableError(RuntimeError):
+class ProjectResultUnavailableError(RuntimeError):
     """A stored run cannot be reconstructed as its historical TaskResult."""
 
     def __init__(self, record, message):
@@ -17,7 +17,7 @@ class PersistentResultUnavailableError(RuntimeError):
         super().__init__(f"Run {record.id}: {message}")
 
 
-class UnrecoverablePersistentResultError(PersistentResultUnavailableError):
+class UnrecoverableProjectResultError(ProjectResultUnavailableError):
     """The persisted metadata is insufficient to reconstruct this result."""
 
 
@@ -29,7 +29,7 @@ def _task_definition_for_record(record):
     try:
         return InputParameters.task_registry[record.task]
     except RegistryEntryNotFound:
-        raise UnrecoverablePersistentResultError(
+        raise UnrecoverableProjectResultError(
             record, f"unknown persisted task {record.task!r}"
         ) from None
 
@@ -46,7 +46,7 @@ def _input_parameters_for_record(manager, record, task_definition):
     try:
         definition = input_registry[record.input_definition]
     except RegistryEntryNotFound:
-        raise UnrecoverablePersistentResultError(
+        raise UnrecoverableProjectResultError(
             record,
             f"unknown persisted input definition {record.input_definition!r}",
         ) from None
@@ -58,7 +58,7 @@ def _input_parameters_for_record(manager, record, task_definition):
             input_definition=definition,
         )
     except TaskMismatchError as exc:
-        raise UnrecoverablePersistentResultError(
+        raise UnrecoverableProjectResultError(
             record,
             "persisted task does not match historical input "
             f"({record.task!r} != {exc.task_name!r})",
@@ -94,7 +94,7 @@ def _result_processor_for_record(manager, record):
     return process_result
 
 
-def attach_persistent_run(
+def attach_project_run(
     manager,
     run,
     *,
@@ -105,13 +105,13 @@ def attach_persistent_run(
     """Reconnect an active run and resume its client-side lifecycle."""
     record = _record(manager, run)
     if record.state in (RunState.FINISHED, RunState.FAILED, RunState.CANCELLED):
-        raise PersistentResultUnavailableError(
+        raise ProjectResultUnavailableError(
             record, f"run is already terminal ({record.state.value})"
         )
 
     try:
         process_result = _result_processor_for_record(manager, record)
-    except UnrecoverablePersistentResultError as exc:
+    except UnrecoverableProjectResultError as exc:
         # If execution is already waiting for result reconstruction, failure to
         # construct the task-owned processor is itself a postprocessing failure.
         if record.state == RunState.POSTPROCESSING:
@@ -133,11 +133,11 @@ def attach_persistent_run(
     )
 
 
-def load_persistent_result(manager, run):
-    """Reconstruct the historical TaskResult of one terminal persistent run."""
+def load_project_result(manager, run):
+    """Reconstruct the historical TaskResult of one terminal project run."""
     record = _record(manager, run)
     if record.state not in (RunState.FINISHED, RunState.FAILED, RunState.CANCELLED):
-        raise PersistentResultUnavailableError(
+        raise ProjectResultUnavailableError(
             record, f"run is still active ({record.state.value})"
         )
 
@@ -145,7 +145,7 @@ def load_persistent_result(manager, run):
     record = manager.check_result_files(record)
     result_files = record.files
     if result_files is None or result_files.output_file is None:
-        raise PersistentResultUnavailableError(
+        raise ProjectResultUnavailableError(
             record, "no persisted output result file"
         )
 
@@ -157,12 +157,12 @@ def load_persistent_result(manager, run):
             message = "result files are missing"
         else:
             message = "result files are unavailable"
-        raise PersistentResultUnavailableError(record, message)
+        raise ProjectResultUnavailableError(record, message)
 
     output_file = result_files.output_file
     output_available = manager.output_file_is_current(record)
     if not output_available:
-        raise PersistentResultUnavailableError(
+        raise ProjectResultUnavailableError(
             record, "output result file is unavailable"
         )
 

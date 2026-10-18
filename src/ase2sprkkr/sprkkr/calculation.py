@@ -21,7 +21,7 @@ from ..bindings.empty_spheres import add_empty_spheres
 from ..common.file_utils import Directory
 from ..common.temporary import temporary_option_value
 from ..execution.base import ExecutionResources, ResourceOwnedRunner
-from ..execution.persistence import resolve_execution_manager
+from ..execution.persistence import resolve_project_manager
 from ..execution.postprocessing import PostprocessingRunner
 from ..input_parameters.input_parameters import InputParameters
 from ..potentials.potentials import Potential
@@ -697,7 +697,7 @@ class PreparedCalculation:
         result_context=None,
         profile: SPRKKRProfile,
         executor=None,
-        persistent=False,
+        project=None,
         print_output=False,
         read_callback=None,
         callback=None,
@@ -722,7 +722,7 @@ class PreparedCalculation:
             result_context=result_context,
             profile=profile,
             executor=executor,
-            persistent=persistent,
+            project=project,
             print_output=print_output,
             read_callback=read_callback,
             callback=callback,
@@ -826,7 +826,7 @@ def _create_sprkkr_run(
     result_context,
     profile: SPRKKRProfile,
     executor=None,
-    persistent=False,
+    project=None,
     print_output=False,
     read_callback=None,
     callback=None,
@@ -869,7 +869,7 @@ def _create_sprkkr_run(
         )
         if executor is None:
             executor = executor_from_profile(profile)
-        manager = resolve_execution_manager(persistent)
+        manager = resolve_project_manager(project)
 
         execution_profile = profile
         if task.mpi:

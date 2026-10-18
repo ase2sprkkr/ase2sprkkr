@@ -25,7 +25,7 @@ from .manager import (
     ArtifactAvailabilityState,
     CorruptRunRecord,
     DuplicateSubmissionError,
-    PersistentRunner,
+    ProjectRunner,
     RunRecord,
     RunStore,
 )
@@ -78,7 +78,7 @@ __all__ = [
     "RunStore",
     "CorruptRunRecord",
     "ExecutionManager",
-    "PersistentRunner",
+    "ProjectRunner",
     "Project",
     "ProjectRepository",
     "ProjectRepositoryError",

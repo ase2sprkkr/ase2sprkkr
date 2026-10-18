@@ -286,12 +286,12 @@ class LocalExecutor(Executor):
     def create_run(self, spec: ExecutionSpec, callback=None):
         return LocalRunner(materialize_local_spec(spec), callback=callback)
 
-    def create_persistent_run(
+    def create_project_run(
         self, spec: ExecutionSpec, *, run_id: str, callback=None
     ):
-        from .local_persistent import LocalPersistentRunner
+        from .local_project import LocalProjectRunner
 
-        return LocalPersistentRunner(
+        return LocalProjectRunner(
             self,
             spec,
             run_id=run_id,
@@ -305,11 +305,19 @@ class LocalExecutor(Executor):
     def attach(
         self, run, callback=None, output_listener=None, start=True,
     ):
-        from .local_persistent import attach_local
+        from .local_project import attach_local
         return attach_local(
             self, run, callback=callback,
             output_listener=output_listener, start=start,
         )
+
+    def acknowledge_submission(self, run):
+        from .local_backend import acknowledge_handoff
+        acknowledge_handoff(run.execution.directory.local, run.execution.backend_id)
+
+    def acknowledge(self, run):
+        from .local_backend import acknowledge_outcome
+        acknowledge_outcome(run.execution.directory.local, run.execution.backend_id)
 
     def status(self, *runs):
         from .local_backend import local_manifest, query

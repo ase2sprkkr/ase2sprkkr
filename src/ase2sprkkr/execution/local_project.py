@@ -1,4 +1,4 @@
-"""Reconnectable local execution with a process identity, not a lifecycle store."""
+"""Raw reconnectable local process for a project-associated calculation."""
 
 from __future__ import annotations
 
@@ -31,7 +31,7 @@ def _file_path(value, directory=None):
     return os.path.abspath(path)
 
 
-class LocalPersistentRunner:
+class LocalProjectRunner:
     """Client-side monitor of a worker identified by PID and birth timestamp."""
 
     def __init__(
@@ -189,6 +189,9 @@ class LocalPersistentRunner:
     def _request(self):
         return {
             "argv": list(self.spec.argv),
+            "input_file": self.result.input_file,
+            "output_files": list(self.spec.output_files),
+            "cache_files": list(self.spec.cache_files),
             "mpi_argv": None if self.spec.mpi_argv is None else list(self.spec.mpi_argv),
             "launch": asdict(self.spec.launch),
             "stdin": _file_path(self.spec.stdin, self.spec.directory),
@@ -258,7 +261,7 @@ def attach_local(executor, run, *, callback=None, output_listener=None, start=Tr
         directory=run.execution.directory.local,
     )
     status = local_backend.query(spec.directory, backend_id)
-    runner = LocalPersistentRunner(
+    runner = LocalProjectRunner(
         executor, spec, callback=callback, output_listener=output_listener,
         backend_id=backend_id, run_id=run.id,
         state=status.state, failure_phase=status.failure_phase,
