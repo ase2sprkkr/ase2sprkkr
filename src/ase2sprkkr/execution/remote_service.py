@@ -98,11 +98,6 @@ def _process_info(pid):
     return fields[19], fields[0]
 
 
-def _same_process(handle):
-    info = _process_info(handle["pid"])
-    return info is not None and info[0] == str(handle["start_time"])
-
-
 def _process_running(handle):
     info = _process_info(handle["pid"])
     return (
@@ -516,7 +511,7 @@ def follow_remote(
     stdout_path=None,
     stderr_path=None,
 ):
-    """Tail client-selected stream files until backend termination."""
+    """Follow direct supervisors or scheduler-owned streams until terminal state."""
     handle = _decode_handle(remote_id)
     offsets = {"out": stdout_offset, "err": stderr_offset}
     streams = {"out": stdout, "err": stderr}
