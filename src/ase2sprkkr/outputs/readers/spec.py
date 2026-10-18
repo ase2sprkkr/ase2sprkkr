@@ -6,12 +6,13 @@ import re
 import numpy as np
 from typing import Dict
 
-from ..task_result import TaskResult, KkrOutputReader
+from ..task_result import KkrOutputReader
+from .arpes import ArpesResult
 from .default import DefaultOutputParser
 from ...common.decorators import cached_property
 
 
-class SpecResult(TaskResult):
+class SpecResult(ArpesResult):
     """
     Class representing the results of a spectral function calculation.
     Provides access to the parsed data from spec.out files.
@@ -96,12 +97,7 @@ class SpecResult(TaskResult):
         BAND writes eigenvalue rows with a different column count from
         photoemission and SPLEED; preserve all native numeric columns.
         """
-        from .arpes import ArpesResult
-
-        filenames = (
-            ArpesResult.spc_filenames.func(self)
-            if hasattr(self, "_input_parameters") else ()
-        )
+        filenames = self.spc_filenames if hasattr(self, "_input_parameters") else ()
         if not filenames:
             # Preserve parsing older standalone SPEC text dumps.
             content = self._get_file_content()
