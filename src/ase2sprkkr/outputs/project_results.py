@@ -1,4 +1,4 @@
-"""Rehydrate SPR-KKR results from persistent execution records."""
+"""Rehydrate SPR-KKR results from project run records."""
 
 from __future__ import annotations
 

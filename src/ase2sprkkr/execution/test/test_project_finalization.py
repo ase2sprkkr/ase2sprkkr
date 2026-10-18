@@ -2,18 +2,18 @@ from types import SimpleNamespace
 
 import pytest
 
-import ase2sprkkr.outputs.persistent as persistent_output
+import ase2sprkkr.outputs.project_results as project_output
 from ase2sprkkr.execution import (
-    ExecutionManager,
     ExecutionOutcome,
     Executor,
     FailurePhase,
     RunState,
     RunStore,
 )
-from ase2sprkkr.outputs.persistent import (
-    UnrecoverablePersistentResultError,
-    attach_persistent_run,
+from ase2sprkkr.execution.manager import ExecutionManager
+from ase2sprkkr.outputs.project_results import (
+    UnrecoverableProjectResultError,
+    attach_project_run,
 )
 
 
@@ -50,7 +50,7 @@ class _RawRunner:
 class _Executor(Executor):
     name = "test"
 
-    def create_persistent_run(self, spec, *, run_id, callback=None):
+    def create_project_run(self, spec, *, run_id, callback=None):
         self.runner = _RawRunner()
         return self.runner
 
@@ -87,8 +87,8 @@ def test_unrecoverable_processor_reconstruction_fails_postprocessing(tmp_path):
     record = manager.new_record(task="NO_SUCH_TASK", directory=tmp_path)
     record = manager.transition(record, state=RunState.POSTPROCESSING)
 
-    with pytest.raises(UnrecoverablePersistentResultError):
-        attach_persistent_run(manager, record)
+    with pytest.raises(UnrecoverableProjectResultError):
+        attach_project_run(manager, record)
 
     failed = store.get(record.id)
     assert failed.state == RunState.FAILED
@@ -111,13 +111,13 @@ def test_reader_constructor_programming_error_is_not_reclassified(
             raise error
 
     monkeypatch.setattr(
-        persistent_output.reader_registry,
+        project_output.reader_registry,
         "class_for_task",
         lambda _task_definition: BrokenReader,
     )
 
     with pytest.raises(RuntimeError, match="reader constructor failed") as exc_info:
-        attach_persistent_run(manager, record)
+        attach_project_run(manager, record)
 
     assert exc_info.value is error
     current = store.get(record.id)
@@ -137,7 +137,7 @@ def test_transient_attach_failure_keeps_postprocessing_active(tmp_path, monkeypa
     )
 
     monkeypatch.setattr(
-        persistent_output,
+        project_output,
         "_result_processor_for_record",
         lambda _manager, _record: lambda outcome: outcome,
     )
@@ -148,7 +148,7 @@ def test_transient_attach_failure_keeps_postprocessing_active(tmp_path, monkeypa
     monkeypatch.setattr(manager, "attach", fail_attach)
 
     with pytest.raises(OSError, match="temporary ssh failure"):
-        attach_persistent_run(manager, record)
+        attach_project_run(manager, record)
 
     current = store.get(record.id)
     assert current.state == RunState.POSTPROCESSING
