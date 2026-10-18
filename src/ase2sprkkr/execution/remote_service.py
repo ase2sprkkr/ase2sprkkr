@@ -495,4 +495,28 @@ def follow_remote(
                 streams[kind].write(data)
                 streams[kind].flush()
 
-    return drain_from_socket()
+    try:
+        return drain_from_socket()
+    except (FileNotFoundError, ConnectionRefusedError):
+        # A completed supervisor has removed its transient socket. Replay
+        # declared spools once, without the historical polling lifecycle.
+        status = status_remote(remote_id)
+        if status["state"] not in {s.value for s in _FINAL_STATES}:
+            raise
+        if not any(path is not None for path in paths.values()):
+            raise ValueError("Output was live-only and cannot be reattached")
+        seen = set()
+        for kind in ("out", "err"):
+            path = paths[kind]
+            if path is None or path in seen:
+                continue
+            seen.add(path)
+            with open(path, "rb") as source:
+                source.seek(offsets[kind])
+                while True:
+                    data = source.read(65536)
+                    if not data:
+                        break
+                    streams[kind].write(data)
+                    streams[kind].flush()
+        return status
