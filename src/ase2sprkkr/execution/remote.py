@@ -652,7 +652,6 @@ class RemoteRunner:
 
     async def _monitor(self):
         stdout_task = stderr_task = None
-        outputs_committed = False
         try:
             self._follow_process = await self.executor._follow(
                 self._remote_directory,
@@ -724,24 +723,8 @@ class RemoteRunner:
 
             self._state = RunState.DOWNLOADING
             try:
-                if stream_error is not None:
-                    # Streaming is observational: discard its provisional
-                    # local copy and retrieve the authoritative declared spool.
-                    self._finish_output_files(commit=False)
-                    if self._files is not None:
-                        seen_streams = set()
-                        for entry in (self._files.stdout, self._files.stderr):
-                            if entry is None or entry.local_path is None or entry.remote_path is None:
-                                continue
-                            if entry.local_path in seen_streams:
-                                continue
-                            seen_streams.add(entry.local_path)
-                            await self.executor.transport.get_file(
-                                entry.remote_path, entry.local_path
-                            )
                 await self._sync_output_files(required=backend_state == RunState.FINISHED)
                 await self._sync_cache_files()
-                self._finish_output_files(commit=True)
             except Exception as exc:
                 self._set_pending_failed(str(exc))
                 if backend_state == RunState.FINISHED:
@@ -758,7 +741,6 @@ class RemoteRunner:
                     self._failure_phase = FailurePhase.EXECUTION
                 return self.result
 
-            outputs_committed = True
             if self._files is not None:
                 for entry in self._files.artifacts:
                     if entry.availability_state == "pending":
@@ -784,20 +766,6 @@ class RemoteRunner:
                     task.cancel()
             if tasks:
                 await asyncio.gather(*tasks, return_exceptions=True)
-            if not outputs_committed:
-                self._finish_output_files(commit=False)
-
-    def _finish_output_files(self, *, commit):
-        closed = set()
-        for file in (self.spec.output_file, self.spec.error_file):
-            if file is None or id(file) in closed:
-                continue
-            closed.add(id(file))
-            method = getattr(file, "commit" if commit else "discard", None)
-            if method is not None:
-                method()
-            elif hasattr(file, "close"):
-                file.close()
 
     def _thread_main(self):
         try:

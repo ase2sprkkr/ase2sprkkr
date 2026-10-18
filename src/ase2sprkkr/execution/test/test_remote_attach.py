@@ -181,3 +181,36 @@ def test_remote_executor_attach_rejects_reference_for_other_backend(tmp_path):
     )
     with pytest.raises(ValueError, match="different remote endpoint"):
         executor.attach(run)
+
+
+def test_remote_attach_preserves_existing_partial_stream(tmp_path, monkeypatch):
+    import asyncio
+    from ..run_model import FileEntry
+    local_root = tmp_path / "local"
+    remote_root = tmp_path / "remote"
+    local_root.mkdir()
+    remote_root.mkdir()
+    local_output = local_root / "run.out"
+    local_output.write_bytes(b"partial")
+    endpoint = _executor()
+    context = endpoint._context(endpoint, _launch(local_root, remote_root))
+    run = RunRecord(
+        id="partial", task="SCF", state=RunState.RUNNING,
+        created_at="2026-10-13T08:00:00+00:00",
+        updated_at="2026-10-13T08:00:00+00:00",
+        execution=Execution(endpoint_for_executor(endpoint),
+                            WorkingDirectory(str(local_root), str(remote_root)),
+                            "opaque-handle"),
+        files=FileManifest(stdout=FileEntry(
+            local_path=str(local_output),
+            remote_path=str(remote_root / "run.out"),
+        )),
+    )
+
+    async def status(*args, **kwargs):
+        return {"state": "running"}
+    monkeypatch.setattr(context, "_status", status)
+    runner = asyncio.run(context.attach(run, start=False))
+    assert runner.spec.output_file.tell() == len(b"partial")
+    runner.spec.output_file.close()
+    assert local_output.read_bytes() == b"partial"

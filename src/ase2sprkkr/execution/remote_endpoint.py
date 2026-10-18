@@ -23,7 +23,6 @@ from .base import (
 )
 from .remote import FileSyncPolicy, RemoteRunner, _run_sync
 from .stream_protocol import FramedRunningCommand
-from .transport import AtomicLocalFile
 from .run_model import FileEntry, CacheEntry, FileManifest, FileMapping, WorkingDirectory
 from .endpoint import endpoint_for_executor
 
@@ -342,21 +341,14 @@ class _RemoteRunContext:
                 before = tuple(before)
             cache_before[item["path"]] = before
 
-        opened = []
-        try:
-            output_file = None
-            if output_local is not None:
-                output_file = AtomicLocalFile(output_local)
-                opened.append(output_file)
-
+        output_file = None if output_local is None else open(output_local, "ab")
+        if error_local is None:
             error_file = None
-            if error_local is not None:
-                if output_local is not None and error_local == output_local:
-                    error_file = output_file
-                else:
-                    error_file = AtomicLocalFile(error_local)
-                    opened.append(error_file)
-
+        elif error_local == output_local:
+            error_file = output_file
+        else:
+            error_file = open(error_local, "ab")
+        try:
             spec = ExecutionSpec(
                 argv=(),
                 input_file=None if input_local is None else os.fspath(input_local),
@@ -395,8 +387,9 @@ class _RemoteRunContext:
                 runner.start()
             return runner
         except BaseException:
-            for file in opened:
-                file.discard()
+            for file in (output_file, error_file):
+                if file is not None and not file.closed:
+                    file.close()
             raise
 
 
