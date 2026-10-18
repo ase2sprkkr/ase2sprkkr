@@ -144,3 +144,47 @@ def test_detached_supervisor_does_not_cancel_on_disconnect(tmp_path):
         finally:
             await streams.finish()
     asyncio.run(run())
+
+
+def test_none_streams_live_only_without_spool_files(tmp_path):
+    async def run():
+        streams = SupervisorStreams(None, None)
+        await streams.start()
+        try:
+            received = []
+            task = asyncio.create_task(follow_socket(
+                streams.socket_path, {"out": 0, "err": 0},
+                lambda *args: received.append(args),
+            ))
+            await asyncio.sleep(0.05)
+            streams.publish("out", b"observed")
+            streams.publish("err", b"warning")
+            streams.terminal({"state": "finished", "return_code": 0})
+            assert (await asyncio.wait_for(task, 2))["return_code"] == 0
+            assert [item[2] for item in received] == [b"observed", b"warning"]
+            assert list(tmp_path.iterdir()) == []
+            assert streams._spools == {}
+        finally:
+            await streams.finish()
+    asyncio.run(run())
+
+
+def test_live_only_stream_does_not_replay_earlier_bytes(tmp_path):
+    async def run():
+        streams = SupervisorStreams(None, None)
+        await streams.start()
+        try:
+            streams.publish("out", b"old")
+            seen = []
+            follower = asyncio.create_task(follow_socket(
+                streams.socket_path, {"out": 0, "err": 0},
+                lambda *args: seen.append(args),
+            ))
+            await asyncio.sleep(0.05)
+            streams.publish("out", b"new")
+            streams.terminal({"state": "finished", "return_code": 0})
+            await asyncio.wait_for(follower, 2)
+            assert seen == [("out", 3, b"new")]
+        finally:
+            await streams.finish()
+    asyncio.run(run())
