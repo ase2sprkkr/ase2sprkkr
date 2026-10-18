@@ -12,7 +12,7 @@ def parameters():
 
 def test_defaults_round_trip(tmp_path):
     p = parameters()
-    assert p._definition.executable == "kkrgen" and not p.is_mpi()
+    assert p.task_definition.executable == "kkrgen" and not p.task_definition.mpi
     assert p.TASK.EPHOT() == 1253.6 and p.TASK.MODE() == 2
     assert p.TASK.ImEFIN() is None and p.TASK.NSPIN() is None
     text = p.to_string(validate=True)
