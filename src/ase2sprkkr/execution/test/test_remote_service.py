@@ -127,6 +127,20 @@ def test_slurm_failed_accounting_record_is_execution_failure(tmp_path, monkeypat
     assert status["failure_phase"] == FailurePhase.EXECUTION.value
 
 
+
+def test_slurm_completed_with_nonzero_exit_is_failed(tmp_path, monkeypatch):
+    _, remote_id = _psij_handle(tmp_path)
+    monkeypatch.setattr(psij, "_slurm_details", lambda _id: {})
+    monkeypatch.setattr(
+        psij, "_scheduler_output", lambda argv: "42|COMPLETED|7:0|\n",
+    )
+    _slurm_executor(monkeypatch)
+    status = remote_service.status_remote(remote_id)
+    assert status["state"] == RunState.FAILED.value
+    assert status["return_code"] == 7
+    assert status["failure_phase"] == FailurePhase.EXECUTION.value
+
+
 def test_follow_returns_unknown_instead_of_waiting_forever(tmp_path, monkeypatch):
     _, remote_id = _psij_handle(tmp_path)
     calls = []

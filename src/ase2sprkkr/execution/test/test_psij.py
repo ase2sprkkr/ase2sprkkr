@@ -263,6 +263,31 @@ def test_psij_merged_output_is_followed_once(monkeypatch, tmp_path):
     assert not any(kind == "err" for kind, value in seen)
 
 
+
+def test_psij_nonzero_completed_job_is_failed(monkeypatch, tmp_path):
+    backend = _Backend()
+    executor = _executor(monkeypatch, backend)
+    runner = executor.create_run(ExecutionSpec(
+        argv=("program",), directory=str(tmp_path), input_file=None,
+        output_file=str(tmp_path / "run.out"),
+    ))
+    runner._job.status = _Status("COMPLETED", 7)
+    assert runner.state == RunState.FAILED
+
+
+def test_psij_slurm_nonzero_accounted_job_is_failed(monkeypatch):
+    executor = _executor(monkeypatch, _Backend())
+    monkeypatch.setattr(psij_backend, "_slurm_details", lambda native_id: {})
+    monkeypatch.setattr(
+        psij_backend, "_scheduler_output",
+        lambda argv: "123|COMPLETED|7:0|\\n".replace("\\n", "\n"),
+    )
+    status = executor.status_native("123")
+    assert status.state == RunState.FAILED
+    assert status.return_code == 7
+    assert status.failure_phase == psij_backend.FailurePhase.EXECUTION
+
+
 def test_psij_mpi_process_count_becomes_resource_spec(monkeypatch, tmp_path):
     backend = _Backend()
     executor = _executor(monkeypatch, backend)

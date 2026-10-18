@@ -278,7 +278,10 @@ class PsijRunner:
     @property
     def state(self):
         state = getattr(getattr(self._job, "status", None), "state", None)
-        return _STATE_MAP.get(getattr(state, "name", None), RunState.UNKNOWN)
+        mapped = _STATE_MAP.get(getattr(state, "name", None), RunState.UNKNOWN)
+        if mapped == RunState.FINISHED and self.return_code not in (None, 0):
+            return RunState.FAILED
+        return mapped
 
     @property
     def exception(self):
@@ -553,6 +556,8 @@ class PsijExecutor(Executor):
                 return_code = None
             elif state == RunState.FINISHED and return_code is None:
                 return_code = 0
+            elif state == RunState.FINISHED and return_code != 0:
+                state = RunState.FAILED
             return RunStatus(
                 state=state,
                 backend_id=native_id,
@@ -573,9 +578,12 @@ class PsijExecutor(Executor):
             if attached and name == "NEW"
             else _STATE_MAP.get(name, RunState.UNKNOWN)
         )
+        return_code = getattr(status, "exit_code", None)
+        if state == RunState.FINISHED and return_code not in (None, 0):
+            state = RunState.FAILED
         return RunStatus(
             state=state, backend_id=native_id,
-            return_code=getattr(status, "exit_code", None),
+            return_code=return_code,
             message=getattr(status, "message", None),
             failure_phase=FailurePhase.EXECUTION if state == RunState.FAILED else None,
         )
