@@ -332,4 +332,11 @@ def test_task_execution_rejects_cross_schema_selector_without_retargeting():
     parameters.change_task("ARPES")
     assert parameters._definition is _schema_for(parameters.task_definition)
     assert parameters.task_definition_required().name == "ARPES"
-\n\ndef test_optional_file_declaration_pickle_roundtrip():\n    import pickle\n\n    task = TaskDefinition("SCF", output_file_templates=(DeclaredFile("extra.dat", optional=True),))\n    restored = pickle.loads(pickle.dumps(task))\n    assert restored == task\n    assert restored.output_file_templates[0].optional is True\n
+
+def test_optional_file_declaration_pickle_roundtrip():
+    import pickle
+
+    task = TaskDefinition("SCF", output_file_templates=(DeclaredFile("extra.dat", optional=True),))
+    restored = pickle.loads(pickle.dumps(task))
+    assert restored == task
+    assert restored.output_file_templates[0].optional is True
