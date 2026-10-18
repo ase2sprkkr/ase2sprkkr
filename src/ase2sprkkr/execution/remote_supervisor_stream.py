@@ -16,7 +16,7 @@ import tempfile
 from dataclasses import dataclass, field
 from pathlib import Path
 
-from ._durability import durable_replace, fsync_directory
+from ._durability import fsync_directory
 
 MAGIC = b"A2SFOLL1"
 _HEADER = struct.Struct("!cQQ")
@@ -61,7 +61,7 @@ class _Follower:
 class SupervisorStreams:
     """One event loop writes the spools and fans out output to followers."""
 
-    def __init__(self, stdout_path=None, stderr_path=None, *, detached=True, atomic=False):
+    def __init__(self, stdout_path=None, stderr_path=None, *, detached=True):
         self.paths = {"out": None if stdout_path is None else os.fspath(stdout_path),
                       "err": None if stderr_path is None else os.fspath(stderr_path)}
         self.merged = (stdout_path is not None and stderr_path is not None
@@ -69,9 +69,6 @@ class SupervisorStreams:
         if self.merged:
             del self.paths["err"]
         self.detached = detached
-        self.atomic = atomic
-        self._destinations = dict(self.paths) if atomic else {}
-        self._temporary = set()
         self.connected = asyncio.Event()
         self.disconnected = asyncio.Event()
         self.cancelled = asyncio.Event()
@@ -88,15 +85,9 @@ class SupervisorStreams:
         for kind, path in self.paths.items():
             if path is not None:
                 Path(path).parent.mkdir(parents=True, exist_ok=True)
-                if self.atomic:
-                    fd, temporary = tempfile.mkstemp(
-                        prefix=f".{Path(path).name}.ase2sprkkr-", dir=Path(path).parent,
-                    )
-                    self.paths[kind] = temporary
-                    self._temporary.add(temporary)
-                    self._spools[kind] = os.fdopen(fd, "wb", buffering=0)
-                else:
-                    self._spools[kind] = open(path, "wb", buffering=0)
+                # Truncate the declared stream at launch. Keep the actual file
+                # available during execution and after failure or cancellation.
+                self._spools[kind] = open(path, "wb", buffering=0)
         self._socket_dir = tempfile.mkdtemp(prefix="ase2sprkkr-follow-")
         self.socket_path = os.path.join(self._socket_dir, "socket")
         self._server = await asyncio.start_unix_server(self._connect, self.socket_path)
@@ -138,20 +129,6 @@ class SupervisorStreams:
             spool.flush()
             os.fsync(spool.fileno())
             fsync_directory(Path(self.paths[kind]).parent)
-
-    def publish_files(self):
-        """Expose completed spools atomically, without losing prior results on launch failure."""
-        if not self.atomic:
-            return
-        for spool in self._spools.values():
-            spool.flush()
-        for kind, destination in self._destinations.items():
-            if destination is None:
-                continue
-            temporary = self.paths[kind]
-            durable_replace(temporary, destination)
-            self._temporary.discard(temporary)
-            self.paths[kind] = destination
 
     def terminal(self, outcome):
         self._terminal = dict(outcome)
@@ -261,11 +238,6 @@ class SupervisorStreams:
             await asyncio.gather(*(f.done.wait() for f in tuple(self._followers)))
         for spool in self._spools.values():
             spool.close()
-        for temporary in self._temporary:
-            try:
-                os.unlink(temporary)
-            except FileNotFoundError:
-                pass
         if self._socket_dir is not None:
             shutil.rmtree(self._socket_dir, ignore_errors=True)
 

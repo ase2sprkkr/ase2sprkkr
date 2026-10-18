@@ -87,7 +87,7 @@ def test_cancel_is_delivered_to_supervisor_not_just_supervisor_pid(tmp_path, mon
     asyncio.run(check())
 
 
-def test_failed_detached_launch_preserves_old_output(tmp_path, monkeypatch):
+def test_failed_detached_launch_clears_previous_output(tmp_path, monkeypatch):
     async def check():
         captured = []
         monkeypatch.setattr(
@@ -103,7 +103,7 @@ def test_failed_detached_launch_preserves_old_output(tmp_path, monkeypatch):
         with os.fdopen(rd, "rb") as pipe:
             assert pipe.readline()
         assert result != 0
-        assert (tmp_path / "stdout").read_bytes() == b"previous"
+        assert (tmp_path / "stdout").read_bytes() == b""
         assert captured[0][1].value == "failed"
         assert not list(tmp_path.glob(".*ase2sprkkr-*"))
     asyncio.run(check())
