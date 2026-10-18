@@ -12,7 +12,7 @@ def parameters():
 
 def test_round_trip(tmp_path):
     p = parameters()
-    assert not p.is_mpi() and p._definition.executable == "kkrgen"
+    assert not p.task_definition.mpi and p.task_definition.executable == "kkrgen"
     assert p.TAU.MOL() and p.TAU.BZINT() == "CLUSTER" and p.TAU.NSHLCLU() == 0
     text = p.to_string(validate=True)
     assert "EMAX=1.0" in text and "MOL" in text and "NSHLCLU=0" in text

@@ -12,7 +12,7 @@ def parameters():
 
 def test_round_trip(tmp_path):
     p = parameters()
-    assert p.is_mpi() and p._definition.executable == "kkrgen"
+    assert p.task_definition.mpi and p.task_definition.executable == "kkrgen"
     assert p.ENERGY.GRID().tolist() == ["3"] and p.TAU.BZINT() == "POINTS"
     text = p.to_string(validate=True)
     assert "EMAX=" not in text
