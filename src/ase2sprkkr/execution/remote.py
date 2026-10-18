@@ -204,11 +204,7 @@ class RemoteRunner:
             self._output_observers.emit(data.decode("utf8"), kind)
 
     def _write_output(self, data, kind):
-        target = (
-            self.spec.error_file
-            if kind == "err" and self.spec.error_file is not None
-            else self.spec.output_file
-        )
+        target = self.spec.error_file if kind == "err" else self.spec.output_file
         if target is not None:
             target.write(data)
             target.flush()
