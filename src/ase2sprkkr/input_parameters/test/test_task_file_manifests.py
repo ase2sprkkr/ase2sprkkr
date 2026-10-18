@@ -80,3 +80,40 @@ def test_jxc_sp_srel_declares_scalar_and_plot_outputs(tmp_path):
         str(tmp_path / "Fe_J_ij.dat"),
         str(tmp_path / "Fe_Jij_*.agr"),
     )
+
+
+def test_spec_inputs_follow_native_flags(tmp_path):
+    for task in ("ARPES", "AIPES", "BAND", "SPLEED", "CLPES"):
+        parameters = InputParameters.create(task)
+        parameters.CONTROL.DATASET = "Fe"
+        assert parameters.input_files(str(tmp_path)) == ()
+        parameters.TASK.INPVER = 0
+        assert parameters.input_files(str(tmp_path)) == (
+            str(tmp_path / "input.inp"),
+        )
+        parameters.TASK.STRVER = 0
+        assert parameters.input_files(str(tmp_path)) == (
+            str(tmp_path / "input.inp"), str(tmp_path / "struc.inp"),
+        )
+
+
+def test_spec_outputs_follow_polarization_and_task(tmp_path):
+    for task in ("ARPES", "AIPES", "CLPES"):
+        parameters = InputParameters.create(task)
+        parameters.CONTROL.DATASET = "Fe"
+        assert parameters.output_files(str(tmp_path)) == (
+            str(tmp_path / "Fe_SPEC.out"), str(tmp_path / "Fe_data.spc"),
+        )
+        parameters.SPEC_PH.POL_P = "S"
+        assert parameters.output_files(str(tmp_path)) == (
+            str(tmp_path / "Fe_SPEC.out"),
+            str(tmp_path / "Fe_data_pol1.spc"),
+            str(tmp_path / "Fe_data_pol2.spc"),
+        )
+
+    for task in ("BAND", "SPLEED"):
+        parameters = InputParameters.create(task)
+        parameters.CONTROL.DATASET = "Fe"
+        assert parameters.output_files(str(tmp_path)) == (
+            str(tmp_path / "Fe_SPEC.out"), str(tmp_path / "Fe_data.spc"),
+        )

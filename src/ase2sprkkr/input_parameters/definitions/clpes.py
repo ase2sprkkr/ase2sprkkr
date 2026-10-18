@@ -2,6 +2,7 @@
 import numpy as np
 from .arpes import input_parameters_definition as arpes_parameters
 from ..task_definition import TaskDefinition
+from ..tasks._spec_files import SPEC_INPUT_FILES, SPEC_OUTPUT_FILES
 from .sections import CONTROL
 from ...common.grammar_types import Integer, Keyword, SetOf
 from ...common.warnings import DataValidityError
@@ -60,6 +61,7 @@ def input_parameters_definition():
     schema = out.copy(add=[task, energy, photon, cl])
     schema.task_selectors = ("CLPES",)
     schema._task_definition = TaskDefinition(
-        "CLPES", executable="kkrspec", mpi=False, output_reader="ARPES"
+        "CLPES", executable="kkrspec", mpi=False, output_reader="ARPES",
+        input_file_templates=SPEC_INPUT_FILES, output_file_templates=SPEC_OUTPUT_FILES
     )
     return schema
