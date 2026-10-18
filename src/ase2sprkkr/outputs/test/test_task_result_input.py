@@ -64,3 +64,20 @@ def test_jxc_continuation_uses_source_result_energy(tmp_path):
 
     assert continuation.input_parameters.task_definition.name == "JXC"
     assert continuation.input_parameters.ENERGY.EMIN() == -0.35
+
+def test_autodetect_single_matching_native_input_file(tmp_path):
+    parameters = InputParameters.create("ARPES")
+    parameters.CONTROL.DATASET = "sample"
+    parameters.CONTROL.POTFIL = "sample.pot"
+    source = tmp_path / "sample_SPEC.inp"
+    source.write_text(parameters.to_string(validate=False))
+    result = TaskResult(None, None, str(tmp_path), output_file="sample_SPEC.out", task_name="ARPES")
+    assert result.input_parameters_file == str(source)
+    assert result.input_parameters.task_name == "ARPES"
+
+
+def test_autodetect_is_not_ambiguous_or_cross_task(tmp_path):
+    for name in ("first.inp", "second.inp"):
+        (tmp_path / name).write_text("invalid")
+    result = TaskResult(None, None, str(tmp_path), task_name="ARPES")
+    assert result.input_parameters is None
