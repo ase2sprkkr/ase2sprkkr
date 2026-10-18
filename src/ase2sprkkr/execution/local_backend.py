@@ -212,32 +212,36 @@ def submit(directory, run_id, request):
         sys.executable, "-m", "ase2sprkkr.execution.local_backend",
         directory, run_id, json.dumps(request),
     ]
+    read_fd, write_fd = os.pipe()
     try:
-        child = subprocess.Popen(
-            command, stdin=subprocess.DEVNULL,
-            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
-            start_new_session=True, close_fds=True,
-        )
-    except OSError as exc:
-        raise SubmissionNotStarted(str(exc)) from exc
-
-    # The worker persists its identity *before* starting the calculation.
-    # A lost reply can recover by run_id, without a second lifecycle store.
-    while True:
-        identity = _receipt(directory, run_id, "handoff.json")
-        if identity is not None:
-            if identity["pid"] != child.pid or identity["run_id"] != run_id:
-                raise RuntimeError("Mismatched local worker identity")
-            return _backend_id(identity)
-        code = child.poll()
-        if code is not None:
-            raise SubmissionNotStarted(
-                f"Local worker exited before the durable handoff (exit {code})"
+        try:
+            child = subprocess.Popen(
+                [*command, str(write_fd)], stdin=subprocess.DEVNULL,
+                stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+                start_new_session=True, close_fds=True, pass_fds=(write_fd,),
             )
-        time.sleep(0.01)
+        except OSError as exc:
+            raise SubmissionNotStarted(str(exc)) from exc
+        finally:
+            os.close(write_fd)
+        # Durable handoff is confirmed by one byte; EOF means worker exit.
+        with os.fdopen(read_fd, "rb") as channel:
+            read_fd = None
+            confirmed = channel.read(1)
+    finally:
+        if read_fd is not None:
+            os.close(read_fd)
+    identity = _receipt(directory, run_id, "handoff.json")
+    if identity is not None:
+        if identity["pid"] != child.pid or identity["run_id"] != run_id:
+            raise RuntimeError("Mismatched local worker identity")
+        return _backend_id(identity)
+    if confirmed:
+        raise RuntimeError("Worker acknowledged handoff without a durable receipt")
+    raise SubmissionNotStarted("Local worker exited before durable handoff")
 
 
-def _worker(directory, run_id, request):
+def _worker(directory, run_id, request, handoff_fd):
     meta = _run_dir(directory, run_id)
     identity = _identity(run_id)
     cancelled = False
@@ -253,6 +257,8 @@ def _worker(directory, run_id, request):
 
     signal.signal(signal.SIGTERM, on_cancel)
     durable_write_json(meta / "handoff.json", identity)
+    os.write(handoff_fd, b"1")
+    os.close(handoff_fd)
 
     code = None
     phase = None
@@ -410,10 +416,10 @@ def local_manifest(files, directory, identifier):
 
 def main(argv=None):
     args = sys.argv[1:] if argv is None else argv
-    if len(args) != 3:
-        raise SystemExit("usage: local_backend DIRECTORY RUN_ID JSON_SPEC")
-    directory, run_id, request = args
-    _worker(directory, run_id, json.loads(request))
+    if len(args) != 4:
+        raise SystemExit("usage: local_backend DIRECTORY RUN_ID JSON_SPEC HANDOFF_FD")
+    directory, run_id, request, handoff_fd = args
+    _worker(directory, run_id, json.loads(request), int(handoff_fd))
 
 
 if __name__ == "__main__":
