@@ -5,7 +5,6 @@ from ase2sprkkr.execution import (
     Executor,
     ProjectRepository,
     RunState,
-    RunStore,
 )
 from ase2sprkkr.input_parameters.input_parameters import InputParameters
 from ase2sprkkr.sprkkr import calculation as calculation_module
@@ -93,10 +92,9 @@ def _parameters(monkeypatch, task="DOS"):
 
 
 def _manager(tmp_path):
-    return ExecutionManager(
-        RunStore(tmp_path / "runs"),
-        project_repository=ProjectRepository(tmp_path / "projects"),
-    )
+    projects = ProjectRepository(tmp_path / "projects")
+    project = projects.create("Calculation project")
+    return ExecutionManager(project_repository=projects).for_project(project)
 
 
 def _runner(parameters, tmp_path, manager, executor=None):
@@ -108,11 +106,11 @@ def _runner(parameters, tmp_path, manager, executor=None):
         result_context=SimpleNamespace(directory=str(tmp_path)),
         profile=SPRKKRProfile(),
         executor=executor,
-        persistent=manager,
+        project=manager,
     )
 
 
-def _persistent_record(parameters, tmp_path):
+def _project_record(parameters, tmp_path):
     manager = _manager(tmp_path)
     runner = _runner(parameters, tmp_path, manager)
     assert runner.id
@@ -123,7 +121,7 @@ def _persistent_record(parameters, tmp_path):
 def test_explicit_manager_persists_task_and_dataset(tmp_path, monkeypatch):
     parameters = _parameters(monkeypatch)
 
-    record = _persistent_record(parameters, tmp_path)
+    record = _project_record(parameters, tmp_path)
 
     assert record.task == parameters.task_name
     assert record.input_definition == parameters.definition_name.upper()
@@ -136,7 +134,7 @@ def test_persistence_uses_task_selected_by_shared_schema_values(tmp_path, monkey
     parameters = _parameters(monkeypatch, "ARPES")
     parameters.TASK.TASK = "SPLEED"
 
-    record = _persistent_record(parameters, tmp_path)
+    record = _project_record(parameters, tmp_path)
 
     assert parameters.requested_task_name == "ARPES"
     assert parameters.task_name == "SPLEED"
@@ -150,7 +148,7 @@ def test_persistence_keeps_ase2sprkkr_task_distinct_from_sprkkr_task_value(
 ):
     parameters = _parameters(monkeypatch, "BSFEK")
 
-    record = _persistent_record(parameters, tmp_path)
+    record = _project_record(parameters, tmp_path)
 
     assert parameters.TASK.TASK() == "BSF"
     assert parameters.task_name == "BSFEK"
@@ -161,20 +159,19 @@ def test_persistence_keeps_ase2sprkkr_task_distinct_from_sprkkr_task_value(
 def test_project_bound_manager_is_preserved_by_execution_adapter(tmp_path, monkeypatch):
     parameters = _parameters(monkeypatch)
     manager = _manager(tmp_path)
-    project = manager.projects.create("Calculation project")
-    manager = manager.for_project(project)
+    project = manager.projects.project(manager.project_id)
     runner = _runner(parameters, tmp_path, manager)
 
     runner.submit()
 
-    assert manager.projects.project(project.id).persistent_refs == (runner.id,)
+    assert manager.store.get(runner.id).id == runner.id
     runner.cancel()
 
 
 def test_persistence_defaults_to_calculator_setting(tmp_path, monkeypatch):
     executor = _Executor()
     manager = _manager(tmp_path)
-    calculator = SPRKKR(directory=tmp_path, executor=executor, persistent=manager)
+    calculator = SPRKKR(directory=tmp_path, executor=executor, project=manager)
     captured = {}
 
     class Prepared:
@@ -187,7 +184,7 @@ def test_persistence_defaults_to_calculator_setting(tmp_path, monkeypatch):
 
     calculator.create_run()
 
-    assert captured["persistent"] is manager
+    assert captured["project"] is manager
     assert captured["executor"] is executor
 
 
