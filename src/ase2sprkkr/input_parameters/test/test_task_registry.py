@@ -337,8 +337,9 @@ def test_task_alias_validation_and_collision(tmp_path, monkeypatch):
     )
     tasks_package = _package(tmp_path, monkeypatch, "_task_alias_collision", {
         "x": ("from ase2sprkkr.input_parameters.task_definition import TaskDefinition\n"
+              "TASK_ALIASES = ('Y',)\n"
               "def task_definition():\n"
-              "    return TaskDefinition('SHARED', name='X', aliases=('Y',))\n"),
+              "    return TaskDefinition('SHARED', name='X', aliases=TASK_ALIASES)\n"),
         "y": ("from ase2sprkkr.input_parameters.task_definition import TaskDefinition\n"
               "def task_definition():\n"
               "    return TaskDefinition('SHARED', name='Y')\n"),
@@ -362,3 +363,55 @@ def test_read_for_canonical_task_accepts_alias_values():
     assert restored.task_name == task.name == "JXC"
     assert restored.task_definition is task
     assert restored.requested_task_name == "JXC"
+
+
+def test_task_alias_discovery_does_not_construct_unrelated_ipds(tmp_path, monkeypatch):
+    """Discovery may import modules, but only the requested IPD is created."""
+    definitions = _package(
+        tmp_path, monkeypatch, "_lazy_task_input_definitions", {
+            "x": (
+                "from ase2sprkkr.input_parameters.input_parameters_definitions "
+                "import InputParametersDefinition\n"
+                "from ase2sprkkr.input_parameters.task_definition "
+                "import TaskDefinition\n"
+                "TASK_ALIASES = ('ALT',)\n"
+                "def input_parameters_definition():\n"
+                "    schema = InputParametersDefinition('x', [])\n"
+                "    schema._task_definition = TaskDefinition('X', aliases=TASK_ALIASES)\n"
+                "    return schema\n"
+            ),
+            "other": (
+                "def input_parameters_definition():\n"
+                "    raise AssertionError('Unrelated IPD was constructed')\n"
+            ),
+        }
+    )
+    extra = _package(tmp_path, monkeypatch, "_lazy_task_extra_definitions", {})
+    registry = TaskRegistry(InputParametersRegistry(definitions), extra)
+    task = registry["ALT"]
+    assert task is registry["X"]
+    assert task.name == "X"
+    assert "_lazy_task_input_definitions.other" in __import__("sys").modules
+    assert "OTHER" not in registry.input_parameters_registry._values
+
+
+def test_task_module_alias_declaration_must_match_definition(tmp_path, monkeypatch):
+    definitions = _package(
+        tmp_path, monkeypatch, "_mismatched_task_alias_definitions", {
+            "x": (
+                "from ase2sprkkr.input_parameters.input_parameters_definitions "
+                "import InputParametersDefinition\n"
+                "from ase2sprkkr.input_parameters.task_definition "
+                "import TaskDefinition\n"
+                "TASK_ALIASES = ('ALT',)\n"
+                "def input_parameters_definition():\n"
+                "    schema = InputParametersDefinition('x', [])\n"
+                "    schema._task_definition = TaskDefinition('X')\n"
+                "    return schema\n"
+            ),
+        }
+    )
+    extra = _package(tmp_path, monkeypatch, "_mismatched_extra_task_definitions", {})
+    registry = TaskRegistry(InputParametersRegistry(definitions), extra)
+    with pytest.raises(RegistryDefinitionError, match="do not match"):
+        registry["ALT"]

@@ -11,6 +11,10 @@ from ..task_definition import TaskDefinition
 from ...common.grammar_types import flag
 
 
+# Importable registration metadata: task discovery must not construct an IPD.
+TASK_ALIASES = ("DMI",)
+
+
 class JxcInputParametersDefinition(InputParametersDefinition):
     task_selectors = ("JXC", "DMI")
 
@@ -95,7 +99,7 @@ def input_parameters_definition():
     )
     schema["CONTROL"]["NONMAG"].warning_condition = _jxc_nonmag_warning_condition
     schema._task_definition = TaskDefinition(
-        "JXC", aliases=("DMI",), executable="kkrgen", mpi=True,
+        "JXC", aliases=TASK_ALIASES, executable="kkrgen", mpi=True,
         output_reader="JXC",
     )
     return schema

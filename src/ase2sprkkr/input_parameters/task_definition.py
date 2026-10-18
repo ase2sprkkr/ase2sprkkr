@@ -400,56 +400,106 @@ class TaskRegistry:
         return task
 
     @cached_property
-    def _tasks_by_name(self):
-        """All canonical task names and aliases; reject shadowing and collisions.
+    def _aliases(self):
+        """Discover task aliases by importing modules, without creating IPDs.
 
-        The input and extra task registries are singleton-style declarations.
-        Task identity and alias metadata must not change after first resolution.
+        TASK_ALIASES is registration metadata co-located with a task's factory;
+        the task object must declare the same aliases. Canonical names and
+        alias collisions are checked before values are materialized.
         """
-        canonical = {}
-        for schema_name in self.input_parameters_registry.names():
-            task = self.input_parameters_registry[schema_name]._task_definition
-            if task is None:
-                continue
-            if task.name in canonical:
-                raise RegistryDefinitionError(f"Duplicate task {task.name}")
-            canonical[task.name] = task
-        for name in self.extra_tasks.names(include_aliases=False):
-            task = self._extra_task(name)
-            if task.name in canonical:
-                raise RegistryDefinitionError(
-                    f"Task {task.name} is defined both by an input schema and explicitly"
-                )
-            canonical[task.name] = task
-
-        by_name = dict(canonical)
-        for task in canonical.values():
-            for alias in task.aliases:
-                if alias in by_name:
-                    raise RegistryDefinitionError(
-                        f"Task alias {alias!r} conflicts with another task name or alias"
+        canonical = set(self.input_parameters_registry.names(include_aliases=False))
+        canonical.update(self.extra_tasks.names(include_aliases=False))
+        aliases = {}
+        for registry in (self.input_parameters_registry, self.extra_tasks):
+            for owner, module in registry.modules.items():
+                declared = getattr(module, "TASK_ALIASES", ())
+                if isinstance(declared, str):
+                    declared = (declared,)
+                try:
+                    declared = tuple(
+                        _normalize_identifier(alias, "TASK_ALIASES")
+                        for alias in declared
                     )
-                by_name[alias] = task
-        return by_name
+                except (TypeError, ValueError) as exc:
+                    raise RegistryDefinitionError(
+                        f"Invalid TASK_ALIASES in {module.__name__}: {exc}"
+                    ) from exc
+                if len(declared) != len(set(declared)):
+                    raise RegistryDefinitionError(
+                        f"Duplicate TASK_ALIASES in {module.__name__}"
+                    )
+                for alias in declared:
+                    if alias in canonical or alias in aliases:
+                        raise RegistryDefinitionError(
+                            f"Task alias {alias!r} conflicts with another task name or alias"
+                        )
+                    aliases[alias] = owner
+        return aliases
+
+    def _canonical_task(self, name):
+        """Materialize at most the single input schema and/or task requested."""
+        try:
+            definition = self.input_parameters_registry[name]
+        except RegistryEntryNotFound:
+            schema_task = None
+        else:
+            schema_task = definition._task_definition
+        extra_task = self._extra_task(name)
+        if schema_task is not None and extra_task is not None:
+            raise RegistryDefinitionError(
+                f"Task {name} is defined both by an input schema and explicitly"
+            )
+        task = extra_task if extra_task is not None else schema_task
+        if task is not None:
+            declared = {
+                alias for alias, owner in self._aliases.items() if owner == name
+            }
+            if set(task.aliases) != declared:
+                raise RegistryDefinitionError(
+                    f"Task {name} aliases {task.aliases!r} do not match "
+                    f"module TASK_ALIASES {tuple(sorted(declared))!r}"
+                )
+        return task
 
     def __getitem__(self, name):
-        name = self.normalize_name(name)
-        try:
-            return self._tasks_by_name[name]
-        except KeyError:
-            raise RegistryEntryNotFound(name) from None
+        requested = self.normalize_name(name)
+        canonical = self._aliases.get(requested, requested)
+        task = self._canonical_task(canonical)
+        if task is None:
+            if requested in self._aliases:
+                raise RegistryDefinitionError(
+                    f"Alias {requested!r} references {canonical!r}, "
+                    "which does not declare a canonical task"
+                )
+            raise RegistryEntryNotFound(requested)
+        return task
 
     def __contains__(self, name):
-        return self.normalize_name(name) in self._tasks_by_name
+        try:
+            self[name]
+        except RegistryEntryNotFound:
+            return False
+        return True
 
     def names(self, *, include_aliases=True):
-        names = self._tasks_by_name
-        if not include_aliases:
-            names = {task.name: task for task in names.values()}
-        return tuple(sorted(names))
+        """List tasks, loading definitions only when enumerating all tasks."""
+        candidates = set(self.input_parameters_registry.names(include_aliases=False))
+        candidates.update(self.extra_tasks.names(include_aliases=False))
+        canonical = {
+            name for name in candidates if self._canonical_task(name) is not None
+        }
+        if include_aliases:
+            for alias, owner in self._aliases.items():
+                if owner not in canonical:
+                    raise RegistryDefinitionError(
+                        f"Alias {alias!r} references {owner!r}, "
+                        "which does not declare a canonical task"
+                    )
+            canonical.update(self._aliases)
+        return tuple(sorted(canonical))
 
     def values(self):
-        """Return each canonical task once, excluding duplicate alias entries."""
+        """Return each canonical task once, excluding alias duplicates."""
         return tuple(self[name] for name in self.names(include_aliases=False))
 
     def task_for_parameters(self, parameters):

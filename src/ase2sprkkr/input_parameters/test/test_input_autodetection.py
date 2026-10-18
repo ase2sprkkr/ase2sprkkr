@@ -104,7 +104,7 @@ def test_native_dmi_only_and_combined_flags_are_not_task_aliases():
         restored = _roundtrip(params)
         assert restored.definition_name == "JXC"
         assert restored.TASK.DMI()
-        assert restored.TASK.JXC() is not dmi_only
+        assert restored.TASK.JXC() == (not dmi_only)
         assert restored.task_name == "JXC"
         assert restored.TASK.TASK() == "JXC"
         assert restored.task_definition is InputParameters.task_registry["DMI"]
