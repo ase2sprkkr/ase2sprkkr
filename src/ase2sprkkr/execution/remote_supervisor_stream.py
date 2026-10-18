@@ -172,10 +172,14 @@ class SupervisorStreams:
                 self._session_follower = follower
                 self.connected.set()
                 disconnect_watch = asyncio.create_task(reader.read(1))
-                disconnect_watch.add_done_callback(lambda _: self.disconnected.set())
+                disconnect_watch.add_done_callback(
+                    lambda _: (self.disconnected.set(), follower.wake.set())
+                )
             self._followers.add(follower)
             writer.write(MAGIC)
             while True:
+                if disconnect_watch is not None and disconnect_watch.done():
+                    return
                 if follower.replay:
                     await writer.drain()
                     for kind, path in self.paths.items():
