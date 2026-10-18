@@ -3,8 +3,6 @@
 from __future__ import annotations
 
 import io
-import pyparsing as pp
-
 from . import definitions, tasks
 from .task_definition import InputParametersRegistry, TaskRegistry
 from ..sprkkr.configuration import (
@@ -15,9 +13,7 @@ from ..sprkkr.configuration import (
 from ..common.configuration_containers import BaseConfigurationContainer
 from ..common.repeated_configuration_containers import RepeatedConfigurationContainer
 from ..common.decorators import cached_class_property
-from ..common.warnings import DataValidityError
 from ..potentials.potentials import Potential
-
 
 class InputSection(ConfigurationSection):
     """Input parameters sections have nothing special yet."""
@@ -285,60 +281,12 @@ class InputParameters(ConfigurationFile):
 
     @classmethod
     def from_file(cls, filename, allow_dangerous: bool = False):
-        """Try registered schemas, preferring matching task or schema ADSI.
+        """Read with the IPD class-level selector autodetection."""
+        from .input_parameters_definitions import InputParametersDefinition
 
-        SPR-KKR schemas intentionally overlap, so a permissive schema can parse
-        an input intended for another task. ``ADSI`` may identify either a task
-        (for example ``SCF``) or an input schema (for example ``BLOCHSF`` for
-        the shared BSF schema). Because ADSI is user-editable, an unmatched
-        value remains only a weak signal and falls back to the first successful
-        parse after all schemas have been considered.
-        """
-        last = None
-        first_match = None
-        is_stream = hasattr(filename, "seek")
-        for definition in cls.definitions.values():
-            if is_stream:
-                filename.seek(0)
-            try:
-                parsed = definition.read_from_file(
-                    filename, allow_dangerous=allow_dangerous
-                )
-            except (pp.ParseBaseException, DataValidityError) as e:
-                last = e
-                continue
-
-            if first_match is None:
-                first_match = parsed
-
-            try:
-                adsi = parsed.CONTROL.ADSI()
-            except (AttributeError, KeyError):
-                continue
-            if not isinstance(adsi, str):
-                continue
-
-            normalized_adsi = cls.task_registry.normalize_name(adsi)
-            if (
-                normalized_adsi in cls.task_registry
-                and parsed.task_name == normalized_adsi
-            ):
-                return parsed
-
-            try:
-                schema_adsi = definition["CONTROL"]["ADSI"].default_value
-            except (KeyError, AttributeError):
-                continue
-            if isinstance(schema_adsi, str) and (
-                cls.task_registry.normalize_name(schema_adsi) == normalized_adsi
-            ):
-                return parsed
-
-        if first_match is not None:
-            return first_match
-        if last is None:
-            raise ValueError("No SPR-KKR input-parameter definitions are available")
-        raise last
+        return InputParametersDefinition.from_file(
+            filename, allow_dangerous=allow_dangerous
+        )
 
     def __repr__(self):
         task = self.task_definition

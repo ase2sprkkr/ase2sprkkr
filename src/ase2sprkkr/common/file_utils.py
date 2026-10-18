@@ -1,7 +1,7 @@
 import contextlib
 import tempfile
 import os
-from io import BufferedIOBase
+from io import IOBase
 
 _RAISE = object()
 
@@ -55,7 +55,7 @@ def filename_from_file(file, default=_RAISE, realpath=False):
     If the object has no filename, return ``default`` or raise ``TypeError``
     when no default was supplied.
     """
-    if isinstance(file, BufferedIOBase):
+    if isinstance(file, IOBase):
         file = getattr(file, "name", file)
     try:
         out = os.fspath(file)
