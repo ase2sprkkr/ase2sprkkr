@@ -735,6 +735,21 @@ class RemoteRunner:
 
             self._state = RunState.DOWNLOADING
             try:
+                if stream_error is not None:
+                    # Streaming is observational: discard its provisional
+                    # local copy and retrieve the authoritative declared spool.
+                    self._finish_output_files(commit=False)
+                    if self._files is not None:
+                        seen_streams = set()
+                        for entry in (self._files.stdout, self._files.stderr):
+                            if entry is None or entry.local_path is None or entry.remote_path is None:
+                                continue
+                            if entry.local_path in seen_streams:
+                                continue
+                            seen_streams.add(entry.local_path)
+                            await self.executor.transport.get_file(
+                                entry.remote_path, entry.local_path
+                            )
                 await self._sync_output_files(required=backend_state == RunState.FINISHED)
                 await self._sync_cache_files()
                 self._finish_output_files(commit=True)
