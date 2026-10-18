@@ -382,6 +382,34 @@ def test_psij_project_run_exposes_recovery_metadata(monkeypatch, tmp_path):
 
 
 
+def test_psij_non_slurm_attach_waits_for_first_real_status(monkeypatch):
+    executor = _executor(monkeypatch, _Backend())
+    executor.backend = "pbs"
+    executor.url = "remote-pbs"
+    executor._status_jobs = {}
+    observed = []
+
+    class Job:
+        def __init__(self):
+            self.status = _Status("NEW")
+        def wait(self, *, target_states):
+            observed.append(target_states)
+            self.status = _Status("ACTIVE")
+            return self.status
+
+    class Backend:
+        def attach(self, job, native_id):
+            observed.append(native_id)
+
+    executor._job_executor = Backend()
+    executor._psij = SimpleNamespace(
+        Job=Job, JobState=SimpleNamespace(QUEUED="QUEUED"),
+    )
+    status = executor.status_native("native-42")
+    assert status.state == RunState.RUNNING
+    assert observed == ["native-42", ["QUEUED"]]
+
+
 def test_psij_record_status_uses_native_status(monkeypatch, tmp_path):
     executor = _executor(monkeypatch, _Backend())
     expected = psij_backend.RunStatus(
