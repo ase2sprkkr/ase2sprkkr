@@ -12,11 +12,11 @@ import numpy as np
 
 
 _DIAGRAM = re.compile(
-    r"\\b(?:i\\s*\\(e\\)\\s*-?diagram|rotation diagram|scattering-angle diagram)",
+    r"\b(?:i\s*\(e\)\s*-?diagram|rotation diagram|scattering-angle diagram)",
     re.IGNORECASE,
 )
 _NUMBER = re.compile(
-    r"[+-]?(?:\\d+\\.\\d*|\\.\\d+)[de][+-]?\\d{2,3}\\Z",
+    r"[+-]?(?:\d+\.\d*|\.\d+)[de][+-]?\d{2,3}\Z",
     re.IGNORECASE,
 )
 
