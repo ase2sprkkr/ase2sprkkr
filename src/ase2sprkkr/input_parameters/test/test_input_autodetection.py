@@ -82,34 +82,29 @@ def test_jxc_combined_selectors_separated_by_other_task_options():
     assert list(parsed.TASK.TASK()) == ["DMI", "JXC"]
 
 
-def test_distinct_jxc_and_dmi_tasks_share_input_definition():
-    dmi = InputParameters.create("DMI")
-    assert dmi.definition_name == "JXC"
-    assert dmi.task_name == "DMI"
-    assert dmi.task_definition is InputParameters.task_registry["JXC"]
-    assert dmi.requested_task_name == "DMI"
-    assert dmi.TASK.DMI()
-    assert not dmi.TASK.JXC()
-    assert dmi.TASK.TASK() == "DMI"
-
+def test_alias_is_exactly_the_same_task_and_defaults():
     jxc = InputParameters.create("JXC")
-    assert jxc.definition_name == "JXC"
-    assert jxc.task_name == "JXC"
+    dmi = InputParameters.create("DMI")
+    assert jxc.definition_name == dmi.definition_name == "JXC"
     assert jxc.task_definition is dmi.task_definition
-    assert jxc.TASK.JXC()
-    assert not jxc.TASK.DMI()
-    assert jxc.TASK.TASK() == "JXC"
+    assert jxc.task_name == dmi.task_name == "JXC"
+    assert jxc.requested_task_name == dmi.requested_task_name == "JXC"
+    assert jxc.TASK.JXC() and dmi.TASK.JXC()
+    assert not jxc.TASK.DMI() and not dmi.TASK.DMI()
+    assert jxc.TASK.TASK() == dmi.TASK.TASK() == "JXC"
 
 
-def test_dmi_only_and_combined_task_native_roundtrip():
-    for task in ("DMI", "JXC"):
-        params = InputParameters.create(task)
+def test_native_dmi_only_and_combined_flags_are_not_task_aliases():
+    for dmi_only in (True, False):
+        params = InputParameters.create("JXC")
         params.CONTROL.POTFIL = "Fe.pot"
-        if task == "JXC":
-            params.TASK.DMI = True
+        params.TASK.DMI = True
+        if dmi_only:
+            params.TASK.JXC = False
         restored = _roundtrip(params)
         assert restored.definition_name == "JXC"
         assert restored.TASK.DMI()
-        assert restored.task_name == task
-        assert restored.TASK.TASK() == task
-        assert restored.TASK.JXC() == (task == "JXC")
+        assert restored.TASK.JXC() is not dmi_only
+        assert restored.task_name == "JXC"
+        assert restored.TASK.TASK() == "JXC"
+        assert restored.task_definition is InputParameters.task_registry["DMI"]

@@ -14,9 +14,6 @@ from ...common.grammar_types import flag
 class JxcInputParametersDefinition(InputParametersDefinition):
     task_selectors = ("JXC", "DMI")
 
-    def task_definition_name(self, parameters):
-        return _selected_task_name(parameters.TASK)
-
     def initialize_from_result(self, parameters, result):
         parameters.ENERGY.EMIN.set_default(result.last_iteration.energy.EMIN())
 
@@ -35,23 +32,14 @@ class JxcInputParametersDefinition(InputParametersDefinition):
         return tuple(files)
 
 
-def _requested_task(option):
-    return option._get_root_container().requested_task_name
-
-
 def _jxc_default(option):
-    requested = _requested_task(option)
-    return requested == "JXC" or (
-        requested is None and not option._container.DMI()
-    )
+    # Native TASK DMI without JXC is a valid DMI-only calculation.
+    # The task identity nevertheless remains the canonical JXC task.
+    return not option._container.DMI()
 
 
-def _dmi_default(option):
-    return _requested_task(option) == "DMI"
-
-
-def _selected_task_name(section):
-    return "JXC" if section.JXC() else "DMI" if section.DMI() else "JXC"
+def _selected_task_name(_section):
+    return "JXC"
 
 
 def _jxc_mode_warning_condition(value):
@@ -88,7 +76,7 @@ def input_parameters_definition():
                 [
                     V("JXC", flag, default_value=_jxc_default, is_required=False,
                       info="Calculate exchange couplings and exchange tensor."),
-                    V("DMI", flag, default_value=_dmi_default, is_required=False,
+                    V("DMI", flag, default_value=False, is_required=False,
                       info="Calculate Dzyaloshinskii-Moriya interaction vectors."),
                     GeneratedValueDefinition("TASK", _selected_task_name),
                     V("HFF", False, info="Enable the hyperfine-field calculation."),

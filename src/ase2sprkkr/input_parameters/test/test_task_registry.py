@@ -325,26 +325,40 @@ def test_task_alias_validation_and_collision(tmp_path, monkeypatch):
         with pytest.raises((TypeError, ValueError)):
             TaskDefinition("X", aliases=aliases)
 
-    package = _package(tmp_path, monkeypatch, "_task_alias_collision", {
+    definitions_package = _package(
+        tmp_path, monkeypatch, "_task_alias_collision_schemas", {
+            "shared": (
+                "from ase2sprkkr.input_parameters.input_parameters_definitions "
+                "import InputParametersDefinition\n"
+                "def input_parameters_definition():\n"
+                "    return InputParametersDefinition('shared', [])\n"
+            ),
+        },
+    )
+    tasks_package = _package(tmp_path, monkeypatch, "_task_alias_collision", {
         "x": ("from ase2sprkkr.input_parameters.task_definition import TaskDefinition\n"
               "def task_definition():\n"
-              "    return TaskDefinition('SCF', name='X', aliases=('Y',))\n"),
+              "    return TaskDefinition('SHARED', name='X', aliases=('Y',))\n"),
         "y": ("from ase2sprkkr.input_parameters.task_definition import TaskDefinition\n"
               "def task_definition():\n"
-              "    return TaskDefinition('SCF', name='Y')\n"),
+              "    return TaskDefinition('SHARED', name='Y')\n"),
     })
-    registry = TaskRegistry(InputParameters.input_parameters_registry, package)
+    registry = TaskRegistry(InputParametersRegistry(definitions_package), tasks_package)
     with pytest.raises(RegistryDefinitionError, match="alias .*conflicts"):
         registry.names()
 
 
 def test_read_for_canonical_task_accepts_alias_values():
     task = InputParameters.task_registry["DMI"]
-    params = InputParameters.create("DMI")
+    params = InputParameters.create("JXC")
+    params.TASK.JXC = False
+    params.TASK.DMI = True
     params.CONTROL.POTFIL = "Fe.pot"
     restored = InputParameters.input_parameters_registry.read_for_task(
         task, io.StringIO(params.to_string(validate=True))
     )
-    assert restored.task_name == "DMI"
+    assert restored.TASK.DMI()
+    assert not restored.TASK.JXC()
+    assert restored.task_name == task.name == "JXC"
     assert restored.task_definition is task
-    assert restored.requested_task_name == "DMI"
+    assert restored.requested_task_name == "JXC"

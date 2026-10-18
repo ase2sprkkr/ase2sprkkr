@@ -265,21 +265,14 @@ class InputParametersRegistry(ModuleRegistry):
         *,
         inputfile=None,
         outputfile=False,
-        requested_task_name=None,
     ):
-        """Create values for a task, preserving the invoked alias for defaults."""
+        """Create values using the canonical task identity, never its alias."""
         from .input_parameters import InputParameters
 
         definition = self.definition_for_task(task)
-        requested_name = (
-            task.name if requested_task_name is None
-            else _normalize_identifier(requested_task_name, "requested_task_name")
-        )
-        if requested_name != task.name and requested_name not in task.aliases:
-            raise ValueError(f"{requested_name} is not a name of task {task.name}")
         return InputParameters(
             definition=definition,
-            requested_task_name=requested_name,
+            requested_task_name=task.name,
             inputfile=inputfile,
             outputfile=outputfile,
         )
@@ -328,7 +321,7 @@ class InputParametersRegistry(ModuleRegistry):
         if out.task_definition != task:
             raise TaskMismatchError(task.name, task_name)
 
-        out._requested_task_name = task_name
+        out._requested_task_name = task.name
         return out
 
     def create_from_result(self, task, result):
