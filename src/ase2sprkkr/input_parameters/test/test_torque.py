@@ -13,7 +13,7 @@ def parameters():
 
 def test_round_trip(tmp_path):
     p = parameters()
-    assert p.is_mpi() and p.task_definition.executable == "kkrgen"
+    assert p.task_definition.mpi and p.task_definition.executable == "kkrgen"
     assert p.ENERGY.GRID().tolist() == ["8"] and p.ENERGY.NE().tolist() == [36]
     assert p.TASK.THETAQ().tolist() == [90.0]
     text = p.to_string(validate=True)

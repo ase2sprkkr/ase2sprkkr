@@ -6,7 +6,7 @@ from ase2sprkkr.input_parameters.input_parameters import InputParameters
 def _names(parameters, tmp_path, kind="output"):
     return {
         os.path.basename(os.fspath(path))
-        for path in getattr(parameters._definition, f"{kind}_files")(parameters, tmp_path)
+        for path in getattr(parameters, f"{kind}_files")(tmp_path)
     }
 
 

@@ -13,7 +13,7 @@ def parameters():
 
 def test_defaults_and_file_round_trip(tmp_path):
     p = parameters()
-    assert p.task_definition.executable == "kkrgen" and not p.is_mpi()
+    assert p.task_definition.executable == "kkrgen" and not p.task_definition.mpi
     assert p.TASK.AVEC().tolist() == [2.0, 0.0, 0.0]
     assert p.TASK.BVEC().tolist() == [0, 2, 0]
     assert p.TASK.DVEC().tolist() == [0.0, 0.0, 0.0]

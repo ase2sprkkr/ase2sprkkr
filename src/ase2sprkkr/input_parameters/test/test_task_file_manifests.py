@@ -153,9 +153,10 @@ def test_dos_native_energy_constraints():
 
 def test_scf_startup_dos_is_optional(tmp_path):
     parameters = InputParameters.create("SCF")
+    parameters.CONTROL.POTFIL = "Fe.pot"
     files = parameters.output_files(str(tmp_path))
-    assert files[-1].optional is True
-    assert not getattr(files[0], "optional", False)
+    assert next(f for f in files if str(f).endswith("_SCFSTART.dos")).optional
+    assert not next(f for f in files if str(f).endswith("Fe.pot_new")).optional
 
 
 def test_bsf_output_file_declarations(tmp_path):

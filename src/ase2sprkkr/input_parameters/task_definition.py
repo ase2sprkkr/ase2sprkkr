@@ -47,6 +47,10 @@ class DeclaredFile(str):
             return not self.optional and str.__eq__(self, other)
         return NotImplemented
 
+    def __ne__(self, other):
+        result = self.__eq__(other)
+        return NotImplemented if result is NotImplemented else not result
+
     def __hash__(self):
         return hash((str(self), True)) if self.optional else hash(str(self))
 

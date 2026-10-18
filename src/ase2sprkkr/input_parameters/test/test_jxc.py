@@ -12,7 +12,7 @@ def parameters():
 
 def test_defaults_round_trip(tmp_path):
     p = parameters()
-    assert p.is_mpi() and p.task_definition.executable == "kkrgen"
+    assert p.task_definition.mpi and p.task_definition.executable == "kkrgen"
     assert p.TASK.TASK() == "JXC"
     assert p.TASK.JXC() and not p.TASK.DMI()
     assert p.TAU.BZINT() == "POINTS" and p.ENERGY.NE().tolist() == [30]

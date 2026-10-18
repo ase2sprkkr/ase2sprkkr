@@ -12,7 +12,7 @@ def parameters():
 
 def test_round_trip(tmp_path):
     p = parameters()
-    assert not p.is_mpi() and p.task_definition.executable == "kkrscf"
+    assert not p.task_definition.mpi and p.task_definition.executable == "kkrscf"
     assert p.SCF.VXC() == "VWN"
     assert p.ENERGY.NE().tolist() == [32]
     text = p.to_string(validate=True)
