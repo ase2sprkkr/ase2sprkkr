@@ -187,3 +187,31 @@ def test_terminal_without_ticket_is_still_accessible_by_handle(tmp_path):
     runner.wait()
     assert acknowledge_submission(RUN_ID)["acknowledged"]
     assert LocalExecutor().status(_record(tmp_path, runner.backend_id))[0].state == RunState.FINISHED
+
+
+def test_local_prelaunch_error_is_known_submission_failure(tmp_path, monkeypatch):
+    from ase2sprkkr.execution import remote_service
+    from ase2sprkkr.execution.base import SubmissionNotStarted
+    from ase2sprkkr.execution import FailurePhase
+
+    def failed_launch(*args, **kwargs):
+        raise OSError("cannot spawn supervisor")
+
+    monkeypatch.setattr(remote_service.subprocess, "Popen", failed_launch)
+    runner = LocalExecutor().create_project_run(_spec(tmp_path), run_id=RUN_ID)
+    with pytest.raises(SubmissionNotStarted, match="cannot spawn supervisor"):
+        runner.submit()
+    assert runner.backend_id is None
+    assert runner.state == RunState.FAILED
+    assert runner.failure_phase == FailurePhase.SUBMISSION
+    assert not _recover_submission(RUN_ID)
+
+
+def test_terminal_runner_state_survives_outcome_acknowledgement(tmp_path):
+    runner = LocalExecutor().create_project_run(_spec(tmp_path), run_id=RUN_ID)
+    runner.submit()
+    assert runner.wait().return_code == 0
+    assert runner.state == RunState.FINISHED
+    LocalExecutor().acknowledge(_record(tmp_path, runner.backend_id))
+    assert runner.state == RunState.FINISHED
+    assert runner.return_code == 0

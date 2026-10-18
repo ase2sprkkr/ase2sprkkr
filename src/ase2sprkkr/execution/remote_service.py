@@ -21,7 +21,7 @@ from pathlib import Path
 from uuid import uuid4
 
 from .growing_file_tail import follow_growing_files
-from .base import ExecutionSpec, FailurePhase, LaunchSpec, RunState
+from .base import ExecutionSpec, FailurePhase, LaunchSpec, RunState, SubmissionNotStarted
 from .remote_process_worker import _SPEC_ENV, _START_FD_ENV
 from .remote_mailbox import publish_outcome, read_outcome, acknowledge_outcome, _path as _outcome_path
 from ._durability import durable_mkdir, durable_write_json, fsync_directory
@@ -126,17 +126,23 @@ def _request_spec(request):
 def _local_submit(request):
     from .local import materialize_local_spec
 
-    directory = Path(request["directory"]).expanduser().resolve()
-    directory.mkdir(parents=True, exist_ok=True)
-    spec = materialize_local_spec(
-        _request_spec(dict(request, directory=os.fspath(directory)))
-    )
+    # Everything here happens before launching a supervisor. A failed local
+    # filesystem setup proves that submission never started, unlike a lost
+    # reply after Popen.
+    try:
+        directory = Path(request["directory"]).expanduser().resolve()
+        directory.mkdir(parents=True, exist_ok=True)
+        spec = materialize_local_spec(
+            _request_spec(dict(request, directory=os.fspath(directory)))
+        )
 
-    output_path = _absolute(directory, spec.output_file)
-    error_path = _absolute(directory, spec.error_file)
-    for path in (output_path, error_path):
-        if path is not None:
-            Path(path).parent.mkdir(parents=True, exist_ok=True)
+        output_path = _absolute(directory, spec.output_file)
+        error_path = _absolute(directory, spec.error_file)
+        for path in (output_path, error_path):
+            if path is not None:
+                Path(path).parent.mkdir(parents=True, exist_ok=True)
+    except OSError as exc:
+        raise SubmissionNotStarted(str(exc)) from exc
 
     run_id = str(request.get("id") or uuid4().hex)
     receipt_id = uuid4().hex
@@ -160,17 +166,20 @@ def _local_submit(request):
     env[_START_FD_ENV] = str(start_fd)
     try:
         try:
-            process = subprocess.Popen(
-                [sys.executable, "-m", "ase2sprkkr.execution.remote_process_worker"],
-                cwd=directory,
-                stdin=subprocess.DEVNULL,
-                stdout=subprocess.DEVNULL,
-                stderr=subprocess.DEVNULL,
-                env=env,
-                start_new_session=True,
-                close_fds=True,
-                pass_fds=(start_fd, socket_write_fd),
-            )
+            try:
+                process = subprocess.Popen(
+                    [sys.executable, "-m", "ase2sprkkr.execution.remote_process_worker"],
+                    cwd=directory,
+                    stdin=subprocess.DEVNULL,
+                    stdout=subprocess.DEVNULL,
+                    stderr=subprocess.DEVNULL,
+                    env=env,
+                    start_new_session=True,
+                    close_fds=True,
+                    pass_fds=(start_fd, socket_write_fd),
+                )
+            except OSError as exc:
+                raise SubmissionNotStarted(str(exc)) from exc
         finally:
             os.close(start_fd)
             os.close(socket_write_fd)

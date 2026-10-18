@@ -162,6 +162,11 @@ class LocalProjectRunner:
         if self._backend_id is None:
             return self._state
         status = local_status(self._backend_id, self._files)
+        # Terminal backend facts may already have been acknowledged and
+        # deleted after the client durably stored them. Never turn a known
+        # finished runner back into UNKNOWN.
+        if self._state in _TERMINAL and status.state == RunState.UNKNOWN:
+            return self._state
         self._state = status.state
         self._failure_phase = status.failure_phase
         self._failure_message = status.message
@@ -273,7 +278,14 @@ class LocalProjectRunner:
             raise RuntimeError(f"Run is already {self._state.value}")
         if not self._run_id:
             raise RuntimeError("Project run has no run id")
-        reply = submit_remote(self._request())
+        from .base import SubmissionNotStarted
+        try:
+            reply = submit_remote(self._request())
+        except SubmissionNotStarted as exc:
+            self._state = RunState.FAILED
+            self._failure_phase = FailurePhase.SUBMISSION
+            self._failure_message = str(exc)
+            raise
         self._backend_id = reply["remote_id"]
         self._state = RunState(reply["state"])
         self._start_monitor()
