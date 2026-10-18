@@ -134,3 +134,16 @@ def test_scf_invalid_grid_and_mixing_are_rejected():
     parameters.SCF.ALG = "TCHEBY"
     with pytest.raises(DataValidityError, match="TCHEBY"):
         parameters.validate("save")
+
+def test_dos_native_energy_constraints():
+    import pytest
+    from ase2sprkkr.common.warnings import DataValidityError, DataValidityWarning
+
+    parameters = InputParameters.create("DOS")
+    parameters.ENERGY.NE = 1
+    with pytest.raises(DataValidityError, match="two energy points"):
+        parameters.validate("save")
+    parameters.ENERGY.NE = 300
+    parameters.ENERGY.ImE = 0
+    with pytest.warns(DataValidityWarning, match="real axis"):
+        parameters.validate("save")
