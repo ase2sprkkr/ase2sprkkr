@@ -1,3 +1,4 @@
+from threading import Event
 from types import SimpleNamespace
 
 import pytest
@@ -53,6 +54,24 @@ class _Executor(Executor):
     def create_project_run(self, spec, *, run_id, callback=None):
         self.runner = _RawRunner()
         return self.runner
+
+
+def test_finished_run_is_persisted_before_callback_without_wait(tmp_path):
+    store = RunStore(tmp_path / "runs")
+    manager = ExecutionManager(store)
+    finished = Event()
+    run = manager.create_run(
+        _Executor(),
+        SimpleNamespace(directory=str(tmp_path)),
+        process_result=lambda outcome: outcome,
+        task="DOS",
+        callback=lambda result: finished.set(),
+    )
+    run.submit()
+    assert finished.wait(timeout=5), "completion callback was not called"
+    record = store.get(run.id)
+    assert record.state == RunState.FINISHED
+    assert record.finished_at is not None
 
 
 def test_result_processor_failure_is_postprocessing_failure(tmp_path):
