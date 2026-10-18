@@ -32,7 +32,8 @@ class BaseMixed(GrammarType):
         """Select the grammar type corresponding to a Python value."""
         if isinstance(value, str):
             return self.string_type
-        if (isinstance(value, recognized_set_types) and not isinstance(value, unyt.unyt_quantity)\n                and len(value) and isinstance(value[0], str)):
+        if (isinstance(value, recognized_set_types) and not isinstance(value, unyt.unyt_quantity)
+                and len(value) and isinstance(value[0], str)):
             for candidate in self.types:
                 if isinstance(candidate, SetOf) and candidate.type is self.string_type:
                     return candidate

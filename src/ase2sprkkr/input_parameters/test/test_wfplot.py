@@ -39,7 +39,8 @@ def test_discovery_defaults_and_round_trip(tmp_path):
     path = tmp_path / "wfplot.in"
     p.save_to_file(path, atoms=False)
     parsed = InputParameters.from_file(path)
-    assert parsed.task_name == "WFPLOT"\n    assert parsed.task_definition is InputParameters.task_registry["WFPLOT"]
+    assert parsed.task_name == "WFPLOT"
+    assert parsed.task_definition is InputParameters.task_registry["WFPLOT"]
     assert parsed.to_dict() == p.to_dict()
     for copied in (p.copy(copy_values=True), pickle.loads(pickle.dumps(p))):
         assert copied.to_dict() == p.to_dict()
