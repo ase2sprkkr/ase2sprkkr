@@ -300,10 +300,14 @@ def status_remote(remote_id):
         }
 
     if handle["kind"] == "psij":
-        executor = _psij_executor(
-            {"backend": handle["backend"], "url": handle.get("url")}
-        )
-        status = executor.status_native(handle["native_id"])
+        if str(handle["backend"]).lower() == "slurm" and handle.get("url") is None:
+            from .psij import _slurm_status_native
+            status = _slurm_status_native(handle["native_id"])
+        else:
+            executor = _psij_executor(
+                {"backend": handle["backend"], "url": handle.get("url")}
+            )
+            status = executor.status_native(handle["native_id"])
         return {
             "state": status.state.value,
             "return_code": status.return_code,
