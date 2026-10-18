@@ -91,6 +91,7 @@ def test_change_task_retain_values_preserves_explicit_shared_task_value():
     assert parameters.TASK.TASK.is_set()
     assert parameters.TASK.TASK() == "SPLEED"
     assert parameters.task_definition.name == "SPLEED"
+    assert parameters._definition is _schema_for(parameters.task_definition)
 
 
 def test_change_task_retain_values_preserves_explicit_old_default():
@@ -104,6 +105,7 @@ def test_change_task_retain_values_preserves_explicit_old_default():
     assert parameters.task_name == "ARPES"
     assert parameters.TASK.TASK.is_set()
     assert parameters.TASK.TASK() == "ARPES"
+    assert parameters._definition is _schema_for(parameters.task_definition)
 
 
 def test_direct_schema_objects_are_detached():
