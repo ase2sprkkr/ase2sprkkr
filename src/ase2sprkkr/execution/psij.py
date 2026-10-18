@@ -514,18 +514,15 @@ class PsijExecutor(Executor):
         from .run_model import FileEntry
         changes = {}
         for field, remote in (("stdout", stdout), ("stderr", stderr)):
-            if remote:
-                previous = getattr(files, field)
-                changes[field] = FileEntry(
-                    local_path=None if previous is None else previous.local_path,
-                    remote_path=remote,
-                )
+            previous = getattr(files, field)
+            if remote and previous is not None:
+                changes[field] = replace(previous, remote_path=remote)
         return replace(files, **changes) if changes else files
 
     def status_native(self, native_id):
         """Query a scheduler job using only its native identity."""
         native_id = str(native_id)
-        if self.backend.lower() == "slurm":
+        if self.backend.lower() == "slurm" and self.url is None:
             # A PSI/J attach initially reports NEW; short-lived remote commands
             # cannot wait for an asynchronous update or retain the Job cache.
             # Query the same scheduler facts for local and SSH PSI/J runs.
@@ -625,8 +622,11 @@ class PsijExecutor(Executor):
         if not accounting:
             return None
         native_id, state, workdir, stdout, stderr, return_code = accounting[0]
+        recovered_state = _slurm_state(state)
+        if recovered_state == RunState.FINISHED and return_code not in (None, 0):
+            recovered_state = RunState.FAILED
         return {
-            "native_id": str(native_id), "state": _slurm_state(state),
+            "native_id": str(native_id), "state": recovered_state,
             "directory": workdir or directory, "stdout": stdout,
             "stderr": stderr, "return_code": return_code,
         }

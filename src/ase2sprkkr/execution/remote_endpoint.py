@@ -596,11 +596,9 @@ class RemoteEndpointExecutor(Executor):
         changes = {}
         for field, key in (("stdout", "output_file"), ("stderr", "error_file")):
             remote = state.get(key)
-            if remote is not None:
-                old = getattr(files, field)
-                changes[field] = FileEntry(
-                    None if old is None else old.local_path, remote,
-                )
+            old = getattr(files, field)
+            if remote is not None and old is not None:
+                changes[field] = replace(old, remote_path=remote)
         if changes:
             files = replace(files, **changes)
         return RunStatus(

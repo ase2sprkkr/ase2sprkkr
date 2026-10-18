@@ -514,6 +514,27 @@ def test_psij_recovers_completed_slurm_submission_from_accounting(monkeypatch, t
     assert status.files.stdout.remote_path == str(tmp_path / "run.out")
 
 
+def test_psij_recovery_normalizes_nonzero_completed(monkeypatch, tmp_path):
+    executor = _executor(monkeypatch, _Backend())
+
+    def scheduler_output(argv):
+        if argv[0] == "squeue":
+            return ""
+        if argv[:3] == ("scontrol", "show", "config"):
+            return "AccountingStoreFlags = job_comment\\n".replace("\\n", "\n")
+        if argv[0] == "sacct":
+            return "456|ase2sprkkr:run-2|COMPLETED|/tmp|out|err|7:0|\n"
+        raise AssertionError(argv)
+
+    monkeypatch.setattr(psij_backend, "_scheduler_output", scheduler_output)
+    status = executor.recover_submission(
+        "run-2", _psij_run(tmp_path),
+        submitted_at="2026-10-13T08:00:00+02:00",
+    )
+    assert status.state == RunState.FAILED
+    assert status.return_code == 7
+
+
 def test_psij_accounting_confirms_missing_submission(monkeypatch, tmp_path):
     executor = _executor(monkeypatch, _Backend())
 

@@ -141,6 +141,30 @@ def test_slurm_completed_with_nonzero_exit_is_failed(tmp_path, monkeypatch):
     assert status["failure_phase"] == FailurePhase.EXECUTION.value
 
 
+def test_psij_cancellation_does_not_invent_terminal_state(monkeypatch, tmp_path):
+    _, remote_id = _psij_handle(tmp_path)
+    calls = []
+
+    class Job:
+        def cancel(self):
+            calls.append("cancel")
+
+    class Backend:
+        _psij = type("Psij", (), {"Job": Job})
+        _job_executor = type("Executor", (), {
+            "attach": lambda self, job, native_id: calls.append(native_id)
+        })()
+
+    monkeypatch.setattr(remote_service, "_psij_executor", lambda _: Backend())
+    monkeypatch.setattr(remote_service, "status_remote", lambda _: {
+        "state": RunState.RUNNING.value, "return_code": None,
+        "failure_phase": None,
+    })
+    status = remote_service.cancel_remote(remote_id)
+    assert status["state"] == RunState.RUNNING.value
+    assert calls == ["42", "cancel"]
+
+
 def test_follow_returns_unknown_instead_of_waiting_forever(tmp_path, monkeypatch):
     _, remote_id = _psij_handle(tmp_path)
     calls = []

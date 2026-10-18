@@ -343,9 +343,6 @@ def cancel_remote(remote_id, timeout=1.0):
         executor._job_executor.attach(job, handle["native_id"])
         job.cancel()
         state = status_remote(remote_id)
-        if state["state"] not in {item.value for item in _FINAL_STATES}:
-            state["state"] = RunState.CANCELLED.value
-            state["failure_phase"] = None
         return state
     raise ValueError("Unsupported remote execution id")
 
