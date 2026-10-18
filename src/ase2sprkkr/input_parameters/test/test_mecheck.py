@@ -14,7 +14,7 @@ def parameters():
 
 def test_defaults_and_round_trip(tmp_path):
     p = parameters()
-    assert p._definition.executable == "kkrgen" and not p.is_mpi()
+    assert p.task_definition.executable == "kkrgen" and not p.task_definition.mpi
     assert p.TASK.ERYDI().tolist() == [0.5, 0.01]
     assert p.TASK.ERYDF().tolist() == [0.8, 0.01]
     assert p.SITES.NL() is None and p.ENERGY.EMAX() is None

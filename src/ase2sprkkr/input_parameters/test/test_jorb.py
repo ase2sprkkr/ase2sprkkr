@@ -12,7 +12,7 @@ def parameters():
 
 def test_defaults_round_trip(tmp_path):
     p = parameters()
-    assert not p.is_mpi() and p._definition.executable == "kkrgen"
+    assert not p.task_definition.mpi and p.task_definition.executable == "kkrgen"
     assert p.ENERGY.GRID().tolist() == ["5"] and p.ENERGY.NE().tolist() == [30]
     text = p.to_string(validate=True)
     assert "EMAX=" not in text
