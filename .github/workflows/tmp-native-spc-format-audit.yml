@@ -1,0 +1,39 @@
+name: Native SPC Format Audit (temporary)
+on:
+  push:
+    branches:
+      - tmp-native-spc-format-audit
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Inspect published SPR-KKR 9.7 source
+        shell: bash
+        run: |
+          set -euxo pipefail
+          curl -fL --retry 2 --max-time 50 -A 'Mozilla/5.0' 'https://www.sprkkr.org/?download_id=3176&sdm_process_download=1' -o sprkkr.tar.gz
+          file sprkkr.tar.gz
+          echo '6377cf6fdeb39cbc6cce605ba49be70d  sprkkr.tar.gz' | md5sum -c -
+          tar -tzf sprkkr.tar.gz | grep -Ei '(spec_vbrun|spec_band|spec_rslab|spec_output|spec_save|spec_write|spec_plot|spec.*\.f)' | head -100
+          python3 - <<'PY'
+          import tarfile, re
+          with tarfile.open('sprkkr.tar.gz','r:gz') as archive:
+              for obj in archive:
+                  if not obj.isfile() or not obj.name.lower().endswith(('.f','.f90','.for')):
+                      continue
+                  if not re.search(r'(spec_vbrun|spec_band|spec_rslab|spec_spleed|spec.*output|spec.*write|spec.*print)',obj.name,re.I):
+                      continue
+                  source=archive.extractfile(obj).read().decode('latin-1').splitlines()
+                  print('===== FILE',obj.name,len(source),'LINES =====')
+                  for i,line in enumerate(source):
+                      if re.search(r'(write\s*\(|format\s*\(|data[_\.]pol|data\.spc|spcleed|spleed|k_eig|e_eig|beam|diffraction)',line,re.I):
+                          if re.search(r'(write\s*\(|format\s*\(|data[_\.]pol|data\.spc|spcleed|spleed)',line,re.I):
+                              lo=max(0,i-6);hi=min(len(source),i+9)
+                              print('----',i+1)
+                              for j in range(lo,hi):
+                                  print('%5d %s'%(j+1,source[j]))
+                  print('======')
+          PY
