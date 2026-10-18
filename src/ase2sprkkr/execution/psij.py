@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import asyncio
+import glob
 import os
 import shlex
 import subprocess
@@ -266,6 +267,7 @@ class PsijRunner:
         self._failure_message = None
         self._thread = None
         self._attached = attached
+        self._files = None
 
         self._psij = executor._psij
         self._job = job or self._create_job()
@@ -349,6 +351,38 @@ class PsijRunner:
     @property
     def failure_message(self):
         return self._failure_message
+
+    def set_manifest(self, files):
+        self._files = files
+
+    @property
+    def files(self):
+        return self._files
+
+    def _update_files(self):
+        if self._files is None:
+            return
+        for entry in self._files.artifacts:
+            if entry.availability_state not in (None, "pending"):
+                continue
+            path = entry.local_path
+            if glob.has_magic(path):
+                matches = sorted(
+                    candidate for candidate in glob.glob(path, recursive=True)
+                    if os.path.isfile(candidate)
+                )
+                kind = (
+                    "cache" if any(cache.file.local_path == path for cache in self._files.caches)
+                    else "output"
+                )
+                for concrete in matches:
+                    self._files = self._files.with_file_availability(
+                        concrete, "available", kind=kind, source_pattern=path,
+                    )
+                state = "available" if matches else "skipped"
+            else:
+                state = "available" if os.path.isfile(path) else "skipped"
+            self._files = self._files.with_file_availability(path, state)
 
     @property
     def backend_id(self):
@@ -434,6 +468,7 @@ class PsijRunner:
         if self._return_code is None:
             self._return_code = 0 if state_name == "COMPLETED" else 1
         self.result.return_code = self._return_code
+        self._update_files()
         if state_name != "CANCELED" and (state_name == "FAILED" or self._return_code != 0):
             self._failure_phase = FailurePhase.EXECUTION
             self._failure_message = getattr(status, "message", None) or (
@@ -724,7 +759,11 @@ class PsijExecutor(Executor):
             error_file=None if run.files.stderr is None else run.files.stderr.local_path,
             directory=run.execution.directory.local,
         )
-        return PsijRunner(
+        runner = PsijRunner(
             self, spec, callback=callback, output_listener=output_listener,
-            start=start, job=job, attached=True,
+            start=False, job=job, attached=True,
         )
+        runner.set_manifest(run.files)
+        if start:
+            runner.start()
+        return runner

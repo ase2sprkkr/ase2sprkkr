@@ -305,6 +305,43 @@ def test_psij_observation_accepts_non_utf8_output(monkeypatch, tmp_path):
     assert runner.exception is None
 
 
+def test_psij_project_manifest_marks_concrete_and_wildcard_files(monkeypatch, tmp_path):
+    backend = _Backend()
+    executor = _executor(monkeypatch, backend)
+    (tmp_path / "data-1.bin").write_bytes(b"cache")
+    files = FileManifest(
+        stdout=FileEntry(local_path=str(tmp_path / "run.out"), availability_state="pending"),
+        outputs=(FileEntry(local_path=str(tmp_path / "data-*.bin"), availability_state="pending"),),
+    )
+    runner = executor.create_project_run(ExecutionSpec(
+        argv=("program",), input_file=None, directory=str(tmp_path),
+        output_file=str(tmp_path / "run.out"),
+    ), run_id="manifest")
+    runner.set_manifest(files)
+    runner.submit()
+    runner.wait()
+    assert runner.files.stdout.availability_state == "available"
+    assert runner.files.outputs[0].availability_state == "available"
+    matches = [entry for entry in runner.files.outputs if entry.source_pattern is not None]
+    assert len(matches) == 1
+    assert matches[0].availability_state == "available"
+
+
+def test_psij_missing_optional_output_is_skipped(monkeypatch, tmp_path):
+    executor = _executor(monkeypatch, _Backend())
+    files = FileManifest(outputs=(
+        FileEntry(local_path=str(tmp_path / "optional.dat"), availability_state="pending"),
+    ))
+    runner = executor.create_project_run(ExecutionSpec(
+        argv=("program",), input_file=None, directory=str(tmp_path),
+        output_file=None,
+    ), run_id="optional")
+    runner.set_manifest(files)
+    runner.submit()
+    runner.wait()
+    assert runner.files.outputs[0].availability_state == "skipped"
+
+
 def test_psij_mpi_process_count_becomes_resource_spec(monkeypatch, tmp_path):
     backend = _Backend()
     executor = _executor(monkeypatch, backend)
