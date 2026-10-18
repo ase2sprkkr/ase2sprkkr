@@ -125,6 +125,7 @@ def test_scf_invalid_grid_and_mixing_are_rejected():
     from ase2sprkkr.common.warnings import DataValidityError
 
     parameters = InputParameters.create("SCF")
+    parameters.ENERGY.GRID = 3
     parameters.ENERGY.NE = 1
     with pytest.raises(DataValidityError, match="NE>=2"):
         parameters.validate("save")
