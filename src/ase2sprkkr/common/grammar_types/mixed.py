@@ -3,6 +3,7 @@ Variant type that can accepts either number or two-item array)"""
 
 import pyparsing as pp
 import copy
+import unyt
 
 from .grammar_type import GrammarType, compare_numpy_values, recognized_set_types, type_from_type, type_from_value
 from ..decorators import cached_property, add_to_signature
@@ -31,7 +32,7 @@ class BaseMixed(GrammarType):
         """Select the grammar type corresponding to a Python value."""
         if isinstance(value, str):
             return self.string_type
-        if isinstance(value, recognized_set_types) and len(value) and isinstance(value[0], str):
+        if (isinstance(value, recognized_set_types) and not isinstance(value, unyt.unyt_quantity)\n                and len(value) and isinstance(value[0], str)):
             for candidate in self.types:
                 if isinstance(candidate, SetOf) and candidate.type is self.string_type:
                     return candidate
