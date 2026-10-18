@@ -122,8 +122,7 @@ def _local_submit(request):
     }
     env = os.environ.copy()
     env["ASE2SPRKKR_RUN_ID"] = run_id
-    env[_SPEC_ENV] = json.dumps(worker_spec, separators=(",", ":"))
-
+    
     start_fd, release_fd = os.pipe()
     socket_read_fd, socket_write_fd = os.pipe()
     worker_spec["socket_fd"] = socket_write_fd
@@ -483,7 +482,7 @@ def follow_remote(
                     request_offsets["err"] = stderr_offset
                 sock.sendall(json.dumps({
                     "command": "follow", "offsets": request_offsets,
-                }).encode() + b"\\n")
+                }).encode() + b"\n")
                 def read_exactly(n):
                     chunks = []
                     while n:
