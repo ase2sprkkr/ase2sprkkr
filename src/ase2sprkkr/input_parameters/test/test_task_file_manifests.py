@@ -65,7 +65,9 @@ def test_jxc_frel_declares_tensor_and_plot_outputs(tmp_path):
 
     assert parameters.output_files(str(tmp_path)) == (
         str(tmp_path / "Fe_XCPLTEN_Jij.dat"),
-        str(tmp_path / "Fe*.agr"),
+        str(tmp_path / "Fe_XCPLTEN_Jij_*.agr"),
+        str(tmp_path / "Fe_XCPLTEN_Dij.dat"),
+        str(tmp_path / "Fe_XCPLTEN_Dij_[xyz]_*.agr"),
     )
 
 
@@ -75,6 +77,6 @@ def test_jxc_sp_srel_declares_scalar_and_plot_outputs(tmp_path):
     parameters.MODE.MODE = "SP-SREL"
 
     assert parameters.output_files(str(tmp_path)) == (
-        str(tmp_path / "Fe*Jij*"),
-        str(tmp_path / "Fe*.agr"),
+        str(tmp_path / "Fe_J_ij.dat"),
+        str(tmp_path / "Fe_Jij_*.agr"),
     )
