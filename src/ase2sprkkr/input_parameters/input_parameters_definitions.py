@@ -15,7 +15,8 @@ from ..sprkkr.configuration import (
     CustomConfigurationValue,
     CustomConfigurationSection,
 )
-from ..common.grammar_types import mixed, flag
+from ..common.grammar_types import mixed, flag, SetOf
+from ..common.grammar_types.mixed import VariantGenerator
 from ..common.grammar import generate_grammar, delimitedList
 from ..common.decorators import cached_class_property, cache, maybeclassmethod
 from ..common.file_utils import filename_from_file
@@ -84,7 +85,7 @@ def _task_preparse_definition():
         raise ValueError("No registered input-parameter TASK selectors")
     ipd = _CachedPreparseIPD(
         "_TASK_PREPARSE",
-        [InputSectionDefinition(
+        [_PreparseTaskSection(
             "TASK",
             [InputValueDefinition(
                 "TASK",
@@ -312,6 +313,17 @@ class InputParametersDefinition(ConfigurationFileDefinition):
 
     def _generic_info(self):
         return f"Input parameters format {self.name}"
+
+
+class _PreparseTaskSection(InputSectionDefinition):
+    """Minimal-task grammar accepts unknown string arrays like SELECT={Fe,Co}."""
+
+    custom_class = staticmethod(
+        CustomConfigurationValue.factory(
+            InputValueDefinition,
+            VariantGenerator("TaskPreparseMixed", add_types=[SetOf(str)]).I,
+        )
+    )
 
 
 class _CachedPreparseIPD(InputParametersDefinition):
