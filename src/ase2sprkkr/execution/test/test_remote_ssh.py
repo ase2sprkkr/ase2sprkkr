@@ -67,10 +67,10 @@ def test_remote_executor_over_ssh(docker_execution_image):
         ExecutionManager,
         ExecutorPool,
         RemoteExecutor,
-        RunStore,
+        ProjectRepository,
         SshTransport,
     )
-    from ase2sprkkr.outputs.persistent import load_persistent_result
+    from ase2sprkkr.outputs.project_results import load_project_result
     from ase2sprkkr.sprkkr.calculator import SPRKKR
     from ase2sprkkr.sprkkr.profile import SPRKKRProfile
 
@@ -148,9 +148,11 @@ def test_remote_executor_over_ssh(docker_execution_image):
                 local_root=tmp,
                 remote_root="/home/tester/ase2sprkkr-runs",
             )
+            projects = ProjectRepository(tmp / "projects")
+            project = projects.create("SSH integration")
             manager = ExecutionManager(
-                RunStore(tmp / "runs"), executor_pool=ExecutorPool()
-            )
+                executor_pool=ExecutorPool(), project_repository=projects
+            ).for_project(project)
             output_seen = Event()
             output = []
             first_output_at = []
@@ -169,7 +171,7 @@ def test_remote_executor_over_ssh(docker_execution_image):
                 directory=workdir,
                 executor=executor,
                 profile=profile,
-                persistent=manager,
+                project=manager,
                 empty_spheres=False,
                 print_output=False,
             )
@@ -217,11 +219,11 @@ def test_remote_executor_over_ssh(docker_execution_image):
             # the outputs layer rather than by attaching a live runner.
             run_id = runner.id
             restarted = ExecutionManager(
-                RunStore(tmp / "runs"), executor_pool=ExecutorPool()
-            )
+                executor_pool=ExecutorPool(), project_repository=projects
+            ).for_project(project)
             record = restarted.store.get(run_id)
             restarted_executor = restarted.executor_for(record)
-            replayed = load_persistent_result(restarted, run_id)
+            replayed = load_project_result(restarted, run_id)
 
             assert restarted_executor is not executor
             assert restarted_executor.transport.host == "tester@127.0.0.1"
