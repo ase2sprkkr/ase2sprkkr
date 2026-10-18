@@ -71,6 +71,9 @@ async def _run(spec):
             except asyncio.TimeoutError:
                 message = "Client never connected to attached supervisor"
                 return return_code
+        if streams.cancelled.is_set() or (not streams.detached and streams.disconnected.is_set()):
+            state, phase, return_code = RunState.CANCELLED, None, -signal.SIGTERM
+            return return_code
         stdin = subprocess.DEVNULL
         if spec.get("stdin"):
             stdin = open(spec["stdin"], "rb")
