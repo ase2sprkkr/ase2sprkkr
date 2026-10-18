@@ -579,6 +579,9 @@ class PsijExecutor(Executor):
             job = self._psij.Job()
             self._job_executor.attach(job, native_id)
             self._status_jobs[native_id] = job
+            # PSI/J attach is asynchronous. A short-lived SSH status request
+            # must observe the initial scheduler status before returning.
+            job.wait(target_states=[self._psij.JobState.QUEUED])
         status = getattr(job, "status", None)
         name = getattr(getattr(status, "state", None), "name", None)
         state = (
