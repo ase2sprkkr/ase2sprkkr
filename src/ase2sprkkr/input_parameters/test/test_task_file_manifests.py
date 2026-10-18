@@ -171,6 +171,8 @@ def test_scf_startup_dos_is_optional(tmp_path):
     files = parameters.output_files(str(tmp_path))
     assert next(f for f in files if str(f).endswith("_SCFSTART.dos")).optional
     assert not next(f for f in files if str(f).endswith("Fe.pot_new")).optional
+    # All returned paths, not just explicitly optional ones, are declarations.
+    assert all(isinstance(f.optional, bool) for f in files)
 
 
 def test_bsf_output_file_declarations(tmp_path):

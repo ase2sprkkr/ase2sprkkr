@@ -65,10 +65,10 @@ def test_arpes_result_uses_native_spec_file_manifest(tmp_path):
     from ase2sprkkr.outputs.readers.arpes import ArpesResult
 
     for task in ("ARPES", "CLPES"):
-        for polarization, expected in (
-            ("P", "sample_data.spc"),
-            ("S", "sample_data_pol1.spc"),
-        ):
+        # POL_P selects photon polarization, not the number of output files.
+        # The latter is controlled by SPEC_PH.NPOL.
+        for polarization in ("P", "S"):
+            expected = "sample_data.spc"
             parameters = InputParameters.create(task)
             parameters.CONTROL.DATASET = "sample"
             parameters.SPEC_PH.POL_P = polarization
@@ -77,6 +77,13 @@ def test_arpes_result_uses_native_spec_file_manifest(tmp_path):
             assert result.spc_filename == str(tmp_path / expected)
             assert result.output_values["SPC"].file_type == "spc"
             assert result.path_to("SPC") == str(tmp_path / expected)
+
+            parameters.SPEC_PH.NPOL = 3
+            dichroic = ArpesResult(parameters, None, tmp_path)
+            assert dichroic.spc_filenames == (
+                str(tmp_path / "sample_data_pol1.spc"),
+                str(tmp_path / "sample_data_pol2.spc"),
+            )
 
 def test_spec_reader_uses_native_data_file_and_preserves_band_columns(tmp_path):
     from ase2sprkkr.outputs.readers.spec import SpecResult
