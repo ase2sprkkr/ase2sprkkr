@@ -4,12 +4,11 @@ from ase2sprkkr.execution import RunState
 from ase2sprkkr.execution import remote_service
 
 
-def test_direct_remote_process_cannot_recover_lost_submit_identity():
-    with pytest.raises(NotImplementedError, match="cannot recover"):
-        remote_service.recover_remote(
-            "client-run",
-            {"executor": "local", "directory": "/scratch/case"},
-        )
+def test_direct_remote_process_without_pending_identity_returns_none(tmp_path, monkeypatch):
+    monkeypatch.setenv("ASE2SPRKKR_REMOTE_STATE_DIR", str(tmp_path))
+    assert remote_service.recover_remote(
+        "a" * 32, {"executor": "local", "directory": "/scratch/case"},
+    ) is None
 
 
 def test_psij_recovery_uses_backend_native_identity(monkeypatch):
