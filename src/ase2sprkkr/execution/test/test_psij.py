@@ -248,7 +248,7 @@ def test_psij_auto_uses_mpi_without_fixed_process_count(monkeypatch, tmp_path):
     output_file.close()
 
 
-def test_psij_persistent_run_exposes_recovery_metadata(monkeypatch, tmp_path):
+def test_psij_project_run_exposes_recovery_metadata(monkeypatch, tmp_path):
     executor = _executor(monkeypatch, _Backend())
     input_file = open(tmp_path / "run.inp", "wb+")
     output_file = open(tmp_path / "run.out", "wb")
@@ -260,7 +260,7 @@ def test_psij_persistent_run_exposes_recovery_metadata(monkeypatch, tmp_path):
         stdin=input_file,
     )
 
-    runner = executor.create_persistent_run(
+    runner = executor.create_project_run(
         spec, run_id="persistent-run"
     )
 
@@ -273,6 +273,42 @@ def test_psij_persistent_run_exposes_recovery_metadata(monkeypatch, tmp_path):
     input_file.close()
     output_file.close()
 
+
+
+def test_psij_record_status_uses_native_status(monkeypatch, tmp_path):
+    executor = _executor(monkeypatch, _Backend())
+    expected = psij_backend.RunStatus(
+        RunState.FINISHED, backend_id="456", return_code=0,
+    )
+    seen = []
+    def status_native(native_id):
+        seen.append(native_id)
+        return expected
+
+    monkeypatch.setattr(executor, "status_native", status_native)
+    assert executor.status(_psij_run(tmp_path, "456")) == (expected,)
+    assert seen == ["456"]
+
+
+def test_psij_submission_without_native_identity_is_not_started(monkeypatch, tmp_path):
+    from ase2sprkkr.execution.base import FailurePhase, SubmissionNotStarted
+
+    class FailingBackend(_Backend):
+        def submit(self, job):
+            raise OSError("scheduler unavailable")
+
+    executor = _executor(monkeypatch, FailingBackend())
+    runner = executor.create_project_run(
+        ExecutionSpec(
+            argv=("program",),
+            directory=str(tmp_path),
+            output_file=str(tmp_path / "run.out"),
+        ),
+        run_id="run-123",
+    )
+    with pytest.raises(SubmissionNotStarted, match="scheduler unavailable"):
+        runner.submit()
+    assert runner.failure_phase == FailurePhase.SUBMISSION
 
 def test_psij_executor_attaches_to_native_job(monkeypatch, tmp_path):
     backend = _Backend()

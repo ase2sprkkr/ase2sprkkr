@@ -78,6 +78,13 @@ def test_status_distinguishes_launch_and_execution_failure(tmp_path, monkeypatch
     assert execution["failure_phase"] == FailurePhase.EXECUTION.value
 
 
+def _slurm_executor(monkeypatch):
+    executor = object.__new__(psij.PsijExecutor)
+    executor.backend = "slurm"
+    monkeypatch.setattr(remote_service, "_psij_executor", lambda _options: executor)
+    return executor
+
+
 def test_slurm_status_is_native_and_does_not_use_psij_job_cache(tmp_path, monkeypatch):
     _, remote_id = _psij_handle(tmp_path)
     monkeypatch.setattr(
@@ -85,11 +92,7 @@ def test_slurm_status_is_native_and_does_not_use_psij_job_cache(tmp_path, monkey
         "_slurm_details",
         lambda native_id: {"JobState": "RUNNING", "ExitCode": "0:0"},
     )
-
-    def forbidden_executor(_options):
-        raise AssertionError("stateless Slurm status must not create a PSI/J Job")
-
-    monkeypatch.setattr(remote_service, "_psij_executor", forbidden_executor)
+    _slurm_executor(monkeypatch)
 
     status = remote_service.status_remote(remote_id)
 
@@ -101,11 +104,8 @@ def test_slurm_status_is_native_and_does_not_use_psij_job_cache(tmp_path, monkey
 def test_slurm_status_falls_back_to_exact_accounting_record(tmp_path, monkeypatch):
     _, remote_id = _psij_handle(tmp_path)
     monkeypatch.setattr(psij, "_slurm_details", lambda _native_id: {})
-    monkeypatch.setattr(
-        remote_service,
-        "_slurm_accounting_status",
-        lambda native_id: (RunState.FINISHED, 0),
-    )
+    monkeypatch.setattr(psij, "_scheduler_output", lambda argv: "42|COMPLETED|0:0|\n")
+    _slurm_executor(monkeypatch)
 
     status = remote_service.status_remote(remote_id)
 
@@ -117,11 +117,8 @@ def test_slurm_status_falls_back_to_exact_accounting_record(tmp_path, monkeypatc
 def test_slurm_failed_accounting_record_is_execution_failure(tmp_path, monkeypatch):
     _, remote_id = _psij_handle(tmp_path)
     monkeypatch.setattr(psij, "_slurm_details", lambda _native_id: {})
-    monkeypatch.setattr(
-        remote_service,
-        "_slurm_accounting_status",
-        lambda native_id: (RunState.FAILED, 7),
-    )
+    monkeypatch.setattr(psij, "_scheduler_output", lambda argv: "42|FAILED|7:0|\n")
+    _slurm_executor(monkeypatch)
 
     status = remote_service.status_remote(remote_id)
 

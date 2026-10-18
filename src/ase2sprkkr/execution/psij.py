@@ -422,7 +422,7 @@ class PsijRunner:
                 self._prepare_io()
                 self.executor._job_executor.submit(self._job)
             except Exception as exc:
-                if self.reference is None:
+                if self.backend_id is None:
                     self._failure_phase = FailurePhase.SUBMISSION
                     self._failure_message = str(exc)
                     raise SubmissionNotStarted(str(exc)) from exc
@@ -483,7 +483,7 @@ class PsijExecutor(Executor):
     def create_run(self, spec: ExecutionSpec, callback=None):
         return PsijRunner(self, spec, callback=callback)
 
-    def create_persistent_run(
+    def create_project_run(
         self, spec: ExecutionSpec, *, run_id, callback=None
     ):
         return PsijRunner(
@@ -494,34 +494,12 @@ class PsijExecutor(Executor):
         )
 
     def status(self, *runs):
-        expected_backend = self.backend
         statuses = []
         for run in runs:
             endpoint = run.execution.endpoint
-            if endpoint.executor != "psij" or endpoint.psij_backend != expected_backend:
+            if endpoint.executor != "psij" or endpoint.psij_backend != self.backend:
                 raise ValueError("Run does not belong to this PSI/J backend")
-            backend_id = run.execution.backend_id
-            attached = False
-            job = self._status_jobs.get(backend_id)
-            if job is None:
-                job = self._psij.Job()
-                self._job_executor.attach(job, backend_id)
-                self._status_jobs[backend_id] = job
-                attached = True
-            status = getattr(job, "status", None)
-            name = getattr(getattr(status, "state", None), "name", None)
-            state = (
-                RunState.UNKNOWN
-                if attached and name == "NEW"
-                else _STATE_MAP.get(name, RunState.UNKNOWN)
-            )
-            statuses.append(RunStatus(
-                state=state,
-                backend_id=backend_id,
-                return_code=getattr(status, "exit_code", None),
-                message=getattr(status, "message", None),
-                failure_phase=FailurePhase.EXECUTION if state == RunState.FAILED else None,
-            ))
+            statuses.append(self.status_native(run.execution.backend_id))
         return tuple(statuses)
 
     @staticmethod
@@ -538,7 +516,48 @@ class PsijExecutor(Executor):
         return replace(files, **changes) if changes else files
 
     def status_native(self, native_id):
-        """Query a native PSI/J job without constructing a client run record."""
+        """Query a scheduler job using only its native identity."""
+        native_id = str(native_id)
+        if self.backend.lower() == "slurm":
+            # A PSI/J attach initially reports NEW; short-lived remote commands
+            # cannot wait for an asynchronous update or retain the Job cache.
+            # Query the same scheduler facts for local and SSH PSI/J runs.
+            try:
+                details = _slurm_details(native_id)
+            except (FileNotFoundError, subprocess.CalledProcessError):
+                details = {}
+
+            if details:
+                state = _slurm_state(details.get("JobState"))
+                return_code = _slurm_exit_code(details.get("ExitCode"))
+            else:
+                try:
+                    output = _scheduler_output((
+                        "sacct", "-X", "-n", "-P", "-j", native_id,
+                        "--format=JobIDRaw,State,ExitCode",
+                    ))
+                except (FileNotFoundError, subprocess.CalledProcessError):
+                    output = ""
+                state = RunState.UNKNOWN
+                return_code = None
+                for line in output.splitlines():
+                    fields = line.rstrip("|").split("|")
+                    if len(fields) == 3 and fields[0].strip() == native_id:
+                        state = _slurm_state(fields[1])
+                        return_code = _slurm_exit_code(fields[2].strip())
+                        break
+
+            if state not in (RunState.FINISHED, RunState.FAILED, RunState.CANCELLED):
+                return_code = None
+            elif state == RunState.FINISHED and return_code is None:
+                return_code = 0
+            return RunStatus(
+                state=state,
+                backend_id=native_id,
+                return_code=return_code,
+                failure_phase=FailurePhase.EXECUTION if state == RunState.FAILED else None,
+            )
+
         job = self._status_jobs.get(native_id)
         attached = job is None
         if attached:
@@ -553,7 +572,7 @@ class PsijExecutor(Executor):
             else _STATE_MAP.get(name, RunState.UNKNOWN)
         )
         return RunStatus(
-            state=state, backend_id=str(native_id),
+            state=state, backend_id=native_id,
             return_code=getattr(status, "exit_code", None),
             message=getattr(status, "message", None),
             failure_phase=FailurePhase.EXECUTION if state == RunState.FAILED else None,
