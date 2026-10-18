@@ -359,3 +359,35 @@ def test_direct_follow_without_stream_files_is_live_only(tmp_path, monkeypatch):
         assert list(tmp_path.iterdir()) == []
 
     asyncio.run(exercise())
+
+
+def test_ssh_psij_cleanup_removes_declared_outputs_before_submit(tmp_path, monkeypatch):
+    from ase2sprkkr.execution import remote_service
+    output = tmp_path / "previous.dat"
+    kept = tmp_path / "cache.pot"
+    output.write_bytes(b"stale")
+    kept.write_bytes(b"restart")
+
+    class Runner:
+        backend_id = "native-123"
+        state = RunState.RUNNING
+        return_code = None
+        failure_phase = None
+        result = type("Result", (), {"output_file": None, "error_file": None})()
+        def submit(self):
+            assert not output.exists()
+            assert kept.read_bytes() == b"restart"
+
+    class Backend:
+        backend = "slurm"
+        url = None
+        def create_project_run(self, spec, *, run_id):
+            return Runner()
+    monkeypatch.setattr(remote_service, "_psij_executor", lambda options: Backend())
+    request = {
+        "id": "d" * 32, "executor": "psij", "directory": str(tmp_path),
+        "argv": ["true"], "output_files": [str(output)],
+        "cache_files": [str(kept)], "input_file": None, "output_file": None,
+    }
+    response = remote_service.submit_remote(request)
+    assert response["remote_id"]

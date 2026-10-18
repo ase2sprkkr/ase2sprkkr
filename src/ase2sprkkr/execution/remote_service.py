@@ -124,6 +124,28 @@ def _request_spec(request):
     )
 
 
+def _clean_request_outputs(request, directory, output_path=None, error_path=None):
+    """Remove only this submission's declared outputs on the execution host."""
+    sync = request.get("client_sync") or {}
+    declared = (
+        *request.get("output_files", ()),
+        *sync.get("output_files", ()),
+        *sync.get("output_patterns", ()),
+        output_path, error_path,
+    )
+    protected = (
+        request.get("input_file"), request.get("stdin"),
+        *request.get("input_files", ()),
+        *request.get("cache_files", ()),
+        *(item.get("path") for item in sync.get("cache_files", ())),
+        *sync.get("cache_patterns", ()),
+    )
+    clear_declared_outputs(
+        (_absolute(directory, path) for path in declared if path is not None),
+        protected=(_absolute(directory, path) for path in protected if path is not None),
+    )
+
+
 def _local_submit(request):
     from .local import materialize_local_spec
 
@@ -142,21 +164,7 @@ def _local_submit(request):
         for path in (output_path, error_path):
             if path is not None:
                 Path(path).parent.mkdir(parents=True, exist_ok=True)
-        sync = request.get("client_sync") or {}
-        declared = (
-            *request.get("output_files", ()),
-            *sync.get("output_files", ()),
-            *sync.get("output_patterns", ()),
-            output_path, error_path,
-        )
-        protected = (
-            request.get("input_file"), request.get("stdin"),
-            *request.get("input_files", ()),
-            *request.get("cache_files", ()),
-            *(item.get("path") for item in sync.get("cache_files", ())),
-            *sync.get("cache_patterns", ()),
-        )
-        clear_declared_outputs(declared, protected=protected)
+        _clean_request_outputs(request, directory, output_path, error_path)
     except OSError as exc:
         raise SubmissionNotStarted(str(exc)) from exc
 
@@ -255,6 +263,10 @@ def _psij_submit(request):
         executor.create_project_run(spec, run_id=request["id"])
         if request.get("id")
         else executor.create_run(spec)
+    )
+    _clean_request_outputs(
+        request, request["directory"],
+        request.get("output_file"), request.get("error_file"),
     )
     runner.submit()
     backend_id = runner.backend_id
