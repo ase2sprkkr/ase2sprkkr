@@ -29,6 +29,7 @@ class PostprocessingRunner:
         self._callback_exception = None
         self._started = False
         self._processing = False
+        self._settled = False
         self._done = Event()
         self._lock = Lock()
         self._thread = None
@@ -71,7 +72,7 @@ class PostprocessingRunner:
 
     @property
     def state(self):
-        if self._done.is_set():
+        if self._settled:
             return self._state
         if self._processing:
             return RunState.POSTPROCESSING
@@ -148,6 +149,8 @@ class PostprocessingRunner:
                 else RunState.FAILED
             )
         finally:
+            # Make terminal status visible during the persistence callback.
+            self._settled = True
             try:
                 if self.callback is not None:
                     self.callback(self.result)
