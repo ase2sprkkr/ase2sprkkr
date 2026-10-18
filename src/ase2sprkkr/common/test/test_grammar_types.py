@@ -512,3 +512,22 @@ def test_bracketed_string_sets_in_input_mixed():
             except pp.ParseBaseException:
                 continue
             assert not (isinstance(parsed, np.ndarray) and len(parsed) == 0)
+
+
+def test_mixed_string_sets_can_be_assigned_and_pickled():
+    import pickle
+
+    for grammar_type in (gt.mixed, gt.Variant()):
+        value = grammar_type.convert(["Fe", "Co"])
+        _assert_equal(value, np.array(["Fe", "Co"]))
+        assert grammar_type.validate(value)
+        assert pickle.loads(pickle.dumps(grammar_type)).validate(value)
+        reparsed = grammar_type.grammar().parse_string(grammar_type.string(value), parse_all=True)[0]
+        _assert_equal(reparsed, value)
+
+
+def test_mixed_other_types_and_potential_line_strings_are_unchanged():
+    _assert_equal(gt.mixed.convert([2, 3]), np.array([2, 3]))
+    _assert_equal(gt.mixed.convert([2.0, 3.0]), np.array([2.0, 3.0]))
+    assert gt.mixed.grammar().parse_string("Fe", parse_all=True)[0] == "Fe"
+    assert gt.pot_mixed.grammar().parse_string("Fe Co", parse_all=True)[0] == "Fe Co"
