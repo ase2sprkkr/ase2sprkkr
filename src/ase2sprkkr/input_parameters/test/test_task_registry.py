@@ -305,113 +305,85 @@ def test_malformed_extra_task_is_definition_error(tmp_path, monkeypatch):
     with pytest.raises(RegistryDefinitionError, match="must be TaskDefinition"):
         registry["BROKEN"]
 
-
-def test_jxc_and_dmi_share_one_canonical_task_with_alias():
+def test_jxc_and_dmi_are_distinct_tasks_sharing_one_schema():
     schema = InputParameters.input_parameters_registry["JXC"]
-    task = InputParameters.task_registry["JXC"]
-    assert schema._task_definition is task
-    assert task.name == "JXC"
-    assert task.aliases == ("DMI",)
-    assert InputParameters.task_registry["DMI"] is task
-    assert InputParameters.input_parameters_registry.definition_for_task(task) is schema
+    jxc = InputParameters.task_registry["JXC"]
+    dmi = InputParameters.task_registry["DMI"]
+    assert schema._task_definition is None
+    assert jxc.name == "JXC"
+    assert dmi.name == "DMI"
+    assert dmi is not jxc
+    assert jxc.input_parameters_definition_name == "JXC"
+    assert dmi.input_parameters_definition_name == "JXC"
+    assert InputParameters.input_parameters_registry.definition_for_task(jxc) is schema
+    assert InputParameters.input_parameters_registry.definition_for_task(dmi) is schema
+    assert "JXC" in InputParameters.task_registry.names()
     assert "DMI" in InputParameters.task_registry.names()
-    assert "DMI" not in InputParameters.task_registry.names(include_aliases=False)
-    assert sum(item is task for item in InputParameters.task_registry.values()) == 1
+    assert InputParameters.task_registry["JXC"] is jxc
+    assert InputParameters.task_registry["DMI"] is dmi
 
 
-def test_task_alias_validation_and_collision(tmp_path, monkeypatch):
-    assert TaskDefinition("X", aliases="name").aliases == ("NAME",)
-    for aliases in (("A", "a"), ("X",), ("",), (42,)):
-        with pytest.raises((TypeError, ValueError)):
-            TaskDefinition("X", aliases=aliases)
-
-    definitions_package = _package(
-        tmp_path, monkeypatch, "_task_alias_collision_schemas", {
+def test_shared_schema_task_lookup_is_lazy(tmp_path, monkeypatch):
+    definitions = _package(
+        tmp_path, monkeypatch, "_lazy_distinct_task_ipds", {
             "shared": (
                 "from ase2sprkkr.input_parameters.input_parameters_definitions "
-                "import InputParametersDefinition\n"
-                "def input_parameters_definition():\n"
-                "    return InputParametersDefinition('shared', [])\n"
+                "import InputParametersDefinition\\n"
+                "def input_parameters_definition():\\n"
+                "    return InputParametersDefinition('shared', [])\\n"
+            ),
+            "broken": (
+                "def input_parameters_definition():\\n"
+                "    raise AssertionError('Unrelated IPD was constructed')\\n"
             ),
         },
     )
-    tasks_package = _package(tmp_path, monkeypatch, "_task_alias_collision", {
-        "x": ("from ase2sprkkr.input_parameters.task_definition import TaskDefinition\n"
-              "TASK_ALIASES = ('Y',)\n"
-              "def task_definition():\n"
-              "    return TaskDefinition('SHARED', name='X', aliases=TASK_ALIASES)\n"),
-        "y": ("from ase2sprkkr.input_parameters.task_definition import TaskDefinition\n"
-              "def task_definition():\n"
-              "    return TaskDefinition('SHARED', name='Y')\n"),
+    tasks = _package(tmp_path, monkeypatch, "_lazy_distinct_task_entries", {
+        "first": (
+            "from ase2sprkkr.input_parameters.task_definition import TaskDefinition\\n"
+            "def task_definition():\\n"
+            "    return TaskDefinition('SHARED', name='FIRST')\\n"
+        ),
+        "second": (
+            "from ase2sprkkr.input_parameters.task_definition import TaskDefinition\\n"
+            "def task_definition():\\n"
+            "    return TaskDefinition('SHARED', name='SECOND')\\n"
+        ),
     })
-    registry = TaskRegistry(InputParametersRegistry(definitions_package), tasks_package)
-    with pytest.raises(RegistryDefinitionError, match="alias .*conflicts"):
-        registry.names()
+    ip_registry = InputParametersRegistry(definitions)
+    registry = TaskRegistry(ip_registry, tasks)
+    assert registry["FIRST"].name == "FIRST"
+    assert "SHARED" in ip_registry._values
+    assert "BROKEN" not in ip_registry._values
+    assert "SECOND" not in registry.extra_tasks._values
+    assert "_lazy_distinct_task_ipds.broken" not in __import__("sys").modules
 
 
-def test_read_for_canonical_task_accepts_alias_values():
-    task = InputParameters.task_registry["DMI"]
-    params = InputParameters.create("JXC")
-    params.TASK.JXC = False
-    params.TASK.DMI = True
+def test_read_for_distinct_task_requires_matching_native_identity():
+    from ...input_parameters.task_definition import TaskMismatchError
+    ip_registry = InputParameters.input_parameters_registry
+    dmi = InputParameters.task_registry["DMI"]
+    jxc = InputParameters.task_registry["JXC"]
+    params = InputParameters.create("DMI")
     params.CONTROL.POTFIL = "Fe.pot"
-    restored = InputParameters.input_parameters_registry.read_for_task(
-        task, io.StringIO(params.to_string(validate=True))
+    text = params.to_string(validate=True)
+    parsed = ip_registry.read_for_task(dmi, io.StringIO(text))
+    assert parsed.task_name == "DMI"
+    assert parsed.task_definition is dmi
+    assert parsed.requested_task_name == "DMI"
+    with pytest.raises(TaskMismatchError):
+        ip_registry.read_for_task(jxc, io.StringIO(text))
+
+
+def test_create_from_dmi_result_keeps_dmi_defaults():
+    result = SimpleNamespace(
+        last_iteration=SimpleNamespace(
+            energy=SimpleNamespace(EMIN=lambda: -0.35)
+        )
     )
-    assert restored.TASK.DMI()
-    assert not restored.TASK.JXC()
-    assert restored.task_name == task.name == "JXC"
-    assert restored.task_definition is task
-    assert restored.requested_task_name == "JXC"
-
-
-def test_task_alias_discovery_does_not_construct_unrelated_ipds(tmp_path, monkeypatch):
-    """Discovery may import modules, but only the requested IPD is created."""
-    definitions = _package(
-        tmp_path, monkeypatch, "_lazy_task_input_definitions", {
-            "x": (
-                "from ase2sprkkr.input_parameters.input_parameters_definitions "
-                "import InputParametersDefinition\n"
-                "from ase2sprkkr.input_parameters.task_definition "
-                "import TaskDefinition\n"
-                "TASK_ALIASES = ('ALT',)\n"
-                "def input_parameters_definition():\n"
-                "    schema = InputParametersDefinition('x', [])\n"
-                "    schema._task_definition = TaskDefinition('X', aliases=TASK_ALIASES)\n"
-                "    return schema\n"
-            ),
-            "other": (
-                "def input_parameters_definition():\n"
-                "    raise AssertionError('Unrelated IPD was constructed')\n"
-            ),
-        }
-    )
-    extra = _package(tmp_path, monkeypatch, "_lazy_task_extra_definitions", {})
-    registry = TaskRegistry(InputParametersRegistry(definitions), extra)
-    task = registry["ALT"]
-    assert task is registry["X"]
-    assert task.name == "X"
-    assert "_lazy_task_input_definitions.other" in __import__("sys").modules
-    assert "OTHER" not in registry.input_parameters_registry._values
-
-
-def test_task_module_alias_declaration_must_match_definition(tmp_path, monkeypatch):
-    definitions = _package(
-        tmp_path, monkeypatch, "_mismatched_task_alias_definitions", {
-            "x": (
-                "from ase2sprkkr.input_parameters.input_parameters_definitions "
-                "import InputParametersDefinition\n"
-                "from ase2sprkkr.input_parameters.task_definition "
-                "import TaskDefinition\n"
-                "TASK_ALIASES = ('ALT',)\n"
-                "def input_parameters_definition():\n"
-                "    schema = InputParametersDefinition('x', [])\n"
-                "    schema._task_definition = TaskDefinition('X')\n"
-                "    return schema\n"
-            ),
-        }
-    )
-    extra = _package(tmp_path, monkeypatch, "_mismatched_extra_task_definitions", {})
-    registry = TaskRegistry(InputParametersRegistry(definitions), extra)
-    with pytest.raises(RegistryDefinitionError, match="do not match"):
-        registry["ALT"]
+    dmi = InputParameters.task_registry["DMI"]
+    params = InputParameters.input_parameters_registry.create_from_result(dmi, result)
+    assert params.task_name == "DMI"
+    assert params.requested_task_name == "DMI"
+    assert params.TASK.DMI() and not params.TASK.JXC()
+    assert params.ENERGY.EMIN() == -0.35

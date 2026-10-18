@@ -81,30 +81,66 @@ def test_jxc_combined_selectors_separated_by_other_task_options():
     parsed = preview.read_from_string("TASK DMI CLURAD=4.0 JXC")
     assert list(parsed.TASK.TASK()) == ["DMI", "JXC"]
 
-
-def test_alias_is_exactly_the_same_task_and_defaults():
+def test_jxc_and_dmi_have_distinct_defaults_on_shared_schema():
     jxc = InputParameters.create("JXC")
     dmi = InputParameters.create("DMI")
     assert jxc.definition_name == dmi.definition_name == "JXC"
-    assert jxc.task_definition is dmi.task_definition
-    assert jxc.task_name == dmi.task_name == "JXC"
-    assert jxc.requested_task_name == dmi.requested_task_name == "JXC"
-    assert jxc.TASK.JXC() and dmi.TASK.JXC()
-    assert not jxc.TASK.DMI() and not dmi.TASK.DMI()
+    assert jxc.task_definition is not dmi.task_definition
+    assert jxc.requested_task_name == "JXC"
+    assert dmi.requested_task_name == "DMI"
+    assert jxc.task_name == "JXC"
+    assert dmi.task_name == "DMI"
+    assert jxc.TASK.JXC() and not jxc.TASK.DMI()
+    assert not dmi.TASK.JXC() and dmi.TASK.DMI()
     assert jxc.TASK.TASK() == dmi.TASK.TASK() == "JXC"
 
 
-def test_native_dmi_only_and_combined_flags_are_not_task_aliases():
-    for dmi_only in (True, False):
-        params = InputParameters.create("JXC")
+def test_adding_secondary_native_switch_keeps_primary_task_enabled():
+    jxc = InputParameters.create("JXC")
+    dmi = InputParameters.create("DMI")
+    jxc.TASK.DMI = True
+    dmi.TASK.JXC = True
+    assert jxc.TASK.JXC() and jxc.TASK.DMI()
+    assert dmi.TASK.JXC() and dmi.TASK.DMI()
+    assert jxc.task_name == dmi.task_name == "JXC"
+    assert jxc.requested_task_name == "JXC"
+    assert dmi.requested_task_name == "DMI"
+
+
+def test_native_dmi_only_and_combined_flags_roundtrip():
+    for requested in ("DMI", "JXC"):
+        params = InputParameters.create(requested)
         params.CONTROL.POTFIL = "Fe.pot"
-        params.TASK.DMI = True
-        if dmi_only:
-            params.TASK.JXC = False
+        if requested == "JXC":
+            params.TASK.DMI = True
         restored = _roundtrip(params)
         assert restored.definition_name == "JXC"
         assert restored.TASK.DMI()
-        assert restored.TASK.JXC() == (not dmi_only)
-        assert restored.task_name == "JXC"
+        assert restored.TASK.JXC() == (requested == "JXC")
+        assert restored.task_name == requested
+        assert restored.task_definition is InputParameters.task_registry[requested]
         assert restored.TASK.TASK() == "JXC"
-        assert restored.task_definition is InputParameters.task_registry["DMI"]
+
+
+def test_combined_native_flags_have_jxc_identity_regardless_of_origin():
+    for requested in ("DMI", "JXC"):
+        params = InputParameters.create(requested)
+        params.CONTROL.POTFIL = "Fe.pot"
+        params.TASK.DMI = True
+        params.TASK.JXC = True
+        restored = _roundtrip(params)
+        assert restored.task_name == "JXC"
+        assert restored.task_definition is InputParameters.task_registry["JXC"]
+        assert restored.TASK.JXC() and restored.TASK.DMI()
+
+
+def test_changing_between_jxc_and_dmi_switches_defaults():
+    params = InputParameters.create("JXC")
+    params.change_task("DMI")
+    assert params.requested_task_name == "DMI"
+    assert params.task_name == "DMI"
+    assert params.TASK.DMI() and not params.TASK.JXC()
+    params.change_task("JXC")
+    assert params.requested_task_name == "JXC"
+    assert params.task_name == "JXC"
+    assert params.TASK.JXC() and not params.TASK.DMI()

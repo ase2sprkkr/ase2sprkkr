@@ -7,16 +7,15 @@ from ..input_parameters_definitions import (
     InputValueDefinition as V,
 )
 from ...common.generated_configuration_definitions import GeneratedValueDefinition
-from ..task_definition import TaskDefinition
 from ...common.grammar_types import flag
-
-
-# Importable registration metadata: task discovery must not construct an IPD.
-TASK_ALIASES = ("DMI",)
 
 
 class JxcInputParametersDefinition(InputParametersDefinition):
     task_selectors = ("JXC", "DMI")
+
+    def task_definition_name(self, parameters):
+        """The native flags identify DMI-only or JXC (also for combined runs)."""
+        return _selected_task_name(parameters.TASK)
 
     def initialize_from_result(self, parameters, result):
         parameters.ENERGY.EMIN.set_default(result.last_iteration.energy.EMIN())
@@ -36,13 +35,27 @@ class JxcInputParametersDefinition(InputParametersDefinition):
         return tuple(files)
 
 
+def _requested_task_name(option):
+    return option._get_root_container().requested_task_name
+
+
 def _jxc_default(option):
-    # Native TASK DMI without JXC is a valid DMI-only calculation.
-    # The task identity nevertheless remains the canonical JXC task.
+    """Use the requested task for new inputs; infer native DMI-only on read."""
+    requested = _requested_task_name(option)
+    if requested is not None:
+        return requested == "JXC"
     return not option._container.DMI()
 
 
-def _selected_task_name(_section):
+def _dmi_default(option):
+    return _requested_task_name(option) == "DMI"
+
+
+def _selected_task_name(section):
+    if section.JXC():
+        return "JXC"
+    if section.DMI():
+        return "DMI"
     return "JXC"
 
 
@@ -80,7 +93,7 @@ def input_parameters_definition():
                 [
                     V("JXC", flag, default_value=_jxc_default, is_required=False,
                       info="Calculate exchange couplings and exchange tensor."),
-                    V("DMI", flag, default_value=False, is_required=False,
+                    V("DMI", flag, default_value=_dmi_default, is_required=False,
                       info="Calculate Dzyaloshinskii-Moriya interaction vectors."),
                     GeneratedValueDefinition("TASK", _selected_task_name),
                     V("HFF", False, info="Enable the hyperfine-field calculation."),
@@ -98,8 +111,4 @@ def input_parameters_definition():
         info="JXC",
     )
     schema["CONTROL"]["NONMAG"].warning_condition = _jxc_nonmag_warning_condition
-    schema._task_definition = TaskDefinition(
-        "JXC", aliases=TASK_ALIASES, executable="kkrgen", mpi=True,
-        output_reader="JXC",
-    )
     return schema
