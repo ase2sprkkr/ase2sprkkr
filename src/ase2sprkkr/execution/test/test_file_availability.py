@@ -1,0 +1,48 @@
+"""Contracts shared by local project and PSI/J artifact discovery."""
+
+from ..file_availability import discover_local_files
+from ..run_model import CacheEntry, FileEntry, FileManifest
+
+
+def test_discovers_outputs_and_caches_with_independent_pattern_children(tmp_path):
+    (tmp_path / "out-a.dat").write_bytes(b"a")
+    (tmp_path / "cache-a.pot").write_bytes(b"old")
+    manifest = FileManifest(
+        outputs=(FileEntry(local_path=str(tmp_path / "out-*.dat"),
+                           availability_state="pending"),),
+        caches=(CacheEntry(FileEntry(
+            local_path=str(tmp_path / "cache-*.pot"),
+            availability_state="pending",
+        )),),
+    )
+    found = discover_local_files(manifest)
+    assert len(found.outputs) == 2
+    assert found.outputs[0].availability_state == "available"
+    assert found.outputs[1].source_pattern == str(tmp_path / "out-*.dat")
+    assert len(found.caches) == 2
+    assert found.caches[0].file.availability_state == "available"
+    assert found.caches[1].file.source_pattern == str(tmp_path / "cache-*.pot")
+    assert discover_local_files(found) == found
+
+
+def test_missing_optional_files_are_skipped_without_creating_them(tmp_path):
+    missing = tmp_path / "missing.out"
+    files = FileManifest(
+        outputs=(FileEntry(local_path=str(missing), availability_state="pending"),),
+    )
+    found = discover_local_files(files)
+    assert found.outputs[0].availability_state == "skipped"
+    assert not missing.exists()
+
+
+def test_local_supervisor_discovery_does_not_override_stream_publication(tmp_path):
+    output = tmp_path / "previous.out"
+    output.write_bytes(b"stale")
+    files = FileManifest(
+        stdout=FileEntry(local_path=str(output), availability_state="pending"),
+        outputs=(FileEntry(local_path=str(tmp_path / "other.out"),
+                           availability_state="pending"),),
+    )
+    found = discover_local_files(files, include_streams=False)
+    assert found.stdout.availability_state == "pending"
+    assert found.outputs[0].availability_state == "skipped"

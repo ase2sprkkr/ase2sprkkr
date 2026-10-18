@@ -6,7 +6,6 @@ facts, a temporary submission ticket and a terminal outcome receipt.
 from __future__ import annotations
 
 import asyncio
-import glob
 import os
 from dataclasses import asdict, replace
 from threading import Event, Lock, Thread
@@ -15,6 +14,7 @@ from .base import (
     ExecutionOutcome, ExecutionSpec, FailurePhase, OutputObservers,
     RunState, RunStatus,
 )
+from .file_availability import discover_local_files
 from .remote_service import (
     _decode_handle, cancel_remote, follow_remote, status_remote, submit_remote,
 )
@@ -66,26 +66,7 @@ def local_manifest(files, status):
 
     if status.failure_phase in (FailurePhase.LAUNCH, FailurePhase.SUBMISSION):
         return files
-    for kind, entries in (
-        ("output", tuple(files.outputs)),
-        ("cache", tuple(item.file for item in files.caches)),
-    ):
-        for entry in entries:
-            if entry.source_pattern is not None or entry.local_path is None:
-                continue
-            path = entry.local_path
-            if glob.has_magic(path):
-                matches = sorted(p for p in glob.glob(path, recursive=True)
-                                 if os.path.isfile(p))
-                for match in matches:
-                    files = files.with_file_availability(
-                        match, "available", kind=kind, source_pattern=path,
-                    )
-                state = "available" if matches else "skipped"
-            else:
-                state = "available" if os.path.isfile(path) else "skipped"
-            files = files.with_file_availability(path, state)
-    return files
+    return discover_local_files(files, include_streams=False)
 
 
 def local_status(backend_id, files=None):

@@ -304,7 +304,6 @@ class RemoteRunner:
         targets = {}
         patterns = []
         pattern_before = {}
-        input_policy = self.executor.input_files
         output_policy = self.executor.output_files
         remote_root = await self.executor._resolved_remote_root()
 
@@ -338,24 +337,9 @@ class RemoteRunner:
 
             if local in targets:
                 continue
-            remote = await self.executor.map_path(local)
-            previous = used.get(remote)
-            if previous is not None and previous != local:
-                raise ValueError(f"Remote cache target collision: {remote}")
-
-            if previous is None:
-                if input_policy != FileSyncPolicy.NEVER:
-                    local_digest = local_file_digest(local)
-                    remote_digest = await self.executor.transport.file_digest(remote)
-                    if input_policy == FileSyncPolicy.ALWAYS:
-                        if local_digest is not None:
-                            await self.executor.transport.put_file(local, remote)
-                    elif input_policy == FileSyncPolicy.MISSING:
-                        if remote_digest is None and local_digest is not None:
-                            await self.executor.transport.put_file(local, remote)
-                    elif local_digest is not None and local_digest != remote_digest:
-                        await self.executor.transport.put_file(local, remote)
-                used[remote] = local
+            # Cache inputs obey precisely the same staging policy as ordinary
+            # inputs, except that a missing local cache is allowed.
+            remote = await self._stage_file(local, used, required=False)
 
             before = None
             if output_policy != FileSyncPolicy.NEVER:
@@ -415,12 +399,14 @@ class RemoteRunner:
 
         for local, remote in self._output_targets.items():
             try:
-                await self._sync_one_output(local, remote, required)
+                available = await self._sync_one_output(local, remote, required)
             except Exception as exc:
                 self._set_file_availability(local, "failed", str(exc))
                 raise
             else:
-                self._set_file_availability(local, "available")
+                self._set_file_availability(
+                    local, "available" if available else "skipped",
+                )
 
         if not self._output_patterns:
             return
@@ -457,12 +443,14 @@ class RemoteRunner:
                         source_pattern=local_pattern,
                     )
                     try:
-                        await self._sync_one_output(local, remote, required)
+                        available = await self._sync_one_output(local, remote, required)
                     except Exception as exc:
                         self._set_file_availability(local, "failed", str(exc))
                         raise
                     else:
-                        self._set_file_availability(local, "available")
+                        self._set_file_availability(
+                            local, "available" if available else "skipped",
+                        )
 
                 # All matches have been considered successfully. Never mark the
                 # pattern complete before its last individual transfer.
@@ -479,16 +467,17 @@ class RemoteRunner:
                 raise FileNotFoundError(
                     f"Declared remote output file was not created: {remote}"
                 )
-            return
+            return False
         if policy == FileSyncPolicy.ALWAYS:
             await self.executor.transport.get_file(remote, local)
-            return
+            return True
         local_digest = local_file_digest(local)
         if policy == FileSyncPolicy.MISSING:
             if local_digest is None:
                 await self.executor.transport.get_file(remote, local)
         elif local_digest != remote_digest:
             await self.executor.transport.get_file(remote, local)
+        return True
 
     async def _sync_cache_files(self):
         policy = self.executor.output_files

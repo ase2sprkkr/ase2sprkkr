@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import asyncio
-import glob
 import os
 import shlex
 import subprocess
@@ -13,6 +12,7 @@ from dataclasses import replace
 from pathlib import Path
 from threading import Event, Lock, Thread
 
+from .file_availability import discover_local_files
 from .growing_file_tail import follow_growing_files
 from .base import (
     ExecutionOutcome,
@@ -363,27 +363,7 @@ class PsijRunner:
     def _update_files(self):
         if self._files is None:
             return
-        for entry in self._files.artifacts:
-            if entry.availability_state not in (None, "pending"):
-                continue
-            path = entry.local_path
-            if glob.has_magic(path):
-                matches = sorted(
-                    candidate for candidate in glob.glob(path, recursive=True)
-                    if os.path.isfile(candidate)
-                )
-                kind = (
-                    "cache" if any(cache.file.local_path == path for cache in self._files.caches)
-                    else "output"
-                )
-                for concrete in matches:
-                    self._files = self._files.with_file_availability(
-                        concrete, "available", kind=kind, source_pattern=path,
-                    )
-                state = "available" if matches else "skipped"
-            else:
-                state = "available" if os.path.isfile(path) else "skipped"
-            self._files = self._files.with_file_availability(path, state)
+        self._files = discover_local_files(self._files)
 
     @property
     def backend_id(self):
