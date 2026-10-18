@@ -269,3 +269,18 @@ def test_preparse_uses_strict_grammar_when_full_parse_is_dangerous(monkeypatch):
     source = _EXAMPLES / "scf.in"
     InputParametersDefinition.from_file(source, allow_dangerous=True)
     assert calls == [False]
+
+
+def test_scalar_task_selector_and_registration_immutability_contract():
+    from .. import input_parameters_definitions as definitions
+
+    schema = InputParametersDefinition("special", [])
+    assert schema.accepted_task_selectors() == ("SPECIAL",)
+    schema.task_selectors = "dmi"
+    assert schema.accepted_task_selectors() == ("DMI",)
+    schema.task_selectors = ("jxc", "dmi")
+    assert schema.accepted_task_selectors() == ("JXC", "DMI")
+    for invalid in ((), ("JXC", "jxc"), ("",), ("JXC", 3)):
+        schema.task_selectors = invalid
+        with pytest.raises(ValueError):
+            schema.accepted_task_selectors()

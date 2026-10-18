@@ -80,3 +80,33 @@ def test_jxc_combined_selectors_separated_by_other_task_options():
     preview = _task_preparse_definition()
     parsed = preview.read_from_string("TASK DMI CLURAD=4.0 JXC")
     assert list(parsed.TASK.TASK()) == ["DMI", "JXC"]
+
+
+def test_distinct_jxc_and_dmi_tasks_share_input_definition():
+    dmi = InputParameters.create("DMI")
+    assert dmi.definition_name == "JXC"
+    assert dmi.task_name == "DMI"
+    assert dmi.TASK.DMI()
+    assert not dmi.TASK.JXC()
+    assert dmi.TASK.TASK() == "DMI"
+
+    jxc = InputParameters.create("JXC")
+    assert jxc.definition_name == "JXC"
+    assert jxc.task_name == "JXC"
+    assert jxc.TASK.JXC()
+    assert not jxc.TASK.DMI()
+    assert jxc.TASK.TASK() == "JXC"
+
+
+def test_dmi_only_and_combined_task_native_roundtrip():
+    for task in ("DMI", "JXC"):
+        params = InputParameters.create(task)
+        params.CONTROL.POTFIL = "Fe.pot"
+        if task == "JXC":
+            params.TASK.DMI = True
+        restored = _roundtrip(params)
+        assert restored.definition_name == "JXC"
+        assert restored.TASK.DMI()
+        assert restored.task_name == task
+        assert restored.TASK.TASK() == task
+        assert restored.TASK.JXC() == (task == "JXC")

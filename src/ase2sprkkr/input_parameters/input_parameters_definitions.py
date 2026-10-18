@@ -204,14 +204,32 @@ class InputParametersDefinition(ConfigurationFileDefinition):
     configuration_type_name = "INPUT PARAMETERS"
 
     task_selectors = None
-    """Native TASK keywords selecting this IPD. Defaults to the IPD's name."""
+    """Native TASK selectors, defaulting to the IPD name.
+
+    A string denotes one selector; an iterable denotes multiple selectors.
+    Like other registration metadata, this must not change once the singleton
+    registry has constructed the cached selector map and preparse grammar.
+    """
 
     def accepted_task_selectors(self):
-        return tuple(
-            str(name).upper()
-            for name in (self.task_selectors if self.task_selectors is not None
-                         else (self.name,))
-        )
+        names = self.task_selectors
+        if names is None:
+            names = (self.name,)
+        elif isinstance(names, str):
+            names = (names,)
+        names = tuple(names)
+        if not names:
+            raise ValueError(f"IPD {self.name}: task_selectors may not be empty")
+        normalized = []
+        for name in names:
+            if not isinstance(name, str) or not name.strip():
+                raise ValueError(
+                    f"IPD {self.name}: TASK selectors must be nonempty strings"
+                )
+            normalized.append(name.strip().upper())
+        if len(set(normalized)) != len(normalized):
+            raise ValueError(f"IPD {self.name}: duplicate TASK selectors")
+        return tuple(normalized)
 
     @maybeclassmethod
     def from_file(self, cls, file, allow_dangerous=False):

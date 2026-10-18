@@ -303,3 +303,16 @@ def test_malformed_extra_task_is_definition_error(tmp_path, monkeypatch):
     registry = TaskRegistry(InputParametersRegistry(definitions_package), tasks_package)
     with pytest.raises(RegistryDefinitionError, match="must be TaskDefinition"):
         registry["BROKEN"]
+
+
+def test_jxc_and_dmi_share_schema_but_have_distinct_registered_tasks():
+    schema = InputParameters.input_parameters_registry["JXC"]
+    assert schema._task_definition is None
+    jxc = InputParameters.task_registry["JXC"]
+    dmi = InputParameters.task_registry["DMI"]
+    assert jxc.name == "JXC" and dmi.name == "DMI"
+    assert jxc is not dmi
+    assert jxc.input_parameters_definition_name == "JXC"
+    assert dmi.input_parameters_definition_name == "JXC"
+    assert InputParameters.input_parameters_registry.definition_for_task(jxc) is schema
+    assert InputParameters.input_parameters_registry.definition_for_task(dmi) is schema

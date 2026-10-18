@@ -1,14 +1,20 @@
 """JXC task definition."""
 
 from ._file_manifests import resolve_file
-from .sections import TASK, CONTROL, TAU, ENERGY, SITES, STRCONST, MODE
-from ..input_parameters_definitions import InputParametersDefinition, InputValueDefinition as V
-from ..task_definition import TaskDefinition
+from .sections import CONTROL, TAU, ENERGY, SITES, STRCONST, MODE
+from ..input_parameters_definitions import (
+    InputParametersDefinition, InputSectionDefinition as Section,
+    InputValueDefinition as V,
+)
+from ...common.generated_configuration_definitions import GeneratedValueDefinition
 from ...common.grammar_types import flag
 
 
 class JxcInputParametersDefinition(InputParametersDefinition):
     task_selectors = ("JXC", "DMI")
+
+    def task_definition_name(self, parameters):
+        return _selected_task_name(parameters.TASK)
 
     def initialize_from_result(self, parameters, result):
         parameters.ENERGY.EMIN.set_default(result.last_iteration.energy.EMIN())
@@ -16,12 +22,35 @@ class JxcInputParametersDefinition(InputParametersDefinition):
     def output_files(self, parameters, directory):
         files = list(super().output_files(parameters, directory))
         dataset = parameters.CONTROL.DATASET()
-        if parameters.MODE.MODE() == "SP-SREL":
-            files.append(resolve_file(directory, f"{dataset}*Jij*"))
-        else:
-            files.append(resolve_file(directory, f"{dataset}_XCPLTEN_Jij.dat"))
-        files.append(resolve_file(directory, f"{dataset}*.agr"))
+        if parameters.TASK.JXC():
+            if parameters.MODE.MODE() == "SP-SREL":
+                files.append(resolve_file(directory, f"{dataset}*Jij*"))
+            else:
+                files.append(resolve_file(directory, f"{dataset}_XCPLTEN_Jij.dat"))
+            files.append(resolve_file(directory, f"{dataset}*.agr"))
+        if parameters.TASK.DMI():
+            files.append(resolve_file(directory, f"{dataset}_DMIVEC_Dij.dat"))
+            files.append(resolve_file(directory, f"{dataset}_DMIVEC_Dij_[xyz]_*.agr"))
         return tuple(files)
+
+
+def _requested_task(option):
+    return option._get_root_container().requested_task_name
+
+
+def _jxc_default(option):
+    requested = _requested_task(option)
+    return requested == "JXC" or (
+        requested is None and not option._container.DMI()
+    )
+
+
+def _dmi_default(option):
+    return _requested_task(option) == "DMI"
+
+
+def _selected_task_name(section):
+    return "JXC" if section.JXC() else "DMI" if section.DMI() else "JXC"
 
 
 def _jxc_mode_warning_condition(value):
@@ -53,15 +82,15 @@ def input_parameters_definition():
             MODE.copy(add=[mmode]),
             STRCONST,
             ENERGY(),
-            TASK("JXC").copy(
+            Section(
+                "TASK",
                 [
-                    V(
-                        "DMI",
-                        flag,
-                        default_value=False,
-                        is_required=False,
-                        info="Calculate Dzyaloshinskii-Moriya interaction vectors.",
-                    ),
+                    V("JXC", flag, default_value=_jxc_default, is_required=False,
+                      info="Calculate exchange couplings and exchange tensor."),
+                    V("DMI", flag, default_value=_dmi_default, is_required=False,
+                      info="Calculate Dzyaloshinskii-Moriya interaction vectors."),
+                    GeneratedValueDefinition("TASK", _selected_task_name),
+                    V("HFF", False, info="Enable the hyperfine-field calculation."),
                     V(
                         "CLURAD",
                         2.2,
@@ -69,18 +98,11 @@ def input_parameters_definition():
         of atoms for which the exchange coupling
         constants will be calculated""",
                     ),
-                ]
+                ],
             ),
             SITES,
         ],
         info="JXC",
     )
     schema["CONTROL"]["NONMAG"].warning_condition = _jxc_nonmag_warning_condition
-    schema._task_definition = TaskDefinition(
-        "JXC",
-        name="JXC",
-        executable="kkrgen",
-        mpi=True,
-        output_reader="JXC",
-    )
     return schema
