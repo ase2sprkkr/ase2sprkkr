@@ -1,11 +1,10 @@
-"""Transient, backpressure-aware stream service owned by a direct-process supervisor.
+"""Transient single-socket streaming owned by the direct process supervisor.
 
-A single Unix socket belongs to the supervisor, not to the client or a
-separate lifecycle agent. The supervisor is the only writer of the spools.
-FOLLOW offsets refer to the first *not yet queued* byte of each stream.
-The connection handler never polls spool files for changes.
+Files are spooled only when explicitly requested. A missing stream file means
+LIVE-only observation, not an implicit stdout/stderr artifact. The target owns
+no run history; terminal facts are sent on this socket and via a short-lived
+acknowledgeable receipt.
 """
-
 from __future__ import annotations
 
 import asyncio
@@ -18,9 +17,9 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 MAGIC = b"A2SFOLL1"
-_HEADER = struct.Struct("!cQQ")  # channel, absolute byte offset, payload size
+_HEADER = struct.Struct("!cQQ")
 _CODES = {"out": b"O", "err": b"E"}
-_BACK = {v: k for k, v in _CODES.items()}
+_BACK = {code: kind for kind, code in _CODES.items()}
 _CHUNK = 65536
 _HIGH = 512 * 1024
 _LOW = 128 * 1024
@@ -28,27 +27,24 @@ _MAX_REQUEST = 4096
 
 
 def frame(kind, offset, data):
-    data = bytes(data)
     return _HEADER.pack(_CODES[kind], offset, len(data)) + data
 
 
 async def receive(reader):
-    """Yield verified, offset-bearing stream frames, followed by terminal JSON."""
+    """Yield offset-bearing stream frames followed by terminal facts."""
     if await reader.readexactly(len(MAGIC)) != MAGIC:
         raise ValueError("Unknown supervisor stream protocol")
     while True:
-        header = await reader.readexactly(_HEADER.size)
-        channel, offset, length = _HEADER.unpack(header)
-        if length > _CHUNK and channel != b"T":
+        code, offset, length = _HEADER.unpack(await reader.readexactly(_HEADER.size))
+        if length > (_MAX_REQUEST if code == b"T" else _CHUNK):
             raise ValueError("Oversized supervisor frame")
-        if channel == b"T":
-            if length > _MAX_REQUEST:
-                raise ValueError("Oversized terminal fact")
-            yield "terminal", 0, json.loads(await reader.readexactly(length))
+        payload = await reader.readexactly(length)
+        if code == b"T":
+            yield "terminal", 0, json.loads(payload)
             return
-        if channel not in _BACK:
-            raise ValueError("Unknown supervisor channel")
-        yield _BACK[channel], offset, await reader.readexactly(length)
+        if code not in _BACK:
+            raise ValueError("Invalid supervisor channel")
+        yield _BACK[code], offset, payload
 
 
 @dataclass(eq=False)
@@ -57,19 +53,23 @@ class _Follower:
     offsets: dict
     replay: bool = True
     wake: asyncio.Event = field(default_factory=asyncio.Event)
+    done: asyncio.Event = field(default_factory=asyncio.Event)
 
 
 class SupervisorStreams:
-    """Single-event-loop spool fanout. Only the supervisor may call publish()."""
+    """One event loop writes the spools and fans out output to followers."""
 
-    def __init__(self, stdout_path, stderr_path, *, detached=True):
-        self.paths = {"out": os.fspath(stdout_path)}
-        self.merged = os.path.abspath(stdout_path) == os.path.abspath(stderr_path)
-        if not self.merged:
-            self.paths["err"] = os.fspath(stderr_path)
+    def __init__(self, stdout_path=None, stderr_path=None, *, detached=True):
+        self.paths = {"out": None if stdout_path is None else os.fspath(stdout_path),
+                      "err": None if stderr_path is None else os.fspath(stderr_path)}
+        self.merged = (stdout_path is not None and stderr_path is not None
+                       and os.path.abspath(stdout_path) == os.path.abspath(stderr_path))
+        if self.merged:
+            del self.paths["err"]
         self.detached = detached
         self.connected = asyncio.Event()
         self.disconnected = asyncio.Event()
+        self.cancelled = asyncio.Event()
         self._session_follower = None
         self._spools = {}
         self._sizes = {kind: 0 for kind in self.paths}
@@ -81,9 +81,9 @@ class SupervisorStreams:
 
     async def start(self):
         for kind, path in self.paths.items():
-            Path(path).parent.mkdir(parents=True, exist_ok=True)
-            self._spools[kind] = open(path, "wb", buffering=0)
-        # A private, disposable path: no target-side lifecycle database.
+            if path is not None:
+                Path(path).parent.mkdir(parents=True, exist_ok=True)
+                self._spools[kind] = open(path, "wb", buffering=0)
         self._socket_dir = tempfile.mkdtemp(prefix="ase2sprkkr-follow-")
         self.socket_path = os.path.join(self._socket_dir, "socket")
         self._server = await asyncio.start_unix_server(self._connect, self.socket_path)
@@ -91,27 +91,24 @@ class SupervisorStreams:
         return self.socket_path
 
     def publish(self, kind, data):
-        """Spool/flush/fanout is one non-yielding event-loop critical section."""
         if self._terminal is not None:
-            raise RuntimeError("Output published after terminal state")
+            raise RuntimeError("Output published after termination")
         if self.merged and kind == "err":
             kind = "out"
-        data = bytes(data)
         if not data:
             return
-        stream = self._spools[kind]
+        data = bytes(data)
         offset = self._sizes[kind]
-        stream.write(data)
+        spool = self._spools.get(kind)
+        if spool is not None:
+            spool.write(data)
+            spool.flush()
         self._sizes[kind] += len(data)
-        # Flush before making the new high-water mark visible to replay.
-        stream.flush()
         wire = frame(kind, offset, data)
         for follower in tuple(self._followers):
             if follower.replay:
                 follower.wake.set()
                 continue
-            # A LIVE follower has exactly one writer. If slow, stop enqueuing
-            # live bytes; REPLAY resumes from its first unqueued offset.
             if follower.writer.transport.get_write_buffer_size() >= _HIGH:
                 follower.replay = True
                 follower.wake.set()
@@ -122,10 +119,13 @@ class SupervisorStreams:
                 follower.replay = True
                 follower.wake.set()
 
+    def sync(self):
+        """Durability barrier before publishing successful terminal outcome."""
+        for spool in self._spools.values():
+            spool.flush()
+            os.fsync(spool.fileno())
+
     def terminal(self, outcome):
-        """Called only after waitpid, both pipe pumps, and outcome publication."""
-        if self._terminal is not None:
-            raise RuntimeError("Terminal outcome already published")
         self._terminal = dict(outcome)
         for follower in tuple(self._followers):
             follower.wake.set()
@@ -134,54 +134,61 @@ class SupervisorStreams:
         follower = None
         disconnect_watch = None
         try:
-            request = await reader.readline()
-            if not request or len(request) > _MAX_REQUEST:
-                raise ValueError("Invalid FOLLOW request")
-            data = json.loads(request)
-            if data.get("command") != "follow":
-                raise ValueError("Unknown supervisor request")
-            offsets = data.get("offsets")
+            raw = await reader.readline()
+            if not raw or len(raw) > _MAX_REQUEST:
+                raise ValueError("Malformed supervisor request")
+            request = json.loads(raw)
+            if request.get("command") == "cancel":
+                self.cancelled.set()
+                writer.write(b'{"accepted":true}\n')
+                await writer.drain()
+                return
+            if request.get("command") != "follow":
+                raise ValueError("Unknown supervisor command")
+            offsets = request.get("offsets")
             if not isinstance(offsets, dict) or set(offsets) != set(self.paths):
                 raise ValueError("Invalid stream offsets")
-            if any(
-                type(offsets[kind]) is not int or not 0 <= offsets[kind] <= self._sizes[kind]
-                for kind in self.paths
-            ):
-                raise ValueError("Stream offset outside the current spool")
+            for kind, offset in offsets.items():
+                if type(offset) is not int or offset < 0:
+                    raise ValueError("Invalid stream offset")
+                if self.paths[kind] is not None and offset > self._sizes[kind]:
+                    raise ValueError("Offset is beyond the spool")
+                if self.paths[kind] is None:
+                    if offset != 0:
+                        raise ValueError("Live-only output cannot be replayed")
+                    offsets[kind] = self._sizes[kind]
             writer.transport.set_write_buffer_limits(high=_HIGH, low=_LOW)
-            # Register before yielding: no output between snapshot and replay.
             follower = _Follower(writer, offsets.copy())
             if not self.detached:
                 if self._session_follower is not None:
-                    raise ValueError("Non-detached run already has its session")
+                    raise ValueError("Attached execution already has a client")
                 self._session_follower = follower
                 self.connected.set()
-                # The peer sends nothing after its FOLLOW request. Detect EOF
-                # even while the process produces no output.
                 disconnect_watch = asyncio.create_task(reader.read(1))
                 disconnect_watch.add_done_callback(lambda _: self.disconnected.set())
             self._followers.add(follower)
             writer.write(MAGIC)
             while True:
                 if follower.replay:
-                    # Drain prior queued LIVE data before replaying the rest.
                     await writer.drain()
-                    for kind in self.paths:
+                    for kind, path in self.paths.items():
+                        if path is None:
+                            # Live-only output has no replay source.
+                            follower.offsets[kind] = self._sizes[kind]
+                            continue
                         offset = follower.offsets[kind]
                         if offset < self._sizes[kind]:
-                            with open(self.paths[kind], "rb", buffering=0) as spool:
+                            with open(path, "rb", buffering=0) as spool:
                                 spool.seek(offset)
                                 data = spool.read(min(_CHUNK, self._sizes[kind] - offset))
                             if not data:
-                                raise RuntimeError("Spool was truncated during FOLLOW")
+                                raise RuntimeError("Supervisor spool truncated")
                             writer.write(frame(kind, offset, data))
                             follower.offsets[kind] += len(data)
-                            # Yield to the pumps and apply socket backpressure.
                             await writer.drain()
                             break
                     else:
-                        # No await between checking spool EOF and registering
-                        # LIVE. An arriving publish therefore cannot be lost.
+                        # No suspension between checking EOF and enabling LIVE.
                         follower.replay = False
                 if self._terminal is not None and all(
                     follower.offsets[kind] == self._sizes[kind] for kind in self.paths
@@ -200,6 +207,7 @@ class SupervisorStreams:
                 self._followers.discard(follower)
                 if follower is self._session_follower and self._terminal is None:
                     self.disconnected.set()
+                follower.done.set()
             if disconnect_watch is not None:
                 disconnect_watch.cancel()
             writer.close()
@@ -208,21 +216,13 @@ class SupervisorStreams:
             except (BrokenPipeError, ConnectionResetError):
                 pass
 
-    async def finish(self, *, grace=2.0):
-        """Allow terminal frames to drain, but never let a client hold the job."""
+    async def finish(self):
+        """Let active clients drain the replay before removing the socket."""
         if self._server is not None:
             self._server.close()
             await self._server.wait_closed()
         if self._followers:
-            try:
-                await asyncio.wait_for(
-                    asyncio.gather(*(f.writer.wait_closed() for f in tuple(self._followers))),
-                    timeout=grace,
-                )
-            except (asyncio.TimeoutError, ConnectionError):
-                pass
-        for follower in tuple(self._followers):
-            follower.writer.close()
+            await asyncio.gather(*(f.done.wait() for f in tuple(self._followers)))
         for spool in self._spools.values():
             spool.close()
         if self._socket_dir is not None:
@@ -230,18 +230,15 @@ class SupervisorStreams:
 
 
 async def follow_socket(path, offsets, on_chunk):
-    """Follow one supervisor connection; on_chunk(kind, offset, bytes) is sync."""
     reader, writer = await asyncio.open_unix_connection(path)
     try:
         writer.write(json.dumps({"command": "follow", "offsets": offsets}).encode() + b"\n")
         await writer.drain()
-        outcome = None
         async for kind, offset, data in receive(reader):
             if kind == "terminal":
-                outcome = data
-                break
+                return data
             on_chunk(kind, offset, data)
-        return outcome
+        raise ConnectionError("Supervisor ended without terminal outcome")
     finally:
         writer.close()
         await writer.wait_closed()
