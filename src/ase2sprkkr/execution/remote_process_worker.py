@@ -93,7 +93,7 @@ async def _run(spec):
                 if not streams.detached else None)
         try:
             while True:
-                watches = [waiting, stop, *pumps]
+                watches = [waiting, stop, *(p for p in pumps if not p.done())]
                 if lost is not None:
                     watches.append(lost)
                 done, _ = await asyncio.wait(watches, return_when=asyncio.FIRST_COMPLETED)
