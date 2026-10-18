@@ -402,6 +402,7 @@ def _follow_scheduler(remote_id, streams, paths, offsets, poll_interval):
     is captured into scheduler-managed files and its terminal status comes
     from the native backend. Read at most one bounded chunk per channel.
     """
+    unknown_since = None
     while True:
         had_data = False
         seen = set()
@@ -426,11 +427,21 @@ def _follow_scheduler(remote_id, streams, paths, offsets, poll_interval):
                 offsets[kind] += len(data)
                 had_data = True
         status = status_remote(remote_id)
-        if status["state"] in {state.value for state in _FINAL_STATES} | {RunState.UNKNOWN.value}:
+        state = status["state"]
+        if state in {item.value for item in _FINAL_STATES}:
             if not had_data:
                 return status
+        elif state == RunState.UNKNOWN.value:
+            # A freshly attached PSI/J job may not have a scheduler status
+            # yet. Continue observing for a bounded recovery window.
+            if unknown_since is None:
+                unknown_since = time.monotonic()
+            if time.monotonic() - unknown_since >= 30 and not had_data:
+                return status
+        else:
+            unknown_since = None
         if not had_data:
-            time.sleep(poll_interval)
+            time.sleep(max(poll_interval, 0.01))
 
 
 def follow_remote(

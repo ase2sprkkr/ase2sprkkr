@@ -168,15 +168,33 @@ def test_follow_returns_unknown_instead_of_waiting_forever(tmp_path, monkeypatch
 
     monkeypatch.setattr(remote_service, "status_remote", unknown)
 
+    times = iter((0, 31))
+    monkeypatch.setattr(remote_service.time, "monotonic", lambda: next(times))
+    monkeypatch.setattr(remote_service.time, "sleep", lambda _: None)
     status = remote_service.follow_remote(
-        remote_id,
-        io.BytesIO(),
-        io.BytesIO(),
-        poll_interval=0,
+        remote_id, io.BytesIO(), io.BytesIO(), poll_interval=0,
     )
-
     assert status["state"] == RunState.UNKNOWN.value
-    assert calls == [remote_id]
+    assert calls == [remote_id, remote_id]
+
+
+def test_follow_transient_unknown_resolves_before_terminal_state(tmp_path, monkeypatch):
+    _, remote_id = _psij_handle(tmp_path)
+    states = iter((
+        RunState.UNKNOWN.value, RunState.RUNNING.value,
+        RunState.FINISHED.value,
+    ))
+    seen = []
+    def status(_id):
+        seen.append(_id)
+        return {"state": next(states)}
+    monkeypatch.setattr(remote_service, "status_remote", status)
+    monkeypatch.setattr(remote_service.time, "sleep", lambda _: None)
+    outcome = remote_service.follow_remote(
+        remote_id, io.BytesIO(), io.BytesIO(), poll_interval=0,
+    )
+    assert outcome["state"] == RunState.FINISHED.value
+    assert seen == [remote_id] * 3
 
 
 def test_supervisor_writes_mailbox_receipt(monkeypatch):
