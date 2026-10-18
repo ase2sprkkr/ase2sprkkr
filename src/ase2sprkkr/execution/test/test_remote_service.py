@@ -219,3 +219,23 @@ def test_supervisor_requires_parent_launch_release(monkeypatch):
 
     with pytest.raises(RuntimeError, match="not released"):
         remote_process_worker._wait_for_parent_release()
+
+
+def test_uncertain_submit_uses_only_temporary_identity_ticket(tmp_path, monkeypatch):
+    from uuid import uuid4
+    monkeypatch.setenv("ASE2SPRKKR_REMOTE_STATE_DIR", str(tmp_path))
+    run_id = uuid4().hex
+    handle = remote_service._encode_handle({
+        "kind": "process", "pid": 123,
+        "start_time": "456", "receipt_id": "a" * 32,
+        "socket_path": "/tmp/fake-socket",
+    })
+    reply = {"remote_id": handle, "directory": str(tmp_path), "state": "running"}
+    remote_service._publish_submission(run_id, reply)
+    recovered = remote_service.recover_remote(run_id, {
+        "executor": "local", "directory": str(tmp_path),
+    })
+    assert recovered["remote_id"] == handle
+    assert remote_service.acknowledge_submission(run_id) == {"acknowledged": True}
+    assert remote_service.recover_remote(run_id, {"executor": "local"}) is None
+    assert remote_service.acknowledge_submission(run_id) == {"acknowledged": False}
