@@ -81,6 +81,7 @@ def test_status_distinguishes_launch_and_execution_failure(tmp_path, monkeypatch
 def _slurm_executor(monkeypatch):
     executor = object.__new__(psij.PsijExecutor)
     executor.backend = "slurm"
+    executor.url = None
     monkeypatch.setattr(remote_service, "_psij_executor", lambda _options: executor)
     return executor
 
