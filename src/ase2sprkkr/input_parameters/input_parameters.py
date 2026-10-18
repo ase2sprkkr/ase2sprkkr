@@ -5,6 +5,7 @@ from __future__ import annotations
 import io
 from . import definitions, tasks
 from .task_definition import InputParametersRegistry, TaskRegistry
+from ..common.module_registry import RegistryEntryNotFound
 from ..sprkkr.configuration import (
     ConfigurationFile,
     ConfigurationSection,
@@ -269,8 +270,8 @@ class InputParameters(ConfigurationFile):
     def create_input_parameters(cls, arg):
         if isinstance(arg, str):
             name = cls.is_task_name(arg)
-            if name:
-                return cls.create(name)
+            if name or arg.upper() in cls.input_parameters_registry:
+                return cls.create(name or arg)
             return cls.from_file(arg)
         if isinstance(arg, io.IOBase):
             return cls.from_file(arg)
@@ -278,7 +279,12 @@ class InputParameters(ConfigurationFile):
 
     @classmethod
     def create(cls, name):
-        task = cls.task_registry[name]
+        name = cls.task_registry.normalize_name(name)
+        try:
+            task = cls.task_registry[name]
+        except RegistryEntryNotFound:
+            # A shared input schema (e.g. BSF) is not itself a task.
+            return cls(definition=cls.input_parameters_registry[name])
         return cls.input_parameters_registry.create_for_task(task)
 
     @classmethod
