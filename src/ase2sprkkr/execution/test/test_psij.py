@@ -677,7 +677,7 @@ def test_psij_recovery_normalizes_nonzero_completed(monkeypatch, tmp_path):
     assert status.return_code == 7
 
 
-def test_psij_accounting_confirms_missing_submission(monkeypatch, tmp_path):
+def test_psij_empty_accounting_keeps_submission_uncertain(monkeypatch, tmp_path):
     executor = _executor(monkeypatch, _Backend())
 
     def scheduler_output(argv):
@@ -691,11 +691,12 @@ def test_psij_accounting_confirms_missing_submission(monkeypatch, tmp_path):
 
     monkeypatch.setattr(psij_backend, "_scheduler_output", scheduler_output)
 
-    assert executor.recover_submission(
-        "missing",
-        _psij_run(tmp_path),
-        submitted_at="2026-10-13T08:00:00+02:00",
-    ) is None
+    with pytest.raises(NotImplementedError, match="still uncertain"):
+        executor.recover_submission(
+            "missing",
+            _psij_run(tmp_path),
+            submitted_at="2026-10-13T08:00:00+02:00",
+        )
 
 
 def test_psij_missing_accounting_history_keeps_submission_uncertain(monkeypatch, tmp_path):

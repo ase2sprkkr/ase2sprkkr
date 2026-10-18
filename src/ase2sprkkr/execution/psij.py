@@ -665,7 +665,13 @@ class PsijExecutor(Executor):
                 f"Multiple Slurm accounting records carry ASE2SPRKKR run id {run_id!r}"
             )
         if not accounting:
-            return None
+            # An empty sacct result is not authoritative negative evidence:
+            # Slurm accounting can lag behind the scheduler. Do not release
+            # the client's SUBMITTING reservation and risk a duplicate job.
+            raise NotImplementedError(
+                "Slurm has no matching job in squeue or accounting yet; "
+                "submission acceptance is still uncertain"
+            )
         native_id, state, workdir, stdout, stderr, return_code = accounting[0]
         recovered_state = _slurm_state(state)
         if recovered_state == RunState.FINISHED and return_code not in (None, 0):
