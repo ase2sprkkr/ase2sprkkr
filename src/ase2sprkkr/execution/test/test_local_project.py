@@ -54,7 +54,7 @@ def test_project_run_launch_reconnect_and_immutable_backend_facts(tmp_path):
     assert executor.status(_record(tmp_path, identity))[0].state == RunState.FINISHED
     assert executor.recover_submission("run", _record(tmp_path, None)).backend_id == identity
     metadata = tmp_path / ".ase2sprkkr" / "runs" / "run"
-    assert sorted(p.name for p in metadata.iterdir()) == ["handoff.json", "outcome.json"]
+    assert sorted(p.name for p in metadata.iterdir()) == ["outcome.json"]
 
     seen = []
     attached = executor.attach(
@@ -116,6 +116,11 @@ def test_cancel_does_not_block_and_publishes_receipt(tmp_path):
     assert local_backend.query(tmp_path, runner.backend_id).state == RunState.CANCELLED
 
 
+def test_uncertain_local_submission_stays_unresolved_without_outcome(tmp_path):
+    with pytest.raises(NotImplementedError, match="no recorded backend ID"):
+        LocalExecutor().recover_submission("missing", _record(tmp_path, None))
+
+
 def test_missing_worker_outcome_is_unknown_not_success(tmp_path):
     record = _record(tmp_path, "local:missing:9999999:1:boot")
     status = LocalExecutor().status(record)[0]
@@ -132,10 +137,10 @@ def test_wildcard_files_have_individual_status(tmp_path):
     from ase2sprkkr.execution._durability import durable_mkdir, durable_write_json
     metadata = local_backend._run_dir(tmp_path, "wildcard")
     durable_mkdir(metadata, parents=True)
-    durable_write_json(metadata / "handoff.json", identity)
     durable_write_json(metadata / "outcome.json", {
         "return_code": 0, "phase": None, "message": None,
         "cancelled": False, "published": [True, True],
+        "identity": identity,
     })
     updated = local_backend.local_manifest(manifest, tmp_path, local_backend._backend_id(identity))
     assert len(updated.outputs) == 2

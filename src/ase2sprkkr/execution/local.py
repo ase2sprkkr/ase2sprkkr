@@ -311,10 +311,6 @@ class LocalExecutor(Executor):
             output_listener=output_listener, start=start,
         )
 
-    def acknowledge_submission(self, run):
-        from .local_backend import acknowledge_handoff
-        acknowledge_handoff(run.execution.directory.local, run.execution.backend_id)
-
     def acknowledge(self, run):
         from .local_backend import acknowledge_outcome
         acknowledge_outcome(run.execution.directory.local, run.execution.backend_id)
