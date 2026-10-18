@@ -13,10 +13,10 @@ from ase2sprkkr.execution import (
 )
 from ase2sprkkr.execution.endpoint import endpoint_for_executor
 from ase2sprkkr.execution.manager import ExecutionManager
-from ase2sprkkr.outputs import persistent as persistent_results
-from ase2sprkkr.outputs.persistent import (
-    PersistentResultUnavailableError,
-    load_persistent_result,
+from ase2sprkkr.outputs import persistent as project_results
+from ase2sprkkr.outputs.project_results import (
+    ProjectResultUnavailableError,
+    load_project_result,
 )
 
 
@@ -92,7 +92,7 @@ def _patch_reader(monkeypatch, parsed):
             return SimpleNamespace(return_code=kwargs["return_code"])
 
     monkeypatch.setattr(
-        persistent_results,
+        project_results,
         "_reader_for_record",
         lambda manager, record: Reader(),
     )
@@ -108,7 +108,7 @@ def test_history_listing_does_not_fetch_missing_result_files(tmp_path):
     assert executor.fetch_calls == []
 
 
-def test_load_persistent_result_restores_exact_missing_historical_output(
+def test_load_project_result_restores_exact_missing_historical_output(
     tmp_path, monkeypatch
 ):
     manager, executor, record = _terminal_run(tmp_path)
@@ -116,7 +116,7 @@ def test_load_persistent_result_restores_exact_missing_historical_output(
     parsed = []
     _patch_reader(monkeypatch, parsed)
 
-    result = load_persistent_result(manager, record.id)
+    result = load_project_result(manager, record.id)
 
     assert executor.fetch_calls == [
         (record.id, (str(tmp_path / "run.out"),))
@@ -144,13 +144,13 @@ def test_restored_changed_content_is_rejected_as_overwritten(tmp_path, monkeypat
             raise AssertionError("overwritten historical output must not be parsed")
 
     monkeypatch.setattr(
-        persistent_results,
+        project_results,
         "_reader_for_record",
         lambda manager, record: Reader(),
     )
 
-    with pytest.raises(PersistentResultUnavailableError, match="overwritten"):
-        load_persistent_result(manager, record.id)
+    with pytest.raises(ProjectResultUnavailableError, match="overwritten"):
+        load_project_result(manager, record.id)
 
     stored = manager.store.get(record.id)
     assert stored.state == RunState.FINISHED
@@ -193,8 +193,8 @@ def test_finished_history_without_available_output_is_not_synthesized(tmp_path):
         artifacts_available=False,
     )
 
-    with pytest.raises(PersistentResultUnavailableError, match="unavailable"):
-        load_persistent_result(manager, record.id)
+    with pytest.raises(ProjectResultUnavailableError, match="unavailable"):
+        load_project_result(manager, record.id)
 
 
 def test_failed_history_without_return_code_is_not_parsed_as_success(
@@ -208,7 +208,7 @@ def test_failed_history_without_return_code_is_not_parsed_as_success(
     parsed = []
     _patch_reader(monkeypatch, parsed)
 
-    result = load_persistent_result(manager, record.id)
+    result = load_project_result(manager, record.id)
 
     assert parsed[0][1]["return_code"] != 0
     assert result.return_code != 0
