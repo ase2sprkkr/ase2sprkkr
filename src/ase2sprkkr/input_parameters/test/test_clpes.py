@@ -16,7 +16,7 @@ def test_roundtrip():
     assert q.TASK.TASK() == "CLPES"
     assert q.SPEC_CL.CL() == "2P"
     assert q.SPEC_CL.IT() == 1
-    assert not q._definition.mpi
+    assert not q.task_definition.mpi
 
 
 @pytest.mark.parametrize("option,value", [("SPEC_CL.CL", "1P"), ("SPEC_CL.IT", 0), ("SPEC_PH.NPOL", 0), ("SPEC_PH.NPOL", 3), ("SPEC_EL.NT", 2), ("ENERGY.EWORK_EV", -1.)])
