@@ -92,7 +92,8 @@ def test_jxc_and_dmi_have_distinct_defaults_on_shared_schema():
     assert dmi.task_name == "DMI"
     assert jxc.TASK.JXC() and not jxc.TASK.DMI()
     assert not dmi.TASK.JXC() and dmi.TASK.DMI()
-    assert jxc.TASK.TASK() == dmi.TASK.TASK() == "JXC"
+    assert jxc.TASK.TASK() == "JXC"
+    assert dmi.TASK.TASK() == "DMI"
 
 
 def test_adding_secondary_native_switch_keeps_primary_task_enabled():
@@ -119,7 +120,7 @@ def test_native_dmi_only_and_combined_flags_roundtrip():
         assert restored.TASK.JXC() == (requested == "JXC")
         assert restored.task_name == requested
         assert restored.task_definition is InputParameters.task_registry[requested]
-        assert restored.TASK.TASK() == "JXC"
+        assert restored.TASK.TASK() == requested
 
 
 def test_combined_native_flags_have_jxc_identity_regardless_of_origin():
@@ -130,6 +131,7 @@ def test_combined_native_flags_have_jxc_identity_regardless_of_origin():
         params.TASK.JXC = True
         restored = _roundtrip(params)
         assert restored.task_name == "JXC"
+        assert restored.TASK.TASK() == "JXC"
         assert restored.task_definition is InputParameters.task_registry["JXC"]
         assert restored.TASK.JXC() and restored.TASK.DMI()
 
