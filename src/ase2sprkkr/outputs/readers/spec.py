@@ -98,7 +98,10 @@ class SpecResult(TaskResult):
         """
         from .arpes import ArpesResult
 
-        filenames = ArpesResult.spc_filenames.__get__(self, type(self))
+        filenames = (
+            ArpesResult.spc_filenames.func(self)
+            if hasattr(self, "_input_parameters") else ()
+        )
         if not filenames:
             # Preserve parsing older standalone SPEC text dumps.
             content = self._get_file_content()
