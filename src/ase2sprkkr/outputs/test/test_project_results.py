@@ -13,7 +13,7 @@ from ase2sprkkr.execution import (
     RunState,
 )
 from ase2sprkkr.input_parameters.input_parameters import InputParameters
-from ase2sprkkr.outputs.project import (
+from ase2sprkkr.outputs.project_results import (
     ProjectResultUnavailableError,
     attach_project_run,
     _reader_for_record,
