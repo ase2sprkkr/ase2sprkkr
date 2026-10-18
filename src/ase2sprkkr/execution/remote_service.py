@@ -7,6 +7,7 @@ submission. No ASE2SPRKKR run record is written on the target.
 
 from __future__ import annotations
 
+import asyncio
 import base64
 import json
 import os
@@ -19,6 +20,7 @@ import time
 from pathlib import Path
 from uuid import uuid4
 
+from .growing_file_tail import GrowingFileTail
 from .base import ExecutionSpec, FailurePhase, LaunchSpec, RunState
 from .remote_process_worker import _SPEC_ENV, _START_FD_ENV
 from .remote_mailbox import publish_outcome, read_outcome, acknowledge_outcome, _path as _outcome_path
@@ -395,53 +397,31 @@ def recover_remote(run_id, request, *, submitted_at=None):
     }
 
 
-def _follow_scheduler(remote_id, streams, paths, offsets, poll_interval):
-    """Scheduler-native stream observation; no direct-process fallback.
+async def _follow_scheduler_async(remote_id, streams, paths, offsets, poll_interval):
+    """Follow scheduler-managed files through the shared tail implementation.
 
-    A PSI/J scheduler does not run the direct-process supervisor. Its output
-    is captured into scheduler-managed files and its terminal status comes
-    from the native backend. Read at most one bounded chunk per channel.
+    Native scheduler status is authoritative. UNKNOWN is not a terminal fact.
     """
-    unknown_since = None
-    while True:
-        had_data = False
-        seen = set()
-        for kind in ("out", "err"):
-            path = paths[kind]
-            if path is None or path in seen:
-                continue
-            seen.add(path)
-            try:
-                with open(path, "rb") as source:
-                    if offsets[kind] is None:
-                        source.seek(0, os.SEEK_END)
-                        offsets[kind] = source.tell()
-                    else:
-                        source.seek(offsets[kind])
-                    data = source.read(65536)
-            except FileNotFoundError:
-                data = b""
-            if data:
+    async with GrowingFileTail(
+        paths, offsets=offsets, poll_interval=max(poll_interval, 1.0),
+    ) as tail:
+        while True:
+            chunks = tail.read_available()
+            for kind, data in chunks:
                 streams[kind].write(data)
                 streams[kind].flush()
-                offsets[kind] += len(data)
-                had_data = True
-        status = status_remote(remote_id)
-        state = status["state"]
-        if state in {item.value for item in _FINAL_STATES}:
-            if not had_data:
+            if chunks:
+                continue
+            status = await asyncio.to_thread(status_remote, remote_id)
+            if status["state"] in {item.value for item in _FINAL_STATES}:
                 return status
-        elif state == RunState.UNKNOWN.value:
-            # A freshly attached PSI/J job may not have a scheduler status
-            # yet. Continue observing for a bounded recovery window.
-            if unknown_since is None:
-                unknown_since = time.monotonic()
-            if time.monotonic() - unknown_since >= 30 and not had_data:
-                return status
-        else:
-            unknown_since = None
-        if not had_data:
-            time.sleep(max(poll_interval, 0.01))
+            await tail.wait_for_change()
+
+
+def _follow_scheduler(remote_id, streams, paths, offsets, poll_interval):
+    return asyncio.run(
+        _follow_scheduler_async(remote_id, streams, paths, offsets, poll_interval)
+    )
 
 
 def follow_remote(
