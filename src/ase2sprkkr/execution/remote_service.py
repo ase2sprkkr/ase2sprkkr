@@ -13,7 +13,6 @@ import os
 import re
 import signal
 import socket
-import struct
 import subprocess
 import sys
 import time
@@ -468,6 +467,44 @@ def recover_remote(run_id, request, *, submitted_at=None):
     }
 
 
+def _follow_scheduler(remote_id, streams, paths, offsets, poll_interval):
+    """Scheduler-native stream observation; no direct-process fallback.
+
+    A PSI/J scheduler does not run the direct-process supervisor. Its output
+    is captured into scheduler-managed files and its terminal status comes
+    from the native backend. Read at most one bounded chunk per channel.
+    """
+    while True:
+        had_data = False
+        seen = set()
+        for kind in ("out", "err"):
+            path = paths[kind]
+            if path is None or path in seen:
+                continue
+            seen.add(path)
+            try:
+                with open(path, "rb") as source:
+                    if offsets[kind] is None:
+                        source.seek(0, os.SEEK_END)
+                        offsets[kind] = source.tell()
+                    else:
+                        source.seek(offsets[kind])
+                    data = source.read(65536)
+            except FileNotFoundError:
+                data = b""
+            if data:
+                streams[kind].write(data)
+                streams[kind].flush()
+                offsets[kind] += len(data)
+                had_data = True
+        status = status_remote(remote_id)
+        if status["state"] in {state.value for state in _FINAL_STATES} | {RunState.UNKNOWN.value}:
+            if not had_data:
+                return status
+        if not had_data:
+            time.sleep(poll_interval)
+
+
 def follow_remote(
     remote_id,
     stdout,
@@ -488,9 +525,10 @@ def follow_remote(
         "err": stderr_path,
     }
 
-    # Exactly one stream implementation, no historical polling fallback.
+    if handle["kind"] == "psij":
+        return _follow_scheduler(remote_id, streams, paths, offsets, poll_interval)
     if handle["kind"] != "process":
-        raise NotImplementedError("Socket follow requires a direct-process backend")
+        raise ValueError("Unknown execution backend")
     from .remote_supervisor_stream import MAGIC, _HEADER
     path = handle.get("socket_path")
     if path is None:
