@@ -3,8 +3,8 @@ import numpy as np
 from .sections import CONTROL, TASK, TAU, ENERGY, SITES, MODE, CPA, STRCONST
 from ...common.grammar_types import Integer, Keyword, SetOf
 from ...common.warnings import DataValidityError
-from ..input_parameters_definitions import (
 from ..task_definition import TaskDefinition
+from ..input_parameters_definitions import (
     InputParametersDefinition, InputSectionDefinition as Section,
     InputValueDefinition as V,
 )
