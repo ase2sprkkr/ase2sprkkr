@@ -266,8 +266,10 @@ class _RemoteRunContext:
     async def _cancel(self, directory, backend_id, files=None):
         return await self.endpoint._cancel(directory, backend_id, files)
 
-    async def _follow(self, directory, backend_id, files=None):
-        return await self.endpoint._follow(directory, backend_id, files)
+    async def _follow(self, directory, backend_id, files=None, *, offsets=None):
+        return await self.endpoint._follow(
+            directory, backend_id, files, offsets=offsets,
+        )
 
     def create_run(self, spec, callback=None, *, run_id=None):
         return _RemoteRun(self, spec, callback=callback, run_id=run_id)
@@ -513,13 +515,20 @@ class RemoteEndpointExecutor(Executor):
     async def _cancel(self, directory, backend_id, files=None):
         return await self._json_request("cancel", backend_id)
 
-    async def _follow(self, directory, backend_id, files=None):
+    async def _follow(self, directory, backend_id, files=None, *, offsets=None):
         options = []
         if files is not None:
             if files.stdout and files.stdout.remote_path:
                 options.extend(("--stdout-path", files.stdout.remote_path))
             if files.stderr and files.stderr.remote_path:
                 options.extend(("--stderr-path", files.stderr.remote_path))
+        for kind, option in (("out", "--stdout-offset"),
+                             ("err", "--stderr-offset")):
+            offset = None if offsets is None else offsets.get(kind)
+            if offset is not None:
+                options.extend((option, str(offset)))
+            elif offsets is not None:
+                options.append("--live-" + ("stdout" if kind == "out" else "stderr"))
         process = await self.transport.start(
             (*self.command, "follow", str(backend_id), *options, "--framed")
         )

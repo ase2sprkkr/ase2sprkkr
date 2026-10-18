@@ -27,6 +27,8 @@ def parser(parser):
     follow.add_argument("--live", action="store_true", help="observe new output only, without replay")
     follow.add_argument("--stdout-offset", type=int, default=0)
     follow.add_argument("--stderr-offset", type=int, default=0)
+    follow.add_argument("--live-stdout", action="store_true")
+    follow.add_argument("--live-stderr", action="store_true")
     follow.add_argument(
         "--framed",
         action="store_true",
@@ -99,8 +101,8 @@ def run(args, global_args):
             args.remote_id,
             stdout,
             stderr,
-            stdout_offset=None if args.live else args.stdout_offset,
-            stderr_offset=None if args.live else args.stderr_offset,
+            stdout_offset=None if args.live or args.live_stdout else args.stdout_offset,
+            stderr_offset=None if args.live or args.live_stderr else args.stderr_offset,
             stdout_path=args.stdout_path,
             stderr_path=args.stderr_path,
         )

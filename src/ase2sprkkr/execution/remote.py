@@ -653,10 +653,19 @@ class RemoteRunner:
     async def _monitor(self):
         stdout_task = stderr_task = None
         try:
+            offsets = {}
+            for kind, target in (("out", self.spec.output_file),
+                                 ("err", self.spec.error_file)):
+                if target is None:
+                    offsets[kind] = None
+                elif kind == "err" and target is self.spec.output_file:
+                    offsets[kind] = offsets["out"]
+                else:
+                    target.flush()
+                    offsets[kind] = os.path.getsize(self._local_path(target))
             self._follow_process = await self.executor._follow(
-                self._remote_directory,
-                self._backend_id,
-                self._files,
+                self._remote_directory, self._backend_id, self._files,
+                offsets=offsets,
             )
             stdout_task = asyncio.create_task(
                 self._pump(self._follow_process.stdout, "out")
