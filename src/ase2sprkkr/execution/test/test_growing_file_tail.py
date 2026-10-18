@@ -2,7 +2,7 @@
 import asyncio
 import os
 
-from ..growing_file_tail import GrowingFileTail
+from ..growing_file_tail import GrowingFileTail, follow_growing_files
 
 
 def test_append_and_eof(tmp_path):
@@ -88,3 +88,44 @@ def test_invalid_fallback_interval():
         pass
     else:
         raise AssertionError("Nonpositive poll intervals must be rejected")
+
+
+def test_follow_growing_files_drains_both_channels_before_terminal(tmp_path):
+    async def check():
+        out, err = tmp_path / "out", tmp_path / "err"
+        out.write_bytes(b"123456")
+        err.write_bytes(b"xyz")
+        observed = []
+        checks = []
+
+        async def terminal():
+            checks.append(True)
+            return "done"
+
+        result = await follow_growing_files(
+            {"out": out, "err": err},
+            lambda kind, data: observed.append((kind, data)),
+            terminal,
+        )
+        assert result == "done"
+        assert observed == [("out", b"123456"), ("err", b"xyz")]
+        assert len(checks) == 1
+
+    asyncio.run(check())
+
+
+def test_follow_growing_files_skips_undefined_channels(tmp_path):
+    async def check():
+        seen = []
+        async def terminal():
+            return "done"
+        result = await follow_growing_files(
+            {"out": None, "err": None},
+            lambda kind, data: seen.append((kind, data)),
+            terminal,
+        )
+        assert result == "done"
+        assert seen == []
+        assert list(tmp_path.iterdir()) == []
+
+    asyncio.run(check())

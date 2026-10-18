@@ -13,7 +13,7 @@ from dataclasses import replace
 from pathlib import Path
 from threading import Event, Lock, Thread
 
-from .growing_file_tail import GrowingFileTail
+from .growing_file_tail import follow_growing_files
 from .base import (
     ExecutionOutcome,
     ExecutionSpec,
@@ -420,37 +420,32 @@ class PsijRunner:
             Path(path).parent.mkdir(parents=True, exist_ok=True)
             Path(path).write_bytes(b"")
 
-    async def _follow_file(self, path, kind, finished):
-        async with GrowingFileTail(
-            {kind: path}, poll_interval=max(self.executor.poll_interval, 1.0),
-        ) as tail:
-            while True:
-                chunks = tail.read_available()
-                for _, data in chunks:
-                    self._emit_output(data, kind)
-                if finished.is_set() and not chunks:
-                    return
-                if not chunks:
-                    await tail.wait_for_change()
-
     async def _monitor(self):
-        finished = asyncio.Event()
-        paths = (("out", self._stdout_path), ("err", self._stderr_path))
-        seen = set()
-        followers = []
-        for kind, path in paths:
-            if path is not None and path not in seen:
-                followers.append(
-                    asyncio.create_task(self._follow_file(path, kind, finished))
+        paths = {}
+        for kind, path in (("out", self._stdout_path),
+                           ("err", self._stderr_path)):
+            # Merged stderr and stdout denote one physical stream.
+            if path is not None and path not in paths.values():
+                paths[kind] = path
+
+        if not paths:
+            status = await asyncio.to_thread(self._job.wait)
+        else:
+            waiting = asyncio.create_task(asyncio.to_thread(self._job.wait))
+
+            async def terminal():
+                return await waiting if waiting.done() else None
+
+            try:
+                status = await follow_growing_files(
+                    paths, lambda kind, data: self._emit_output(data, kind),
+                    terminal, poll_interval=max(self.executor.poll_interval, 1.0),
                 )
-                seen.add(path)
-        status = None
-        try:
-            loop = asyncio.get_running_loop()
-            status = await loop.run_in_executor(None, self._job.wait)
-        finally:
-            finished.set()
-            await asyncio.gather(*followers, return_exceptions=False)
+            finally:
+                if not waiting.done():
+                    # PSI/J owns scheduler cancellation; never cancel its job
+                    # merely because an output listener stopped.
+                    waiting.cancel()
 
         self._return_code = getattr(status, "exit_code", None)
         state_name = getattr(getattr(status, "state", None), "name", None)

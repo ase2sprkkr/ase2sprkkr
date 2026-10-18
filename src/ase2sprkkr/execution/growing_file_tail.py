@@ -135,3 +135,25 @@ class GrowingFileTail:
         except asyncio.TimeoutError:
             pass
         self._changed.clear()
+
+async def follow_growing_files(paths, on_chunk, terminal, *, offsets=None,
+                               poll_interval=1.0):
+    """Observe file bytes and drain them before returning a terminal fact.
+
+    `terminal` is an async callback returning None while execution remains
+    active, or a terminal value when the producer has finished writing.
+    This helper does not own backend status, files or transport.
+    """
+    async with GrowingFileTail(
+        paths, offsets=offsets, poll_interval=poll_interval,
+    ) as tail:
+        while True:
+            chunks = tail.read_available()
+            for kind, data in chunks:
+                on_chunk(kind, data)
+            if chunks:
+                continue
+            outcome = await terminal()
+            if outcome is not None:
+                return outcome
+            await tail.wait_for_change()

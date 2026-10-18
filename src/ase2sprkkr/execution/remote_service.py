@@ -20,7 +20,7 @@ import time
 from pathlib import Path
 from uuid import uuid4
 
-from .growing_file_tail import GrowingFileTail
+from .growing_file_tail import follow_growing_files
 from .base import ExecutionSpec, FailurePhase, LaunchSpec, RunState
 from .remote_process_worker import _SPEC_ENV, _START_FD_ENV
 from .remote_mailbox import publish_outcome, read_outcome, acknowledge_outcome, _path as _outcome_path
@@ -398,24 +398,19 @@ def recover_remote(run_id, request, *, submitted_at=None):
 
 
 async def _follow_scheduler_async(remote_id, streams, paths, offsets, poll_interval):
-    """Follow scheduler-managed files through the shared tail implementation.
+    """Follow scheduler files directly: no process supervisor is involved."""
+    def emit(kind, data):
+        streams[kind].write(data)
+        streams[kind].flush()
 
-    Native scheduler status is authoritative. UNKNOWN is not a terminal fact.
-    """
-    async with GrowingFileTail(
-        paths, offsets=offsets, poll_interval=max(poll_interval, 1.0),
-    ) as tail:
-        while True:
-            chunks = tail.read_available()
-            for kind, data in chunks:
-                streams[kind].write(data)
-                streams[kind].flush()
-            if chunks:
-                continue
-            status = await asyncio.to_thread(status_remote, remote_id)
-            if status["state"] in {item.value for item in _FINAL_STATES}:
-                return status
-            await tail.wait_for_change()
+    async def terminal():
+        status = await asyncio.to_thread(status_remote, remote_id)
+        return status if status["state"] in {s.value for s in _FINAL_STATES} else None
+
+    return await follow_growing_files(
+        paths, emit, terminal, offsets=offsets,
+        poll_interval=max(poll_interval, 1.0),
+    )
 
 
 def _follow_scheduler(remote_id, streams, paths, offsets, poll_interval):
