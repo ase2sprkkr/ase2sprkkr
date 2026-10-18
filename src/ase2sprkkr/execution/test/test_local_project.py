@@ -1,4 +1,4 @@
-"""Local persistent execution has no independent lifecycle database."""
+"""Local project execution has no independent lifecycle database."""
 
 import os
 import sys
@@ -43,9 +43,9 @@ def _record(tmp_path, backend_id):
     )
 
 
-def test_run_reconnect_and_immutable_backend_facts(tmp_path):
+def test_project_run_launch_reconnect_and_immutable_backend_facts(tmp_path):
     executor = LocalExecutor()
-    runner = executor.create_persistent_run(_spec(tmp_path), run_id="run")
+    runner = executor.create_project_run(_spec(tmp_path), run_id="run")
     runner.submit()
     identity = runner.backend_id
     assert identity.startswith("local:run:")
@@ -54,7 +54,7 @@ def test_run_reconnect_and_immutable_backend_facts(tmp_path):
     assert executor.status(_record(tmp_path, identity))[0].state == RunState.FINISHED
     assert executor.recover_submission("run", _record(tmp_path, None)).backend_id == identity
     metadata = tmp_path / ".ase2sprkkr" / "runs" / "run"
-    assert sorted(p.name for p in metadata.iterdir()) == ["identity.json", "outcome.json"]
+    assert sorted(p.name for p in metadata.iterdir()) == ["handoff.json", "outcome.json"]
 
     seen = []
     attached = executor.attach(
@@ -65,8 +65,23 @@ def test_run_reconnect_and_immutable_backend_facts(tmp_path):
     assert seen == [("output\n", "out")]
 
 
+
+def test_opaque_file_objects_are_not_serialized_into_worker_request(tmp_path):
+    """Only execution argv and concrete paths cross the worker boundary."""
+    from dataclasses import replace
+
+    spec = _spec(tmp_path)
+    with (tmp_path / "extra.out").open("w+b") as extra, (
+        tmp_path / "cache.pot"
+    ).open("w+b") as cache:
+        spec = replace(spec, output_files=(extra,), cache_files=(cache,))
+        runner = LocalExecutor().create_project_run(spec, run_id="file-objects")
+        runner.submit()
+        assert runner.wait().return_code == 0
+        assert (tmp_path / "out.txt").read_text() == "output\n"
+
 def test_failed_process_preserves_execution_failure(tmp_path):
-    runner = LocalExecutor().create_persistent_run(
+    runner = LocalExecutor().create_project_run(
         _spec(tmp_path, (sys.executable, "-c", "import sys; sys.exit(7)")),
         run_id="fail",
     )
@@ -77,7 +92,7 @@ def test_failed_process_preserves_execution_failure(tmp_path):
 
 
 def test_reused_pid_is_not_a_running_process(tmp_path):
-    runner = LocalExecutor().create_persistent_run(_spec(tmp_path), run_id="pid")
+    runner = LocalExecutor().create_project_run(_spec(tmp_path), run_id="pid")
     runner.submit()
     runner.wait()
     identity = local_backend._parse_id(runner.backend_id)
@@ -85,7 +100,7 @@ def test_reused_pid_is_not_a_running_process(tmp_path):
 
 
 def test_cancel_does_not_block_and_publishes_receipt(tmp_path):
-    runner = LocalExecutor().create_persistent_run(
+    runner = LocalExecutor().create_project_run(
         _spec(tmp_path, (
             sys.executable, "-c",
             "import time; print('started', flush=True); time.sleep(30)",
@@ -117,7 +132,7 @@ def test_wildcard_files_have_individual_status(tmp_path):
     from ase2sprkkr.execution._durability import durable_mkdir, durable_write_json
     metadata = local_backend._run_dir(tmp_path, "wildcard")
     durable_mkdir(metadata, parents=True)
-    durable_write_json(metadata / "identity.json", identity)
+    durable_write_json(metadata / "handoff.json", identity)
     durable_write_json(metadata / "outcome.json", {
         "return_code": 0, "phase": None, "message": None,
         "cancelled": False, "published": [True, True],

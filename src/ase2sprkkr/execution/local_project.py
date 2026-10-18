@@ -190,8 +190,6 @@ class LocalProjectRunner:
         return {
             "argv": list(self.spec.argv),
             "input_file": self.result.input_file,
-            "output_files": list(self.spec.output_files),
-            "cache_files": list(self.spec.cache_files),
             "mpi_argv": None if self.spec.mpi_argv is None else list(self.spec.mpi_argv),
             "launch": asdict(self.spec.launch),
             "stdin": _file_path(self.spec.stdin, self.spec.directory),
@@ -203,7 +201,7 @@ class LocalProjectRunner:
         if self._state != RunState.NEW:
             raise RuntimeError(f"Run is already {self._state.value}")
         if not self._run_id:
-            raise RuntimeError("Persistent local run has no run id")
+            raise RuntimeError("Project run has no run id")
         try:
             self._backend_id = local_backend.submit(
                 self.spec.directory, self._run_id, self._request(),
