@@ -1,8 +1,4 @@
-"""Direct-process supervisor: wait for the child, spool its output and serve followers.
-
-The client owns all RunRecord state. This process owns only the child PID,
-open pipes, transient FOLLOW socket and an acknowledged terminal receipt.
-"""
+"""Direct-process supervisor: the sole owner of child waitpid and cancellation."""
 from __future__ import annotations
 
 import asyncio
@@ -38,89 +34,118 @@ def _wait_for_parent_release():
 
 
 async def _pump(source, kind, streams):
-    while True:
-        data = await source.read(65536)
-        if not data:
-            return
+    while data := await source.read(65536):
         streams.publish(kind, data)
 
 
+async def _stop_process(process, waiting):
+    try:
+        os.killpg(process.pid, signal.SIGTERM)
+    except ProcessLookupError:
+        pass
+    try:
+        await asyncio.wait_for(asyncio.shield(waiting), 1.0)
+    except asyncio.TimeoutError:
+        try:
+            os.killpg(process.pid, signal.SIGKILL)
+        except ProcessLookupError:
+            pass
+        await waiting
+
+
 async def _run(spec):
-    streams = SupervisorStreams(spec["output_file"], spec["error_file"], detached=spec.get("detached", True))
-    socket_path = await streams.start()
-    # The parent reads this once before returning the backend handle; never
-    # advertise a socket that is not listening yet.
-    os.write(int(spec["socket_fd"]), (socket_path + "\n").encode())
+    streams = SupervisorStreams(
+        spec.get("output_file"), spec.get("error_file"),
+        detached=spec.get("detached", True),
+    )
+    await streams.start()
+    os.write(int(spec["socket_fd"]), (streams.socket_path + "\n").encode())
     os.close(int(spec["socket_fd"]))
+    state, phase, return_code, message = RunState.FAILED, FailurePhase.LAUNCH, 127, None
     opened = []
-    stdin = subprocess.DEVNULL
-    return_code = _LAUNCH_FAILURE_RETURN_CODE
-    state = RunState.FAILED
-    phase = FailurePhase.LAUNCH
     process = None
     try:
         if not streams.detached:
             try:
                 await asyncio.wait_for(streams.connected.wait(), timeout=30)
             except asyncio.TimeoutError:
-                # No client took ownership of this non-persistent submission.
-                return _LAUNCH_FAILURE_RETURN_CODE
+                message = "Client never connected to attached supervisor"
+                return return_code
+        stdin = subprocess.DEVNULL
         if spec.get("stdin"):
             stdin = open(spec["stdin"], "rb")
             opened.append(stdin)
+        process = await asyncio.create_subprocess_exec(
+            *spec["argv"], cwd=spec["directory"], stdin=stdin,
+            stdout=asyncio.subprocess.PIPE,
+            stderr=(asyncio.subprocess.STDOUT if streams.merged
+                    else asyncio.subprocess.PIPE),
+            start_new_session=True,
+        )
+        state, phase, return_code = RunState.RUNNING, None, None
+        waiting = asyncio.create_task(process.wait())
+        pumps = [asyncio.create_task(_pump(process.stdout, "out", streams))]
+        if not streams.merged:
+            pumps.append(asyncio.create_task(_pump(process.stderr, "err", streams)))
+        # A failing spool must terminate the process rather than deadlock a pipe.
+        stop = asyncio.create_task(streams.cancelled.wait())
+        lost = (asyncio.create_task(streams.disconnected.wait())
+                if not streams.detached else None)
         try:
-            process = await asyncio.create_subprocess_exec(
-                *spec["argv"], cwd=spec["directory"], stdin=stdin,
-                stdout=asyncio.subprocess.PIPE,
-                stderr=asyncio.subprocess.STDOUT if streams.merged else asyncio.subprocess.PIPE,
-                start_new_session=True,
-            )
-        except OSError:
-            pass
-        else:
-            pumps = [asyncio.create_task(_pump(process.stdout, "out", streams))]
-            if not streams.merged:
-                pumps.append(asyncio.create_task(_pump(process.stderr, "err", streams)))
-            if streams.detached:
-                return_code = await process.wait()
-            else:
-                finished = asyncio.create_task(process.wait())
-                lost = asyncio.create_task(streams.disconnected.wait())
-                done, pending = await asyncio.wait((finished, lost), return_when=asyncio.FIRST_COMPLETED)
-                if lost in done and not finished.done():
-                    try:
-                        os.killpg(process.pid, signal.SIGTERM)
-                    except ProcessLookupError:
-                        pass
-                    try:
-                        await asyncio.wait_for(asyncio.shield(finished), timeout=1)
-                    except asyncio.TimeoutError:
-                        try:
-                            os.killpg(process.pid, signal.SIGKILL)
-                        except ProcessLookupError:
-                            pass
-                        await finished
-                    state = RunState.CANCELLED
-                    phase = None
-                for task in pending:
-                    task.cancel()
-                return_code = finished.result()
+            while True:
+                watches = [waiting, stop, *pumps]
+                if lost is not None:
+                    watches.append(lost)
+                done, _ = await asyncio.wait(watches, return_when=asyncio.FIRST_COMPLETED)
+                failed = next((t.exception() for t in pumps if t.done() and not t.cancelled()
+                               and t.exception() is not None), None)
+                if failed is not None:
+                    message = f"Failed to write process output: {failed}"
+                    state, phase = RunState.FAILED, FailurePhase.EXECUTION
+                    await _stop_process(process, waiting)
+                    break
+                if stop in done or lost is not None and lost in done:
+                    state, phase = RunState.CANCELLED, None
+                    await _stop_process(process, waiting)
+                    break
+                if waiting.done():
+                    break
+            return_code = await waiting
             await asyncio.gather(*pumps)
-            if state != RunState.CANCELLED:
+            if state == RunState.RUNNING:
                 state = RunState.FINISHED if return_code == 0 else RunState.FAILED
                 phase = None if return_code == 0 else FailurePhase.EXECUTION
+        finally:
+            stop.cancel()
+            if lost is not None:
+                lost.cancel()
+    except OSError as exc:
+        message = str(exc)
+        state, phase = RunState.FAILED, (FailurePhase.LAUNCH if process is None
+                                         else FailurePhase.EXECUTION)
+    except Exception as exc:
+        message = str(exc)
+        state, phase = RunState.FAILED, FailurePhase.EXECUTION
+        if process is not None and process.returncode is None:
+            await _stop_process(process, asyncio.create_task(process.wait()))
+        return_code = process.returncode if process is not None else 127
     finally:
-        for file in opened:
-            file.close()
+        for f in opened:
+            f.close()
+        try:
+            streams.sync()
+        except OSError as exc:
+            state, phase = RunState.FAILED, FailurePhase.EXECUTION
+            message = f"Failed to sync process output: {exc}"
+        outcome = {"state": state.value, "return_code": return_code,
+                   "failure_phase": None if phase is None else phase.value,
+                   "error": message}
         try:
             _write_outcome(spec["receipt_id"], state, return_code, phase)
-            streams.terminal({
-                "state": state.value, "return_code": return_code,
-                "failure_phase": None if phase is None else phase.value,
-            })
         finally:
+            streams.terminal(outcome)
             await streams.finish()
-    return return_code
+    return return_code if return_code is not None else 127
 
 
 def main():
