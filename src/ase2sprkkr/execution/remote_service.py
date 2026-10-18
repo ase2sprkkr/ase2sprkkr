@@ -10,6 +10,7 @@ from __future__ import annotations
 import base64
 import json
 import os
+import re
 import signal
 import socket
 import struct
@@ -21,10 +22,41 @@ from uuid import uuid4
 
 from .base import ExecutionSpec, FailurePhase, LaunchSpec, RunState
 from .remote_process_worker import _SPEC_ENV, _START_FD_ENV
-from .remote_mailbox import publish_outcome, read_outcome, acknowledge_outcome
+from .remote_mailbox import publish_outcome, read_outcome, acknowledge_outcome, _path as _outcome_path
+from ._durability import durable_mkdir, durable_write_json, fsync_directory
 
 
 _FINAL_STATES = {RunState.FINISHED, RunState.FAILED, RunState.CANCELLED}
+
+
+def _submission_ticket(run_id):
+    if not isinstance(run_id, str) or re.fullmatch(r"[0-9a-f]{32}", run_id) is None:
+        raise ValueError("Invalid project run id")
+    return _outcome_path(run_id).parent.parent / "remote-submissions" / (run_id + ".json")
+
+
+def _publish_submission(run_id, reply):
+    """Temporary identity handoff, never a target-side run lifecycle record."""
+    path = _submission_ticket(run_id)
+    durable_mkdir(path.parent, parents=True, exist_ok=True, mode=0o700)
+    durable_write_json(path, reply, mode=0o600)
+
+
+def _recover_submission(run_id):
+    try:
+        return json.loads(_submission_ticket(run_id).read_text())
+    except FileNotFoundError:
+        return None
+
+
+def acknowledge_submission(run_id):
+    path = _submission_ticket(run_id)
+    try:
+        path.unlink()
+    except FileNotFoundError:
+        return {"acknowledged": False}
+    fsync_directory(path.parent)
+    return {"acknowledged": True}
 
 
 def _encode_handle(data):
@@ -173,7 +205,7 @@ def _local_submit(request):
             "socket_path": socket_path,
         }
     )
-    return {
+    reply = {
         "remote_id": remote_id,
         "state": RunState.RUNNING.value,
         "directory": os.fspath(directory),
@@ -183,6 +215,9 @@ def _local_submit(request):
         "return_code": None,
         "failure_phase": None,
     }
+    if request.get("detached"):
+        _publish_submission(run_id, reply)
+    return reply
 
 
 def _psij_executor(options):
@@ -401,10 +436,10 @@ def recover_remote(run_id, request, *, submitted_at=None):
     """Recover an uncertain submit using backend-native identity only."""
     executor = request.get("executor", "local")
     if executor == "local":
-        raise NotImplementedError(
-            "A direct remote process cannot recover a lost submit response from "
-            "PID identity alone"
-        )
+        reply = _recover_submission(run_id)
+        if reply is None:
+            return None
+        return dict(reply, **status_remote(reply["remote_id"]))
     if executor != "psij":
         raise ValueError(f"Unsupported remote executor: {executor!r}")
 
