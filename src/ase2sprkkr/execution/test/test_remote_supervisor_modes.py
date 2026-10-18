@@ -85,3 +85,25 @@ def test_cancel_is_delivered_to_supervisor_not_just_supervisor_pid(tmp_path, mon
         await asyncio.wait_for(task, 5)
         assert captured[0][1].value == "cancelled"
     asyncio.run(check())
+
+
+def test_failed_detached_launch_preserves_old_output(tmp_path, monkeypatch):
+    async def check():
+        captured = []
+        monkeypatch.setattr(
+            remote_process_worker, "publish_outcome",
+            lambda *args, **kwargs: captured.append(args),
+        )
+        (tmp_path / "stdout").write_bytes(b"previous")
+        rd, wr = os.pipe()
+        spec = _spec(tmp_path, wr, detached=True, argv=[
+            str(tmp_path / "missing-command"),
+        ])
+        result = await remote_process_worker._run(spec)
+        with os.fdopen(rd, "rb") as pipe:
+            assert pipe.readline()
+        assert result != 0
+        assert (tmp_path / "stdout").read_bytes() == b"previous"
+        assert captured[0][1].value == "failed"
+        assert not list(tmp_path.glob(".*ase2sprkkr-*"))
+    asyncio.run(check())

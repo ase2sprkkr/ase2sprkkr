@@ -188,3 +188,59 @@ def test_live_only_stream_does_not_replay_earlier_bytes(tmp_path):
         finally:
             await streams.finish()
     asyncio.run(run())
+
+
+def test_atomic_spools_leave_existing_output_unchanged_until_publish(tmp_path):
+    async def run():
+        output, error = tmp_path / "out", tmp_path / "err"
+        output.write_bytes(b"previous")
+        streams = SupervisorStreams(output, error, atomic=True)
+        await streams.start()
+        try:
+            streams.publish("out", b"new")
+            streams.publish("err", b"diagnostic")
+            assert output.read_bytes() == b"previous"
+            assert not error.exists()
+            received = []
+            follower = asyncio.create_task(follow_socket(
+                streams.socket_path, {"out": 0, "err": 0},
+                lambda kind, offset, data: received.append((kind, data)),
+            ))
+            streams.sync()
+            streams.publish_files()
+            streams.terminal({"state": "finished", "return_code": 0})
+            assert (await asyncio.wait_for(follower, 2))["state"] == "finished"
+            assert received == [("out", b"new"), ("err", b"diagnostic")]
+            assert output.read_bytes() == b"new"
+            assert error.read_bytes() == b"diagnostic"
+        finally:
+            await streams.finish()
+    asyncio.run(run())
+
+
+def test_aborted_atomic_spools_never_replace_existing_output(tmp_path):
+    async def run():
+        output = tmp_path / "out"
+        output.write_bytes(b"existing")
+        streams = SupervisorStreams(output, None, atomic=True)
+        await streams.start()
+        streams.publish("out", b"partial")
+        await streams.finish()
+        assert output.read_bytes() == b"existing"
+        assert list(tmp_path.iterdir()) == [output]
+    asyncio.run(run())
+
+
+def test_no_file_target_never_creates_spool_in_atomic_mode(tmp_path):
+    async def run():
+        streams = SupervisorStreams(None, None, atomic=True)
+        await streams.start()
+        try:
+            streams.publish("out", b"live")
+            streams.sync()
+            streams.publish_files()
+            assert streams._spools == {}
+            assert list(tmp_path.iterdir()) == []
+        finally:
+            await streams.finish()
+    asyncio.run(run())

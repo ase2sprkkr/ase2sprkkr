@@ -57,6 +57,7 @@ async def _run(spec):
     streams = SupervisorStreams(
         spec.get("output_file"), spec.get("error_file"),
         detached=spec.get("detached", True),
+        atomic=spec.get("detached", True),
     )
     await streams.start()
     os.write(int(spec["socket_fd"]), (streams.socket_path + "\n").encode())
@@ -137,9 +138,14 @@ async def _run(spec):
             f.close()
         try:
             streams.sync()
+            if state == RunState.FINISHED or (
+                state == RunState.FAILED and phase == FailurePhase.EXECUTION
+                and process is not None
+            ):
+                streams.publish_files()
         except OSError as exc:
-            state, phase = RunState.FAILED, FailurePhase.EXECUTION
-            message = f"Failed to sync process output: {exc}"
+            state, phase = RunState.FAILED, FailurePhase.ARTIFACTS
+            message = f"Failed to publish process output: {exc}"
         outcome = {"state": state.value, "return_code": return_code,
                    "failure_phase": None if phase is None else phase.value,
                    "error": message}
