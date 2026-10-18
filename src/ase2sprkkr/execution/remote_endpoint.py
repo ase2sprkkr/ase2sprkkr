@@ -167,6 +167,7 @@ class _RemoteRun(RemoteRunner):
         else:
             request, manifest = self._prepared
 
+        request["detached"] = self._run_id is not None
         status = await self.executor._submit(request)
         remote_id = status.get("remote_id")
         if not remote_id:
