@@ -59,7 +59,7 @@ class BaseMixed(GrammarType):
     def _string(self, value):
         if isinstance(value, bool):
             return Bool._string(self, value)
-        return super()._string(value)
+        return self.get_type(value).string(value)
 
     def convert(self, value):
         if value is None:
