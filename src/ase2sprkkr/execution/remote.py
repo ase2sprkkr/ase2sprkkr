@@ -201,7 +201,7 @@ class RemoteRunner:
 
     def _emit_output(self, data, kind):
         if data:
-            self._output_observers.emit(data.decode("utf8"), kind)
+            self._output_observers.emit(data.decode("utf8", errors="replace"), kind)
 
     def _write_output(self, data, kind):
         target = self.spec.error_file if kind == "err" else self.spec.output_file
