@@ -103,7 +103,7 @@ def VariantGenerator(name, bool_type=Boolean.I, string_type=QString.I, add_types
 
 Mixed = VariantGenerator(
     "Mixed", Flag.I, QString.I,
-    add_types=[SetOf(str, min_length=1, require_brackets=True)],
+    add_types=[SetOf(QString.I, min_length=1, require_brackets=True)],
     doc="""A variant value for unknown input options, including bracketed string sets."""
 )
 Mixed.missing_value = lambda self: (True, True, False)
