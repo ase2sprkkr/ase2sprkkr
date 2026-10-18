@@ -104,10 +104,11 @@ def _local_submit(request):
         _request_spec(dict(request, directory=os.fspath(directory)))
     )
 
-    output_path = _absolute(directory, spec.output_file or "stdout")
-    error_path = _absolute(directory, spec.error_file or "stderr")
-    Path(output_path).parent.mkdir(parents=True, exist_ok=True)
-    Path(error_path).parent.mkdir(parents=True, exist_ok=True)
+    output_path = _absolute(directory, spec.output_file)
+    error_path = _absolute(directory, spec.error_file)
+    for path in (output_path, error_path):
+        if path is not None:
+            Path(path).parent.mkdir(parents=True, exist_ok=True)
 
     run_id = str(request.get("id") or uuid4().hex)
     receipt_id = uuid4().hex
@@ -354,41 +355,21 @@ def status_remote(remote_id):
 def cancel_remote(remote_id, timeout=1.0):
     handle = _decode_handle(remote_id)
     if handle["kind"] == "process":
-        if not _same_process(handle):
+        outcome = _process_outcome(handle["receipt_id"])
+        if outcome is not None:
             return status_remote(remote_id)
-
         try:
-            os.killpg(int(handle["pid"]), signal.SIGTERM)
-        except ProcessLookupError:
+            with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as conn:
+                conn.settimeout(timeout)
+                conn.connect(handle["socket_path"])
+                conn.sendall(b'{"command":"cancel"}\n')
+                reply = conn.recv(256)
+                if b'"accepted":true' not in reply:
+                    raise RuntimeError("Supervisor rejected cancellation")
+        except (FileNotFoundError, ConnectionRefusedError):
             return status_remote(remote_id)
-
-        deadline = time.monotonic() + timeout
-        while time.monotonic() < deadline and _process_running(handle):
-            time.sleep(0.05)
-        if _process_running(handle):
-            try:
-                os.killpg(int(handle["pid"]), signal.SIGKILL)
-            except ProcessLookupError:
-                pass
-            # SIGKILL is a request, not proof of process termination.
-            deadline = time.monotonic() + timeout
-            while time.monotonic() < deadline and _process_running(handle):
-                time.sleep(0.05)
-            if _process_running(handle):
-                return status_remote(remote_id)
-
-        # A natural completion racing with cancellation wins. Otherwise publish
-        # cancellation as the durable backend outcome so future status queries
-        # cannot regress to FAILED/UNKNOWN after the supervisor disappears.
-        current = status_remote(remote_id)
-        if current["state"] in (RunState.FINISHED.value, RunState.FAILED.value):
-            return current
-        publish_outcome(
-            handle["receipt_id"],
-            RunState.CANCELLED,
-            current.get("return_code"),
-            None,
-        )
+        # The request is not a terminal fact. Only the supervisor waits for and
+        # publishes the final child outcome.
         return status_remote(remote_id)
 
     if handle["kind"] == "psij":
@@ -470,74 +451,48 @@ def follow_remote(
         "err": stderr_path,
     }
 
-    # The supervisor gives each follower its own offset cursor and moves slow
-    # clients from LIVE into replay. The CLI forwards frames through the
-    # existing single SSH data channel; terminal facts are read by status().
-    if handle["kind"] == "process" and handle.get("socket_path"):
-        from .remote_supervisor_stream import MAGIC, _HEADER
-        try:
-            with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as sock:
-                sock.connect(handle["socket_path"])
-                request_offsets = {"out": stdout_offset}
-                if stdout_path != stderr_path:
-                    request_offsets["err"] = stderr_offset
-                sock.sendall(json.dumps({
-                    "command": "follow", "offsets": request_offsets,
-                }).encode() + b"\n")
-                def read_exactly(n):
-                    chunks = []
-                    while n:
-                        part = sock.recv(n)
-                        if not part:
-                            raise ConnectionError("Supervisor FOLLOW ended unexpectedly")
-                        chunks.append(part)
-                        n -= len(part)
-                    return b"".join(chunks)
-                if read_exactly(len(MAGIC)) != MAGIC:
-                    raise RuntimeError("Unknown supervisor FOLLOW protocol")
-                while True:
-                    kind, offset, size = _HEADER.unpack(read_exactly(_HEADER.size))
-                    if kind == b"T":
-                        return json.loads(read_exactly(size))
-                    if kind not in (b"O", b"E") or size > 65536:
-                        raise RuntimeError("Invalid supervisor FOLLOW frame")
-                    stream = stdout if kind == b"O" else stderr
-                    payload = read_exactly(size)
-                    channel = "out" if kind == b"O" else "err"
-                    if offset != offsets[channel]:
-                        raise RuntimeError("Supervisor FOLLOW offset mismatch")
-                    stream.write(payload)
-                    stream.flush()
-                    offsets[channel] += len(payload)
-        except (FileNotFoundError, ConnectionRefusedError):
-            # A completed supervisor has already closed its transient socket.
-            # Its output files and acknowledged backend outcome remain readable.
-            pass
+    # Exactly one stream implementation, no historical polling fallback.
+    if handle["kind"] != "process":
+        raise NotImplementedError("Socket follow requires a direct-process backend")
+    from .remote_supervisor_stream import MAGIC, _HEADER
+    path = handle.get("socket_path")
+    if path is None:
+        raise RuntimeError("Backend handle contains no follow socket")
 
-    while True:
-        had_data = False
-        seen = set()
-        for kind in ("out", "err"):
-            path = paths[kind]
-            if not path or path in seen:
-                continue
-            seen.add(path)
-            try:
-                with open(path, "rb") as source:
-                    source.seek(offsets[kind])
-                    data = source.read()
-            except FileNotFoundError:
-                data = b""
-            if data:
+    def drain_from_socket():
+        with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as sock:
+            sock.connect(path)
+            offsets = {"out": stdout_offset, "err": stderr_offset}
+            if stdout_path is not None and stdout_path == stderr_path:
+                offsets.pop("err")
+            sock.sendall(json.dumps({"command": "follow", "offsets": offsets}).encode() + b"\n")
+
+            def read_exactly(n):
+                parts = []
+                while n:
+                    part = sock.recv(n)
+                    if not part:
+                        raise ConnectionError("Supervisor FOLLOW ended before terminal state")
+                    parts.append(part)
+                    n -= len(part)
+                return b"".join(parts)
+
+            if read_exactly(len(MAGIC)) != MAGIC:
+                raise RuntimeError("Unknown supervisor protocol")
+            while True:
+                channel, offset, size = _HEADER.unpack(read_exactly(_HEADER.size))
+                if channel == b"T":
+                    return json.loads(read_exactly(size))
+                if channel not in (b"O", b"E") or size > 65536:
+                    raise RuntimeError("Invalid supervisor FOLLOW frame")
+                kind = "out" if channel == b"O" else "err"
+                data = read_exactly(size)
+                # Live-only streams are intentionally non-replayable and may
+                # start after bytes have already been emitted.
+                if offset != offsets[kind] and paths[kind] is not None:
+                    raise RuntimeError("Supervisor FOLLOW offset mismatch")
+                offsets[kind] = offset + len(data)
                 streams[kind].write(data)
                 streams[kind].flush()
-                offsets[kind] += len(data)
-                had_data = True
 
-        state = status_remote(remote_id)
-        terminal = state["state"] in {item.value for item in _FINAL_STATES}
-        unresolved = state["state"] == RunState.UNKNOWN.value
-        if (terminal or unresolved) and not had_data:
-            return state
-        if not had_data:
-            time.sleep(poll_interval)
+    return drain_from_socket()
