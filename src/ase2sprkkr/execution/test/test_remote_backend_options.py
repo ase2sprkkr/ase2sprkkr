@@ -72,3 +72,18 @@ def test_remote_request_carries_target_executor_options(tmp_path):
 
     input_file.close()
     output_file.close()
+
+def test_nonproject_remote_request_does_not_publish_project_identity(tmp_path):
+    root = tmp_path / "local"
+    directory = root / "work"
+    directory.mkdir(parents=True)
+    executor = RemoteExecutor(LocalTransport(), backend="psij")
+    runner = executor.create_run(ExecutionSpec(
+        argv=("program",), directory=str(directory), input_file=None,
+        output_file=None, launch=LaunchSpec(
+            local_root=root, remote_root=tmp_path / "remote",
+        ),
+    ))
+    request, _manifest = asyncio.run(runner._prepare_async())
+    assert request["id"] is None
+    assert runner._run_id is None

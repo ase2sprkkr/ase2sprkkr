@@ -136,6 +136,8 @@ class _RemoteRun(RemoteRunner):
         remote_directory = await self.executor.map_directory(self.spec.directory)
         await self.executor.transport.run(("mkdir", "-p", "--", remote_directory))
         request = await self._prepare_request(run_id, remote_directory)
+        if self._run_id is None:
+            request["id"] = None
         manifest = await self._submitted_manifest(request)
         return request, manifest
 
