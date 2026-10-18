@@ -1,18 +1,25 @@
-"""Raw reconnectable local process for a project-associated calculation."""
+"""Reconnectable local projects use the same supervisor as SSH execution.
 
+A project RunRecord belongs to the client. The supervisor owns only process
+facts, a temporary submission ticket and a terminal outcome receipt.
+"""
 from __future__ import annotations
 
 import asyncio
+import glob
 import os
-from dataclasses import asdict
+from dataclasses import asdict, replace
 from threading import Event, Lock, Thread
 
-from . import local_backend
-from .growing_file_tail import GrowingFileTail
 from .base import (
     ExecutionOutcome, ExecutionSpec, FailurePhase, OutputObservers,
-    RunState, SubmissionNotStarted,
+    RunState, RunStatus,
 )
+from .remote_service import (
+    _decode_handle, cancel_remote, follow_remote, status_remote, submit_remote,
+)
+
+_TERMINAL = {RunState.FINISHED, RunState.FAILED, RunState.CANCELLED}
 
 
 def _file_path(value, directory=None):
@@ -32,8 +39,84 @@ def _file_path(value, directory=None):
     return os.path.abspath(path)
 
 
+def local_manifest(files, status):
+    """Resolve local file availability without confusing stale files with output.
+
+    A failed launch (and a cancelled run) never publishes stream files. The
+    supervisor commits streams only for completed processes; a publication
+    failure is explicitly an artifacts failure, not a successful execution.
+    """
+    published = (
+        status.state == RunState.FINISHED or
+        (status.state == RunState.FAILED and status.failure_phase == FailurePhase.EXECUTION)
+    )
+    for entry in (files.stdout, files.stderr):
+        if entry is None or entry.local_path is None:
+            continue
+        if status.failure_phase == FailurePhase.ARTIFACTS:
+            state, message = "failed", status.message or "Output publication failed"
+        elif published:
+            exists = os.path.isfile(entry.local_path)
+            state, message = ("available", None) if exists else (
+                "failed", "Published output file is missing",
+            )
+        else:
+            state, message = "skipped", None
+        files = files.with_file_availability(entry.local_path, state, message)
+
+    if status.failure_phase in (FailurePhase.LAUNCH, FailurePhase.SUBMISSION):
+        return files
+    for kind, entries in (
+        ("output", tuple(files.outputs)),
+        ("cache", tuple(item.file for item in files.caches)),
+    ):
+        for entry in entries:
+            if entry.source_pattern is not None or entry.local_path is None:
+                continue
+            path = entry.local_path
+            if glob.has_magic(path):
+                matches = sorted(p for p in glob.glob(path, recursive=True)
+                                 if os.path.isfile(p))
+                for match in matches:
+                    files = files.with_file_availability(
+                        match, "available", kind=kind, source_pattern=path,
+                    )
+                state = "available" if matches else "skipped"
+            else:
+                state = "available" if os.path.isfile(path) else "skipped"
+            files = files.with_file_availability(path, state)
+    return files
+
+
+def local_status(backend_id, files=None):
+    facts = status_remote(backend_id)
+    status = RunStatus(
+        state=RunState(facts["state"]), backend_id=backend_id,
+        return_code=facts.get("return_code"), message=facts.get("error"),
+        failure_phase=facts.get("failure_phase"),
+    )
+    if files is not None and status.state in _TERMINAL:
+        status = replace(status, files=local_manifest(files, status))
+    return status
+
+
+class _ObserverSink:
+    """Adapt the supervisor's byte stream to the existing listener contract."""
+
+    def __init__(self, observers, kind):
+        self.observers = observers
+        self.kind = kind
+
+    def write(self, data):
+        if data:
+            self.observers.emit(data.decode("utf8", errors="replace"), self.kind)
+
+    def flush(self):
+        pass
+
+
 class LocalProjectRunner:
-    """Client-side monitor of a worker identified by PID and birth timestamp."""
+    """Project-associated process with supervisor-based follow and reattach."""
 
     def __init__(
         self, executor, spec: ExecutionSpec, *, run_id=None, callback=None,
@@ -78,17 +161,14 @@ class LocalProjectRunner:
     def _refresh(self):
         if self._backend_id is None:
             return self._state
-        status = local_backend.query(self.spec.directory, self._backend_id)
+        status = local_status(self._backend_id, self._files)
         self._state = status.state
         self._failure_phase = status.failure_phase
         self._failure_message = status.message
         self._return_code = status.return_code
         self.result.return_code = self._return_code
-        if status.state in (RunState.FINISHED, RunState.FAILED, RunState.CANCELLED):
-            if self._files is not None:
-                self._files = local_backend.local_manifest(
-                    self._files, self.spec.directory, self._backend_id,
-                )
+        if status.files is not None:
+            self._files = status.files
         return self._state
 
     @property
@@ -117,34 +197,26 @@ class LocalProjectRunner:
     def add_output_error_listener(self, callback):
         self._output_observers.add_error_listener(callback)
 
-    async def _monitor(self):
-        offsets = {"out": 0, "err": 0}
-        initial = local_backend.observed_paths(
-            self.spec.directory, self._backend_id,
-            self.result.output_file, self.result.error_file,
-        )
-        async with GrowingFileTail(
-            dict(zip(("out", "err"), initial)), offsets=offsets,
-            watch_paths=tuple(path for path in (
-                self.result.output_file, self.result.error_file,
-            ) if path is not None),
-        ) as tail:
-            while True:
-                state = self._refresh()
-                paths = local_backend.observed_paths(
-                    self.spec.directory, self._backend_id,
-                    self.result.output_file, self.result.error_file,
-                )
-                chunks = tail.read_available(dict(zip(("out", "err"), paths)))
-                for kind, data in chunks:
-                    self._output_observers.emit(
-                        data.decode("utf8", errors="replace"), kind,
-                    )
-                if state in (RunState.FINISHED, RunState.FAILED,
-                             RunState.CANCELLED, RunState.UNKNOWN) and not chunks:
-                    return self.result
-                if not chunks:
-                    await tail.wait_for_change()
+    def _monitor(self):
+        try:
+            follow_remote(
+                self._backend_id,
+                _ObserverSink(self._output_observers, "out"),
+                _ObserverSink(self._output_observers, "err"),
+                stdout_path=self.result.output_file,
+                stderr_path=self.result.error_file,
+            )
+        except (OSError, ConnectionError, RuntimeError, ValueError) as exc:
+            # The follow channel is observational. A supervisor that has
+            # already exited may have no socket, or no replayable spool.
+            # Backend outcome is authoritative, never a guessed exit code.
+            status = self._refresh()
+            if status not in _TERMINAL:
+                self._state = RunState.UNKNOWN
+                self._failure_message = str(exc)
+                return self.result
+        self._refresh()
+        return self.result
 
     def _close_owned_files(self):
         seen = set()
@@ -157,7 +229,7 @@ class LocalProjectRunner:
 
     def _thread_main(self):
         try:
-            asyncio.run(self._monitor())
+            self._monitor()
         except BaseException as exc:
             self._exception = exc
             self._failure_message = str(exc)
@@ -183,6 +255,10 @@ class LocalProjectRunner:
 
     def _request(self):
         return {
+            "executor": "local",
+            "id": self._run_id,
+            "detached": True,
+            "directory": os.fspath(self.spec.directory),
             "argv": list(self.spec.argv),
             "input_file": self.result.input_file,
             "mpi_argv": None if self.spec.mpi_argv is None else list(self.spec.mpi_argv),
@@ -197,16 +273,9 @@ class LocalProjectRunner:
             raise RuntimeError(f"Run is already {self._state.value}")
         if not self._run_id:
             raise RuntimeError("Project run has no run id")
-        try:
-            self._backend_id = local_backend.submit(
-                self.spec.directory, self._run_id, self._request(),
-            )
-        except SubmissionNotStarted as exc:
-            self._state = RunState.FAILED
-            self._failure_phase = FailurePhase.SUBMISSION
-            self._failure_message = str(exc)
-            raise
-        self._state = RunState.RUNNING
+        reply = submit_remote(self._request())
+        self._backend_id = reply["remote_id"]
+        self._state = RunState(reply["state"])
         self._start_monitor()
 
     def start(self):
@@ -237,30 +306,32 @@ class LocalProjectRunner:
     def cancel(self):
         if self._backend_id is None:
             raise RuntimeError("Run has not been submitted")
-        local_backend.cancel(self.spec.directory, self._backend_id)
+        cancel_remote(self._backend_id)
 
 
 def attach_local(executor, run, *, callback=None, output_listener=None, start=True):
     if run.execution.endpoint.executor != "local":
         raise ValueError("Run does not belong to the local backend")
     backend_id = run.execution.backend_id
-    if local_backend._parse_id(backend_id) is None:
-        raise NotImplementedError("Cannot reattach legacy PID-only local runs")
+    if _decode_handle(backend_id).get("kind") != "process":
+        raise ValueError("Local project does not have a supervisor handle")
     files = run.files
+    if files.stdout is None and files.stderr is None:
+        raise ValueError("This run has no replayable stdout or stderr")
     spec = ExecutionSpec(
         argv=(), input_file=files.input_file,
         output_file=files.output_file,
         error_file=None if files.stderr is None else files.stderr.local_path,
         directory=run.execution.directory.local,
     )
-    status = local_backend.query(spec.directory, backend_id)
+    status = local_status(backend_id, files)
     runner = LocalProjectRunner(
         executor, spec, callback=callback, output_listener=output_listener,
         backend_id=backend_id, run_id=run.id,
         state=status.state, failure_phase=status.failure_phase,
         failure_message=status.message,
     )
-    runner.set_manifest(files)
+    runner.set_manifest(status.files or files)
     runner._return_code = status.return_code
     runner.result.return_code = status.return_code
     if start:

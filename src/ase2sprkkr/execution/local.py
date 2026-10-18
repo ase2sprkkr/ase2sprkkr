@@ -299,37 +299,48 @@ class LocalExecutor(Executor):
         )
 
     def recover_submission(self, run_id, submission, *, submitted_at=None):
-        from .local_backend import recover
-        return recover(submission.execution.directory.local, run_id)
+        from .remote_service import recover_remote
+        from .local_project import local_manifest
+        reply = recover_remote(run_id, {
+            "executor": "local",
+            "directory": submission.execution.directory.local,
+        })
+        if reply is None:
+            # The absence of a ticket is not proof that submission never
+            # happened. Never authorize an automatic duplicate launch.
+            raise NotImplementedError("Submission identity is not recoverable")
+        status = RunStatus(
+            state=RunState(reply["state"]),
+            backend_id=reply["remote_id"],
+            return_code=reply.get("return_code"),
+            message=reply.get("error"),
+            failure_phase=reply.get("failure_phase"),
+        )
+        if status.state in (RunState.FINISHED, RunState.FAILED, RunState.CANCELLED):
+            from dataclasses import replace
+            status = replace(status, files=local_manifest(submission.files, status))
+        return status
 
-    def attach(
-        self, run, callback=None, output_listener=None, start=True,
-    ):
+    def attach(self, run, callback=None, output_listener=None, start=True):
         from .local_project import attach_local
         return attach_local(
             self, run, callback=callback,
             output_listener=output_listener, start=start,
         )
 
+    def acknowledge_submission(self, run):
+        from .remote_service import acknowledge_submission
+        acknowledge_submission(run.id)
+
     def acknowledge(self, run):
-        from .local_backend import acknowledge_outcome
-        acknowledge_outcome(run.execution.directory.local, run.execution.backend_id)
+        from .remote_service import acknowledge_remote
+        acknowledge_remote(run.execution.backend_id)
 
     def status(self, *runs):
-        from .local_backend import local_manifest, query
-
+        from .local_project import local_status
         statuses = []
         for run in runs:
             if run.execution.endpoint.executor != "local":
                 raise ValueError("Run does not belong to the local backend")
-            status = query(run.execution.directory.local, run.execution.backend_id)
-            if status.state in (RunState.FINISHED, RunState.FAILED, RunState.CANCELLED):
-                from dataclasses import replace
-                status = replace(
-                    status, files=local_manifest(
-                        run.files, run.execution.directory.local,
-                        run.execution.backend_id,
-                    ),
-                )
-            statuses.append(status)
+            statuses.append(local_status(run.execution.backend_id, run.files))
         return tuple(statuses)
