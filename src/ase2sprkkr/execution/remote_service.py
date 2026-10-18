@@ -215,7 +215,7 @@ def _local_submit(request):
         "failure_phase": None,
     }
     if request.get("detached"):
-        _publish_submission(run_id, reply)
+        _publish_submission(run_id, {"remote_id": remote_id})
     return reply
 
 
@@ -438,7 +438,7 @@ def recover_remote(run_id, request, *, submitted_at=None):
         reply = _recover_submission(run_id)
         if reply is None:
             return None
-        return dict(reply, **status_remote(reply["remote_id"]))
+        return dict(reply, directory=request["directory"], **status_remote(reply["remote_id"]))
     if executor != "psij":
         raise ValueError(f"Unsupported remote executor: {executor!r}")
 
