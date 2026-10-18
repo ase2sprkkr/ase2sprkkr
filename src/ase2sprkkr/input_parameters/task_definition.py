@@ -23,12 +23,15 @@ class DeclaredFile(str):
 
     __slots__ = ("_optional",)
 
-    def __new__(cls, path, *, optional=False):
+    def __new__(cls, path, optional=False):
         if not isinstance(optional, bool):
             raise TypeError("optional must be a boolean")
         obj = super().__new__(cls, os.fspath(path))
         object.__setattr__(obj, "_optional", optional)
         return obj
+
+    def __reduce__(self):
+        return (type(self), (str(self), self.optional))
 
     @property
     def optional(self):
