@@ -8,6 +8,7 @@ from __future__ import annotations
 import asyncio
 import json
 import os
+import signal
 import subprocess
 import sys
 
@@ -45,7 +46,7 @@ async def _pump(source, kind, streams):
 
 
 async def _run(spec):
-    streams = SupervisorStreams(spec["output_file"], spec["error_file"])
+    streams = SupervisorStreams(spec["output_file"], spec["error_file"], detached=spec.get("detached", True))
     socket_path = await streams.start()
     # The parent reads this once before returning the backend handle; never
     # advertise a socket that is not listening yet.
@@ -56,7 +57,14 @@ async def _run(spec):
     return_code = _LAUNCH_FAILURE_RETURN_CODE
     state = RunState.FAILED
     phase = FailurePhase.LAUNCH
+    process = None
     try:
+        if not streams.detached:
+            try:
+                await asyncio.wait_for(streams.connected.wait(), timeout=30)
+            except asyncio.TimeoutError:
+                # No client took ownership of this non-persistent submission.
+                return _LAUNCH_FAILURE_RETURN_CODE
         if spec.get("stdin"):
             stdin = open(spec["stdin"], "rb")
             opened.append(stdin)
@@ -65,6 +73,7 @@ async def _run(spec):
                 *spec["argv"], cwd=spec["directory"], stdin=stdin,
                 stdout=asyncio.subprocess.PIPE,
                 stderr=asyncio.subprocess.STDOUT if streams.merged else asyncio.subprocess.PIPE,
+                start_new_session=True,
             )
         except OSError:
             pass
@@ -72,10 +81,33 @@ async def _run(spec):
             pumps = [asyncio.create_task(_pump(process.stdout, "out", streams))]
             if not streams.merged:
                 pumps.append(asyncio.create_task(_pump(process.stderr, "err", streams)))
-            return_code = await process.wait()
+            if streams.detached:
+                return_code = await process.wait()
+            else:
+                finished = asyncio.create_task(process.wait())
+                lost = asyncio.create_task(streams.disconnected.wait())
+                done, pending = await asyncio.wait((finished, lost), return_when=asyncio.FIRST_COMPLETED)
+                if lost in done and not finished.done():
+                    try:
+                        os.killpg(process.pid, signal.SIGTERM)
+                    except ProcessLookupError:
+                        pass
+                    try:
+                        await asyncio.wait_for(finished, timeout=1)
+                    except asyncio.TimeoutError:
+                        try:
+                            os.killpg(process.pid, signal.SIGKILL)
+                        except ProcessLookupError:
+                            pass
+                        await finished
+                    state = RunState.CANCELLED
+                for task in pending:
+                    task.cancel()
+                return_code = finished.result()
             await asyncio.gather(*pumps)
-            state = RunState.FINISHED if return_code == 0 else RunState.FAILED
-            phase = None if return_code == 0 else FailurePhase.EXECUTION
+            if state != RunState.CANCELLED:
+                state = RunState.FINISHED if return_code == 0 else RunState.FAILED
+                phase = None if return_code == 0 else FailurePhase.EXECUTION
     finally:
         for file in opened:
             file.close()
