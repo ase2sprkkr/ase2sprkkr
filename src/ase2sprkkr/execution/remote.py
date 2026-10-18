@@ -680,15 +680,23 @@ class RemoteRunner:
             stderr_task = asyncio.create_task(
                 self._pump(self._follow_process.stderr, "err")
             )
-            follow_return_code, _, _ = await asyncio.gather(
-                self._follow_process.wait(), stdout_task, stderr_task
-            )
+            stream_error = None
+            try:
+                await asyncio.gather(
+                    self._follow_process.wait(), stdout_task, stderr_task
+                )
+            except Exception as exc:
+                stream_error = exc
 
-            status = await self.executor._status(
-                self._remote_directory,
-                self._backend_id,
-                self._files,
-            )
+            # The backend outcome is authoritative. A broken observational
+            # stream cannot turn a successful calculation into FAILED.
+            status = self._follow_process.terminal
+            if status is None:
+                status = await self.executor._status(
+                    self._remote_directory,
+                    self._backend_id,
+                    self._files,
+                )
             backend_state = RunState(status.get("state", "unknown"))
             self._return_code = status.get("return_code")
             self.result.return_code = self._return_code
@@ -696,14 +704,12 @@ class RemoteRunner:
             self._failure_phase = None if phase is None else FailurePhase(phase)
             self._failure_message = status.get("error")
 
-            if follow_return_code != 0 and backend_state not in (
-                RunState.FINISHED,
-                RunState.FAILED,
-                RunState.CANCELLED,
+            if stream_error is not None and backend_state not in (
+                RunState.FINISHED, RunState.FAILED, RunState.CANCELLED,
             ):
-                raise RuntimeError(
-                    "Remote output stream ended before the remote run finished"
-                )
+                self._state = RunState.UNKNOWN
+                self._failure_message = str(stream_error)
+                return self.result
 
             if backend_state == RunState.FAILED and self._failure_phase in (
                 FailurePhase.SUBMISSION,
