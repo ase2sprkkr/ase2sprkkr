@@ -24,7 +24,7 @@ def _path(receipt_id):
     return base / "remote-outcomes" / (receipt_id + ".json")
 
 
-def publish_outcome(receipt_id, state, return_code, failure_phase=None):
+def publish_outcome(receipt_id, state, return_code, failure_phase=None, *, error=None):
     """Publish once: cancellation must not overwrite natural completion."""
     state = RunState(state)
     if state not in _TERMINAL:
@@ -39,6 +39,7 @@ def publish_outcome(receipt_id, state, return_code, failure_phase=None):
                 "state": state.value,
                 "return_code": None if return_code is None else int(return_code),
                 "failure_phase": None if failure_phase is None else FailurePhase(failure_phase).value,
+                "error": error,
             },
             separators=(",", ":"),
             mode=0o600,
