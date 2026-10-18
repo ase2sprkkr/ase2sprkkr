@@ -24,6 +24,7 @@ def parser(parser):
     follow.add_argument("remote_id")
     follow.add_argument("--stdout-path")
     follow.add_argument("--stderr-path")
+    follow.add_argument("--live", action="store_true", help="observe new output only, without replay")
     follow.add_argument("--stdout-offset", type=int, default=0)
     follow.add_argument("--stderr-offset", type=int, default=0)
     follow.add_argument(
