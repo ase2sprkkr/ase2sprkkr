@@ -16,6 +16,8 @@ import tempfile
 from dataclasses import dataclass, field
 from pathlib import Path
 
+from ._durability import fsync_directory
+
 MAGIC = b"A2SFOLL1"
 _HEADER = struct.Struct("!cQQ")
 _CODES = {"out": b"O", "err": b"E"}
@@ -121,9 +123,10 @@ class SupervisorStreams:
 
     def sync(self):
         """Durability barrier before publishing successful terminal outcome."""
-        for spool in self._spools.values():
+        for kind, spool in self._spools.items():
             spool.flush()
             os.fsync(spool.fileno())
+            fsync_directory(Path(self.paths[kind]).parent)
 
     def terminal(self, outcome):
         self._terminal = dict(outcome)
