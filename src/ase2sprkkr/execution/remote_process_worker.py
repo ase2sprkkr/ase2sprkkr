@@ -1,11 +1,11 @@
-"""Minimal direct-process supervisor used by the stateless remote service.
+"""Direct-process supervisor: wait for the child, spool its output and serve followers.
 
-It owns no ASE2SPRKKR lifecycle state. Its only durable metadata is the backend
-outcome needed after the supervised process has disappeared.
+The client owns all RunRecord state. This process owns only the child PID,
+open pipes, transient FOLLOW socket and an acknowledged terminal receipt.
 """
-
 from __future__ import annotations
 
+import asyncio
 import json
 import os
 import subprocess
@@ -13,7 +13,7 @@ import sys
 
 from .remote_mailbox import publish_outcome
 from .base import FailurePhase, RunState
-
+from .remote_supervisor_stream import SupervisorStreams
 
 _SPEC_ENV = "ASE2SPRKKR_REMOTE_PROCESS_SPEC"
 _START_FD_ENV = "ASE2SPRKKR_REMOTE_PROCESS_START_FD"
@@ -36,55 +36,68 @@ def _wait_for_parent_release():
         os.close(fd)
 
 
+async def _pump(source, kind, streams):
+    while True:
+        data = await source.read(65536)
+        if not data:
+            return
+        streams.publish(kind, data)
+
+
+async def _run(spec):
+    streams = SupervisorStreams(spec["output_file"], spec["error_file"])
+    socket_path = await streams.start()
+    # The parent reads this once before returning the backend handle; never
+    # advertise a socket that is not listening yet.
+    os.write(int(spec["socket_fd"]), (socket_path + "\n").encode())
+    os.close(int(spec["socket_fd"]))
+    opened = []
+    stdin = subprocess.DEVNULL
+    return_code = _LAUNCH_FAILURE_RETURN_CODE
+    state = RunState.FAILED
+    phase = FailurePhase.LAUNCH
+    try:
+        if spec.get("stdin"):
+            stdin = open(spec["stdin"], "rb")
+            opened.append(stdin)
+        try:
+            process = await asyncio.create_subprocess_exec(
+                *spec["argv"], cwd=spec["directory"], stdin=stdin,
+                stdout=asyncio.subprocess.PIPE,
+                stderr=asyncio.subprocess.STDOUT if streams.merged else asyncio.subprocess.PIPE,
+            )
+        except OSError:
+            pass
+        else:
+            pumps = [asyncio.create_task(_pump(process.stdout, "out", streams))]
+            if not streams.merged:
+                pumps.append(asyncio.create_task(_pump(process.stderr, "err", streams)))
+            return_code = await process.wait()
+            await asyncio.gather(*pumps)
+            state = RunState.FINISHED if return_code == 0 else RunState.FAILED
+            phase = None if return_code == 0 else FailurePhase.EXECUTION
+    finally:
+        for file in opened:
+            file.close()
+        try:
+            _write_outcome(spec["receipt_id"], state, return_code, phase)
+            streams.terminal({
+                "state": state.value, "return_code": return_code,
+                "failure_phase": None if phase is None else phase.value,
+            })
+            await streams.finish()
+        finally:
+            pass
+    return return_code
+
+
 def main():
     raw = os.environ.pop(_SPEC_ENV, None)
     if raw is None:
         raise RuntimeError(f"Missing {_SPEC_ENV}")
     spec = json.loads(raw)
-
     _wait_for_parent_release()
-
-    opened = []
-    stdin = subprocess.DEVNULL
-    return_code = _LAUNCH_FAILURE_RETURN_CODE
-    state = RunState.FAILED
-    failure_phase = FailurePhase.LAUNCH
-    try:
-        if spec.get("stdin"):
-            stdin = open(spec["stdin"], "rb")
-            opened.append(stdin)
-
-        output = open(spec["output_file"], "wb")
-        opened.append(output)
-        if spec["error_file"] == spec["output_file"]:
-            error = subprocess.STDOUT
-        else:
-            error = open(spec["error_file"], "wb")
-            opened.append(error)
-
-        try:
-            process = subprocess.Popen(
-                spec["argv"],
-                cwd=spec["directory"],
-                stdin=stdin,
-                stdout=output,
-                stderr=error,
-                close_fds=True,
-            )
-        except OSError:
-            return_code = _LAUNCH_FAILURE_RETURN_CODE
-            state = RunState.FAILED
-            failure_phase = FailurePhase.LAUNCH
-        else:
-            return_code = process.wait()
-            state = RunState.FINISHED if return_code == 0 else RunState.FAILED
-            failure_phase = None if return_code == 0 else FailurePhase.EXECUTION
-    finally:
-        for file in opened:
-            file.close()
-        _write_outcome(spec["receipt_id"], state, return_code, failure_phase)
-
-    return return_code
+    return asyncio.run(_run(spec))
 
 
 if __name__ == "__main__":
