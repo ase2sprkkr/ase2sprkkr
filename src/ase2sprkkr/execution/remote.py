@@ -436,7 +436,7 @@ class RemoteRunner:
                     selected.add(remote)
                     local = os.fspath(await self.executor.unmap_path(remote))
                     if local in primary:
-                        # Primary streams are atomically published by the monitor.
+                        # Primary streams are written incrementally by follow.
                         continue
                     self._set_file_availability(
                         local, "pending", remote=remote,
@@ -779,6 +779,14 @@ class RemoteRunner:
                     task.cancel()
             if tasks:
                 await asyncio.gather(*tasks, return_exceptions=True)
+            # Files already contain every received byte, including incomplete
+            # sessions. Closing flushes them without any publish/discard step.
+            seen = set()
+            for target in (self.spec.output_file, self.spec.error_file):
+                if target is not None and id(target) not in seen:
+                    seen.add(id(target))
+                    if hasattr(target, "close"):
+                        target.close()
 
     def _thread_main(self):
         try:

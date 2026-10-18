@@ -48,7 +48,13 @@ def clear_declared_outputs(paths, *, protected=()):
     Called on the execution host before starting a new calculation, never on
     reattach. A wildcard removes only its concrete files.
     """
-    protected = {os.path.abspath(os.fspath(p)) for p in protected if p is not None}
+    protected_paths = [os.path.abspath(os.fspath(p)) for p in protected if p is not None]
+    protected = set()
+    for path in protected_paths:
+        if glob.has_magic(path):
+            protected.update(os.path.abspath(p) for p in glob.glob(path, recursive=True))
+        else:
+            protected.add(path)
     for declared in dict.fromkeys(os.fspath(p) for p in paths if p is not None):
         candidates = glob.glob(declared, recursive=True) if glob.has_magic(declared) else (declared,)
         for candidate in candidates:

@@ -4,7 +4,6 @@ import pytest
 
 from ase2sprkkr.execution import ExecutionSpec, RunState, FileManifest, FileEntry
 from ase2sprkkr.execution.remote import FileSyncPolicy, RemoteRunner
-from ase2sprkkr.execution.transport import AtomicLocalFile
 
 
 class _Follow:
@@ -27,7 +26,7 @@ class _Executor:
         self.backend_state = RunState(state)
         self.sync_calls = 0
 
-    async def _follow(self, directory, run_id, reference=None):
+    async def _follow(self, directory, run_id, reference=None, *, offsets=None):
         return _Follow()
 
     async def _status(self, directory, run_id, reference=None):
@@ -51,7 +50,7 @@ class _GateRunner(RemoteRunner):
 def _run(tmp_path, state, *, original=b"old\n"):
     destination = tmp_path / "calculation.out"
     destination.write_bytes(original)
-    output = AtomicLocalFile(destination)
+    output = destination.open("wb")
     executor = _Executor(state)
     runner = _GateRunner(
         executor,
@@ -79,7 +78,7 @@ def test_terminal_remote_state_may_publish_streamed_output(tmp_path):
     assert runner.state == RunState.FINISHED
     assert result.return_code == 0
     assert destination.read_bytes() == b"streamed\n"
-    assert output._finished is True
+    assert output.closed is True
     assert executor.sync_calls == 2
 
 
@@ -90,9 +89,9 @@ def test_unknown_remote_state_does_not_publish_or_download_output(tmp_path):
 
     assert runner.state == RunState.UNKNOWN
     assert runner.failure_phase is None
-    assert destination.read_bytes() == b"old\n"
-    assert output._finished is True
-    assert not output.temporary_path.exists()
+    assert destination.read_bytes() == b"streamed\n"
+    assert output.closed is True
+    assert not list(tmp_path.glob(".*.tmp"))
     assert executor.sync_calls == 0
 
 
@@ -112,8 +111,8 @@ def test_successful_backend_with_failed_download_fails_run(tmp_path):
     assert runner.return_code == 0
     assert runner.files.availability_state == "failed"
     assert "could not be downloaded" in runner.files.availability_message
-    assert destination.read_bytes() == b"old\n"
-    assert output._finished is True
+    assert destination.read_bytes() == b"streamed\n"
+    assert output.closed is True
 
 
 def test_failed_backend_keeps_execution_failure_when_diagnostics_cannot_download(tmp_path):
@@ -137,8 +136,8 @@ def test_failed_backend_keeps_execution_failure_when_diagnostics_cannot_download
     assert result.return_code == 17
     assert runner.files.availability_state == "failed"
     assert "could not be downloaded" in runner.files.availability_message
-    assert destination.read_bytes() == b"old\n"
-    assert output._finished is True
+    assert destination.read_bytes() == b"streamed\n"
+    assert output.closed is True
 
 
 def test_completed_remote_download_marks_files_available(tmp_path):
@@ -157,4 +156,4 @@ def test_cancelled_backend_survives_diagnostic_download_failure(tmp_path):
     assert runner.state == RunState.CANCELLED
     assert runner.failure_phase is None
     assert runner.files.availability_state == "failed"
-    assert destination.read_bytes() == b"old\n"
+    assert destination.read_bytes() == b"streamed\n"

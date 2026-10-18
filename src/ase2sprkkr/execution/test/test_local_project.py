@@ -152,7 +152,7 @@ def test_wildcards_track_concrete_file_availability(tmp_path):
     assert updated.outputs[1].availability_state == "available"
 
 
-def test_failed_launch_does_not_publish_stale_stdout(tmp_path):
+def test_failed_launch_clears_stale_stdout(tmp_path):
     out = tmp_path / "out.txt"
     out.write_bytes(b"previous")
     runner = LocalExecutor().create_project_run(
@@ -162,7 +162,7 @@ def test_failed_launch_does_not_publish_stale_stdout(tmp_path):
     runner.wait()
     assert runner.state == RunState.FAILED
     assert runner.failure_phase == FailurePhase.LAUNCH
-    assert out.read_bytes() == b"previous"
+    assert out.read_bytes() == b""
 
 
 def test_none_stream_paths_are_live_only(tmp_path):
