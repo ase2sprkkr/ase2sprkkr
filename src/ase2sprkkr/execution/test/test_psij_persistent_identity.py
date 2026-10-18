@@ -35,14 +35,6 @@ _FAKE_PSIJ = SimpleNamespace(
 )
 
 
-class _Reader:
-    print_output = False
-
-    @staticmethod
-    def create_result(output_file, input_file):
-        return object()
-
-
 def _executor(monkeypatch, backend="slurm"):
     monkeypatch.setattr(psij_backend, "_load_psij", lambda: _FAKE_PSIJ)
     return psij_backend.PsijExecutor(backend, job_executor=object())

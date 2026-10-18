@@ -104,10 +104,13 @@ class _Backend:
 
         def run():
             job.status = _Status("ACTIVE")
-            with open(job.spec.stdout_path, "wb") as out:
-                out.write(b"hello\n")
-            with open(job.spec.stderr_path, "wb") as err:
-                err.write(b"warning\n")
+            if job.spec.stdout_path is not None:
+                with open(job.spec.stdout_path, "wb") as out:
+                    out.write(b"hello\n")
+            if job.spec.stderr_path is not None:
+                mode = "ab" if job.spec.stderr_path == job.spec.stdout_path else "wb"
+                with open(job.spec.stderr_path, mode) as err:
+                    err.write(b"warning\n")
             job.status = _Status("COMPLETED", 0)
             job._done.set()
 
@@ -171,6 +174,7 @@ def test_psij_runner_submits_and_streams_output(monkeypatch, tmp_path):
         output_file=output_file,
         directory=str(tmp_path),
         stdin=input_file,
+        error_file=str(tmp_path / "run.err"),
     )
     runner = executor.create_run(spec)
     seen = []
@@ -189,11 +193,74 @@ def test_psij_runner_submits_and_streams_output(monkeypatch, tmp_path):
     assert backend_id == "123"
     assert runner.state == RunState.FINISHED
     assert (tmp_path / "run.out").read_bytes() == b"hello\n"
-    assert (tmp_path / "run.out.err").read_bytes() == b"warning\n"
+    assert backend.submitted.spec.stderr_path == str(tmp_path / "run.err")
+    assert (tmp_path / "run.err").read_bytes() == b"warning\n"
     assert result.return_code == 0
     assert ("out", "hello\n") in seen
     assert ("err", "warning\n") in seen
     input_file.close()
+
+
+
+def test_psij_without_output_files_does_not_create_any(monkeypatch, tmp_path):
+    backend = _Backend()
+    executor = _executor(monkeypatch, backend)
+    spec = ExecutionSpec(
+        argv=("program",), directory=str(tmp_path),
+        input_file=None, output_file=None, error_file=None,
+    )
+    seen = []
+    runner = executor.create_run(spec)
+    runner.add_output_listener(lambda text, kind: seen.append((kind, text)))
+    runner.submit()
+    result = runner.wait()
+
+    assert backend.submitted.spec.stdout_path is None
+    assert backend.submitted.spec.stderr_path is None
+    assert result.output_file is None
+    assert result.error_file is None
+    assert result.return_code == 0
+    assert not seen
+    assert list(tmp_path.iterdir()) == []
+
+
+def test_psij_stderr_only_does_not_create_stdout(monkeypatch, tmp_path):
+    backend = _Backend()
+    executor = _executor(monkeypatch, backend)
+    runner = executor.create_run(ExecutionSpec(
+        argv=("program",), directory=str(tmp_path),
+        input_file=None, output_file=None,
+        error_file=str(tmp_path / "run.err"),
+    ))
+    seen = []
+    runner.add_output_listener(lambda text, kind: seen.append((kind, text)))
+    runner.submit()
+    result = runner.wait()
+
+    assert backend.submitted.spec.stdout_path is None
+    assert backend.submitted.spec.stderr_path == str(tmp_path / "run.err")
+    assert result.output_file is None
+    assert (tmp_path / "run.err").read_bytes() == b"warning\n"
+    assert ("err", "warning\n") in seen
+    assert not (tmp_path / "run.out").exists()
+
+
+def test_psij_merged_output_is_followed_once(monkeypatch, tmp_path):
+    backend = _Backend()
+    executor = _executor(monkeypatch, backend)
+    output = str(tmp_path / "merged.out")
+    runner = executor.create_run(ExecutionSpec(
+        argv=("program",), directory=str(tmp_path),
+        input_file=None, output_file=output, error_file=output,
+    ))
+    seen = []
+    runner.add_output_listener(lambda text, kind: seen.append((kind, text)))
+    runner.submit()
+    runner.wait()
+
+    assert (tmp_path / "merged.out").read_bytes() == b"hello\nwarning\n"
+    assert "".join(value for kind, value in seen if kind == "out") == "hello\nwarning\n"
+    assert not any(kind == "err" for kind, value in seen)
 
 
 def test_psij_mpi_process_count_becomes_resource_spec(monkeypatch, tmp_path):
@@ -325,6 +392,28 @@ def test_psij_executor_attaches_to_native_job(monkeypatch, tmp_path):
     assert runner.backend_id == "456"
     assert runner.state == RunState.FINISHED
     assert (tmp_path / "run.out").read_bytes() == b"old output\n"
+
+
+
+def test_psij_attach_to_stderr_only(monkeypatch, tmp_path):
+    executor = _executor(monkeypatch, _Backend())
+    from dataclasses import replace
+    run = _psij_run(tmp_path, "456")
+    run = replace(run, files=replace(run.files, stdout=None))
+    (tmp_path / "run.err").write_bytes(b"existing error\n")
+
+    runner = executor.attach(run)
+    assert runner.wait().output_file is None
+    assert runner.result.error_file == str(tmp_path / "run.err")
+
+
+def test_psij_attach_requires_a_recorded_stream(monkeypatch, tmp_path):
+    executor = _executor(monkeypatch, _Backend())
+    from dataclasses import replace
+    run = _psij_run(tmp_path, "456")
+    run = replace(run, files=replace(run.files, stdout=None, stderr=None))
+    with pytest.raises(ValueError, match="recorded output streams"):
+        executor.attach(run)
 
 
 def test_psij_recovers_live_slurm_submission_by_run_id(monkeypatch, tmp_path):

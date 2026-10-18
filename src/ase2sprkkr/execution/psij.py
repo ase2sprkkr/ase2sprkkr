@@ -200,9 +200,7 @@ class PsijRunner:
         self._run_id = run_id
 
         self._stdout_path = _path(spec.output_file, spec.directory)
-        if self._stdout_path is None:
-            raise ValueError("PSI/J execution requires an output file")
-        self._stderr_path = _path(spec.error_file, spec.directory) or self._stdout_path + ".err"
+        self._stderr_path = _path(spec.error_file, spec.directory)
         self._stdin_path = _path(spec.stdin, spec.directory)
         self.result = ExecutionOutcome(
             output_file=self._stdout_path,
@@ -243,7 +241,7 @@ class PsijRunner:
             resources = self._psij.ResourceSpecV1(process_count=mpi.process_count)
         return tuple(self.spec.mpi_argv), resources, self._mpi_launcher()
 
-    def _persistent_metadata(self):
+    def _project_metadata(self):
         if self._run_id is None:
             return None, None
         environment = {"ASE2SPRKKR_RUN_ID": self._run_id}
@@ -258,7 +256,7 @@ class PsijRunner:
         argv, resources, launcher = self._job_command()
         if not argv:
             raise ValueError("Cannot submit a PSI/J run without a command")
-        environment, attributes = self._persistent_metadata()
+        environment, attributes = self._project_metadata()
         job_spec = self._psij.JobSpec(
             executable=os.fspath(argv[0]),
             arguments=[os.fspath(arg) for arg in argv[1:]],
@@ -331,10 +329,9 @@ class PsijRunner:
         self._flush(self.spec.error_file)
         self._close(self.spec.output_file)
         self._close(self.spec.error_file)
-        Path(self._stdout_path).parent.mkdir(parents=True, exist_ok=True)
-        Path(self._stderr_path).parent.mkdir(parents=True, exist_ok=True)
-        Path(self._stdout_path).write_bytes(b"")
-        Path(self._stderr_path).write_bytes(b"")
+        for path in {self._stdout_path, self._stderr_path} - {None}:
+            Path(path).parent.mkdir(parents=True, exist_ok=True)
+            Path(path).write_bytes(b"")
 
     async def _follow_file(self, path, kind, finished):
         position = 0
@@ -363,10 +360,15 @@ class PsijRunner:
 
     async def _monitor(self):
         finished = asyncio.Event()
-        followers = [
-            asyncio.create_task(self._follow_file(self._stdout_path, "out", finished)),
-            asyncio.create_task(self._follow_file(self._stderr_path, "err", finished)),
-        ]
+        paths = (("out", self._stdout_path), ("err", self._stderr_path))
+        seen = set()
+        followers = []
+        for kind, path in paths:
+            if path is not None and path not in seen:
+                followers.append(
+                    asyncio.create_task(self._follow_file(path, kind, finished))
+                )
+                seen.add(path)
         status = None
         try:
             loop = asyncio.get_running_loop()
@@ -380,7 +382,7 @@ class PsijRunner:
         if self._return_code is None:
             self._return_code = 0 if state_name == "COMPLETED" else 1
         self.result.return_code = self._return_code
-        if state_name == "FAILED" or self._return_code != 0:
+        if state_name != "CANCELED" and (state_name == "FAILED" or self._return_code != 0):
             self._failure_phase = FailurePhase.EXECUTION
             self._failure_message = getattr(status, "message", None) or (
                 f"PSI/J job exited with status {self._return_code}"
@@ -649,8 +651,8 @@ class PsijExecutor(Executor):
         if endpoint.executor != "psij" or endpoint.psij_backend != self.backend:
             raise ValueError("Run does not belong to this PSI/J backend")
         backend_id = run.execution.backend_id
-        if not backend_id or not run.files.output_file:
-            raise ValueError("PSI/J run lacks backend ID or output location")
+        if not backend_id or (run.files.stdout is None and run.files.stderr is None):
+            raise ValueError("PSI/J run lacks backend ID or recorded output streams")
         job = self._psij.Job()
         self._job_executor.attach(job, backend_id)
         spec = ExecutionSpec(
