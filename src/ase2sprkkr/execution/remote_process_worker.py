@@ -141,7 +141,10 @@ async def _run(spec):
                    "failure_phase": None if phase is None else phase.value,
                    "error": message}
         try:
-            _write_outcome(spec["receipt_id"], state, return_code, phase)
+            if message is not None:
+                publish_outcome(spec["receipt_id"], state, return_code, phase, error=message)
+            else:
+                _write_outcome(spec["receipt_id"], state, return_code, phase)
         finally:
             streams.terminal(outcome)
             await streams.finish()
