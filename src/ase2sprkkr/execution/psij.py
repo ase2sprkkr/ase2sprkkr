@@ -182,46 +182,46 @@ def _slurm_accounting_matches(run_id, submitted_at):
 def _slurm_status_native(native_id):
     """Read scheduler facts for a local Slurm job without initializing PSI/J."""
     native_id = str(native_id)
-        # A PSI/J attach initially reports NEW; short-lived remote commands
-        # cannot wait for an asynchronous update or retain the Job cache.
-        # Query the same scheduler facts for local and SSH PSI/J runs.
+    # A PSI/J attach initially reports NEW; short-lived remote commands
+    # cannot wait for an asynchronous update or retain the Job cache.
+    # Query the same scheduler facts for local and SSH PSI/J runs.
+    try:
+        details = _slurm_details(native_id)
+    except (FileNotFoundError, subprocess.CalledProcessError):
+        details = {}
+
+    if details:
+        state = _slurm_state(details.get("JobState"))
+        return_code = _slurm_exit_code(details.get("ExitCode"))
+    else:
         try:
-            details = _slurm_details(native_id)
+            output = _scheduler_output((
+                "sacct", "-X", "-n", "-P", "-j", native_id,
+                "--format=JobIDRaw,State,ExitCode",
+            ))
         except (FileNotFoundError, subprocess.CalledProcessError):
-            details = {}
+            output = ""
+        state = RunState.UNKNOWN
+        return_code = None
+        for line in output.splitlines():
+            fields = line.rstrip("|").split("|")
+            if len(fields) == 3 and fields[0].strip() == native_id:
+                state = _slurm_state(fields[1])
+                return_code = _slurm_exit_code(fields[2].strip())
+                break
 
-        if details:
-            state = _slurm_state(details.get("JobState"))
-            return_code = _slurm_exit_code(details.get("ExitCode"))
-        else:
-            try:
-                output = _scheduler_output((
-                    "sacct", "-X", "-n", "-P", "-j", native_id,
-                    "--format=JobIDRaw,State,ExitCode",
-                ))
-            except (FileNotFoundError, subprocess.CalledProcessError):
-                output = ""
-            state = RunState.UNKNOWN
-            return_code = None
-            for line in output.splitlines():
-                fields = line.rstrip("|").split("|")
-                if len(fields) == 3 and fields[0].strip() == native_id:
-                    state = _slurm_state(fields[1])
-                    return_code = _slurm_exit_code(fields[2].strip())
-                    break
-
-        if state not in (RunState.FINISHED, RunState.FAILED, RunState.CANCELLED):
-            return_code = None
-        elif state == RunState.FINISHED and return_code is None:
-            return_code = 0
-        elif state == RunState.FINISHED and return_code != 0:
-            state = RunState.FAILED
-        return RunStatus(
-            state=state,
-            backend_id=native_id,
-            return_code=return_code,
-            failure_phase=FailurePhase.EXECUTION if state == RunState.FAILED else None,
-        )
+    if state not in (RunState.FINISHED, RunState.FAILED, RunState.CANCELLED):
+        return_code = None
+    elif state == RunState.FINISHED and return_code is None:
+        return_code = 0
+    elif state == RunState.FINISHED and return_code != 0:
+        state = RunState.FAILED
+    return RunStatus(
+        state=state,
+        backend_id=native_id,
+        return_code=return_code,
+        failure_phase=FailurePhase.EXECUTION if state == RunState.FAILED else None,
+    )
 
 
 
