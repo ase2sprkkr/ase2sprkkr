@@ -615,12 +615,12 @@ class RemoteRunner:
         output_target = (
             await self.executor.map_path(self.result.output_file)
             if self.result.output_file
-            else posixpath.join(remote_directory, "stdout")
+            else None
         )
         error_target = (
             await self.executor.map_path(self.result.error_file)
             if self.result.error_file
-            else output_target + ".err"
+            else None
         )
         client_sync = {
             "output_file": output_target if self.spec.output_file is not None else None,
