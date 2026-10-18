@@ -6,7 +6,7 @@ import asyncio
 import os
 import shlex
 import subprocess
-from datetime import datetime
+from datetime import datetime, timedelta
 from dataclasses import replace
 from pathlib import Path
 from threading import Event, Lock, Thread
@@ -549,11 +549,13 @@ class PsijExecutor(Executor):
         )
 
     def status(self, *runs):
+        from .endpoint import endpoint_for_executor
+
+        expected = endpoint_for_executor(self)
         statuses = []
         for run in runs:
-            endpoint = run.execution.endpoint
-            if endpoint.executor != "psij" or endpoint.psij_backend != self.backend:
-                raise ValueError("Run does not belong to this PSI/J backend")
+            if run.execution.endpoint != expected:
+                raise ValueError("Run does not belong to this PSI/J endpoint")
             statuses.append(self.status_native(run.execution.backend_id))
         return tuple(statuses)
 
@@ -579,9 +581,13 @@ class PsijExecutor(Executor):
             job = self._psij.Job()
             self._job_executor.attach(job, native_id)
             self._status_jobs[native_id] = job
-            # PSI/J attach is asynchronous. A short-lived SSH status request
-            # must observe the initial scheduler status before returning.
-            job.wait(target_states=[self._psij.JobState.QUEUED])
+            # PSI/J attach is asynchronous. Wait briefly for its first status,
+            # without allowing an unresponsive scheduler to block refresh()
+            # or a short-lived SSH status request indefinitely.
+            job.wait(
+                timeout=timedelta(seconds=10),
+                target_states=[self._psij.JobState.QUEUED],
+            )
         status = getattr(job, "status", None)
         name = getattr(getattr(status, "state", None), "name", None)
         state = (
@@ -675,9 +681,10 @@ class PsijExecutor(Executor):
         )
 
     def attach(self, run, callback=None, output_listener=None, start=True):
-        endpoint = run.execution.endpoint
-        if endpoint.executor != "psij" or endpoint.psij_backend != self.backend:
-            raise ValueError("Run does not belong to this PSI/J backend")
+        from .endpoint import endpoint_for_executor
+
+        if run.execution.endpoint != endpoint_for_executor(self):
+            raise ValueError("Run does not belong to this PSI/J endpoint")
         backend_id = run.execution.backend_id
         if not backend_id or (run.files.stdout is None and run.files.stderr is None):
             raise ValueError("PSI/J run lacks backend ID or recorded output streams")

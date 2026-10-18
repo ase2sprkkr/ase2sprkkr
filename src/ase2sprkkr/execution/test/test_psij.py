@@ -1,6 +1,8 @@
 import asyncio
 import subprocess
 import threading
+from dataclasses import replace
+from datetime import timedelta
 from types import SimpleNamespace
 
 import pytest
@@ -392,8 +394,8 @@ def test_psij_non_slurm_attach_waits_for_first_real_status(monkeypatch):
     class Job:
         def __init__(self):
             self.status = _Status("NEW")
-        def wait(self, *, target_states):
-            observed.append(target_states)
+        def wait(self, *, timeout, target_states):
+            observed.append((timeout, target_states))
             self.status = _Status("ACTIVE")
             return self.status
 
@@ -407,7 +409,69 @@ def test_psij_non_slurm_attach_waits_for_first_real_status(monkeypatch):
     )
     status = executor.status_native("native-42")
     assert status.state == RunState.RUNNING
-    assert observed == ["native-42", ["QUEUED"]]
+    assert observed == ["native-42", (timedelta(seconds=10), ["QUEUED"])]
+
+
+def test_psij_status_attach_timeout_is_unknown(monkeypatch):
+    executor = _executor(monkeypatch, _Backend())
+    executor.backend = "pbs"
+    executor.url = "remote-pbs"
+    observed = []
+
+    class Job:
+        def __init__(self):
+            self.status = _Status("NEW")
+
+        def wait(self, *, timeout, target_states):
+            observed.append((timeout, target_states))
+            return None
+
+    class Backend:
+        def attach(self, job, native_id):
+            observed.append(native_id)
+
+    executor._job_executor = Backend()
+    executor._psij = SimpleNamespace(
+        Job=Job, JobState=SimpleNamespace(QUEUED="QUEUED"),
+    )
+    status = executor.status_native("native-42")
+    assert status.state == RunState.UNKNOWN
+    assert status.backend_id == "native-42"
+    assert observed == ["native-42", (timedelta(seconds=10), ["QUEUED"])]
+
+
+def test_psij_status_and_attach_check_complete_endpoint(monkeypatch, tmp_path):
+    executor = _executor(monkeypatch, _Backend())
+    executor.url = "ssh://cluster-a"
+    run = _psij_run(tmp_path, "456")
+    foreign = replace(
+        run,
+        execution=replace(
+            run.execution,
+            endpoint=ExecutorEndpoint(
+                executor="psij", psij_backend="slurm", psij_url="ssh://cluster-b"
+            ),
+        ),
+    )
+    with pytest.raises(ValueError, match="PSI/J endpoint"):
+        executor.status(foreign)
+    with pytest.raises(ValueError, match="PSI/J endpoint"):
+        executor.attach(foreign, start=False)
+
+    matching = replace(
+        run,
+        execution=replace(
+            run.execution,
+            endpoint=ExecutorEndpoint(
+                executor="psij", psij_backend="slurm", psij_url=executor.url
+            ),
+        ),
+    )
+    expected = psij_backend.RunStatus(RunState.RUNNING, backend_id="456")
+    monkeypatch.setattr(executor, "status_native", lambda native_id: expected)
+    assert executor.status(matching) == (expected,)
+    attached = executor.attach(matching, start=False)
+    assert attached.backend_id == "456"
 
 
 def test_psij_record_status_uses_native_status(monkeypatch, tmp_path):
