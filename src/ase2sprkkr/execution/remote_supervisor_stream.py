@@ -173,8 +173,8 @@ class SupervisorStreams:
                     await writer.drain()
                     for kind, path in self.paths.items():
                         if path is None:
-                            # Live-only output has no replay source.
-                            follower.offsets[kind] = self._sizes[kind]
+                            if follower.offsets[kind] != self._sizes[kind]:
+                                raise ConnectionError("Live-only follower missed output")
                             continue
                         offset = follower.offsets[kind]
                         if offset < self._sizes[kind]:
