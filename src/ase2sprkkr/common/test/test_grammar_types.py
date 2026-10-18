@@ -488,3 +488,27 @@ class TestGrammar:
         type = gt.Date()
         for val, res in [("{40,50}", Error), ("23.01.2020", datetime.date(2020, 1, 23)), ("40", Error)]:
             test(val, res)
+
+
+def test_bracketed_string_sets_in_input_mixed():
+    """Unknown input values may have string arrays without consuming scalars."""
+    import pyparsing as pp
+
+    for opener, closer in (("{", "}"), ("[", "]"), ("(", ")")):
+        result = gt.mixed.grammar().parse_string(f"{opener}Fe,Co{closer}", parse_all=True)
+        _assert_equal(result[0], np.array(["Fe", "Co"]))
+
+    for invalid in ("Fe,Co", "{ }", "{}", "[ ]", "( )"):
+        # The unbracketed case must not be parsed as a string *array*.
+        if invalid == "Fe,Co":
+            try:
+                parsed = gt.mixed.grammar().parse_string(invalid, parse_all=True)[0]
+            except pp.ParseBaseException:
+                continue
+            assert not isinstance(parsed, np.ndarray)
+        else:
+            try:
+                parsed = gt.mixed.grammar().parse_string(invalid, parse_all=True)[0]
+            except pp.ParseBaseException:
+                continue
+            assert not (isinstance(parsed, np.ndarray) and len(parsed) == 0)
