@@ -12,7 +12,7 @@ def test_scf_declares_new_potential_as_output(tmp_path):
     parameters = InputParameters.create("SCF")
     parameters.CONTROL.POTFIL = "Fe.pot"
 
-    assert parameters.output_files(str(tmp_path)) == (
+    assert tuple(map(str, parameters.output_files(str(tmp_path)))) == (
         str(tmp_path / "Fe.pot_new"), str(tmp_path / "*_SCFSTART.dos"),
     )
 
@@ -162,7 +162,7 @@ def test_bsf_output_file_declarations(tmp_path):
     for task in ("BSFEK", "BSFKK"):
         parameters = InputParameters.create(task)
         parameters.CONTROL.DATASET = "Fe"
-        assert parameters.output_files(str(tmp_path)) == (
+        assert tuple(map(str, parameters.output_files(str(tmp_path)))) == (
             str(tmp_path / "Fe_BLOCHSF.bsf"),
             str(tmp_path / "Fe_BLOCHSF_spol.bsf"),
         )

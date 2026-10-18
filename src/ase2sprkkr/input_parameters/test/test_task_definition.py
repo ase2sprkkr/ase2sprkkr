@@ -307,3 +307,14 @@ def test_optional_file_template_retains_metadata(tmp_path):
         assert len(resolved) == 1
         assert resolved[0].optional is True
     assert task.input_file_templates[0].optional is True
+
+
+def test_optional_file_metadata_affects_task_identity():
+    required = TaskDefinition("SCF", output_file_templates=(DeclaredFile("x", optional=False),))
+    optional = TaskDefinition("SCF", output_file_templates=(DeclaredFile("x", optional=True),))
+    assert required != optional
+    assert hash(required) != hash(optional)
+    assert optional.output_file_templates[0] != "x"
+    assert required.output_file_templates[0] == "x"
+    with pytest.raises(AttributeError):
+        optional.output_file_templates[0].optional = False
