@@ -13,6 +13,7 @@ from dataclasses import replace
 from pathlib import Path
 from threading import Event, Lock, Thread
 
+from .growing_file_tail import GrowingFileTail
 from .base import (
     ExecutionOutcome,
     ExecutionSpec,
@@ -420,29 +421,17 @@ class PsijRunner:
             Path(path).write_bytes(b"")
 
     async def _follow_file(self, path, kind, finished):
-        position = 0
-        empty_after_finish = False
-        while True:
-            data = b""
-            try:
-                size = os.path.getsize(path)
-                if size < position:
-                    position = 0
-                with open(path, "rb") as source:
-                    source.seek(position)
-                    data = source.read()
-            except FileNotFoundError:
-                pass
-
-            if data:
-                position += len(data)
-                self._emit_output(data, kind)
-                empty_after_finish = False
-            elif finished.is_set():
-                if empty_after_finish:
+        async with GrowingFileTail(
+            {kind: path}, poll_interval=max(self.executor.poll_interval, 1.0),
+        ) as tail:
+            while True:
+                chunks = tail.read_available()
+                for _, data in chunks:
+                    self._emit_output(data, kind)
+                if finished.is_set() and not chunks:
                     return
-                empty_after_finish = True
-            await asyncio.sleep(self.executor.poll_interval)
+                if not chunks:
+                    await tail.wait_for_change()
 
     async def _monitor(self):
         finished = asyncio.Event()
