@@ -21,12 +21,31 @@ class DeclaredFile(str):
     string subclass keeps existing path APIs and file manifests compatible.
     """
 
+    __slots__ = ("_optional",)
+
     def __new__(cls, path, *, optional=False):
         if not isinstance(optional, bool):
             raise TypeError("optional must be a boolean")
         obj = super().__new__(cls, os.fspath(path))
-        obj.optional = optional
+        object.__setattr__(obj, "_optional", optional)
         return obj
+
+    @property
+    def optional(self):
+        return self._optional
+
+    def __setattr__(self, name, value):
+        raise AttributeError("file declarations are immutable")
+
+    def __eq__(self, other):
+        if isinstance(other, DeclaredFile):
+            return str.__eq__(self, other) and self.optional == other.optional
+        if isinstance(other, str):
+            return not self.optional and str.__eq__(self, other)
+        return NotImplemented
+
+    def __hash__(self):
+        return hash((str(self), True)) if self.optional else hash(str(self))
 
 
 _FilePath = Union[str, os.PathLike[str]]
