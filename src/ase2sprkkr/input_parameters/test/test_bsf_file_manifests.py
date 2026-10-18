@@ -28,8 +28,10 @@ def test_bsf_schema_access_is_distinct_from_task_creation():
     parameters = schema.create_object()
     assert parameters.definition_name == "BSF"
     assert parameters.task_name == "BSFKK"
+    assert parameters.task_definition.name == "BSFKK"
     parameters.ENERGY.NE = [200]
     assert parameters.task_name == "BSFEK"
+    assert parameters.task_definition.name == "BSFEK"
 
     with pytest.raises(RegistryEntryNotFound):
         InputParameters.create("BSF")

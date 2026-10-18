@@ -5,7 +5,6 @@ from __future__ import annotations
 import io
 from . import definitions, tasks
 from .task_definition import InputParametersRegistry, TaskRegistry
-from ..common.module_registry import RegistryEntryNotFound
 from ..sprkkr.configuration import (
     ConfigurationFile,
     ConfigurationSection,
