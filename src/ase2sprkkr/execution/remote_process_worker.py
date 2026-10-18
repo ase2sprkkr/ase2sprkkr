@@ -104,11 +104,11 @@ async def _run(spec):
                     state, phase = RunState.FAILED, FailurePhase.EXECUTION
                     await _stop_process(process, waiting)
                     break
-                if stop in done or lost is not None and lost in done:
+                if waiting.done():
+                    break
+                if stop in done or (lost is not None and lost in done):
                     state, phase = RunState.CANCELLED, None
                     await _stop_process(process, waiting)
-                    break
-                if waiting.done():
                     break
             return_code = await waiting
             await asyncio.gather(*pumps)
