@@ -328,26 +328,26 @@ def test_shared_schema_task_lookup_is_lazy(tmp_path, monkeypatch):
         tmp_path, monkeypatch, "_lazy_distinct_task_ipds", {
             "shared": (
                 "from ase2sprkkr.input_parameters.input_parameters_definitions "
-                "import InputParametersDefinition\\n"
-                "def input_parameters_definition():\\n"
-                "    return InputParametersDefinition('shared', [])\\n"
+                "import InputParametersDefinition\n"
+                "def input_parameters_definition():\n"
+                "    return InputParametersDefinition('shared', [])\n"
             ),
             "broken": (
-                "def input_parameters_definition():\\n"
-                "    raise AssertionError('Unrelated IPD was constructed')\\n"
+                "def input_parameters_definition():\n"
+                "    raise AssertionError('Unrelated IPD was constructed')\n"
             ),
         },
     )
     tasks = _package(tmp_path, monkeypatch, "_lazy_distinct_task_entries", {
         "first": (
-            "from ase2sprkkr.input_parameters.task_definition import TaskDefinition\\n"
-            "def task_definition():\\n"
-            "    return TaskDefinition('SHARED', name='FIRST')\\n"
+            "from ase2sprkkr.input_parameters.task_definition import TaskDefinition\n"
+            "def task_definition():\n"
+            "    return TaskDefinition('SHARED', name='FIRST')\n"
         ),
         "second": (
-            "from ase2sprkkr.input_parameters.task_definition import TaskDefinition\\n"
-            "def task_definition():\\n"
-            "    return TaskDefinition('SHARED', name='SECOND')\\n"
+            "from ase2sprkkr.input_parameters.task_definition import TaskDefinition\n"
+            "def task_definition():\n"
+            "    return TaskDefinition('SHARED', name='SECOND')\n"
         ),
     })
     ip_registry = InputParametersRegistry(definitions)
