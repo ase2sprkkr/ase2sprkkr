@@ -78,14 +78,6 @@ def test_status_distinguishes_launch_and_execution_failure(tmp_path, monkeypatch
     assert execution["failure_phase"] == FailurePhase.EXECUTION.value
 
 
-def _slurm_executor(monkeypatch):
-    executor = object.__new__(psij.PsijExecutor)
-    executor.backend = "slurm"
-    executor.url = None
-    monkeypatch.setattr(remote_service, "_psij_executor", lambda _options: executor)
-    return executor
-
-
 def test_slurm_status_is_native_and_does_not_use_psij_job_cache(tmp_path, monkeypatch):
     _, remote_id = _psij_handle(tmp_path)
     monkeypatch.setattr(
