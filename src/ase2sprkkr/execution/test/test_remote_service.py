@@ -168,7 +168,7 @@ def test_follow_returns_unknown_instead_of_waiting_forever(tmp_path, monkeypatch
 
     monkeypatch.setattr(remote_service, "status_remote", unknown)
 
-    times = iter((0, 31))
+    times = iter((0, 0, 31))
     monkeypatch.setattr(remote_service.time, "monotonic", lambda: next(times))
     monkeypatch.setattr(remote_service.time, "sleep", lambda _: None)
     status = remote_service.follow_remote(
