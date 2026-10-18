@@ -29,7 +29,7 @@ def test_defaults_and_discovery(tmp_path):
         q = InputParameters.from_file(filename)
         assert q.TASK.TASK() == "POSANITAU"
         assert pickle.loads(pickle.dumps(q)).to_string() == text
-    assert q._definition.mpi is False
+    assert q.task_definition.mpi is False
 
 
 @pytest.mark.parametrize("posvc", ["BM", "DR", "IPM"])

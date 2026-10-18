@@ -23,7 +23,7 @@ def test_defaults_roundtrip_pickle():
     assert "EMIN=" not in text and "EMAX=" not in text
     assert q.ENERGY.GRID().tolist() == ["0"] and q.ENERGY.NE().tolist() == [1]
     assert pickle.loads(pickle.dumps(q)).to_string() == q.to_string()
-    assert p._definition.executable == "kkrchi" and p._definition.mpi is False
+    assert p.task_definition.executable == "kkrchi" and p.task_definition.mpi is False
 
 
 def test_frequency_resolution_roundtrip():

@@ -12,7 +12,7 @@ def parameters():
 
 def test_defaults_round_trip(tmp_path):
     p = parameters()
-    assert p.MODE.MODE() == "SREL" and not p.is_mpi()
+    assert p.MODE.MODE() == "SREL" and not p.task_definition.mpi
     assert p.TASK.CL() == "2P"
     text = p.to_string(validate=True)
     for name in ("IT", "CL"):
