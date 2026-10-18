@@ -90,7 +90,7 @@ def run(args, global_args):
         else:
             stdout = sys.stdout.buffer
             stderr = sys.stderr.buffer
-        follow_remote(
+        outcome = follow_remote(
             args.remote_id,
             stdout,
             stderr,
@@ -99,6 +99,10 @@ def run(args, global_args):
             stdout_path=args.stdout_path,
             stderr_path=args.stderr_path,
         )
+        if args.framed:
+            from ...execution.stream_protocol import encode_terminal_frame
+            stream.write(encode_terminal_frame(outcome))
+            stream.flush()
     elif args.remote_action == "recover":
         request = json.load(sys.stdin)
         request["directory"] = args.directory
