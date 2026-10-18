@@ -106,3 +106,41 @@ def test_supervisor_rejects_offsets_outside_spool(tmp_path):
         finally:
             await streams.finish()
     asyncio.run(run())
+
+
+def test_attached_supervisor_detects_session_disconnect(tmp_path):
+    async def run():
+        streams = SupervisorStreams(tmp_path / "out", tmp_path / "err", detached=False)
+        await streams.start()
+        reader = writer = None
+        try:
+            reader, writer = await asyncio.open_unix_connection(streams.socket_path)
+            writer.write(b'{"command":"follow","offsets":{"out":0,"err":0}}\n')
+            await writer.drain()
+            await asyncio.wait_for(streams.connected.wait(), 2)
+            writer.close()
+            await writer.wait_closed()
+            await asyncio.wait_for(streams.disconnected.wait(), 2)
+        finally:
+            if writer is not None:
+                writer.close()
+            await streams.finish()
+    asyncio.run(run())
+
+
+def test_detached_supervisor_does_not_cancel_on_disconnect(tmp_path):
+    async def run():
+        streams = SupervisorStreams(tmp_path / "out", tmp_path / "err", detached=True)
+        await streams.start()
+        try:
+            reader, writer = await asyncio.open_unix_connection(streams.socket_path)
+            writer.write(b'{"command":"follow","offsets":{"out":0,"err":0}}\n')
+            await writer.drain()
+            writer.close()
+            await writer.wait_closed()
+            await asyncio.sleep(0.05)
+            assert not streams.disconnected.is_set()
+            streams.terminal({"state": "finished", "return_code": 0})
+        finally:
+            await streams.finish()
+    asyncio.run(run())
