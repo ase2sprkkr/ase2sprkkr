@@ -121,7 +121,7 @@ class ResultFile(ConfigurationFile):
         # definition modules can safely import this class.
         from .definition_registry import result_file_definition_registry
 
-        return result_file_definition_registry.by_extension()
+        return result_file_definition_registry.by_name()
 
     @classmethod
     def definition(cls, self):
@@ -165,71 +165,94 @@ class ResultFile(ConfigurationFile):
           A :class:`Potential` or its filename. If omitted, it is looked up
           lazily from the result filename when it is needed.
         """
-        fname = filename
-        if hasattr(filename, "name"):
-            fname = filename.name
-        elif isinstance(filename, str):
-            if not os.path.exists(filename):
-                raise ValueError(f"File {filename} to be read does not exist")
+        from .definition_registry import result_file_definition_registry
 
-        if first_try is None and not try_only:
-            if isinstance(fname, str):
+        registry = result_file_definition_registry
+        definitions = cls.definitions
+        by_extension = registry.by_extension()
+
+        if isinstance(filename, (str, os.PathLike)):
+            filename_path = os.fspath(filename)
+            if not os.path.isfile(filename_path):
+                raise FileNotFoundError(filename_path)
+        elif hasattr(filename, "name"):
+            filename_path = os.fspath(filename.name)
+        else:
+            filename_path = None
+
+        def normalize_names(hints):
+            if hints is None or hints is False:
+                return ()
+            if isinstance(hints, str):
+                hints = (hints,)
+            return tuple(str(hint).lower().lstrip(".") for hint in hints)
+
+        def resolve(hints):
+            candidates = []
+            for hint in normalize_names(hints):
+                if hint in definitions:
+                    found = (definitions[hint],)
+                else:
+                    found = by_extension.get(hint, ())
+                for candidate in found:
+                    if not any(candidate is existing for existing in candidates):
+                        candidates.append(candidate)
+            return candidates
+
+        def matches(candidates, *, forced=False):
+            successes = []
+            errors = []
+            for definition in candidates:
                 try:
-                    first_try = fname.rsplit(".", 1)[1].lower()
-                except IndexError:
-                    first_try = None
-                special = re.match(r"^.+_([^/\\]+\.[^/\\]+)$", fname)
-                if special:
-                    first_try = [special.groups(1)[0], first_try]
+                    result = definition.read_from_file(filename, potential=potential)
+                except (pp.ParseBaseException, ValueError) as exc:
+                    errors.append(exc)
+                else:
+                    successes.append((definition, result))
+            if len(successes) > 1:
+                names = ", ".join(definition.name for definition, _ in successes)
+                raise ValueError(f"Ambiguous result file {filename!s}: matches {names}")
+            return successes[0][1] if successes else None, errors
+
+        if try_only is not None:
+            candidates = resolve(try_only)
+            if not candidates:
+                raise ValueError(f"Unknown result file format: {try_only!r}")
+            parsed, errors = matches(candidates, forced=True)
+            if parsed is not None:
+                return parsed
+            if unknown is None:
+                unknown = False
+        else:
+            if first_try is None:
+                ext = os.path.splitext(filename_path)[1].lower().lstrip(".") if filename_path else ""
+                candidates = list(by_extension.get(ext, ()))
             else:
-                first_try = ""
+                candidates = resolve(first_try)
+            parsed, errors = matches(candidates)
+            if parsed is not None:
+                return parsed
+            remaining = [
+                definition for definition in registry.values(include_aliases=False)
+                if not any(definition is candidate for candidate in candidates)
+            ]
+            parsed, further_errors = matches(remaining)
+            errors.extend(further_errors)
+            if parsed is not None:
+                return parsed
+            if unknown is None:
+                unknown = True
 
-        first = None
-        if first_try:
-            out = None
-            try:
-                out = cls.from_file(
-                    filename,
-                    first_try=False,
-                    try_only=first_try,
-                    potential=potential,
-                )
-            except Exception as e:
-                first = e
-            if out:
-                return out
-        else:
-            last = None
-
-        if try_only:
-            if isinstance(try_only, str):
-                try_only = [try_only]
-            for i in try_only:
-                if i in cls.definitions:
-                    try:
-                        return cls.definitions[i].read_from_file(
-                            filename, potential=potential
-                        )
-                    except Exception as e:
-                        last = e
-        else:
-            for ext, i in cls.definitions.items():
-                if first_try and ext in first_try:
-                    continue
-                try:
-                    return i.read_from_file(filename, potential=potential)
-                except Exception as e:
-                    last = e
-        if unknown is None:
-            unknown = try_only is None
         if unknown:
             try:
                 return cls.unknown_result_file_definition.read_from_file(
                     filename, potential=potential
                 )
-            except pp.ParseBaseException as e:
-                raise Exception(f"Can not parse file: {filename}") from e
-        raise (first or last or ValueError(f"File {filename} is not recognized as any known file type"))
+            except pp.ParseBaseException as exc:
+                raise ValueError(f"Cannot parse result file: {filename}") from exc
+        if errors:
+            raise errors[0]
+        raise ValueError(f"File {filename} is not recognized as any known result format")
 
 
 class CommonResultFile(ResultFile):
