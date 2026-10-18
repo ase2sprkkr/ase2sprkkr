@@ -621,3 +621,31 @@ def test_remote_directory_mapping_rejects_path_outside_local_root(tmp_path):
 
     with pytest.raises(ValueError, match="outside mapped root"):
         asyncio.run(context.map_directory(tmp_path / "elsewhere"))
+
+
+def test_remote_none_stream_files_are_live_only(tmp_path):
+    workdir = tmp_path / "calculation"
+    workdir.mkdir()
+    executor = _executor()
+    spec = ExecutionSpec(
+        argv=(sys.executable, "-c",
+              "import sys,time; time.sleep(.1); print('out',flush=True); "
+              "print('err',file=sys.stderr,flush=True)"),
+        input_file=None,
+        output_file=None,
+        error_file=None,
+        directory=str(workdir),
+        launch=_launch(tmp_path, tmp_path / "remote"),
+    )
+    observed = []
+    runner = executor.create_run(spec)
+    runner.add_output_listener(lambda text, kind: observed.append((kind, text)))
+    outcome = runner.run()
+    assert runner.state == RunState.FINISHED
+    assert outcome.return_code == 0
+    assert outcome.output_file is None
+    assert outcome.error_file is None
+    assert ("out", "out\n") in observed
+    assert ("err", "err\n") in observed
+    assert list((tmp_path / "remote").rglob("stdout")) == []
+    assert list((tmp_path / "remote").rglob("stderr")) == []
