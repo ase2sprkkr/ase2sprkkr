@@ -6,6 +6,7 @@ import asyncio
 import os
 import shlex
 import subprocess
+import time
 from datetime import datetime, timedelta
 from dataclasses import replace
 from pathlib import Path
@@ -570,31 +571,21 @@ class PsijExecutor(Executor):
         return replace(files, **changes) if changes else files
 
     def status_native(self, native_id):
-        """Query a scheduler job using only its native identity."""
+        """Return the currently known native job status without waiting."""
         native_id = str(native_id)
         if self.backend.lower() == "slurm" and self.url is None:
             return _slurm_status_native(native_id)
 
         job = self._status_jobs.get(native_id)
-        attached = job is None
-        if attached:
+        if job is None:
             job = self._psij.Job()
             self._job_executor.attach(job, native_id)
             self._status_jobs[native_id] = job
-            # PSI/J attach is asynchronous. Wait briefly for its first status,
-            # without allowing an unresponsive scheduler to block refresh()
-            # or a short-lived SSH status request indefinitely.
-            job.wait(
-                timeout=timedelta(seconds=10),
-                target_states=[self._psij.JobState.QUEUED],
-            )
         status = getattr(job, "status", None)
         name = getattr(getattr(status, "state", None), "name", None)
-        state = (
-            RunState.UNKNOWN
-            if attached and name == "NEW"
-            else _STATE_MAP.get(name, RunState.UNKNOWN)
-        )
+        # NEW after attach means no scheduler observation yet, even when
+        # the attached PSI/J Job was previously cached.
+        state = RunState.UNKNOWN if name == "NEW" else _STATE_MAP.get(name, RunState.UNKNOWN)
         return_code = getattr(status, "exit_code", None)
         if state == RunState.FINISHED and return_code not in (None, 0):
             state = RunState.FAILED
@@ -604,6 +595,36 @@ class PsijExecutor(Executor):
             message=getattr(status, "message", None),
             failure_phase=FailurePhase.EXECUTION if state == RunState.FAILED else None,
         )
+
+    def wait_status_native(self, native_id, timeout):
+        """Wait up to *timeout* seconds for a known state of a native job.
+
+        Unlike status_native(), this method may wait. A timeout returns UNKNOWN
+        if the scheduler has still not provided a meaningful job state.
+        """
+        timeout = float(timeout)
+        if timeout < 0:
+            raise ValueError("Status timeout must not be negative")
+        status = self.status_native(native_id)
+        if status.state != RunState.UNKNOWN or timeout == 0:
+            return status
+
+        if self.backend.lower() == "slurm" and self.url is None:
+            # Native Slurm polling has no PSI/J Job to wait on.
+            deadline = time.monotonic() + timeout
+            while (remaining := deadline - time.monotonic()) > 0:
+                time.sleep(min(max(self.poll_interval, 0.01), remaining))
+                status = self.status_native(native_id)
+                if status.state != RunState.UNKNOWN:
+                    break
+            return status
+
+        job = self._status_jobs[str(native_id)]
+        job.wait(
+            timeout=timedelta(seconds=timeout),
+            target_states=[self._psij.JobState.QUEUED],
+        )
+        return self.status_native(native_id)
 
     def recover_native(self, run_id, directory, *, submitted_at=None):
         """Return Slurm's native recovery facts without a client RunRecord."""

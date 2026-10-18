@@ -384,7 +384,7 @@ def test_psij_project_run_exposes_recovery_metadata(monkeypatch, tmp_path):
 
 
 
-def test_psij_non_slurm_attach_waits_for_first_real_status(monkeypatch):
+def test_psij_status_is_nonblocking_and_explicit_wait_synchronizes(monkeypatch):
     executor = _executor(monkeypatch, _Backend())
     executor.backend = "pbs"
     executor.url = "remote-pbs"
@@ -408,11 +408,17 @@ def test_psij_non_slurm_attach_waits_for_first_real_status(monkeypatch):
         Job=Job, JobState=SimpleNamespace(QUEUED="QUEUED"),
     )
     status = executor.status_native("native-42")
+    assert status.state == RunState.UNKNOWN
+    assert observed == ["native-42"]
+
+    status = executor.wait_status_native("native-42", timeout=2.5)
     assert status.state == RunState.RUNNING
-    assert observed == ["native-42", (timedelta(seconds=10), ["QUEUED"])]
+    assert observed == ["native-42", (timedelta(seconds=2.5), ["QUEUED"])]
+    assert executor.status_native("native-42").state == RunState.RUNNING
+    assert len(observed) == 2
 
 
-def test_psij_status_attach_timeout_is_unknown(monkeypatch):
+def test_psij_explicit_wait_timeout_keeps_cached_new_unknown(monkeypatch):
     executor = _executor(monkeypatch, _Backend())
     executor.backend = "pbs"
     executor.url = "remote-pbs"
@@ -434,10 +440,34 @@ def test_psij_status_attach_timeout_is_unknown(monkeypatch):
     executor._psij = SimpleNamespace(
         Job=Job, JobState=SimpleNamespace(QUEUED="QUEUED"),
     )
-    status = executor.status_native("native-42")
+    first = executor.status_native("native-42")
+    assert first.state == RunState.UNKNOWN
+    assert observed == ["native-42"]
+    status = executor.wait_status_native("native-42", timeout=0.05)
     assert status.state == RunState.UNKNOWN
     assert status.backend_id == "native-42"
-    assert observed == ["native-42", (timedelta(seconds=10), ["QUEUED"])]
+    assert executor.status_native("native-42").state == RunState.UNKNOWN
+    assert observed == ["native-42", (timedelta(seconds=0.05), ["QUEUED"])]
+    assert executor.wait_status_native("native-42", timeout=0).state == RunState.UNKNOWN
+    assert len(observed) == 2
+    with pytest.raises(ValueError, match="negative"):
+        executor.wait_status_native("native-42", timeout=-1)
+
+
+def test_psij_local_slurm_explicit_wait_polls_only_when_requested(monkeypatch):
+    executor = _executor(monkeypatch, _Backend())
+    observed = []
+    states = [RunState.UNKNOWN, RunState.UNKNOWN, RunState.RUNNING]
+
+    def status(native_id):
+        observed.append(native_id)
+        return psij_backend.RunStatus(states.pop(0), backend_id=native_id)
+
+    monkeypatch.setattr(executor, "status_native", status)
+    assert executor.wait_status_native("slurm-123", timeout=0).state == RunState.UNKNOWN
+    assert len(observed) == 1
+    assert executor.wait_status_native("slurm-123", timeout=0.1).state == RunState.RUNNING
+    assert observed == ["slurm-123"] * 3
 
 
 def test_psij_status_and_attach_check_complete_endpoint(monkeypatch, tmp_path):
