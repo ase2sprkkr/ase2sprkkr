@@ -141,6 +141,7 @@ def test_dos_native_energy_constraints():
     from ase2sprkkr.common.warnings import DataValidityError, DataValidityWarning
 
     parameters = InputParameters.create("DOS")
+    parameters.CONTROL.POTFIL = "Fe.pot"
     parameters.ENERGY.NE = 1
     with pytest.raises(DataValidityError, match="two energy points"):
         parameters.validate("save")
