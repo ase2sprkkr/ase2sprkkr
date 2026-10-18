@@ -63,3 +63,25 @@ def test_detached_run_survives_follow_disconnect(tmp_path, monkeypatch):
         assert (tmp_path / "stdout").read_bytes() == b"first\nlast\n"
         assert captured[0][1].value == "finished"
     asyncio.run(check())
+
+
+def test_cancel_is_delivered_to_supervisor_not_just_supervisor_pid(tmp_path, monkeypatch):
+    async def check():
+        captured = []
+        monkeypatch.setattr(remote_process_worker, "publish_outcome",
+                            lambda *args, **kwargs: captured.append(args))
+        rd, wr = os.pipe()
+        task = asyncio.create_task(remote_process_worker._run(
+            _spec(tmp_path, wr, detached=True)
+        ))
+        with os.fdopen(rd, "rb") as pipe:
+            path = (await asyncio.to_thread(pipe.readline)).decode().strip()
+        reader, writer = await asyncio.open_unix_connection(path)
+        writer.write(b'{"command":"cancel"}\n')
+        await writer.drain()
+        assert b'"accepted":true' in await reader.readline()
+        writer.close()
+        await writer.wait_closed()
+        await asyncio.wait_for(task, 5)
+        assert captured[0][1].value == "cancelled"
+    asyncio.run(check())
