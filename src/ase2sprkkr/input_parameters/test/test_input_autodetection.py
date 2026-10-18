@@ -10,7 +10,7 @@ def _roundtrip(parameters):
     return InputParameters.from_file(stream)
 
 
-def test_from_file_detects_bsfek_shared_schema_by_adsi():
+def test_from_file_detects_bsfek_from_task_selector():
     parameters = InputParameters.create("BSFEK")
     parameters.CONTROL.POTFIL = "Fe.pot"
     parameters.TASK.KPATH = 6
@@ -23,7 +23,7 @@ def test_from_file_detects_bsfek_shared_schema_by_adsi():
     assert parsed.TASK.KPATH() == "6"
 
 
-def test_from_file_detects_bsfkk_shared_schema_by_adsi():
+def test_from_file_detects_bsfkk_from_task_selector():
     parameters = InputParameters.create("BSFKK")
     parameters.CONTROL.POTFIL = "Fe.pot"
     parameters.TASK.NK1 = 45
@@ -40,3 +40,76 @@ def test_from_file_detects_bsfkk_shared_schema_by_adsi():
     assert parsed.TASK.NK1() == 45
     assert parsed.TASK.NK2() == 55
     np.testing.assert_array_equal(parsed.TASK.KA(), [[0.0, 0.0, 0.0]])
+
+
+def test_from_file_without_task_section_uses_scf_schema():
+    text = """CONTROL DATASET=Fe
+        ADSI=CUSTOM
+        POTFIL=Fe.pot
+TAU BZINT=POINTS
+    NKTAB=250
+ENERGY GRID={5}
+    NE={32}
+SCF NITER=80
+    MIX=0.2
+SITES NL={3}
+"""
+    parsed = InputParameters.from_file(io.StringIO(text))
+    assert parsed.definition_name == "SCF"
+    assert parsed.task_name == "SCF"
+    assert parsed.CONTROL.ADSI() == "CUSTOM"
+    assert parsed.SCF.NITER() == 80
+
+
+def test_from_file_jxc_example_with_preceding_dmi_flag():
+    from pathlib import Path
+
+    path = Path(__file__).parent.parent / "examples" / "jxc.in"
+    parsed = InputParameters.from_file(path)
+    assert parsed.definition_name == "JXC"
+    assert parsed.TASK.TASK() == "JXC"
+    assert parsed.TASK.DMI()
+
+
+
+def test_jxc_combined_selectors_separated_by_other_task_options():
+    # The unordered TASK section must recognize both native keywords, even
+    # when a non-selector parameter appears between them.
+    from ..input_parameters_definitions import _task_preparse_definition
+
+    preview = _task_preparse_definition()
+    parsed = preview.read_from_string("TASK DMI CLURAD=4.0 JXC")
+    assert list(parsed.TASK.TASK()) == ["DMI", "JXC"]
+
+
+def test_distinct_jxc_and_dmi_tasks_share_input_definition():
+    dmi = InputParameters.create("DMI")
+    assert dmi.definition_name == "JXC"
+    assert dmi.task_name == "DMI"
+    assert dmi.task_definition is InputParameters.task_registry["JXC"]
+    assert dmi.requested_task_name == "DMI"
+    assert dmi.TASK.DMI()
+    assert not dmi.TASK.JXC()
+    assert dmi.TASK.TASK() == "DMI"
+
+    jxc = InputParameters.create("JXC")
+    assert jxc.definition_name == "JXC"
+    assert jxc.task_name == "JXC"
+    assert jxc.task_definition is dmi.task_definition
+    assert jxc.TASK.JXC()
+    assert not jxc.TASK.DMI()
+    assert jxc.TASK.TASK() == "JXC"
+
+
+def test_dmi_only_and_combined_task_native_roundtrip():
+    for task in ("DMI", "JXC"):
+        params = InputParameters.create(task)
+        params.CONTROL.POTFIL = "Fe.pot"
+        if task == "JXC":
+            params.TASK.DMI = True
+        restored = _roundtrip(params)
+        assert restored.definition_name == "JXC"
+        assert restored.TASK.DMI()
+        assert restored.task_name == task
+        assert restored.TASK.TASK() == task
+        assert restored.TASK.JXC() == (task == "JXC")

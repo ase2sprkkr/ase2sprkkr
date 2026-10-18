@@ -1,4 +1,5 @@
 import importlib
+import io
 import pickle
 from types import SimpleNamespace
 
@@ -303,3 +304,47 @@ def test_malformed_extra_task_is_definition_error(tmp_path, monkeypatch):
     registry = TaskRegistry(InputParametersRegistry(definitions_package), tasks_package)
     with pytest.raises(RegistryDefinitionError, match="must be TaskDefinition"):
         registry["BROKEN"]
+
+
+def test_jxc_and_dmi_share_one_canonical_task_with_alias():
+    schema = InputParameters.input_parameters_registry["JXC"]
+    task = InputParameters.task_registry["JXC"]
+    assert schema._task_definition is task
+    assert task.name == "JXC"
+    assert task.aliases == ("DMI",)
+    assert InputParameters.task_registry["DMI"] is task
+    assert InputParameters.input_parameters_registry.definition_for_task(task) is schema
+    assert "DMI" in InputParameters.task_registry.names()
+    assert "DMI" not in InputParameters.task_registry.names(include_aliases=False)
+    assert sum(item is task for item in InputParameters.task_registry.values()) == 1
+
+
+def test_task_alias_validation_and_collision(tmp_path, monkeypatch):
+    assert TaskDefinition("X", aliases="name").aliases == ("NAME",)
+    for aliases in (("A", "a"), ("X",), ("",), (42,)):
+        with pytest.raises((TypeError, ValueError)):
+            TaskDefinition("X", aliases=aliases)
+
+    package = _package(tmp_path, monkeypatch, "_task_alias_collision", {
+        "x": ("from ase2sprkkr.input_parameters.task_definition import TaskDefinition\n"
+              "def task_definition():\n"
+              "    return TaskDefinition('SCF', name='X', aliases=('Y',))\n"),
+        "y": ("from ase2sprkkr.input_parameters.task_definition import TaskDefinition\n"
+              "def task_definition():\n"
+              "    return TaskDefinition('SCF', name='Y')\n"),
+    })
+    registry = TaskRegistry(InputParameters.input_parameters_registry, package)
+    with pytest.raises(RegistryDefinitionError, match="alias .*conflicts"):
+        registry.names()
+
+
+def test_read_for_canonical_task_accepts_alias_values():
+    task = InputParameters.task_registry["DMI"]
+    params = InputParameters.create("DMI")
+    params.CONTROL.POTFIL = "Fe.pot"
+    restored = InputParameters.input_parameters_registry.read_for_task(
+        task, io.StringIO(params.to_string(validate=True))
+    )
+    assert restored.task_name == "DMI"
+    assert restored.task_definition is task
+    assert restored.requested_task_name == "DMI"

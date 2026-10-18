@@ -1,6 +1,12 @@
 """Definitions of SPR-KKR input-parameter file formats."""
 
+import os
+from io import StringIO
+from functools import cache
+
 import pyparsing as pp
+from ..common.grammar_types import Keyword
+from ..common.warnings import DataValidityError
 from ..common.container_definitions import dict_from_parsed
 from ..sprkkr.configuration import (
     ConfigurationValueDefinition,
@@ -11,11 +17,135 @@ from ..sprkkr.configuration import (
 )
 from ..common.grammar_types import mixed, flag
 from ..common.grammar import generate_grammar, delimitedList
-from ..common.decorators import cached_class_property, cache
+from ..common.decorators import cached_class_property, cache, maybeclassmethod
+from ..common.file_utils import filename_from_file
 from .input_parameters import InputParameters, InputSection, InputValue
 
 with generate_grammar():
     section_line_ends = pp.Regex("(\n[ \t]*)*[ \t]")
+
+
+MAX_INPUT_FILE_SIZE = 1024 * 1024
+
+
+def _read_input_text(file):
+    """Return a UTF-8 snapshot no larger than MAX_INPUT_FILE_SIZE bytes."""
+    if isinstance(file, (str, bytes, os.PathLike)):
+        with open(file, "rb") as stream:
+            content = stream.read(MAX_INPUT_FILE_SIZE + 1)
+    elif hasattr(file, "read"):
+        content = file.read(MAX_INPUT_FILE_SIZE + 1)
+    else:
+        raise TypeError("Input file must be a path or a readable stream")
+
+    if isinstance(content, str):
+        data = content.encode("utf-8")
+        if len(data) > MAX_INPUT_FILE_SIZE:
+            raise ValueError(
+                f"SPR-KKR input exceeds {MAX_INPUT_FILE_SIZE} bytes"
+            )
+        return content
+    if not isinstance(content, bytes):
+        raise TypeError("Input stream must return str or bytes")
+    if len(content) > MAX_INPUT_FILE_SIZE:
+        raise ValueError(
+            f"SPR-KKR input exceeds {MAX_INPUT_FILE_SIZE} bytes"
+        )
+    return content.decode("utf-8")
+
+
+def _snapshot_stream(text, filename):
+    """Reparse the same bytes without losing the origin of a named input."""
+    stream = StringIO(text)
+    if filename is not None:
+        stream.name = filename
+    return stream
+
+
+@cache
+def _task_selector_map():
+    """A single map for the singleton input-definition registry."""
+    selectors = {}
+    for definition in InputParameters.definitions.values():
+        for token in definition.accepted_task_selectors():
+            if not token:
+                raise ValueError(f"Empty TASK selector in IPD {definition.name}")
+            selectors.setdefault(token, [])
+            if all(definition is not other for other in selectors[token]):
+                selectors[token].append(definition)
+    return {key: tuple(value) for key, value in selectors.items()}
+
+
+@cache
+def _task_preparse_definition():
+    """Build the minimal IPD and its complete grammar exactly once."""
+    values = tuple(sorted(_task_selector_map()))
+    if not values:
+        raise ValueError("No registered input-parameter TASK selectors")
+    ipd = _CachedPreparseIPD(
+        "_TASK_PREPARSE",
+        [InputSectionDefinition(
+            "TASK",
+            [InputValueDefinition(
+                "TASK",
+                Keyword(*values),
+                name_in_grammar=False,
+                is_optional=True,
+                is_required=False,
+                is_repeated=True,
+                repeated_delimiter=pp.Empty(),
+            )],
+            is_optional=True,
+        )],
+    )
+    ipd.grammar()  # Compile and cache the completed minimal grammar now.
+    return ipd
+
+
+def _read_selected_definitions(text, selectors, *, filename=None, allow_dangerous=False):
+    """Try only IPDs nominated by detected native TASK keywords."""
+    mapping = _task_selector_map()
+    candidates = []
+    for selector in selectors:
+        selector = str(selector).upper()
+        if selector not in mapping:
+            raise ValueError(f"Unknown TASK selector: {selector}")
+        for ipd in mapping[selector]:
+            if all(ipd is not candidate for candidate in candidates):
+                candidates.append(ipd)
+
+    def parse(definition):
+        return definition.read_from_file(
+            _snapshot_stream(text, filename),
+            allow_dangerous=allow_dangerous,
+        )
+
+    if len(candidates) == 1:
+        return parse(candidates[0])
+
+    successful = []
+    failures = []
+    for definition in candidates:
+        try:
+            result = parse(definition)
+        except (pp.ParseBaseException, DataValidityError) as exc:
+            failures.append((definition, exc))
+        else:
+            successful.append((definition, result))
+    if len(successful) == 1:
+        return successful[0][1]
+    if len(successful) > 1:
+        names = ", ".join(definition.name for definition, _ in successful)
+        raise ValueError(f"Ambiguous TASK selectors, multiple IPDs accept input: {names}")
+    if failures:
+        details = "\n".join(
+            f"  {definition.name}: {type(error).__name__}: {error}"
+            for definition, error in failures
+        )
+        raise ValueError(
+            f"No selected IPD can parse the input:\n{details}"
+        ) from failures[-1][1]
+    raise ValueError("No input-parameter definition selected")
 
 
 class InputValueDefinition(ConfigurationValueDefinition):
@@ -73,6 +203,61 @@ class InputParametersDefinition(ConfigurationFileDefinition):
     )
     configuration_type_name = "INPUT PARAMETERS"
 
+    task_selectors = None
+    """Native TASK selectors, defaulting to the IPD name.
+
+    A string denotes one selector; an iterable denotes multiple selectors.
+    Like other registration metadata, this must not change once the singleton
+    registry has constructed the cached selector map and preparse grammar.
+    """
+
+    def accepted_task_selectors(self):
+        names = self.task_selectors
+        if names is None:
+            names = (self.name,)
+        elif isinstance(names, str):
+            names = (names,)
+        names = tuple(names)
+        if not names:
+            raise ValueError(f"IPD {self.name}: task_selectors may not be empty")
+        normalized = []
+        for name in names:
+            if not isinstance(name, str) or not name.strip():
+                raise ValueError(
+                    f"IPD {self.name}: TASK selectors must be nonempty strings"
+                )
+            normalized.append(name.strip().upper())
+        if len(set(normalized)) != len(normalized):
+            raise ValueError(f"IPD {self.name}: duplicate TASK selectors")
+        return tuple(normalized)
+
+    @maybeclassmethod
+    def from_file(self, cls, file, allow_dangerous=False):
+        """Read one input; on the class autodetect an IPD, on an instance use it.
+
+        Read a bounded snapshot of the input once, independently of path/stream.
+        A missing TASK selector selects SCF, not an ADSI-derived definition.
+        """
+        filename = filename_from_file(file, None)
+        text = _read_input_text(file)
+        if self is not None:
+            return self.read_from_file(
+                _snapshot_stream(text, filename),
+                allow_dangerous=allow_dangerous,
+            )
+
+        preview = _task_preparse_definition().read_from_string(
+            text, allow_dangerous=False
+        )
+        selected = preview.TASK.TASK()
+        selectors = tuple(selected) if selected is not None else ()
+        if not selectors:
+            selectors = ("SCF",)
+        return _read_selected_definitions(
+            text, selectors, filename=filename,
+            allow_dangerous=allow_dangerous,
+        )
+
     def task_definition_name(self, parameters):
         """Return the ASE2SPRKKR task name represented by *parameters*.
 
@@ -127,3 +312,11 @@ class InputParametersDefinition(ConfigurationFileDefinition):
 
     def _generic_info(self):
         return f"Input parameters format {self.name}"
+
+
+class _CachedPreparseIPD(InputParametersDefinition):
+    """Preparser only: no mutations after grammar compilation."""
+
+    @cache
+    def grammar(self, allow_dangerous=False):
+        return super().grammar(allow_dangerous)
