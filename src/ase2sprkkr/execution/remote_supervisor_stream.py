@@ -62,11 +62,15 @@ class _Follower:
 class SupervisorStreams:
     """Single-event-loop spool fanout. Only the supervisor may call publish()."""
 
-    def __init__(self, stdout_path, stderr_path):
+    def __init__(self, stdout_path, stderr_path, *, detached=True):
         self.paths = {"out": os.fspath(stdout_path)}
         self.merged = os.path.abspath(stdout_path) == os.path.abspath(stderr_path)
         if not self.merged:
             self.paths["err"] = os.fspath(stderr_path)
+        self.detached = detached
+        self.connected = asyncio.Event()
+        self.disconnected = asyncio.Event()
+        self._session_follower = None
         self._spools = {}
         self._sizes = {kind: 0 for kind in self.paths}
         self._followers = set()
@@ -128,6 +132,7 @@ class SupervisorStreams:
 
     async def _connect(self, reader, writer):
         follower = None
+        disconnect_watch = None
         try:
             request = await reader.readline()
             if not request or len(request) > _MAX_REQUEST:
@@ -146,6 +151,15 @@ class SupervisorStreams:
             writer.transport.set_write_buffer_limits(high=_HIGH, low=_LOW)
             # Register before yielding: no output between snapshot and replay.
             follower = _Follower(writer, offsets.copy())
+            if not self.detached:
+                if self._session_follower is not None:
+                    raise ValueError("Non-detached run already has its session")
+                self._session_follower = follower
+                self.connected.set()
+                # The peer sends nothing after its FOLLOW request. Detect EOF
+                # even while the process produces no output.
+                disconnect_watch = asyncio.create_task(reader.read(1))
+                disconnect_watch.add_done_callback(lambda _: self.disconnected.set())
             self._followers.add(follower)
             writer.write(MAGIC)
             while True:
@@ -184,6 +198,10 @@ class SupervisorStreams:
         finally:
             if follower is not None:
                 self._followers.discard(follower)
+                if follower is self._session_follower and self._terminal is None:
+                    self.disconnected.set()
+            if disconnect_watch is not None:
+                disconnect_watch.cancel()
             writer.close()
             try:
                 await writer.wait_closed()
