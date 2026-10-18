@@ -78,12 +78,15 @@ def test_arpes_result_uses_native_spec_file_manifest(tmp_path):
             assert result.output_values["SPC"].file_type == "spc"
             assert result.path_to("SPC") == str(tmp_path / expected)
 
-            parameters.SPEC_PH.NPOL = 3
-            dichroic = ArpesResult(parameters, None, tmp_path)
-            assert dichroic.spc_filenames == (
-                str(tmp_path / "sample_data_pol1.spc"),
-                str(tmp_path / "sample_data_pol2.spc"),
-            )
+            # CLPES only supports NPOL=1/2; dichroic outputs belong to
+            # photoemission tasks that allow NPOL=0/3.
+            if task == "ARPES":
+                parameters.SPEC_PH.NPOL = 3
+                dichroic = ArpesResult(parameters, None, tmp_path)
+                assert dichroic.spc_filenames == (
+                    str(tmp_path / "sample_data_pol1.spc"),
+                    str(tmp_path / "sample_data_pol2.spc"),
+                )
 
 def test_spec_reader_uses_native_data_file_and_preserves_band_columns(tmp_path):
     from ase2sprkkr.outputs.readers.spec import SpecResult
