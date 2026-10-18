@@ -146,7 +146,7 @@ def test_preparation_snapshots_input_parameters(tmp_path):
 
 def test_task_survives_preparation_snapshot(tmp_path):
     parameters = InputParameters.create("ARPES")
-    parameters.TASK.TASK = "SPLEED"
+    parameters.change_task("SPLEED")
     calculator = SPRKKR(
         atoms=bulk("Fe"),
         directory=tmp_path,
@@ -161,7 +161,7 @@ def test_task_survives_preparation_snapshot(tmp_path):
     )
 
     try:
-        assert prepared.input_parameters.requested_task_name == "ARPES"
+        assert prepared.input_parameters.requested_task_name == "SPLEED"
         assert prepared.input_parameters.task_name == "SPLEED"
         assert prepared.input_parameters.task_definition.name == "SPLEED"
         assert not hasattr(prepared.input_parameters, "execution_task_name")
