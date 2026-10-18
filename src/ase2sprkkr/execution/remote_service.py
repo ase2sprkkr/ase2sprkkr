@@ -119,6 +119,7 @@ def _local_submit(request):
         "output_file": output_path,
         "error_file": error_path,
         "receipt_id": receipt_id,
+        "detached": bool(request.get("detached", True)),
     }
     env = os.environ.copy()
     env["ASE2SPRKKR_RUN_ID"] = run_id
