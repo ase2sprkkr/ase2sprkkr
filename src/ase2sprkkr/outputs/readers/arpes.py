@@ -75,12 +75,16 @@ class ArpesResult(TaskResult):
         if not filenames:
             return ()
         entries = []
+        task = self._task_name or (self.input_parameters.task_name if self.input_parameters is not None else None)
+        file_type = {"band": "band_spc", "spleed": "spleed_spc"}.get(
+            str(task).lower(), "spc"
+        )
         for index, filename in enumerate(filenames):
             key = "SPC" if index == 0 else f"SPC_{index + 1}"
             if key not in self.files:
-                entries.append(self.files.add_file(key, filename, "spc"))
+                entries.append(self.files.add_file(key, filename, file_type))
             else:
-                entries.append(self.files.set_file_type(key, "spc"))
+                entries.append(self.files.set_file_type(key, file_type))
         return tuple(entries)
 
     @cached_property
