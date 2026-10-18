@@ -525,6 +525,10 @@ class RemoteEndpointExecutor(Executor):
         )
         return FramedRunningCommand(process)
 
+    def acknowledge_submission(self, run):
+        """Release temporary submission identity after client persistence."""
+        return _run_sync(self._json_request("ack-submit", run.id))
+
     def acknowledge(self, run):
         """Release a delivered receipt only after durable RunRecord completion."""
         self._validate_run(run)
