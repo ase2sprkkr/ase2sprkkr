@@ -36,6 +36,9 @@ def parser(parser):
     recover.add_argument("directory")
     recover.add_argument("run_id")
 
+    ack_submit = actions.add_parser("ack-submit")
+    ack_submit.add_argument("run_id")
+
     ack = actions.add_parser("ack")
     ack.add_argument("remote_id")
 
@@ -63,6 +66,7 @@ class _FramedSink:
 def run(args, global_args):
     from ...execution.remote_service import (
         acknowledge_remote,
+        acknowledge_submission,
         cancel_remote,
         follow_remote,
         recover_remote,
@@ -116,6 +120,8 @@ def run(args, global_args):
         except NotImplementedError as exc:
             result = {"unsupported": True, "error": str(exc)}
         _print_json(result)
+    elif args.remote_action == "ack-submit":
+        _print_json(acknowledge_submission(args.run_id))
     elif args.remote_action == "ack":
         _print_json(acknowledge_remote(args.remote_id))
     elif args.remote_action == "resolve-mpi":
