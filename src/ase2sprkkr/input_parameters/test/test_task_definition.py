@@ -320,3 +320,15 @@ def test_optional_file_metadata_affects_task_identity():
     assert required.output_file_templates[0] == "x"
     with pytest.raises(AttributeError):
         optional.output_file_templates[0].optional = False
+
+
+def test_task_execution_rejects_cross_schema_selector_without_retargeting():
+    parameters = InputParameters.create("SPLEED")
+    parameters.TASK.TASK = "ARPES"
+    assert parameters.task_name == "ARPES"
+    with pytest.raises(RuntimeError, match="change_task"):
+        parameters.task_definition_required()
+
+    parameters.change_task("ARPES")
+    assert parameters._definition is _schema_for(parameters.task_definition)
+    assert parameters.task_definition_required().name == "ARPES"
