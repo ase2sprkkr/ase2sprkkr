@@ -252,6 +252,21 @@ class LocalProjectRunner:
             "stdin": _file_path(self.spec.stdin, self.spec.directory),
             "output_file": self.result.output_file,
             "error_file": self.result.error_file,
+            "output_files": [
+                _file_path(value, self.spec.directory)
+                for value in self.spec.output_files
+                if _file_path(value, self.spec.directory) is not None
+            ],
+            "input_files": [
+                _file_path(value, self.spec.directory)
+                for value in self.spec.input_files
+                if _file_path(value, self.spec.directory) is not None
+            ],
+            "cache_files": [
+                _file_path(value, self.spec.directory)
+                for value in self.spec.cache_files
+                if _file_path(value, self.spec.directory) is not None
+            ],
         }
 
     def submit(self):

@@ -21,6 +21,7 @@ from pathlib import Path
 from uuid import uuid4
 
 from .growing_file_tail import follow_growing_files
+from .file_availability import clear_declared_outputs
 from .base import ExecutionSpec, FailurePhase, LaunchSpec, RunState, SubmissionNotStarted
 from .remote_process_worker import _SPEC_ENV, _START_FD_ENV
 from .remote_mailbox import publish_outcome, read_outcome, acknowledge_outcome, _path as _outcome_path
@@ -141,6 +142,21 @@ def _local_submit(request):
         for path in (output_path, error_path):
             if path is not None:
                 Path(path).parent.mkdir(parents=True, exist_ok=True)
+        sync = request.get("client_sync") or {}
+        declared = (
+            *request.get("output_files", ()),
+            *sync.get("output_files", ()),
+            *sync.get("output_patterns", ()),
+            output_path, error_path,
+        )
+        protected = (
+            request.get("input_file"), request.get("stdin"),
+            *request.get("input_files", ()),
+            *request.get("cache_files", ()),
+            *(item.get("path") for item in sync.get("cache_files", ())),
+            *sync.get("cache_patterns", ()),
+        )
+        clear_declared_outputs(declared, protected=protected)
     except OSError as exc:
         raise SubmissionNotStarted(str(exc)) from exc
 

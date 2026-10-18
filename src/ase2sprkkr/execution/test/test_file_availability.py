@@ -46,3 +46,21 @@ def test_local_supervisor_discovery_does_not_override_stream_publication(tmp_pat
     found = discover_local_files(files, include_streams=False)
     assert found.stdout.availability_state == "pending"
     assert found.outputs[0].availability_state == "skipped"
+
+
+def test_clear_outputs_preserves_inputs_and_cache(tmp_path):
+    from ..file_availability import clear_declared_outputs
+    input_file = tmp_path / "input.dat"
+    cache_file = tmp_path / "cache.dat"
+    output_file = tmp_path / "output.dat"
+    other = tmp_path / "result-2.dat"
+    for path in (input_file, cache_file, output_file, other):
+        path.write_text("old")
+    clear_declared_outputs(
+        (str(tmp_path / "*.dat"),),
+        protected=(input_file, cache_file),
+    )
+    assert input_file.read_text() == "old"
+    assert cache_file.read_text() == "old"
+    assert not output_file.exists()
+    assert not other.exists()

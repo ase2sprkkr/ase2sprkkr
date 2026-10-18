@@ -12,7 +12,7 @@ from dataclasses import replace
 from pathlib import Path
 from threading import Event, Lock, Thread
 
-from .file_availability import discover_local_files
+from .file_availability import discover_local_files, clear_declared_outputs
 from .growing_file_tail import follow_growing_files
 from .base import (
     ExecutionOutcome,
@@ -396,6 +396,17 @@ class PsijRunner:
         self._flush(self.spec.error_file)
         self._close(self.spec.output_file)
         self._close(self.spec.error_file)
+        protected = [
+            _path(value, self.spec.directory)
+            for value in (self.spec.input_file, self.spec.stdin, *self.spec.input_files,
+                          *self.spec.cache_files)
+        ]
+        declared = [
+            _path(value, self.spec.directory)
+            for value in (*self.spec.output_files, self.spec.output_file,
+                          self.spec.error_file)
+        ]
+        clear_declared_outputs(declared, protected=protected)
         for path in {self._stdout_path, self._stderr_path} - {None}:
             Path(path).parent.mkdir(parents=True, exist_ok=True)
             Path(path).write_bytes(b"")

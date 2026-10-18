@@ -40,3 +40,19 @@ def discover_local_files(files, *, include_streams=True):
             state = "available" if os.path.isfile(path) else "skipped"
         files = files.with_file_availability(path, state)
     return files
+
+
+def clear_declared_outputs(paths, *, protected=()):
+    """Remove old declared results without destroying inputs or restart caches.
+
+    Called on the execution host before starting a new calculation, never on
+    reattach. A wildcard removes only its concrete files.
+    """
+    protected = {os.path.abspath(os.fspath(p)) for p in protected if p is not None}
+    for declared in dict.fromkeys(os.fspath(p) for p in paths if p is not None):
+        candidates = glob.glob(declared, recursive=True) if glob.has_magic(declared) else (declared,)
+        for candidate in candidates:
+            path = os.path.abspath(candidate)
+            if path in protected or not os.path.isfile(path):
+                continue
+            os.unlink(path)
