@@ -86,6 +86,8 @@ def test_distinct_jxc_and_dmi_tasks_share_input_definition():
     dmi = InputParameters.create("DMI")
     assert dmi.definition_name == "JXC"
     assert dmi.task_name == "DMI"
+    assert dmi.task_definition is InputParameters.task_registry["JXC"]
+    assert dmi.requested_task_name == "DMI"
     assert dmi.TASK.DMI()
     assert not dmi.TASK.JXC()
     assert dmi.TASK.TASK() == "DMI"
@@ -93,6 +95,7 @@ def test_distinct_jxc_and_dmi_tasks_share_input_definition():
     jxc = InputParameters.create("JXC")
     assert jxc.definition_name == "JXC"
     assert jxc.task_name == "JXC"
+    assert jxc.task_definition is dmi.task_definition
     assert jxc.TASK.JXC()
     assert not jxc.TASK.DMI()
     assert jxc.TASK.TASK() == "JXC"

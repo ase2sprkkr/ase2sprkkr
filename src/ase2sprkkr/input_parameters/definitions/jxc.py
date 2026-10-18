@@ -7,6 +7,7 @@ from ..input_parameters_definitions import (
     InputValueDefinition as V,
 )
 from ...common.generated_configuration_definitions import GeneratedValueDefinition
+from ..task_definition import TaskDefinition
 from ...common.grammar_types import flag
 
 
@@ -105,4 +106,8 @@ def input_parameters_definition():
         info="JXC",
     )
     schema["CONTROL"]["NONMAG"].warning_condition = _jxc_nonmag_warning_condition
+    schema._task_definition = TaskDefinition(
+        "JXC", aliases=("DMI",), executable="kkrgen", mpi=True,
+        output_reader="JXC",
+    )
     return schema

@@ -273,7 +273,9 @@ class InputParameters(ConfigurationFile):
     @classmethod
     def create(cls, name):
         task = cls.task_registry[name]
-        return cls.input_parameters_registry.create_for_task(task)
+        return cls.input_parameters_registry.create_for_task(
+            task, requested_task_name=cls.task_registry.normalize_name(name)
+        )
 
     @classmethod
     def default_parameters(cls):
