@@ -244,7 +244,7 @@ def _process_outcome(receipt_id):
         failure_phase = None if raw_phase is None else FailurePhase(raw_phase)
     except (KeyError, TypeError, ValueError) as exc:
         raise RuntimeError("Invalid remote process outcome artifact") from exc
-    return state, return_code, failure_phase
+    return state, return_code, failure_phase, data.get("error")
 
 
 def _slurm_accounting_status(native_id):
@@ -317,14 +317,16 @@ def status_remote(remote_id):
     if handle["kind"] == "process":
         outcome = _process_outcome(handle["receipt_id"])
         if outcome is not None:
-            state, return_code, failure_phase = outcome
+            state, return_code, failure_phase, error = outcome
         else:
             state = RunState.RUNNING if _process_running(handle) else RunState.UNKNOWN
             return_code = None
             failure_phase = None
+            error = None
         return {
             "state": state.value,
             "return_code": return_code,
+            "error": error,
             "failure_phase": (
                 None if failure_phase is None else failure_phase.value
             ),
