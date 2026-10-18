@@ -77,3 +77,22 @@ def test_arpes_result_uses_native_spec_file_manifest(tmp_path):
             assert result.spc_filename == str(tmp_path / expected)
             assert result.output_values["SPC"].file_type == "spc"
             assert result.path_to("SPC") == str(tmp_path / expected)
+
+def test_spec_reader_uses_native_data_file_and_preserves_band_columns(tmp_path):
+    from ase2sprkkr.outputs.readers.spec import SpecResult
+
+    (tmp_path / "Fe_data.spc").write_text(
+        "# BAND eigenvalues\nNT 1\nNP 1\n1.0D+00 2.0D+00 3.0D+00\n"
+    )
+    result = SpecResult(None, None, tmp_path, output_file="Fe_SPEC.out", task_name="BAND")
+    np.testing.assert_allclose(result.spectral_data, [[1.0, 2.0, 3.0]])
+
+
+def test_arpes_registers_both_polarizations_from_native_files(tmp_path):
+    from ase2sprkkr.outputs.readers.arpes import ArpesResult
+
+    for suffix in ("_data_pol1.spc", "_data_pol2.spc"):
+        (tmp_path / ("Fe" + suffix)).write_text("# SPC\n")
+    result = ArpesResult(None, None, tmp_path, output_file="Fe_SPEC.out", task_name="ARPES")
+    assert result.spc_filename == str(tmp_path / "Fe_data_pol1.spc")
+    assert result.path_to("SPC_2") == str(tmp_path / "Fe_data_pol2.spc") if "SPC_2" in result.output_values else False

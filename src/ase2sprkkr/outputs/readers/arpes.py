@@ -12,42 +12,65 @@ class ArpesResult(TaskResult):
     using the :py:attr:`~spc` property."""
 
     @cached_property
-    def spc_filename(self):
-        """Primary SPC filename from the task-owned native output manifest."""
+    def spc_filenames(self):
+        """Native SPC outputs, declared by the task or discovered alongside stdout."""
         parameters = self.input_parameters
-        if parameters is None:
-            return None
-        return next(
-            (
-                os.fspath(path)
-                for path in parameters.output_files(self.directory)
+        if parameters is not None:
+            return tuple(
+                os.fspath(path) for path in parameters.output_files(self.directory)
                 if os.fspath(path).endswith(".spc")
-            ),
-            None,
+            )
+        if self.output_file is None:
+            return ()
+        output = os.path.basename(os.fspath(self.output_file))
+        if not output.endswith("_SPEC.out"):
+            return ()
+        dataset = output[:-len("_SPEC.out")]
+        candidates = (
+            os.path.join(self.directory, dataset + suffix)
+            for suffix in ("_data.spc", "_data_pol1.spc", "_data_pol2.spc")
         )
+        return tuple(path for path in candidates if os.path.isfile(path))
+
+    @cached_property
+    def spc_filename(self):
+        """First SPC output, retained as a convenience for older callers."""
+        return next(iter(self.spc_filenames), None)
 
     @cached_property
     def spc(self):
-        """Spectroscopy results."""
+        """Primary spectral data file, parsed with the SPC format reader."""
         return self._spc_file.parsed_file()
 
     @property
     def arpes(self):
-        """ Alias of ``meth:ArpesResult.spc`` """
-        return self.spc()
+        """Alias for the primary spectral file."""
+        return self.spc
 
     @property
     def output_values(self):
-        self._spc_file
+        self._register_spc_files()
         return super().output_values
+
+    def _register_spc_files(self):
+        filenames = self.spc_filenames
+        if not filenames:
+            return ()
+        entries = []
+        for index, filename in enumerate(filenames):
+            key = "SPC" if index == 0 else f"SPC_{index + 1}"
+            if key not in self.files:
+                entries.append(self.files.add_file(key, filename, "spc"))
+            else:
+                entries.append(self.files.set_file_type(key, "spc"))
+        return tuple(entries)
 
     @cached_property
     def _spc_file(self):
-        if self.spc_filename is None:
-            raise FileNotFoundError("No SPC output file is declared for this result")
-        if "SPC" not in self.files:
-            return self.files.add_file("SPC", self.spc_filename, "spc")
-        return self.files.set_file_type("SPC", "spc")
+        files = self._register_spc_files()
+        if not files:
+            raise FileNotFoundError("No SPC output file could be identified")
+        return files[0]
 
 
 class ArpesOutputReader(KkrOutputReader):
