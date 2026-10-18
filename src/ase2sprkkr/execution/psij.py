@@ -427,13 +427,15 @@ class PsijRunner:
                 raise RuntimeError(f"Run is already {self.state.value}")
             try:
                 self._prepare_io()
-                self.executor._job_executor.submit(self._job)
             except Exception as exc:
-                if self.backend_id is None:
-                    self._failure_phase = FailurePhase.SUBMISSION
-                    self._failure_message = str(exc)
-                    raise SubmissionNotStarted(str(exc)) from exc
-                raise
+                # No scheduler interaction has happened yet.
+                self._failure_phase = FailurePhase.SUBMISSION
+                self._failure_message = str(exc)
+                raise SubmissionNotStarted(str(exc)) from exc
+            # An exception from PSI/J submit does not prove that the scheduler
+            # rejected the job. Leave project submission recoverable even when
+            # the native ID has not reached this process.
+            self.executor._job_executor.submit(self._job)
             self._start_monitor()
 
     def wait(self):
@@ -589,9 +591,10 @@ class PsijExecutor(Executor):
 
     def recover_native(self, run_id, directory, *, submitted_at=None):
         """Return Slurm's native recovery facts without a client RunRecord."""
-        if self.backend.lower() != "slurm":
+        if self.backend.lower() != "slurm" or self.url is not None:
             raise NotImplementedError(
-                f"PSI/J backend {self.backend!r} cannot recover uncertain submissions"
+                f"PSI/J backend {self.backend!r} at {self.url!r} cannot "
+                "recover uncertain submissions using local Slurm commands"
             )
         matches = _slurm_current_matches(run_id)
         if len(matches) > 1:
@@ -600,14 +603,19 @@ class PsijExecutor(Executor):
             )
         if matches:
             native_id, state, workdir = matches[0]
-            details = _slurm_details(native_id)
-            run_state = _slurm_state(state)
-            return {
-                "native_id": str(native_id), "state": run_state,
-                "directory": details.get("WorkDir") or workdir or directory,
-                "stdout": details.get("StdOut"), "stderr": details.get("StdErr"),
-                "return_code": None,
-            }
+            try:
+                details = _slurm_details(native_id)
+            except (FileNotFoundError, subprocess.CalledProcessError):
+                # The job may have finished between squeue and scontrol.
+                # Recover its terminal facts from accounting instead.
+                details = None
+            if details:
+                return {
+                    "native_id": str(native_id), "state": _slurm_state(state),
+                    "directory": details.get("WorkDir") or workdir or directory,
+                    "stdout": details.get("StdOut"),
+                    "stderr": details.get("StdErr"), "return_code": None,
+                }
 
         if submitted_at is None or not _slurm_accounting_stores_comments():
             raise NotImplementedError(

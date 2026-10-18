@@ -1,4 +1,5 @@
 import asyncio
+import subprocess
 import threading
 from types import SimpleNamespace
 
@@ -396,25 +397,44 @@ def test_psij_record_status_uses_native_status(monkeypatch, tmp_path):
     assert seen == ["456"]
 
 
-def test_psij_submission_without_native_identity_is_not_started(monkeypatch, tmp_path):
-    from ase2sprkkr.execution.base import FailurePhase, SubmissionNotStarted
+def test_psij_uncertain_submit_without_native_id_stays_recoverable(monkeypatch, tmp_path):
+    from ase2sprkkr.execution.base import SubmissionNotStarted
 
     class FailingBackend(_Backend):
         def submit(self, job):
-            raise OSError("scheduler unavailable")
+            raise OSError("scheduler reply lost")
 
     executor = _executor(monkeypatch, FailingBackend())
     runner = executor.create_project_run(
         ExecutionSpec(
-            argv=("program",),
-            directory=str(tmp_path),
-            input_file=None,
+            argv=("program",), directory=str(tmp_path), input_file=None,
             output_file=str(tmp_path / "run.out"),
-        ),
-        run_id="run-123",
+        ), run_id="run-123",
     )
-    with pytest.raises(SubmissionNotStarted, match="scheduler unavailable"):
+    with pytest.raises(OSError, match="scheduler reply lost") as caught:
         runner.submit()
+    assert not isinstance(caught.value, SubmissionNotStarted)
+    assert runner.backend_id is None
+    assert runner.failure_phase is None
+
+
+def test_psij_preparation_failure_is_definitively_not_submitted(monkeypatch, tmp_path):
+    from ase2sprkkr.execution.base import FailurePhase, SubmissionNotStarted
+
+    executor = _executor(monkeypatch, _Backend())
+    runner = executor.create_project_run(
+        ExecutionSpec(
+            argv=("program",), directory=str(tmp_path), input_file=None,
+            output_file=str(tmp_path / "run.out"),
+        ), run_id="run-123",
+    )
+    def fail_preparation():
+        raise OSError("cannot prepare output")
+
+    monkeypatch.setattr(runner, "_prepare_io", fail_preparation)
+    with pytest.raises(SubmissionNotStarted, match="cannot prepare output"):
+        runner.submit()
+    assert executor._job_executor.submitted is None
     assert runner.failure_phase == FailurePhase.SUBMISSION
 
 def test_psij_executor_attaches_to_native_job(monkeypatch, tmp_path):
@@ -574,6 +594,44 @@ def test_psij_missing_accounting_history_keeps_submission_uncertain(monkeypatch,
             _psij_run(tmp_path),
             submitted_at="2026-10-13T08:00:00+02:00",
         )
+
+
+def test_psij_remote_url_does_not_search_local_scheduler(monkeypatch, tmp_path):
+    executor = _executor(monkeypatch, _Backend())
+    executor.url = "ssh://other-cluster"
+    monkeypatch.setattr(
+        psij_backend, "_scheduler_output",
+        lambda argv: pytest.fail("must not search local Slurm"),
+    )
+    with pytest.raises(NotImplementedError, match="local Slurm"):
+        executor.recover_native("run-remote", str(tmp_path))
+
+
+def test_psij_recovery_handles_job_disappearing_between_queries(monkeypatch, tmp_path):
+    executor = _executor(monkeypatch, _Backend())
+
+    def scheduler_output(argv):
+        if argv[0] == "squeue":
+            return f"123|ase2sprkkr:run-race|RUNNING|{tmp_path}\n"
+        if argv[:4] == ("scontrol", "--oneliner", "show", "job"):
+            raise subprocess.CalledProcessError(1, argv)
+        if argv[:3] == ("scontrol", "show", "config"):
+            return "AccountingStoreFlags = job_comment\n"
+        if argv[0] == "sacct":
+            return (
+                f"123|ase2sprkkr:run-race|COMPLETED|{tmp_path}|"
+                f"{tmp_path / 'run.out'}|{tmp_path / 'run.err'}|0:0|\n"
+            )
+        raise AssertionError(argv)
+
+    monkeypatch.setattr(psij_backend, "_scheduler_output", scheduler_output)
+    facts = executor.recover_native(
+        "run-race", str(tmp_path),
+        submitted_at="2026-10-13T08:00:00+02:00",
+    )
+    assert facts["native_id"] == "123"
+    assert facts["state"] == RunState.FINISHED
+    assert facts["return_code"] == 0
 
 
 def test_psij_recovery_rejects_ambiguous_live_jobs(monkeypatch, tmp_path):
