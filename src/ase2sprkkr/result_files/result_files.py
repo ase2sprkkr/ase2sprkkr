@@ -9,7 +9,6 @@ from ..common.decorators import cached_class_property, cached_property
 from ..common.grammar_types.data import RestOfTheFile
 import io
 import os
-import re
 
 
 class UnknownDataValue(ConfigurationValue):
@@ -187,10 +186,12 @@ class ResultFile(ConfigurationFile):
                 hints = (hints,)
             return tuple(str(hint).lower().lstrip(".") for hint in hints)
 
-        def resolve(hints):
+        def resolve(hints, *, prefer_extension=False):
             candidates = []
             for hint in normalize_names(hints):
-                if hint in definitions:
+                if prefer_extension and hint in by_extension:
+                    found = by_extension[hint]
+                elif hint in definitions:
                     found = (definitions[hint],)
                 else:
                     found = by_extension.get(hint, ())
@@ -199,7 +200,7 @@ class ResultFile(ConfigurationFile):
                         candidates.append(candidate)
             return candidates
 
-        def matches(candidates, *, forced=False):
+        def matches(candidates):
             successes = []
             errors = []
             for definition in candidates:
@@ -218,7 +219,7 @@ class ResultFile(ConfigurationFile):
             candidates = resolve(try_only)
             if not candidates:
                 raise ValueError(f"Unknown result file format: {try_only!r}")
-            parsed, errors = matches(candidates, forced=True)
+            parsed, errors = matches(candidates)
             if parsed is not None:
                 return parsed
             if unknown is None:
@@ -228,7 +229,7 @@ class ResultFile(ConfigurationFile):
                 ext = os.path.splitext(filename_path)[1].lower().lstrip(".") if filename_path else ""
                 candidates = list(by_extension.get(ext, ()))
             else:
-                candidates = resolve(first_try)
+                candidates = resolve(first_try, prefer_extension=True)
             parsed, errors = matches(candidates)
             if parsed is not None:
                 return parsed
