@@ -97,3 +97,34 @@ def test_arpes_registers_both_polarizations_from_native_files(tmp_path):
     assert result.spc_filename == str(tmp_path / "Fe_data_pol1.spc")
     assert "SPC_2" in result.output_values
     assert result.path_to("SPC_2") == str(tmp_path / "Fe_data_pol2.spc")
+
+def test_spectra_unpolarized_is_a_tuple_and_spc_is_deprecated(tmp_path, monkeypatch):
+    import pytest
+    from ase2sprkkr.outputs.readers.arpes import ArpesResult
+
+    (tmp_path / "Fe_data.spc").write_text("# example\\n")
+    result = ArpesResult(None, None, tmp_path, output_file="Fe_SPEC.out", task_name="ARPES")
+    spectrum = object()
+    monkeypatch.setattr(result, "parse_result_file", lambda file, potential=None: spectrum)
+    assert result.spectra == (spectrum,)
+    assert result.spectra is result.spectra
+    assert "SPC" in result.output_values
+    with pytest.warns(DeprecationWarning, match="result.spectra"):
+        assert result.spc is spectrum
+
+
+def test_spectra_includes_both_polarizations_in_result_values(tmp_path, monkeypatch):
+    from ase2sprkkr.outputs.readers.arpes import ArpesResult
+    from ase2sprkkr.outputs.readers.spec import SpecResult
+
+    for suffix in ("_data_pol1.spc", "_data_pol2.spc"):
+        (tmp_path / ("Fe" + suffix)).write_text("# example\\n")
+    for result_class in (ArpesResult, SpecResult):
+        result = result_class(None, None, tmp_path, output_file="Fe_SPEC.out", task_name="ARPES")
+        monkeypatch.setattr(result, "parse_result_file", lambda file, potential=None: file.path())
+        assert result.spectra == (
+            str(tmp_path / "Fe_data_pol1.spc"),
+            str(tmp_path / "Fe_data_pol2.spc"),
+        )
+        assert tuple(k for k in result.output_values if k.startswith("SPC")) == ("SPC", "SPC_2")
+        assert result.output_values["SPC_2"].path() == str(tmp_path / "Fe_data_pol2.spc")

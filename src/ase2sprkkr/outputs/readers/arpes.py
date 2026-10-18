@@ -4,6 +4,7 @@ from ..task_result import TaskResult, KkrOutputReader
 from .default import DefaultOutputParser
 from ...common.decorators import cached_property
 import os
+import warnings
 
 
 class ArpesResult(TaskResult):
@@ -38,13 +39,30 @@ class ArpesResult(TaskResult):
         return next(iter(self.spc_filenames), None)
 
     @cached_property
+    def spectra(self):
+        """Tuple of parsed spectral files, including all photon polarizations.
+
+        A single-polarization calculation still returns a one-element tuple.
+        """
+        return tuple(file.parsed_file() for file in self._register_spc_files())
+
+    @property
     def spc(self):
-        """Primary spectral data file, parsed with the SPC format reader."""
-        return self._spc_file.parsed_file()
+        """Deprecated single-spectrum accessor; prefer :attr:`spectra`."""
+        warnings.warn(
+            "ArpesResult.spc is deprecated because a calculation can produce "
+            "multiple polarization spectra. Use result.spectra (always a tuple) "
+            "and select a spectrum explicitly, e.g. result.spectra[0].",
+            DeprecationWarning,
+            stacklevel=2,
+        )
+        if not self.spc_filenames:
+            raise FileNotFoundError("No SPC output file could be identified")
+        return self.spectra[0]
 
     @property
     def arpes(self):
-        """Alias for the primary spectral file."""
+        """Legacy alias for the first spectral file."""
         return self.spc
 
     @property
