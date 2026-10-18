@@ -13,7 +13,7 @@ from ase2sprkkr.execution import (
 )
 from ase2sprkkr.execution.endpoint import endpoint_for_executor
 from ase2sprkkr.execution.manager import ExecutionManager
-from ase2sprkkr.outputs import persistent as project_results
+from ase2sprkkr.outputs import project_results
 from ase2sprkkr.outputs.project_results import (
     ProjectResultUnavailableError,
     load_project_result,
