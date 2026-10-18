@@ -288,6 +288,20 @@ def test_psij_slurm_nonzero_accounted_job_is_failed(monkeypatch):
     assert status.failure_phase == psij_backend.FailurePhase.EXECUTION
 
 
+def test_psij_observation_accepts_non_utf8_output(monkeypatch, tmp_path):
+    backend = _Backend()
+    executor = _executor(monkeypatch, backend)
+    runner = executor.create_run(ExecutionSpec(
+        argv=("program",), input_file=None, directory=str(tmp_path),
+        output_file=str(tmp_path / "run.out"),
+    ))
+    seen = []
+    runner.add_output_listener(lambda text, kind: seen.append((kind, text)))
+    runner._emit_output(b"raw:\xff", "out")
+    assert seen == [("out", "raw:\ufffd")]
+    assert runner.exception is None
+
+
 def test_psij_mpi_process_count_becomes_resource_spec(monkeypatch, tmp_path):
     backend = _Backend()
     executor = _executor(monkeypatch, backend)
@@ -394,6 +408,7 @@ def test_psij_submission_without_native_identity_is_not_started(monkeypatch, tmp
         ExecutionSpec(
             argv=("program",),
             directory=str(tmp_path),
+            input_file=None,
             output_file=str(tmp_path / "run.out"),
         ),
         run_id="run-123",

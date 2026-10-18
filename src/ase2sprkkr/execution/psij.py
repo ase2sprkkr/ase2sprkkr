@@ -277,6 +277,8 @@ class PsijRunner:
 
     @property
     def state(self):
+        if self._exception is not None:
+            return RunState.FAILED
         state = getattr(getattr(self._job, "status", None), "state", None)
         mapped = _STATE_MAP.get(getattr(state, "name", None), RunState.UNKNOWN)
         if mapped == RunState.FINISHED and self.return_code not in (None, 0):
@@ -314,7 +316,7 @@ class PsijRunner:
 
     def _emit_output(self, data, kind):
         if data:
-            self._output_observers.emit(data.decode("utf8"), kind)
+            self._output_observers.emit(data.decode("utf8", errors="replace"), kind)
 
     @staticmethod
     def _flush(value):
