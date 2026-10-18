@@ -526,7 +526,7 @@ def follow_remote(
                 data = read_exactly(size)
                 # Live-only streams are intentionally non-replayable and may
                 # start after bytes have already been emitted.
-                if offset != offsets[kind] and paths[kind] is not None:
+                if offsets[kind] is not None and offset != offsets[kind] and paths[kind] is not None:
                     raise RuntimeError("Supervisor FOLLOW offset mismatch")
                 offsets[kind] = offset + len(data)
                 streams[kind].write(data)
