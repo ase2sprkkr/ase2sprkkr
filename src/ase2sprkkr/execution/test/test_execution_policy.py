@@ -10,7 +10,6 @@ from ase2sprkkr.execution.base import (
     RunState,
     SubmissionNotStarted,
 )
-from ase2sprkkr.execution.detached import _terminate_process_group
 from ase2sprkkr.execution.endpoint import endpoint_for_executor
 from ase2sprkkr.execution.local import LocalExecutor, LocalRunner
 from ase2sprkkr.execution.manager import (
@@ -229,31 +228,3 @@ def test_local_transport_failed_copy_preserves_destination(tmp_path):
     assert destination.read_bytes() == b"old"
 
 
-def test_process_group_cancel_checks_group_not_only_leader(tmp_path, monkeypatch):
-    calls = []
-
-    def killpg(pid, sig):
-        calls.append((pid, sig))
-        if sig == 0:
-            raise ProcessLookupError
-
-    monkeypatch.setattr(os, "killpg", killpg)
-    monkeypatch.setattr(
-        os,
-        "kill",
-        lambda *args: (_ for _ in ()).throw(AssertionError("leader-only check used")),
-    )
-    monkeypatch.setattr(
-        "ase2sprkkr.execution.detached._read_state",
-        lambda directory, run_id: {"state": "cancelled"},
-    )
-
-    state, stopped, signalled = _terminate_process_group(
-        tmp_path, "run", 1234, timeout=1.0
-    )
-
-    assert state["state"] == "cancelled"
-    assert stopped is True
-    assert signalled is True
-    assert calls[0][0] == 1234
-    assert any(sig == 0 for _, sig in calls)

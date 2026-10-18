@@ -745,6 +745,11 @@ class ExecutionManager:
         self.register_executor(executor, endpoint)
 
         raw = executor.create_persistent_run(spec, run_id=record.id)
+        # The manifest is owned by RunRecord. Local execution observes its
+        # publication outcomes, without persisting an independent file list.
+        set_manifest = getattr(raw, "set_manifest", None)
+        if set_manifest is not None:
+            set_manifest(record.files)
         processed = PostprocessingRunner(raw, process_result)
         persistent = PersistentRunner(self, executor, processed, record)
         processed.callback = lambda result: self._complete(

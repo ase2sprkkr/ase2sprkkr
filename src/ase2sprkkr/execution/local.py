@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import asyncio
-import errno
 import os
 from threading import Event, Lock, Thread
 
@@ -38,22 +37,6 @@ def _path(value, directory):
     if not os.path.isabs(path):
         path = os.path.join(directory, path)
     return os.path.abspath(path)
-
-
-def _pid_running(pid):
-    try:
-        os.kill(pid, 0)
-    except ProcessLookupError:
-        return False
-    except PermissionError:
-        return True
-    except OSError as exc:
-        if exc.errno == errno.ESRCH:
-            return False
-        if exc.errno == errno.EPERM:
-            return True
-        raise
-    return True
 
 
 class LocalRunner:
@@ -316,43 +299,33 @@ class LocalExecutor(Executor):
         )
 
     def recover_submission(self, run_id, submission, *, submitted_at=None):
-        from .local_persistent import recover_local_submission
-
-        return recover_local_submission(run_id, submission)
+        from .local_backend import recover
+        return recover(submission.execution.directory.local, run_id)
 
     def attach(
-        self,
-        run,
-        callback=None,
-        output_listener=None,
-        start=True,
+        self, run, callback=None, output_listener=None, start=True,
     ):
         from .local_persistent import attach_local
-
         return attach_local(
-            self,
-            run,
-            callback=callback,
-            output_listener=output_listener,
-            start=start,
+            self, run, callback=callback,
+            output_listener=output_listener, start=start,
         )
 
     def status(self, *runs):
-        from .local_persistent import detached_local_status
+        from .local_backend import local_manifest, query
 
         statuses = []
         for run in runs:
             if run.execution.endpoint.executor != "local":
                 raise ValueError("Run does not belong to the local backend")
-            detached = detached_local_status(run.execution.directory.local, run.execution.backend_id)
-            if detached is not None:
-                statuses.append(detached)
-                continue
-            try:
-                pid = int(run.execution.backend_id)
-            except (TypeError, ValueError):
-                state = RunState.UNKNOWN
-            else:
-                state = RunState.RUNNING if _pid_running(pid) else RunState.UNKNOWN
-            statuses.append(RunStatus(state=state, backend_id=run.execution.backend_id))
+            status = query(run.execution.directory.local, run.execution.backend_id)
+            if status.state in (RunState.FINISHED, RunState.FAILED, RunState.CANCELLED):
+                from dataclasses import replace
+                status = replace(
+                    status, files=local_manifest(
+                        run.files, run.execution.directory.local,
+                        run.execution.backend_id,
+                    ),
+                )
+            statuses.append(status)
         return tuple(statuses)
