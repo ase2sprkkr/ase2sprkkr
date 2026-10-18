@@ -13,11 +13,18 @@ class ArpesResult(TaskResult):
 
     @cached_property
     def spc_filename(self):
-        """Spectroscopy results file name"""
-        fname = self.input_parameters.CONTROL.DATASET() + "_ARPES_data.spc"
-        if self.directory:
-            fname = os.path.join(self.directory, fname)
-        return fname
+        """Primary SPC filename from the task-owned native output manifest."""
+        parameters = self.input_parameters
+        if parameters is None:
+            return None
+        return next(
+            (
+                os.fspath(path)
+                for path in parameters.output_files(self.directory)
+                if os.fspath(path).endswith(".spc")
+            ),
+            None,
+        )
 
     @cached_property
     def spc(self):
@@ -36,6 +43,8 @@ class ArpesResult(TaskResult):
 
     @cached_property
     def _spc_file(self):
+        if self.spc_filename is None:
+            raise FileNotFoundError("No SPC output file is declared for this result")
         if "SPC" not in self.files:
             return self.files.add_file("SPC", self.spc_filename, "spc")
         return self.files.set_file_type("SPC", "spc")
