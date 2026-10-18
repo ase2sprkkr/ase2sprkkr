@@ -32,7 +32,7 @@ class BandSPCResultFile(CommonResultFile):
         latex=None,
         show_fermi=True,
         xlabel=None,
-        ylabel=r"$E-E_{\\mathrm{F}}$ (eV)",
+        ylabel=r"$E-E_{\mathrm{F}}$ (eV)",
         **kwargs,
     ):
         """Plot accepted band roots as points, never join unrelated eigenstates.
@@ -45,7 +45,7 @@ class BandSPCResultFile(CommonResultFile):
         if xlabel is None:
             xlabel = (
                 r"$k_z$ (native units)" if self.NT() == 1
-                else r"$k_{\\parallel}$ (native units)"
+                else r"$k_{\parallel}$ (native units)"
             )
 
         style = {"s": 6, "marker": ".", "linewidths": 0}

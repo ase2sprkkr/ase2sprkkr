@@ -43,7 +43,7 @@ def test_band_plot_uses_one_scatter_plot_and_correct_k_axis(monkeypatch):
         def set_ylabel(self, label):
             self.labels.append(("y", label))
 
-    for nt, axis_symbol in ((1, "k_z"), (2, "k_{\\\\parallel}")):
+    for nt, axis_symbol in ((1, "k_z"), (2, "k_{\\parallel}")):
         axes = FakeAxis()
         options = {}
         @contextmanager
