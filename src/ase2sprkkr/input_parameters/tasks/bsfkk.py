@@ -1,4 +1,4 @@
-from ..task_definition import TaskDefinition
+from ..task_definition import TaskDefinition, DeclaredFile
 
 
 def task_definition():
@@ -8,5 +8,5 @@ def task_definition():
         executable="kkrgen",
         mpi=True,
         output_reader="BSF",
-        output_file_templates=("{dataset}_BLOCHSF.bsf", "{dataset}_BLOCHSF_spol.bsf"),
+        output_file_templates=("{dataset}_BLOCHSF.bsf", DeclaredFile("{dataset}_BLOCHSF_spol.bsf", optional=True)),
     )
