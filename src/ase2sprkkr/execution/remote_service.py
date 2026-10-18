@@ -11,6 +11,8 @@ import base64
 import json
 import os
 import signal
+import socket
+import struct
 import subprocess
 import sys
 import time
@@ -123,6 +125,9 @@ def _local_submit(request):
     env[_SPEC_ENV] = json.dumps(worker_spec, separators=(",", ":"))
 
     start_fd, release_fd = os.pipe()
+    socket_read_fd, socket_write_fd = os.pipe()
+    worker_spec["socket_fd"] = socket_write_fd
+    env[_SPEC_ENV] = json.dumps(worker_spec, separators=(",", ":"))
     env[_START_FD_ENV] = str(start_fd)
     try:
         try:
@@ -135,10 +140,11 @@ def _local_submit(request):
                 env=env,
                 start_new_session=True,
                 close_fds=True,
-                pass_fds=(start_fd,),
+                pass_fds=(start_fd, socket_write_fd),
             )
         finally:
             os.close(start_fd)
+            os.close(socket_write_fd)
 
         info = _process_info(process.pid)
         if info is None:
@@ -149,6 +155,11 @@ def _local_submit(request):
             raise RuntimeError("Started remote process disappeared before identification")
         start_time, _ = info
         os.write(release_fd, b"1")
+        # An advertised handle must refer to an already-listening supervisor.
+        with os.fdopen(socket_read_fd, "rb", closefd=True) as ready:
+            socket_path = ready.readline().decode("utf8").rstrip("\n")
+        if not socket_path:
+            raise RuntimeError("Remote supervisor did not create its follow socket")
     finally:
         os.close(release_fd)
 
@@ -158,6 +169,7 @@ def _local_submit(request):
             "pid": process.pid,
             "start_time": start_time,
             "receipt_id": receipt_id,
+            "socket_path": socket_path,
         }
     )
     return {
@@ -457,6 +469,45 @@ def follow_remote(
         "out": stdout_path,
         "err": stderr_path,
     }
+
+    # The supervisor gives each follower its own offset cursor and moves slow
+    # clients from LIVE into replay. The CLI forwards frames through the
+    # existing single SSH data channel; terminal facts are read by status().
+    if handle["kind"] == "process" and handle.get("socket_path"):
+        from .remote_supervisor_stream import MAGIC, _HEADER
+        try:
+            with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as sock:
+                sock.connect(handle["socket_path"])
+                request_offsets = {"out": stdout_offset}
+                if stdout_path != stderr_path:
+                    request_offsets["err"] = stderr_offset
+                sock.sendall(json.dumps({
+                    "command": "follow", "offsets": request_offsets,
+                }).encode() + b"\\n")
+                def read_exactly(n):
+                    chunks = []
+                    while n:
+                        part = sock.recv(n)
+                        if not part:
+                            raise ConnectionError("Supervisor FOLLOW ended unexpectedly")
+                        chunks.append(part)
+                        n -= len(part)
+                    return b"".join(chunks)
+                if read_exactly(len(MAGIC)) != MAGIC:
+                    raise RuntimeError("Unknown supervisor FOLLOW protocol")
+                while True:
+                    kind, offset, size = _HEADER.unpack(read_exactly(_HEADER.size))
+                    if kind == b"T":
+                        return json.loads(read_exactly(size))
+                    if kind not in (b"O", b"E") or size > 65536:
+                        raise RuntimeError("Invalid supervisor FOLLOW frame")
+                    stream = stdout if kind == b"O" else stderr
+                    stream.write(read_exactly(size))
+                    stream.flush()
+        except (FileNotFoundError, ConnectionRefusedError):
+            # A completed supervisor has already closed its transient socket.
+            # Its output files and acknowledged backend outcome remain readable.
+            pass
 
     while True:
         had_data = False
