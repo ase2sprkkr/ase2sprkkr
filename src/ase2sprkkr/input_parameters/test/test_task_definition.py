@@ -6,7 +6,7 @@ import pytest
 
 from ..input_parameters import InputParameters
 from ..input_parameters_definitions import InputParametersDefinition
-from ..task_definition import TaskDefinition
+from ..task_definition import TaskDefinition, DeclaredFile
 from ...outputs.readers.default import DefaultOutputReader
 from ...sprkkr.configuration import ConfigurationFile
 
@@ -289,3 +289,21 @@ def test_bsf_tasks_declare_shared_output_reader_identifier():
 
     assert bsfek.output_reader_name == "BSF"
     assert bsfkk.output_reader_name == "BSF"
+
+
+def test_optional_file_template_retains_metadata(tmp_path):
+    task = TaskDefinition(
+        "SCF",
+        input_file_templates=(DeclaredFile("aux.dat", optional=True),),
+        output_file_templates=(DeclaredFile("{dataset}_optional-*.dat", optional=True),),
+    )
+    parameters = InputParameters.create("SCF")
+    parameters.CONTROL.DATASET = "Fe"
+    registry = InputParameters.input_parameters_registry
+    for kind in ("input", "output"):
+        resolved = registry._resolve_file_templates(
+            parameters, str(tmp_path), getattr(task, f"{kind}_file_templates")
+        )
+        assert len(resolved) == 1
+        assert resolved[0].optional is True
+    assert task.input_file_templates[0].optional is True

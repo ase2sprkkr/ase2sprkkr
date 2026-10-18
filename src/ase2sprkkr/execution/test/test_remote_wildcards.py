@@ -1,3 +1,4 @@
+from ase2sprkkr.input_parameters.task_definition import DeclaredFile
 import asyncio
 from pathlib import Path
 
@@ -133,3 +134,29 @@ def test_remote_executor_syncs_cache_wildcards_in_both_directions(tmp_path):
     assert (workdir / "cache-b.dat").read_text() == "created"
     assert (remote_root / "calculation" / "cache-a.dat").read_text() == "new"
     assert (remote_root / "calculation" / "cache-b.dat").read_text() == "created"
+
+
+def test_remote_executor_allows_missing_optional_outputs(tmp_path):
+    workdir = tmp_path / "local" / "calculation"
+    executor, spec, _, _ = _text_run(
+        tmp_path,
+        declared_output_files=(
+            DeclaredFile(workdir / "missing-*.dat", optional=True),
+            DeclaredFile(workdir / "not-created.dat", optional=True),
+        ),
+        code="print('done')",
+    )
+    result = executor.create_run(_Reader(), spec).run()
+    assert result.return_code == 0
+    assert not (workdir / "not-created.dat").exists()
+
+
+def test_remote_executor_allows_missing_optional_input_pattern(tmp_path):
+    workdir = tmp_path / "local" / "calculation"
+    executor, spec, _, _ = _text_run(
+        tmp_path,
+        declared_input_files=(DeclaredFile(workdir / "missing-*.pot", optional=True),),
+        code="print('done')",
+    )
+    result = executor.create_run(_Reader(), spec).run()
+    assert result.return_code == 0
