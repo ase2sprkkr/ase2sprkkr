@@ -149,6 +149,10 @@ class SupervisorStreams:
             if not isinstance(offsets, dict) or set(offsets) != set(self.paths):
                 raise ValueError("Invalid stream offsets")
             for kind, offset in offsets.items():
+                if offset is None:
+                    # from_bytes=None means observe only newly arriving bytes.
+                    offsets[kind] = self._sizes[kind]
+                    continue
                 if type(offset) is not int or offset < 0:
                     raise ValueError("Invalid stream offset")
                 if self.paths[kind] is not None and offset > self._sizes[kind]:
