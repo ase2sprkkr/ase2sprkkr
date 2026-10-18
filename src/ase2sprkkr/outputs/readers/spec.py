@@ -101,7 +101,7 @@ class SpecResult(ArpesResult):
         if not filenames:
             # Preserve parsing older standalone SPEC text dumps.
             content = self._get_file_content()
-            marker = re.search(r"stookes-vector\\s+of the photonfield", content)
+            marker = re.search(r"stookes-vector\s+of the photonfield", content)
             rows = content[marker.end():].splitlines() if marker else ()
         else:
             with open(filenames[0], encoding="utf-8") as file:

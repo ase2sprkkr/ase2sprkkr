@@ -95,4 +95,5 @@ def test_arpes_registers_both_polarizations_from_native_files(tmp_path):
         (tmp_path / ("Fe" + suffix)).write_text("# SPC\n")
     result = ArpesResult(None, None, tmp_path, output_file="Fe_SPEC.out", task_name="ARPES")
     assert result.spc_filename == str(tmp_path / "Fe_data_pol1.spc")
-    assert result.path_to("SPC_2") == str(tmp_path / "Fe_data_pol2.spc") if "SPC_2" in result.output_values else False
+    assert "SPC_2" in result.output_values
+    assert result.path_to("SPC_2") == str(tmp_path / "Fe_data_pol2.spc")
