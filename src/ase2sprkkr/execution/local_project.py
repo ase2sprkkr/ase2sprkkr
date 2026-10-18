@@ -8,6 +8,7 @@ from dataclasses import asdict
 from threading import Event, Lock, Thread
 
 from . import local_backend
+from .growing_file_tail import GrowingFileTail
 from .base import (
     ExecutionOutcome, ExecutionSpec, FailurePhase, OutputObservers,
     RunState, SubmissionNotStarted,
@@ -116,40 +117,34 @@ class LocalProjectRunner:
     def add_output_error_listener(self, callback):
         self._output_observers.add_error_listener(callback)
 
-    @staticmethod
-    def _read_new(path, offset):
-        if path is None:
-            return b""
-        try:
-            with open(path, "rb") as source:
-                source.seek(offset)
-                return source.read()
-        except FileNotFoundError:
-            return b""
-
     async def _monitor(self):
         offsets = {"out": 0, "err": 0}
-        while True:
-            state = self._refresh()
-            paths = local_backend.observed_paths(
-                self.spec.directory, self._backend_id,
+        initial = local_backend.observed_paths(
+            self.spec.directory, self._backend_id,
+            self.result.output_file, self.result.error_file,
+        )
+        async with GrowingFileTail(
+            dict(zip(("out", "err"), initial)), offsets=offsets,
+            watch_paths=tuple(path for path in (
                 self.result.output_file, self.result.error_file,
-            )
-            seen = set()
-            had_data = False
-            for kind, path in zip(("out", "err"), paths):
-                if path is None or path in seen:
-                    continue
-                seen.add(path)
-                data = self._read_new(path, offsets[kind])
-                if data:
-                    offsets[kind] += len(data)
-                    self._output_observers.emit(data.decode("utf8", errors="replace"), kind)
-                    had_data = True
-            if state in (RunState.FINISHED, RunState.FAILED, RunState.CANCELLED, RunState.UNKNOWN) and not had_data:
-                return self.result
-            if not had_data:
-                await asyncio.sleep(0.05)
+            ) if path is not None),
+        ) as tail:
+            while True:
+                state = self._refresh()
+                paths = local_backend.observed_paths(
+                    self.spec.directory, self._backend_id,
+                    self.result.output_file, self.result.error_file,
+                )
+                chunks = tail.read_available(dict(zip(("out", "err"), paths)))
+                for kind, data in chunks:
+                    self._output_observers.emit(
+                        data.decode("utf8", errors="replace"), kind,
+                    )
+                if state in (RunState.FINISHED, RunState.FAILED,
+                             RunState.CANCELLED, RunState.UNKNOWN) and not chunks:
+                    return self.result
+                if not chunks:
+                    await tail.wait_for_change()
 
     def _close_owned_files(self):
         seen = set()
