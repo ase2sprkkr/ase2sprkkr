@@ -11,7 +11,7 @@ from ..alternative_types import numpy_types
 from ..grammar import generate_grammar, delimitedList, line_end, White, Forward
 from .grammar_type import GrammarType, compare_numpy_values, type_from_type, type_from_default_value, TypedGrammarType
 from ..decorators import add_to_signature, cached_property
-from .basic import Integer, Real, Unsigned, real
+from .basic import Integer, Real, Unsigned, QString, real
 
 
 _named_sequence_types = {}
@@ -313,7 +313,16 @@ class SetOf(Array):
         }
 
     def _do_build_grammar(self):
-        g = super()._do_build_grammar()
+        if self.require_brackets and isinstance(self.type, QString):
+            # QString's generic word grammar accepts '[' and '('; inside a
+            # bracketed set these characters are structural delimiters.
+            # Keep the restriction local to this SetOf rather than changing
+            # scalar QString parsing throughout the application.
+            item = pp.Word(pp.printables, exclude_chars='",;{}[]()') | pp.QuotedString('"')
+            g = delimitedList(item, self.delimiter)
+            self._set_convert_action(g)
+        else:
+            g = super()._do_build_grammar()
         out = []
         for i in ( '{', '[', '(' ):
             out.append(self._prefixes[i] + g + self._postfixes[i])
