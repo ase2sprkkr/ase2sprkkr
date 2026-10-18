@@ -23,12 +23,11 @@ CHILD = "33333333333333333333333333333333"
 
 def _write_project(directory, project_id, **values):
     data = {
-        "schema_version": 1,
+        "schema_version": 2,
         "id": project_id,
         "generation": 1,
         "name": project_id,
         "parent_id": None,
-        "persistent_refs": [],
     }
     data.update(values)
     directory.mkdir(parents=True, exist_ok=True)
@@ -48,13 +47,11 @@ def _save_while_locked(directory, project_id, started, finished):
 def test_project_editing_methods_keep_snapshot_generation():
     project = Project(id=ROOT_A, generation=7, name="Original")
 
-    edited = project.rename(" Renamed ").add_run("run-1").move_to(ROOT_B)
+    edited = project.rename(" Renamed ").move_to(ROOT_B)
 
     assert edited.generation == 7
     assert edited.name == "Renamed"
     assert edited.parent_id == ROOT_B
-    assert edited.persistent_refs == ("run-1",)
-    assert edited.remove_run("run-1").persistent_refs == ()
     assert project.name == "Original"
 
 
@@ -65,8 +62,6 @@ def test_project_rejects_invalid_local_edits():
         project.rename(" ")
     with pytest.raises(ValueError, match="own parent"):
         project.move_to(project.id)
-    with pytest.raises(ValueError, match="reference"):
-        project.add_run("")
 
 
 def test_repository_uses_one_generation_checked_json_per_project(tmp_path):
@@ -78,18 +73,17 @@ def test_repository_uses_one_generation_checked_json_per_project(tmp_path):
     assert [path.stem for path in json_files] == sorted([parent.id, child.id])
     assert repository.project(child.id).parent_id == parent.id
 
-    edited = parent.rename("Renamed").add_run("run-17")
+    edited = parent.rename("Renamed")
     saved = repository.save(edited, expected_generation=parent.generation)
 
     assert saved.generation == 2
     assert saved.name == "Renamed"
-    assert saved.persistent_refs == ("run-17",)
 
 
 def test_stale_save_conflicts_and_explicit_overwrite_replaces_snapshot(tmp_path):
     repository = ProjectRepository(tmp_path / "projects")
     original = repository.create("Original")
-    stale = repository.project(original.id).add_run("run-17")
+    stale = repository.project(original.id).rename("Stale name")
     renamed = repository.save(
         original.rename("Renamed elsewhere"),
         expected_generation=original.generation,
@@ -105,7 +99,6 @@ def test_stale_save_conflicts_and_explicit_overwrite_replaces_snapshot(tmp_path)
         overwrite=True,
     )
     assert overwritten.name == "Original"
-    assert overwritten.persistent_refs == ("run-17",)
     assert overwritten.generation == renamed.generation + 1
 
 
