@@ -290,9 +290,10 @@ class SetOf(Array):
     delimiter_str = ","
 
     @add_to_signature(Array.__init__)
-    def __init__(self, type, *args, **kwargs):
+    def __init__(self, type, *args, require_brackets=False, **kwargs):
         if 'prefix' in kwargs or 'postfix' in kwargs:
             raise ValueError("For a custom prefix/postfix use Array, not SetOf")
+        self.require_brackets = require_brackets
         super().__init__(type, *args, **kwargs)
 
     def _suppress(x):
@@ -316,8 +317,12 @@ class SetOf(Array):
         out = []
         for i in ( '{', '[', '(' ):
             out.append(self._prefixes[i] + g + self._postfixes[i])
-        out.append(g)
-        out = pp.MatchFirst(out).set_name( f"[{{([]]?{g}[}}])]?" )
+        if not self.require_brackets:
+            out.append(g)
+        out = pp.MatchFirst(out).set_name(
+            f"bracketed {g}" if self.require_brackets
+            else f"[{{([]]?{g}[}}])]?"
+        )
         return out
         #out | self.type.grammar(param_name).copy().add_parse_action(lambda x: np.atleast_1d(x.asList()))
 
