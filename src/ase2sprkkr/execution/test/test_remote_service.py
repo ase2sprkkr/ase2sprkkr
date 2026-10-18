@@ -315,8 +315,8 @@ def test_direct_follow_uses_shared_socket_protocol(tmp_path, monkeypatch):
             stdout_path=spec["output_file"], stderr_path=spec["error_file"],
         )
         assert terminal["state"] == "finished"
-        assert out.getvalue() == b"stdout\\n"
-        assert err.getvalue() == b"stderr\\n"
+        assert out.getvalue() == b"stdout\n"
+        assert err.getvalue() == b"stderr\n"
         assert await worker == 0
 
     asyncio.run(exercise())
@@ -353,7 +353,7 @@ def test_direct_follow_without_stream_files_is_live_only(tmp_path, monkeypatch):
             stdout_offset=0, stderr_offset=0,
         )
         assert terminal["state"] == "finished"
-        assert out.getvalue() == b"live\\n"
+        assert out.getvalue() == b"live\n"
         assert err.getvalue() == b""
         assert await worker == 0
         assert list(tmp_path.iterdir()) == []
