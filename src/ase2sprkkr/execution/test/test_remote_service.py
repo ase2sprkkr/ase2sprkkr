@@ -334,7 +334,7 @@ def test_direct_follow_without_stream_files_is_live_only(tmp_path, monkeypatch):
         rd, wr = os.pipe()
         spec = {
             "argv": [sys.executable, "-c",
-                     "import time; print('live', flush=True); time.sleep(.2)"],
+                     "import time; time.sleep(.15); print('live', flush=True); time.sleep(.1)"],
             "directory": str(tmp_path),
             "output_file": None, "error_file": None,
             "receipt_id": "b" * 32,
