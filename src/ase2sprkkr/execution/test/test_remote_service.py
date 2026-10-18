@@ -1,6 +1,5 @@
 import io
 import json
-import signal
 
 import pytest
 
@@ -15,6 +14,7 @@ def _process_handle(tmp_path):
         "pid": 123,
         "start_time": "456",
         "receipt_id": "a" * 32,
+        "socket_path": "/tmp/test-supervisor.sock",
     }
     return handle, remote_service._encode_handle(handle), outcome
 
@@ -43,7 +43,7 @@ def test_remote_id_is_opaque_backend_handle_without_lifecycle_state(tmp_path):
     assert decoded["pid"] == 123
     assert "state" not in decoded
     assert "failure_phase" not in decoded
-    assert set(decoded) == {"kind", "pid", "start_time", "receipt_id"}
+    assert set(decoded) == {"kind", "pid", "start_time", "receipt_id", "socket_path"}
 
 
 def test_mailbox_receipt_survives_until_client_ack(tmp_path, monkeypatch):
@@ -162,52 +162,47 @@ def test_supervisor_writes_mailbox_receipt(monkeypatch):
     assert calls == [("a" * 32, RunState.FAILED, 3, FailurePhase.EXECUTION)]
 
 
-def test_cancel_publishes_durable_cancelled_backend_outcome(
+def test_cancel_requests_supervisor_without_inventing_terminal_state(
     tmp_path, monkeypatch
 ):
     _, remote_id, outcome = _process_handle(tmp_path)
-    monkeypatch.setattr(remote_service, "_same_process", lambda _handle: True)
-    monkeypatch.setattr(remote_service, "_process_running", lambda _handle: False)
-    signals = []
-    monkeypatch.setattr(
-        remote_service.os,
-        "killpg",
-        lambda pid, sig: signals.append((pid, sig)),
-    )
-
     monkeypatch.setenv("ASE2SPRKKR_REMOTE_STATE_DIR", str(tmp_path))
-    cancelled = remote_service.cancel_remote(remote_id)
-
-    assert signals == [(123, signal.SIGTERM)]
-    assert cancelled["state"] == RunState.CANCELLED.value
-    assert cancelled["failure_phase"] is None
-
-    # A later status query reads the durable backend outcome, rather than
-    # regressing to UNKNOWN after the supervisor process is gone.
-    assert outcome.is_file()
-    later = remote_service.status_remote(remote_id)
-    assert later["state"] == RunState.CANCELLED.value
-    assert later["failure_phase"] is None
-
-
-def test_cancel_does_not_publish_terminal_fact_while_process_survives_sigkill(
-    tmp_path, monkeypatch
-):
-    _, remote_id, outcome = _process_handle(tmp_path)
-    monkeypatch.setattr(remote_service, "_same_process", lambda _handle: True)
     monkeypatch.setattr(remote_service, "_process_running", lambda _handle: True)
-    signals = []
-    monkeypatch.setattr(
-        remote_service.os, "killpg",
-        lambda pid, sig: signals.append(sig),
-    )
+    sent = []
 
-    monkeypatch.setenv("ASE2SPRKKR_REMOTE_STATE_DIR", str(tmp_path))
-    status = remote_service.cancel_remote(remote_id, timeout=0)
+    class Connection:
+        def __enter__(self):
+            return self
+        def __exit__(self, *args):
+            pass
+        def settimeout(self, timeout):
+            pass
+        def connect(self, path):
+            assert path == "/tmp/test-supervisor.sock"
+        def sendall(self, data):
+            sent.append(data)
+        def recv(self, count):
+            return b'{"accepted":true}\n'
 
+    monkeypatch.setattr(remote_service.socket, "socket", lambda *args: Connection())
+    status = remote_service.cancel_remote(remote_id)
+    assert sent == [b'{"command":"cancel"}\n']
     assert status["state"] == RunState.RUNNING.value
-    assert signals == [signal.SIGTERM, signal.SIGKILL]
     assert not outcome.exists()
+
+
+def test_cancel_after_natural_completion_keeps_backend_outcome(tmp_path, monkeypatch):
+    _, remote_id, _ = _process_handle(tmp_path)
+    monkeypatch.setenv("ASE2SPRKKR_REMOTE_STATE_DIR", str(tmp_path))
+    _write_outcome(None, RunState.FINISHED, 0)
+
+    def forbidden(*args):
+        raise AssertionError("Terminal process must not receive cancellation")
+    monkeypatch.setattr(remote_service.socket, "socket", forbidden)
+
+    status = remote_service.cancel_remote(remote_id)
+    assert status["state"] == RunState.FINISHED.value
+    assert status["return_code"] == 0
 
 
 def test_supervisor_requires_parent_launch_release(monkeypatch):
