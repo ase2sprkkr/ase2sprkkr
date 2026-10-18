@@ -61,7 +61,7 @@ def input_parameters_definition():
     schema = out.copy(add=[task])
     schema.task_selectors = ("SPLEED",)
     schema._task_definition = TaskDefinition(
-        "SPLEED", executable="kkrspec", mpi=False, output_reader="ARPES",
+        "SPLEED", executable="kkrspec", mpi=False, output_reader="SPEC",
         input_file_templates=SPEC_INPUT_FILES, output_file_templates=SPEC_OUTPUT_FILES,
     )
     return schema

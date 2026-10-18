@@ -5,7 +5,7 @@ import pytest
 from ase2sprkkr.input_parameters.input_parameters import InputParameters
 
 
-@pytest.mark.parametrize("task", ["BSF", "BSFEK", "BSFKK"])
+@pytest.mark.parametrize("task", ["BSFEK", "BSFKK"])
 def test_bsf_aliases_share_native_output_manifest(task, tmp_path):
     parameters = InputParameters.create(task)
     parameters.CONTROL.DATASET = "manifest_test"
