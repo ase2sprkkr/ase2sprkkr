@@ -93,7 +93,7 @@ async def _run(spec):
                     except ProcessLookupError:
                         pass
                     try:
-                        await asyncio.wait_for(finished, timeout=1)
+                        await asyncio.wait_for(asyncio.shield(finished), timeout=1)
                     except asyncio.TimeoutError:
                         try:
                             os.killpg(process.pid, signal.SIGKILL)
@@ -101,6 +101,7 @@ async def _run(spec):
                             pass
                         await finished
                     state = RunState.CANCELLED
+                    phase = None
                 for task in pending:
                     task.cancel()
                 return_code = finished.result()
@@ -117,9 +118,8 @@ async def _run(spec):
                 "state": state.value, "return_code": return_code,
                 "failure_phase": None if phase is None else phase.value,
             })
-            await streams.finish()
         finally:
-            pass
+            await streams.finish()
     return return_code
 
 
