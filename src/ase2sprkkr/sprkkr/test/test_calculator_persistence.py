@@ -1,43 +1,29 @@
-from types import SimpleNamespace
+"""Calculator forwards explicit project scope into prepared execution."""
 
+from types import SimpleNamespace
 from ..calculator import SPRKKR
 
 
-def test_create_run_forwards_persistent_policy(monkeypatch, tmp_path):
+def test_create_run_forwards_project(monkeypatch, tmp_path):
     calculator = SPRKKR(directory=tmp_path)
-    persistent = object()
-    runner = object()
+    project = object()
+    result = object()
     captured = {}
-
-    def create_run(**kwargs):
-        captured.update(kwargs)
-        return runner
-
-    prepared = SimpleNamespace(create_run=create_run)
+    prepared = SimpleNamespace(create_run=lambda **kwargs: captured.update(kwargs) or result)
     monkeypatch.setattr(calculator, "prepare", lambda **kwargs: prepared)
-
-    assert calculator.create_run(
-        directory=tmp_path,
-        persistent=persistent,
-    ) is runner
-    assert captured["persistent"] is persistent
+    assert calculator.create_run(project=project) is result
+    assert captured["project"] is project
 
 
-def test_calculate_forwards_persistent_policy(monkeypatch):
+def test_calculate_forwards_project(monkeypatch):
     calculator = SPRKKR()
-    persistent = object()
+    project = object()
     captured = {}
     result = SimpleNamespace(task_name="DOS")
-
     class Runner:
         def run(self):
             return result
-
-    def create_run(**kwargs):
-        captured.update(kwargs)
-        return Runner()
-
-    monkeypatch.setattr(calculator, "create_run", create_run)
-
-    assert calculator.calculate(persistent=persistent) is result
-    assert captured["persistent"] is persistent
+    monkeypatch.setattr(calculator, "create_run",
+                        lambda **kwargs: captured.update(kwargs) or Runner())
+    assert calculator.calculate(project=project) is result
+    assert captured["project"] is project

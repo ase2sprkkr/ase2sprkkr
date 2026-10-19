@@ -154,7 +154,7 @@ def test_profile_executor_is_selected_before_mpi_resolution(monkeypatch, tmp_pat
             calls.append(("resolve_mpi", value))
             return False
 
-        def create_run(self, reader, spec, callback=None):
+        def create_run(self, spec, callback=None):
             calls.append(("create_run", spec.argv))
             return backend_runner
 
@@ -188,7 +188,7 @@ def test_profile_executor_is_selected_before_mpi_resolution(monkeypatch, tmp_pat
         profile=profile,
     )
     try:
-        assert result.result is backend_runner.result
+        assert result.result is None  # Postprocessing starts only after submit
         assert calls[0] == ("factory", "ssh")
         assert calls[1] == ("resolve_mpi", 8)
         assert calls[2][0] == "create_run"

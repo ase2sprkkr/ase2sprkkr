@@ -30,7 +30,7 @@ class _Executor:
     def resolve_mpi(self, mpi):
         return mpi
 
-    def create_run(self, reader, spec, callback=None):
+    def create_run(self, spec, callback=None):
         return _UnstartedRunner(spec)
 
 
