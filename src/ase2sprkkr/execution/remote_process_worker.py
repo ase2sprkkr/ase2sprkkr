@@ -2,7 +2,6 @@
 from __future__ import annotations
 
 import asyncio
-from functools import partial
 import json
 import os
 import signal
@@ -49,18 +48,38 @@ async def _launch_managed_process(spec, stdin, stderr):
             str(read_fd),
             stdin=subprocess.DEVNULL, stdout=asyncio.subprocess.PIPE,
             stderr=subprocess.DEVNULL, pass_fds=(read_fd,),
-            preexec_fn=os.setpgrp,
+
         )
         os.close(read_fd)
         read_fd = None
         ready = await asyncio.wait_for(watchdog.stdout.readexactly(1), 5.0)
         if ready != b"R":
             raise RuntimeError("Calculation watchdog failed to initialize")
-        process = await asyncio.create_subprocess_exec(
-            *spec["argv"], cwd=spec["directory"], stdin=stdin,
-            stdout=asyncio.subprocess.PIPE, stderr=stderr,
-            preexec_fn=partial(os.setpgid, 0, watchdog.pid),
-        )
+        # A tiny exec trampoline joins the group using os.setpgid().
+        # Unlike preexec_fn, this does not run Python inside a forked,
+        # potentially multi-threaded supervisor.
+        error_read, error_write = os.pipe()
+        try:
+            try:
+                process = await asyncio.create_subprocess_exec(
+                    sys.executable, "-m",
+                    "ase2sprkkr.execution.remote_process_watchdog",
+                    "--exec", str(watchdog.pid), str(error_write), *spec["argv"],
+                    cwd=spec["directory"], stdin=stdin,
+                    stdout=asyncio.subprocess.PIPE, stderr=stderr,
+                    pass_fds=(error_write,),
+                )
+            finally:
+                os.close(error_write)
+            # The CLOEXEC descriptor closes when the requested program
+            # starts; errors before exec are sent through the same pipe.
+            error = await asyncio.to_thread(os.read, error_read, 4096)
+            if error:
+                await process.wait()
+                errno_number, message = json.loads(error.decode("utf8"))
+                raise OSError(errno_number, message)
+        finally:
+            os.close(error_read)
         return process, watchdog, write_fd
     except BaseException:
         os.close(write_fd)

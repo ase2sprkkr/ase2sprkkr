@@ -304,3 +304,69 @@ def test_watchdog_kills_calculation_group_when_supervisor_dies(tmp_path):
                 await guard.wait()
 
     asyncio.run(check())
+
+
+def test_supervisor_sigkill_stops_calculation_and_grandchild(tmp_path):
+    """Real supervisor death must not leave a calculation process tree running."""
+    import json
+    import signal
+    import subprocess
+    import time
+
+    pid_file = tmp_path / "calculation-pids"
+    calculation = (
+        "import os, subprocess, sys, time, pathlib\n"
+        "sub = subprocess.Popen([sys.executable, '-c', 'import time; time.sleep(60)'])\n"
+        f"pathlib.Path({str(pid_file)!r}).write_text(f'{{os.getpid()}} {{sub.pid}}')\n"
+        "time.sleep(60)\n"
+    )
+    rd, wr = os.pipe()
+    spec = _spec(tmp_path, wr, detached=True, argv=[
+        sys.executable, "-c", calculation,
+    ])
+    spec["socket_dir"] = str(tmp_path / "socket-dir")
+    env = os.environ.copy()
+    env[remote_process_worker._SPEC_ENV] = json.dumps(spec)
+    supervisor = subprocess.Popen(
+        [sys.executable, "-m", "ase2sprkkr.execution.remote_process_worker"],
+        cwd=str(tmp_path), env=env, start_new_session=True,
+        pass_fds=(wr,), stdout=subprocess.DEVNULL, stderr=subprocess.PIPE,
+    )
+    os.close(wr)
+    pids = []
+    try:
+        with os.fdopen(rd, "rb") as reader:
+            assert reader.readline(), "Supervisor did not publish follow socket"
+        for _ in range(150):
+            if pid_file.is_file():
+                pids = list(map(int, pid_file.read_text().split()))
+                break
+            if supervisor.poll() is not None:
+                raise AssertionError("Supervisor died before launching calculation")
+            time.sleep(0.02)
+        assert len(pids) == 2
+        os.kill(supervisor.pid, signal.SIGKILL)
+        supervisor.wait(timeout=5)
+
+        def is_alive(pid):
+            try:
+                state = open(f"/proc/{pid}/stat").read().rsplit(")", 1)[1].split()[0]
+            except FileNotFoundError:
+                return False
+            return state != "Z"
+
+        for _ in range(150):
+            if not any(is_alive(pid) for pid in pids):
+                break
+            time.sleep(0.03)
+        assert not any(is_alive(pid) for pid in pids)
+    finally:
+        if supervisor.poll() is None:
+            supervisor.kill()
+            supervisor.wait(timeout=5)
+        for pid in pids:
+            if os.path.exists(f"/proc/{pid}"):
+                try:
+                    os.kill(pid, signal.SIGKILL)
+                except ProcessLookupError:
+                    pass
