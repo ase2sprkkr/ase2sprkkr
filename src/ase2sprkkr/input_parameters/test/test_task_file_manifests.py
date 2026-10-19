@@ -169,7 +169,7 @@ def test_dos_native_energy_constraints():
     with pytest.raises(DataValidityError, match="two energy points"):
         parameters.validate("save")
     parameters.ENERGY.NE = 300
-    parameters.ENERGY.ImE = 0
+    parameters.ENERGY.ImE = 0.0
     with pytest.warns(DataValidityWarning, match="real axis"):
         parameters.validate("save")
 
