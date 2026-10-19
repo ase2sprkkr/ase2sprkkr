@@ -22,7 +22,7 @@ import time
 from pathlib import Path
 from uuid import uuid4
 
-from .growing_file_tail import follow_growing_files
+from .growing_file_tail import follow_job_files
 from .file_availability import clear_declared_outputs
 from .base import ExecutionSpec, FailurePhase, LaunchSpec, RunState, SubmissionNotStarted
 from .remote_process_worker import _SPEC_ENV, _START_FD_ENV
@@ -31,6 +31,16 @@ from ._durability import durable_mkdir, durable_write_json, fsync_directory
 
 
 _FINAL_STATES = {RunState.FINISHED, RunState.FAILED, RunState.CANCELLED}
+
+
+def _status_reply(state, return_code=None, *, failure_phase=None, error=None):
+    """Encode backend status facts for the common remote-service wire contract."""
+    return {
+        "state": state.value,
+        "return_code": return_code,
+        "error": error,
+        "failure_phase": None if failure_phase is None else failure_phase.value,
+    }
 
 
 def _submission_ticket(run_id):
@@ -138,24 +148,15 @@ def _request_spec(request):
         cache_files=cache_files,
         mpi_argv=None if mpi_argv is None else tuple(mpi_argv),
         launch=LaunchSpec(**(request.get("launch") or {})),
+        mpi_uses_stdin=request.get("mpi_uses_stdin", True),
     )
 
 
-def _clean_request_outputs(request, directory, output_path=None, error_path=None):
-    """Remove only this submission's declared outputs on the execution host."""
-    sync = request.get("client_sync") or {}
-    declared = (
-        *request.get("output_files", ()),
-        *sync.get("output_files", ()),
-        *sync.get("output_patterns", ()),
-        output_path, error_path,
-    )
+def _clean_request_outputs(spec, directory, output_path=None, error_path=None):
+    """Clear prior outputs while protecting inputs and caches in the parsed spec."""
+    declared = (*spec.output_files, output_path, error_path)
     protected = (
-        request.get("input_file"), request.get("stdin"),
-        *request.get("input_files", ()),
-        *request.get("cache_files", ()),
-        *(item.get("path") for item in sync.get("cache_files", ())),
-        *sync.get("cache_patterns", ()),
+        spec.input_file, spec.stdin, *spec.input_files, *spec.cache_files,
     )
     clear_declared_outputs(
         (_absolute(directory, path) for path in declared if path is not None),
@@ -172,16 +173,15 @@ def _local_submit(request):
     try:
         directory = Path(request["directory"]).expanduser().resolve()
         directory.mkdir(parents=True, exist_ok=True)
-        spec = materialize_local_spec(
-            _request_spec(dict(request, directory=os.fspath(directory)))
-        )
+        original_spec = _request_spec(dict(request, directory=os.fspath(directory)))
+        spec = materialize_local_spec(original_spec)
 
         output_path = _absolute(directory, spec.output_file)
         error_path = _absolute(directory, spec.error_file)
         for path in (output_path, error_path):
             if path is not None:
                 Path(path).parent.mkdir(parents=True, exist_ok=True)
-        _clean_request_outputs(request, directory, output_path, error_path)
+        _clean_request_outputs(original_spec, directory, output_path, error_path)
     except OSError as exc:
         raise SubmissionNotStarted(str(exc)) from exc
 
@@ -361,14 +361,9 @@ def status_remote(remote_id):
             return_code = None
             failure_phase = None
             error = None
-        return {
-            "state": state.value,
-            "return_code": return_code,
-            "error": error,
-            "failure_phase": (
-                None if failure_phase is None else failure_phase.value
-            ),
-        }
+        return _status_reply(
+            state, return_code, failure_phase=failure_phase, error=error,
+        )
 
     if handle["kind"] == "psij":
         if str(handle["backend"]).lower() == "slurm" and handle.get("url") is None:
@@ -379,14 +374,10 @@ def status_remote(remote_id):
                 {"backend": handle["backend"], "url": handle.get("url")}
             )
             status = executor.status_native(handle["native_id"])
-        return {
-            "state": status.state.value,
-            "return_code": status.return_code,
-            "error": status.message,
-            "failure_phase": (
-                None if status.failure_phase is None else status.failure_phase.value
-            ),
-        }
+        return _status_reply(
+            status.state, status.return_code,
+            failure_phase=status.failure_phase, error=status.message,
+        )
     raise ValueError("Unsupported remote execution id")
 
 
@@ -414,8 +405,7 @@ def cancel_remote(remote_id, timeout=1.0):
         executor = _psij_executor(
             {"backend": handle["backend"], "url": handle.get("url")}
         )
-        job = executor._psij.Job()
-        executor._job_executor.attach(job, handle["native_id"])
+        job = executor.attach_native_job(handle["native_id"])
         job.cancel()
         state = status_remote(remote_id)
         return state
@@ -468,49 +458,36 @@ def recover_remote(run_id, request, *, submitted_at=None):
 
 async def _follow_scheduler_async(remote_id, streams, paths, offsets, poll_interval):
     """Follow scheduler-owned files while PSI/J waits for terminal completion."""
-    from .psij import _STATE_MAP
+    from .psij import _psij_state
 
     handle = _decode_handle(remote_id)
     executor = _psij_executor(
         {"backend": handle["backend"], "url": handle.get("url")}
     )
-    job = executor._psij.Job()
-    executor._job_executor.attach(job, handle["native_id"])
-    waiting = asyncio.create_task(asyncio.to_thread(job.wait))
+    job = executor.attach_native_job(handle["native_id"])
 
     def emit(kind, data):
         streams[kind].write(data)
         streams[kind].flush()
 
-    async def terminal():
-        if not waiting.done():
-            return None
-        await waiting
+    async def terminal(_native_status):
         status = await asyncio.to_thread(status_remote, remote_id)
         if status["state"] in {s.value for s in _FINAL_STATES}:
             return status
         native = job.status
-        state = _STATE_MAP.get(
-            getattr(getattr(native, "state", None), "name", None),
-            RunState.UNKNOWN,
-        )
-        return {
-            "state": state.value,
-            "return_code": getattr(native, "exit_code", None),
-            "failure_phase": (
-                FailurePhase.EXECUTION.value if state == RunState.FAILED else None
+        state = _psij_state(native)
+        return _status_reply(
+            state, getattr(native, "exit_code", None),
+            failure_phase=(
+                FailurePhase.EXECUTION if state == RunState.FAILED else None
             ),
-            "error": getattr(native, "message", None),
-        }
-
-    try:
-        return await follow_growing_files(
-            paths, emit, terminal, offsets=offsets,
-            poll_interval=max(poll_interval, 1.0),
+            error=getattr(native, "message", None),
         )
-    finally:
-        if not waiting.done():
-            waiting.cancel()
+
+    return await follow_job_files(
+        paths, emit, job.wait, terminal=terminal, offsets=offsets,
+        poll_interval=max(poll_interval, 1.0),
+    )
 
 
 def _follow_scheduler(remote_id, streams, paths, offsets, poll_interval):

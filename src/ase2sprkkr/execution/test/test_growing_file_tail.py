@@ -1,8 +1,13 @@
 """Tests for the shared growing-file observation contract."""
 import asyncio
 import os
+from threading import Event
 
-from ..growing_file_tail import GrowingFileTail, follow_growing_files
+import pytest
+
+from ..growing_file_tail import (
+    GrowingFileTail, follow_growing_files, follow_job_files,
+)
 
 
 def test_append_and_eof(tmp_path):
@@ -127,5 +132,96 @@ def test_follow_growing_files_skips_undefined_channels(tmp_path):
         assert result == "done"
         assert seen == []
         assert list(tmp_path.iterdir()) == []
+
+    asyncio.run(check())
+
+
+def test_follow_job_files_drains_output_created_at_completion(tmp_path):
+    async def check():
+        path = tmp_path / "later.out"
+        entered, release = Event(), Event()
+        seen = []
+        calls = []
+
+        def wait():
+            calls.append("wait")
+            entered.set()
+            assert release.wait(2)
+            path.write_bytes(b"final bytes")
+            return "done"
+
+        following = asyncio.create_task(follow_job_files(
+            {"out": path}, lambda kind, data: seen.append((kind, data)),
+            wait, poll_interval=0.01,
+        ))
+        try:
+            assert await asyncio.to_thread(entered.wait, 2)
+        finally:
+            release.set()
+        assert await asyncio.wait_for(following, 3) == "done"
+        assert calls == ["wait"]
+        assert seen == [("out", b"final bytes")]
+
+    asyncio.run(check())
+
+
+def test_follow_job_files_maps_terminal_status(tmp_path):
+    async def check():
+        observed = []
+
+        async def terminal(native_status):
+            observed.append(native_status)
+            return {"state": "finished", "return_code": native_status}
+
+        return_value = await follow_job_files(
+            {"out": tmp_path / "missing"}, lambda *_: None,
+            lambda: 42, terminal=terminal, poll_interval=0.01,
+        )
+        assert return_value == {"state": "finished", "return_code": 42}
+        assert observed == [42]
+
+    asyncio.run(check())
+
+
+def test_follow_job_files_propagates_wait_errors(tmp_path):
+    def wait():
+        raise RuntimeError("scheduler wait failed")
+
+    async def check():
+        with pytest.raises(RuntimeError, match="scheduler wait failed"):
+            await asyncio.wait_for(
+                follow_job_files(
+                    {"out": tmp_path / "missing"}, lambda *_: None,
+                    wait, poll_interval=0.01,
+                ),
+                3,
+            )
+
+    asyncio.run(check())
+
+
+def test_follow_job_files_cancelled_observation_does_not_cancel_job(tmp_path):
+    async def check():
+        entered, release, exited = Event(), Event(), Event()
+
+        def wait():
+            entered.set()
+            assert release.wait(2)
+            exited.set()
+            return "finished"
+
+        follower = asyncio.create_task(follow_job_files(
+            {"out": tmp_path / "missing"}, lambda *_: None,
+            wait, poll_interval=0.01,
+        ))
+        try:
+            assert await asyncio.to_thread(entered.wait, 2)
+            follower.cancel()
+            with pytest.raises(asyncio.CancelledError):
+                await follower
+            assert not exited.is_set()
+        finally:
+            release.set()
+        assert await asyncio.to_thread(exited.wait, 2)
 
     asyncio.run(check())

@@ -49,7 +49,7 @@ def materialize_local_spec(spec: ExecutionSpec) -> ExecutionSpec:
     return replace(
         spec,
         argv=(*launcher, *spec.mpi_argv),
-        stdin=None,
+        stdin=spec.stdin if spec.mpi_uses_stdin else None,
     )
 
 

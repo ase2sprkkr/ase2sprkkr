@@ -49,6 +49,7 @@ def test_remote_request_carries_target_executor_options(tmp_path):
     assert request["executor"] == "psij"
     assert request["executor_options"] == {"backend": "slurm", "url": None}
     assert request["argv"] == ["program"]
+    assert request["mpi_uses_stdin"] is True
     assert request["mpi_argv"][0] == "programMPI"
     assert request["mpi_argv"][1].endswith("/calculation/run.inp")
     assert request["launch"] == {
@@ -66,6 +67,10 @@ def test_remote_request_carries_target_executor_options(tmp_path):
     }
     remote_input = tmp_path / "remote" / "calculation" / "run.inp"
     remote_potential = tmp_path / "remote" / "calculation" / "start.pot"
+    assert "output_files" not in request
+    assert "cache_files" not in request
+    assert request["client_sync"]["output_files"] == []
+    assert request["client_sync"]["cache_files"] == []
     assert request["input_file"] == str(remote_input)
     assert remote_input.read_bytes() == b"input"
     assert remote_potential.read_text() == "potential"
@@ -87,3 +92,30 @@ def test_nonproject_remote_request_does_not_publish_project_identity(tmp_path):
     request, _manifest = asyncio.run(runner._prepare_async())
     assert request["id"] is None
     assert runner._run_id is None
+
+
+def test_remote_sync_declarations_have_one_wire_authority(tmp_path):
+    from ase2sprkkr.execution.remote_service import _request_spec
+
+    root = tmp_path / "local"
+    directory = root / "work"
+    directory.mkdir(parents=True)
+    output = directory / "run.out"
+    auxiliary = directory / "plot-*.dat"
+    cache = directory / "restart.dat"
+    cache.write_text("restart")
+    executor = RemoteExecutor(LocalTransport())
+    run = executor.create_run(ExecutionSpec(
+        argv=("program",), directory=str(directory), input_file=None,
+        output_file=str(output),
+        output_files=(auxiliary,),
+        cache_files=(cache,),
+        launch=LaunchSpec(local_root=root, remote_root=tmp_path / "remote"),
+    ))
+    remote_dir = tmp_path / "remote" / "work"
+    request = asyncio.run(run._prepare_request("test-run", str(remote_dir)))
+    assert "output_files" not in request
+    assert "cache_files" not in request
+    restored = _request_spec(request)
+    assert str(remote_dir / "plot-*.dat") in restored.output_files
+    assert str(remote_dir / "restart.dat") in restored.cache_files

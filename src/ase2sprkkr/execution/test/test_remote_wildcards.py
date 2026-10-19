@@ -196,3 +196,108 @@ def test_exact_and_wildcard_caches_keep_individual_sync_states(tmp_path):
     new_entry = entries[str(workdir / "generated-new.dat")]
     assert new_entry.availability_state == "available"
     assert new_entry.source_pattern == str(pattern)
+
+
+def test_remote_executor_tolerates_unmatched_optional_cache_wildcard(tmp_path):
+    workdir = tmp_path / "local" / "calculation"
+    cache_pattern = workdir / "not-present-*.pot"
+    executor, spec, _, remote_root = _text_run(
+        tmp_path,
+        declared_cache_files=(cache_pattern,),
+        code="print('done')",
+    )
+    runner = _processed_run(executor, spec)
+    result = runner.run()
+
+    assert result.return_code == 0
+    assert result.output == b"done\n"
+    assert not tuple(workdir.glob("not-present-*.pot"))
+    assert not tuple((remote_root / "calculation").glob("not-present-*.pot"))
+
+
+def test_local_transfer_batches_use_their_directional_file_primitives(tmp_path):
+    source = tmp_path / "source"
+    dest = tmp_path / "dest"
+    (source / "nested").mkdir(parents=True)
+    (source / "nested" / "result.dat").write_text("data")
+
+    class TracedTransport(LocalTransport):
+        def __init__(self):
+            self.operations = []
+
+        async def put_file(self, src, dst):
+            self.operations.append("put")
+            await super().put_file(src, dst)
+
+        async def get_file(self, src, dst):
+            self.operations.append("get")
+            await super().get_file(src, dst)
+
+    transport = TracedTransport()
+    async def check():
+        await transport.put_files("nested/*.dat", source, dest)
+        assert transport.operations == ["put"]
+        transport.operations.clear()
+        await transport.get_files("nested/*.dat", source, dest)
+        assert transport.operations == ["get", "put"]
+
+    asyncio.run(check())
+    assert (dest / "nested" / "result.dat").read_text() == "data"
+
+
+def test_overlapping_exact_and_wildcard_outputs_are_transferred_once(tmp_path):
+    from .test_remote import _SpyTransport
+
+    transport = _SpyTransport()
+    workdir = tmp_path / "local" / "calculation"
+    exact = workdir / "value-a.dat"
+    pattern = workdir / "value-*.dat"
+    executor, spec, _, remote_root = _text_run(
+        tmp_path, transport,
+        declared_output_files=(exact, pattern),
+        code=(
+            "from pathlib import Path; "
+            "Path('value-a.dat').write_text('a'); "
+            "Path('value-b.dat').write_text('b')"
+        ),
+    )
+    runner = _processed_run(executor, spec)
+    runner.run()
+    remote_a = remote_root / "calculation" / "value-a.dat"
+    remote_b = remote_root / "calculation" / "value-b.dat"
+    assert sum(src == remote_a for src, _ in transport.get_files) == 1
+    assert sum(src == remote_b for src, _ in transport.get_files) == 1
+    entries = {item.local_path: item for item in runner.files.outputs}
+    assert entries[str(exact)].availability_state == "available"
+    assert entries[str(pattern)].availability_state == "available"
+    assert exact.read_text() == "a"
+
+
+def test_overlapping_exact_and_wildcard_caches_are_transferred_once(tmp_path):
+    from .test_remote import _SpyTransport
+
+    transport = _SpyTransport()
+    workdir = tmp_path / "local" / "calculation"
+    workdir.mkdir(parents=True)
+    exact = workdir / "restart-a.dat"
+    exact.write_text("old")
+    pattern = workdir / "restart-*.dat"
+    executor, spec, _, remote_root = _text_run(
+        tmp_path, transport,
+        declared_cache_files=(exact, pattern),
+        code=(
+            "from pathlib import Path; "
+            "Path('restart-a.dat').write_text('new'); "
+            "Path('restart-b.dat').write_text('created')"
+        ),
+    )
+    runner = _processed_run(executor, spec)
+    runner.run()
+    remote_a = remote_root / "calculation" / "restart-a.dat"
+    remote_b = remote_root / "calculation" / "restart-b.dat"
+    assert sum(src == remote_a for src, _ in transport.get_files) == 1
+    assert sum(src == remote_b for src, _ in transport.get_files) == 1
+    entries = {item.file.local_path: item.file for item in runner.files.caches}
+    assert entries[str(exact)].availability_state == "available"
+    assert entries[str(pattern)].availability_state == "available"
+    assert exact.read_text() == "new"

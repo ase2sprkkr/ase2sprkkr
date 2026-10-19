@@ -32,6 +32,19 @@ from .endpoint import endpoint_for_executor
 _REMOTE_BACKENDS = {"local", "psij"}
 
 
+def _relative_local_path(path, local_root):
+    """Resolve a local path and enforce the run's mapped root boundary."""
+    path = Path(path).expanduser().resolve()
+    root = Path(local_root).expanduser().resolve()
+    try:
+        return path.relative_to(root)
+    except ValueError as exc:
+        raise ValueError(
+            f"Local path {path} is outside mapped root {root}; "
+            "specify local_root/remote_root explicitly"
+        ) from exc
+
+
 def _client_status_state(state):
     """Translate target backend facts to the remote executor's client lifecycle."""
     backend_state = RunState(state.get("state", "unknown"))
@@ -46,6 +59,19 @@ def _client_status_state(state):
     ):
         return RunState.DOWNLOADING
     return backend_state
+
+
+def _remote_status_from_facts(facts, backend_id, *, execution=None, files=None):
+    """Interpret one backend reply without issuing another remote request."""
+    return RunStatus(
+        _client_status_state(facts),
+        backend_id=backend_id,
+        execution=execution,
+        files=files,
+        return_code=facts.get("return_code"),
+        message=facts.get("error"),
+        failure_phase=facts.get("failure_phase"),
+    )
 
 
 class _RemoteRun(RemoteRunner):
@@ -124,10 +150,11 @@ class _RemoteRun(RemoteRunner):
             for path in output_paths
         ]
         caches = []
-        for item in self.spec.cache_files:
-            path = local(item)
-            if path is None:
-                continue
+        cache_paths = dict.fromkeys(
+            path for item in self.spec.cache_files
+            if (path := local(item)) is not None
+        )
+        for path in cache_paths:
             remote = await self.executor.map_path(path)
             previous = self._cache_targets.get(path)
             caches.append(CacheEntry(FileEntry(path, remote), None if previous is None else previous[1]))
@@ -240,14 +267,7 @@ class _RemoteRunContext:
         return posixpath.normpath(self.remote_root)
 
     async def map_path(self, path):
-        path = Path(path).expanduser().resolve()
-        try:
-            relative = path.relative_to(self.local_root)
-        except ValueError as exc:
-            raise ValueError(
-                f"Local path {path} is outside mapped root {self.local_root}; "
-                "specify local_root/remote_root explicitly"
-            ) from exc
+        relative = _relative_local_path(path, self.local_root)
         remote_root = await self._resolved_remote_root()
         if not relative.parts:
             return remote_root
@@ -293,34 +313,31 @@ class _RemoteRunContext:
 
     @staticmethod
     def _manifest_sync(files):
+        outputs, output_patterns = [], []
+        for entry in files.outputs:
+            remote = entry.remote_path
+            if entry.source_pattern is not None or not remote:
+                continue
+            (output_patterns if glob.has_magic(remote) else outputs).append(remote)
+
+        caches, cache_patterns, cache_before = [], [], []
+        for item in files.caches:
+            entry = item.file
+            remote = entry.remote_path
+            if entry.local_path is None:
+                cache_before.append({"path": remote, "signature": item.before})
+            elif entry.source_pattern is None and remote:
+                if glob.has_magic(remote):
+                    cache_patterns.append(remote)
+                else:
+                    caches.append({"path": remote, "before": item.before})
+
         return {
-            "output_files": [
-                entry.remote_path for entry in files.outputs
-                if entry.source_pattern is None and entry.remote_path
-                and not glob.has_magic(entry.remote_path)
-            ],
-            "output_patterns": [
-                entry.remote_path for entry in files.outputs
-                if entry.source_pattern is None and entry.remote_path
-                and glob.has_magic(entry.remote_path)
-            ],
-            "cache_files": [
-                {"path": item.file.remote_path, "before": item.before}
-                for item in files.caches
-                if item.file.source_pattern is None
-                and item.file.local_path is not None and item.file.remote_path
-                and not glob.has_magic(item.file.remote_path)
-            ],
-            "cache_patterns": [
-                item.file.remote_path for item in files.caches
-                if item.file.source_pattern is None
-                and item.file.local_path is not None and item.file.remote_path
-                and glob.has_magic(item.file.remote_path)
-            ],
-            "cache_before": [
-                {"path": item.file.remote_path, "signature": item.before}
-                for item in files.caches if item.file.local_path is None
-            ],
+            "output_files": outputs,
+            "output_patterns": output_patterns,
+            "cache_files": caches,
+            "cache_patterns": cache_patterns,
+            "cache_before": cache_before,
         }
 
     async def attach(self, run, callback=None, output_listener=None, start=True):
@@ -480,15 +497,9 @@ class RemoteEndpointExecutor(Executor):
 
     def submission_directory(self, spec):
         launch = spec.launch
-        local_root = Path(launch.local_root or Path.home()).expanduser().resolve()
-        directory = Path(spec.directory).expanduser().resolve()
-        try:
-            relative = directory.relative_to(local_root)
-        except ValueError as exc:
-            raise ValueError(
-                f"Local path {directory} is outside mapped root {local_root}; "
-                "specify local_root/remote_root explicitly"
-            ) from exc
+        relative = _relative_local_path(
+            spec.directory, launch.local_root or Path.home(),
+        )
 
         root = launch.remote_root
         if root is None or root == "~":
@@ -573,12 +584,8 @@ class RemoteEndpointExecutor(Executor):
                 state = await self._status(
                     execution.directory.remote, execution.backend_id, run.files
                 )
-                result.append(RunStatus(
-                    _client_status_state(state),
-                    backend_id=execution.backend_id,
-                    return_code=state.get("return_code"),
-                    message=state.get("error"),
-                    failure_phase=state.get("failure_phase"),
+                result.append(_remote_status_from_facts(
+                    state, execution.backend_id,
                 ))
             return tuple(result)
 
@@ -613,23 +620,11 @@ class RemoteEndpointExecutor(Executor):
                 execution.directory.local, target_directory,
             ),
         )
-        files = submission.files
-        changes = {}
-        for field, key in (("stdout", "output_file"), ("stderr", "error_file")):
-            remote = state.get(key)
-            old = getattr(files, field)
-            if remote is not None and old is not None:
-                changes[field] = replace(old, remote_path=remote)
-        if changes:
-            files = replace(files, **changes)
-        return RunStatus(
-            _client_status_state(state),
-            backend_id=str(remote_id),
-            execution=execution,
-            files=files,
-            return_code=state.get("return_code"),
-            message=state.get("error"),
-            failure_phase=state.get("failure_phase"),
+        files = submission.files.with_remote_stream_paths(
+            stdout=state.get("output_file"), stderr=state.get("error_file"),
+        )
+        return _remote_status_from_facts(
+            state, str(remote_id), execution=execution, files=files,
         )
 
     def recover_submission(self, run_id, submission, *, submitted_at=None):
@@ -666,16 +661,15 @@ class RemoteEndpointExecutor(Executor):
             remote = entry.remote_path if entry is not None else None
             if remote is None:
                 remote = await context.map_path(local)
-            if glob.has_magic(local):
-                for matched in await self.transport.expand_files(remote, remote_root):
-                    destination = await context.unmap_path(matched)
-                    if not destination.is_file():
-                        await self.transport.get_file(matched, destination)
-                continue
-            if os.path.isfile(local):
-                continue
-            if await self.transport.file_signature(remote) is not None:
-                await self.transport.get_file(remote, local)
+            # Exact paths and wildcards have the same source-side selection
+            # and use the transport's verified single-file download.
+            for matched in await self.transport.expand_files(remote, remote_root):
+                destination = (
+                    os.fspath(await context.unmap_path(matched))
+                    if glob.has_magic(remote) else local
+                )
+                if not os.path.isfile(destination):
+                    await self.transport.get_file(matched, destination)
 
     def fetch_result_files(self, run, files):
         return _run_sync(self._fetch_result_files(run, files))

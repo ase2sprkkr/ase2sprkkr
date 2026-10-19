@@ -62,9 +62,9 @@ def run(args, global_args):
     print("ASE2SPRKKR\n==========\nA tool to run SPRKKR calculations\n\n")
 
     def info_task(args, filter):
-        input_parameters = InputParameters.definitions.values()
+        registry = InputParameters.input_parameters_registry
         if filter is True:
-            input_parameters = list(input_parameters)
+            input_parameters = registry.iter_valid_values()
             path = None
             print(
                 "The known SPRKKR tasks (kind of input parameters)\n---------------------------------------------------"
@@ -76,7 +76,9 @@ def run(args, global_args):
                 filter, path = filter.split(".", 1)
             else:
                 path = None
-            input_parameters = [i for i in input_parameters if filter in i.name.lower()]
+            matching = (name for name in registry.names(include_aliases=False)
+                        if filter.upper() in name)
+            input_parameters = list(registry.iter_valid_values(names=matching))
             if len(input_parameters) == 0:
                 print("There is no known SPRKKR task with '{filter.upper()}' in its name")
                 return

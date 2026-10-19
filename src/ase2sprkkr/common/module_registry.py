@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import importlib
 import pkgutil
+import warnings
 from threading import RLock
 from types import MappingProxyType
 
@@ -14,6 +15,10 @@ class RegistryEntryNotFound(KeyError):
 
 class RegistryDefinitionError(RuntimeError):
     """A discovered registry module or registry configuration is malformed."""
+
+
+class RegistryLoadWarning(UserWarning):
+    """A definition was skipped while enumerating registry entries."""
 
 
 class ModuleRegistry:
@@ -51,6 +56,7 @@ class ModuleRegistry:
         self._module_names = None
         self._modules = {}
         self._values = {}
+        self._warned_load_failures = set()
 
     @staticmethod
     def normalize_name(name):
@@ -196,6 +202,33 @@ class ModuleRegistry:
             self[name]
             for name in self.names(include_aliases=include_aliases)
         )
+
+    def iter_valid_values(self, *, names=None):
+        """Load entries in an enumeration, warning and skipping invalid ones.
+
+        A direct lookup and :meth:`values` remain strict. The optional names
+        restrict which entries are materialized, preserving lazy lookup for
+        filtered enumerations. Each failing entry is warned about at most once.
+        """
+        if names is None:
+            names = self.names(include_aliases=False)
+        for name in names:
+            try:
+                value = self[name]
+            except Exception as exc:
+                canonical = self.aliases.get(self.normalize_name(name), self.normalize_name(name))
+                with self._lock:
+                    warn = canonical not in self._warned_load_failures
+                    self._warned_load_failures.add(canonical)
+                if warn:
+                    warnings.warn(
+                        f"Skipping invalid registry entry {self.package.__name__}.{canonical.lower()}: "
+                        f"{type(exc).__name__}: {exc}",
+                        RegistryLoadWarning,
+                        stacklevel=2,
+                    )
+                continue
+            yield value
 
     @property
     def modules(self):

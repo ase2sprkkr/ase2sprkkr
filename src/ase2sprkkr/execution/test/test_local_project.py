@@ -239,3 +239,92 @@ def test_terminal_local_runner_never_regresses_to_running(tmp_path, monkeypatch)
     monkeypatch.setattr(local_project, "local_status", lambda *args: RunStatus(RunState.RUNNING))
     assert runner.state == RunState.FINISHED
     assert runner.return_code == 0
+
+
+def test_project_request_flushes_each_declared_file_once(tmp_path):
+    class NamedFile:
+        def __init__(self, name):
+            self.name = str(tmp_path / name)
+            self.flush_count = 0
+
+        def flush(self):
+            self.flush_count += 1
+
+    output = NamedFile("supplement.out")
+    inp = NamedFile("supplement.in")
+    cache = NamedFile("restart.pot")
+    spec = replace(
+        _spec(tmp_path),
+        output_files=(output,),
+        input_files=(inp,),
+        cache_files=(cache,),
+    )
+    runner = LocalExecutor().create_project_run(spec, run_id=RUN_ID)
+    request = runner._request()
+
+    assert request["output_files"] == [output.name]
+    assert request["input_files"] == [inp.name]
+    assert request["cache_files"] == [cache.name]
+    assert (output.flush_count, inp.flush_count, cache.flush_count) == (1, 1, 1)
+
+
+def test_submission_cleanup_uses_parsed_manifest_and_protects_caches(tmp_path):
+    from ase2sprkkr.execution.remote_service import (
+        _clean_request_outputs, _request_spec,
+    )
+
+    for name in ("stale.dat", "input.dat", "stdin.dat", "cache.dat", "sync-cache.dat"):
+        (tmp_path / name).write_text(name)
+
+    request = {
+        "directory": str(tmp_path),
+        "argv": [sys.executable, "-c", "pass"],
+        "input_file": "input.dat",
+        "stdin": "stdin.dat",
+        "output_files": ["*.dat"],
+        "cache_files": ["cache.dat"],
+        "client_sync": {
+            "cache_files": [{"path": "sync-cache.dat", "before": None}],
+        },
+    }
+    spec = _request_spec(request)
+    _clean_request_outputs(spec, tmp_path)
+
+    assert not (tmp_path / "stale.dat").exists()
+    for name in ("input.dat", "stdin.dat", "cache.dat", "sync-cache.dat"):
+        assert (tmp_path / name).read_text() == name
+
+
+def test_local_project_request_preserves_mpi_stdin_contract(tmp_path):
+    from dataclasses import replace
+    from ase2sprkkr.execution import LaunchSpec
+    from ase2sprkkr.execution.remote_service import _request_spec
+
+    spec = replace(
+        _spec(tmp_path),
+        mpi_argv=("parallel-program",),
+        launch=LaunchSpec.from_mpi(2),
+        mpi_uses_stdin=False,
+    )
+    runner = LocalExecutor().create_project_run(spec, run_id=RUN_ID)
+    request = runner._request()
+
+    assert request["mpi_uses_stdin"] is False
+    reconstructed = _request_spec(request)
+    assert reconstructed.mpi_uses_stdin is False
+    assert reconstructed.mpi_argv == ("parallel-program",)
+
+
+
+def test_local_project_request_uses_common_command_fields(tmp_path):
+    from ase2sprkkr.execution import LaunchSpec
+
+    spec = replace(
+        _spec(tmp_path),
+        mpi_argv=("mpi-program", "input.inp"),
+        mpi_uses_stdin=False,
+        launch=LaunchSpec.from_mpi(3),
+    )
+    request = LocalExecutor().create_project_run(spec, run_id=RUN_ID)._request()
+    for key, value in spec.command_request().items():
+        assert request[key] == value

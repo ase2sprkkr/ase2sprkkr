@@ -1,8 +1,10 @@
+from dataclasses import replace
+
 import pytest
 
 from ase2sprkkr.execution import (
-    Execution, ExecutorEndpoint, FileManifest, RunRecord, FailurePhase, RunState,
-    WorkingDirectory,
+    Execution, ExecutorEndpoint, FileEntry, FileManifest, RunRecord,
+    FailurePhase, RunState, WorkingDirectory,
 )
 from ase2sprkkr.execution.endpoint import endpoint_for_executor
 from ase2sprkkr.execution.remote_endpoint import (
@@ -164,3 +166,84 @@ def test_backend_status_is_mapped_to_client_owned_lifecycle(
     state = {"state": backend_state, "failure_phase": phase}
 
     assert _client_status_state(state) == expected
+
+
+
+def test_psij_recovered_streams_delegate_to_manifest():
+    from ase2sprkkr.execution.psij import PsijExecutor
+    from ase2sprkkr.execution.run_model import FileEntry, FileManifest
+
+    manifest = FileManifest(
+        stdout=FileEntry("/local/stdout", "/old/out"),
+        stderr=FileEntry("/local/stderr", "/old/err"),
+    )
+    assert PsijExecutor._recovered_files(
+        manifest, "/new/out", "/new/err"
+    ) == manifest.with_remote_stream_paths(
+        stdout="/new/out", stderr="/new/err"
+    )
+
+
+@pytest.mark.parametrize(
+    "facts, expected_state",
+    [
+        ({"state": "running"}, RunState.RUNNING),
+        ({"state": "finished", "return_code": 0}, RunState.DOWNLOADING),
+        ({"state": "failed", "return_code": 7,
+          "failure_phase": "execution", "error": "job failed"},
+         RunState.DOWNLOADING),
+        ({"state": "failed", "failure_phase": "launch",
+          "error": "program missing"}, RunState.FAILED),
+        ({"state": "failed", "failure_phase": "submission"},
+         RunState.FAILED),
+        ({"state": "cancelled", "return_code": 130}, RunState.CANCELLED),
+        ({"state": "unknown"}, RunState.UNKNOWN),
+    ],
+)
+def test_remote_status_and_recovery_share_backend_facts_mapping(
+    facts, expected_state,
+):
+    executor = RemoteEndpointExecutor(_Transport(), backend="local")
+    calls = []
+
+    async def request(action, *args, payload=None):
+        calls.append(action)
+        if action == "status":
+            assert args == ("opaque-job",)
+            return dict(facts)
+        if action == "recover":
+            assert args == ("/work/case", "run-id")
+            return {
+                **facts,
+                "remote_id": "opaque-job",
+                "directory": "/other/work",
+                "output_file": "/other/work/run.out",
+                "error_file": "/other/work/run.err",
+            }
+        pytest.fail(f"Unexpected operation: {action}")
+
+    executor._json_request = request
+    (queried,) = executor.status(_run("opaque-job", backend="local"))
+    original = _run(None, backend="local")
+    submission = replace(original, files=FileManifest(
+        stdout=FileEntry(local_path="/local/case/run.out"),
+        stderr=FileEntry(local_path="/local/case/run.err"),
+    ))
+    recovered = executor.recover_submission("run-id", submission)
+
+    assert calls == ["status", "recover"]
+    assert queried.state == recovered.state == expected_state
+    assert queried.backend_id == recovered.backend_id == "opaque-job"
+    assert queried.return_code == recovered.return_code == facts.get("return_code")
+    assert queried.message == recovered.message == facts.get("error")
+    expected_phase = facts.get("failure_phase")
+    expected_phase = None if expected_phase is None else FailurePhase(expected_phase)
+    assert queried.failure_phase == recovered.failure_phase == expected_phase
+    assert queried.execution is None
+    assert queried.files is None
+    assert recovered.execution.directory.local == "/local/case"
+    assert recovered.execution.directory.remote == "/other/work"
+    assert recovered.files.stdout.local_path == "/local/case/run.out"
+    assert recovered.files.stdout.remote_path == "/other/work/run.out"
+    assert recovered.files.stderr.local_path == "/local/case/run.err"
+    assert recovered.files.stderr.remote_path == "/other/work/run.err"

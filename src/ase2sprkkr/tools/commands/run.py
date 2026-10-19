@@ -13,10 +13,19 @@ sys.path.append(str(Path(__file__).resolve().parents[3]))
 
 from ...common.tools import parse_named_option, main  # NOQA
 from ... import InputParameters  # NOQA
+from ...common.module_registry import RegistryEntryNotFound
 
 
 help = "Run SPRKKR calculation."
 description = "You can pass the input parameters using the command line. However, due to limitation of argparse, pass them directly after the potential file."
+
+
+def _task_name(value):
+    """Validate only a task explicitly requested on the command line."""
+    try:
+        return InputParameters.task_registry[value].name.lower()
+    except RegistryEntryNotFound:
+        raise argparse.ArgumentTypeError(f"Unknown task {value!r}") from None
 
 
 def parser(parser):
@@ -28,10 +37,7 @@ def parser(parser):
         "-t",
         "--task",
         dest="task",
-        choices=tuple(
-            name.lower() for name in InputParameters.task_registry.names()
-        ),
-        type=str.lower,
+        type=_task_name,
         help="Task to compute.",
     )
     grp.add_argument(
@@ -60,6 +66,7 @@ def run(args, global_args):
     import sys
 
     calc = SPRKKR()
+    ip = None
     try:
         potential = Potential.from_file(args.pot)
     except pyparsing.ParseException:

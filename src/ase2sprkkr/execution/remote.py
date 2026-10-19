@@ -6,7 +6,7 @@ import asyncio
 import fcntl
 import os
 import posixpath
-from dataclasses import asdict, replace
+from dataclasses import replace
 from enum import Enum
 from threading import Event, Lock, Thread
 
@@ -14,6 +14,7 @@ from .base import (
     ExecutionOutcome,
     FailurePhase,
     OutputObservers,
+    close_output_files,
     file_path,
     finish_monitor,
     wait_for_monitor,
@@ -31,6 +32,20 @@ class FileSyncPolicy(str, Enum):
     ALWAYS = "always"
     MISSING = "missing"
     NEVER = "never"
+
+    def should_transfer(self, source_digest, destination_digest):
+        """Apply the direction-independent transfer rule to file digests.
+
+        The caller handles missing mandatory files separately; a missing
+        source is never transferable, including with ALWAYS.
+        """
+        if self == FileSyncPolicy.NEVER or source_digest is None:
+            return False
+        if self == FileSyncPolicy.ALWAYS:
+            return True
+        if self == FileSyncPolicy.MISSING:
+            return destination_digest is None
+        return source_digest != destination_digest
 
 
 def _run_sync(coro):
@@ -207,10 +222,6 @@ class RemoteRunner:
     def add_output_error_listener(self, callback):
         self._output_observers.add_error_listener(callback)
 
-    def _emit_output(self, data, kind):
-        if data:
-            self._output_observers.emit(data.decode("utf8", errors="replace"), kind)
-
     def _write_output(self, data, kind):
         """Persist FOLLOW bytes at their logical offset, not blindly append.
 
@@ -270,32 +281,15 @@ class RemoteRunner:
 
         local_digest = file_digest(source, missing_ok=True)
         remote_digest = await self.executor.transport.file_digest(target)
-        transfer = False
-
-        if policy == FileSyncPolicy.ALWAYS:
-            if local_digest is None:
-                if required:
-                    raise FileNotFoundError(f"Local input file does not exist: {source}")
-            else:
-                transfer = True
-        elif policy == FileSyncPolicy.MISSING:
+        if required and local_digest is None:
+            if policy == FileSyncPolicy.ALWAYS:
+                raise FileNotFoundError(f"Local input file does not exist: {source}")
             if remote_digest is None:
-                if local_digest is None:
-                    if required:
-                        raise FileNotFoundError(
-                            f"Input file exists neither locally nor remotely: {source}"
-                        )
-                else:
-                    transfer = True
-        elif local_digest is None:
-            if remote_digest is None and required:
                 raise FileNotFoundError(
                     f"Input file exists neither locally nor remotely: {source}"
                 )
-        elif local_digest != remote_digest:
-            transfer = True
 
-        if transfer:
+        if policy.should_transfer(local_digest, remote_digest):
             if uploads is None:
                 await self.executor.transport.put_file(source, target)
             else:
@@ -304,16 +298,18 @@ class RemoteRunner:
         used[target] = source
         return target
 
-    async def _stage_input_pattern(self, value, used):
+    async def _stage_input_pattern(self, value, used, *, required=True):
         source = self._local_path(value)
         matches = expand_local_files(source, self.executor.local_root)
-        if not matches:
+        if not matches and required:
             raise FileNotFoundError(
                 f"Local input pattern did not match any files: {source}"
             )
         uploads = []
         for match in matches:
-            await self._stage_file(match, used, uploads=uploads)
+            await self._stage_file(
+                match, used, uploads=uploads, required=required,
+            )
         if uploads:
             await self.executor.transport.put_files(
                 uploads,
@@ -338,15 +334,9 @@ class RemoteRunner:
                 if remote_pattern in patterns:
                     continue
                 patterns.append(remote_pattern)
-                uploads = []
-                for match in expand_local_files(local, self.executor.local_root):
-                    await self._stage_file(
-                        match, used, uploads=uploads, required=False
-                    )
-                if uploads:
-                    await self.executor.transport.put_files(
-                        uploads, self.executor.local_root, remote_root
-                    )
+                # Cache patterns use the same transfer logic as inputs,
+                # but an unmatched cache pattern is optional.
+                await self._stage_input_pattern(local, used, required=False)
                 if output_policy != FileSyncPolicy.NEVER:
                     for remote in await self.executor.transport.expand_files(
                         remote_pattern, remote_root
@@ -371,7 +361,7 @@ class RemoteRunner:
         self._cache_patterns = tuple(patterns)
         self._cache_before = pattern_before
 
-    async def _prepare_output_files(self, input_targets):
+    async def _prepare_output_files(self):
         primary = {
             path
             for path in (self.result.output_file, self.result.error_file)
@@ -379,7 +369,6 @@ class RemoteRunner:
         }
         targets = {}
         patterns = []
-        remote_root = await self.executor._resolved_remote_root()
 
         for value in self.spec.output_files:
             local = self._local_path(value)
@@ -415,6 +404,46 @@ class RemoteRunner:
             local, "available" if available else "skipped",
         )
 
+    async def _sync_patterns(self, patterns, *, kind, required=False,
+                             excluded_remote=(), excluded_local=()):
+        """Expand declarations once; the entry handlers own transfer policy."""
+        remote_root = await self.executor._resolved_remote_root()
+        selected = set(excluded_remote)
+        excluded_local = set(excluded_local)
+        for pattern in patterns:
+            local_pattern = os.fspath(await self.executor.unmap_path(pattern))
+            try:
+                matches = await self.executor.transport.expand_files(pattern, remote_root)
+                if not matches:
+                    if required:
+                        raise FileNotFoundError(
+                            f"Declared remote {kind} pattern did not match any files: {pattern}"
+                        )
+                    self._set_file_availability(local_pattern, "skipped", kind=kind)
+                    continue
+                for remote in matches:
+                    if remote in selected:
+                        continue
+                    selected.add(remote)
+                    local = os.fspath(await self.executor.unmap_path(remote))
+                    if local in excluded_local:
+                        continue
+                    if kind == "cache":
+                        await self._sync_cache_entry(
+                            local, remote, self._cache_before.get(remote),
+                            source_pattern=local_pattern,
+                        )
+                    else:
+                        await self._sync_output_entry(
+                            local, remote, required, source_pattern=local_pattern,
+                        )
+                self._set_file_availability(local_pattern, "available", kind=kind)
+            except Exception as exc:
+                self._set_file_availability(
+                    local_pattern, "failed", str(exc), kind=kind,
+                )
+                raise
+
     async def _sync_output_files(self, required):
         policy = self.executor.output_files
         if policy == FileSyncPolicy.NEVER:
@@ -433,45 +462,18 @@ class RemoteRunner:
         for local, remote in self._output_targets.items():
             await self._sync_output_entry(local, remote, required)
 
-        if not self._output_patterns:
-            return
-
-        remote_root = await self.executor._resolved_remote_root()
-        primary = {
-            path
-            for path in (self.result.output_file, self.result.error_file)
-            if path is not None
-        }
-        selected = set()
-        for pattern in self._output_patterns:
-            local_pattern = os.fspath(await self.executor.unmap_path(pattern))
-            try:
-                matches = await self.executor.transport.expand_files(pattern, remote_root)
-                if not matches:
-                    if required:
-                        raise FileNotFoundError(
-                            f"Declared remote output pattern did not match any files: {pattern}"
-                        )
-                    self._set_file_availability(local_pattern, "skipped")
-                    continue
-
-                for remote in matches:
-                    if remote in selected:
-                        continue
-                    selected.add(remote)
-                    local = os.fspath(await self.executor.unmap_path(remote))
-                    if local in primary:
-                        # Primary streams are written incrementally by follow.
-                        continue
-                    await self._sync_output_entry(
-                        local, remote, required, source_pattern=local_pattern,
-                    )
-
-                # The declaration becomes available only after every match.
-                self._set_file_availability(local_pattern, "available")
-            except Exception as exc:
-                self._set_file_availability(local_pattern, "failed", str(exc))
-                raise
+        if self._output_patterns:
+            primary = {
+                path for path in (self.result.output_file, self.result.error_file)
+                if path is not None
+            }
+            await self._sync_patterns(
+                self._output_patterns,
+                kind="output",
+                required=required,
+                excluded_remote=self._output_targets.values(),
+                excluded_local=primary,
+            )
 
     async def _sync_one_output(self, local, remote, required):
         policy = self.executor.output_files
@@ -482,14 +484,8 @@ class RemoteRunner:
                     f"Declared remote output file was not created: {remote}"
                 )
             return False
-        if policy == FileSyncPolicy.ALWAYS:
-            await self.executor.transport.get_file(remote, local)
-            return True
         local_digest = file_digest(local, missing_ok=True)
-        if policy == FileSyncPolicy.MISSING:
-            if local_digest is None:
-                await self.executor.transport.get_file(remote, local)
-        elif local_digest != remote_digest:
+        if policy.should_transfer(remote_digest, local_digest):
             await self.executor.transport.get_file(remote, local)
         return True
 
@@ -525,38 +521,12 @@ class RemoteRunner:
         for local, (remote, before) in self._cache_targets.items():
             await self._sync_cache_entry(local, remote, before)
 
-        if not self._cache_patterns:
-            return
-
-        remote_root = await self.executor._resolved_remote_root()
-        selected = set()
-        exact = {remote for remote, _ in self._cache_targets.values()}
-        for pattern in self._cache_patterns:
-            local_pattern = os.fspath(await self.executor.unmap_path(pattern))
-            try:
-                matches = await self.executor.transport.expand_files(pattern, remote_root)
-                if not matches:
-                    self._set_file_availability(
-                        local_pattern, "skipped", kind="cache",
-                    )
-                    continue
-                for remote in matches:
-                    if remote in selected or remote in exact:
-                        continue
-                    selected.add(remote)
-                    local = os.fspath(await self.executor.unmap_path(remote))
-                    await self._sync_cache_entry(
-                        local, remote, self._cache_before.get(remote),
-                        source_pattern=local_pattern,
-                    )
-                self._set_file_availability(
-                    local_pattern, "available", kind="cache",
-                )
-            except Exception as exc:
-                self._set_file_availability(
-                    local_pattern, "failed", str(exc), kind="cache",
-                )
-                raise
+        if self._cache_patterns:
+            await self._sync_patterns(
+                self._cache_patterns,
+                kind="cache",
+                excluded_remote=(remote for remote, _ in self._cache_targets.values()),
+            )
 
     def _remote_argv(self, argv, staged):
         directory = os.path.abspath(self.spec.directory)
@@ -597,7 +567,7 @@ class RemoteRunner:
 
         await self._prepare_cache_files(used)
         staged = {source: target for target, source in used.items()}
-        await self._prepare_output_files(set(used))
+        await self._prepare_output_files()
 
         output_target = (
             await self.executor.map_path(self.result.output_file)
@@ -630,22 +600,15 @@ class RemoteRunner:
             "executor": self.executor.backend,
             "executor_options": self.executor.backend_options,
             "directory": remote_directory,
-            "argv": self._remote_argv(self.spec.argv, staged),
-            "mpi_argv": (
-                None
-                if self.spec.mpi_argv is None
-                else self._remote_argv(self.spec.mpi_argv, staged)
+            **self.spec.command_request(
+                lambda args: self._remote_argv(args, staged)
             ),
-            "launch": asdict(self.spec.launch),
             "input_file": input_target,
             "stdin": stdin_target,
             "output_file": output_target,
             "error_file": error_target,
             "client_sync": client_sync,
-            "output_files": list(self._output_targets.values())
-                            + list(self._output_patterns),
             "input_files": list(used.keys()),
-            "cache_files": [remote for remote, _ in self._cache_targets.values()],
         }
 
     async def _pump(self, source, kind):
@@ -654,7 +617,7 @@ class RemoteRunner:
             if not data:
                 return
             self._write_output(data, kind)
-            self._emit_output(data, kind)
+            self._output_observers.emit_bytes(data, kind)
 
     async def _monitor(self):
         stdout_task = stderr_task = None
@@ -796,12 +759,7 @@ class RemoteRunner:
                 await asyncio.gather(*tasks, return_exceptions=True)
             # Files already contain every received byte, including incomplete
             # sessions. Closing flushes them without any publish/discard step.
-            seen = set()
-            for target in (self.spec.output_file, self.spec.error_file):
-                if target is not None and id(target) not in seen:
-                    seen.add(id(target))
-                    if hasattr(target, "close"):
-                        target.close()
+            close_output_files(self.spec.output_file, self.spec.error_file)
 
     def _thread_main(self):
         try:

@@ -7,13 +7,13 @@ from __future__ import annotations
 
 import asyncio
 import os
-from dataclasses import asdict, replace
+from dataclasses import replace
 from threading import Event, Lock, Thread
 
 from .base import (
     ExecutionOutcome, ExecutionSpec, FailurePhase, OutputObservers,
     RunState, RunStatus, dispatch_cancellation,
-    finish_monitor, wait_for_monitor, file_path,
+    close_output_files, finish_monitor, wait_for_monitor, file_path,
 )
 from .file_availability import discover_local_files
 from .remote_service import (
@@ -57,8 +57,12 @@ def local_manifest(files, status):
     return discover_local_files(files, include_streams=False)
 
 
-def local_status(backend_id, files=None):
-    facts = status_remote(backend_id)
+def _local_status_from_facts(backend_id, facts, files=None):
+    """Project local supervisor facts into a status without querying it again.
+
+    Recovery already has an authoritative reply; asking the supervisor for
+    status a second time risks replacing that snapshot with newer/unknown facts.
+    """
     status = RunStatus(
         state=RunState(facts["state"]), backend_id=backend_id,
         return_code=facts.get("return_code"), message=facts.get("error"),
@@ -69,6 +73,12 @@ def local_status(backend_id, files=None):
     return status
 
 
+def local_status(backend_id, files=None):
+    return _local_status_from_facts(
+        backend_id, status_remote(backend_id), files,
+    )
+
+
 class _ObserverSink:
     """Adapt the supervisor's byte stream to the existing listener contract."""
 
@@ -77,8 +87,7 @@ class _ObserverSink:
         self.kind = kind
 
     def write(self, data):
-        if data:
-            self.observers.emit(data.decode("utf8", errors="replace"), self.kind)
+        self.observers.emit_bytes(data, self.kind)
 
     def flush(self):
         pass
@@ -193,15 +202,6 @@ class LocalProjectRunner:
         self._refresh()
         return self.result
 
-    def _close_owned_files(self):
-        seen = set()
-        for value in (self.spec.output_file, self.spec.error_file):
-            if value is None or id(value) in seen:
-                continue
-            seen.add(id(value))
-            if hasattr(value, "close"):
-                value.close()
-
     def _thread_main(self):
         try:
             self._monitor()
@@ -212,7 +212,7 @@ class LocalProjectRunner:
             self._state = RunState.FAILED
         finally:
             try:
-                self._close_owned_files()
+                close_output_files(self.spec.output_file, self.spec.error_file)
             except BaseException as exc:
                 if self._exception is None:
                     self._exception = exc
@@ -237,27 +237,22 @@ class LocalProjectRunner:
             "id": self._run_id,
             "detached": True,
             "directory": os.fspath(self.spec.directory),
-            "argv": list(self.spec.argv),
+            **self.spec.command_request(),
             "input_file": self.result.input_file,
-            "mpi_argv": None if self.spec.mpi_argv is None else list(self.spec.mpi_argv),
-            "launch": asdict(self.spec.launch),
             "stdin": _file_path(self.spec.stdin, self.spec.directory),
             "output_file": self.result.output_file,
             "error_file": self.result.error_file,
             "output_files": [
-                _file_path(value, self.spec.directory)
-                for value in self.spec.output_files
-                if _file_path(value, self.spec.directory) is not None
+                path for value in self.spec.output_files
+                if (path := _file_path(value, self.spec.directory)) is not None
             ],
             "input_files": [
-                _file_path(value, self.spec.directory)
-                for value in self.spec.input_files
-                if _file_path(value, self.spec.directory) is not None
+                path for value in self.spec.input_files
+                if (path := _file_path(value, self.spec.directory)) is not None
             ],
             "cache_files": [
-                _file_path(value, self.spec.directory)
-                for value in self.spec.cache_files
-                if _file_path(value, self.spec.directory) is not None
+                path for value in self.spec.cache_files
+                if (path := _file_path(value, self.spec.directory)) is not None
             ],
         }
 

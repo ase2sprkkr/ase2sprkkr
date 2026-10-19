@@ -133,3 +133,139 @@ def test_transport_missing_file_is_optional_but_provenance_digest_is_strict(tmp_
     assert asyncio.run(LocalTransport().file_digest(missing)) is None
     with pytest.raises(FileNotFoundError):
         file_digest(missing)
+
+
+
+def test_ssh_and_local_globstar_agree_on_hidden_entries(tmp_path):
+    """Remote glob semantics match the local transport, including dotfiles."""
+    from ..transport import _match_relative_path, expand_local_files
+
+    for name in (
+        "shown/one.dat",
+        "shown/.private.dat",
+        ".hidden/other.dat",
+        "shown/.hidden/deep.dat",
+        "shown/nested/two.dat",
+        "shown/nested/.another.dat",
+    ):
+        destination = tmp_path / name
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        destination.write_text(name)
+
+    names = tuple(
+        str(path.relative_to(tmp_path))
+        for path in tmp_path.rglob("*")
+        if path.is_file()
+    )
+    for pattern in (
+        "**/*.dat", "shown/**/*.dat", "**/.*.dat",
+        "**/.hidden/*.dat", ".hidden/*.dat", "shown/one.dat",
+    ):
+        local = {
+            str(os.path.relpath(path, tmp_path))
+            for path in expand_local_files(pattern, tmp_path)
+        }
+        ssh = {name for name in names if _match_relative_path(name, pattern)}
+        assert ssh == local, (pattern, ssh, local)
+
+
+def test_strict_transfer_refuses_wildcard_symlink_outside_source_root(tmp_path):
+    import pytest
+    from ..transport import expand_local_candidates, expand_local_files
+
+    root = tmp_path / "root"
+    root.mkdir()
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    target = outside / "sensitive.dat"
+    target.write_text("protected")
+    alias = root / "alias.dat"
+    alias.symlink_to(target)
+
+    assert expand_local_candidates(str(root / "*.dat")) == (str(alias),)
+    with pytest.raises(ValueError, match="outside source root"):
+        expand_local_files(str(root / "*.dat"), root)
+    assert target.read_text() == "protected"
+
+
+
+class _LoopbackSshTransport(SshTransport):
+    """Exercise the real SSH transfer implementation without an SSH server."""
+
+    def __init__(self):
+        super().__init__("local-test")
+
+    def _command(self, argv, cwd=None):
+        assert cwd is None
+        return tuple(os.fspath(part) for part in argv)
+
+
+def test_ssh_batch_tar_upload_and_download_share_pipeline(tmp_path):
+    import shutil
+
+    if shutil.which("tar") is None:
+        pytest.skip("tar executable unavailable")
+
+    source = tmp_path / "upload source"
+    (source / "nested").mkdir(parents=True)
+    (source / "nested" / "one.dat").write_text("one")
+    (source / "nested" / "two.dat").write_text("two")
+    remote = tmp_path / "remote target"
+    downloaded = tmp_path / "download destination"
+    transport = _LoopbackSshTransport()
+
+    async def check():
+        sent = await transport.put_files("nested/*.dat", source, remote)
+        assert len(sent) == 2
+        assert all(os.path.isfile(destination) for _, destination in sent)
+        received = await transport.get_files("nested/*.dat", remote, downloaded)
+        assert len(received) == 2
+        assert all(os.path.isfile(destination) for _, destination in received)
+
+    asyncio.run(check())
+    for name in ("one.dat", "two.dat"):
+        expected = (source / "nested" / name).read_text()
+        assert (remote / "nested" / name).read_text() == expected
+        assert (downloaded / "nested" / name).read_text() == expected
+
+
+@pytest.mark.parametrize("failing_side", ["producer", "consumer"])
+def test_ssh_batch_tar_pipeline_reports_subprocess_failures(failing_side):
+    transport = _LoopbackSshTransport()
+    producer = (
+        sys.executable, "-c",
+        "import sys; sys.stdout.buffer.write(b'data'); "
+        "sys.stdout.buffer.flush(); "
+        "sys.stderr.write('producer failed'); "
+        f"sys.exit({7 if failing_side == 'producer' else 0})",
+    )
+    consumer = (
+        sys.executable, "-c",
+        "import sys; sys.stdin.buffer.read(); "
+        "sys.stderr.write('consumer failed'); "
+        f"sys.exit({9 if failing_side == 'consumer' else 0})",
+    )
+    async def check():
+        with pytest.raises(__import__("subprocess").CalledProcessError) as exc:
+            await asyncio.wait_for(transport._transfer_tar(producer, consumer), timeout=5)
+        expected = 7 if failing_side == "producer" else 9
+        assert exc.value.returncode == expected
+        assert (failing_side + " failed").encode() in exc.value.stderr
+
+    asyncio.run(check())
+
+
+def test_ssh_batch_tar_pipeline_drains_stderr_during_copy():
+    transport = _LoopbackSshTransport()
+    producer = (
+        sys.executable, "-c",
+        "import sys; sys.stderr.buffer.write(b'e' * 262144); "
+        "sys.stderr.buffer.flush(); sys.stdout.buffer.write(b'payload')",
+    )
+    consumer = (
+        sys.executable, "-c",
+        "import sys; assert sys.stdin.buffer.read() == b'payload'",
+    )
+    asyncio.run(asyncio.wait_for(
+        transport._transfer_tar(producer, consumer), timeout=5,
+    ))

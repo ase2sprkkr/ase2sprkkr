@@ -12,11 +12,11 @@ from .base import (
     Executor,
     FailurePhase,
     OutputObservers,
+    close_output_files,
     file_path,
     finish_monitor,
     wait_for_monitor,
     RunState,
-    RunStatus,
     SubmissionNotStarted,
 )
 from .file_availability import clear_declared_outputs
@@ -91,10 +91,6 @@ class LocalRunner:
     def add_output_error_listener(self, callback):
         self._output_observers.add_error_listener(callback)
 
-    def _emit_output(self, data, kind):
-        if data:
-            self._output_observers.emit(data.decode("utf8", errors="replace"), kind)
-
     def _output_target(self, kind):
         # A missing stderr target means live observation only, not an
         # implicit merge into the saved stdout artifact.
@@ -105,7 +101,7 @@ class LocalRunner:
         if target is not None:
             target.write(data)
             target.flush()
-        self._emit_output(data, kind)
+        self._output_observers.emit_bytes(data, kind)
 
     async def _stop_process(self):
         await stop_local_process(self._process)
@@ -131,15 +127,6 @@ class LocalRunner:
             loop.call_soon_threadsafe(self._schedule_stop)
         except RuntimeError:
             pass
-
-    def _close_output_files(self):
-        closed = set()
-        for file in (self.spec.output_file, self.spec.error_file):
-            if file is None or id(file) in closed:
-                continue
-            closed.add(id(file))
-            if hasattr(file, "close"):
-                file.close()
 
     async def _execute(self):
         self._loop = asyncio.get_running_loop()
@@ -224,7 +211,7 @@ class LocalRunner:
         finally:
             if self._stop_task is not None:
                 await asyncio.gather(self._stop_task, return_exceptions=True)
-            self._close_output_files()
+            close_output_files(self.spec.output_file, self.spec.error_file)
             self._process = None
             self._loop = None
 
@@ -294,7 +281,7 @@ class LocalExecutor(Executor):
 
     def recover_submission(self, run_id, submission, *, submitted_at=None):
         from .remote_service import recover_remote
-        from .local_project import local_manifest
+        from .local_project import _local_status_from_facts
         reply = recover_remote(run_id, {
             "executor": "local",
             "directory": submission.execution.directory.local,
@@ -303,17 +290,9 @@ class LocalExecutor(Executor):
             # The absence of a ticket is not proof that submission never
             # happened. Never authorize an automatic duplicate launch.
             raise NotImplementedError("Submission identity is not recoverable")
-        status = RunStatus(
-            state=RunState(reply["state"]),
-            backend_id=reply["remote_id"],
-            return_code=reply.get("return_code"),
-            message=reply.get("error"),
-            failure_phase=reply.get("failure_phase"),
+        return _local_status_from_facts(
+            reply["remote_id"], reply, submission.files,
         )
-        if status.state in (RunState.FINISHED, RunState.FAILED, RunState.CANCELLED):
-            from dataclasses import replace
-            status = replace(status, files=local_manifest(submission.files, status))
-        return status
 
     def attach(self, run, callback=None, output_listener=None, start=True):
         from .local_project import attach_local

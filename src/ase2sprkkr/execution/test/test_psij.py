@@ -267,6 +267,61 @@ def test_psij_merged_output_is_followed_once(monkeypatch, tmp_path):
 
 
 
+@pytest.mark.parametrize(
+    "native_name, return_code, attached, expected",
+    [
+        ("COMPLETED", 7, False, RunState.FAILED),
+        ("COMPLETED", 0, False, RunState.FINISHED),
+        ("COMPLETED", None, False, RunState.FINISHED),
+        ("FAILED", 0, False, RunState.FAILED),
+        ("CANCELED", 1, False, RunState.CANCELLED),
+        ("NEW", None, False, RunState.NEW),
+        ("NEW", None, True, RunState.UNKNOWN),
+        ("ACTIVE", None, True, RunState.RUNNING),
+        (None, None, True, RunState.UNKNOWN),
+    ],
+)
+def test_native_psij_state_normalization(
+    native_name, return_code, attached, expected,
+):
+    native = None if native_name is None else _Status(native_name, return_code)
+    assert psij_backend._psij_state(native, attached=attached) == expected
+
+
+def test_psij_runner_prefers_observed_return_code_over_cached_job_status(
+    monkeypatch, tmp_path,
+):
+    executor = _executor(monkeypatch, _Backend())
+    runner = executor.create_run(ExecutionSpec(
+        argv=("program",), directory=str(tmp_path),
+        input_file=None, output_file=None,
+    ))
+    runner._job.status = _Status("COMPLETED", 0)
+    runner._return_code = 7
+    assert runner.state == RunState.FAILED
+
+
+def test_psij_non_slurm_status_uses_shared_normalization(monkeypatch):
+    executor = _executor(monkeypatch, _Backend())
+    executor.backend = "pbs"
+    executor.url = "remote-pbs"
+
+    class Job:
+        def __init__(self):
+            self.status = _Status("COMPLETED", 9)
+
+    class Backend:
+        def attach(self, job, native_id):
+            assert native_id == "pbs-123"
+
+    executor._psij = SimpleNamespace(Job=Job)
+    executor._job_executor = Backend()
+    result = executor.status_native("pbs-123")
+    assert result.state == RunState.FAILED
+    assert result.return_code == 9
+    assert result.failure_phase == psij_backend.FailurePhase.EXECUTION
+
+
 def test_psij_nonzero_completed_job_is_failed(monkeypatch, tmp_path):
     backend = _Backend()
     executor = _executor(monkeypatch, backend)
@@ -300,7 +355,7 @@ def test_psij_observation_accepts_non_utf8_output(monkeypatch, tmp_path):
     ))
     seen = []
     runner.add_output_listener(lambda text, kind: seen.append((kind, text)))
-    runner._emit_output(b"raw:\xff", "out")
+    runner._output_observers.emit_bytes(b"raw:\xff", "out")
     assert seen == [("out", "raw:\ufffd")]
     assert runner.exception is None
 
@@ -364,7 +419,7 @@ def test_psij_mpi_process_count_becomes_resource_spec(monkeypatch, tmp_path):
     assert job_spec.arguments == [str(tmp_path / "run.inp")]
     assert job_spec.resources.process_count == 16
     assert job_spec.launcher == "srun"
-    assert job_spec.stdin_path is None
+    assert job_spec.stdin_path == str(tmp_path / "run.inp")
     input_file.close()
     output_file.close()
 
@@ -609,6 +664,38 @@ def test_psij_preparation_failure_is_definitively_not_submitted(monkeypatch, tmp
         runner.submit()
     assert executor._job_executor.submitted is None
     assert runner.failure_phase == FailurePhase.SUBMISSION
+
+def test_psij_native_attachment_is_fresh_while_status_attachment_is_cached(
+    monkeypatch,
+):
+    class Backend:
+        def __init__(self):
+            self.attaches = []
+
+        def attach(self, job, native_id):
+            self.attaches.append((job, native_id))
+            job.native_id = native_id
+            job.status = _Status("ACTIVE")
+
+    backend = Backend()
+    executor = _executor(monkeypatch, backend)
+    executor.backend = "pbs"
+    executor.url = "remote-pbs"
+
+    first = executor.attach_native_job("native-42")
+    second = executor.attach_native_job("native-42")
+    assert first is not second
+    assert backend.attaches == [(first, "native-42"), (second, "native-42")]
+    assert executor._status_jobs == {}
+
+    status = executor.status_native("native-42")
+    assert status.state == RunState.RUNNING
+    cached = executor._status_jobs["native-42"]
+    assert cached is not first and cached is not second
+    assert executor.status_native("native-42").state == RunState.RUNNING
+    assert len(backend.attaches) == 3
+    assert backend.attaches[-1] == (cached, "native-42")
+
 
 def test_psij_executor_attaches_to_native_job(monkeypatch, tmp_path):
     backend = _Backend()
@@ -877,3 +964,17 @@ def test_psij_submit_is_serialized_across_threads(monkeypatch, tmp_path):
     assert len(errors) == 1
     runner.wait()
     input_file.close()
+
+def test_psij_mpi_respects_explicit_stdin_policy(monkeypatch, tmp_path):
+    backend = _Backend()
+    executor = _executor(monkeypatch, backend)
+    spec = ExecutionSpec(
+        argv=("program",), mpi_argv=("parallel",),
+        launch=LaunchSpec.from_mpi(2),
+        input_file=None, output_file=None, directory=str(tmp_path),
+        stdin=str(tmp_path / "stdin.dat"),
+        mpi_uses_stdin=False,
+    )
+    runner = executor.create_run(spec)
+    assert runner._job.spec.stdin_path is None
+    assert replace(spec, mpi_uses_stdin=True).mpi_uses_stdin

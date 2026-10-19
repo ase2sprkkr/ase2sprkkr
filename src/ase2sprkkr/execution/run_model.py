@@ -55,12 +55,10 @@ class Execution:
 
     def submitted(self, backend_id: str):
         """Return the execution bound to its immutable backend identity."""
-        backend_id = str(backend_id)
-        if not backend_id:
-            raise ValueError("backend_id cannot be empty")
-        if self.backend_id is not None and self.backend_id != backend_id:
+        submitted = replace(self, backend_id=backend_id)
+        if self.backend_id is not None and self.backend_id != submitted.backend_id:
             raise ValueError("Cannot replace an assigned backend identity")
-        return replace(self, backend_id=backend_id)
+        return submitted
 
 
 
@@ -192,6 +190,19 @@ class FileManifest:
         failures = self.failed_artifacts
         return None if not failures else failures[0].availability_message
 
+    def with_remote_stream_paths(self, *, stdout=None, stderr=None):
+        """Update recovered stream locations without changing artifact identity.
+
+        Missing or empty recovered paths do not replace persisted locations.
+        A stream that was not recorded remains absent.
+        """
+        changes = {}
+        for name, remote in (("stdout", stdout), ("stderr", stderr)):
+            current = getattr(self, name)
+            if remote and current is not None:
+                changes[name] = replace(current, remote_path=remote)
+        return replace(self, **changes) if changes else self
+
     def initialize_availability(self):
         """Mark declared downloadable files pending without marking inputs."""
         return self._map_artifacts(
@@ -220,10 +231,6 @@ class FileManifest:
         """
         import os
         path = os.fspath(local_path)
-        if state not in ("pending", "available", "failed", "skipped"):
-            raise ValueError("Invalid per-file availability state")
-        if message is not None and state != "failed":
-            raise ValueError("An availability error belongs to a failed file")
         matches = any(x.local_path == path for x in self.artifacts)
         if matches:
             return self._map_artifacts(

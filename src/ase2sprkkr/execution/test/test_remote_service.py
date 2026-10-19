@@ -3,7 +3,7 @@ import json
 
 import pytest
 
-from ase2sprkkr.execution import FailurePhase, RunState
+from ase2sprkkr.execution import FailurePhase, RunState, RunStatus
 from ase2sprkkr.execution import psij, remote_process_worker, remote_service
 
 
@@ -44,6 +44,45 @@ def test_remote_id_is_opaque_backend_handle_without_lifecycle_state(tmp_path):
     assert "state" not in decoded
     assert "failure_phase" not in decoded
     assert set(decoded) == {"kind", "pid", "start_time", "receipt_id", "socket_path"}
+
+
+@pytest.mark.parametrize(
+    "state, return_code, phase, error",
+    [
+        (RunState.UNKNOWN, None, None, None),
+        (RunState.RUNNING, None, None, None),
+        (RunState.FINISHED, 0, None, None),
+        (RunState.CANCELLED, -15, None, None),
+        (RunState.FAILED, 127, FailurePhase.LAUNCH, "spawn failed"),
+        (RunState.FAILED, 7, FailurePhase.EXECUTION, "job failed"),
+    ],
+)
+def test_remote_status_wire_reply_is_shared_between_process_and_psij(
+    monkeypatch, tmp_path, state, return_code, phase, error,
+):
+    _, process_id, _ = _process_handle(tmp_path)
+    _, psij_id = _psij_handle(tmp_path)
+
+    monkeypatch.setattr(
+        remote_service, "_process_outcome",
+        lambda receipt_id: (state, return_code, phase, error),
+    )
+    monkeypatch.setattr(
+        psij, "_slurm_status_native",
+        lambda native_id: RunStatus(
+            state, backend_id=native_id, return_code=return_code,
+            failure_phase=phase, message=error,
+        ),
+    )
+    expected = {
+        "state": state.value,
+        "return_code": return_code,
+        "error": error,
+        "failure_phase": None if phase is None else phase.value,
+    }
+
+    assert remote_service.status_remote(process_id) == expected
+    assert remote_service.status_remote(psij_id) == expected
 
 
 def test_mailbox_receipt_survives_until_client_ack(tmp_path, monkeypatch):
@@ -143,10 +182,9 @@ def test_psij_cancellation_does_not_invent_terminal_state(monkeypatch, tmp_path)
             calls.append("cancel")
 
     class Backend:
-        _psij = type("Psij", (), {"Job": Job})
-        _job_executor = type("Executor", (), {
-            "attach": lambda self, job, native_id: calls.append(native_id)
-        })()
+        def attach_native_job(self, native_id):
+            calls.append(native_id)
+            return Job()
 
     monkeypatch.setattr(remote_service, "_psij_executor", lambda _: Backend())
     monkeypatch.setattr(remote_service, "status_remote", lambda _: {
@@ -173,10 +211,9 @@ def _stub_terminal_psij_job(monkeypatch, state, return_code, observed):
             return self.status
 
     class Backend:
-        _psij = SimpleNamespace(Job=Job)
-        _job_executor = SimpleNamespace(
-            attach=lambda job, native_id: observed.append(("attach", native_id)),
-        )
+        def attach_native_job(self, native_id):
+            observed.append(("attach", native_id))
+            return Job()
 
     monkeypatch.setattr(remote_service, "_psij_executor", lambda _: Backend())
 
@@ -216,6 +253,28 @@ def test_follow_uses_native_terminal_when_status_query_is_transient_unknown(tmp_
     assert outcome["failure_phase"] == FailurePhase.EXECUTION.value
     assert observed == [("attach", "42"), "wait"]
     assert checks == [remote_id]
+
+
+def test_follow_fallback_treats_completed_nonzero_psij_as_failed(
+    tmp_path, monkeypatch,
+):
+    _, remote_id = _psij_handle(tmp_path)
+    observed = []
+    _stub_terminal_psij_job(monkeypatch, "COMPLETED", 7, observed)
+    monkeypatch.setattr(
+        remote_service, "status_remote",
+        lambda _remote_id: {"state": RunState.UNKNOWN.value},
+    )
+    outcome = remote_service.follow_remote(
+        remote_id, io.BytesIO(), io.BytesIO(),
+    )
+    assert outcome == {
+        "state": RunState.FAILED.value,
+        "return_code": 7,
+        "failure_phase": FailurePhase.EXECUTION.value,
+        "error": None,
+    }
+    assert observed == [("attach", "42"), "wait"]
 
 
 def test_supervisor_writes_mailbox_receipt(monkeypatch):

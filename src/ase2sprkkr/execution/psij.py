@@ -13,7 +13,7 @@ from pathlib import Path
 from threading import Event, Lock, Thread
 
 from .file_availability import discover_local_files, clear_declared_outputs
-from .growing_file_tail import follow_growing_files
+from .growing_file_tail import follow_job_files
 from .base import (
     ExecutionOutcome,
     ExecutionSpec,
@@ -60,6 +60,24 @@ _SLURM_STATE_MAP = {
     "REVOKED": RunState.FAILED,
     "TIMEOUT": RunState.FAILED,
 }
+
+
+def _psij_state(status, *, attached=False, return_code=None):
+    """Interpret native PSI/J job facts consistently across all observers.
+
+    A newly attached job reports NEW before PSI/J has received its real
+    scheduler status. That is UNKNOWN, not evidence of a new submission.
+    A completed job with a nonzero exit code is an execution failure.
+    """
+    name = getattr(getattr(status, "state", None), "name", None)
+    if attached and name == "NEW":
+        return RunState.UNKNOWN
+    state = _STATE_MAP.get(name, RunState.UNKNOWN)
+    if return_code is None:
+        return_code = getattr(status, "exit_code", None)
+    if state == RunState.FINISHED and return_code not in (None, 0):
+        return RunState.FAILED
+    return state
 
 
 def _load_psij():
@@ -314,9 +332,10 @@ class PsijRunner:
             directory=self.spec.directory,
             environment=environment,
             stdin_path=(
-                None
-                if self.spec.launch and self.spec.mpi_argv is not None
-                else self._stdin_path
+                self._stdin_path
+                if not (self.spec.launch and self.spec.mpi_argv is not None)
+                or self.spec.mpi_uses_stdin
+                else None
             ),
             stdout_path=self._stdout_path,
             stderr_path=self._stderr_path,
@@ -330,11 +349,7 @@ class PsijRunner:
     def state(self):
         if self._exception is not None:
             return RunState.FAILED
-        state = getattr(getattr(self._job, "status", None), "state", None)
-        mapped = _STATE_MAP.get(getattr(state, "name", None), RunState.UNKNOWN)
-        if mapped == RunState.FINISHED and self.return_code not in (None, 0):
-            return RunState.FAILED
-        return mapped
+        return _psij_state(self._job.status, return_code=self.return_code)
 
     @property
     def exception(self):
@@ -376,10 +391,6 @@ class PsijRunner:
 
     def add_output_error_listener(self, callback):
         self._output_observers.add_error_listener(callback)
-
-    def _emit_output(self, data, kind):
-        if data:
-            self._output_observers.emit(data.decode("utf8", errors="replace"), kind)
 
     @staticmethod
     def _flush(value):
@@ -423,21 +434,10 @@ class PsijRunner:
         if not paths:
             status = await asyncio.to_thread(self._job.wait)
         else:
-            waiting = asyncio.create_task(asyncio.to_thread(self._job.wait))
-
-            async def terminal():
-                return await waiting if waiting.done() else None
-
-            try:
-                status = await follow_growing_files(
-                    paths, lambda kind, data: self._emit_output(data, kind),
-                    terminal, poll_interval=max(self.executor.poll_interval, 1.0),
-                )
-            finally:
-                if not waiting.done():
-                    # PSI/J owns scheduler cancellation; never cancel its job
-                    # merely because an output listener stopped.
-                    waiting.cancel()
+            status = await follow_job_files(
+                paths, lambda kind, data: self._output_observers.emit_bytes(data, kind),
+                self._job.wait, poll_interval=max(self.executor.poll_interval, 1.0),
+            )
 
         self._return_code = getattr(status, "exit_code", None)
         state_name = getattr(getattr(status, "state", None), "name", None)
@@ -566,13 +566,22 @@ class PsijExecutor(Executor):
 
     @staticmethod
     def _recovered_files(files, stdout, stderr):
-        from .run_model import FileEntry
-        changes = {}
-        for field, remote in (("stdout", stdout), ("stderr", stderr)):
-            previous = getattr(files, field)
-            if remote and previous is not None:
-                changes[field] = replace(previous, remote_path=remote)
-        return replace(files, **changes) if changes else files
+        return files.with_remote_stream_paths(stdout=stdout, stderr=stderr)
+
+    def attach_native_job(self, native_id):
+        """Create a fresh attached PSI/J job; never reuse the status cache."""
+        job = self._psij.Job()
+        self._job_executor.attach(job, native_id)
+        return job
+
+    def _status_job(self, native_id):
+        """Reuse a single attached PSI/J job for repeated status observations."""
+        native_id = str(native_id)
+        job = self._status_jobs.get(native_id)
+        if job is None:
+            job = self.attach_native_job(native_id)
+            self._status_jobs[native_id] = job
+        return job
 
     def status_native(self, native_id):
         """Return the currently known native job status without waiting."""
@@ -580,19 +589,9 @@ class PsijExecutor(Executor):
         if self.backend.lower() == "slurm" and self.url is None:
             return _slurm_status_native(native_id)
 
-        job = self._status_jobs.get(native_id)
-        if job is None:
-            job = self._psij.Job()
-            self._job_executor.attach(job, native_id)
-            self._status_jobs[native_id] = job
-        status = getattr(job, "status", None)
-        name = getattr(getattr(status, "state", None), "name", None)
-        # NEW after attach means no scheduler observation yet, even when
-        # the attached PSI/J Job was previously cached.
-        state = RunState.UNKNOWN if name == "NEW" else _STATE_MAP.get(name, RunState.UNKNOWN)
+        status = getattr(self._status_job(native_id), "status", None)
+        state = _psij_state(status, attached=True)
         return_code = getattr(status, "exit_code", None)
-        if state == RunState.FINISHED and return_code not in (None, 0):
-            state = RunState.FAILED
         return RunStatus(
             state=state, backend_id=native_id,
             return_code=return_code,
@@ -613,11 +612,7 @@ class PsijExecutor(Executor):
         if status.state != RunState.UNKNOWN or timeout == 0:
             return status
 
-        job = self._status_jobs.get(str(native_id))
-        if job is None:
-            job = self._psij.Job()
-            self._job_executor.attach(job, str(native_id))
-            self._status_jobs[str(native_id)] = job
+        job = self._status_job(native_id)
         # The PSI/J Job object waits for notifications from its executor.
         # There is no repeated scheduler status query or sleep loop.
         job.wait(
@@ -715,8 +710,7 @@ class PsijExecutor(Executor):
         backend_id = run.execution.backend_id
         if not backend_id or (run.files.stdout is None and run.files.stderr is None):
             raise ValueError("PSI/J run lacks backend ID or recorded output streams")
-        job = self._psij.Job()
-        self._job_executor.attach(job, backend_id)
+        job = self.attach_native_job(backend_id)
         spec = ExecutionSpec(
             argv=(),
             input_file=run.files.input_file,

@@ -459,3 +459,83 @@ def test_legacy_user_hook_can_read_arpes_without_loading_broken_user_schema(
         check=False,
     )
     assert completed.returncode == 0, completed.stderr
+
+
+def test_task_enumeration_ignores_broken_schema_and_extra_task(
+    tmp_path, monkeypatch
+):
+    from ...common.module_registry import RegistryLoadWarning
+
+    definitions = _package(
+        tmp_path, monkeypatch, "_tolerant_task_schemas", {
+            "good": (
+                "from ase2sprkkr.input_parameters.input_parameters_definitions "
+                "import InputParametersDefinition\n"
+                "from ase2sprkkr.input_parameters.task_definition import TaskDefinition\n"
+                "def input_parameters_definition():\n"
+                "    definition = InputParametersDefinition('good', [])\n"
+                "    definition._task_definition = TaskDefinition('GOOD')\n"
+                "    return definition\n"
+            ),
+            "marpes": "input_parameters = object()\n",
+            "shared": (
+                "from ase2sprkkr.input_parameters.input_parameters_definitions "
+                "import InputParametersDefinition\n"
+                "def input_parameters_definition():\n"
+                "    return InputParametersDefinition('shared', [])\n"
+            ),
+        },
+    )
+    tasks = _package(
+        tmp_path, monkeypatch, "_tolerant_extra_tasks", {
+            "extra": (
+                "from ase2sprkkr.input_parameters.task_definition import TaskDefinition\n"
+                "def task_definition():\n"
+                "    return TaskDefinition('SHARED', name='EXTRA')\n"
+            ),
+            "invalid": "task_definition = object()\n",
+        },
+    )
+    registry = TaskRegistry(InputParametersRegistry(definitions), tasks)
+    with pytest.warns(RegistryLoadWarning) as record:
+        assert set(registry.names()) == {"GOOD", "EXTRA"}
+    assert len(record) == 2
+    assert {registry[name].name for name in ("GOOD", "EXTRA")} == {"GOOD", "EXTRA"}
+    with pytest.raises(RegistryDefinitionError, match="required export"):
+        registry.input_parameters_registry["MARPES"]
+    with pytest.raises(RegistryDefinitionError, match="must be TaskDefinition"):
+        registry.extra_tasks["INVALID"]
+
+
+def test_cli_and_input_autodetection_with_broken_user_schema(tmp_path):
+    config_dir = tmp_path / "ase2sprkkr"
+    custom = config_dir / "input_parameters"
+    custom.mkdir(parents=True)
+    (custom / "marpes.py").write_text("input_parameters = object()\n")
+    work = tmp_path / "work"
+    work.mkdir()
+    env = os.environ.copy()
+    env["XDG_CONFIG_HOME"] = str(tmp_path)
+    env.pop("ASE2SPRKKR_NO_USER_PROFILE", None)
+
+    examples = os.path.join(os.path.dirname(__file__), "..", "examples", "scf.in")
+
+    commands = (
+        ([sys.executable, "-m", "ase2sprkkr.tools.ase2sprkkr", "--help"], False),
+        ([sys.executable, "-m", "ase2sprkkr.tools.ase2sprkkr", "run", "--help"], False),
+        ([sys.executable, "-m", "ase2sprkkr.tools.ase2sprkkr", "info", "--task=scf"], False),
+        ([sys.executable, "-c", (
+            "from ase2sprkkr.input_parameters.input_parameters import InputParameters; "
+            "assert 'SCF' in InputParameters.task_registry.names(); "
+            "assert InputParameters.from_file(" + repr(examples) + ").task_name == 'SCF'"
+        )], True),
+    )
+    for command, should_warn in commands:
+        completed = subprocess.run(
+            command, cwd=work, env=env, capture_output=True, text=True,
+            timeout=45, check=False,
+        )
+        assert completed.returncode == 0, (
+            f"{command!r} failed: {completed.stderr}\n{completed.stdout}"
+        )
+        assert ("Skipping invalid registry entry" in completed.stderr) == should_warn

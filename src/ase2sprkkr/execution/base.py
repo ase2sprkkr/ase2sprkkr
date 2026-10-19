@@ -6,7 +6,7 @@ import asyncio
 import os
 import warnings
 from concurrent.futures import Future
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
 from enum import Enum
 from threading import Event, Lock, Thread
 from typing import Any, Optional, Protocol, Sequence, Tuple
@@ -35,6 +35,22 @@ def file_path(value, directory=None, *, flush=False, required=False):
     if directory is not None and not os.path.isabs(path):
         path = os.path.join(directory, path)
     return os.path.abspath(path)
+
+
+def close_output_files(*files):
+    """Close each distinct output handle once, including merged stdout/stderr.
+
+    Path declarations and absent streams do not own a closeable handle.
+    Propagate the first close error, as each runner did before.
+    """
+    seen = set()
+    for file in files:
+        if file is None or id(file) in seen:
+            continue
+        seen.add(id(file))
+        close = getattr(file, "close", None)
+        if close is not None:
+            close()
 
 
 def dispatch_cancellation(action):
@@ -104,6 +120,11 @@ class OutputObservers:
     def add_error_listener(self, callback):
         with self._lock:
             self._error_listeners.append(callback)
+
+    def emit_bytes(self, data, kind):
+        """Decode a raw output chunk and dispatch it to text observers."""
+        if data:
+            self.emit(data.decode("utf8", errors="replace"), kind)
 
     def emit(self, text, kind):
         with self._lock:
@@ -487,6 +508,9 @@ class ExecutionSpec:
     cache_files: Sequence[Any] = ()
     mpi_argv: Optional[Sequence[str]] = None
     launch: LaunchSpec = LaunchSpec()
+    # The MPI command may have a different stdin contract from serial argv.
+    # Generic executors preserve stdin unless the caller explicitly opts out.
+    mpi_uses_stdin: bool = True
 
     def __post_init__(self):
         object.__setattr__(self, "directory", os.fspath(self.directory))
@@ -505,6 +529,19 @@ class ExecutionSpec:
                 "mpi_argv",
                 tuple(os.fspath(value) for value in self.mpi_argv),
             )
+
+    def command_request(self, transform=list):
+        """Serialize common command and launch fields for execution services.
+
+        The caller supplies the mapping for command arguments; for remote runs
+        this resolves already-staged local file names to target paths.
+        """
+        return {
+            "argv": transform(self.argv),
+            "mpi_argv": None if self.mpi_argv is None else transform(self.mpi_argv),
+            "mpi_uses_stdin": self.mpi_uses_stdin,
+            "launch": asdict(self.launch),
+        }
 
 
 class Runner(Protocol):
