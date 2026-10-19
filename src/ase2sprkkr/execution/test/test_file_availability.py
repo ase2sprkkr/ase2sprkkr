@@ -79,3 +79,38 @@ def test_clear_outputs_preserves_wildcard_cache_matches(tmp_path):
     )
     assert cache.read_bytes() == b"restart state"
     assert not output.exists()
+
+
+def test_local_wildcard_discovery_uses_same_glob_semantics_as_transport(tmp_path):
+    from ..transport import expand_local_candidates
+    hidden = tmp_path / ".hidden"
+    hidden.mkdir()
+    (hidden / "invisible.dat").write_text("hidden")
+    shown = tmp_path / "shown"
+    shown.mkdir()
+    (shown / "file.dat").write_text("visible")
+
+    declaration = str(tmp_path / "**" / "*.dat")
+    assert expand_local_candidates(declaration) == (str(shown / "file.dat"),)
+    manifest = FileManifest(
+        outputs=(FileEntry(declaration, availability_state="pending"),),
+    )
+    discovered = discover_local_files(manifest)
+    assert [entry.local_path for entry in discovered.outputs] == [
+        declaration, str(shown / "file.dat")
+    ]
+
+
+def test_cleanup_unlinks_symlink_without_deleting_its_target(tmp_path):
+    from ..file_availability import clear_declared_outputs
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    original = outside / "original.dat"
+    original.write_text("important")
+    working = tmp_path / "working"
+    working.mkdir()
+    link = working / "result.dat"
+    link.symlink_to(original)
+    clear_declared_outputs((str(working / "*.dat"),))
+    assert not link.is_symlink()
+    assert original.read_text() == "important"

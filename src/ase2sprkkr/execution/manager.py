@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import asyncio
 import fnmatch
-import glob
 import json
 import os
 import warnings
@@ -33,6 +32,7 @@ from .endpoint import ExecutorEndpoint, endpoint_for_executor
 from .pool import default_executor_pool
 from .postprocessing import PostprocessingRunner
 from .run_model import Execution, WorkingDirectory, FileManifest, FileEntry, CacheEntry
+from .transport import expand_local_candidates, has_file_magic
 
 
 _RUN_RECORD_SCHEMA_VERSION = 3
@@ -380,12 +380,7 @@ class ExecutionManager:
         paths = []
         seen = set()
         for manifest in manifests:
-            matches = (
-                glob.glob(manifest, recursive=True)
-                if glob.has_magic(manifest)
-                else (manifest,)
-            )
-            for path in sorted(matches):
+            for path in expand_local_candidates(manifest):
                 path = os.path.abspath(path)
                 if path in seen or not os.path.isfile(path):
                     continue
@@ -432,8 +427,8 @@ class ExecutionManager:
 
         missing = []
         for manifest in result_files.manifests:
-            if glob.has_magic(manifest):
-                if not glob.glob(manifest, recursive=True):
+            if has_file_magic(manifest):
+                if not expand_local_candidates(manifest):
                     missing.append(manifest)
             elif not os.path.isfile(manifest):
                 missing.append(manifest)

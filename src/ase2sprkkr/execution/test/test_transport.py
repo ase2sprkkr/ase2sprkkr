@@ -167,3 +167,22 @@ def test_ssh_and_local_globstar_agree_on_hidden_entries(tmp_path):
         }
         ssh = {name for name in names if _match_relative_path(name, pattern)}
         assert ssh == local, (pattern, ssh, local)
+
+
+def test_strict_transfer_refuses_wildcard_symlink_outside_source_root(tmp_path):
+    import pytest
+    from ..transport import expand_local_candidates, expand_local_files
+
+    root = tmp_path / "root"
+    root.mkdir()
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    target = outside / "sensitive.dat"
+    target.write_text("protected")
+    alias = root / "alias.dat"
+    alias.symlink_to(target)
+
+    assert expand_local_candidates(str(root / "*.dat")) == (str(alias),)
+    with pytest.raises(ValueError, match="outside source root"):
+        expand_local_files(str(root / "*.dat"), root)
+    assert target.read_text() == "protected"
