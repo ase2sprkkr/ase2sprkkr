@@ -404,8 +404,7 @@ def cancel_remote(remote_id, timeout=1.0):
         executor = _psij_executor(
             {"backend": handle["backend"], "url": handle.get("url")}
         )
-        job = executor._psij.Job()
-        executor._job_executor.attach(job, handle["native_id"])
+        job = executor.attach_native_job(handle["native_id"])
         job.cancel()
         state = status_remote(remote_id)
         return state
@@ -464,8 +463,8 @@ async def _follow_scheduler_async(remote_id, streams, paths, offsets, poll_inter
     executor = _psij_executor(
         {"backend": handle["backend"], "url": handle.get("url")}
     )
-    job = executor._psij.Job()
-    executor._job_executor.attach(job, handle["native_id"])
+    job = executor.attach_native_job(handle["native_id"])
+
     def emit(kind, data):
         streams[kind].write(data)
         streams[kind].flush()

@@ -572,18 +572,28 @@ class PsijExecutor(Executor):
     def _recovered_files(files, stdout, stderr):
         return files.with_remote_stream_paths(stdout=stdout, stderr=stderr)
 
+    def attach_native_job(self, native_id):
+        """Create a fresh attached PSI/J job; never reuse the status cache."""
+        job = self._psij.Job()
+        self._job_executor.attach(job, native_id)
+        return job
+
+    def _status_job(self, native_id):
+        """Reuse a single attached PSI/J job for repeated status observations."""
+        native_id = str(native_id)
+        job = self._status_jobs.get(native_id)
+        if job is None:
+            job = self.attach_native_job(native_id)
+            self._status_jobs[native_id] = job
+        return job
+
     def status_native(self, native_id):
         """Return the currently known native job status without waiting."""
         native_id = str(native_id)
         if self.backend.lower() == "slurm" and self.url is None:
             return _slurm_status_native(native_id)
 
-        job = self._status_jobs.get(native_id)
-        if job is None:
-            job = self._psij.Job()
-            self._job_executor.attach(job, native_id)
-            self._status_jobs[native_id] = job
-        status = getattr(job, "status", None)
+        status = getattr(self._status_job(native_id), "status", None)
         state = _psij_state(status, attached=True)
         return_code = getattr(status, "exit_code", None)
         return RunStatus(
@@ -606,11 +616,7 @@ class PsijExecutor(Executor):
         if status.state != RunState.UNKNOWN or timeout == 0:
             return status
 
-        job = self._status_jobs.get(str(native_id))
-        if job is None:
-            job = self._psij.Job()
-            self._job_executor.attach(job, str(native_id))
-            self._status_jobs[str(native_id)] = job
+        job = self._status_job(native_id)
         # The PSI/J Job object waits for notifications from its executor.
         # There is no repeated scheduler status query or sleep loop.
         job.wait(
@@ -708,8 +714,7 @@ class PsijExecutor(Executor):
         backend_id = run.execution.backend_id
         if not backend_id or (run.files.stdout is None and run.files.stderr is None):
             raise ValueError("PSI/J run lacks backend ID or recorded output streams")
-        job = self._psij.Job()
-        self._job_executor.attach(job, backend_id)
+        job = self.attach_native_job(backend_id)
         spec = ExecutionSpec(
             argv=(),
             input_file=run.files.input_file,

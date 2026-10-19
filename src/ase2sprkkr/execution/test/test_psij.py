@@ -665,6 +665,38 @@ def test_psij_preparation_failure_is_definitively_not_submitted(monkeypatch, tmp
     assert executor._job_executor.submitted is None
     assert runner.failure_phase == FailurePhase.SUBMISSION
 
+def test_psij_native_attachment_is_fresh_while_status_attachment_is_cached(
+    monkeypatch,
+):
+    class Backend:
+        def __init__(self):
+            self.attaches = []
+
+        def attach(self, job, native_id):
+            self.attaches.append((job, native_id))
+            job.native_id = native_id
+            job.status = _Status("ACTIVE")
+
+    backend = Backend()
+    executor = _executor(monkeypatch, backend)
+    executor.backend = "pbs"
+    executor.url = "remote-pbs"
+
+    first = executor.attach_native_job("native-42")
+    second = executor.attach_native_job("native-42")
+    assert first is not second
+    assert backend.attaches == [(first, "native-42"), (second, "native-42")]
+    assert executor._status_jobs == {}
+
+    status = executor.status_native("native-42")
+    assert status.state == RunState.RUNNING
+    cached = executor._status_jobs["native-42"]
+    assert cached is not first and cached is not second
+    assert executor.status_native("native-42").state == RunState.RUNNING
+    assert len(backend.attaches) == 3
+    assert backend.attaches[-1] == (cached, "native-42")
+
+
 def test_psij_executor_attaches_to_native_job(monkeypatch, tmp_path):
     backend = _Backend()
     executor = _executor(monkeypatch, backend)

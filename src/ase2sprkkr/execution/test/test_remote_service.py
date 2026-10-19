@@ -143,10 +143,9 @@ def test_psij_cancellation_does_not_invent_terminal_state(monkeypatch, tmp_path)
             calls.append("cancel")
 
     class Backend:
-        _psij = type("Psij", (), {"Job": Job})
-        _job_executor = type("Executor", (), {
-            "attach": lambda self, job, native_id: calls.append(native_id)
-        })()
+        def attach_native_job(self, native_id):
+            calls.append(native_id)
+            return Job()
 
     monkeypatch.setattr(remote_service, "_psij_executor", lambda _: Backend())
     monkeypatch.setattr(remote_service, "status_remote", lambda _: {
@@ -173,10 +172,9 @@ def _stub_terminal_psij_job(monkeypatch, state, return_code, observed):
             return self.status
 
     class Backend:
-        _psij = SimpleNamespace(Job=Job)
-        _job_executor = SimpleNamespace(
-            attach=lambda job, native_id: observed.append(("attach", native_id)),
-        )
+        def attach_native_job(self, native_id):
+            observed.append(("attach", native_id))
+            return Job()
 
     monkeypatch.setattr(remote_service, "_psij_executor", lambda _: Backend())
 
