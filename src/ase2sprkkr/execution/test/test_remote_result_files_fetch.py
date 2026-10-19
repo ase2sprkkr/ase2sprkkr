@@ -1,6 +1,8 @@
+import pytest
+
 from ase2sprkkr.execution import (
     LocalTransport, RemoteExecutor, RunRecord, RunState, Execution,
-    WorkingDirectory, FileManifest,
+    WorkingDirectory, FileManifest, FileEntry,
 )
 from ase2sprkkr.execution.run_model import FileMapping
 from ase2sprkkr.execution.endpoint import endpoint_for_executor
@@ -124,3 +126,48 @@ def test_remote_fetch_uses_transport_expansion_for_exact_and_wildcard(tmp_path):
     assert existing.read_text() == "keep"
     assert (local_root / "calc" / "part-b.dat").read_text() == "b"
     assert not (local_root / "calc" / ".hidden.dat").exists()
+
+
+@pytest.mark.parametrize("wildcard", (False, True))
+def test_fetch_never_follows_local_symlink_outside_mapped_root(tmp_path, wildcard):
+    local_root = tmp_path / "local"
+    remote_root = tmp_path / "remote"
+    outside = tmp_path / "outside"
+    local_root.mkdir()
+    remote_root.mkdir()
+    outside.mkdir()
+    (local_root / "alias").symlink_to(outside, target_is_directory=True)
+
+    remote_dir = remote_root / "alias"
+    remote_dir.mkdir()
+    (remote_dir / "result.dat").write_text("remote result")
+    existing = outside / "result.dat"
+    existing.write_text("do not touch")
+
+    local_path = local_root / "alias" / (
+        "*.dat" if wildcard else "result.dat"
+    )
+    remote_path = remote_dir / (
+        "*.dat" if wildcard else "result.dat"
+    )
+    executor = RemoteExecutor(LocalTransport())
+    run = RunRecord(
+        id="escaped-result", state=RunState.FINISHED,
+        created_at="2026-10-13T08:00:00+00:00",
+        updated_at="2026-10-13T08:00:00+00:00",
+        task="DOS",
+        execution=Execution(
+            endpoint_for_executor(executor),
+            WorkingDirectory(str(local_root), str(remote_root)),
+            "backend-id",
+        ),
+        files=FileManifest(
+            outputs=(FileEntry(str(local_path), str(remote_path)),),
+            mapping=FileMapping(str(local_root), str(remote_root)),
+        ),
+    )
+
+    with pytest.raises(ValueError, match="outside mapped root"):
+        executor.fetch_result_files(run, (local_path,))
+    assert existing.read_text() == "do not touch"
+    assert sorted(p.name for p in outside.iterdir()) == ["result.dat"]

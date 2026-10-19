@@ -1,3 +1,7 @@
+import asyncio
+
+import pytest
+
 from ase2sprkkr.execution import Executor, LaunchSpec
 from ase2sprkkr.execution.remote_endpoint import RemoteEndpointExecutor
 
@@ -73,3 +77,32 @@ def test_manifest_sync_groups_declarations_without_replaying_pattern_children():
         "cache_patterns": ["/remote/restart-*.pot"],
         "cache_before": [{"path": "/remote/remote-only.dat", "signature": (5, 7)}],
     }
+
+
+def test_unmap_rejects_local_directory_symlink_outside_root(tmp_path):
+    local_root = tmp_path / "local"
+    outside = tmp_path / "outside"
+    local_root.mkdir()
+    outside.mkdir()
+    (local_root / "redirect").symlink_to(outside, target_is_directory=True)
+    executor = RemoteEndpointExecutor(_Transport())
+    context = executor._context(
+        executor, LaunchSpec(local_root=local_root, remote_root="/remote"),
+    )
+
+    with pytest.raises(ValueError, match="outside mapped root"):
+        asyncio.run(context.unmap_path("/remote/redirect/output.dat"))
+
+
+def test_unmap_preserves_symlinks_within_local_root(tmp_path):
+    local_root = tmp_path / "local"
+    actual = local_root / "actual"
+    actual.mkdir(parents=True)
+    (local_root / "alias").symlink_to(actual, target_is_directory=True)
+    executor = RemoteEndpointExecutor(_Transport())
+    context = executor._context(
+        executor, LaunchSpec(local_root=local_root, remote_root="/remote"),
+    )
+    assert asyncio.run(context.unmap_path("/remote/alias/output.dat")) == (
+        local_root / "alias" / "output.dat"
+    )

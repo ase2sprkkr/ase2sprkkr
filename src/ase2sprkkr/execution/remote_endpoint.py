@@ -289,7 +289,11 @@ class _RemoteRunContext:
         relative = posixpath.relpath(path, remote_root)
         if relative == ".":
             return self.local_root
-        return self.local_root.joinpath(*PurePosixPath(relative).parts)
+        local = self.local_root.joinpath(*PurePosixPath(relative).parts)
+        # A local symlink below the root can point outside it. Apply the
+        # same containment check as map_path before exposing a download path.
+        _relative_local_path(local, self.local_root)
+        return local
 
     async def map_directory(self, directory):
         return await self.map_path(directory)
@@ -668,6 +672,9 @@ class RemoteEndpointExecutor(Executor):
                     os.fspath(await context.unmap_path(matched))
                     if glob.has_magic(remote) else local
                 )
+                # Even a previously persisted local path can gain a symlink
+                # parent since submission. Never download outside local_root.
+                _relative_local_path(destination, context.local_root)
                 if not os.path.isfile(destination):
                     await self.transport.get_file(matched, destination)
 
