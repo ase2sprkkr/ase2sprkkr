@@ -30,6 +30,24 @@ class SPC:
     def NP(self): return self.np_
     def NE(self): return self.ne if self.mode=="energy" else 1
     def COMMENT(self): return "synthetic native spectrum"
+    def spc_columns(self):
+        from ase2sprkkr.result_files.definitions.spc import SPC_COLUMNS
+        return SPC_COLUMNS[self.MODE()]
+    def _field(self, col):
+        shape = (self.ne, self.np_, self.nt) if self.mode == "energy" and self.np_ > 1 else (
+            (self.ne, self.nt) if self.mode == "energy" else (self.np_, self.nt)
+        )
+        return self.raw[:, col].reshape(shape)
+    def TOTAL(self): return self._field(2)
+    def UP(self): return self._field(3)
+    def DOWN(self): return self._field(4)
+    def POLARIZATION(self): return self._field(5)
+    def DETERMINANT(self): return self._field(7 if self.mode == "energy" else 6)
+    def ENERGY(self): return self._field(1)
+    def THETA(self): return self._field(0)
+    def K(self): return self._field(6)
+    def KX(self): return self._field(0)
+    def KY(self): return self._field(1)
 
 
 @pytest.mark.parametrize("mode,np_", [("energy",1),("energy",2),("kx_ky",2)])
@@ -50,6 +68,10 @@ def test_native_modes(tmp_path, mode, np_):
         assert "original_input" not in f["entry/calculation"]
         if mode=="kx_ky":
             assert "energy" not in data
+            assert "coordinate_warning" in data.attrs
+            assert list(data.attrs["axes"]) == ["k_y", "k_x"]
+            np.testing.assert_allclose(data["k_x"], spc.KX()[0])
+            np.testing.assert_allclose(data["k_y"], spc.KY()[:, 0])
             assert "k_origin" not in data
             assert "k_basis" not in data
         else:
@@ -207,3 +229,70 @@ def test_no_physics_reconstructed_from_input(tmp_path):
         data=f["entry/data"]
         assert "k_basis" not in data
         assert data.attrs["scan_definition"]=="../calculation/original_input/SPEC_EL"
+
+
+
+def test_arpes_static_azimuth_selection(tmp_path, monkeypatch):
+    """Multiple file slices and live mode must share the same plotting path."""
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+    from ase2sprkkr.result_files.definitions.spc import ARPESResultFile
+    # Use a minimal adapted object to exercise the NP>1 branch without
+    # creating a large file or launching a GUI.
+    class Value:
+        def __init__(self, value, name): self.value, self.name = value, name
+        def __call__(self): return self.value
+        def plot(self, **kwargs): return kwargs
+    class PlotResult:
+        MODE = lambda self: "energy"
+        NP = lambda self: 5
+        TOTAL = Value(np.zeros((2, 5, 3)), "TOTAL")
+        UP = Value(np.zeros((2, 5, 3)), "UP")
+        DOWN = Value(np.zeros((2, 5, 3)), "DOWN")
+        POLARIZATION = Value(np.zeros((2, 5, 3)), "POLARIZATION")
+
+    calls = []
+    def record(option, **kwargs):
+        calls.append(kwargs)
+    for val in (PlotResult.TOTAL, PlotResult.UP, PlotResult.DOWN, PlotResult.POLARIZATION):
+        monkeypatch.setattr(val, "plot", lambda **kwargs: calls.append(kwargs))
+    ARPESResultFile.plot(PlotResult(), filename=tmp_path / "one.png", dpi=50, live=False)
+    assert len(calls) == 4
+    assert all(item["azimuth_indices"] == (0,) for item in calls)
+    calls.clear()
+    ARPESResultFile.plot(
+        PlotResult(), filename=tmp_path / "three.png", dpi=50, live=False, azimuths=3
+    )
+    assert len(calls) == 12
+    assert [calls[i]["azimuth_indices"] for i in (0, 4, 8)] == [(0,), (2,), (4,)]
+    calls.clear()
+    ARPESResultFile.plot(
+        PlotResult(), filename=tmp_path / "angles.png", dpi=50,
+        live=False, azimuths=[15., 45.], phi_range=(0., 60.)
+    )
+    assert [calls[i]["azimuth_indices"] for i in (0, 4)] == [(1,), (3,)]
+    calls.clear()
+    ARPESResultFile.plot(PlotResult(), show=False, live=True)
+    assert len(calls) == 4
+    assert all(item["azimuth_indices"] == (0, 1, 2, 3, 4) for item in calls)
+    plt.close("all")
+
+
+def test_colormesh_callable_slider_shared():
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+    from ase2sprkkr.gui.plot import colormesh
+    fig, axes = plt.subplots(1, 2)
+    xx, yy = np.meshgrid(np.arange(3), np.arange(3))
+    calls = []
+    for ax in axes:
+        colormesh(xx, yy, lambda i: calls.append(i) or np.full((3, 3), i + 1.),
+                  slider_values=(0, 1, 2), live=True, axis=ax)
+    widget = fig._ase2sprkkr_slider[0]
+    assert calls == [0, 0]
+    widget.set_val(2)
+    assert calls == [0, 0, 2, 2]
+    assert len(fig.axes) == 3  # one common slider, not one per subplot
+    plt.close(fig)
