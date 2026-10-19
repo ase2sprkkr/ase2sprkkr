@@ -3,7 +3,7 @@ import asyncio
 
 import pytest
 
-from ..remote_supervisor_stream import SupervisorStreams, follow_socket, frame
+from ..remote_supervisor_stream import SupervisorStreams, _Follower, _HIGH, follow_socket, frame
 
 
 def test_supervisor_live_replay_and_terminal(tmp_path):
@@ -246,3 +246,54 @@ def test_terminal_drops_backpressured_client_without_discarding_output(tmp_path)
             if writer is not None:
                 writer.close()
     asyncio.run(run())
+
+
+class _FakeFollowerTransport:
+    def __init__(self, buffered=0):
+        self.buffered = buffered
+        self.aborted = False
+
+    def get_write_buffer_size(self):
+        return self.buffered
+
+    def abort(self):
+        self.aborted = True
+
+
+class _FakeFollowerWriter:
+    def __init__(self, buffered=0):
+        self.transport = _FakeFollowerTransport(buffered)
+        self.frames = []
+
+    def write(self, data):
+        self.frames.append(data)
+
+
+def test_live_only_channel_is_delivered_during_other_channel_replay():
+    # A follower catching up on a saved stdout must not lose new stderr
+    # merely because stderr has no spool to replay.
+    streams = SupervisorStreams("saved-stdout", None)
+    streams.publish("out", b"previous stdout")
+    writer = _FakeFollowerWriter()
+    follower = _Follower(writer, {"out": 0, "err": 0}, replay=True)
+    streams._followers.add(follower)
+
+    streams.publish("err", b"live stderr")
+
+    assert follower.replay
+    assert writer.frames == [frame("err", 0, b"live stderr")]
+    assert follower.offsets == {"out": 0, "err": len(b"live stderr")}
+    assert not writer.transport.aborted
+
+
+def test_backpressured_live_only_channel_disconnects_instead_of_losing_bytes():
+    streams = SupervisorStreams("saved-stdout", None)
+    writer = _FakeFollowerWriter(buffered=_HIGH)
+    follower = _Follower(writer, {"out": 0, "err": 0}, replay=True)
+    streams._followers.add(follower)
+
+    streams.publish("err", b"must not vanish")
+
+    assert writer.transport.aborted
+    assert follower.offsets["err"] == 0
+    assert writer.frames == []

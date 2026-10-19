@@ -112,18 +112,27 @@ class SupervisorStreams:
         self._sizes[kind] += len(data)
         wire = frame(kind, offset, data)
         for follower in tuple(self._followers):
-            if follower.replay:
+            # A spooled channel can catch up from disk. A live-only channel
+            # cannot: forward it even while another channel is replaying.
+            if follower.replay and self.paths[kind] is not None:
                 follower.wake.set()
                 continue
             if follower.writer.transport.get_write_buffer_size() >= _HIGH:
-                follower.replay = True
-                follower.wake.set()
+                if self.paths[kind] is None:
+                    follower.writer.transport.abort()
+                else:
+                    follower.replay = True
+                    follower.wake.set()
                 continue
             follower.writer.write(wire)
             follower.offsets[kind] += len(data)
             if follower.writer.transport.get_write_buffer_size() >= _HIGH:
-                follower.replay = True
-                follower.wake.set()
+                if self.paths[kind] is None:
+                    # There is nowhere to replay bytes lost to backpressure.
+                    follower.writer.transport.abort()
+                else:
+                    follower.replay = True
+                    follower.wake.set()
 
     def sync(self):
         """Durability barrier before publishing successful terminal outcome."""
