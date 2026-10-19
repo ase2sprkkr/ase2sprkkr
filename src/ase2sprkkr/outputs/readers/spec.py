@@ -79,7 +79,7 @@ class SpecResult(ArpesResult):
         """SPLEED's header-only SPC is not a separate spectrum."""
         if self.task_name == "spleed":
             parameters = self.input_parameters
-            if parameters is not None and parameters.SPEC_EL.TYP() == 0:
+            if parameters is not None and str(parameters.SPEC_EL.TYP()) == "0":
                 return ()
             if self.spleed_intensity is not None:
                 return ()
