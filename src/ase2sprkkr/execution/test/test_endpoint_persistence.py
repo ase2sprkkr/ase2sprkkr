@@ -1,7 +1,7 @@
 from threading import Event
 
 from ase2sprkkr.execution import (
-    ExecutionManager,
+    
     ExecutorEndpoint,
     ExecutorPool,
     LocalExecutor,
@@ -10,6 +10,8 @@ from ase2sprkkr.execution import (
     RunStore,
     SshTransport,
 )
+
+from ase2sprkkr.execution.manager import ExecutionManager
 from ase2sprkkr.execution.endpoint import endpoint_for_executor
 from ase2sprkkr.sprkkr.profile import SPRKKRProfile
 

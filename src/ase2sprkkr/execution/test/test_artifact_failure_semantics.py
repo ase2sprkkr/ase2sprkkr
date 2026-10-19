@@ -1,9 +1,11 @@
 """Execution outcome and file availability are independent persisted facts."""
 
 from ase2sprkkr.execution import (
-    ArtifactAvailabilityState, ExecutionManager, FailurePhase, FileEntry,
+    ArtifactAvailabilityState, FailurePhase, FileEntry,
     FileManifest, RunState, RunStore,
 )
+
+from ase2sprkkr.execution.manager import ExecutionManager
 
 
 def _record(tmp_path):

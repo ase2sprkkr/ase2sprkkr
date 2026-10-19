@@ -1,9 +1,11 @@
 from ase2sprkkr.execution import (
-    ExecutionManager,
+    
     ExecutorEndpoint,
     RunState,
     RunStore,
 )
+
+from ase2sprkkr.execution.manager import ExecutionManager
 
 
 def _record(manager, tmp_path):
