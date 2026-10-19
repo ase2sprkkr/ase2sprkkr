@@ -429,6 +429,7 @@ class JXCResultFile(ResultFile):
 
 class JXCResultFileDefinition(ResultFileDefinition):
     result_class = JXCResultFile
+    extension = "dat"
 
 
 import pyparsing as pp
@@ -514,8 +515,6 @@ def create_definition():
         ],
         info="Dzyaloshinski-Moriya couplings Dij or Jij",
     )
-
-    definition.__dict__["extension"] = "dat"
 
     return definition
 

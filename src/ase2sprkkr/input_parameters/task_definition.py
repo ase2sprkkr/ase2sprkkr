@@ -392,6 +392,12 @@ class InputParametersRegistry(ModuleRegistry):
         templates = getattr(task, f"{kind}_file_templates")
         declared = self._resolve_file_templates(parameters, directory, templates)
         schema_files = getattr(definition, f"{kind}_files")(parameters, directory)
+        # Schema-specific paths have the same public contract as task templates:
+        # all entries expose .optional, including required (default False) files.
+        schema_files = tuple(
+            DeclaredFile(path, optional=getattr(path, "optional", False))
+            for path in schema_files
+        )
         return (*declared, *schema_files)
 
 

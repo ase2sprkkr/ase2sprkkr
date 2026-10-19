@@ -5,7 +5,6 @@ from __future__ import annotations
 import io
 from . import definitions, tasks
 from .task_definition import InputParametersRegistry, TaskRegistry
-from ..common.module_registry import RegistryEntryNotFound
 from ..sprkkr.configuration import (
     ConfigurationFile,
     ConfigurationSection,
@@ -279,13 +278,9 @@ class InputParameters(ConfigurationFile):
 
     @classmethod
     def create(cls, name):
+        """Create parameters for a registered task, not for a bare shared schema."""
         name = cls.task_registry.normalize_name(name)
-        try:
-            task = cls.task_registry[name]
-        except RegistryEntryNotFound:
-            # A shared input schema (e.g. BSF) is not itself a task.
-            return cls(definition=cls.input_parameters_registry[name])
-        return cls.input_parameters_registry.create_for_task(task)
+        return cls.input_parameters_registry.create_for_task(cls.task_registry[name])
 
     @classmethod
     def default_parameters(cls):
