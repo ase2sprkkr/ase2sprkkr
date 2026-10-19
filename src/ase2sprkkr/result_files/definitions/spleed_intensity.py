@@ -46,14 +46,20 @@ def _read_diagram(filename):
             if not in_diagram:
                 continue
             record = line.rstrip("\r\n")
-            if len(record) != 26 or record[12:14] != "  ":
-                continue
-            first, second = record[:12], record[14:]
-            if _NUMBER.fullmatch(first) and _NUMBER.fullmatch(second):
-                rows.append((
-                    float(first.replace("D", "E").replace("d", "e")),
-                    float(second.replace("D", "E").replace("d", "e")),
-                ))
+            if len(record) == 26 and record[12:14] == "  ":
+                first, second = record[:12], record[14:]
+                if _NUMBER.fullmatch(first) and _NUMBER.fullmatch(second):
+                    rows.append((
+                        float(first.replace("D", "E").replace("d", "e")),
+                        float(second.replace("D", "E").replace("d", "e")),
+                    ))
+                    continue
+
+            # Once a table has started, the next nonblank nonrecord ends
+            # this SPLOUT block. Never resume collecting unrelated D fields
+            # later in the general-purpose SPEC.out diagnostics.
+            if rows and record.strip():
+                break
     if not rows:
         raise SpleedIntensityNotFound(
             "No two-column SPLOUT intensity records were found in the SPEC output"
@@ -62,7 +68,15 @@ def _read_diagram(filename):
 
 
 class SpleedIntensityResultFile(ResultFile):
-    """Energy and diffracted-beam intensity recorded by SPLOUT in NOUT1."""
+    """Read-only view of energy/intensity data embedded in SPEC.out."""
+
+    embedded_source = True
+
+    def save_to_file(self, file, atoms=None, *, validate="save"):
+        raise TypeError(
+            "SPLEED intensity is a view of a SPEC.out log, not a standalone "
+            "result file. Export RAW_DATA explicitly to a separate data file."
+        )
 
 
 class SpleedIntensityDefinition(ResultFileDefinition):
@@ -71,7 +85,9 @@ class SpleedIntensityDefinition(ResultFileDefinition):
 
     @property
     def extension(self):
-        return "out"
+        # The compound native filename suffix distinguishes this view from
+        # ordinary SPR-KKR .out files.
+        return "SPEC.out"
 
     def read_from_file(self, file, allow_dangerous=False, **kwargs):
         if not isinstance(file, (str, os.PathLike)):

@@ -115,7 +115,10 @@ class OutputFileOption(OutputOption):
         return f"<{self.file_type} file>" if self.file_type else str(self())
 
     def actions(self):
-        out = ["open", "open_directory", "save"]
+        out = ["open", "open_directory"]
+        if not (self.file_type and getattr(self.definition().result_class,
+                                           "embedded_source", False)):
+            out.append("save")
         if self.file_type:
             result_class = self.definition().result_class
             if result_class.can_be_plotted():
@@ -148,6 +151,12 @@ class OutputFileOption(OutputOption):
         self.parsed_file().plot()
 
     def save(self, parent=None):
+        if self.file_type and getattr(self.definition().result_class,
+                                      "embedded_source", False):
+            raise TypeError(
+                "This result is embedded in a larger output log; save the "
+                "original output file or export its data explicitly."
+            )
         from PyQt6.QtWidgets import QFileDialog
 
         extension = self.definition().extension if self.file_type else "*"

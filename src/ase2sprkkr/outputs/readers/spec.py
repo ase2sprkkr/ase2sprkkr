@@ -40,7 +40,7 @@ class SpecResult(ArpesResult):
             self._parse_lattice_info()
         return self._basis_vectors
 
-    @cached_property
+    @property
     def spleed_intensity(self):
         """Two-column SPLEED I(E) data, parsed as a ResultFile from SPEC.out."""
         if (self.task_name != "spleed" or self.output_file is None
@@ -58,12 +58,26 @@ class SpecResult(ArpesResult):
         self.files.add_file("SPLEED_INTENSITY", self.path_to("output"), "spleed_intensity")
         return result
 
-    @cached_property
+    @property
+    def output_values(self):
+        # Make the embedded diagram discoverable without caching incomplete
+        # results. A later request reparses the current SPEC.out contents.
+        if self.task_name == "spleed":
+            self.spleed_intensity
+        return super().output_values
+
+    @property
     def spectral_data(self) -> np.ndarray:
         """Convenience view of a unique spectrum; no independent parser.
 
         When multiple SPC files are present, choose a spectrum explicitly.
         """
+        # Preserve the pre-ResultFile API for old standalone text dumps
+        # containing photoemission diagnostics after the Stokes-vector line.
+        # Do not mistake these rows for a structured SPC format.
+        if self.output_file is None:
+            return self._inline_spectral_data(self._get_file_content())
+
         if self.task_name == "spleed":
             spectrum = self.spleed_intensity
             if spectrum is not None:
@@ -71,7 +85,32 @@ class SpecResult(ArpesResult):
         spectra = self.spectra
         if len(spectra) > 1:
             raise ValueError("Multiple spectral files; select one from result.spectra")
-        return spectra[0].RAW_DATA() if spectra else np.array([])
+        if spectra:
+            return spectra[0].RAW_DATA()
+        return self._inline_spectral_data(self._get_file_content())
+
+    @staticmethod
+    def _inline_spectral_data(content):
+        """Legacy text-log photoemission table (not a native SPC parser)."""
+        marker = re.search(r"stookes-vector\\s+of the photonfield", content)
+        if marker is None:
+            return np.array([])
+        data = []
+        for line in content[marker.end():].splitlines():
+            fields = line.split()
+            try:
+                values = [float(value.replace("D", "E").replace("d", "e"))
+                          for value in fields]
+            except ValueError:
+                if data and line.strip():
+                    break
+                continue
+            if not values:
+                continue
+            if data and len(values) != len(data[0]):
+                break
+            data.append(values)
+        return np.asarray(data) if data else np.array([])
 
     def _parse_potential_barrier(self) -> None:
         """Parse the potential barrier section of the output."""
