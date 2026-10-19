@@ -114,3 +114,26 @@ def test_cleanup_unlinks_symlink_without_deleting_its_target(tmp_path):
     clear_declared_outputs((str(working / "*.dat"),))
     assert not link.is_symlink()
     assert original.read_text() == "important"
+
+
+def test_protected_output_stream_is_rejected_without_deleting_files(tmp_path):
+    import pytest
+    from ase2sprkkr.execution.file_availability import validate_output_streams
+
+    protected = tmp_path / "restart.pot"
+    protected.write_text("density")
+    with pytest.raises(ValueError, match="overlaps protected"):
+        validate_output_streams((protected,), protected=(protected,))
+    assert protected.read_text() == "density"
+
+
+def test_protected_output_stream_matches_cache_glob(tmp_path):
+    import pytest
+    from ase2sprkkr.execution.file_availability import validate_output_streams
+
+    protected = tmp_path / "restart-1.pot"
+    protected.write_text("density")
+    with pytest.raises(ValueError, match="overlaps protected"):
+        validate_output_streams(
+            (protected,), protected=(tmp_path / "restart-*.pot",),
+        )

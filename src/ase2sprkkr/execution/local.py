@@ -18,7 +18,7 @@ from .base import (
     RunState,
     SubmissionNotStarted,
 )
-from .file_availability import clear_declared_outputs
+from .file_availability import clear_declared_outputs, validate_output_streams
 from .local_process import (
     materialize_local_spec,
     pump_stream,
@@ -159,6 +159,10 @@ class LocalRunner:
                 file_path(value, self.spec.directory)
                 for value in self.spec.output_files
             ]
+            validate_output_streams(
+                (self.result.output_file, self.result.error_file),
+                protected=protected,
+            )
             clear_declared_outputs(
                 outputs,
                 protected=(*protected, self.result.output_file, self.result.error_file),

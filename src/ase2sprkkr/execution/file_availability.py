@@ -43,6 +43,23 @@ def discover_local_files(files, *, include_streams=True):
     return files
 
 
+
+def validate_output_streams(streams, *, protected=()):
+    """Reject a stream that would overwrite a declared input or restart cache."""
+    protected_paths = tuple(
+        os.path.abspath(os.fspath(p)) for p in protected if p is not None
+    )
+    for stream in streams:
+        if stream is None:
+            continue
+        target = os.path.abspath(os.fspath(stream))
+        for declaration in protected_paths:
+            if target in expand_local_candidates(declaration):
+                raise ValueError(
+                    f"Output stream {target} overlaps protected input/cache {declaration}"
+                )
+
+
 def clear_declared_outputs(paths, *, protected=()):
     """Remove old declared results without destroying inputs or restart caches.
 

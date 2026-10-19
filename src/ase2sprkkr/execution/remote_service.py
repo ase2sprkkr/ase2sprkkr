@@ -23,7 +23,7 @@ from pathlib import Path
 from uuid import uuid4
 
 from .growing_file_tail import follow_job_files
-from .file_availability import clear_declared_outputs
+from .file_availability import clear_declared_outputs, validate_output_streams
 from .base import ExecutionSpec, FailurePhase, LaunchSpec, RunState, SubmissionNotStarted
 from .remote_process_worker import _SPEC_ENV, _START_FD_ENV
 from .remote_mailbox import publish_outcome, read_outcome, acknowledge_outcome, _path as _outcome_path
@@ -157,6 +157,10 @@ def _clean_request_outputs(spec, directory, output_path=None, error_path=None):
     declared = (*spec.output_files, output_path, error_path)
     protected = (
         spec.input_file, spec.stdin, *spec.input_files, *spec.cache_files,
+    )
+    validate_output_streams(
+        (output_path, error_path),
+        protected=(_absolute(directory, path) for path in protected if path is not None),
     )
     clear_declared_outputs(
         (_absolute(directory, path) for path in declared if path is not None),
