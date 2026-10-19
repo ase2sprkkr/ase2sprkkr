@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import asyncio
 import base64
+import binascii
 import json
 import os
 import re
@@ -79,13 +80,34 @@ def _encode_handle(data):
 
 
 def _decode_handle(value):
-    value = str(value)
+    if not isinstance(value, str):
+        raise ValueError("Invalid remote execution id")
     padding = "=" * (-len(value) % 4)
     try:
-        data = json.loads(base64.urlsafe_b64decode(value + padding).decode("utf8"))
-    except (ValueError, json.JSONDecodeError) as exc:
+        payload = base64.b64decode(value + padding, altchars=b"-_", validate=True)
+        data = json.loads(payload.decode("utf8"))
+    except (binascii.Error, UnicodeError, ValueError, TypeError) as exc:
         raise ValueError("Invalid remote execution id") from exc
-    if not isinstance(data, dict) or "kind" not in data:
+    if not isinstance(data, dict):
+        raise ValueError("Invalid remote execution id")
+    kind = data.get("kind")
+    if kind == "process":
+        valid = (
+            type(data.get("pid")) is int and data["pid"] > 0
+            and isinstance(data.get("start_time"), str) and bool(data["start_time"])
+            and isinstance(data.get("receipt_id"), str)
+            and re.fullmatch(r"[0-9a-f]{32}", data["receipt_id"]) is not None
+            and isinstance(data.get("socket_path"), str) and bool(data["socket_path"])
+        )
+    elif kind == "psij":
+        valid = (
+            isinstance(data.get("backend"), str) and bool(data["backend"])
+            and (data.get("url") is None or isinstance(data["url"], str))
+            and isinstance(data.get("native_id"), str) and bool(data["native_id"])
+        )
+    else:
+        valid = False
+    if not valid:
         raise ValueError("Invalid remote execution id")
     return data
 
