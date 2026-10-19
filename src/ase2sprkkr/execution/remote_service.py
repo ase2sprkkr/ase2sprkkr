@@ -112,6 +112,18 @@ def _process_running(handle):
 
 def _request_spec(request):
     mpi_argv = request.get("mpi_argv")
+    sync = request.get("client_sync") or {}
+    input_files = tuple(request.get("input_files", ()))
+    output_files = tuple(dict.fromkeys((
+        *request.get("output_files", ()),
+        *sync.get("output_files", ()),
+        *sync.get("output_patterns", ()),
+    )))
+    cache_files = tuple(dict.fromkeys((
+        *request.get("cache_files", ()),
+        *(item["path"] for item in sync.get("cache_files", ())),
+        *sync.get("cache_patterns", ()),
+    )))
     return ExecutionSpec(
         argv=tuple(request["argv"]),
         input_file=request.get("input_file"),
@@ -119,6 +131,9 @@ def _request_spec(request):
         error_file=request.get("error_file"),
         directory=os.fspath(request["directory"]),
         stdin=request.get("stdin"),
+        input_files=input_files,
+        output_files=output_files,
+        cache_files=cache_files,
         mpi_argv=None if mpi_argv is None else tuple(mpi_argv),
         launch=LaunchSpec(**(request.get("launch") or {})),
     )
@@ -264,10 +279,8 @@ def _psij_submit(request):
         if request.get("id")
         else executor.create_run(spec)
     )
-    _clean_request_outputs(
-        request, request["directory"],
-        request.get("output_file"), request.get("error_file"),
-    )
+    # PSI/J's _prepare_io() owns cleanup of its complete declared manifest.
+    # Running a second cleanup here would duplicate it and risk wildcard caches.
     runner.submit()
     backend_id = runner.backend_id
     if backend_id is None:
