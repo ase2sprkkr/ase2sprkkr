@@ -107,3 +107,68 @@ def test_failed_detached_launch_clears_previous_output(tmp_path, monkeypatch):
         assert captured[0][1].value == "failed"
         assert not list(tmp_path.glob(".*ase2sprkkr-*"))
     asyncio.run(check())
+
+
+def test_output_spool_write_failure_is_reported_without_losing_diagnosis(tmp_path, monkeypatch):
+    from ..base import FailurePhase, RunState
+    from ..remote_supervisor_stream import SupervisorStreams
+
+    reported = []
+    monkeypatch.setattr(
+        remote_process_worker, "publish_outcome",
+        lambda *args, **kwargs: reported.append((args, kwargs)),
+    )
+
+    def fail_write(self, kind, data):
+        raise OSError("disk full during output")
+
+    monkeypatch.setattr(SupervisorStreams, "publish", fail_write)
+
+    async def check():
+        rd, wr = os.pipe()
+        spec = _spec(tmp_path, wr, detached=True, argv=[
+            sys.executable, "-c", "print('payload', flush=True)",
+        ])
+        await asyncio.wait_for(remote_process_worker._run(spec), 5)
+        with os.fdopen(rd, "rb") as read_pipe:
+            assert read_pipe.readline()
+
+    asyncio.run(check())
+    assert len(reported) == 1
+    args, kwargs = reported[0]
+    assert args[1] == RunState.FAILED
+    assert args[3] == FailurePhase.EXECUTION
+    assert "Failed to write process output: disk full during output" in kwargs["error"]
+
+
+def test_failed_final_output_sync_is_reported_as_artifact_failure(tmp_path, monkeypatch):
+    from ..base import FailurePhase, RunState
+    from ..remote_supervisor_stream import SupervisorStreams
+
+    reported = []
+    monkeypatch.setattr(
+        remote_process_worker, "publish_outcome",
+        lambda *args, **kwargs: reported.append((args, kwargs)),
+    )
+
+    def fail_sync(self):
+        raise OSError("cannot fsync output")
+
+    monkeypatch.setattr(SupervisorStreams, "sync", fail_sync)
+
+    async def check():
+        rd, wr = os.pipe()
+        spec = _spec(tmp_path, wr, detached=True, argv=[
+            sys.executable, "-c", "print('payload', flush=True)",
+        ])
+        await asyncio.wait_for(remote_process_worker._run(spec), 5)
+        with os.fdopen(rd, "rb") as read_pipe:
+            assert read_pipe.readline()
+
+    asyncio.run(check())
+    assert len(reported) == 1
+    args, kwargs = reported[0]
+    assert args[1] == RunState.FAILED
+    assert args[2] == 0
+    assert args[3] == FailurePhase.ARTIFACTS
+    assert kwargs["error"] == "Failed to sync process output: cannot fsync output"

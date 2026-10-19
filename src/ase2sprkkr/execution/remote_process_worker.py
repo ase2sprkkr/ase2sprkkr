@@ -115,8 +115,17 @@ async def _run(spec):
                     await _stop_process(process, waiting)
                     break
             return_code = await waiting
-            await asyncio.gather(*pumps)
-            if state == RunState.RUNNING:
+            # Inspect all pump outcomes without allowing their exceptions to
+            # replace the diagnosed output-write failure and its context.
+            pump_results = await asyncio.gather(*pumps, return_exceptions=True)
+            pump_error = next(
+                (value for value in pump_results if isinstance(value, BaseException)),
+                None,
+            )
+            if pump_error is not None:
+                state, phase = RunState.FAILED, FailurePhase.EXECUTION
+                message = f"Failed to write process output: {pump_error}"
+            elif state == RunState.RUNNING:
                 state = RunState.FINISHED if return_code == 0 else RunState.FAILED
                 phase = None if return_code == 0 else FailurePhase.EXECUTION
         finally:
