@@ -104,11 +104,14 @@ def attach_project_run(
 ):
     """Reconnect an active run and resume its client-side lifecycle."""
     record = _record(manager, run)
-    if (record.state == RunState.FAILED
-            and record.failure_phase == FailurePhase.DOWNLOAD
-            and record.return_code == 0):
-        record = manager.resume_download(record)
-    elif record.state in (RunState.FINISHED, RunState.FAILED, RunState.CANCELLED):
+    retry_download = (
+        record.state == RunState.FAILED
+        and record.failure_phase == FailurePhase.DOWNLOAD
+        and record.return_code == 0
+    )
+    if not retry_download and record.state in (
+        RunState.FINISHED, RunState.FAILED, RunState.CANCELLED
+    ):
         raise ProjectResultUnavailableError(
             record, f"run is already terminal ({record.state.value})"
         )
@@ -127,6 +130,11 @@ def attach_project_run(
                 artifacts_available=True,
             )
         raise
+
+    if retry_download:
+        # Resolve the reader first: a construction error must not turn a
+        # historically failed transfer into an orphan active run.
+        record = manager.resume_download(record)
 
     return manager.attach(
         record,

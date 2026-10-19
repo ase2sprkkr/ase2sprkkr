@@ -113,7 +113,8 @@ def test_explicit_resume_download_preserves_original_backend_and_artifacts(tmp_p
 
     assert reopened.state == RunState.DOWNLOADING
     assert reopened.execution == failed.execution
-    assert reopened.files == failed.files
+    assert reopened.files.stdout.availability_state == "pending"
+    assert reopened.files.stdout.availability_message is None
     assert reopened.finished_at is None
     assert reopened.failure_phase is None
     assert output.read_bytes() == b"partial"
@@ -129,3 +130,57 @@ def test_resume_download_rejects_execution_failure_and_nonzero_code(tmp_path):
     import pytest
     with pytest.raises(ValueError, match="Only failed downloads"):
         manager.resume_download(bad.id)
+
+
+def test_retry_failed_download_can_publish_clean_snapshot(tmp_path):
+    manager, initial = _record(tmp_path)
+    output = tmp_path / "run.out"
+    output.write_bytes(b"partial")
+    initial = manager.transition(
+        initial, state=RunState.DOWNLOADING,
+        execution=initial.execution.submitted("existing-backend"),
+    )
+    failed_files = initial.files.with_file_availability(
+        str(output), "failed", "interrupted transfer"
+    )
+    manager.complete(
+        initial, state=RunState.FAILED, return_code=0,
+        failure_phase=FailurePhase.DOWNLOAD,
+        files=failed_files, artifacts_available=False,
+    )
+
+    resumed = manager.resume_download(initial.id)
+    assert resumed.files.stdout.availability_state == "pending"
+    output.write_bytes(b"complete")
+    available = resumed.files.with_file_availability(str(output), "available")
+    complete = manager.complete(
+        resumed, state=RunState.FINISHED, return_code=0,
+        files=available, artifacts_available=True,
+    )
+    assert complete.state == RunState.FINISHED
+    assert complete.files.failed_artifacts == ()
+    assert complete.files.captured_at is not None
+    assert len(complete.files.output_versions) == 1
+    assert manager.output_file_is_current(complete)
+
+
+def test_resume_download_retains_previously_available_artifacts(tmp_path):
+    manager = ExecutionManager(RunStore(tmp_path / "runs"))
+    output = tmp_path / "stdout"
+    other = tmp_path / "other"
+    record = manager.new_record(
+        task="DOS", directory=tmp_path,
+        files=FileManifest(
+            stdout=FileEntry(local_path=str(output), availability_state="available"),
+            outputs=(FileEntry(local_path=str(other), availability_state="failed",
+                               availability_message="temporary transport error"),),
+        ),
+    )
+    record = manager.transition(record, state=RunState.DOWNLOADING,
+                                execution=record.execution.submitted("existing-backend"))
+    manager.complete(record, state=RunState.FAILED, return_code=0,
+                     failure_phase=FailurePhase.DOWNLOAD, artifacts_available=False)
+    retried = manager.resume_download(record.id)
+    assert retried.files.stdout.availability_state == "available"
+    assert retried.files.outputs[0].availability_state == "pending"
+    assert retried.files.outputs[0].availability_message is None

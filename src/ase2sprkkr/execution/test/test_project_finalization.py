@@ -217,3 +217,38 @@ def test_attaching_failed_download_reopens_transfer_without_resubmitting(
     assert manager.store.get(record.id).finished_at is None
     assert output.read_bytes() == b"partial output"
     assert attached == [resumed]
+
+
+def test_failed_download_reader_construction_does_not_reopen_run(tmp_path, monkeypatch):
+    from ase2sprkkr.execution import FileEntry, FileManifest
+    manager = ExecutionManager(RunStore(tmp_path / "runs"))
+    record = manager.new_record(
+        task="DOS", directory=tmp_path,
+        files=FileManifest(stdout=FileEntry(
+            local_path=str(tmp_path / "out"),
+            availability_state="failed",
+            availability_message="original download failure",
+        )),
+    )
+    record = manager.transition(
+        record, state=RunState.DOWNLOADING,
+        execution=record.execution.submitted("existing-backend"),
+    )
+    failed = manager.complete(
+        record, state=RunState.FAILED, return_code=0,
+        failure_phase=FailurePhase.DOWNLOAD, artifacts_available=False,
+    )
+
+    def broken_reader(*args):
+        raise RuntimeError("Reader constructor is broken")
+
+    monkeypatch.setattr(
+        project_output, "_result_processor_for_record", broken_reader
+    )
+    with pytest.raises(RuntimeError, match="Reader constructor is broken"):
+        attach_project_run(manager, failed.id)
+
+    current = manager.store.get(failed.id)
+    assert current.state == RunState.FAILED
+    assert current.failure_phase == FailurePhase.DOWNLOAD
+    assert current.files == failed.files

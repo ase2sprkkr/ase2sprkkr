@@ -744,9 +744,17 @@ class ExecutionManager:
                     or latest.files is None
                     or latest.files.captured_at is not None):
                 raise ValueError("Only failed downloads of successful backend jobs can be retried")
+            # Keep already transferred artifacts and all bytes on disk.
+            # Only failed transfers become eligible for a fresh attempt.
+            files = latest.files._map_artifacts(
+                lambda item: replace(
+                    item, availability_state="pending",
+                    availability_message=None,
+                ) if item.availability_state == "failed" else item
+            )
             return replace(
                 latest, state=RunState.DOWNLOADING, finished_at=None,
-                failure_phase=None, message=None, updated_at=_now(),
+                failure_phase=None, message=None, files=files, updated_at=_now(),
             )
 
         return self.store.update(record, reopen)
