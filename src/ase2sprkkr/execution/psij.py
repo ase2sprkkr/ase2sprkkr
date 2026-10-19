@@ -360,6 +360,8 @@ class PsijRunner:
 
     @property
     def return_code(self):
+        if self._observation_unknown:
+            return None
         if self._return_code is not None:
             return self._return_code
         return getattr(getattr(self._job, "status", None), "exit_code", None)
