@@ -266,3 +266,30 @@ def test_project_request_flushes_each_declared_file_once(tmp_path):
     assert request["input_files"] == [inp.name]
     assert request["cache_files"] == [cache.name]
     assert (output.flush_count, inp.flush_count, cache.flush_count) == (1, 1, 1)
+
+
+def test_submission_cleanup_uses_parsed_manifest_and_protects_caches(tmp_path):
+    from ase2sprkkr.execution.remote_service import (
+        _clean_request_outputs, _request_spec,
+    )
+
+    for name in ("stale.dat", "input.dat", "stdin.dat", "cache.dat", "sync-cache.dat"):
+        (tmp_path / name).write_text(name)
+
+    request = {
+        "directory": str(tmp_path),
+        "argv": [sys.executable, "-c", "pass"],
+        "input_file": "input.dat",
+        "stdin": "stdin.dat",
+        "output_files": ["*.dat"],
+        "cache_files": ["cache.dat"],
+        "client_sync": {
+            "cache_files": [{"path": "sync-cache.dat", "before": None}],
+        },
+    }
+    spec = _request_spec(request)
+    _clean_request_outputs(spec, tmp_path)
+
+    assert not (tmp_path / "stale.dat").exists()
+    for name in ("input.dat", "stdin.dat", "cache.dat", "sync-cache.dat"):
+        assert (tmp_path / name).read_text() == name
