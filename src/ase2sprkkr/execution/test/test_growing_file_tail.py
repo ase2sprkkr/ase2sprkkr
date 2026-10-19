@@ -200,6 +200,30 @@ def test_follow_job_files_propagates_wait_errors(tmp_path):
     asyncio.run(check())
 
 
+def test_follow_job_files_can_recover_wait_failure_and_drain_output(tmp_path):
+    async def check():
+        path = tmp_path / "out"
+        observed, errors = [], []
+
+        def failing_wait():
+            path.write_bytes(b"last output")
+            raise RuntimeError("wait disconnected")
+
+        async def on_error(exc):
+            errors.append(str(exc))
+            return {"state": "unknown"}
+
+        result = await asyncio.wait_for(follow_job_files(
+            {"out": path}, lambda kind, data: observed.append((kind, data)),
+            failing_wait, wait_error=on_error, poll_interval=0.01,
+        ), 3)
+        assert result == {"state": "unknown"}
+        assert errors == ["wait disconnected"]
+        assert observed == [("out", b"last output")]
+
+    asyncio.run(check())
+
+
 def test_follow_job_files_cancelled_observation_does_not_cancel_job(tmp_path):
     async def check():
         entered, release, exited = Event(), Event(), Event()

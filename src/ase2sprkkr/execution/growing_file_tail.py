@@ -159,20 +159,27 @@ async def follow_growing_files(paths, on_chunk, terminal, *, offsets=None,
             await tail.wait_for_change()
 
 
-async def follow_job_files(paths, on_chunk, wait, *, terminal=None, offsets=None,
-                           poll_interval=1.0):
-    """Follow scheduler output while one blocking job.wait() runs in a thread.
+async def follow_job_files(paths, on_chunk, wait, *, terminal=None, wait_error=None,
+                           offsets=None, poll_interval=1.0):
+    """Follow output while a blocking job.wait() runs in a thread.
 
-    The optional async terminal callback maps the native job status to the
-    caller's terminal facts. The common follower drains output before returning
-    those facts. Cancelling observation does not cancel the scheduler job.
+    The optional callbacks transform the result or exception of wait(). The
+    follower drains all currently available bytes before reporting either
+    result. A wait_error callback must return an observation outcome (which
+    may report UNKNOWN), not None. Without one, wait exceptions propagate.
+    Cancelling observation does not cancel the scheduler job.
     """
     waiting = asyncio.create_task(asyncio.to_thread(wait))
 
     async def outcome():
         if not waiting.done():
             return None
-        status = await waiting
+        try:
+            status = await waiting
+        except Exception as exc:
+            if wait_error is None:
+                raise
+            return await wait_error(exc)
         return await terminal(status) if terminal is not None else status
 
     try:

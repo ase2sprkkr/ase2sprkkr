@@ -470,12 +470,28 @@ async def _follow_scheduler_async(remote_id, streams, paths, offsets, poll_inter
         streams[kind].write(data)
         streams[kind].flush()
 
-    async def terminal(_native_status):
-        status = await asyncio.to_thread(status_remote, remote_id)
-        if status["state"] in {s.value for s in _FINAL_STATES}:
-            return status
-        native = job.status
-        state = _psij_state(native)
+    async def uncertain(reason):
+        # Only local Slurm has an independent status source. Asking PSI/J
+        # again would create a fresh attached Job with no observed status.
+        if str(handle["backend"]).lower() == "slurm" and handle.get("url") is None:
+            try:
+                status = await asyncio.to_thread(status_remote, remote_id)
+            except (OSError, subprocess.CalledProcessError):
+                pass
+            else:
+                if RunState(status["state"]) in _FINAL_STATES:
+                    return status
+        # The observer has stopped, not necessarily the calculation. A later
+        # refresh/attach can recover its state and replay remaining bytes.
+        return {
+            "state": RunState.UNKNOWN.value, "return_code": None,
+            "failure_phase": None, "error": reason,
+        }
+
+    async def terminal(native):
+        state = _psij_state(native, attached=True)
+        if state not in _FINAL_STATES:
+            return await uncertain("PSI/J wait returned without a terminal state")
         return _status_reply(
             state, getattr(native, "exit_code", None),
             failure_phase=(
@@ -484,9 +500,12 @@ async def _follow_scheduler_async(remote_id, streams, paths, offsets, poll_inter
             error=getattr(native, "message", None),
         )
 
+    async def wait_error(exc):
+        return await uncertain(f"PSI/J wait failed: {exc}")
+
     return await follow_job_files(
-        paths, emit, job.wait, terminal=terminal, offsets=offsets,
-        poll_interval=max(poll_interval, 1.0),
+        paths, emit, job.wait, terminal=terminal, wait_error=wait_error,
+        offsets=offsets, poll_interval=max(poll_interval, 1.0),
     )
 
 

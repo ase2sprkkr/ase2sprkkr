@@ -218,7 +218,7 @@ def _stub_terminal_psij_job(monkeypatch, state, return_code, observed):
     monkeypatch.setattr(remote_service, "_psij_executor", lambda _: Backend())
 
 
-def test_follow_waits_for_psij_terminal_without_repeated_status_probes(tmp_path, monkeypatch):
+def test_follow_uses_wait_status_without_scheduler_probe(tmp_path, monkeypatch):
     _, remote_id = _psij_handle(tmp_path)
     observed = []
     _stub_terminal_psij_job(monkeypatch, "COMPLETED", 0, observed)
@@ -233,10 +233,10 @@ def test_follow_waits_for_psij_terminal_without_repeated_status_probes(tmp_path,
 
     assert outcome["state"] == RunState.FINISHED.value
     assert observed == [("attach", "42"), "wait"]
-    assert checks == [remote_id]
+    assert checks == []
 
 
-def test_follow_uses_native_terminal_when_status_query_is_transient_unknown(tmp_path, monkeypatch):
+def test_follow_uses_native_terminal_even_if_scheduler_disagrees(tmp_path, monkeypatch):
     _, remote_id = _psij_handle(tmp_path)
     observed = []
     _stub_terminal_psij_job(monkeypatch, "FAILED", 7, observed)
@@ -252,10 +252,10 @@ def test_follow_uses_native_terminal_when_status_query_is_transient_unknown(tmp_
     assert outcome["return_code"] == 7
     assert outcome["failure_phase"] == FailurePhase.EXECUTION.value
     assert observed == [("attach", "42"), "wait"]
-    assert checks == [remote_id]
+    assert checks == []
 
 
-def test_follow_fallback_treats_completed_nonzero_psij_as_failed(
+def test_follow_completed_with_nonzero_exit_is_failed(
     tmp_path, monkeypatch,
 ):
     _, remote_id = _psij_handle(tmp_path)
@@ -275,6 +275,116 @@ def test_follow_fallback_treats_completed_nonzero_psij_as_failed(
         "error": None,
     }
     assert observed == [("attach", "42"), "wait"]
+
+
+def test_follow_uses_exact_status_returned_by_wait(monkeypatch, tmp_path):
+    from types import SimpleNamespace
+
+    _, remote_id = _psij_handle(tmp_path)
+    returned = SimpleNamespace(
+        state=SimpleNamespace(name="FAILED"), exit_code=4, message="failed",
+    )
+    class Job:
+        status = SimpleNamespace(
+            state=SimpleNamespace(name="ACTIVE"), exit_code=None, message=None,
+        )
+        def wait(self):
+            return returned
+    class Backend:
+        _psij = SimpleNamespace(Job=Job)
+        _job_executor = SimpleNamespace(attach=lambda *_: None)
+        def attach_native_job(self, native_id):
+            self._job_executor.attach(Job(), native_id)
+            return Job()
+
+    monkeypatch.setattr(remote_service, "_psij_executor", lambda _: Backend())
+    monkeypatch.setattr(
+        remote_service, "status_remote",
+        lambda _: pytest.fail("Terminal PSI/J status must not be queried again"),
+    )
+    result = remote_service.follow_remote(remote_id, io.BytesIO(), io.BytesIO())
+    assert result == {
+        "state": "failed", "return_code": 4,
+        "failure_phase": "execution", "error": "failed",
+    }
+
+
+@pytest.mark.parametrize("native_state", ("NEW", "ACTIVE"))
+@pytest.mark.parametrize("scheduler_state", ("finished", "unknown", "running"))
+def test_inconclusive_wait_checks_slurm_once_and_never_invents_completion(
+    monkeypatch, tmp_path, native_state, scheduler_state,
+):
+    _, remote_id = _psij_handle(tmp_path)
+    observed = []
+    _stub_terminal_psij_job(monkeypatch, native_state, None, observed)
+    queries = []
+    def status(_):
+        queries.append(True)
+        return {
+            "state": scheduler_state,
+            "return_code": 0 if scheduler_state == "finished" else None,
+            "error": None,
+            "failure_phase": None,
+        }
+    monkeypatch.setattr(remote_service, "status_remote", status)
+    result = remote_service.follow_remote(remote_id, io.BytesIO(), io.BytesIO())
+    assert len(queries) == 1
+    assert result["state"] == (
+        RunState.FINISHED.value
+        if scheduler_state == "finished" else RunState.UNKNOWN.value
+    )
+    if scheduler_state != "finished":
+        assert result["return_code"] is None
+        assert result["failure_phase"] is None
+        assert "without a terminal state" in result["error"]
+    assert observed == [("attach", "42"), "wait"]
+
+
+@pytest.mark.parametrize("slurm_state", ("failed", "unknown"))
+def test_wait_error_uses_one_slurm_status_check(monkeypatch, tmp_path, slurm_state):
+    _, remote_id = _psij_handle(tmp_path)
+    observations = []
+    _stub_terminal_psij_job(monkeypatch, "ACTIVE", None, observations)
+
+    # Modify the existing fake job's wait method without changing attach.
+    executor = remote_service._psij_executor({})
+    def broken_wait():
+        observations.append("wait")
+        raise OSError("scheduler connection dropped")
+    executor._psij.Job.wait = lambda self: broken_wait()
+    executor.attach_native_job = lambda native_id: executor._psij.Job()
+    monkeypatch.setattr(remote_service, "_psij_executor", lambda _: executor)
+    queried = []
+    def status(_):
+        queried.append(True)
+        return {
+            "state": slurm_state, "return_code": 9 if slurm_state == "failed" else None,
+            "error": "native failed" if slurm_state == "failed" else None,
+            "failure_phase": "execution" if slurm_state == "failed" else None,
+        }
+    monkeypatch.setattr(remote_service, "status_remote", status)
+    result = remote_service.follow_remote(remote_id, io.BytesIO(), io.BytesIO())
+    assert len(queried) == 1
+    assert result["state"] == (
+        RunState.FAILED.value if slurm_state == "failed" else RunState.UNKNOWN.value
+    )
+    if slurm_state == "unknown":
+        assert "scheduler connection dropped" in result["error"]
+
+
+def test_non_slurm_inconclusive_wait_does_not_attach_for_status(monkeypatch, tmp_path):
+    handle, _ = _psij_handle(tmp_path)
+    handle["backend"], handle["url"] = "pbs", "ssh://other-host"
+    remote_id = remote_service._encode_handle(handle)
+    observed = []
+    _stub_terminal_psij_job(monkeypatch, "ACTIVE", None, observed)
+    monkeypatch.setattr(
+        remote_service, "status_remote",
+        lambda _: pytest.fail("Never probe PSI/J with another fresh attach"),
+    )
+    result = remote_service.follow_remote(remote_id, io.BytesIO(), io.BytesIO())
+    assert result["state"] == RunState.UNKNOWN.value
+    assert "without a terminal state" in result["error"]
 
 
 def test_supervisor_writes_mailbox_receipt(monkeypatch):
