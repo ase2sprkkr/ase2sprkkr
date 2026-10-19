@@ -5,7 +5,8 @@ from __future__ import annotations
 import asyncio
 from threading import Event, Lock, Thread
 
-from .base import FailurePhase, RunState, SubmissionNotStarted
+from .base import (FailurePhase, RunState, SubmissionNotStarted,
+                   finish_monitor, wait_for_monitor)
 
 
 class PostprocessingRunner:
@@ -157,12 +158,7 @@ class PostprocessingRunner:
         finally:
             # Make terminal status visible during the persistence callback.
             self._settled = True
-            try:
-                if self.callback is not None:
-                    self.callback(self.result)
-            except BaseException as exc:
-                self._callback_exception = exc
-            self._done.set()
+            finish_monitor(self)
 
     def _start_completion(self):
         self._started = True
@@ -206,12 +202,7 @@ class PostprocessingRunner:
     def wait(self):
         if not self._started:
             raise RuntimeError("Run has not been started")
-        self._done.wait()
-        if self._exception is not None:
-            raise self._exception
-        if self._callback_exception is not None:
-            raise self._callback_exception
-        return self.result
+        return wait_for_monitor(self)
 
     def run(self):
         if not self._started:

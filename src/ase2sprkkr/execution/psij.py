@@ -20,6 +20,8 @@ from .base import (
     Executor,
     FailurePhase,
     OutputObservers,
+    finish_monitor,
+    wait_for_monitor,
     RunState,
     RunStatus,
     SubmissionNotStarted,
@@ -461,12 +463,7 @@ class PsijRunner:
             self._failure_phase = self._failure_phase or FailurePhase.EXECUTION
             self._failure_message = self._failure_message or str(exc)
         finally:
-            try:
-                if self.callback:
-                    self.callback(self.result)
-            except BaseException as exc:
-                self._callback_exception = exc
-            self._done.set()
+            finish_monitor(self)
 
     def _start_monitor(self):
         with self._lock:
@@ -500,12 +497,7 @@ class PsijRunner:
     def wait(self):
         if self._thread is None:
             raise RuntimeError("Run has not been started")
-        self._done.wait()
-        if self._exception is not None:
-            raise self._exception
-        if self._callback_exception is not None:
-            raise self._callback_exception
-        return self.result
+        return wait_for_monitor(self)
 
     def run(self):
         if self._thread is None:

@@ -34,6 +34,27 @@ def dispatch_cancellation(action):
     return future
 
 
+def finish_monitor(runner):
+    """Deliver the callback and unblock waiters after backend-specific cleanup."""
+    try:
+        if runner.callback is not None:
+            runner.callback(runner.result)
+    except BaseException as exc:
+        runner._callback_exception = exc
+    finally:
+        runner._done.set()
+
+
+def wait_for_monitor(runner):
+    """Propagate execution errors before callback errors after completion."""
+    runner._done.wait()
+    if runner._exception is not None:
+        raise runner._exception
+    if runner._callback_exception is not None:
+        raise runner._callback_exception
+    return runner.result
+
+
 class MpiNotFoundWarning(UserWarning):
     """MPI autodetection was requested, but no MPI launcher was found."""
 
