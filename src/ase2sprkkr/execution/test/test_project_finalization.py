@@ -172,3 +172,48 @@ def test_transient_attach_failure_keeps_postprocessing_active(tmp_path, monkeypa
     current = store.get(record.id)
     assert current.state == RunState.POSTPROCESSING
     assert current.finished_at is None
+
+
+def test_attaching_failed_download_reopens_transfer_without_resubmitting(
+    tmp_path, monkeypatch
+):
+    manager = ExecutionManager(RunStore(tmp_path / "runs"))
+    from ase2sprkkr.execution import FileEntry, FileManifest
+    from ase2sprkkr.outputs.project_results import attach_project_run
+
+    output = tmp_path / "run.out"
+    output.write_bytes(b"partial output")
+    record = manager.new_record(
+        task="DOS", directory=tmp_path,
+        files=FileManifest(stdout=FileEntry(
+            local_path=str(output), availability_state="failed",
+            availability_message="connection dropped",
+        )),
+    )
+    record = manager.transition(
+        record, state=RunState.DOWNLOADING,
+        execution=record.execution.submitted("existing-backend-id"),
+    )
+    manager.complete(
+        record, state=RunState.FAILED, return_code=0,
+        failure_phase=FailurePhase.DOWNLOAD,
+        message="connection dropped", artifacts_available=False,
+    )
+    import ase2sprkkr.outputs.project_results as project_results
+
+    monkeypatch.setattr(
+        project_results, "_result_processor_for_record",
+        lambda *_: lambda result: result,
+    )
+    attached = []
+    def fake_attach(record, **kwargs):
+        attached.append(record)
+        return record
+
+    monkeypatch.setattr(manager, "attach", fake_attach)
+    resumed = attach_project_run(manager, record.id)
+    assert resumed.state == RunState.DOWNLOADING
+    assert resumed.execution.backend_id == "existing-backend-id"
+    assert manager.store.get(record.id).finished_at is None
+    assert output.read_bytes() == b"partial output"
+    assert attached == [resumed]

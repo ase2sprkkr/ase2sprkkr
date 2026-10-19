@@ -115,9 +115,8 @@ class PostprocessingRunner:
             if raw_state == RunState.UNKNOWN:
                 self.result = outcome
                 self._state = RunState.UNKNOWN
-                self._exception = RuntimeError(
-                    "Raw execution completed with unresolved backend state"
-                )
+                # An unresolved backend may still be executing. It is
+                # recoverable and must not finalize as a failed project run.
                 self._failure_message = getattr(
                     self._runner, "failure_message", None
                 )

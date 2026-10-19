@@ -111,9 +111,9 @@ def test_unknown_raw_state_is_preserved_and_not_postprocessed():
     runner = PostprocessingRunner(raw, lambda outcome: processed.append(outcome))
 
     runner.submit()
-    with pytest.raises(RuntimeError, match="unresolved backend state"):
-        runner.wait()
+    assert runner.wait() is raw.result
 
+    # UNKNOWN is an active, recoverable outcome, not a fabricated failure.
     assert processed == []
     assert runner.result is raw.result
     assert runner.state == RunState.UNKNOWN

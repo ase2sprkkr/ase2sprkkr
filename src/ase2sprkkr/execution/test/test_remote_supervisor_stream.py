@@ -302,3 +302,39 @@ def test_backpressured_live_only_channel_disconnects_instead_of_losing_bytes():
         assert writer.frames == []
 
     asyncio.run(run())
+
+
+def test_supervisor_finish_is_bounded_when_client_never_drains(tmp_path):
+    async def run():
+        streams = SupervisorStreams(tmp_path / "out", None)
+        await streams.start()
+
+        class Transport:
+            def __init__(self, done):
+                self.done = done
+                self.aborted = False
+
+            def get_write_buffer_size(self):
+                return 0
+
+            def abort(self):
+                self.aborted = True
+                self.done.set()
+
+        class Writer:
+            def __init__(self, transport):
+                self.transport = transport
+
+        done = asyncio.Event()
+        transport = Transport(done)
+        follower = _Follower(Writer(transport), {"out": 0, "err": 0})
+        streams._followers.add(follower)
+        streams.terminal({"state": "finished", "return_code": 0})
+        try:
+            await asyncio.wait_for(streams.finish(), 4)
+            assert transport.aborted
+            assert streams._spools["out"].closed
+        finally:
+            streams._followers.discard(follower)
+
+    asyncio.run(run())

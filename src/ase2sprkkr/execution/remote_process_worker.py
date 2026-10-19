@@ -115,8 +115,17 @@ async def _run(spec):
                     await _stop_process(process, waiting)
                     break
             return_code = await waiting
-            await asyncio.gather(*pumps)
-            if state == RunState.RUNNING:
+            # Inspect all pump outcomes without allowing their exceptions to
+            # replace the diagnosed output-write failure and its context.
+            pump_results = await asyncio.gather(*pumps, return_exceptions=True)
+            pump_error = next(
+                (value for value in pump_results if isinstance(value, BaseException)),
+                None,
+            )
+            if pump_error is not None:
+                state, phase = RunState.FAILED, FailurePhase.EXECUTION
+                message = f"Failed to write process output: {pump_error}"
+            elif state == RunState.RUNNING:
                 state = RunState.FINISHED if return_code == 0 else RunState.FAILED
                 phase = None if return_code == 0 else FailurePhase.EXECUTION
         finally:
@@ -149,6 +158,15 @@ async def _run(spec):
                 publish_outcome(spec["receipt_id"], state, return_code, phase, error=message)
             else:
                 _write_outcome(spec["receipt_id"], state, return_code, phase)
+        except OSError as exc:
+            # No durable terminal receipt exists. The client must preserve its
+            # active run and retry recovery, never commit FINISHED from a socket.
+            outcome = {
+                "state": RunState.UNKNOWN.value,
+                "return_code": None,
+                "failure_phase": None,
+                "error": f"Unable to persist terminal receipt: {exc}",
+            }
         finally:
             streams.terminal(outcome)
             await streams.finish()

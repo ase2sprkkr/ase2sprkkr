@@ -696,10 +696,17 @@ class RemoteRunner:
                     target.flush()
                     offsets[kind] = os.path.getsize(self._local_path(target))
             self._stream_positions = dict(offsets)
-            self._follow_process = await self.executor._follow(
-                self._remote_directory, self._backend_id, self._files,
-                offsets=offsets,
-            )
+            try:
+                self._follow_process = await self.executor._follow(
+                    self._remote_directory, self._backend_id, self._files,
+                    offsets=offsets,
+                )
+            except (OSError, ConnectionError) as exc:
+                # An unreachable transport is not a failed calculation.
+                self._state = RunState.UNKNOWN
+                self._failure_phase = None
+                self._failure_message = str(exc)
+                return self.result
             stdout_task = asyncio.create_task(
                 self._pump(self._follow_process.stdout, "out")
             )
@@ -718,11 +725,17 @@ class RemoteRunner:
             # stream cannot turn a successful calculation into FAILED.
             status = self._follow_process.terminal
             if status is None:
-                status = await self.executor._status(
-                    self._remote_directory,
-                    self._backend_id,
-                    self._files,
-                )
+                try:
+                    status = await self.executor._status(
+                        self._remote_directory,
+                        self._backend_id,
+                        self._files,
+                    )
+                except (OSError, ConnectionError) as exc:
+                    self._state = RunState.UNKNOWN
+                    self._failure_phase = None
+                    self._failure_message = str(stream_error or exc)
+                    return self.result
             backend_state = RunState(status.get("state", "unknown"))
             self._return_code = status.get("return_code")
             self.result.return_code = self._return_code
