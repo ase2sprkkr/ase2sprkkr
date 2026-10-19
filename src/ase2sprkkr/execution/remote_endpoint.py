@@ -32,6 +32,19 @@ from .endpoint import endpoint_for_executor
 _REMOTE_BACKENDS = {"local", "psij"}
 
 
+def _relative_local_path(path, local_root):
+    """Resolve a local path and enforce the run's mapped root boundary."""
+    path = Path(path).expanduser().resolve()
+    root = Path(local_root).expanduser().resolve()
+    try:
+        return path.relative_to(root)
+    except ValueError as exc:
+        raise ValueError(
+            f"Local path {path} is outside mapped root {root}; "
+            "specify local_root/remote_root explicitly"
+        ) from exc
+
+
 def _client_status_state(state):
     """Translate target backend facts to the remote executor's client lifecycle."""
     backend_state = RunState(state.get("state", "unknown"))
@@ -241,14 +254,7 @@ class _RemoteRunContext:
         return posixpath.normpath(self.remote_root)
 
     async def map_path(self, path):
-        path = Path(path).expanduser().resolve()
-        try:
-            relative = path.relative_to(self.local_root)
-        except ValueError as exc:
-            raise ValueError(
-                f"Local path {path} is outside mapped root {self.local_root}; "
-                "specify local_root/remote_root explicitly"
-            ) from exc
+        relative = _relative_local_path(path, self.local_root)
         remote_root = await self._resolved_remote_root()
         if not relative.parts:
             return remote_root
@@ -478,15 +484,9 @@ class RemoteEndpointExecutor(Executor):
 
     def submission_directory(self, spec):
         launch = spec.launch
-        local_root = Path(launch.local_root or Path.home()).expanduser().resolve()
-        directory = Path(spec.directory).expanduser().resolve()
-        try:
-            relative = directory.relative_to(local_root)
-        except ValueError as exc:
-            raise ValueError(
-                f"Local path {directory} is outside mapped root {local_root}; "
-                "specify local_root/remote_root explicitly"
-            ) from exc
+        relative = _relative_local_path(
+            spec.directory, launch.local_root or Path.home(),
+        )
 
         root = launch.remote_root
         if root is None or root == "~":
