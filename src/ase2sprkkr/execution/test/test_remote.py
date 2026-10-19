@@ -649,3 +649,25 @@ def test_remote_none_stream_files_are_live_only(tmp_path):
     assert ("err", "err\n") in observed
     assert list((tmp_path / "remote").rglob("stdout")) == []
     assert list((tmp_path / "remote").rglob("stderr")) == []
+
+
+@pytest.mark.parametrize(
+    "policy,source,destination,expected",
+    [
+        (FileSyncPolicy.NEVER, "new", None, False),
+        (FileSyncPolicy.NEVER, "new", "old", False),
+        (FileSyncPolicy.ALWAYS, "new", "new", True),
+        (FileSyncPolicy.ALWAYS, None, "old", False),
+        (FileSyncPolicy.MISSING, "new", None, True),
+        (FileSyncPolicy.MISSING, "new", "old", False),
+        (FileSyncPolicy.CHANGED, "new", None, True),
+        (FileSyncPolicy.CHANGED, "new", "old", True),
+        (FileSyncPolicy.CHANGED, "new", "new", False),
+        (FileSyncPolicy.CHANGED, None, None, False),
+        (FileSyncPolicy.CHANGED, None, "old", False),
+    ],
+)
+def test_file_sync_transfer_decision_is_direction_independent(
+    policy, source, destination, expected,
+):
+    assert policy.should_transfer(source, destination) is expected
