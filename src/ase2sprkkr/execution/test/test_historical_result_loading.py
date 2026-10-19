@@ -180,7 +180,7 @@ def test_retrieval_programming_error_is_not_persisted_as_artifact_failure(tmp_pa
     manager, executor, record = _terminal_run(tmp_path)
     (tmp_path / "run.out").unlink()
 
-    def broken_fetch(reference, files):
+    def broken_fetch(reference, files, *, destinations=None):
         raise KeyError("programming error")
 
     executor.fetch_result_files = broken_fetch
