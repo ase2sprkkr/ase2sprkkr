@@ -53,6 +53,6 @@ def input_parameters_definition():
         executable="kkrgen",
         mpi=True,
         output_reader="DOS",
-        output_file_templates=(TaskFile("{dataset}.dos", type="DOS"),),
+        output_files=(TaskFile("{dataset}.dos", type="DOS"),),
     )
     return schema

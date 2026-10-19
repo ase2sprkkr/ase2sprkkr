@@ -120,20 +120,11 @@ class _TaskFileFormatter(string.Formatter):
         return value, field_name
 
 
-def _choose_files(files, templates, kind):
-    """Accept modern file declarations and the historical template spelling."""
-    if files is not None:
-        if templates:
-            raise TypeError(f"Specify only one of {kind}_files and {kind}_file_templates")
-        return files
-    return templates
-
-
-def _normalize_file_templates(templates: Iterable[_FileTemplate], field: str):
-    if isinstance(templates, (str, bytes, os.PathLike)) or callable(templates):
+def _normalize_task_files(files: Iterable[_FileTemplate], field: str) -> Tuple[TaskFile, ...]:
+    if isinstance(files, (str, bytes, os.PathLike)) or callable(files):
         raise TypeError(f"{field} must be an iterable of path-like strings or TaskFile declarations")
     try:
-        iterator = iter(templates)
+        iterator = iter(files)
     except TypeError:
         raise TypeError(f"{field} must be an iterable of path-like strings or TaskFile declarations") from None
 
@@ -159,9 +150,9 @@ class TaskDefinition:
     executable: str
     mpi: bool
     output_reader_name: Optional[str]
-    input_file_templates: Tuple[_FileTemplate, ...]
-    output_file_templates: Tuple[_FileTemplate, ...]
-    cache_file_templates: Tuple[_FileTemplate, ...]
+    input_files: Tuple[TaskFile, ...]
+    output_files: Tuple[TaskFile, ...]
+    cache_files: Tuple[TaskFile, ...]
 
     def __init__(
         self,
@@ -172,12 +163,9 @@ class TaskDefinition:
         mpi: bool = True,
         output_reader_name: Optional[str] = None,
         output_reader: Optional[str] = None,
-        input_file_templates: Iterable[_FileTemplate] = (),
-        output_file_templates: Iterable[_FileTemplate] = (),
-        cache_file_templates: Iterable[_FileTemplate] = (),
-        input_files=None,
-        output_files=None,
-        cache_files=None,
+        input_files: Iterable[_FileTemplate] = (),
+        output_files: Iterable[_FileTemplate] = (),
+        cache_files: Iterable[_FileTemplate] = (),
     ) -> None:
         schema_name = _normalize_identifier(
             input_parameters_definition_name, "input_parameters_definition_name"
@@ -206,36 +194,15 @@ class TaskDefinition:
         object.__setattr__(self, "executable", executable)
         object.__setattr__(self, "mpi", mpi)
         object.__setattr__(self, "output_reader_name", output_reader_name)
-        object.__setattr__(
-            self,
-            "input_file_templates",
-            _normalize_file_templates(_choose_files(input_files, input_file_templates, "input"), "input_file_templates"),
-        )
-        object.__setattr__(
-            self,
-            "output_file_templates",
-            _normalize_file_templates(_choose_files(output_files, output_file_templates, "output"), "output_file_templates"),
-        )
-        object.__setattr__(
-            self,
-            "cache_file_templates",
-            _normalize_file_templates(_choose_files(cache_files, cache_file_templates, "cache"), "cache_file_templates"),
-        )
-
-    @property
-    def input_files(self):
-        return tuple(item if isinstance(item, TaskFile) else TaskFile(item)
-                     for item in self.input_file_templates)
-
-    @property
-    def output_files(self):
-        return tuple(item if isinstance(item, TaskFile) else TaskFile(item)
-                     for item in self.output_file_templates)
-
-    @property
-    def cache_files(self):
-        return tuple(item if isinstance(item, TaskFile) else TaskFile(item)
-                     for item in self.cache_file_templates)
+        for kind, values in (
+            ("input", input_files),
+            ("output", output_files),
+            ("cache", cache_files),
+        ):
+            object.__setattr__(
+                self, f"{kind}_files",
+                _normalize_task_files(values, f"{kind}_files"),
+            )
 
     def output_reader(
         self,
@@ -445,8 +412,9 @@ class InputParametersRegistry(ModuleRegistry):
     def files_for_task(self, task, parameters, directory, kind):
         """Combine declarative task templates with schema-specific file rules."""
         definition = self.definition_for_task(task)
-        templates = getattr(task, f"{kind}_file_templates")
-        declared = self._resolve_file_templates(parameters, directory, templates)
+        declared = self._resolve_file_templates(
+            parameters, directory, getattr(task, f"{kind}_files")
+        )
         schema_files = getattr(definition, f"{kind}_files")(parameters, directory)
         # Keep schema extension hooks; shared resolution lives in this registry.
         # A TaskFile retains metadata, while plain paths remain valid shorthands.

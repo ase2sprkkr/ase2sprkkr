@@ -398,7 +398,7 @@ def test_file_template_callbacks_skip_none_and_support_pickle(tmp_path):
     parameters.CONTROL.PRINT = 0
     task = TaskDefinition(
         "ARPES", name="FILE_CALLBACK_TEST",
-        input_file_templates=("{dataset}.required", _optional_task_file),
+        input_files=("{dataset}.required", _optional_task_file),
     )
     registry = InputParameters.input_parameters_registry
     assert registry.files_for_task(task, parameters, str(tmp_path), "input") == (
@@ -410,4 +410,4 @@ def test_file_template_callbacks_skip_none_and_support_pickle(tmp_path):
     )
     restored = pickle.loads(pickle.dumps(task))
     assert restored == task
-    assert restored.input_file_templates[1] is _optional_task_file
+    assert restored.input_files[1].pathname is _optional_task_file
