@@ -222,7 +222,7 @@ class SupervisorStreams:
                 if not follower.replay:
                     await follower.wake.wait()
                     follower.wake.clear()
-        except (BrokenPipeError, ConnectionResetError, asyncio.IncompleteReadError):
+        except (BrokenPipeError, ConnectionResetError, ConnectionAbortedError, asyncio.IncompleteReadError):
             pass
         finally:
             if follower is not None:
