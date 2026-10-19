@@ -228,7 +228,7 @@ class PlotControls:
                 widget.on_changed(
                     lambda position, name=name: self._slider_changed(name, position)
                 )
-                widget.valtext.set_text(str(values[0]))
+                widget.valtext.set_text(self._slider_text(name))
             self.widgets[name] = widget
         # Matplotlib widgets need a surviving reference while the figure lives.
         figure._ase2sprkkr_controls = self
@@ -239,6 +239,12 @@ class PlotControls:
         if not values:
             raise ValueError("A plot slider needs at least one value")
         return values
+
+    def _slider_text(self, name):
+        """Only the display text is formatted; state keeps the native value."""
+        value = self.state[name]
+        formatter = self.specs[name].get("format")
+        return str(formatter(value, self.state) if formatter else value)
 
     def connect(self, callback):
         self.callbacks.append(callback)
@@ -269,7 +275,7 @@ class PlotControls:
                     widget.ax.set_xlim(0, widget.valmax)
                     widget.set_active(len(values) > 1)
                     widget.set_val(values.index(self.state[slider_name]))
-                    widget.valtext.set_text(str(self.state[slider_name]))
+                    widget.valtext.set_text(self._slider_text(slider_name))
         finally:
             self._changing = False
         self._notify()
@@ -279,7 +285,7 @@ class PlotControls:
             return
         values = self._slider_values[name]
         self.state[name] = values[min(int(position), len(values) - 1)]
-        self.widgets[name].valtext.set_text(str(self.state[name]))
+        self.widgets[name].valtext.set_text(self._slider_text(name))
         self._notify()
 
 
@@ -545,11 +551,13 @@ class Multiplot:
         self.index = 0
 
     def __enter__(self):
+        if self.live_options is not None:
+            # Static separate plots still need the same initial state for
+            # callable datasets, but no figure or widgets are created.
+            self.controls = PlotControls(self.figure, self.live_options, live=self.live)
         if not self.separate_plots:
             self.context = create_rc_context(latex=self.latex)
             self.context.__enter__()
-            if self.live_options is not None:
-                self.controls = PlotControls(self.figure, self.live_options, live=self.live)
         return self
 
     def __exit__(self, type, value, traceback):

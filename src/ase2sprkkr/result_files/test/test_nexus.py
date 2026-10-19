@@ -324,3 +324,34 @@ def test_standalone_controls_and_static():
     colormesh(xx, yy, np.ones((3, 3)), show=False)
     assert not hasattr(plt.gcf(), "_ase2sprkkr_controls")
     plt.close("all")
+
+
+def test_static_separate_plots_with_callable_data(tmp_path):
+    """Shared initial live_options state works without a visible figure/widget."""
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+    from ase2sprkkr.gui.plot import Multiplot, colormesh, lineplot
+    xx, yy = np.meshgrid(np.arange(3), np.arange(3))
+    states = []
+    filename = tmp_path / "section.png"
+    with Multiplot(
+        layout=(1, 2), separate_plots=True, live=False,
+        live_options={"slice": {"slider": (1, 2, 3)}},
+        filename=filename, show=False, dpi=50,
+    ) as mp:
+        with mp.new_axis(name="map") as (ax, kwargs):
+            colormesh(
+                xx, yy,
+                lambda state: states.append(state.copy()) or
+                np.full((3, 3), state["slice"]),
+                axis=ax, **kwargs,
+            )
+        with mp.new_axis(name="line") as (ax, kwargs):
+            lineplot([0, 1], lambda state: [state["slice"], 2], axis=ax, **kwargs)
+    assert states == [{"slice": 1}]
+    assert (tmp_path / "section_map.png").is_file()
+    assert (tmp_path / "section_line.png").is_file()
+    assert mp.controls.state == {"slice": 1}
+    assert not mp.controls.widgets
+    plt.close("all")

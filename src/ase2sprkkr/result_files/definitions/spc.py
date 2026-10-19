@@ -110,6 +110,11 @@ class ARPESResultFile(CommonResultFile, Arithmetic):
                     else indices
                 ),
                 "label": "Slice",
+                "format": lambda value, state: (
+                    f"{phi[value]:g}°"
+                    if phi is not None and state.get("direction", "NP") == "NP"
+                    else str(value)
+                ),
             }
 
         with Multiplot(
@@ -178,6 +183,9 @@ def create_definition():
             "norm": "log",
             "vmax": np.max([c.TOTAL().max(), c.UP().max(), c.DOWN().max()]),
         }
+        if option.name == "POLARIZATION":
+            # Polarization is signed and dimensionless, unlike intensities.
+            kw.update(mode="centered", norm="lin", vmax=1.0)
 
         if c.MODE() == "energy":
             x = c.THETA()
@@ -219,7 +227,9 @@ def create_definition():
                 def xlabel(state):
                     if state.get("direction", "NP") == "NT":
                         return r"$\phi$ (deg)" if phi_values is not None else "Azimuth index (NP)"
-                    return r"$\theta$ (deg)"
+                    # A single polar-angle point is an energy spectrum;
+                    # its horizontal axis must remain energy while sliding.
+                    return kw["ylabel"] if c.NT() == 1 else r"$\theta$ (deg)"
 
                 kw["xlabel"] = xlabel(controls.state)
                 # Labels belong to the plot; changing direction changes x.

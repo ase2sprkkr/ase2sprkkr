@@ -163,3 +163,46 @@ def test_live_azimuth_selection_keeps_requested_indices(tmp_path):
         assert controls.state["slice"] == 2
     finally:
         plt.close("all")
+
+
+def test_single_angle_energy_axis_stays_correct_after_slider(tmp_path):
+    spc = ResultFile.from_file(str(_multi_azimuth_file(tmp_path)), unknown=False)
+    try:
+        spc.plot(show=False, live=True)
+        fig = plt.gcf()
+        axes = _artists(fig)
+        energy_label = r"$E-E_{\rm F}$ (eV)"
+        assert all(axis.get_xlabel() == energy_label for axis in axes)
+        fig._ase2sprkkr_controls.widgets["slice"].set_val(2)
+        assert all(axis.get_xlabel() == energy_label for axis in axes)
+    finally:
+        plt.close("all")
+
+
+def test_azimuth_physical_angle_is_slider_label(tmp_path):
+    spc = ResultFile.from_file(str(_multi_azimuth_file(tmp_path)), unknown=False)
+    try:
+        spc.plot(show=False, live=True, phi_range=(15., 45.))
+        controls = plt.gcf()._ase2sprkkr_controls
+        widget = controls.widgets["slice"]
+        assert widget.valtext.get_text() == "15°"
+        widget.set_val(2)
+        assert controls.state["slice"] == 2
+        assert widget.valtext.get_text() == "45°"
+    finally:
+        plt.close("all")
+
+
+def test_signed_spin_polarization_uses_centered_linear_scale():
+    from matplotlib.colors import CenteredNorm
+    source = Path(__file__).resolve().parents[1] / "examples" / "WSe2_ARPES.spc"
+    spc = ResultFile.from_file(str(source), unknown=False)
+    try:
+        spc.plot(show=False, live=False)
+        fig = plt.gcf()
+        polarization = _artists(fig)[3].collections[0]
+        assert isinstance(polarization.norm, CenteredNorm)
+        assert polarization.norm.vcenter == 0
+        assert polarization.norm.halfrange == 1
+    finally:
+        plt.close("all")
