@@ -124,10 +124,11 @@ class _RemoteRun(RemoteRunner):
             for path in output_paths
         ]
         caches = []
-        for item in self.spec.cache_files:
-            path = local(item)
-            if path is None:
-                continue
+        cache_paths = dict.fromkeys(
+            path for item in self.spec.cache_files
+            if (path := local(item)) is not None
+        )
+        for path in cache_paths:
             remote = await self.executor.map_path(path)
             previous = self._cache_targets.get(path)
             caches.append(CacheEntry(FileEntry(path, remote), None if previous is None else previous[1]))

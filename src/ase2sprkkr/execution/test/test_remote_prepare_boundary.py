@@ -98,3 +98,24 @@ def test_remote_manifest_deduplicates_declared_inputs_and_outputs(tmp_path):
     assert [entry.local_path for entry in manifest.inputs] == [str(inp)]
     assert [entry.local_path for entry in manifest.outputs] == [str(auxiliary)]
     assert manifest.stdout.local_path == str(out)
+
+
+def test_remote_manifest_deduplicates_cache_declarations(tmp_path):
+    import asyncio
+
+    directory = tmp_path / "local"
+    directory.mkdir()
+    executor = RemoteEndpointExecutor(LocalTransport())
+    remote = tmp_path / "remote"
+    cache = directory / "restart.dat"
+    spec = ExecutionSpec(
+        argv=("ignored",), directory=str(directory), input_file=None,
+        output_file=None, cache_files=(str(cache), str(cache)),
+        launch=LaunchSpec(local_root=str(tmp_path), remote_root=str(remote)),
+    )
+    runner = executor.create_run(spec)
+    manifest = asyncio.run(runner._submitted_manifest({}))
+
+    assert len(manifest.caches) == 1
+    assert manifest.caches[0].file.local_path == str(cache)
+    assert manifest.caches[0].file.remote_path == str(remote / "local" / "restart.dat")
