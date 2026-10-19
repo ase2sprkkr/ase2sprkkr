@@ -167,3 +167,8 @@ def test_bsf_output_file_declarations(tmp_path):
             str(tmp_path / "Fe_BLOCHSF.bsf"),
             str(tmp_path / "Fe_BLOCHSF_spol.bsf"),
         )
+
+def test_clpes_core_wavefunction_is_a_declared_output(tmp_path):
+    parameters = InputParameters.create("CLPES")
+    parameters.CONTROL.DATASET = "Fe"
+    assert str(tmp_path / "Fe_corewf") in parameters.output_files(str(tmp_path))

@@ -73,10 +73,29 @@ class TaskResult:
 
     @cached_property
     def input_parameters(self):
-        if self._input_parameters:
+        if self._input_parameters is not None:
             return self._input_parameters
-        if self.input_parameters_file:
-            return input_parameters.InputParameters.from_file(self.input_parameters_file)
+        source = self.input_parameters_file
+        if source is None:
+            return None
+        return input_parameters.InputParameters.from_file(source)
+
+    def _candidate_input_files(self):
+        """Use an unambiguous native input file; never guess between runs."""
+        import glob
+
+        directory = self.directory
+        if not os.path.isdir(directory):
+            return ()
+        candidates = glob.glob(os.path.join(directory, "*.inp"))
+        # A paired input name is authoritative even if the directory contains
+        # unrelated calculations.
+        if self.output_file is not None:
+            stem = os.path.splitext(os.path.basename(os.fspath(self.output_file)))[0]
+            paired = os.path.join(directory, stem + ".inp")
+            if paired in candidates:
+                return (paired,)
+        return tuple(sorted(candidates)) if len(candidates) == 1 else ()
 
     @cached_property
     def input_parameters_file(self):
@@ -84,7 +103,17 @@ class TaskResult:
             filename = self.path_to("input")
             if os.path.isfile(filename):
                 return filename
-
+            return None
+        for filename in self._candidate_input_files():
+            try:
+                parameters = input_parameters.InputParameters.from_file(filename)
+            except (OSError, ValueError):
+                continue
+            if self._task_name is not None and parameters.task_name != self._task_name.upper():
+                continue
+            self.files.add_file("input", filename)
+            return filename
+        return None
     @cached_property
     def potential_filename(self):
         """New (output) potential file name"""

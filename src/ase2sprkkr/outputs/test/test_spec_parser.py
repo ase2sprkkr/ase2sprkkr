@@ -58,3 +58,22 @@ stookes-vector    of the photonfield  0.10000E+01  100.000%    0.000%    0.000%
             [1.9000e00, -9.6825e-02, 5.7837e-08, -4.2368e-04, 2.8906e-08, 2.8931e-08],
         ],
     )
+
+
+def test_arpes_result_uses_native_spec_file_manifest(tmp_path):
+    from ase2sprkkr.input_parameters.input_parameters import InputParameters
+    from ase2sprkkr.outputs.readers.arpes import ArpesResult
+
+    for task in ("ARPES", "CLPES"):
+        for polarization, expected in (
+            ("P", "sample_data.spc"),
+            ("S", "sample_data_pol1.spc"),
+        ):
+            parameters = InputParameters.create(task)
+            parameters.CONTROL.DATASET = "sample"
+            parameters.SPEC_PH.POL_P = polarization
+            result = ArpesResult(parameters, None, tmp_path)
+
+            assert result.spc_filename == str(tmp_path / expected)
+            assert result.output_values["SPC"].file_type == "spc"
+            assert result.path_to("SPC") == str(tmp_path / expected)

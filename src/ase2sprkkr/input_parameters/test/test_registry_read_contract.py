@@ -178,7 +178,7 @@ def test_expected_task_does_not_supply_missing_shared_task_selector():
 
     with pytest.raises(
         TaskMismatchError,
-        match=r"read for task 'SPLEED'.*task 'ARPES'",
+        match=r"read for task 'SPLEED'.*task None",
     ):
         registry.read_for_task(task, StringIO(text))
 
