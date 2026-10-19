@@ -44,7 +44,7 @@ class SpecResult(ArpesResult):
         """Two-column SPLEED I(E) data, parsed as a ResultFile from SPEC.out."""
         if self.task_name != "spleed" or self.output_file is None:
             return None
-        from ..result_files import ResultFile
+        from ...result_files import ResultFile
         from ...result_files.definitions.spleed_intensity import SpleedIntensityNotFound
 
         try:

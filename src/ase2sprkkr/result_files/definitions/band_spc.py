@@ -1,8 +1,9 @@
-"""Structured three-column KKRSPEC BAND results and band-structure plots.
+"""Structured four-column KKRSPEC BAND results and band-structure plots.
 
 BAND rows are discrete accepted Bloch roots rather than regularly gridded
 intensities. The native first coordinate is kz for NT=1 and k_parallel for
-NT>1; the second coordinate is energy relative to the Fermi level.
+NT>1; the second coordinate is energy relative to the Fermi level; the final two
+columns contain the real and imaginary parts of complex T_EIG.
 """
 
 from typing import Optional
@@ -38,8 +39,7 @@ class BandSPCResultFile(CommonResultFile):
         """Plot accepted band roots as points, never join unrelated eigenstates.
 
         For NT=1 the native K_EIG coordinate represents real kz; otherwise
-        it represents k_parallel. The third native column is not used for
-        plotting (its physical meaning is not established here).
+        it represents k_parallel. The complex transmission eigenvalue is not used for plotting.
         """
         data = self.RAW_DATA()
         if xlabel is None:
@@ -80,11 +80,13 @@ definition = create_result_file_definition(
         V("NT", int),
         V("NP", int),
         V("COMMENT", Prefixed("#"), name_in_grammar=False),
-        V("RAW_DATA", NumpyArray(written_shape=(-1, 3)), name_in_grammar=False),
+        V("RAW_DATA", NumpyArray(shape=(-1, 4), written_shape=(-1, 4)), name_in_grammar=False),
         NV("K_EIG", "RAW_DATA", (slice(None), 0)),
         NV("E_EIG", "RAW_DATA", (slice(None), 1)),
+        NV("T_EIG_REAL", "RAW_DATA", (slice(None), 2)),
+        NV("T_EIG_IMAG", "RAW_DATA", (slice(None), 3)),
     ],
     name="BAND_SPC",
     cls=BandSPCDefinition,
-    info="KKRSPEC BAND output: native wavevector coordinate, energy relative to EF, and a third native numeric column.",
+    info="KKRSPEC BAND output: native wavevector coordinate, energy relative to EF, and the real and imaginary components of T_EIG.",
 )
