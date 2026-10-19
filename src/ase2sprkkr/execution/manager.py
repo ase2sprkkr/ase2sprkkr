@@ -727,6 +727,30 @@ class ExecutionManager:
             files=result_files,
         )
 
+    def resume_download(self, run):
+        """Explicitly reopen a failed post-execution transfer for retry.
+
+        This is not an execution resubmit. The original backend handle remains
+        authoritative and the attached raw runner replays/synchronizes files
+        before task postprocessing can finish.
+        """
+        record = self.store.get(run) if isinstance(run, str) else self.store.get(run.id)
+
+        def reopen(latest):
+            if (latest.state != RunState.FAILED
+                    or latest.failure_phase != FailurePhase.DOWNLOAD
+                    or latest.return_code != 0
+                    or latest.execution.backend_id is None
+                    or latest.files is None
+                    or latest.files.captured_at is not None):
+                raise ValueError("Only failed downloads of successful backend jobs can be retried")
+            return replace(
+                latest, state=RunState.DOWNLOADING, finished_at=None,
+                failure_phase=None, message=None, updated_at=_now(),
+            )
+
+        return self.store.update(record, reopen)
+
     def check_result_files(self, run):
         return self.store.get(run) if isinstance(run, str) else self.store.get(run.id)
 

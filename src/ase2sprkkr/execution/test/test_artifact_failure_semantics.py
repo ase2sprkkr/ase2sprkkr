@@ -86,3 +86,46 @@ def test_cancellation_preserves_outcome_when_diagnostic_files_fail(tmp_path):
     assert saved.state is RunState.CANCELLED
     assert saved.failure_phase is None
     assert saved.files.availability_state == ArtifactAvailabilityState.FAILED
+
+
+def test_explicit_resume_download_preserves_original_backend_and_artifacts(tmp_path):
+    from ase2sprkkr.execution import Execution, ExecutorEndpoint, WorkingDirectory
+    manager = ExecutionManager(RunStore(tmp_path / "runs"))
+    output = tmp_path / "run.out"
+    output.write_bytes(b"partial")
+    record = manager.new_record(
+        task="DOS", directory=tmp_path,
+        files=FileManifest(stdout=FileEntry(
+            local_path=str(output), availability_state="failed",
+            availability_message="SSH interrupted",
+        )),
+    )
+    record = manager.transition(
+        record, state=RunState.DOWNLOADING,
+        execution=record.execution.submitted("durable-backend"),
+    )
+    failed = manager.complete(
+        record, state=RunState.FAILED, return_code=0,
+        failure_phase=FailurePhase.DOWNLOAD, message="SSH interrupted",
+        artifacts_available=False,
+    )
+    reopened = manager.resume_download(record.id)
+
+    assert reopened.state == RunState.DOWNLOADING
+    assert reopened.execution == failed.execution
+    assert reopened.files == failed.files
+    assert reopened.finished_at is None
+    assert reopened.failure_phase is None
+    assert output.read_bytes() == b"partial"
+    assert manager.store.get(record.id) == reopened
+
+
+def test_resume_download_rejects_execution_failure_and_nonzero_code(tmp_path):
+    manager, record = _record(tmp_path)
+    bad = manager.complete(
+        record, state=RunState.FAILED, return_code=17,
+        failure_phase=FailurePhase.EXECUTION, artifacts_available=False,
+    )
+    import pytest
+    with pytest.raises(ValueError, match="Only failed downloads"):
+        manager.resume_download(bad.id)

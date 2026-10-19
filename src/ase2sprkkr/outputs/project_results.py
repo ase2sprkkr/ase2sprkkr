@@ -104,7 +104,11 @@ def attach_project_run(
 ):
     """Reconnect an active run and resume its client-side lifecycle."""
     record = _record(manager, run)
-    if record.state in (RunState.FINISHED, RunState.FAILED, RunState.CANCELLED):
+    if (record.state == RunState.FAILED
+            and record.failure_phase == FailurePhase.DOWNLOAD
+            and record.return_code == 0):
+        record = manager.resume_download(record)
+    elif record.state in (RunState.FINISHED, RunState.FAILED, RunState.CANCELLED):
         raise ProjectResultUnavailableError(
             record, f"run is already terminal ({record.state.value})"
         )
