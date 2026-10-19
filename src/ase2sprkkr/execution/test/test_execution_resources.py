@@ -19,7 +19,11 @@ class _Task:
     mpi = False
 
     def output_reader(self, **kwargs):
-        return object()
+        return SimpleNamespace(
+            read_from_file=lambda *args, **options: SimpleNamespace(
+                return_code=options.get("return_code"),
+            ),
+        )
 
 
 class _Parameters:
@@ -99,7 +103,7 @@ class _Executor:
         self.factory_error = factory_error
         self.submit_error = submit_error
 
-    def create_run(self, reader, spec, callback=None):
+    def create_run(self, spec, callback=None):
         if self.factory_error is not None:
             raise self.factory_error
         return _Runner(callback, submit_error=self.submit_error)
@@ -156,6 +160,9 @@ def test_completion_releases_files_without_wait():
 
     runner.submit()
 
+    # Finalization is asynchronous, but owning resources must be released
+    # even when the caller never invokes the public wait() method.
+    assert runner._runner._done.wait(3)
     assert runner.state == RunState.FINISHED
     assert input_file.closed
     assert output_file.closed

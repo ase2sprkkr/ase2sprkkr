@@ -7,21 +7,28 @@ from ase2sprkkr.execution import (
 
 
 def test_disappeared_local_process_is_unknown(monkeypatch):
+    from ase2sprkkr.execution import remote_service
+
     executor = LocalExecutor()
+    handle = remote_service._encode_handle({
+        "kind": "process",
+        "pid": 12345,
+        "start_time": "0",
+        "receipt_id": "a" * 32,
+        "socket_path": "/missing/socket",
+    })
     run = RunRecord(
         id="run", state=RunState.RUNNING, task="SCF",
         created_at="2026-10-13T08:00:00+00:00",
         updated_at="2026-10-13T08:00:00+00:00",
         execution=Execution(
-            ExecutorEndpoint(), WorkingDirectory("/tmp"), "12345"
+            ExecutorEndpoint(), WorkingDirectory("/tmp"), handle
         ),
         files=FileManifest(),
     )
 
-    def missing_process(pid, signal):
-        raise ProcessLookupError
-
-    monkeypatch.setattr("ase2sprkkr.execution.local.os.kill", missing_process)
+    monkeypatch.setattr(remote_service, "_process_outcome", lambda receipt_id: None)
+    monkeypatch.setattr(remote_service, "_process_info", lambda pid: None)
 
     (status,) = executor.status(run)
 
