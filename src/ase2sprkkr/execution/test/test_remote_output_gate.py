@@ -244,7 +244,7 @@ def test_remote_follow_transport_failure_is_recoverable_unknown(tmp_path):
     executor._follow = disconnected
     result = asyncio.run(runner._monitor())
     assert result.return_code is None
-    assert runner.state == RunState.UNKNOWN
+    assert runner._state == RunState.UNKNOWN
     assert runner.failure_phase is None
     assert runner.failure_message == "SSH disconnected"
     assert output.closed
