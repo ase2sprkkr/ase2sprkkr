@@ -371,7 +371,7 @@ class RemoteRunner:
         self._cache_patterns = tuple(patterns)
         self._cache_before = pattern_before
 
-    async def _prepare_output_files(self, input_targets):
+    async def _prepare_output_files(self):
         primary = {
             path
             for path in (self.result.output_file, self.result.error_file)
@@ -379,7 +379,6 @@ class RemoteRunner:
         }
         targets = {}
         patterns = []
-        remote_root = await self.executor._resolved_remote_root()
 
         for value in self.spec.output_files:
             local = self._local_path(value)
@@ -597,7 +596,7 @@ class RemoteRunner:
 
         await self._prepare_cache_files(used)
         staged = {source: target for target, source in used.items()}
-        await self._prepare_output_files(set(used))
+        await self._prepare_output_files()
 
         output_target = (
             await self.executor.map_path(self.result.output_file)
