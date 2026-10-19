@@ -1151,7 +1151,7 @@ class SFNResultFile(ResultFile):
         ) as multiplot:
             for item in selected:
 
-                def plot_function(axis, item=item):
+                def plot_function(axis, item=item, controls=None):
                     self._plot_representative_on_axis(
                         axis,
                         item,
@@ -1207,7 +1207,7 @@ class SFNResultFile(ResultFile):
             latex=latex,
         ) as multiplot:
 
-            def plot_function(axis):
+            def plot_function(axis, controls=None):
                 self._plot_cell_on_axis(
                     axis,
                     selected,
@@ -1266,7 +1266,7 @@ class SFNResultFile(ResultFile):
         ) as multiplot:
             for item in selected:
 
-                def plot_function(axis, item=item):
+                def plot_function(axis, item=item, controls=None):
                     self._plot_representative_on_axis(
                         axis,
                         item,

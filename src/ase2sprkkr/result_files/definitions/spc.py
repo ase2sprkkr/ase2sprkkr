@@ -105,8 +105,9 @@ class ARPESResultFile(CommonResultFile, Arithmetic):
             if self.NT() > 1:
                 live_options["direction"] = {"options": ("NP", "NT")}
             live_options["slice"] = {
-                "slider": lambda state: range(
-                    self.NT() if state.get("direction") == "NT" else self.NP()
+                "slider": lambda state: (
+                    range(self.NT()) if state.get("direction") == "NT"
+                    else indices
                 ),
                 "label": "Slice",
             }

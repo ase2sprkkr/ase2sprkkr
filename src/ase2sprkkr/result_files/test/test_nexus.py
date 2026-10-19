@@ -247,6 +247,7 @@ def test_arpes_static_azimuth_selection(tmp_path, monkeypatch):
     class PlotResult:
         MODE = lambda self: "energy"
         NP = lambda self: 5
+        NT = lambda self: 3
         TOTAL = Value(np.zeros((2, 5, 3)), "TOTAL")
         UP = Value(np.zeros((2, 5, 3)), "UP")
         DOWN = Value(np.zeros((2, 5, 3)), "DOWN")

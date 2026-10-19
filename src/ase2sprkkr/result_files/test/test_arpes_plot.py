@@ -138,3 +138,16 @@ def test_controls_switch_np_nt_on_real_parser_grid(tmp_path):
         assert len(_artists(fig)) == 4
     finally:
         plt.close("all")
+
+
+def test_live_azimuth_selection_keeps_requested_indices(tmp_path):
+    """An explicit NP selection stays the slider domain in live mode."""
+    spc = ResultFile.from_file(str(_multi_azimuth_file(tmp_path)), unknown=False)
+    try:
+        spc.plot(show=False, live=True, azimuths=2)
+        controls = plt.gcf()._ase2sprkkr_controls
+        assert controls._slider_values["slice"] == (0, 2)
+        controls.widgets["slice"].set_val(1)
+        assert controls.state["slice"] == 2
+    finally:
+        plt.close("all")
