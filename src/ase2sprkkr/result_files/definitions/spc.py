@@ -11,7 +11,7 @@ from ..result_files import Arithmetic, CommonResultFile
 from ...common.grammar_types import NumpyArray, Prefixed
 from ...common.generated_configuration_definitions import NumpyViewDefinition as NV, GeneratedValueDefinition as GV
 from ...common.configuration_definitions import switch
-from ...gui.plot import change_default_kwargs, colormesh, Multiplot
+from ...gui.plot import change_default_kwargs, colormesh, lineplot, Multiplot
 
 
 # Native SPC columns are shared by the reader and the NeXus writer.
@@ -99,10 +99,6 @@ class ARPESResultFile(CommonResultFile, Arithmetic):
         if layout[0] * layout[1] < 4 * len(slices):
             raise ValueError("The layout has too few axes for the selected slices")
 
-        # A live slider occupies figure space outside the regular axes.
-        # Matplotlib's constrained layout would reposition it on export/show.
-        if live and layout_kind == "constrained":
-            layout_kind = "adjust"
         with Multiplot(
             layout=layout,
             figsize=figsize,
@@ -112,6 +108,13 @@ class ARPESResultFile(CommonResultFile, Arithmetic):
             dpi=dpi,
             separate_plots=separate_plots,
             layout_kind=layout_kind,
+            live=live,
+            slider_values=indices if multi and live else None,
+            slider_label="Azimuth",
+            slider_labels=(
+                tuple(f"{phi[i]:g}°" for i in indices)
+                if phi is not None and multi and live else None
+            ),
             **kwargs,
         ) as mp:
             for selected in slices:
@@ -119,7 +122,7 @@ class ARPESResultFile(CommonResultFile, Arithmetic):
                     with mp.new_axis(name=option.name) as (axis, plot_kwargs):
                         option.plot(
                             azimuth_indices=selected if multi else None,
-                            live=live, phi_values=phi, axis=axis, **plot_kwargs
+                            live=live, axis=axis, **plot_kwargs
                         )
 
     def spc_columns(self):
@@ -159,7 +162,7 @@ class ARPESDefinition(ResultFileDefinition):
 def create_definition():
 
     def plot(option, azimuth_index=None, azimuth_indices=None,
-             live=False, phi_values=None, **kwargs):
+             live=False, slider=None, **kwargs):
         c = option._container
         kw = {
             "show_zero_line": False,
@@ -180,23 +183,48 @@ def create_definition():
             kw["ylabel"] = r"$k_y$ (Å$^{-1}$)"
 
         intensity = option()
-        selected = None
-        labels = None
         if c.MODE() == "energy" and c.NP() > 1:
             selected = tuple(azimuth_indices) if azimuth_indices is not None else (
                 0 if azimuth_index is None else azimuth_index,
             )
-            x, y, intensity = (
-                lambda index, data=data: data[:, index, :]
-                for data in (x, y, intensity)
-            )
-            if phi_values is not None:
-                labels = tuple(f"{phi_values[i]:g}°" for i in selected)
+            if slider is not None:
+                x, y, intensity = (
+                    lambda index, data=data: data[:, index, :]
+                    for data in (x, y, intensity)
+                )
+            else:
+                x, y, intensity = (
+                    data[:, selected[0], :] for data in (x, y, intensity)
+                )
         kw.update(kwargs)
-        colormesh(
-            x, y, intensity, live=live, slider_values=selected,
-            slider_labels=labels, slider_label="Azimuth", **kw
-        )
+        first = intensity(slider.values[0]) if callable(intensity) else intensity
+        if 1 in first.shape:
+            # A singleton mesh contains no Gouraud cells. Show the actual
+            # one-dimensional spectrum rather than an empty pseudocolor plot.
+            if c.MODE() == "energy":
+                variable_is_y = first.shape[1] == 1
+            else:
+                initial_x = x(slider.values[0]) if callable(x) else x
+                initial_y = y(slider.values[0]) if callable(y) else y
+                variable_is_y = np.ptp(initial_y) > np.ptp(initial_x)
+            coordinate = y if variable_is_y else x
+            if callable(coordinate):
+                data = coordinate
+                coordinate = lambda index: data(index).ravel()
+            else:
+                coordinate = coordinate.ravel()
+            if callable(intensity):
+                data = intensity
+                intensity = lambda index: data(index).ravel()
+            else:
+                intensity = intensity.ravel()
+            kw["xlabel"] = kw["ylabel"] if variable_is_y else kw["xlabel"]
+            kw["ylabel"] = option.name
+            for key in ("show_zero_line", "mode", "norm", "vmax", "vmin", "colormap"):
+                kw.pop(key, None)
+            lineplot(coordinate, intensity, slider=slider, **kw)
+        else:
+            colormesh(x, y, intensity, slider=slider, **kw)
 
     def ii(j):
         def fn(data: np.ndarray, section: object) -> np.ndarray:
