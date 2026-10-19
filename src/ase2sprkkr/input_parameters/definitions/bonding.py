@@ -35,5 +35,5 @@ def input_parameters_definition():
                     "that require KTAUIJ>=2. The native workflow needs repair before numerical use. "
                     "CLUBONDING also returns silently for KMROT!=0 and writes to unit 22."
     )
-    schema._task_definition = TaskDefinition("BONDING", executable="kkrgen", mpi=False, output_file_templates=("fort.22",))
+    schema._task_definition = TaskDefinition("BONDING", executable="kkrgen", mpi=False, output_files=("fort.22",))
     return schema

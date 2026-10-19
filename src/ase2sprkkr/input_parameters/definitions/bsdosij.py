@@ -42,7 +42,7 @@ def input_parameters_definition():
         description="Native 9.7 component and output indexing appear faulty; numerical results are unverified. "
                     "Potential-dependent native checks also require KMROT=0, NKM=NKMMAX and representative type sites."
     )
-    schema._task_definition = TaskDefinition("BSDOSIJ", executable="kkrgen", mpi=True, output_file_templates=(
+    schema._task_definition = TaskDefinition("BSDOSIJ", executable="kkrgen", mpi=True, output_files=(
             "{dataset}_XCPLTEN_Jij.dat",
             "{dataset}_XCPLTEN_Jij_*.agr",
             "{dataset}_XCPLTEN_Dij_[xyz]_*.agr",
