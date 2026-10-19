@@ -72,7 +72,7 @@ class _Executor(Executor):
         self.status_calls = []
         self.on_submit = None
 
-    def create_persistent_run(self, spec, *, run_id, callback=None):
+    def create_project_run(self, spec, *, run_id, callback=None):
         runner = _RawRunner(on_submit=self.on_submit)
         self.runners.append(runner)
         return runner

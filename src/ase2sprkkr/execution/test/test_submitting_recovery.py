@@ -50,7 +50,7 @@ class _RecoveringExecutor(Executor):
         self.recovered = recovered
         self.recovery_calls = []
 
-    def create_persistent_run(self, spec, *, run_id, callback=None):
+    def create_project_run(self, spec, *, run_id, callback=None):
         return _Runner()
 
     def recover_submission(self, run_id, submission, *, submitted_at=None):
