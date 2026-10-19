@@ -36,7 +36,7 @@ def _validate_executable(value: str) -> str:
     return value
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, eq=False)
 class TaskFile(os.PathLike):
     """One task file declaration, or its resolved path with retained metadata.
 
@@ -73,6 +73,21 @@ class TaskFile(os.PathLike):
 
     def __str__(self):
         return str(self.pathname)
+
+    def __eq__(self, other):
+        if isinstance(other, TaskFile):
+            return (self.pathname, self.type, self.info, self.optional) == (
+                other.pathname, other.type, other.info, other.optional
+            )
+        if isinstance(other, str):
+            return (not self.optional and self.type is None and self.info is None
+                    and self.pathname == other)
+        return NotImplemented
+
+    def __hash__(self):
+        if not self.optional and self.type is None and self.info is None:
+            return hash(self.pathname)
+        return hash((self.pathname, self.type, self.info, self.optional))
 
     @property
     def effective_info(self):
@@ -116,26 +131,18 @@ def _choose_files(files, templates, kind):
 
 def _normalize_file_templates(templates: Iterable[_FileTemplate], field: str):
     if isinstance(templates, (str, bytes, os.PathLike)) or callable(templates):
-        raise TypeError(f"{field} must be an iterable of path declarations")
+        raise TypeError(f"{field} must be an iterable of path-like strings or TaskFile declarations")
     try:
         iterator = iter(templates)
     except TypeError:
-        raise TypeError(f"{field} must be an iterable of path declarations") from None
+        raise TypeError(f"{field} must be an iterable of path-like strings or TaskFile declarations") from None
 
     normalized = []
     for index, item in enumerate(iterator):
-        if isinstance(item, TaskFile) or callable(item):
-            normalized.append(item)
-            continue
         try:
-            path = os.fspath(item)
-        except TypeError:
-            raise TypeError(f"{field}[{index}] must be a path, TaskFile or callback") from None
-        if not isinstance(path, str):
-            raise TypeError(f"{field}[{index}] must resolve to a string")
-        if not path:
-            raise ValueError(f"{field}[{index}] must not be empty")
-        normalized.append(path)
+            normalized.append(item if isinstance(item, TaskFile) else TaskFile(item))
+        except (TypeError, ValueError) as exc:
+            raise type(exc)(f"{field}[{index}]: {exc}") from None
     return tuple(normalized)
 
 
@@ -409,19 +416,20 @@ class InputParametersRegistry(ModuleRegistry):
 
     @staticmethod
     def _resolve_file_templates(parameters, directory, templates):
-        """Resolve task file templates, preserving explicit TaskFile metadata."""
+        """Resolve templates to concrete TaskFile values without losing metadata."""
         formatter = _TaskFileFormatter(parameters)
         files = []
-        for template in templates:
-            declaration = template if isinstance(template, TaskFile) else TaskFile(template)
-            value = (declaration.pathname(parameters) if callable(declaration.pathname)
-                     else declaration.pathname)
-            if value is None:
+        for value in templates:
+            declaration = value if isinstance(value, TaskFile) else TaskFile(value)
+            pathname = declaration.pathname
+            if callable(pathname):
+                pathname = pathname(parameters)
+            if pathname is None:
                 continue
-            if isinstance(value, TaskFile):
-                declaration = value
-                value = declaration.pathname
-            path = os.fspath(value)
+            if isinstance(pathname, TaskFile):
+                declaration = pathname
+                pathname = declaration.pathname
+            path = os.fspath(pathname)
             if not isinstance(path, str):
                 raise TypeError("File callback must return a string/path or None")
             if not path:
@@ -431,10 +439,7 @@ class InputParametersRegistry(ModuleRegistry):
             except _MissingTaskFileValue:
                 continue
             resolved = path if os.path.isabs(path) else os.path.join(directory, path)
-            if isinstance(template, TaskFile) or isinstance(value, TaskFile):
-                files.append(replace(declaration, pathname=resolved))
-            else:
-                files.append(resolved)
+            files.append(replace(declaration, pathname=resolved))
         return tuple(files)
 
     def files_for_task(self, task, parameters, directory, kind):
@@ -446,7 +451,7 @@ class InputParametersRegistry(ModuleRegistry):
         # Keep schema extension hooks; shared resolution lives in this registry.
         # A TaskFile retains metadata, while plain paths remain valid shorthands.
         schema_files = tuple(
-            value if isinstance(value, TaskFile) else os.fspath(value)
+            value if isinstance(value, TaskFile) else TaskFile(value)
             for value in schema_files
         )
         return (*declared, *schema_files)

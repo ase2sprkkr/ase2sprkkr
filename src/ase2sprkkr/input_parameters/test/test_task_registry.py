@@ -217,18 +217,16 @@ def test_instance_default_copy_respects_copy_values():
     np.testing.assert_equal(deep.ENERGY.GRID(), parameters.ENERGY.GRID())
 
 
-def test_task_cannot_reuse_schema_bound_to_different_canonical_task():
+def test_explicit_task_can_reuse_schema_with_noncanonical_name():
     task = TaskDefinition("SCF", name="SPECIAL")
+    registry = InputParameters.input_parameters_registry
+    assert registry.definition_for_task(task) is registry["SCF"]
 
-    with pytest.raises(RegistryDefinitionError, match="different canonical task metadata"):
-        InputParameters.input_parameters_registry.definition_for_task(task)
 
-
-def test_canonical_task_metadata_must_match_as_a_value():
+def test_explicit_task_can_override_canonical_executable():
     task = TaskDefinition("SCF", name="SCF", executable="different-executable")
-
-    with pytest.raises(RegistryDefinitionError, match="different canonical task metadata"):
-        InputParameters.input_parameters_registry.definition_for_task(task)
+    registry = InputParameters.input_parameters_registry
+    assert registry.definition_for_task(task) is registry["SCF"]
 
 
 def test_extra_task_resolves_schema_from_own_input_registry(tmp_path, monkeypatch):

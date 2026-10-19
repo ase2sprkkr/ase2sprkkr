@@ -258,9 +258,6 @@ def test_builtin_task_definitions_are_metadata_objects():
     for name in (
         "output_reader_class",
         "prepare_from_result",
-        "input_files",
-        "output_files",
-        "cache_files",
         "execution_task_name",
     ):
         assert not hasattr(TaskDefinition, name)

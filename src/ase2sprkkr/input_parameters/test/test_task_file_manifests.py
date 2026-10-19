@@ -5,7 +5,8 @@ def test_dos_output_is_namespaced_by_dataset(tmp_path):
     parameters = InputParameters.create("DOS")
     parameters.CONTROL.DATASET = "Fe"
 
-    assert parameters.output_files(str(tmp_path)) == (str(tmp_path / "Fe.dos"),)
+    assert tuple(map(str, parameters.output_files(str(tmp_path)))) == (str(tmp_path / "Fe.dos"),)
+    assert parameters.output_files(str(tmp_path))[0].type == "DOS"
 
 
 def test_scf_declares_new_potential_as_output(tmp_path):
