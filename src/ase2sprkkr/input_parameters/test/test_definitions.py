@@ -258,6 +258,10 @@ class TestDefinitions:
                 elif name == "BSFKK":
                     self.set_bsfkk_grid(ip)
                     out = ip.to_string(validate=True)
+                elif name == "CHIXAS":
+                    # CHIXAS intentionally requires physical type-dependent
+                    # NEF/CHISPN/CHIVV arrays, which no generic default supplies.
+                    out = ip.to_string(validate=False)
                 else:
                     raise
             else:

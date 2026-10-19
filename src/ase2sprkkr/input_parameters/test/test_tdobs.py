@@ -14,8 +14,8 @@ def test_tdobs_roundtrip():
     assert q.TAU.TAUPATH() == "cache"
     assert q.TASK.TASK() == "TDOBS"
     assert q.CONTROL.ADSI() == "TDOBS"
-    assert not q._definition.mpi
-    assert q._definition.executable == "kkrgen"
+    assert not q.task_definition.mpi
+    assert q.task_definition.executable == "kkrgen"
 
 
 @pytest.mark.parametrize("option,value", [("ENERGY.NE", [0]), ("ENERGY.NE", [1]), ("ENERGY.ImE", -1.), ("ENERGY.EMIN", float("nan"))])

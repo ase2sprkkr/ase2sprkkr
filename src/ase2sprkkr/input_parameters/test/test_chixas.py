@@ -24,7 +24,7 @@ def test_defaults_and_data_roundtrip():
     assert q.TASK.NEF(all_values=True)[0].tolist() == [1., 2., 3.]
     assert q.ENERGY.EMAX() == 4 and q.ENERGY.NE().tolist() == [180]
     assert pickle.loads(pickle.dumps(q)).to_string() == q.to_string()
-    assert p._definition.executable == "kkrchi" and p._definition.mpi is False
+    assert p.task_definition.executable == "kkrchi" and p.task_definition.mpi is False
 
 
 def test_missing_external_data():

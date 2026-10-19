@@ -12,7 +12,7 @@ def parameters():
 
 def test_round_trip(tmp_path):
     p = parameters()
-    assert not p.is_mpi() and p._definition.executable == "kkrgen"
+    assert not p.task_definition.mpi and p.task_definition.executable == "kkrgen"
     assert p.TASK.NE3() == 40 and p.TASK.EMAX3() == 8.0 and p.TASK.TSELECT() == 0
     text = p.to_string(validate=True)
     assert "EMIN=" not in text and "NE3=" not in text and "EMAX=4.0" in text

@@ -21,7 +21,7 @@ def test_defaults_roundtrip_pickle():
     assert "EMAX=" not in text and "SIGSPROJ" not in text
     assert "SP_NO_ALPHA" not in text and "FULLPOT" not in text
     assert pickle.loads(pickle.dumps(q)).to_string() == q.to_string()
-    assert p._definition.executable == "kkrchi" and p._definition.mpi is False
+    assert p.task_definition.executable == "kkrchi" and p.task_definition.mpi is False
 
 
 def test_sea_projectors_frame_roundtrip():

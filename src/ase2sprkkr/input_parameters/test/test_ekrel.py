@@ -13,7 +13,7 @@ def parameters():
 
 def test_defaults_and_round_trip(tmp_path):
     p = parameters()
-    assert p._definition.executable == "kkrgen" and p.is_mpi()
+    assert p.task_definition.executable == "kkrgen" and p.task_definition.mpi
     assert p.TASK.NK() == 1000 and p.TASK.NE() == 501
     assert p.TASK.EMIN() == 0.01 and p.TASK.EMAX() == 1
     assert p.TASK.ESLICE() is None and p.TASK.NKDIR() == 0

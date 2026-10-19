@@ -24,7 +24,7 @@ def test_defaults_and_discovery(tmp_path):
     q = InputParameters.from_file(path)
     assert q.TASK.TASK() == "GILBERT"
     assert pickle.loads(pickle.dumps(q)).to_string() == text
-    assert q._definition.executable == "kkrchi"
+    assert q.task_definition.executable == "kkrchi"
 
 
 def test_mlin_spin():

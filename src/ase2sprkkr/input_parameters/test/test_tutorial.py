@@ -20,8 +20,8 @@ def test_roundtrip(task):
     p = parameters(task)
     q = p._definition.read_from_file(io.StringIO(p.to_string(validate=True)))
     assert q.TASK["TUT-TASK"]() == task
-    assert q._definition.executable == "kkrgen"
-    assert not q._definition.mpi
+    assert q.task_definition.executable == "kkrgen"
+    assert not q.task_definition.mpi
 
 
 @pytest.mark.parametrize("task,option,value", [("YLM", "M", 3), ("YLM", "L", -1), ("JLX", "NX", 1), ("JLX", "LMAX", 5), ("JLX", "XMAX", .001), ("JLX", "XMIN", float("nan")), ("JLX-ASYMPT", "XMIN", .1)])

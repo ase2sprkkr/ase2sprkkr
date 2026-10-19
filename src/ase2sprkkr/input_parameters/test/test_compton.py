@@ -27,7 +27,7 @@ def test_defaults_and_discovery(tmp_path):
     assert q.TASK.TASK() == "COMPTON"
     assert q.TASK.NPMAX() == 250
     assert pickle.loads(pickle.dumps(q)).to_string() == text
-    assert q._definition.mpi is True
+    assert q.task_definition.mpi is True
 
 
 def test_default_zero_warning():

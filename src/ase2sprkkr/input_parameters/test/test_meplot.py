@@ -16,8 +16,8 @@ def parameters():
 
 def test_defaults_discovery_and_round_trip(tmp_path):
     p = parameters()
-    assert p._definition.executable == "kkrgen"
-    assert not p.is_mpi()
+    assert p.task_definition.executable == "kkrgen"
+    assert not p.task_definition.mpi
     assert p.TASK.ITSEL() == p.TASK.NEPHOT() == 1
     assert p.TASK.INITIALSTATE() == "BAND"
     assert p.TASK.L() is None

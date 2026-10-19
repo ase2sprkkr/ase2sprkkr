@@ -18,8 +18,8 @@ def parameters():
 
 def test_discovery_defaults_and_round_trip(tmp_path):
     p = parameters()
-    assert p._definition.executable == "kkrgen"
-    assert not p.is_mpi()
+    assert p.task_definition.executable == "kkrgen"
+    assert not p.task_definition.mpi
     text = p.to_string(validate=True)
     assert "TASK\n\tWFPLOT" in text
     assert "\tITSEL=1" in text

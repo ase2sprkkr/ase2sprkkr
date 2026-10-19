@@ -15,7 +15,7 @@ def parameters():
 def test_defaults_and_roundtrip(tmp_path):
     p = parameters()
     assert p.name == "jxc"
-    assert p.TASK.TASK() == "JXC"
+    assert p.TASK.TASK() == "DMI"
     assert not p.TASK.JXC() and p.TASK.DMI()
     text = p.to_string()
     assert "\n\tDMI\n" in text and "\n\tJXC\n" not in text
@@ -25,13 +25,13 @@ def test_defaults_and_roundtrip(tmp_path):
     filename = tmp_path / "dmi.in"
     filename.write_text(text)
     q = InputParameters.from_file(filename)
-    assert q.TASK.TASK() == "JXC"
+    assert q.TASK.TASK() == "DMI"
     assert not q.TASK.JXC() and q.TASK.DMI()
     assert q.ENERGY.GRID().tolist() == ["5"]
     assert q.ENERGY.NE().tolist() == [30]
     assert pickle.loads(pickle.dumps(q)).to_string() == q.to_string()
-    assert p._definition.executable == "kkrgen"
-    assert p._definition.mpi is True
+    assert p.task_definition.executable == "kkrgen"
+    assert p.task_definition.mpi is True
 
 
 def test_copy_preserves_dmi_preset():
