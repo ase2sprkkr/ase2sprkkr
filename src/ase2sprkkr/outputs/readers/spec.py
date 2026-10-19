@@ -40,17 +40,17 @@ class SpecResult(ArpesResult):
         return self._basis_vectors
 
     @cached_property
-    def spleed_text_spectrum(self):
-        """SPLOUT spectrum embedded in the SPLEED SPEC.out text stream.
+    def spleed_intensity(self):
+        """Two-column SPLOUT energy/intensity diagram stored in SPEC.out.
 
-        NOUT1 is a log, not a separate file. Some native modes emit a
-        standalone SPC instead; this property only parses text records.
+        This is distinct from the seven-column SPLEED files in spectra.
+        Only the native D12.5 intensity records are read.
         """
         if self.task_name.upper() != "SPLEED" or self.output_file is None:
             return None
-        from .spleed_text import SpleedTextSpectrum
+        from .spleed_intensity import SpleedIntensity
 
-        return SpleedTextSpectrum.from_file(self.path_to("output"))
+        return SpleedIntensity.from_output(self.path_to("output"))
 
     @cached_property
     def spectral_data(self) -> np.ndarray:
