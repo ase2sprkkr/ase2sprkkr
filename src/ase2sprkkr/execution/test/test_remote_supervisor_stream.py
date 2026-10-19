@@ -270,30 +270,35 @@ class _FakeFollowerWriter:
 
 
 def test_live_only_channel_is_delivered_during_other_channel_replay():
-    # A follower catching up on a saved stdout must not lose new stderr
-    # merely because stderr has no spool to replay.
-    streams = SupervisorStreams("saved-stdout", None)
-    streams.publish("out", b"previous stdout")
-    writer = _FakeFollowerWriter()
-    follower = _Follower(writer, {"out": 0, "err": 0}, replay=True)
-    streams._followers.add(follower)
+    async def run():
+        # A follower catching up on a saved stdout must not lose live stderr.
+        streams = SupervisorStreams("saved-stdout", None)
+        streams.publish("out", b"previous stdout")
+        writer = _FakeFollowerWriter()
+        follower = _Follower(writer, {"out": 0, "err": 0}, replay=True)
+        streams._followers.add(follower)
 
-    streams.publish("err", b"live stderr")
+        streams.publish("err", b"live stderr")
 
-    assert follower.replay
-    assert writer.frames == [frame("err", 0, b"live stderr")]
-    assert follower.offsets == {"out": 0, "err": len(b"live stderr")}
-    assert not writer.transport.aborted
+        assert follower.replay
+        assert writer.frames == [frame("err", 0, b"live stderr")]
+        assert follower.offsets == {"out": 0, "err": len(b"live stderr")}
+        assert not writer.transport.aborted
+
+    asyncio.run(run())
 
 
 def test_backpressured_live_only_channel_disconnects_instead_of_losing_bytes():
-    streams = SupervisorStreams("saved-stdout", None)
-    writer = _FakeFollowerWriter(buffered=_HIGH)
-    follower = _Follower(writer, {"out": 0, "err": 0}, replay=True)
-    streams._followers.add(follower)
+    async def run():
+        streams = SupervisorStreams("saved-stdout", None)
+        writer = _FakeFollowerWriter(buffered=_HIGH)
+        follower = _Follower(writer, {"out": 0, "err": 0}, replay=True)
+        streams._followers.add(follower)
 
-    streams.publish("err", b"must not vanish")
+        streams.publish("err", b"must not vanish")
 
-    assert writer.transport.aborted
-    assert follower.offsets["err"] == 0
-    assert writer.frames == []
+        assert writer.transport.aborted
+        assert follower.offsets["err"] == 0
+        assert writer.frames == []
+
+    asyncio.run(run())
