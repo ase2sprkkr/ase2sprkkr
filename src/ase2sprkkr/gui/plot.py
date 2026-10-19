@@ -175,44 +175,118 @@ def auto_range(rng, data, eps=1e-4):
 
 
 
-class PlotSlider:
-    """One figure-owned slider that dispatches a selected value to its plots."""
+class PlotControls:
+    """One figure-owned set of simple controls sharing a single state."""
 
-    def __init__(self, figure, values, label="Slice", labels=None):
-        from matplotlib.widgets import Slider
+    def __init__(self, figure, specs, live=True):
+        from matplotlib.widgets import RadioButtons, Slider
 
-        self.values = tuple(values)
-        if len(self.values) < 2:
-            raise ValueError("Live slider needs at least two values")
-        self.labels = None if labels is None else tuple(labels)
-        if self.labels is not None and len(self.labels) != len(self.values):
-            raise ValueError("slider_labels must match slider_values")
-        self.callbacks = []
         self.figure = figure
+        self.specs = specs
+        self.state = {}
+        self.widgets = {}
+        self.callbacks = []
+        self._slider_values = {}
+        self._changing = False
+        self.live = live
+
+        # Resolve all options first: dependent sliders must not rely on the
+        # dictionary insertion order of live_options.
+        for name, spec in specs.items():
+            if "options" in spec:
+                values = tuple(spec["options"])
+                if not values:
+                    raise ValueError(f"Empty options for {name}")
+                self.state[name] = values[0]
+            elif "slider" not in spec:
+                raise ValueError(f"Unknown plot control: {name}")
+
+        for name, spec in specs.items():
+            if "slider" in spec:
+                values = self._values(spec)
+                self._slider_values[name] = values
+                self.state[name] = values[0]
+
+        if not live or not specs:
+            return
         figure.set_layout_engine(None)
-        figure.subplots_adjust(bottom=0.23)
-        slider_axis = figure.add_axes((0.22, 0.06, 0.60, 0.035))
-        self.widget = Slider(
-            slider_axis, label, 0, len(self.values) - 1, valinit=0, valstep=1
-        )
-        self.widget.on_changed(self._changed)
-        self._display_label(0)
-        # Keep the Matplotlib widget alive while the figure is open.
-        figure._ase2sprkkr_slider_controller = self
+        figure.subplots_adjust(bottom=min(0.5, 0.13 * len(specs) + 0.12))
+        for index, (name, spec) in enumerate(reversed(tuple(specs.items()))):
+            y = 0.04 + 0.13 * index
+            if "options" in spec:
+                ax = figure.add_axes((0.22, y, 0.46, 0.105))
+                widget = RadioButtons(ax, tuple(spec["options"]))
+                widget.on_clicked(lambda value, name=name: self._option_changed(name, value))
+            else:
+                values = self._slider_values[name]
+                ax = figure.add_axes((0.22, y + 0.03, 0.60, 0.04))
+                widget = Slider(
+                    ax, spec.get("label", name),
+                    0, max(1, len(values) - 1), valinit=0, valstep=1,
+                )
+                widget.set_active(len(values) > 1)
+                widget.on_changed(
+                    lambda position, name=name: self._slider_changed(name, position)
+                )
+                widget.valtext.set_text(self._slider_text(name))
+            self.widgets[name] = widget
+        # Matplotlib widgets need a surviving reference while the figure lives.
+        figure._ase2sprkkr_controls = self
+
+    def _values(self, spec):
+        source = spec["slider"]
+        values = tuple(source(self.state) if callable(source) else source)
+        if not values:
+            raise ValueError("A plot slider needs at least one value")
+        return values
+
+    def _slider_text(self, name):
+        """Only the display text is formatted; state keeps the native value."""
+        value = self.state[name]
+        formatter = self.specs[name].get("format")
+        return str(formatter(value, self.state) if formatter else value)
 
     def connect(self, callback):
         self.callbacks.append(callback)
 
-    def _display_label(self, index):
-        value = self.labels[index] if self.labels is not None else self.values[index]
-        self.widget.valtext.set_text(str(value))
-
-    def _changed(self, position):
-        index = int(position)
+    def _notify(self):
+        state = self.state.copy()
         for callback in self.callbacks:
-            callback(self.values[index])
-        self._display_label(index)
-        self.figure.canvas.draw_idle()
+            callback(state)
+        if self.live:
+            self.figure.canvas.draw_idle()
+
+    def _option_changed(self, name, value):
+        if self._changing:
+            return
+        self.state[name] = value
+        self._changing = True
+        try:
+            for slider_name, spec in self.specs.items():
+                if "slider" not in spec:
+                    continue
+                values = self._values(spec)
+                old = self.state[slider_name]
+                self._slider_values[slider_name] = values
+                self.state[slider_name] = old if old in values else values[0]
+                widget = self.widgets.get(slider_name)
+                if widget is not None:
+                    widget.valmax = max(1, len(values) - 1)
+                    widget.ax.set_xlim(0, widget.valmax)
+                    widget.set_active(len(values) > 1)
+                    widget.set_val(values.index(self.state[slider_name]))
+                    widget.valtext.set_text(self._slider_text(slider_name))
+        finally:
+            self._changing = False
+        self._notify()
+
+    def _slider_changed(self, name, position):
+        if self._changing:
+            return
+        values = self._slider_values[name]
+        self.state[name] = values[min(int(position), len(values) - 1)]
+        self.widgets[name].valtext.set_text(self._slider_text(name))
+        self._notify()
 
 
 def plotting_function(func):
@@ -229,8 +303,8 @@ def plotting_function(func):
     @functools.wraps(func)
     def plot_function(
         *args, filename=None, show=None, dpi=600, latex=None, figsize=(6, 4),
-        callback=None, axis=None, slider=None, slider_values=None,
-        slider_label="Slice", slider_labels=None, live=False, **kwargs
+        callback=None, axis=None, controls=None, live_options=None,
+        live=False, **kwargs
     ):
         provided_axis = axis is not None
         with single_plot(
@@ -241,15 +315,11 @@ def plotting_function(func):
             figsize=figsize,
             axis=axis,
         ) as (axis, _):
-            if live and slider is None and slider_values is not None:
-                values = tuple(slider_values)
-                if len(values) > 1:
-                    if provided_axis:
-                        raise ValueError(
-                            "Use Multiplot for a shared slider on existing axes"
-                        )
-                    slider = PlotSlider(axis.figure, values, slider_label, slider_labels)
-            func(*args, axis=axis, slider=slider, **kwargs)
+            if controls is None and live_options is not None:
+                if provided_axis:
+                    raise ValueError("Use Multiplot for live controls on existing axes")
+                controls = PlotControls(axis.figure, live_options, live=live)
+            func(*args, axis=axis, controls=controls, **kwargs)
             if callback:
                 callback(axis)
 
@@ -258,7 +328,7 @@ def plotting_function(func):
 
 def set_up_common_plot(
     axis, title=None, xlabel=None, ylabel=None, xticklabels=None, yticklabels=None,
-    xticks=None, yticks=None, slider=None, **kwargs
+    xticks=None, yticks=None, controls=None, **kwargs
 ):
     loc = locals()
     """
@@ -292,17 +362,17 @@ def colormesh(
     vmin=None,
     vmax=None,
     colorbar=False,
-    slider=None,
+    controls=None,
     **kwargs,
 ):
-    """Plot a 2D map, updating callable x/y/c when the owning slider changes."""
-    if slider is None and any(callable(value) for value in (x, y, c)):
-        raise ValueError("Callable plot data require a slider")
+    """Plot a 2D map; callable x/y/c receive the shared control state."""
+    if controls is None and any(callable(value) for value in (x, y, c)):
+        raise ValueError("Callable plot data require controls")
 
     def selected(data, value):
         return data(value) if callable(data) else data
 
-    current = slider.values[0] if slider is not None else None
+    current = controls.state.copy() if controls is not None else None
     initial_x, initial_y, initial_c = (
         selected(data, current) for data in (x, y, c)
     )
@@ -317,7 +387,7 @@ def colormesh(
             vmax = None
         elif norm == "lin":
             colormap = colormap or "seismic"
-            norm = CenteredNorm(vmax=vmax)
+            norm = CenteredNorm(halfrange=vmax)
             vmax = None
     else:
         colormap = colormap or "BuPu"
@@ -347,7 +417,7 @@ def colormesh(
         )
 
     mesh = make_mesh(initial_x, initial_y, initial_c)
-    if slider is not None and any(callable(data) for data in (x, y, c)):
+    if controls is not None and any(callable(data) for data in (x, y, c)):
 
         def update(value):
             nonlocal mesh
@@ -362,7 +432,7 @@ def colormesh(
             else:
                 mesh.set_array(np.asarray(intensity))
 
-        slider.connect(update)
+        controls.connect(update)
     if show_zero_line:
         opts = {"lw": 1.0, "color": "black"}
         if isinstance(show_zero_line, dict):
@@ -378,26 +448,26 @@ def colormesh(
 
 
 @plotting_function
-def lineplot(x, y, axis=None, slider=None, **kwargs):
-    """Plot a one-dimensional scan, optionally updated by a shared slider."""
-    if slider is None and (callable(x) or callable(y)):
-        raise ValueError("Callable line data require a slider")
+def lineplot(x, y, axis=None, controls=None, **kwargs):
+    """Plot a one-dimensional scan, optionally updated by shared controls."""
+    if controls is None and (callable(x) or callable(y)):
+        raise ValueError("Callable line data require controls")
 
     def values(data, index):
         return np.asarray(data(index) if callable(data) else data).ravel()
 
-    index = slider.values[0] if slider is not None else None
+    index = controls.state.copy() if controls is not None else None
     set_up_common_plot(axis, **kwargs)
     (line,) = axis.plot(values(x, index), values(y, index))
     axis.relim()
     axis.autoscale_view()
 
-    if slider is not None and (callable(x) or callable(y)):
+    if controls is not None and (callable(x) or callable(y)):
         def update(index):
             line.set_data(values(x, index), values(y, index))
             axis.relim()
             axis.autoscale_view()
-        slider.connect(update)
+        controls.connect(update)
 
 
 class Multiplot:
@@ -417,16 +487,12 @@ class Multiplot:
         number_of_plots=None,
         projection=None,
         live=False,
-        slider_values=None,
-        slider_label="Slice",
-        slider_labels=None,
+        live_options=None,
         **kwargs,
     ):
-        self.slider = None
+        self.controls = None
         self.live = live
-        self.slider_values = None if slider_values is None else tuple(slider_values)
-        self.slider_label = slider_label
-        self.slider_labels = slider_labels
+        self.live_options = live_options
         self.separate_plots = separate_plots
         self.filename = filename
         self.show = show
@@ -450,9 +516,9 @@ class Multiplot:
         if callable(figsize):
             figsize = figsize((1, 1) if separate_plots else layout)
 
-        if separate_plots and live and self.slider_values is not None and len(self.slider_values) > 1:
-            raise ValueError("Shared slider requires a single figure")
-        if live and self.slider_values is not None and len(self.slider_values) > 1 and layout_kind == "constrained":
+        if separate_plots and live and self.live_options:
+            raise ValueError("Live controls require a single figure")
+        if live and self.live_options and layout_kind == "constrained":
             layout_kind = "adjust"
             self.layout_kind = layout_kind
 
@@ -485,14 +551,13 @@ class Multiplot:
         self.index = 0
 
     def __enter__(self):
+        if self.live_options is not None:
+            # Static separate plots still need the same initial state for
+            # callable datasets, but no figure or widgets are created.
+            self.controls = PlotControls(self.figure, self.live_options, live=self.live)
         if not self.separate_plots:
             self.context = create_rc_context(latex=self.latex)
             self.context.__enter__()
-            if self.live and self.slider_values is not None and len(self.slider_values) > 1:
-                self.slider = PlotSlider(
-                    self.figure, self.slider_values,
-                    self.slider_label, self.slider_labels,
-                )
         return self
 
     def __exit__(self, type, value, traceback):
@@ -524,8 +589,8 @@ class Multiplot:
 
     @contextmanager
     def new_axis(self, name=None, filename=None, **kwargs):
-        if self.slider is not None:
-            kwargs.setdefault("slider", self.slider)
+        if self.controls is not None:
+            kwargs.setdefault("controls", self.controls)
         for k, v in self.kwargs.items():
              kwargs.setdefault(k, v)
         for k, v in self.specific_kwargs.get(self.index, {}).items():

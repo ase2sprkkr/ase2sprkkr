@@ -99,6 +99,24 @@ class ARPESResultFile(CommonResultFile, Arithmetic):
         if layout[0] * layout[1] < 4 * len(slices):
             raise ValueError("The layout has too few axes for the selected slices")
 
+        live_options = None
+        if multi and live:
+            live_options = {}
+            if self.NT() > 1:
+                live_options["direction"] = {"options": ("NP", "NT")}
+            live_options["slice"] = {
+                "slider": lambda state: (
+                    range(self.NT()) if state.get("direction") == "NT"
+                    else indices
+                ),
+                "label": "Slice",
+                "format": lambda value, state: (
+                    f"{phi[value]:g}°"
+                    if phi is not None and state.get("direction", "NP") == "NP"
+                    else str(value)
+                ),
+            }
+
         with Multiplot(
             layout=layout,
             figsize=figsize,
@@ -109,12 +127,7 @@ class ARPESResultFile(CommonResultFile, Arithmetic):
             separate_plots=separate_plots,
             layout_kind=layout_kind,
             live=live,
-            slider_values=indices if multi and live else None,
-            slider_label="Azimuth",
-            slider_labels=(
-                tuple(f"{phi[i]:g}°" for i in indices)
-                if phi is not None and multi and live else None
-            ),
+            live_options=live_options,
             **kwargs,
         ) as mp:
             for selected in slices:
@@ -122,7 +135,7 @@ class ARPESResultFile(CommonResultFile, Arithmetic):
                     with mp.new_axis(name=option.name) as (axis, plot_kwargs):
                         option.plot(
                             azimuth_indices=selected if multi else None,
-                            live=live, axis=axis, **plot_kwargs
+                            live=live, phi_values=phi, axis=axis, **plot_kwargs
                         )
 
     def spc_columns(self):
@@ -162,7 +175,7 @@ class ARPESDefinition(ResultFileDefinition):
 def create_definition():
 
     def plot(option, azimuth_index=None, azimuth_indices=None,
-             live=False, slider=None, **kwargs):
+             live=False, phi_values=None, controls=None, **kwargs):
         c = option._container
         kw = {
             "show_zero_line": False,
@@ -170,6 +183,9 @@ def create_definition():
             "norm": "log",
             "vmax": np.max([c.TOTAL().max(), c.UP().max(), c.DOWN().max()]),
         }
+        if option.name == "POLARIZATION":
+            # Polarization is signed and dimensionless, unlike intensities.
+            kw.update(mode="centered", norm="lin", vmax=1.0)
 
         if c.MODE() == "energy":
             x = c.THETA()
@@ -187,25 +203,53 @@ def create_definition():
             selected = tuple(azimuth_indices) if azimuth_indices is not None else (
                 0 if azimuth_index is None else azimuth_index,
             )
-            if slider is not None:
-                x, y, intensity = (
-                    lambda index, data=data: data[:, index, :]
-                    for data in (x, y, intensity)
+            if controls is not None:
+                theta, energy = x, y
+                phi = (
+                    np.arange(c.NP()) if phi_values is None
+                    else np.asarray(phi_values)
                 )
+
+                def section(data, state):
+                    if state.get("direction", "NP") == "NT":
+                        return data[:, :, state["slice"]]
+                    return data[:, state["slice"], :]
+
+                x = lambda state: (
+                    np.broadcast_to(phi, (energy.shape[0], c.NP()))
+                    if state.get("direction", "NP") == "NT"
+                    else section(theta, state)
+                )
+                y = lambda state: section(energy, state)
+                raw_intensity = intensity
+                intensity = lambda state: section(raw_intensity, state)
+
+                def xlabel(state):
+                    if state.get("direction", "NP") == "NT":
+                        return r"$\phi$ (deg)" if phi_values is not None else "Azimuth index (NP)"
+                    # A single polar-angle point is an energy spectrum;
+                    # its horizontal axis must remain energy while sliding.
+                    return kw["ylabel"] if c.NT() == 1 else r"$\theta$ (deg)"
+
+                kw["xlabel"] = xlabel(controls.state)
+                # Labels belong to the plot; changing direction changes x.
+                axis = kwargs.get("axis")
+                # A singleton mesh is rendered as a line: its horizontal
+                # coordinate can be energy, not the 2D mesh x coordinate.
             else:
                 x, y, intensity = (
                     data[:, selected[0], :] for data in (x, y, intensity)
                 )
         kw.update(kwargs)
-        first = intensity(slider.values[0]) if callable(intensity) else intensity
+        first = intensity(controls.state) if callable(intensity) else intensity
         if 1 in first.shape:
             # A singleton mesh contains no Gouraud cells. Show the actual
             # one-dimensional spectrum rather than an empty pseudocolor plot.
             if c.MODE() == "energy":
                 variable_is_y = first.shape[1] == 1
             else:
-                initial_x = x(slider.values[0]) if callable(x) else x
-                initial_y = y(slider.values[0]) if callable(y) else y
+                initial_x = x(controls.state) if callable(x) else x
+                initial_y = y(controls.state) if callable(y) else y
                 variable_is_y = np.ptp(initial_y) > np.ptp(initial_x)
             coordinate = y if variable_is_y else x
             if callable(coordinate):
@@ -222,9 +266,12 @@ def create_definition():
             kw["ylabel"] = option.name
             for key in ("show_zero_line", "mode", "norm", "vmax", "vmin", "colormap"):
                 kw.pop(key, None)
-            lineplot(coordinate, intensity, slider=slider, **kw)
+            lineplot(coordinate, intensity, controls=controls, **kw)
         else:
-            colormesh(x, y, intensity, slider=slider, **kw)
+            if controls is not None and callable(x) and kwargs.get("axis") is not None:
+                axis = kwargs["axis"]
+                controls.connect(lambda state: axis.set_xlabel(xlabel(state)))
+            colormesh(x, y, intensity, controls=controls, **kw)
 
     def ii(j):
         def fn(data: np.ndarray, section: object) -> np.ndarray:

@@ -247,6 +247,7 @@ def test_arpes_static_azimuth_selection(tmp_path, monkeypatch):
     class PlotResult:
         MODE = lambda self: "energy"
         NP = lambda self: 5
+        NT = lambda self: 3
         TOTAL = Value(np.zeros((2, 5, 3)), "TOTAL")
         UP = Value(np.zeros((2, 5, 3)), "UP")
         DOWN = Value(np.zeros((2, 5, 3)), "DOWN")
@@ -279,75 +280,78 @@ def test_arpes_static_azimuth_selection(tmp_path, monkeypatch):
     plt.close("all")
 
 
-def test_colormesh_callable_slider_shared():
+def test_colormesh_callable_controls_shared():
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
-    from ase2sprkkr.gui.plot import colormesh
-    fig, axes = plt.subplots(1, 2)
+    from ase2sprkkr.gui.plot import colormesh, PlotControls, Multiplot
     xx, yy = np.meshgrid(np.arange(3), np.arange(3))
     calls = []
-    from ase2sprkkr.gui.plot import PlotSlider
-    slider = PlotSlider(fig, (0, 1, 2))
-    for ax in axes:
-        colormesh(xx, yy, lambda i: calls.append(i) or np.full((3, 3), i + 1.),
-                  slider=slider, axis=ax)
-    widget = slider.widget
-    assert calls == [0, 0]
-    widget.set_val(2)
-    assert calls == [0, 0, 2, 2]
-    assert len(fig.axes) == 3  # one common slider, not one per subplot
-    plt.close(fig)
-
-
-
-def test_multiplot_slider_with_mixed_plot_types():
-    """Line plots may ignore a shared slider without rejecting its argument."""
-    import matplotlib
-    matplotlib.use("Agg")
-    import matplotlib.pyplot as plt
-    from ase2sprkkr.gui.plot import Multiplot, colormesh, set_up_common_plot
-
-    xx, yy = np.meshgrid(np.arange(3), np.arange(3))
-    selected = []
-    with Multiplot(
-        layout=(1, 2), live=True, slider_values=(0, 1, 2),
-        show=False, layout_kind="adjust"
-    ) as mp:
-        with mp.new_axis(name="map") as (ax, options):
-            colormesh(
-                xx, yy, lambda i: selected.append(i) or np.full((3, 3), i + 1),
-                axis=ax, **options
-            )
-        with mp.new_axis(name="line") as (ax, options):
-            set_up_common_plot(ax, title="Static line", **options)
-            ax.plot([0, 1], [0, 2])
-
-    mp.slider.widget.set_val(2)
-    assert selected == [0, 2]
-    assert len(mp.figure.axes) == 3
+    with Multiplot(layout=(1, 2), show=False, live=True,
+                   live_options={"direction": {"options": ("NP", "NT")},
+                                 "slice": {"slider": lambda state: range(
+                                     3 if state["direction"] == "NP" else 5)}}) as mp:
+        for _ in range(2):
+            with mp.new_axis() as (axis, kwargs):
+                colormesh(xx, yy, lambda state: calls.append(dict(state)) or
+                          np.full((3, 3), state["slice"] + 1),
+                          axis=axis, **kwargs)
+    controls = mp.controls
+    assert calls == [{"direction": "NP", "slice": 0}] * 2
+    controls.widgets["slice"].set_val(2)
+    assert calls[-1] == {"direction": "NP", "slice": 2}
+    controls.widgets["direction"].set_active(1)
+    assert controls.state == {"direction": "NT", "slice": 2}
+    assert controls._slider_values["slice"] == tuple(range(5))
+    controls.widgets["slice"].set_val(4)
+    assert calls[-1] == {"direction": "NT", "slice": 4}
+    assert len(mp.figure.axes) == 4  # 2 panels, options and slider
     plt.close(mp.figure)
 
 
-def test_colormesh_standalone_slider_and_static():
-    """The decorated standalone routine creates the same slider owner."""
+def test_standalone_controls_and_static():
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
     from ase2sprkkr.gui.plot import colormesh
-
     xx, yy = np.meshgrid(np.arange(3), np.arange(3))
-    colormesh(xx, yy, lambda k: np.full((3, 3), k + 1),
-              live=True, slider_values=(1, 2, 3), show=False)
+    opts = {"slice": {"slider": range(3)}}
+    colormesh(xx, yy, lambda state: np.full((3, 3), state["slice"] + 1),
+              live=True, live_options=opts, show=False)
     fig = plt.gcf()
-    controller = fig._ase2sprkkr_slider_controller
-    assert controller.values == (1, 2, 3)
-    assert len(fig.axes) == 2
-    controller.widget.set_val(2)
+    assert fig._ase2sprkkr_controls.widgets["slice"] is not None
     plt.close(fig)
+    colormesh(xx, yy, np.ones((3, 3)), show=False)
+    assert not hasattr(plt.gcf(), "_ase2sprkkr_controls")
+    plt.close("all")
 
-    # No widget or callable plumbing is needed for static image data.
-    colormesh(xx, yy, np.ones((3, 3)), live=False, show=False)
-    fig = plt.gcf()
-    assert not hasattr(fig, "_ase2sprkkr_slider_controller")
-    plt.close(fig)
+
+def test_static_separate_plots_with_callable_data(tmp_path):
+    """Shared initial live_options state works without a visible figure/widget."""
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+    from ase2sprkkr.gui.plot import Multiplot, colormesh, lineplot
+    xx, yy = np.meshgrid(np.arange(3), np.arange(3))
+    states = []
+    filename = tmp_path / "section.png"
+    with Multiplot(
+        layout=(1, 2), separate_plots=True, live=False,
+        live_options={"slice": {"slider": (1, 2, 3)}},
+        filename=filename, show=False, dpi=50,
+    ) as mp:
+        with mp.new_axis(name="map") as (ax, kwargs):
+            colormesh(
+                xx, yy,
+                lambda state: states.append(state.copy()) or
+                np.full((3, 3), state["slice"]),
+                axis=ax, **kwargs,
+            )
+        with mp.new_axis(name="line") as (ax, kwargs):
+            lineplot([0, 1], lambda state: [state["slice"], 2], axis=ax, **kwargs)
+    assert states == [{"slice": 1}]
+    assert (tmp_path / "section_map.png").is_file()
+    assert (tmp_path / "section_line.png").is_file()
+    assert mp.controls.state == {"slice": 1}
+    assert not mp.controls.widgets
+    plt.close("all")

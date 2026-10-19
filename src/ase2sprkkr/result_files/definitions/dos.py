@@ -48,7 +48,7 @@ class DOS(Arithmetic):
         return self.dos[key]
 
     def plot(self, axis=None, legend_ncols=1, legend_height=0.3,
-             legend_fontsize=10, slider=None, **kwargs):
+             legend_fontsize=10, controls=None, **kwargs):
         axis.set_xlabel(r"$E-E_{\rm F}$ (eV)")
         axis.set_ylabel(r"DOS (states/eV)")
 

@@ -15,11 +15,13 @@ _EXAMPLE = Path(__file__).resolve().parents[1] / "examples" / "Mo2Se4_ARPES_ARPE
 
 
 def _artists(figure):
-    controller = getattr(figure, "_ase2sprkkr_slider_controller", None)
-    slider_axis = None if controller is None else controller.widget.ax
+    controls = getattr(figure, "_ase2sprkkr_controls", None)
+    control_axes = set() if controls is None else {
+        widget.ax for widget in controls.widgets.values()
+    }
     return [
         axis for axis in figure.axes
-        if axis is not slider_axis and (axis.lines or axis.collections)
+        if axis not in control_axes and (axis.lines or axis.collections)
     ]
 
 
@@ -75,11 +77,11 @@ def test_real_parser_multi_azimuth_slider_draws_all_four_panels(tmp_path):
         spc.plot(show=False, live=True)
         fig = plt.gcf()
         assert len(_artists(fig)) == 4
-        controller = fig._ase2sprkkr_slider_controller
-        assert controller.values == (0, 1, 2)
+        controls = fig._ase2sprkkr_controls
+        assert controls._slider_values["slice"] == (0, 1, 2)
         lines = [ax.lines[0] for ax in _artists(fig)]
         before = np.asarray(lines[0].get_ydata()).copy()
-        controller.widget.set_val(2)
+        controls.widgets["slice"].set_val(2)
         after = np.asarray(lines[0].get_ydata())
         np.testing.assert_allclose(after, 3 * before)
     finally:
@@ -92,6 +94,115 @@ def test_multi_azimuth_static_slice_count(tmp_path):
         spc.plot(show=False, live=False, azimuths=2)
         fig = plt.gcf()
         assert len(_artists(fig)) == 8
-        assert not hasattr(fig, "_ase2sprkkr_slider_controller")
+        assert not hasattr(fig, "_ase2sprkkr_controls")
+    finally:
+        plt.close("all")
+
+
+
+def test_controls_switch_np_nt_on_real_parser_grid(tmp_path):
+    """A parsed NP x NT spectrum changes slice direction and slider limits."""
+    header, payload = _EXAMPLE.read_text().split("#######################", 1)
+    header = header.replace("NT                 1", "NT                 3")
+    header = header.replace("NP                 1", "NP                 4")
+    lines = []
+    for line in payload.splitlines():
+        if not line.strip():
+            continue
+        values = np.fromstring(line, sep=" ")
+        for ip in range(4):
+            for it in range(3):
+                point = values.copy()
+                point[0] = -10 + 10 * it
+                point[2:5] *= (ip + 1) * (it + 1)
+                lines.append(" ".join(f"{v:.9E}" for v in point))
+    path = tmp_path / "two_angles.spc"
+    path.write_text(header + "#######################\n" + "\n".join(lines) + "\n")
+    spc = ResultFile.from_file(str(path), unknown=False)
+    assert spc.TOTAL().shape == (spc.NE(), 4, 3)
+    try:
+        spc.plot(show=False, live=True)
+        fig = plt.gcf()
+        controls = fig._ase2sprkkr_controls
+        assert len(_artists(fig)) == 4
+        np.testing.assert_allclose(
+            np.asarray(_artists(fig)[0].collections[0].get_array()),
+            spc.TOTAL()[:, 0, :]
+        )
+        assert controls.state == {"direction": "NP", "slice": 0}
+        assert len(controls._slider_values["slice"]) == 4
+        assert _artists(fig)[0].get_xlabel() == r"$\theta$ (deg)"
+        controls.widgets["slice"].set_val(3)
+        controls.widgets["direction"].set_active(1)
+        assert controls.state == {"direction": "NT", "slice": 0}
+        assert len(controls._slider_values["slice"]) == 3
+        assert _artists(fig)[0].get_xlabel() == "Azimuth index (NP)"
+        np.testing.assert_allclose(
+            np.asarray(_artists(fig)[0].collections[0].get_array()),
+            spc.TOTAL()[:, :, 0]
+        )
+        controls.widgets["slice"].set_val(2)
+        assert controls.state["slice"] == 2
+        np.testing.assert_allclose(
+            np.asarray(_artists(fig)[0].collections[0].get_array()),
+            spc.TOTAL()[:, :, 2]
+        )
+        assert len(_artists(fig)) == 4
+    finally:
+        plt.close("all")
+
+
+def test_live_azimuth_selection_keeps_requested_indices(tmp_path):
+    """An explicit NP selection stays the slider domain in live mode."""
+    spc = ResultFile.from_file(str(_multi_azimuth_file(tmp_path)), unknown=False)
+    try:
+        spc.plot(show=False, live=True, azimuths=2)
+        controls = plt.gcf()._ase2sprkkr_controls
+        assert controls._slider_values["slice"] == (0, 2)
+        controls.widgets["slice"].set_val(1)
+        assert controls.state["slice"] == 2
+    finally:
+        plt.close("all")
+
+
+def test_single_angle_energy_axis_stays_correct_after_slider(tmp_path):
+    spc = ResultFile.from_file(str(_multi_azimuth_file(tmp_path)), unknown=False)
+    try:
+        spc.plot(show=False, live=True)
+        fig = plt.gcf()
+        axes = _artists(fig)
+        energy_label = r"$E-E_{\rm F}$ (eV)"
+        assert all(axis.get_xlabel() == energy_label for axis in axes)
+        fig._ase2sprkkr_controls.widgets["slice"].set_val(2)
+        assert all(axis.get_xlabel() == energy_label for axis in axes)
+    finally:
+        plt.close("all")
+
+
+def test_azimuth_physical_angle_is_slider_label(tmp_path):
+    spc = ResultFile.from_file(str(_multi_azimuth_file(tmp_path)), unknown=False)
+    try:
+        spc.plot(show=False, live=True, phi_range=(15., 45.))
+        controls = plt.gcf()._ase2sprkkr_controls
+        widget = controls.widgets["slice"]
+        assert widget.valtext.get_text() == "15°"
+        widget.set_val(2)
+        assert controls.state["slice"] == 2
+        assert widget.valtext.get_text() == "45°"
+    finally:
+        plt.close("all")
+
+
+def test_signed_spin_polarization_uses_centered_linear_scale():
+    from matplotlib.colors import CenteredNorm
+    source = Path(__file__).resolve().parents[1] / "examples" / "WSe2_ARPES.spc"
+    spc = ResultFile.from_file(str(source), unknown=False)
+    try:
+        spc.plot(show=False, live=False)
+        fig = plt.gcf()
+        polarization = _artists(fig)[3].collections[0]
+        assert isinstance(polarization.norm, CenteredNorm)
+        assert polarization.norm.vcenter == 0
+        assert polarization.norm.halfrange == 1
     finally:
         plt.close("all")
