@@ -104,13 +104,16 @@ def test_result_api(tmp_path):
     class Input:
         def to_string(self,*,validate): return "TASK ARPES\n"
     class ResultSPC(SPC):
-        def to_nexus(self, filename, *, input_parameters=None, metadata=None):
+        def to_nexus(self, filename, *, input_parameters=None, input_file=None,
+                     metadata=None):
             return write_arpes_nexus(
-                self, filename, input_parameters=input_parameters, metadata=metadata
+                self, filename, input_parameters=input_parameters,
+                input_file=input_file, metadata=metadata
             )
     class Result:
         spc = ResultSPC()
-        input_parameters = Input()
+        _input_parameters = Input()
+        input_parameters_file = None
     path = tmp_path/"result.nxs"
     assert ArpesResult.to_nexus(Result(),path) == path
     with h5py.File(path) as f:
