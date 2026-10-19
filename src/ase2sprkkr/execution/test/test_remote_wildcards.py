@@ -196,3 +196,20 @@ def test_exact_and_wildcard_caches_keep_individual_sync_states(tmp_path):
     new_entry = entries[str(workdir / "generated-new.dat")]
     assert new_entry.availability_state == "available"
     assert new_entry.source_pattern == str(pattern)
+
+
+def test_remote_executor_tolerates_unmatched_optional_cache_wildcard(tmp_path):
+    workdir = tmp_path / "local" / "calculation"
+    cache_pattern = workdir / "not-present-*.pot"
+    executor, spec, _, remote_root = _text_run(
+        tmp_path,
+        declared_cache_files=(cache_pattern,),
+        code="print('done')",
+    )
+    runner = _processed_run(executor, spec)
+    result = runner.run()
+
+    assert result.return_code == 0
+    assert result.output == b"done\n"
+    assert not tuple(workdir.glob("not-present-*.pot"))
+    assert not tuple((remote_root / "calculation").glob("not-present-*.pot"))

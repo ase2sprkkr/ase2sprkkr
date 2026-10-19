@@ -304,16 +304,18 @@ class RemoteRunner:
         used[target] = source
         return target
 
-    async def _stage_input_pattern(self, value, used):
+    async def _stage_input_pattern(self, value, used, *, required=True):
         source = self._local_path(value)
         matches = expand_local_files(source, self.executor.local_root)
-        if not matches:
+        if not matches and required:
             raise FileNotFoundError(
                 f"Local input pattern did not match any files: {source}"
             )
         uploads = []
         for match in matches:
-            await self._stage_file(match, used, uploads=uploads)
+            await self._stage_file(
+                match, used, uploads=uploads, required=required,
+            )
         if uploads:
             await self.executor.transport.put_files(
                 uploads,
@@ -338,15 +340,9 @@ class RemoteRunner:
                 if remote_pattern in patterns:
                     continue
                 patterns.append(remote_pattern)
-                uploads = []
-                for match in expand_local_files(local, self.executor.local_root):
-                    await self._stage_file(
-                        match, used, uploads=uploads, required=False
-                    )
-                if uploads:
-                    await self.executor.transport.put_files(
-                        uploads, self.executor.local_root, remote_root
-                    )
+                # Cache patterns use the same transfer logic as inputs,
+                # but an unmatched cache pattern is optional.
+                await self._stage_input_pattern(local, used, required=False)
                 if output_policy != FileSyncPolicy.NEVER:
                     for remote in await self.executor.transport.expand_files(
                         remote_pattern, remote_root
