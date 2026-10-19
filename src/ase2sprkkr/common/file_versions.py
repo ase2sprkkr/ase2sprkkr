@@ -31,11 +31,17 @@ def _is_file(fingerprint: FileFingerprint) -> bool:
     return stat_module.S_ISREG(fingerprint.mode)
 
 
-def _file_digest(path: Path) -> str:
+def file_digest(path: str | Path, *, missing_ok: bool = False) -> str | None:
+    """SHA-256 of a file; optionally return None if the file is missing."""
     digest = hashlib.sha256()
-    with path.open("rb") as stream:
-        while chunk := stream.read(_DIGEST_CHUNK_SIZE):
-            digest.update(chunk)
+    try:
+        with Path(path).open("rb") as stream:
+            while chunk := stream.read(_DIGEST_CHUNK_SIZE):
+                digest.update(chunk)
+    except FileNotFoundError:
+        if missing_ok:
+            return None
+        raise
     return digest.hexdigest()
 
 
@@ -94,7 +100,7 @@ class FileVersion:
         last_error = None
         for _ in range(_STABLE_CAPTURE_ATTEMPTS if require_digest else 1):
             try:
-                content_digest = _file_digest(resolved)
+                content_digest = file_digest(resolved)
                 after = file_fingerprint(resolved)
             except OSError as exc:
                 last_error = exc
@@ -170,7 +176,7 @@ class FileVersion:
             return FileState.OVERWRITTEN
 
         try:
-            digest = _file_digest(self.path)
+            digest = file_digest(self.path)
             after = file_fingerprint(self.path)
         except FileNotFoundError:
             return FileState.MISSING
@@ -185,4 +191,5 @@ __all__ = [
     "FileState",
     "FileVersion",
     "FileVersionCaptureError",
+    "file_digest",
 ]
