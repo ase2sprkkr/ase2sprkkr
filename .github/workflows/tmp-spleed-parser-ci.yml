@@ -1,0 +1,16 @@
+name: SPLEED inline parser tests
+on:
+  push:
+    branches: [tmp-spleed-parser-ci]
+permissions:
+  contents: read
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - run: ./install_dependencies.sh
+      - run: DO_NOT_RUN_SPRKKR=1 python -m pytest -q src/ase2sprkkr/outputs/test/test_spleed_intensity.py src/ase2sprkkr/outputs/test/test_spec_parser.py src/ase2sprkkr/result_files/test/test_native_spc_registry.py src/ase2sprkkr/result_files/test/test_definition_registry.py
