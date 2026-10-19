@@ -134,17 +134,13 @@ def test_spec_outputs_follow_polarization_and_task(tmp_path):
 
     parameters = InputParameters.create("SPLEED")
     parameters.CONTROL.DATASET = "Fe"
-    assert parameters.output_files(str(tmp_path)) == (str(tmp_path / "Fe_SPEC.out"),)
-    for diagram in (1, 2):
+    for diagram in (0, 1, 2):
         parameters.SPEC_EL.TYP = diagram
-        output = parameters.output_files(str(tmp_path))
-        assert tuple(map(str, output)) == (
+        declared = parameters.output_files(str(tmp_path))
+        assert tuple(map(str, declared)) == (
             str(tmp_path / "Fe_SPEC.out"), str(tmp_path / "Fe_data.spc"),
         )
-        assert not output[0].optional
-        assert output[1].optional
-    parameters.SPEC_EL.TYP = 0
-    assert parameters.output_files(str(tmp_path)) == (str(tmp_path / "Fe_SPEC.out"),)
+        assert all(not f.optional for f in declared)
 
 
 def test_scf_invalid_grid_and_mixing_are_rejected():

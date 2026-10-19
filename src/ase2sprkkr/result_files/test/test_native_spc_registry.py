@@ -7,6 +7,7 @@ def test_native_spc_definitions_are_distinct():
     assert names["band_spc"].extension == "spc"
     assert names["spleed_spc"].extension == "spc"
     assert names["spc"].extension == "spc"
+    assert names["spleed_intensity"].extension == "out"
     assert len(result_file_definition_registry.by_extension()["spc"]) == 3
 
 def test_band_and_spleed_results_register_typed_spectra(tmp_path):
@@ -102,3 +103,11 @@ def test_band_plot_can_skip_fermi_line(monkeypatch):
     assert len(axis.points) == 1
     assert axis.points[0][2]["s"] == 3
     assert axis.lines == []
+
+
+def test_spc_one_row_retains_two_dimensions():
+    import numpy as np
+    d = ResultFile.definitions["spleed_spc"]
+    f = d.read_from_dict({"RAW_DATA": np.array([[11., 45., .2, .1, .1, .2, .3]])})
+    assert f.RAW_DATA().shape == (1, 7)
+    assert f.ENERGY()[0] == 11.
