@@ -18,59 +18,6 @@ from ...execution import (
 from ..profile import SPRKKRProfile
 
 
-class _Result:
-    def complete(self, error, return_code):
-        self.error = error
-        self.return_code = return_code
-
-
-class _Parser:
-    print_output = False
-
-    async def read_output(self, stdout, result):
-        out = b""
-        while data := await stdout.readline():
-            out += data
-        result.output = out
-        return out
-
-    async def read_error(self, stderr, result):
-        out = b""
-        while data := await stderr.readline():
-            out += data
-        result.error_output = out
-        return out
-
-    def result(self, output, error, return_code):
-        if return_code:
-            exc = ValueError(f"Process returned {return_code}")
-            exc.output = output
-            exc.error = error
-            raise exc
-        return output, error, return_code
-
-
-class _Reader:
-    print_output = False
-
-    def __init__(self):
-        self.parser = _Parser()
-
-    def create_result(self, output_file, input_file):
-        return _Result()
-
-    async def parse_streams(self, stdout, stderr, result):
-        return await asyncio.gather(
-            self.parser.read_output(stdout, result),
-            self.parser.read_error(stderr, result),
-        )
-
-    def complete_result(self, result, output, error, return_code):
-        _, error, return_code = self.parser.result(output, error, return_code)
-        result.complete(error, return_code)
-        return result
-
-
 def test_profile_builds_serial_command():
     input_file = SimpleNamespace(name="/tmp/Fe.inp")
     output_file = object()
@@ -151,9 +98,10 @@ def _local_run(code):
         argv=(sys.executable, "-S", "-c", code),
         input_file=SimpleNamespace(name=f"{directory.name}/run.inp"),
         output_file=output,
+        error_file=open(f"{directory.name}/run.err", "wb"),
         directory=directory.name,
     )
-    runner = LocalExecutor().create_run(_Reader(), spec)
+    runner = LocalExecutor().create_run(spec)
     runner._test_directory = directory
     return runner
 
@@ -162,7 +110,7 @@ def test_local_executor_returns_unstarted_runner():
     runner = _local_run("pass")
     assert isinstance(runner, LocalRunner)
     assert runner.state == RunState.NEW
-    assert runner.reference is None
+    assert runner.backend_id is None
 
 
 def test_local_runner_streams_output_to_parser_and_listeners():
@@ -176,8 +124,9 @@ def test_local_runner_streams_output_to_parser_and_listeners():
     result = runner.run()
 
     assert runner.state == RunState.FINISHED
-    assert result.output == b"hello\n"
-    assert result.error_output == b"problem\n"
+    from pathlib import Path
+    assert Path(result.output_file).read_bytes() == b"hello\n"
+    assert Path(result.error_file).read_bytes() == b"problem\n"
     assert result.return_code == 0
     assert ("out", "hello\n") in seen
     assert ("err", "problem\n") in seen
@@ -187,7 +136,8 @@ def test_local_runner_submit_then_wait():
     runner = _local_run("print('ok')")
     runner.submit()
     result = runner.wait()
-    assert result.output == b"ok\n"
+    from pathlib import Path
+    assert Path(result.output_file).read_bytes() == b"ok\n"
     assert runner.state == RunState.FINISHED
 
 
@@ -210,9 +160,16 @@ def test_local_runner_cancel_is_thread_safe():
     assert runner.state == RunState.RUNNING
 
     runner.cancel()
-    with pytest.raises(ValueError):
-        runner.wait()
+    runner.wait()
 
     assert runner.state == RunState.CANCELLED
     assert stopped_from
     assert stopped_from[0] != caller_thread
+
+
+def test_local_binary_output_does_not_abort_observers():
+    runner = _local_run("import os; os.write(1, b'\\xff\\n')")
+    seen = []
+    runner.add_output_listener(lambda text, kind: seen.append((text, kind)))
+    assert runner.run().return_code == 0
+    assert seen == [("\\ufffd\\n", "out")]
