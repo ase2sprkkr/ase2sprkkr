@@ -1,13 +1,17 @@
 import importlib
 import io
+import os
 import pickle
+import subprocess
+import sys
+from collections.abc import Mapping
 from types import SimpleNamespace
 
 import numpy as np
 import pytest
 
 from ...common.module_registry import RegistryDefinitionError, RegistryEntryNotFound
-from ..input_parameters import InputParameters
+from ..input_parameters import InputParameters, _LazyInputParametersDefinitions
 from ..task_definition import InputParametersRegistry, TaskDefinition, TaskRegistry
 
 
@@ -387,3 +391,71 @@ def test_create_from_dmi_result_keeps_dmi_defaults():
     assert params.requested_task_name == "DMI"
     assert params.TASK.DMI() and not params.TASK.JXC()
     assert params.ENERGY.EMIN() == -0.35
+
+
+def test_compatibility_definition_mapping_loads_only_requested_schema(
+    tmp_path, monkeypatch
+):
+    package = _package(
+        tmp_path,
+        monkeypatch,
+        "_lazy_user_definition_entries",
+        {
+            "valid": (
+                "from ase2sprkkr.input_parameters.input_parameters_definitions "
+                "import InputParametersDefinition\n"
+                "def input_parameters_definition():\n"
+                "    return InputParametersDefinition('valid', [])\n"
+            ),
+            "marpes": "input_parameters = object()\n",
+        },
+    )
+    mapping = _LazyInputParametersDefinitions(InputParametersRegistry(package))
+
+    assert isinstance(mapping, Mapping)
+    assert set(mapping) == {"VALID", "MARPES"}
+    assert "MARPES" in mapping  # Discovery is not module materialization.
+    assert mapping["VALID"].name == "valid"
+
+    with pytest.raises(
+        RegistryDefinitionError,
+        match="does not define required export 'input_parameters_definition'",
+    ):
+        mapping["MARPES"]
+
+
+def test_legacy_user_hook_can_read_arpes_without_loading_broken_user_schema(
+    tmp_path,
+):
+    # Reproduce an import-time preference using InputParameters.definitions.
+    # The separate user-installed MARPES module is intentionally malformed.
+    config_dir = tmp_path / "ase2sprkkr"
+    custom_schemas = config_dir / "input_parameters"
+    custom_schemas.mkdir(parents=True)
+    (custom_schemas / "marpes.py").write_text(
+        "input_parameters = object()\n"
+    )
+    (config_dir / "__init__.py").write_text(
+        "from ase2sprkkr.input_parameters.input_parameters import InputParameters\n"
+        "InputParameters.definitions['ARPES'].mpi = False\n"
+        "assert InputParameters.definitions['ARPES'].name == 'arpes'\n"
+        "assert InputParameters.definitions['ARPES'].mpi is False\n"
+    )
+    env = os.environ.copy()
+    env["XDG_CONFIG_HOME"] = str(tmp_path)
+    env.pop("ASE2SPRKKR_NO_USER_PROFILE", None)
+
+    # Do not execute in XDG_CONFIG_HOME: its ase2sprkkr directory would
+    # shadow the installed package on sys.path in a fresh Python process.
+    working_dir = tmp_path / "work"
+    working_dir.mkdir()
+    completed = subprocess.run(
+        [sys.executable, "-c", "import ase2sprkkr"],
+        env=env,
+        cwd=working_dir,
+        capture_output=True,
+        text=True,
+        timeout=45,
+        check=False,
+    )
+    assert completed.returncode == 0, completed.stderr

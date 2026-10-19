@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import io
+from collections.abc import Mapping
 from . import definitions, tasks
 from .task_definition import InputParametersRegistry, TaskRegistry
 from ..sprkkr.configuration import (
@@ -14,6 +15,29 @@ from ..common.configuration_containers import BaseConfigurationContainer
 from ..common.repeated_configuration_containers import RepeatedConfigurationContainer
 from ..common.decorators import cached_class_property
 from ..potentials.potentials import Potential
+
+class _LazyInputParametersDefinitions(Mapping):
+    """Read-only compatibility mapping that materializes only requested schemas.
+
+    User-installed definitions can be malformed or require optional packages.
+    Merely requesting a different definition must not import those modules.
+    """
+
+    def __init__(self, registry):
+        self._registry = registry
+
+    def __getitem__(self, name):
+        return self._registry[name]
+
+    def __iter__(self):
+        return iter(self._registry.names())
+
+    def __len__(self):
+        return len(self._registry.names())
+
+    def __contains__(self, name):
+        return name in self._registry
+
 
 class InputSection(ConfigurationSection):
     """Input parameters sections have nothing special yet."""
@@ -248,10 +272,8 @@ class InputParameters(ConfigurationFile):
 
     @cached_class_property
     def definitions(cls):
-        return {
-            name: cls.input_parameters_registry[name]
-            for name in cls.input_parameters_registry.names()
-        }
+        """Legacy definition mapping; lookup does not load unrelated schemas."""
+        return _LazyInputParametersDefinitions(cls.input_parameters_registry)
 
     @classmethod
     def is_task_name(cls, name):
