@@ -113,6 +113,11 @@ def _spc_arrays(spc):
     """Use the SPC parser's named fields, shapes and native column contract."""
     mode = spc.MODE()
     columns = spc.spc_columns()
+    raw = np.asarray(spc.RAW_DATA())
+    if raw.ndim != 2 or raw.shape[1] != len(columns):
+        raise ValueError(
+            f"ARPES SPC {mode} records must have {len(columns)} columns"
+        )
     fields = {
         "data": "TOTAL", "spin_up": "UP", "spin_down": "DOWN",
         "spin_polarization": "POLARIZATION", "determinant": "DETERMINANT",
@@ -139,7 +144,6 @@ def _spc_arrays(spc):
             raise ValueError("ARPES SPC NP disagrees with decoded azimuth grid")
         if len(shape) not in (2, 3):
             raise ValueError("Unexpected ARPES SPC energy-grid dimensions")
-    raw = np.asarray(spc.RAW_DATA())
     if raw.shape != (arrays["data"].size, len(columns)):
         raise ValueError(
             f"ARPES SPC raw data must have {len(columns)} columns "
