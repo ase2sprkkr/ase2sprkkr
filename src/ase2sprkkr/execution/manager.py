@@ -139,11 +139,14 @@ class RunRecord:
     input_definition: Optional[str] = None
     failure_phase: Optional[FailurePhase] = None
     schema_version: int = _RUN_RECORD_SCHEMA_VERSION
+    project_id: Optional[str] = None
 
     def __post_init__(self):
         object.__setattr__(self, "task", str(self.task).upper())
         if self.dataset is not None:
             object.__setattr__(self, "dataset", str(self.dataset))
+        if self.project_id is not None:
+            object.__setattr__(self, "project_id", str(self.project_id))
         if self.input_definition is not None:
             object.__setattr__(self, "input_definition", str(self.input_definition).upper())
         if isinstance(self.execution, dict):
@@ -440,6 +443,7 @@ class ExecutionManager:
     def new_record(
         self, *, task, directory, dataset=None, endpoint=None,
         remote_directory=None, files=None, input_definition=None, run_id=None,
+        project_id=None,
     ):
         now = _now()
         local = os.path.abspath(os.fspath(directory))
@@ -449,6 +453,7 @@ class ExecutionManager:
             execution=Execution(endpoint or ExecutorEndpoint(), WorkingDirectory(local, remote_directory)),
             files=files if files is not None else FileManifest(),
             input_definition=input_definition,
+            project_id=project_id,
         )
 
     @staticmethod

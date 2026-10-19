@@ -1,4 +1,4 @@
-"""ExecutionManager scoped to a project and its project-owned run store."""
+"""Project-bound facade over the shared global run store."""
 
 from __future__ import annotations
 
@@ -9,9 +9,9 @@ from .projects import Project, ProjectRepository
 class ExecutionManager(_ExecutionManager):
     """Track a run only when it belongs to an existing project.
 
-    Runs are stored under projects_runs/<project-id>/; projects do not maintain
-    duplicate run-reference lists.  A manager without a bound project can
-    resolve projects but cannot create tracked runs.
+    All projects share the projects_runs/ RunStore. Each RunRecord contains
+    project_id, so reservations are atomic across project boundaries.
+    A manager without a bound project cannot create tracked runs.
     """
 
     def __init__(
@@ -26,7 +26,7 @@ class ExecutionManager(_ExecutionManager):
             self._project_id = current.id
             if store is None:
                 root = self.projects.directory.parent / "projects_runs"
-                store = RunStore(root / current.id)
+                store = RunStore(root)
         super().__init__(
             store, executor_pool=executor_pool,
             submitting_grace=submitting_grace,
@@ -35,6 +35,11 @@ class ExecutionManager(_ExecutionManager):
     @property
     def project_id(self):
         return self._project_id
+
+    def new_record(self, **kwargs):
+        if self._project_id is None:
+            raise ValueError("Tracked runs require a project")
+        return super().new_record(project_id=self._project_id, **kwargs)
 
     def for_project(self, project):
         identity = project.id if isinstance(project, Project) else str(project)
