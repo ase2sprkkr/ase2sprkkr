@@ -322,7 +322,8 @@ class ExecutionManager:
 
     def register_executor(self, executor: Executor, endpoint=None):
         endpoint = endpoint or endpoint_for_executor(executor)
-        return self.executor_pool.get(endpoint, lambda: executor)
+        self.executor_pool.get(endpoint, lambda: executor)
+        return endpoint
 
     def executor_for(self, record):
         return self.executor_pool.for_endpoint(record.execution.endpoint)
