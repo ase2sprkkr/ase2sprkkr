@@ -35,6 +35,11 @@ class PostprocessingRunner:
         self._thread = None
 
     @property
+    def spec(self):
+        """Expose the immutable launch specification before submission."""
+        return self._runner.spec
+
+    @property
     def executor(self):
         """Expose the raw executor without leaking task processing into it."""
         return self._runner.executor
