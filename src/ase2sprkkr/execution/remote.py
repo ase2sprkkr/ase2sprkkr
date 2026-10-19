@@ -32,6 +32,20 @@ class FileSyncPolicy(str, Enum):
     MISSING = "missing"
     NEVER = "never"
 
+    def should_transfer(self, source_digest, destination_digest):
+        """Apply the direction-independent transfer rule to file digests.
+
+        The caller handles missing mandatory files separately; a missing
+        source is never transferable, including with ALWAYS.
+        """
+        if self == FileSyncPolicy.NEVER or source_digest is None:
+            return False
+        if self == FileSyncPolicy.ALWAYS:
+            return True
+        if self == FileSyncPolicy.MISSING:
+            return destination_digest is None
+        return source_digest != destination_digest
+
 
 def _run_sync(coro):
     """Run one transport coroutine from the synchronous executor facade."""
@@ -270,32 +284,15 @@ class RemoteRunner:
 
         local_digest = file_digest(source, missing_ok=True)
         remote_digest = await self.executor.transport.file_digest(target)
-        transfer = False
-
-        if policy == FileSyncPolicy.ALWAYS:
-            if local_digest is None:
-                if required:
-                    raise FileNotFoundError(f"Local input file does not exist: {source}")
-            else:
-                transfer = True
-        elif policy == FileSyncPolicy.MISSING:
+        if required and local_digest is None:
+            if policy == FileSyncPolicy.ALWAYS:
+                raise FileNotFoundError(f"Local input file does not exist: {source}")
             if remote_digest is None:
-                if local_digest is None:
-                    if required:
-                        raise FileNotFoundError(
-                            f"Input file exists neither locally nor remotely: {source}"
-                        )
-                else:
-                    transfer = True
-        elif local_digest is None:
-            if remote_digest is None and required:
                 raise FileNotFoundError(
                     f"Input file exists neither locally nor remotely: {source}"
                 )
-        elif local_digest != remote_digest:
-            transfer = True
 
-        if transfer:
+        if policy.should_transfer(local_digest, remote_digest):
             if uploads is None:
                 await self.executor.transport.put_file(source, target)
             else:
@@ -490,14 +487,8 @@ class RemoteRunner:
                     f"Declared remote output file was not created: {remote}"
                 )
             return False
-        if policy == FileSyncPolicy.ALWAYS:
-            await self.executor.transport.get_file(remote, local)
-            return True
         local_digest = file_digest(local, missing_ok=True)
-        if policy == FileSyncPolicy.MISSING:
-            if local_digest is None:
-                await self.executor.transport.get_file(remote, local)
-        elif local_digest != remote_digest:
+        if policy.should_transfer(remote_digest, local_digest):
             await self.executor.transport.get_file(remote, local)
         return True
 
