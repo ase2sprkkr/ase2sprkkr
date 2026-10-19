@@ -131,3 +131,4 @@ def test_band_four_columns_and_complex_components():
     np.testing.assert_allclose(f.E_EIG(), [-1.])
     np.testing.assert_allclose(f.T_EIG_REAL(), [.25])
     np.testing.assert_allclose(f.T_EIG_IMAG(), [-.125])
+    np.testing.assert_allclose(f.T_EIG(), [.25 - .125j])

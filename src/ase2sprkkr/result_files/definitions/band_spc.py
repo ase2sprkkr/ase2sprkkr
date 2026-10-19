@@ -22,6 +22,10 @@ from ...gui.plot import single_plot
 class BandSPCResultFile(CommonResultFile):
     """Native BAND roots, exposed as a single energy-versus-wavevector plot."""
 
+    def T_EIG(self):
+        """Complex transmission eigenvalues written as two real columns."""
+        return self.T_EIG_REAL() + 1j * self.T_EIG_IMAG()
+
     def plot(
         self,
         *,
