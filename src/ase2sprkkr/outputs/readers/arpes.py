@@ -17,10 +17,6 @@ class ArpesResult(TaskResult):
         """Native SPC outputs, declared by the task or discovered alongside stdout."""
         parameters = self.input_parameters
         if parameters is not None:
-            # TYP=0 writes its I(E) data only to NOUT1. Native SPR-KKR
-            # still opens a header-only SPC file, which is not a spectrum.
-            if parameters.task_name == "SPLEED" and parameters.SPEC_EL.TYP() == 0:
-                return ()
             return tuple(
                 os.fspath(path) for path in parameters.output_files(self.directory)
                 if os.fspath(path).endswith(".spc")
@@ -37,13 +33,6 @@ class ArpesResult(TaskResult):
             for suffix in ("_data.spc", "_data_pol1.spc", "_data_pol2.spc")
         )
         found = tuple(path for path in candidates if os.path.isfile(path))
-        # Without an input file the native TYP=0 flag is unknown, but
-        # its two-column data can be identified in SPEC.out. Native still
-        # opens an SPC header in this mode; it is not a usable spectrum.
-        if (self._task_name == "spleed" and found and
-                os.path.isfile(os.fspath(self.output_file))):
-            if self.spleed_intensity is not None:
-                return ()
         return found
 
     @cached_property
@@ -81,8 +70,6 @@ class ArpesResult(TaskResult):
     @property
     def output_values(self):
         self._register_spc_files()
-        if self.task_name == "spleed":
-            self.spleed_intensity
         return super().output_values
 
     def _register_spc_files(self):

@@ -51,7 +51,10 @@ stookes-vector    of the photonfield  0.10000E+01  100.000%    0.000%    0.000%
         result.basis_vectors["reciprocal"],
         [[1.35711, 0.78353], [0.0, 1.56706]],
     )
-    # Unstructured diagnostic rows inside the text log are not a native SPC ResultFile.
+    np.testing.assert_allclose(result.spectral_data, [
+        [1.8937, -9.6825e-02, 6.1567e-08, -3.9380e-04, 3.0771e-08, 3.0795e-08],
+        [1.9000, -9.6825e-02, 5.7837e-08, -4.2368e-04, 2.8906e-08, 2.8931e-08],
+    ])
 
 
 def test_arpes_result_uses_native_spec_file_manifest(tmp_path):

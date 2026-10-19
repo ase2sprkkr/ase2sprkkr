@@ -13,6 +13,26 @@ from .default import DefaultOutputParser
 from ...common.decorators import cached_property
 
 
+class SpleedIntensity:
+    """Numerical I(E) data embedded in a SPLEED calculation's SPEC.out log.
+
+    This is not a separate file. It preserves the familiar callable column
+    accessors without routing embedded output through ResultFile.
+    """
+
+    def __init__(self, rows):
+        self._data = np.asarray(rows, dtype=float)
+
+    def RAW_DATA(self):
+        return self._data
+
+    def ENERGY(self):
+        return self._data[:, 0]
+
+    def INTENSITY(self):
+        return self._data[:, 1]
+
+
 class SpecResult(ArpesResult):
     """
     Class representing the results of a spectral function calculation.
@@ -40,30 +60,38 @@ class SpecResult(ArpesResult):
             self._parse_lattice_info()
         return self._basis_vectors
 
-    @cached_property
+    @property
     def spleed_intensity(self):
-        """Two-column SPLEED I(E) data, parsed as a ResultFile from SPEC.out."""
-        if (self.task_name != "spleed" or self.output_file is None
-                or not os.path.isfile(self.path_to("output"))):
-            return None
-        from ...result_files import ResultFile
-        from ...result_files.definitions.spleed_intensity import SpleedIntensityNotFound
+        """Current two-column SPLEED diagram from the main text output, if any.
 
-        try:
-            result = ResultFile.from_file(
-                self.path_to("output"), try_only="spleed_intensity"
-            )
-        except SpleedIntensityNotFound:
-            return None
-        self.files.add_file("SPLEED_INTENSITY", self.path_to("output"), "spleed_intensity")
-        return result
-
-    @cached_property
-    def spectral_data(self) -> np.ndarray:
-        """Convenience view of a unique spectrum; no independent parser.
-
-        When multiple SPC files are present, choose a spectrum explicitly.
+        Do not cache: callers may inspect a result while SPEC.out is growing.
         """
+        if self.task_name != "spleed" or self.output_file is None:
+            return None
+        filename = self.path_to("output")
+        if not os.path.isfile(filename):
+            return None
+        with open(filename, encoding="utf-8", errors="replace") as stream:
+            return SpecOutputParser.parse_spleed_intensity(stream)
+
+    @property
+    def spc_filenames(self):
+        """SPLEED's header-only SPC is not a separate spectrum."""
+        if self.task_name == "spleed":
+            parameters = self.input_parameters
+            if parameters is not None and str(parameters.SPEC_EL.TYP()) == "0":
+                return ()
+            if self.spleed_intensity is not None:
+                return ()
+        return super().spc_filenames
+
+    @property
+    def spectral_data(self) -> np.ndarray:
+        """Convenience array from the unique spectrum or legacy text log."""
+        if self.output_file is None:
+            return SpecOutputParser.parse_inline_spectral_data(
+                self._get_file_content()
+            )
         if self.task_name == "spleed":
             spectrum = self.spleed_intensity
             if spectrum is not None:
@@ -71,7 +99,13 @@ class SpecResult(ArpesResult):
         spectra = self.spectra
         if len(spectra) > 1:
             raise ValueError("Multiple spectral files; select one from result.spectra")
-        return spectra[0].RAW_DATA() if spectra else np.array([])
+        if spectra:
+            return spectra[0].RAW_DATA()
+        if os.path.isfile(self.path_to("output")):
+            return SpecOutputParser.parse_inline_spectral_data(
+                self._get_file_content()
+            )
+        return np.array([])
 
     def _parse_potential_barrier(self) -> None:
         """Parse the potential barrier section of the output."""
@@ -130,7 +164,72 @@ class SpecResult(ArpesResult):
 
 
 class SpecOutputParser(DefaultOutputParser):
-    """Reader for spec.out files."""
+    """Reader for the main text output produced by KKRSPEC."""
+
+    _DIAGRAM = re.compile(
+        r"^\s*(?:i\s*\(e\)\s*-?diagram|rotation diagram|"
+        r"scattering-angle diagram,?)\s*$",
+        re.IGNORECASE,
+    )
+    _D_NUMBER = re.compile(r"\s*[+-]?\d\.\d{5}[dD][+-]\d{2}\s*\Z")
+
+    @classmethod
+    def parse_spleed_intensity(cls, lines):
+        """Extract the first SPLOUT D12.5,2X,D12.5 table from SPEC.out.
+
+        The diagram is part of NOUT1, not another result file. Stop at the
+        first non-record after data begins; do not collect later diagnostics.
+        Return None when only a seven-column diagram or no table is present.
+        """
+        in_diagram = False
+        rows = []
+        for line in lines:
+            if cls._DIAGRAM.fullmatch(line.strip()):
+                if rows:
+                    break
+                in_diagram = True
+                continue
+            if not in_diagram:
+                continue
+            record = line.rstrip("\r\n")
+            if len(record) == 26 and record[12:14] == "  ":
+                first, second = record[:12], record[14:]
+                if cls._D_NUMBER.fullmatch(first) and cls._D_NUMBER.fullmatch(second):
+                    rows.append((
+                        float(first.replace("D", "E").replace("d", "e")),
+                        float(second.replace("D", "E").replace("d", "e")),
+                    ))
+                    continue
+            if record.strip():
+                # Blank lines follow SPLOUT's diagram header; a different
+                # nonempty line marks the end of the current diagram.
+                in_diagram = False
+                if rows:
+                    break
+        return SpleedIntensity(rows) if rows else None
+
+    @staticmethod
+    def parse_inline_spectral_data(content):
+        """Read legacy photoemission diagnostic rows from a text-only log."""
+        marker = re.search(r"stookes-vector\s+of the photonfield", content)
+        if marker is None:
+            return np.array([])
+        rows = []
+        for line in content[marker.end():].splitlines():
+            try:
+                values = [
+                    float(item.replace("D", "E").replace("d", "e"))
+                    for item in line.split()
+                ]
+            except ValueError:
+                if rows and line.strip():
+                    break
+                continue
+            if values:
+                if rows and len(values) != len(rows[0]):
+                    break
+                rows.append(values)
+        return np.asarray(rows) if rows else np.array([])
 
     async def read_output(self, stdout, result):
         """Read and parse the output from the spec.out file."""
