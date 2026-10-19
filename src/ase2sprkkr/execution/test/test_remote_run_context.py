@@ -73,3 +73,20 @@ def test_manifest_sync_groups_declarations_without_replaying_pattern_children():
         "cache_patterns": ["/remote/restart-*.pot"],
         "cache_before": [{"path": "/remote/remote-only.dat", "signature": (5, 7)}],
     }
+
+
+def test_context_uses_endpoint_directly_for_backend_requests():
+    from ase2sprkkr.execution.remote_endpoint import _RemoteRunContext
+    from ase2sprkkr.execution import LaunchSpec
+
+    class Endpoint:
+        async def _status(self, directory, backend_id, files=None):
+            return {"state": "running", "remote_id": backend_id}
+
+    endpoint = Endpoint()
+    context = _RemoteRunContext(endpoint, LaunchSpec())
+    assert context.endpoint is endpoint
+    assert not hasattr(context, "_status")
+    assert not hasattr(context, "_submit")
+    assert not hasattr(context, "_cancel")
+    assert not hasattr(context, "_follow")
