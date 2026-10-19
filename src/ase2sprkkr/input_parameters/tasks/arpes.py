@@ -7,7 +7,7 @@ def task_definition():
         "ARPES",
         name="ARPES",
         executable="kkrspec",
-        mpi=False, mpi=False,
+        mpi=False,
         input_file_templates=SPEC_INPUT_FILES,
         output_file_templates=SPEC_OUTPUT_FILES,
         output_reader="ARPES",
