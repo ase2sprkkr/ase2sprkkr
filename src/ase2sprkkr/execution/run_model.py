@@ -192,6 +192,19 @@ class FileManifest:
         failures = self.failed_artifacts
         return None if not failures else failures[0].availability_message
 
+    def with_remote_stream_paths(self, *, stdout=None, stderr=None):
+        """Update recovered stream locations without changing artifact identity.
+
+        Missing or empty recovered paths do not replace persisted locations.
+        A stream that was not recorded remains absent.
+        """
+        changes = {}
+        for name, remote in (("stdout", stdout), ("stderr", stderr)):
+            current = getattr(self, name)
+            if remote and current is not None:
+                changes[name] = replace(current, remote_path=remote)
+        return replace(self, **changes) if changes else self
+
     def initialize_availability(self):
         """Mark declared downloadable files pending without marking inputs."""
         return self._map_artifacts(
