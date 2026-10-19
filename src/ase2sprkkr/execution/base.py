@@ -56,6 +56,25 @@ def dispatch_cancellation(action):
     return future
 
 
+def start_monitor(runner, *, missing_backend=None):
+    """Start a runner's monitor thread only once, holding its lifecycle lock."""
+    with runner._lock:
+        if runner._thread is not None:
+            return
+        if missing_backend is not None and runner._backend_id is None:
+            raise RuntimeError(missing_backend)
+        runner._thread = Thread(target=runner._thread_main, daemon=True)
+        runner._thread.start()
+
+
+def request_cancellation(runner, action):
+    """Dispatch one cancellation per runner and return the same Future on retries."""
+    with runner._lock:
+        if runner._cancel_future is None:
+            runner._cancel_future = dispatch_cancellation(action)
+        return runner._cancel_future
+
+
 def finish_monitor(runner):
     """Deliver the callback and unblock waiters after backend-specific cleanup."""
     try:

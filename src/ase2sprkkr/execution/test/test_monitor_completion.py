@@ -1,11 +1,13 @@
 """Shared monitor completion mechanics, independently of backend state machines."""
 
-from threading import Event
+from threading import Event, Lock
 from types import SimpleNamespace
 
 import pytest
 
-from ase2sprkkr.execution.base import finish_monitor, wait_for_monitor
+from ase2sprkkr.execution.base import (
+    finish_monitor, start_monitor, wait_for_monitor,
+)
 
 
 def _runner(callback=None, error=None):
@@ -52,3 +54,39 @@ def test_execution_error_has_priority_over_callback_error():
         wait_for_monitor(runner)
     assert error.value is original_error
     assert isinstance(runner._callback_exception, ValueError)
+
+
+def test_start_monitor_is_idempotent():
+    entered, release = Event(), Event()
+    calls = []
+
+    def monitor():
+        calls.append(1)
+        entered.set()
+        assert release.wait(2)
+
+    runner = SimpleNamespace(
+        _lock=Lock(), _thread=None, _backend_id="job-1", _thread_main=monitor,
+    )
+    try:
+        start_monitor(runner, missing_backend="No job ID")
+        assert entered.wait(2)
+        first_thread = runner._thread
+        start_monitor(runner, missing_backend="No job ID")
+        assert runner._thread is first_thread
+    finally:
+        release.set()
+        if runner._thread is not None:
+            runner._thread.join(timeout=2)
+
+    assert calls == [1]
+    assert not runner._thread.is_alive()
+
+
+def test_start_monitor_validates_backend_only_for_new_thread():
+    runner = SimpleNamespace(
+        _lock=Lock(), _thread=None, _backend_id=None, _thread_main=lambda: None,
+    )
+    with pytest.raises(RuntimeError, match="No backend identity"):
+        start_monitor(runner, missing_backend="No backend identity")
+    assert runner._thread is None

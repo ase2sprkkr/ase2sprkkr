@@ -8,11 +8,11 @@ from __future__ import annotations
 import asyncio
 import os
 from dataclasses import asdict, replace
-from threading import Event, Lock, Thread
+from threading import Event, Lock
 
 from .base import (
     ExecutionOutcome, ExecutionSpec, FailurePhase, OutputObservers,
-    RunState, RunStatus, dispatch_cancellation,
+    RunState, RunStatus, request_cancellation, start_monitor,
     finish_monitor, wait_for_monitor, file_path,
 )
 from .file_availability import discover_local_files
@@ -223,13 +223,7 @@ class LocalProjectRunner:
                 finish_monitor(self)
 
     def _start_monitor(self):
-        with self._lock:
-            if self._thread is not None:
-                return
-            if self._backend_id is None:
-                raise RuntimeError("Local run has no backend identity")
-            self._thread = Thread(target=self._thread_main, daemon=True)
-            self._thread.start()
+        start_monitor(self, missing_backend="Local run has no backend identity")
 
     def _request(self):
         return {
@@ -299,12 +293,7 @@ class LocalProjectRunner:
     def cancel(self):
         if self._backend_id is None:
             raise RuntimeError("Run has not been submitted")
-        with self._lock:
-            if self._cancel_future is None:
-                self._cancel_future = dispatch_cancellation(
-                    lambda: cancel_remote(self._backend_id)
-                )
-            return self._cancel_future
+        return request_cancellation(self, lambda: cancel_remote(self._backend_id))
 
 
 def attach_local(executor, run, *, callback=None, output_listener=None, start=True):

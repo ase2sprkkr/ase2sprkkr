@@ -10,7 +10,7 @@ import time
 from datetime import datetime, timedelta
 from dataclasses import replace
 from pathlib import Path
-from threading import Event, Lock, Thread
+from threading import Event, Lock
 
 from .file_availability import discover_local_files, clear_declared_outputs
 from .growing_file_tail import follow_growing_files
@@ -26,7 +26,8 @@ from .base import (
     RunState,
     RunStatus,
     SubmissionNotStarted,
-    dispatch_cancellation,
+    request_cancellation,
+    start_monitor,
 )
 
 
@@ -464,11 +465,7 @@ class PsijRunner:
             finish_monitor(self)
 
     def _start_monitor(self):
-        with self._lock:
-            if self._thread is not None:
-                return
-            self._thread = Thread(target=self._thread_main, daemon=True)
-            self._thread.start()
+        start_monitor(self)
 
     def start(self):
         if self._attached:
@@ -510,10 +507,7 @@ class PsijRunner:
     def cancel(self):
         if self._thread is None and not self._attached:
             raise RuntimeError("Run has not been submitted")
-        with self._lock:
-            if self._cancel_future is None:
-                self._cancel_future = dispatch_cancellation(self._job.cancel)
-            return self._cancel_future
+        return request_cancellation(self, self._job.cancel)
 
 
 class PsijExecutor(Executor):
