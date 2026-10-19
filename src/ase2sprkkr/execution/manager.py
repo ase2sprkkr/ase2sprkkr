@@ -25,6 +25,7 @@ from .base import (
     Executor,
     FailurePhase,
     file_path,
+    manifest_for_spec,
     RunState,
     RunStatus,
     SubmissionNotStarted,
@@ -358,22 +359,7 @@ class ExecutionManager:
 
     @staticmethod
     def _result_files_for_spec(spec):
-        directory = os.path.abspath(os.fspath(spec.directory))
-        def absolute(value):
-            return file_path(value, directory)
-        primary_input = absolute(getattr(spec, "input_file", None))
-        primary_output = absolute(getattr(spec, "output_file", None))
-        error = absolute(getattr(spec, "error_file", None))
-        inputs = _unique((primary_input, *(absolute(x) for x in getattr(spec, "input_files", ()))))
-        outputs = _unique((primary_output, *(absolute(x) for x in getattr(spec, "output_files", ()))))
-        caches = _unique(absolute(x) for x in getattr(spec, "cache_files", ()))
-        return FileManifest(
-            inputs=tuple(FileEntry(local_path=x) for x in inputs if x is not None),
-            outputs=tuple(FileEntry(local_path=x) for x in outputs if x is not None and x != primary_output),
-            caches=tuple(CacheEntry(FileEntry(local_path=x)) for x in caches if x is not None),
-            stdout=None if primary_output is None else FileEntry(local_path=primary_output),
-            stderr=None if error is None else FileEntry(local_path=error),
-        ).initialize_availability()
+        return manifest_for_spec(spec)
 
     @staticmethod
     def _concrete_result_files(manifests):

@@ -202,3 +202,37 @@ def test_project_manifest_reuses_optional_file_path_semantics(tmp_path):
         str(tmp_path / "result.dat")
     ]
     assert manifest.caches[0].file.local_path == str(tmp_path / "cache.dat")
+
+
+def test_manifest_factory_keeps_streams_distinct_from_declared_outputs(tmp_path):
+    from types import SimpleNamespace
+    from ase2sprkkr.execution.base import manifest_for_spec
+    from ase2sprkkr.execution.manager import ExecutionManager
+
+    spec = SimpleNamespace(
+        directory=str(tmp_path),
+        input_file="input.inp",
+        input_files=("input.inp", "other.inp", "other.inp"),
+        output_file="stdout.out",
+        error_file="stderr.err",
+        output_files=("stdout.out", "stderr.err", "result.dat", "result.dat"),
+        cache_files=("restart.pot", "restart.pot"),
+    )
+    manifest = manifest_for_spec(spec)
+    assert manifest == ExecutionManager._result_files_for_spec(spec)
+    assert manifest.input_files == (
+        str(tmp_path / "input.inp"), str(tmp_path / "other.inp"),
+    )
+    assert manifest.stdout.local_path == str(tmp_path / "stdout.out")
+    assert manifest.stderr.local_path == str(tmp_path / "stderr.err")
+    assert [item.local_path for item in manifest.outputs] == [
+        str(tmp_path / "result.dat"),
+    ]
+    assert [item.file.local_path for item in manifest.caches] == [
+        str(tmp_path / "restart.pot"),
+    ]
+    assert manifest.output_files == (
+        str(tmp_path / "stdout.out"),
+        str(tmp_path / "stderr.err"),
+        str(tmp_path / "result.dat"),
+    )

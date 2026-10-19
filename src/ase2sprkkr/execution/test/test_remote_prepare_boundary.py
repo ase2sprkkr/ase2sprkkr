@@ -119,3 +119,77 @@ def test_remote_manifest_deduplicates_cache_declarations(tmp_path):
     assert len(manifest.caches) == 1
     assert manifest.caches[0].file.local_path == str(cache)
     assert manifest.caches[0].file.remote_path == str(remote / "local" / "restart.dat")
+
+
+def test_remote_manifest_preserves_local_declarations_and_adds_mapping(tmp_path):
+    import asyncio
+
+    directory = tmp_path / "local" / "calculation"
+    directory.mkdir(parents=True)
+    remote_root = tmp_path / "remote"
+    inp = directory / "calc.inp"
+    out = directory / "run.out"
+    err = directory / "run.err"
+    cache = directory / "restart.pot"
+    other = directory / "dos.dat"
+    spec = ExecutionSpec(
+        argv=("ignored",), directory=str(directory),
+        input_file=str(inp), input_files=(str(inp),),
+        output_file=str(out), error_file=str(err),
+        output_files=(str(out), str(err), str(other), str(other)),
+        cache_files=(str(cache), str(cache)),
+        launch=LaunchSpec(local_root=str(tmp_path / "local"),
+                          remote_root=str(remote_root)),
+    )
+    executor = RemoteEndpointExecutor(LocalTransport())
+    runner = executor.create_run(spec)
+    local = ExecutionManager._result_files_for_spec(spec)
+    manifest = asyncio.run(runner._submitted_manifest({
+        "client_sync": {
+            "output_file": str(remote_root / "calculation" / "run.out"),
+            "error_file": str(remote_root / "calculation" / "run.err"),
+        }
+    }))
+
+    assert [x.local_path for x in manifest.inputs] == [
+        x.local_path for x in local.inputs
+    ]
+    assert [x.local_path for x in manifest.outputs] == [
+        x.local_path for x in local.outputs
+    ]
+    assert [x.file.local_path for x in manifest.caches] == [
+        x.file.local_path for x in local.caches
+    ]
+    assert manifest.outputs[0].remote_path == str(remote_root / "calculation" / "dos.dat")
+    assert manifest.caches[0].file.remote_path == str(
+        remote_root / "calculation" / "restart.pot"
+    )
+    assert manifest.stdout.remote_path == str(remote_root / "calculation" / "run.out")
+    assert manifest.stderr.remote_path == str(remote_root / "calculation" / "run.err")
+
+
+def test_remote_manifest_maps_multiple_entries_without_async_generator(tmp_path):
+    import asyncio
+
+    root = tmp_path / "local"
+    work = root / "calc"
+    work.mkdir(parents=True)
+    spec = ExecutionSpec(
+        argv=("ignored",), directory=str(work),
+        input_file=str(work / "main.inp"),
+        input_files=(str(work / "more.inp"),),
+        output_file=str(work / "std.out"),
+        output_files=(str(work / "one.dat"), str(work / "two.dat")),
+        launch=LaunchSpec(local_root=str(root), remote_root=str(tmp_path / "remote")),
+    )
+    executor = RemoteEndpointExecutor(LocalTransport())
+    result = asyncio.run(executor.create_run(spec)._submitted_manifest({}))
+
+    assert [e.remote_path for e in result.inputs] == [
+        str(tmp_path / "remote" / "calc" / "main.inp"),
+        str(tmp_path / "remote" / "calc" / "more.inp"),
+    ]
+    assert [e.remote_path for e in result.outputs] == [
+        str(tmp_path / "remote" / "calc" / "one.dat"),
+        str(tmp_path / "remote" / "calc" / "two.dat"),
+    ]

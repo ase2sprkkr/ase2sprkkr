@@ -12,7 +12,7 @@ from threading import Event, Lock, Thread
 from typing import Any, Optional, Protocol, Sequence, Tuple
 
 from ..common.decorators import class_property
-from .run_model import Execution, FileManifest
+from .run_model import Execution, FileManifest, FileEntry, CacheEntry
 
 
 def file_path(value, directory=None, *, flush=False, required=False):
@@ -35,6 +35,37 @@ def file_path(value, directory=None, *, flush=False, required=False):
     if directory is not None and not os.path.isabs(path):
         path = os.path.join(directory, path)
     return os.path.abspath(path)
+
+
+
+def manifest_for_spec(spec):
+    """Build the backend-independent, local portion of a file manifest."""
+    directory = os.path.abspath(os.fspath(spec.directory))
+
+    def paths(*values):
+        return tuple(dict.fromkeys(
+            path for value in values
+            if (path := file_path(value, directory)) is not None
+        ))
+
+    input_paths = paths(
+        getattr(spec, "input_file", None), *getattr(spec, "input_files", ())
+    )
+    output = file_path(getattr(spec, "output_file", None), directory)
+    error = file_path(getattr(spec, "error_file", None), directory)
+    output_paths = paths(*getattr(spec, "output_files", ()))
+    cache_paths = paths(*getattr(spec, "cache_files", ()))
+    streams = {output, error}
+    return FileManifest(
+        inputs=tuple(FileEntry(local_path=path) for path in input_paths),
+        outputs=tuple(
+            FileEntry(local_path=path) for path in output_paths
+            if path not in streams
+        ),
+        caches=tuple(CacheEntry(FileEntry(local_path=path)) for path in cache_paths),
+        stdout=None if output is None else FileEntry(local_path=output),
+        stderr=None if error is None else FileEntry(local_path=error),
+    ).initialize_availability()
 
 
 def dispatch_cancellation(action):

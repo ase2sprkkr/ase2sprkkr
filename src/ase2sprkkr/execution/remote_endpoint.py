@@ -14,6 +14,7 @@ from uuid import uuid4
 from .base import (
     ExecutionSpec,
     file_path,
+    manifest_for_spec,
     Executor,
     FailurePhase,
     LaunchSpec,
@@ -102,38 +103,27 @@ class _RemoteRun(RemoteRunner):
         return result
 
     async def _submitted_manifest(self, request):
-        directory = os.path.abspath(os.fspath(self.spec.directory))
-        def local(value):
-            return file_path(value, directory)
-        # The primary input is normally also declared among input_files.
-        input_paths = dict.fromkeys(
-            path for item in (self.spec.input_file, *self.spec.input_files)
-            if (path := local(item)) is not None
-        )
-        output_paths = dict.fromkeys(
-            path for item in self.spec.output_files
-            if (path := local(item)) is not None
-            and path not in (self.result.output_file, self.result.error_file)
-        )
-        inputs = [
-            FileEntry(path, await self.executor.map_path(path))
-            for path in input_paths
-        ]
-        outputs = [
-            FileEntry(path, await self.executor.map_path(path))
-            for path in output_paths
-        ]
+        local = manifest_for_spec(self.spec)
+        inputs = []
+        for entry in local.inputs:
+            remote = await self.executor.map_path(entry.local_path)
+            inputs.append(replace(entry, remote_path=remote))
+        outputs = []
+        for entry in local.outputs:
+            remote = await self.executor.map_path(entry.local_path)
+            outputs.append(replace(entry, remote_path=remote))
         caches = []
-        cache_paths = dict.fromkeys(
-            path for item in self.spec.cache_files
-            if (path := local(item)) is not None
-        )
-        for path in cache_paths:
+        for item in local.caches:
+            path = item.file.local_path
             remote = await self.executor.map_path(path)
             previous = self._cache_targets.get(path)
-            caches.append(CacheEntry(FileEntry(path, remote), None if previous is None else previous[1]))
+            caches.append(CacheEntry(
+                replace(item.file, remote_path=remote),
+                None if previous is None else previous[1],
+            ))
         for remote, before in self._cache_before.items():
             caches.append(CacheEntry(FileEntry(remote_path=remote), before))
+
         sync = request.get("client_sync") or {}
         mapping = FileMapping(
             local_root=os.fspath(self.executor.local_root),
@@ -141,12 +131,19 @@ class _RemoteRun(RemoteRunner):
             input_sync=self.executor.input_files.value,
             output_sync=self.executor.output_files.value,
         )
-        return FileManifest(
-            inputs=tuple(inputs), outputs=tuple(outputs), caches=tuple(caches),
-            stdout=None if self.result.output_file is None else FileEntry(self.result.output_file, sync.get("output_file")),
-            stderr=None if self.result.error_file is None else FileEntry(self.result.error_file, sync.get("error_file")),
+        return replace(
+            local,
+            inputs=tuple(inputs),
+            outputs=tuple(outputs),
+            caches=tuple(caches),
+            stdout=None if local.stdout is None else replace(
+                local.stdout, remote_path=sync.get("output_file"),
+            ),
+            stderr=None if local.stderr is None else replace(
+                local.stderr, remote_path=sync.get("error_file"),
+            ),
             mapping=mapping,
-        ).initialize_availability()
+        )
 
     async def _prepare_async(self):
         run_id = self._run_id or uuid4().hex
