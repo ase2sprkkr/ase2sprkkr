@@ -238,10 +238,6 @@ def test_arpes_static_azimuth_selection(tmp_path, monkeypatch):
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
     from ase2sprkkr.result_files.definitions.spc import ARPESResultFile
-    from ase2sprkkr.result_files import ResultFile
-    from ase2sprkkr.gui.plot import colormesh
-
-    source = Path(__file__).resolve().parents[1] / "examples" / "WSe2_ARPES.spc"
     # Use a minimal adapted object to exercise the NP>1 branch without
     # creating a large file or launching a GUI.
     class Value:
@@ -261,18 +257,18 @@ def test_arpes_static_azimuth_selection(tmp_path, monkeypatch):
         calls.append(kwargs)
     for val in (PlotResult.TOTAL, PlotResult.UP, PlotResult.DOWN, PlotResult.POLARIZATION):
         monkeypatch.setattr(val, "plot", lambda **kwargs: calls.append(kwargs))
-    ARPESResultFile.plot(PlotResult(), filename=tmp_path / "one.png", live=False)
+    ARPESResultFile.plot(PlotResult(), filename=tmp_path / "one.png", dpi=50, live=False)
     assert len(calls) == 4
     assert all(item["azimuth_indices"] == (0,) for item in calls)
     calls.clear()
     ARPESResultFile.plot(
-        PlotResult(), filename=tmp_path / "three.png", live=False, azimuths=3
+        PlotResult(), filename=tmp_path / "three.png", dpi=50, live=False, azimuths=3
     )
     assert len(calls) == 12
     assert [calls[i]["azimuth_indices"] for i in (0, 4, 8)] == [(0,), (2,), (4,)]
     calls.clear()
     ARPESResultFile.plot(
-        PlotResult(), filename=tmp_path / "angles.png",
+        PlotResult(), filename=tmp_path / "angles.png", dpi=50,
         live=False, azimuths=[15., 45.], phi_range=(0., 60.)
     )
     assert [calls[i]["azimuth_indices"] for i in (0, 4)] == [(1,), (3,)]
