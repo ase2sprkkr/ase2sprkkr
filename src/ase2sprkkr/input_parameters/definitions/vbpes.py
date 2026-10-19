@@ -106,5 +106,5 @@ def input_parameters_definition():
                     "This is a separate implementation from KKRSPEC ARPES. GRV stops as unimplemented. "
                     "Numerical output and FULLPOT have not been verified."
     )
-    schema._task_definition = TaskDefinition("VBPES", executable="kkrgen", mpi=False, output_file_templates=("arpes.dat", "arpes_spol.dat", "spin.matrix.xps"))
+    schema._task_definition = TaskDefinition("VBPES", executable="kkrgen", mpi=False, output_files=("arpes.dat", "arpes_spol.dat", "spin.matrix.xps"))
     return schema

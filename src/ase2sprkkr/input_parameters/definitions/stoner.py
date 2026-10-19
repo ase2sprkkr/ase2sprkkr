@@ -42,7 +42,7 @@ def input_parameters_definition():
                     "Only the fully relativistic, single-energy workflow is exposed; "
                     "numerical results and FULLPOT have not been verified."
     )
-    schema._task_definition = TaskDefinition("STONER", executable="kkrgen", mpi=False, output_file_templates=(
+    schema._task_definition = TaskDefinition("STONER", executable="kkrgen", mpi=False, output_files=(
             "{dataset}_*_g-spin.dat",
             "{dataset}_*_g-orb.dat",
             "{dataset}_*_VWN_A-xc.dat",

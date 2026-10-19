@@ -64,7 +64,7 @@ def input_parameters_definition():
                     "Window vectors are Cartesian in units ALAT, not fractional lattice coordinates. "
                     "DMFT and LDA+U are unsupported; numerical output is unverified."
     )
-    schema._task_definition = TaskDefinition("PLOT2DPR", executable="kkrgen", mpi=False, output_file_templates=(
+    schema._task_definition = TaskDefinition("PLOT2DPR", executable="kkrgen", mpi=False, output_files=(
             "PLY-V-ASA-*.ply",
             "POT-ASA-LINES.ply",
             "PLY-V-FP-*.ply",
