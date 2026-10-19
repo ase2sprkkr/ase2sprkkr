@@ -355,7 +355,7 @@ def test_psij_observation_accepts_non_utf8_output(monkeypatch, tmp_path):
     ))
     seen = []
     runner.add_output_listener(lambda text, kind: seen.append((kind, text)))
-    runner._emit_output(b"raw:\xff", "out")
+    runner._output_observers.emit_bytes(b"raw:\xff", "out")
     assert seen == [("out", "raw:\ufffd")]
     assert runner.exception is None
 
