@@ -1,6 +1,7 @@
 import asyncio
 
 from ..base import SubmissionNotStarted
+from ..remote import FileSyncPolicy
 from ..transport import LocalTransport
 from .test_remote import _processed_run, _text_run
 
@@ -132,3 +133,66 @@ def test_remote_executor_syncs_cache_wildcards_in_both_directions(tmp_path):
     assert (workdir / "cache-b.dat").read_text() == "created"
     assert (remote_root / "calculation" / "cache-a.dat").read_text() == "new"
     assert (remote_root / "calculation" / "cache-b.dat").read_text() == "created"
+
+
+def test_exact_and_wildcard_outputs_share_availability_tracking(tmp_path):
+    workdir = tmp_path / "local" / "calculation"
+    exact = workdir / "bands.dat"
+    pattern = workdir / "part-*.dat"
+    executor, spec, _, _ = _text_run(
+        tmp_path,
+        declared_output_files=(exact, pattern),
+        code=(
+            "from pathlib import Path; "
+            "Path('bands.dat').write_text('exact'); "
+            "Path('part-a.dat').write_text('a'); "
+            "Path('part-b.dat').write_text('b')"
+        ),
+    )
+    runner = _processed_run(executor, spec)
+    runner.run()
+
+    entries = {entry.local_path: entry for entry in runner.files.outputs}
+    assert exact.read_text() == "exact"
+    assert (workdir / "part-a.dat").read_text() == "a"
+    assert (workdir / "part-b.dat").read_text() == "b"
+    assert entries[str(exact)].availability_state == "available"
+    assert entries[str(pattern)].availability_state == "available"
+    for name in ("part-a.dat", "part-b.dat"):
+        entry = entries[str(workdir / name)]
+        assert entry.availability_state == "available"
+        assert entry.source_pattern == str(pattern)
+
+
+def test_exact_and_wildcard_caches_keep_individual_sync_states(tmp_path):
+    workdir = tmp_path / "local" / "calculation"
+    workdir.mkdir(parents=True)
+    exact = workdir / "restart.dat"
+    unchanged = workdir / "generated-base.dat"
+    pattern = workdir / "generated-*.dat"
+    exact.write_text("before")
+    unchanged.write_text("unchanged")
+
+    executor, spec, _, _ = _text_run(
+        tmp_path,
+        declared_cache_files=(exact, pattern),
+        output_files=FileSyncPolicy.MISSING,
+        code=(
+            "from pathlib import Path; "
+            "Path('restart.dat').write_text('after'); "
+            "Path('generated-new.dat').write_text('new')"
+        ),
+    )
+    runner = _processed_run(executor, spec)
+    runner.run()
+
+    entries = {entry.file.local_path: entry.file for entry in runner.files.caches}
+    assert exact.read_text() == "before"
+    assert unchanged.read_text() == "unchanged"
+    assert (workdir / "generated-new.dat").read_text() == "new"
+    assert entries[str(exact)].availability_state == "skipped"
+    assert entries[str(unchanged)].availability_state == "skipped"
+    assert entries[str(pattern)].availability_state == "available"
+    new_entry = entries[str(workdir / "generated-new.dat")]
+    assert new_entry.availability_state == "available"
+    assert new_entry.source_pattern == str(pattern)
