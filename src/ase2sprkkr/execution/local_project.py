@@ -245,19 +245,16 @@ class LocalProjectRunner:
             "output_file": self.result.output_file,
             "error_file": self.result.error_file,
             "output_files": [
-                _file_path(value, self.spec.directory)
-                for value in self.spec.output_files
-                if _file_path(value, self.spec.directory) is not None
+                path for value in self.spec.output_files
+                if (path := _file_path(value, self.spec.directory)) is not None
             ],
             "input_files": [
-                _file_path(value, self.spec.directory)
-                for value in self.spec.input_files
-                if _file_path(value, self.spec.directory) is not None
+                path for value in self.spec.input_files
+                if (path := _file_path(value, self.spec.directory)) is not None
             ],
             "cache_files": [
-                _file_path(value, self.spec.directory)
-                for value in self.spec.cache_files
-                if _file_path(value, self.spec.directory) is not None
+                path for value in self.spec.cache_files
+                if (path := _file_path(value, self.spec.directory)) is not None
             ],
         }
 
