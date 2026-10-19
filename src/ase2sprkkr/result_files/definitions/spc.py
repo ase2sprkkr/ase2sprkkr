@@ -16,7 +16,7 @@ from ...gui.plot import change_default_kwargs, colormesh, Multiplot
 class ARPESResultFile(CommonResultFile, Arithmetic):
     def to_nexus(self, filename, *, input_parameters=None, input_file=None,
                  metadata=None):
-        """Export calculated energy/angle ARPES data and its provenance to NeXus."""
+        """Export an ARPES spectrum together with its available input data."""
         from ..nexus import write_arpes_nexus
 
         return write_arpes_nexus(
@@ -58,6 +58,7 @@ class ARPESResultFile(CommonResultFile, Arithmetic):
     def _assert_arithmetic(self, other):
         """Check, that the file can be summed/subtracked from an other file"""
         assert self.MODE() == other.MODE()
+        assert self.RAW_DATA().shape == other.RAW_DATA().shape
         if self.MODE() == "energy":
             assert np.allclose(other.ENERGY(), self.ENERGY())
             assert np.allclose(other.THETA(), self.THETA())
@@ -95,22 +96,19 @@ def create_definition():
         kw.update(kwargs)
         colormesh(x, y, option(), **kw)
 
-    def i(j):
-        return slice(None), j
-
-    def determinant(data: np.ndarray, section: object) -> np.ndarray:
-        """Reshape determinant ``data`` using dimensions from ``section``."""
-        if section["MODE"]() == "energy":
-            return data[:, 7].reshape(section["NE"](), section["NT"]())
-        return data[:, 6].reshape(section["NP"](), section["NT"]())
-
     def ii(j):
         def fn(data: np.ndarray, section: object) -> np.ndarray:
-            """Select column ``j`` from ``data`` and shape it from ``section``."""
-            first = section["NE"]() if section["MODE"]() == "energy" else section["NP"]()
-            return data[:, j].reshape(first, section["NT"]())
-
+            if section["MODE"]() == "energy":
+                shape = (section["NE"](), section["NT"]())
+                if section["NP"]() > 1:
+                    shape = (section["NE"](), section["NP"](), section["NT"]())
+            else:
+                shape = (section["NP"](), section["NT"]())
+            return data[:, j].reshape(shape)
         return fn
+
+    def determinant(data: np.ndarray, section: object) -> np.ndarray:
+        return ii(7 if section["MODE"]() == "energy" else 6)(data, section)
 
     def mode(section: object, _key: object = None) -> str:
         """Derive the output mode from ``section``."""
@@ -128,16 +126,16 @@ def create_definition():
                 "MODE",
                 {
                     "energy": [
-                        NV("THETA", "RAW_DATA", i(0), ("NE", "NT"), info="Photoelectron polar angle in degrees"),
-                        NV("ENERGY", "RAW_DATA", i(1), ("NE", "NT"), info="Initial-state energy E - E_F (eV)"),
+                        NV("THETA", "RAW_DATA", ii(0), info="Photoelectron polar angle in degrees"),
+                        NV("ENERGY", "RAW_DATA", ii(1), info="Initial-state energy E - E_F (eV)"),
                         NV(
-                            "K", "RAW_DATA", i(6), ("NE", "NT"),
-                            info="Native parallel momentum coordinate (1/angstrom; signed angular scan or K-vector displacement)",
+                            "K", "RAW_DATA", ii(6),
+                            info="Native parallel momentum coordinate (1/angstrom)",
                         ),
                     ],
                     "kx_ky": [
-                        NV("KX", "RAW_DATA", i(0), ("NP", "NT"), info="k_x coordinate (1/Å)"),
-                        NV("KY", "RAW_DATA", i(1), ("NP", "NT"), info="k_y coordinate (1/Å)"),
+                        NV("KX", "RAW_DATA", ii(0), info="k_x coordinate (1/Å)"),
+                        NV("KY", "RAW_DATA", ii(1), info="k_y coordinate (1/Å)"),
                     ],
                 },
             ),
