@@ -328,3 +328,18 @@ def test_local_project_request_uses_common_command_fields(tmp_path):
     request = LocalExecutor().create_project_run(spec, run_id=RUN_ID)._request()
     for key, value in spec.command_request().items():
         assert request[key] == value
+
+
+def test_project_request_ignores_unnamed_optional_declarations(tmp_path):
+    from dataclasses import replace
+
+    spec = replace(
+        _spec(tmp_path),
+        output_files=(None, "a.dat", object()),
+        input_files=(None, "b.inp", 1),
+        cache_files=(None, "restart.pot", object()),
+    )
+    request = LocalExecutor().create_project_run(spec, run_id=RUN_ID)._request()
+    assert request["output_files"] == [str(tmp_path / "a.dat")]
+    assert request["input_files"] == [str(tmp_path / "b.inp")]
+    assert request["cache_files"] == [str(tmp_path / "restart.pot")]

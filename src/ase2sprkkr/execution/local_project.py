@@ -232,6 +232,12 @@ class LocalProjectRunner:
             self._thread.start()
 
     def _request(self):
+        def paths(values):
+            return [
+                path for value in values
+                if (path := _file_path(value, self.spec.directory)) is not None
+            ]
+
         return {
             "executor": "local",
             "id": self._run_id,
@@ -242,18 +248,9 @@ class LocalProjectRunner:
             "stdin": _file_path(self.spec.stdin, self.spec.directory),
             "output_file": self.result.output_file,
             "error_file": self.result.error_file,
-            "output_files": [
-                path for value in self.spec.output_files
-                if (path := _file_path(value, self.spec.directory)) is not None
-            ],
-            "input_files": [
-                path for value in self.spec.input_files
-                if (path := _file_path(value, self.spec.directory)) is not None
-            ],
-            "cache_files": [
-                path for value in self.spec.cache_files
-                if (path := _file_path(value, self.spec.directory)) is not None
-            ],
+            "output_files": paths(self.spec.output_files),
+            "input_files": paths(self.spec.input_files),
+            "cache_files": paths(self.spec.cache_files),
         }
 
     def submit(self):
