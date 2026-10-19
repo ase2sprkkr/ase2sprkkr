@@ -41,6 +41,18 @@ def has_file_magic(path):
     return glob.has_magic(os.fspath(path))
 
 
+def expand_local_candidates(path):
+    """Enumerate path candidates; preserve exact names even when absent.
+
+    No root validation or symlink resolution happens here. The operation
+    consuming the paths is responsible for enforcing its own safety policy.
+    """
+    path = os.fspath(path)
+    if has_file_magic(path):
+        return tuple(sorted(glob.glob(path, recursive=True)))
+    return (path,)
+
+
 def _local_pattern(source, root):
     root = Path(root).expanduser().resolve()
     source = os.fspath(source)
@@ -65,8 +77,7 @@ def expand_local_files(sources, root):
     seen = set()
     for source in _sources(sources):
         _, pattern = _local_pattern(source, root)
-        matches = glob.glob(pattern, recursive=True)
-        for match in sorted(matches):
+        for match in expand_local_candidates(pattern):
             path = Path(match)
             if not path.is_file():
                 continue
