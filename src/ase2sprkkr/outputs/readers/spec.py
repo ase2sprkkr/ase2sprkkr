@@ -40,11 +40,34 @@ class SpecResult(ArpesResult):
         return self._basis_vectors
 
     @cached_property
+    def spleed_intensity(self):
+        """Two-column SPLEED I(E) data, parsed as a ResultFile from SPEC.out."""
+        if self.task_name != "spleed" or self.output_file is None:
+            return None
+        from ..result_files import ResultFile
+        from ...result_files.definitions.spleed_intensity import SpleedIntensityNotFound
+
+        try:
+            return ResultFile.from_file(
+                self.path_to("output"), try_only="spleed_intensity"
+            )
+        except SpleedIntensityNotFound:
+            return None
+
+    @cached_property
     def spectral_data(self) -> np.ndarray:
-        """Extract the main spectral data table."""
-        if not hasattr(self, "_spectral_data"):
-            self._parse_spectral_data()
-        return self._spectral_data
+        """Convenience view of a unique spectrum; no independent parser.
+
+        When multiple SPC files are present, choose a spectrum explicitly.
+        """
+        if self.task_name == "spleed":
+            spectrum = self.spleed_intensity
+            if spectrum is not None:
+                return spectrum.RAW_DATA()
+        spectra = self.spectra
+        if len(spectra) > 1:
+            raise ValueError("Multiple spectral files; select one from result.spectra")
+        return spectra[0].RAW_DATA() if spectra else np.array([])
 
     def _parse_potential_barrier(self) -> None:
         """Parse the potential barrier section of the output."""
@@ -90,34 +113,6 @@ class SpecResult(ArpesResult):
         matches = re.finditer(r"(real|reciprocal) basis\s+(\d+)\s*:\s*([\d.-]+)\s+([\d.-]+)", content)
         for match in matches:
             self._basis_vectors[match.group(1)][int(match.group(2)) - 1] = [match.group(3), match.group(4)]
-
-    def _parse_spectral_data(self) -> None:
-        """Read numeric rows from native KKRSPEC .spc output, not stdout.
-
-        BAND writes eigenvalue rows with a different column count from
-        photoemission and SPLEED; preserve all native numeric columns.
-        """
-        filenames = self.spc_filenames if hasattr(self, "_input_parameters") else ()
-        if not filenames:
-            # Preserve parsing older standalone SPEC text dumps.
-            content = self._get_file_content()
-            marker = re.search(r"stookes-vector\s+of the photonfield", content)
-            rows = content[marker.end():].splitlines() if marker else ()
-        else:
-            with open(filenames[0], encoding="utf-8") as file:
-                rows = file.readlines()
-        data = []
-        for line in rows:
-            if not line.strip() or line.lstrip().startswith("#"):
-                continue
-            try:
-                values = [float(item.replace("D", "E").replace("d", "e"))
-                          for item in line.split()]
-            except ValueError:
-                continue
-            if values and (not data or len(values) == len(data[0])):
-                data.append(values)
-        self._spectral_data = np.asarray(data) if data else np.array([])
 
     def _get_file_content(self) -> str:
         """Get the content of the output file."""

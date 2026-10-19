@@ -17,9 +17,14 @@ class ArpesResult(TaskResult):
         """Native SPC outputs, declared by the task or discovered alongside stdout."""
         parameters = self.input_parameters
         if parameters is not None:
+            # TYP=0 writes its I(E) data only to NOUT1. Native SPR-KKR
+            # still opens a header-only SPC file, which is not a spectrum.
+            if parameters.task_name == "SPLEED" and parameters.SPEC_EL.TYP() == 0:
+                return ()
             return tuple(
                 os.fspath(path) for path in parameters.output_files(self.directory)
                 if os.fspath(path).endswith(".spc")
+                and (not getattr(path, "optional", False) or os.path.isfile(path))
             )
         if self.output_file is None:
             return ()
@@ -31,7 +36,15 @@ class ArpesResult(TaskResult):
             os.path.join(self.directory, dataset + suffix)
             for suffix in ("_data.spc", "_data_pol1.spc", "_data_pol2.spc")
         )
-        return tuple(path for path in candidates if os.path.isfile(path))
+        found = tuple(path for path in candidates if os.path.isfile(path))
+        # Without an input file the native TYP=0 flag is unknown, but
+        # its two-column data can be identified in SPEC.out. Native still
+        # opens an SPC header in this mode; it is not a usable spectrum.
+        if (self._task_name == "spleed" and found and
+                os.path.isfile(os.fspath(self.output_file))):
+            if self.spleed_intensity is not None:
+                return ()
+        return found
 
     @cached_property
     def spc_filename(self):
@@ -75,12 +88,16 @@ class ArpesResult(TaskResult):
         if not filenames:
             return ()
         entries = []
+        task = self._task_name or (self.input_parameters.task_name if self.input_parameters is not None else None)
+        file_type = {"band": "band_spc", "spleed": "spleed_spc"}.get(
+            str(task).lower(), "spc"
+        )
         for index, filename in enumerate(filenames):
             key = "SPC" if index == 0 else f"SPC_{index + 1}"
             if key not in self.files:
-                entries.append(self.files.add_file(key, filename, "spc"))
+                entries.append(self.files.add_file(key, filename, file_type))
             else:
-                entries.append(self.files.set_file_type(key, "spc"))
+                entries.append(self.files.set_file_type(key, file_type))
         return tuple(entries)
 
     @cached_property
