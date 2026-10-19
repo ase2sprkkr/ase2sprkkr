@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import asyncio
+from functools import partial
 import json
 import os
 import signal
@@ -34,19 +35,41 @@ def _wait_for_parent_release():
         os.close(fd)
 
 
-async def _stop_process(process, waiting):
+async def _launch_managed_process(spec, stdin, stderr):
+    """Start the watchdog before launching a child into its process group.
+
+    The watchdog and calculation share the supervisor's session, not its
+    process group. The ready handshake closes the parent-death race.
+    """
+    read_fd, write_fd = os.pipe()
+    watchdog = None
     try:
-        os.killpg(process.pid, signal.SIGTERM)
-    except ProcessLookupError:
-        pass
-    try:
-        await asyncio.wait_for(asyncio.shield(waiting), 1.0)
-    except asyncio.TimeoutError:
-        try:
-            os.killpg(process.pid, signal.SIGKILL)
-        except ProcessLookupError:
-            pass
-        await waiting
+        watchdog = await asyncio.create_subprocess_exec(
+            sys.executable, "-m", "ase2sprkkr.execution.remote_process_watchdog",
+            str(read_fd),
+            stdin=subprocess.DEVNULL, stdout=asyncio.subprocess.PIPE,
+            stderr=subprocess.DEVNULL, pass_fds=(read_fd,),
+            preexec_fn=os.setpgrp,
+        )
+        os.close(read_fd)
+        read_fd = None
+        ready = await asyncio.wait_for(watchdog.stdout.readexactly(1), 5.0)
+        if ready != b"R":
+            raise RuntimeError("Calculation watchdog failed to initialize")
+        process = await asyncio.create_subprocess_exec(
+            *spec["argv"], cwd=spec["directory"], stdin=stdin,
+            stdout=asyncio.subprocess.PIPE, stderr=stderr,
+            preexec_fn=partial(os.setpgid, 0, watchdog.pid),
+        )
+        return process, watchdog, write_fd
+    except BaseException:
+        os.close(write_fd)
+        if watchdog is not None:
+            await watchdog.wait()
+        raise
+    finally:
+        if read_fd is not None:
+            os.close(read_fd)
 
 
 async def _run(spec):
@@ -61,6 +84,8 @@ async def _run(spec):
     state, phase, return_code, message = RunState.FAILED, FailurePhase.LAUNCH, 127, None
     opened = []
     process = None
+    watchdog = None
+    watchdog_fd = None
     try:
         if not streams.detached:
             try:
@@ -75,12 +100,9 @@ async def _run(spec):
         if spec.get("stdin"):
             stdin = open(spec["stdin"], "rb")
             opened.append(stdin)
-        process = await asyncio.create_subprocess_exec(
-            *spec["argv"], cwd=spec["directory"], stdin=stdin,
-            stdout=asyncio.subprocess.PIPE,
-            stderr=(asyncio.subprocess.STDOUT if streams.merged
-                    else asyncio.subprocess.PIPE),
-            start_new_session=True,
+        process, watchdog, watchdog_fd = await _launch_managed_process(
+            spec, stdin,
+            asyncio.subprocess.STDOUT if streams.merged else asyncio.subprocess.PIPE,
         )
         state, phase, return_code = RunState.RUNNING, None, None
         waiting = asyncio.create_task(process.wait())
@@ -106,13 +128,21 @@ async def _run(spec):
                 if failed is not None:
                     message = f"Failed to write process output: {failed}"
                     state, phase = RunState.FAILED, FailurePhase.EXECUTION
-                    await _stop_process(process, waiting)
+                    os.close(watchdog_fd)
+                    watchdog_fd = None
+                    await waiting
                     break
                 if waiting.done():
+                    # Descendants can hold the output pipes after the main
+                    # process exits. Shut down their group before draining.
+                    os.close(watchdog_fd)
+                    watchdog_fd = None
                     break
                 if stop in done or (lost is not None and lost in done):
                     state, phase = RunState.CANCELLED, None
-                    await _stop_process(process, waiting)
+                    os.close(watchdog_fd)
+                    watchdog_fd = None
+                    await waiting
                     break
             return_code = await waiting
             # Inspect all pump outcomes without allowing their exceptions to
@@ -139,10 +169,17 @@ async def _run(spec):
     except Exception as exc:
         message = str(exc)
         state, phase = RunState.FAILED, FailurePhase.EXECUTION
-        if process is not None and process.returncode is None:
-            await _stop_process(process, asyncio.create_task(process.wait()))
+        # The watchdog will stop the entire group in the finally block.
         return_code = process.returncode if process is not None else 127
     finally:
+        if watchdog_fd is not None:
+            os.close(watchdog_fd)
+        if watchdog is not None:
+            await watchdog.wait()
+        if process is not None and process.returncode is None:
+            await process.wait()
+        if process is not None and return_code is None:
+            return_code = process.returncode
         for f in opened:
             f.close()
         try:

@@ -84,7 +84,7 @@ async def pump_stream(source, sink, *, eof=None):
             eof()
 
 
-async def stop_local_process(process, *, process_group=False, timeout=0.1):
+async def stop_local_process(process, *, process_group=False, timeout=1.0):
     """Terminate a local process, escalating to kill after ``timeout``."""
     if process is None or process.returncode is not None:
         return

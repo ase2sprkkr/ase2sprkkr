@@ -241,3 +241,66 @@ def test_supervisor_pumps_both_binary_channels_to_separate_files(tmp_path, monke
     assert (tmp_path / "stdout").read_bytes() == b"A" * 65536 + bytes([0, 255])
     assert (tmp_path / "stderr").read_bytes() == b"B" * 65536 + bytes([1, 254])
     assert reported[0][0][1].value == "finished"
+
+
+def test_managed_calculation_has_separate_group_but_same_session(tmp_path):
+    import subprocess
+
+    async def check():
+        spec = _spec(tmp_path, -1, detached=True, argv=[
+            sys.executable, "-c",
+            "import os, time; print(os.getsid(0), os.getpgrp(), flush=True); time.sleep(1)",
+        ])
+        process, guard, write_fd = await remote_process_worker._launch_managed_process(
+            spec, subprocess.DEVNULL, asyncio.subprocess.PIPE,
+        )
+        try:
+            assert os.getsid(process.pid) == os.getsid(0)
+            assert os.getpgid(process.pid) == guard.pid
+            assert os.getpgrp() != guard.pid
+            await asyncio.wait_for(process.wait(), 5)
+        finally:
+            os.close(write_fd)
+            await asyncio.wait_for(guard.wait(), 5)
+
+    asyncio.run(check())
+
+
+def test_watchdog_kills_calculation_group_when_supervisor_dies(tmp_path):
+    import signal
+    import subprocess
+
+    async def check():
+        ready = tmp_path / "child-pid"
+        script = (
+            "import os, signal, time, pathlib\n"
+            "signal.signal(signal.SIGTERM, signal.SIG_IGN)\n"
+            f"pathlib.Path({str(ready)!r}).write_text(str(os.getpid()))\n"
+            "while True: time.sleep(10)\n"
+        )
+        spec = _spec(tmp_path, -1, detached=True, argv=[
+            sys.executable, "-c", script,
+        ])
+        process, guard, write_fd = await remote_process_worker._launch_managed_process(
+            spec, subprocess.DEVNULL, asyncio.subprocess.PIPE,
+        )
+        try:
+            for _ in range(100):
+                if ready.exists():
+                    break
+                await asyncio.sleep(0.02)
+            assert ready.exists(), "Calculation never started"
+            os.close(write_fd)  # The supervisor has disappeared.
+            write_fd = None
+            assert await asyncio.wait_for(process.wait(), 5) == -signal.SIGKILL
+            await asyncio.wait_for(guard.wait(), 5)
+        finally:
+            if write_fd is not None:
+                os.close(write_fd)
+            if process.returncode is None:
+                os.killpg(guard.pid, signal.SIGKILL)
+                await process.wait()
+            if guard.returncode is None:
+                await guard.wait()
+
+    asyncio.run(check())
