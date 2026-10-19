@@ -208,4 +208,4 @@ def test_receipt_write_failure_never_emits_durable_terminal_claim(tmp_path, monk
         "failure_phase": None,
         "error": "Unable to persist terminal receipt: mailbox fsync failed",
     }]
-    assert (tmp_path / "stdout").read_bytes() == b"payload\\n"
+    assert (tmp_path / "stdout").read_bytes() == b"payload\n"
