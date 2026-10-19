@@ -392,10 +392,6 @@ class PsijRunner:
     def add_output_error_listener(self, callback):
         self._output_observers.add_error_listener(callback)
 
-    def _emit_output(self, data, kind):
-        if data:
-            self._output_observers.emit(data.decode("utf8", errors="replace"), kind)
-
     @staticmethod
     def _flush(value):
         if value is not None and hasattr(value, "flush"):
@@ -439,7 +435,7 @@ class PsijRunner:
             status = await asyncio.to_thread(self._job.wait)
         else:
             status = await follow_job_files(
-                paths, lambda kind, data: self._emit_output(data, kind),
+                paths, lambda kind, data: self._output_observers.emit_bytes(data, kind),
                 self._job.wait, poll_interval=max(self.executor.poll_interval, 1.0),
             )
 

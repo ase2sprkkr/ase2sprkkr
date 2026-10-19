@@ -117,7 +117,7 @@ def test_remote_attach_installs_listener_before_monitor(monkeypatch, tmp_path):
     events = []
 
     def immediate_monitor(self):
-        self._emit_output(b"remote replay\n", "out")
+        self._output_observers.emit_bytes(b"remote replay\n", "out")
         if self.callback is not None:
             self.callback(self.result)
         self._done.set()
@@ -143,7 +143,7 @@ def test_remote_attach_can_defer_monitor_start(monkeypatch, tmp_path):
     events = []
 
     def immediate_monitor(self):
-        self._emit_output(b"remote replay\n", "out")
+        self._output_observers.emit_bytes(b"remote replay\n", "out")
         self._done.set()
 
     monkeypatch.setattr(_RemoteRun, "_thread_main", immediate_monitor)
@@ -207,7 +207,7 @@ def test_psij_attach_installs_listener_before_monitor(monkeypatch, tmp_path):
     events = []
 
     def immediate_monitor(self):
-        self._emit_output(b"psij replay\n", "out")
+        self._output_observers.emit_bytes(b"psij replay\n", "out")
         if self.callback is not None:
             self.callback(self.result)
         self._done.set()
@@ -228,7 +228,7 @@ def test_psij_attach_can_defer_monitor_start(monkeypatch, tmp_path):
     events = []
 
     def immediate_monitor(self):
-        self._emit_output(b"psij replay\n", "out")
+        self._output_observers.emit_bytes(b"psij replay\n", "out")
         self._done.set()
 
     monkeypatch.setattr(PsijRunner, "_thread_main", immediate_monitor)

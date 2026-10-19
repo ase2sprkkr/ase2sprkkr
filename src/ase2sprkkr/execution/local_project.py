@@ -87,8 +87,7 @@ class _ObserverSink:
         self.kind = kind
 
     def write(self, data):
-        if data:
-            self.observers.emit(data.decode("utf8", errors="replace"), self.kind)
+        self.observers.emit_bytes(data, self.kind)
 
     def flush(self):
         pass

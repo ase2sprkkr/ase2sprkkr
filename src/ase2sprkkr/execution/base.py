@@ -105,6 +105,11 @@ class OutputObservers:
         with self._lock:
             self._error_listeners.append(callback)
 
+    def emit_bytes(self, data, kind):
+        """Decode a raw output chunk and dispatch it to text observers."""
+        if data:
+            self.emit(data.decode("utf8", errors="replace"), kind)
+
     def emit(self, text, kind):
         with self._lock:
             listeners = tuple(self._listeners)
