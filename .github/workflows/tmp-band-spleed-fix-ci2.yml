@@ -1,0 +1,24 @@
+name: BAND SPLEED focused CI v2
+on:
+  push:
+    branches: [tmp-band-spleed-fix-ci2]
+permissions:
+  contents: read
+jobs:
+  targeted:
+    runs-on: ubuntu-latest
+    timeout-minutes: 16
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - run: ./install_dependencies.sh
+      - name: Test legacy and new spectral readers
+        run: |
+          DO_NOT_RUN_SPRKKR=1 python -m pytest -q \
+            src/ase2sprkkr/outputs/test/test_spec_parser.py \
+            src/ase2sprkkr/outputs/test/test_spleed_intensity.py \
+            src/ase2sprkkr/result_files/test/test_native_spc_registry.py \
+            src/ase2sprkkr/result_files/test/test_definition_registry.py \
+            src/ase2sprkkr/input_parameters/test/test_task_file_manifests.py
