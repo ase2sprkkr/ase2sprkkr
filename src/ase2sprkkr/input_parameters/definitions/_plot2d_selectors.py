@@ -56,5 +56,5 @@ def plot2d_parameters(task):
                     "The native test writer has fixed sampling details and output filenames; no numerical run certified here.")
 
     schema._task_definition = TaskDefinition(task, executable="kkrgen", mpi=False,
-        output_file_templates=_PLY_OUTPUTS)
+        output_files=_PLY_OUTPUTS)
     return schema

@@ -28,5 +28,5 @@ def plot_parameters(task, info):
                     "Native initialization maps this selector to internal TASK=PLOTPRS while retaining its output flag.")
 
     schema._task_definition = TaskDefinition(task, executable="kkrgen", mpi=False,
-        output_file_templates=_OUTPUTS[task])
+        output_files=_OUTPUTS[task])
     return schema
