@@ -234,8 +234,8 @@ def create_definition():
                 kw["xlabel"] = xlabel(controls.state)
                 # Labels belong to the plot; changing direction changes x.
                 axis = kwargs.get("axis")
-                if axis is not None:
-                    controls.connect(lambda state: axis.set_xlabel(xlabel(state)))
+                # A singleton mesh is rendered as a line: its horizontal
+                # coordinate can be energy, not the 2D mesh x coordinate.
             else:
                 x, y, intensity = (
                     data[:, selected[0], :] for data in (x, y, intensity)
@@ -268,6 +268,9 @@ def create_definition():
                 kw.pop(key, None)
             lineplot(coordinate, intensity, controls=controls, **kw)
         else:
+            if controls is not None and callable(x) and kwargs.get("axis") is not None:
+                axis = kwargs["axis"]
+                controls.connect(lambda state: axis.set_xlabel(xlabel(state)))
             colormesh(x, y, intensity, controls=controls, **kw)
 
     def ii(j):

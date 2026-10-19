@@ -387,7 +387,7 @@ def colormesh(
             vmax = None
         elif norm == "lin":
             colormap = colormap or "seismic"
-            norm = CenteredNorm(vmax=vmax)
+            norm = CenteredNorm(halfrange=vmax)
             vmax = None
     else:
         colormap = colormap or "BuPu"
