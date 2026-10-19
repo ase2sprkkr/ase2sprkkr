@@ -48,6 +48,19 @@ def _client_status_state(state):
     return backend_state
 
 
+def _remote_status_from_facts(facts, backend_id, *, execution=None, files=None):
+    """Interpret one backend reply without issuing another remote request."""
+    return RunStatus(
+        _client_status_state(facts),
+        backend_id=backend_id,
+        execution=execution,
+        files=files,
+        return_code=facts.get("return_code"),
+        message=facts.get("error"),
+        failure_phase=facts.get("failure_phase"),
+    )
+
+
 class _RemoteRun(RemoteRunner):
     """One remote run whose persistent lifecycle is owned by the client."""
 
@@ -571,12 +584,8 @@ class RemoteEndpointExecutor(Executor):
                 state = await self._status(
                     execution.directory.remote, execution.backend_id, run.files
                 )
-                result.append(RunStatus(
-                    _client_status_state(state),
-                    backend_id=execution.backend_id,
-                    return_code=state.get("return_code"),
-                    message=state.get("error"),
-                    failure_phase=state.get("failure_phase"),
+                result.append(_remote_status_from_facts(
+                    state, execution.backend_id,
                 ))
             return tuple(result)
 
@@ -614,14 +623,8 @@ class RemoteEndpointExecutor(Executor):
         files = submission.files.with_remote_stream_paths(
             stdout=state.get("output_file"), stderr=state.get("error_file"),
         )
-        return RunStatus(
-            _client_status_state(state),
-            backend_id=str(remote_id),
-            execution=execution,
-            files=files,
-            return_code=state.get("return_code"),
-            message=state.get("error"),
-            failure_phase=state.get("failure_phase"),
+        return _remote_status_from_facts(
+            state, str(remote_id), execution=execution, files=files,
         )
 
     def recover_submission(self, run_id, submission, *, submitted_at=None):
