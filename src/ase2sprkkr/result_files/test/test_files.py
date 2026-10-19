@@ -249,3 +249,84 @@ class TestOutput:
             exchange_radius=None,
             coordinates=Coordinates.lattice,
         )
+
+
+def test_first_try_cannot_bypass_try_only(tmp_path):
+    """A parser hint is not permission to read a forbidden result type."""
+    path = tmp_path / "result.dat"
+    path.write_bytes(b"fake result")
+    attempted = []
+
+    class Reader:
+        def __init__(self, name):
+            self.name = name
+
+        def read_from_file(self, filename, potential=None):
+            attempted.append((self.name, filename, potential))
+            return self.name
+
+    class TestResult(ResultFile):
+        definitions = {"dos": Reader("dos"), "bsf": Reader("bsf")}
+
+    assert TestResult.from_file(
+        str(path), first_try="dos", try_only="bsf",
+        unknown=False, potential="given.pot",
+    ) == "bsf"
+    assert attempted == [("bsf", str(path), "given.pot")]
+
+
+def test_first_try_orders_allowed_parsers_without_retrying(tmp_path):
+    path = tmp_path / "test.out"
+    path.write_bytes(b"fake result")
+    attempted = []
+
+    class Reader:
+        def __init__(self, name, *, fails=False):
+            self.name = name
+            self.fails = fails
+
+        def read_from_file(self, filename, potential=None):
+            attempted.append(self.name)
+            if self.fails:
+                raise ValueError(f"{self.name} parse failed")
+            return self.name
+
+    class TestResult(ResultFile):
+        definitions = {
+            "dos": Reader("dos"),
+            "bsf": Reader("bsf", fails=True),
+            "spc": Reader("spc"),
+        }
+
+    assert TestResult.from_file(
+        str(path), first_try=("bsf", "dos", "bsf"),
+        try_only=("dos", "bsf"), unknown=False,
+    ) == "dos"
+    assert attempted == ["bsf", "dos"]
+
+    attempted.clear()
+    assert TestResult.from_file(
+        str(path), first_try="spc", try_only=("dos", "bsf"),
+        unknown=False,
+    ) == "dos"
+    assert attempted == ["dos"]
+
+
+def test_filename_extension_is_still_preferred_without_explicit_types(tmp_path):
+    path = tmp_path / "result.bsf"
+    path.write_bytes(b"fake result")
+    attempted = []
+
+    class Reader:
+        def __init__(self, name):
+            self.name = name
+
+        def read_from_file(self, filename, potential=None):
+            attempted.append(self.name)
+            return self.name
+
+    class TestResult(ResultFile):
+        definitions = {"dos": Reader("dos"), "bsf": Reader("bsf")}
+
+    assert TestResult.from_file(str(path), unknown=False) == "bsf"
+    assert attempted == ["bsf"]
