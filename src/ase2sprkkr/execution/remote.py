@@ -625,10 +625,7 @@ class RemoteRunner:
             "output_file": output_target,
             "error_file": error_target,
             "client_sync": client_sync,
-            "output_files": list(self._output_targets.values())
-                            + list(self._output_patterns),
             "input_files": list(used.keys()),
-            "cache_files": [remote for remote, _ in self._cache_targets.values()],
         }
 
     async def _pump(self, source, kind):
