@@ -4,6 +4,7 @@ from ..result_files_definitions import (
     ResultFileDefinition,
 )
 from typing import Optional
+import numbers
 import numpy as np
 
 from ..result_files import Arithmetic, CommonResultFile
@@ -43,11 +44,57 @@ class ARPESResultFile(CommonResultFile, Arithmetic):
         dpi=800,
         separate_plots=False,
         layout_kind="constrained",
+        azimuths=None,
+        phi_range=None,
+        input_parameters=None,
+        live=None,
         **kwargs,
     ):
-        multi_azimuth = self.MODE() == "energy" and self.NP() > 1
-        if multi_azimuth and layout == (2, 2):
-            layout = (self.NP(), 4)
+        """Plot energy-angle slices, optionally choosing azimuths.
+
+        azimuths: integer number of evenly distributed slices, or a sequence
+        of phi angles in degrees. Physical angles need phi_range or the
+        corresponding input parameters. Without a selection, static plots
+        use the first slice; live plots can switch between all slices.
+        """
+        multi = self.MODE() == "energy" and self.NP() > 1
+        if live is None:
+            live = filename is None and show is not False
+        if live and separate_plots:
+            raise ValueError("A shared live slider requires one figure")
+
+        if input_parameters is not None and phi_range is None:
+            phi_range = input_parameters.SPEC_EL.PHI()
+        phi = None if phi_range is None else np.linspace(*phi_range, self.NP())
+
+        if not multi:
+            if azimuths is not None:
+                raise ValueError("azimuths selection requires NP > 1")
+            indices = (None,)
+            live = False
+        elif azimuths is None:
+            indices = tuple(range(self.NP())) if live else (0,)
+        elif isinstance(azimuths, numbers.Integral) and not isinstance(azimuths, bool):
+            if azimuths <= 0:
+                raise ValueError("azimuths must be a positive number of slices")
+            indices = tuple(np.rint(np.linspace(
+                0, self.NP() - 1, min(azimuths, self.NP())
+            )).astype(int))
+        else:
+            if phi is None:
+                raise ValueError("Azimuth angles require phi_range or input_parameters")
+            indices = tuple(int(np.abs(phi - angle).argmin()) for angle in azimuths)
+            if not indices:
+                raise ValueError("azimuths must not be empty")
+
+        # Both paths use the same plotting operation. Live mode switches
+        # among slices; static mode renders the requested slices as panels.
+        slices = (indices,) if live else tuple((index,) for index in indices)
+        if multi and not live and layout == (2, 2) and len(slices) > 1:
+            layout = (2 * len(slices), 2)
+        if layout[0] * layout[1] < 4 * len(slices):
+            raise ValueError("The layout has too few axes for the selected slices")
+
         with Multiplot(
             layout=layout,
             figsize=figsize,
@@ -59,15 +106,13 @@ class ARPESResultFile(CommonResultFile, Arithmetic):
             layout_kind=layout_kind,
             **kwargs,
         ) as mp:
-            options = (self.TOTAL, self.UP, self.DOWN, self.POLARIZATION)
-            if multi_azimuth:
-                for ip in range(self.NP()):
-                    for option in options:
-                        with mp.new_axis(name=f"{option.name}_azimuth_{ip + 1}") as (axis, plot_kwargs):
-                            option.plot(azimuth_index=ip, axis=axis, **plot_kwargs)
-            else:
-                for option in options:
-                    mp.plot(option)
+            for selected in slices:
+                for option in (self.TOTAL, self.UP, self.DOWN, self.POLARIZATION):
+                    with mp.new_axis(name=option.name) as (axis, plot_kwargs):
+                        option.plot(
+                            azimuth_indices=selected if multi else None,
+                            live=live, phi_values=phi, axis=axis, **plot_kwargs
+                        )
 
     def spc_columns(self):
         """Native column ordering for this file's detected SPC mode."""
@@ -105,7 +150,8 @@ class ARPESDefinition(ResultFileDefinition):
 
 def create_definition():
 
-    def plot(option, azimuth_index=None, **kwargs):
+    def plot(option, azimuth_index=None, azimuth_indices=None,
+             live=False, phi_values=None, **kwargs):
         c = option._container
         kw = {
             "show_zero_line": False,
@@ -126,14 +172,23 @@ def create_definition():
             kw["ylabel"] = r"$k_y$ (Å$^{-1}$)"
 
         intensity = option()
+        selected = None
+        labels = None
         if c.MODE() == "energy" and c.NP() > 1:
-            if azimuth_index is None:
-                raise ValueError("Choose azimuth_index for an energy/angle scan with NP > 1")
-            x, y, intensity = (
-                field[:, azimuth_index, :] for field in (x, y, intensity)
+            selected = tuple(azimuth_indices) if azimuth_indices is not None else (
+                0 if azimuth_index is None else azimuth_index,
             )
+            x, y, intensity = (
+                lambda index, data=data: data[:, index, :]
+                for data in (x, y, intensity)
+            )
+            if phi_values is not None:
+                labels = tuple(f"{phi_values[i]:g}°" for i in selected)
         kw.update(kwargs)
-        colormesh(x, y, intensity, **kw)
+        colormesh(
+            x, y, intensity, live=live, slider_values=selected,
+            slider_labels=labels, slider_label="Azimuth", **kw
+        )
 
     def ii(j):
         def fn(data: np.ndarray, section: object) -> np.ndarray:

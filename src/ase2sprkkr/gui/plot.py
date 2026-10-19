@@ -239,11 +239,36 @@ def colormesh(
     vmin=None,
     vmax=None,
     colorbar=False,
+    live=False,
+    slider_values=None,
+    slider_label="Slice",
+    slider_labels=None,
     **kwargs,
 ):
+    """Plot a 2D map.
+
+    With slider_values, callable x, y or c receive the selected value.
+    Static output uses the first value; live output adds a shared slider
+    to the figure when there is more than one possible value.
     """
-    Plot 3D data by assigning colors to 2D grid. See matplotlib.pyplot.pcolormesh
-    """
+    if slider_values is not None:
+        slider_values = tuple(slider_values)
+        if not slider_values:
+            raise ValueError("slider_values must not be empty")
+    elif any(callable(value) for value in (x, y, c)):
+        raise ValueError("Callable plot data require slider_values")
+    if slider_labels is not None:
+        slider_labels = tuple(slider_labels)
+        if slider_values is None or len(slider_labels) != len(slider_values):
+            raise ValueError("slider_labels must match slider_values")
+
+    def selected(data, value):
+        return data(value) if callable(data) else data
+
+    current = slider_values[0] if slider_values is not None else None
+    initial_x, initial_y, initial_c = (
+        selected(data, current) for data in (x, y, c)
+    )
     set_up_common_plot(axis, **kwargs)
     if "cmap" in kwargs:
         colormap = kwargs["cmap"]
@@ -275,9 +300,57 @@ def colormesh(
             vmax = None
             vmin = None
 
-    axis.set_xlim(auto_range(xrange, x))
-    axis.set_ylim(auto_range(yrange, y))
-    axis.pcolormesh(x, y, c, cmap=colormap, shading="gouraud", norm=norm, vmin=vmin, vmax=vmax)
+    axis.set_xlim(auto_range(xrange, initial_x))
+    axis.set_ylim(auto_range(yrange, initial_y))
+
+    def make_mesh(xdata, ydata, intensity):
+        return axis.pcolormesh(
+            xdata, ydata, intensity, cmap=colormap,
+            shading="gouraud", norm=norm, vmin=vmin, vmax=vmax,
+        )
+
+    mesh = make_mesh(initial_x, initial_y, initial_c)
+    if live and slider_values is not None and len(slider_values) > 1:
+        from matplotlib.widgets import Slider
+
+        fig = axis.figure
+        existing = getattr(fig, "_ase2sprkkr_slider", None)
+        if existing is None:
+            fig.set_layout_engine(None)
+            fig.subplots_adjust(bottom=0.23)
+            slider_axis = fig.add_axes((0.22, 0.06, 0.60, 0.035))
+            widget = Slider(
+                slider_axis, slider_label, 0, len(slider_values) - 1,
+                valinit=0, valstep=1,
+            )
+            fig._ase2sprkkr_slider = (widget, slider_values, slider_labels)
+        else:
+            widget, values, labels = existing
+            if values != slider_values or labels != slider_labels:
+                raise ValueError("A figure's plots must share the same slider values")
+
+        def update(position):
+            nonlocal mesh
+            index = int(position)
+            value = slider_values[index]
+            xdata, ydata, intensity = (
+                selected(data, value) for data in (x, y, c)
+            )
+            if callable(x) or callable(y):
+                mesh.remove()
+                mesh = make_mesh(xdata, ydata, intensity)
+                axis.set_xlim(auto_range(xrange, xdata))
+                axis.set_ylim(auto_range(yrange, ydata))
+            else:
+                mesh.set_array(np.asarray(intensity))
+            label = slider_labels[index] if slider_labels is not None else value
+            widget.valtext.set_text(str(label))
+            fig.canvas.draw_idle()
+
+        widget.on_changed(update)
+        widget.valtext.set_text(
+            str(slider_labels[0] if slider_labels is not None else slider_values[0])
+        )
     if show_zero_line:
         opts = {"lw": 1.0, "color": "black"}
         if isinstance(show_zero_line, dict):
