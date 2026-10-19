@@ -236,7 +236,7 @@ def test_terminal_drops_backpressured_client_without_discarding_output(tmp_path)
             reader, writer = await asyncio.open_unix_connection(streams.socket_path)
             writer.write(b'{"command":"follow","offsets":{"out":0,"err":0}}\n')
             await writer.drain()
-            assert await reader.readexactly(8) == b"A2SSUPR1"
+            assert await reader.readexactly(8) == b"A2SFOLL1"
             for _ in range(1024):
                 streams.publish("out", b"x" * 8192)
             streams.terminal({"state": "finished", "return_code": 0})
