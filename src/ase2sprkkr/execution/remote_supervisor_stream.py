@@ -117,18 +117,14 @@ class SupervisorStreams:
             if follower.replay and self.paths[kind] is not None:
                 follower.wake.set()
                 continue
+            # A full buffer skips the write; a write that fills the buffer
+            # triggers exactly the same backpressure handling below.
+            if follower.writer.transport.get_write_buffer_size() < _HIGH:
+                follower.writer.write(wire)
+                follower.offsets[kind] += len(data)
             if follower.writer.transport.get_write_buffer_size() >= _HIGH:
                 if self.paths[kind] is None:
-                    follower.writer.transport.abort()
-                else:
-                    follower.replay = True
-                    follower.wake.set()
-                continue
-            follower.writer.write(wire)
-            follower.offsets[kind] += len(data)
-            if follower.writer.transport.get_write_buffer_size() >= _HIGH:
-                if self.paths[kind] is None:
-                    # There is nowhere to replay bytes lost to backpressure.
+                    # Live-only bytes cannot be recovered after disconnect.
                     follower.writer.transport.abort()
                 else:
                     follower.replay = True

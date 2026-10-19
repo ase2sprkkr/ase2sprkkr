@@ -267,6 +267,7 @@ class _FakeFollowerWriter:
 
     def write(self, data):
         self.frames.append(data)
+        self.transport.buffered += len(data)
 
 
 def test_live_only_channel_is_delivered_during_other_channel_replay():
@@ -302,6 +303,44 @@ def test_backpressured_live_only_channel_disconnects_instead_of_losing_bytes():
         assert writer.frames == []
 
     asyncio.run(run())
+
+
+@pytest.mark.parametrize("spooled", (False, True))
+@pytest.mark.parametrize("already_full", (False, True))
+def test_publish_backpressure_before_and_after_write(spooled, already_full):
+    streams = SupervisorStreams("saved-stdout" if spooled else None, None)
+    data = b"payload"
+    wire = frame("out", 0, data)
+    # Either begin over the limit or cross it on this particular write.
+    buffered = _HIGH if already_full else _HIGH - len(wire) + 1
+    writer = _FakeFollowerWriter(buffered=buffered)
+    follower = _Follower(writer, {"out": 0, "err": 0}, replay=False)
+    streams._followers.add(follower)
+
+    streams.publish("out", data)
+
+    assert writer.frames == ([] if already_full else [wire])
+    assert follower.offsets["out"] == (0 if already_full else len(data))
+    if spooled:
+        assert follower.replay
+        assert follower.wake.is_set()
+        assert not writer.transport.aborted
+    else:
+        assert writer.transport.aborted
+
+
+def test_replaying_saved_channel_does_not_send_live_duplicates():
+    streams = SupervisorStreams("saved-stdout", None)
+    writer = _FakeFollowerWriter(buffered=_HIGH)
+    follower = _Follower(writer, {"out": 0, "err": 0}, replay=True)
+    streams._followers.add(follower)
+
+    streams.publish("out", b"to be replayed")
+
+    assert writer.frames == []
+    assert follower.offsets["out"] == 0
+    assert follower.wake.is_set()
+    assert not writer.transport.aborted
 
 
 def test_supervisor_finish_is_bounded_when_client_never_drains(tmp_path):
