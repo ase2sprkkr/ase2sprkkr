@@ -53,12 +53,12 @@ def _companion_input_file(spc):
     stem = source.stem
     dataset = stem.removesuffix("_ARPES_data")
     stems = {stem, dataset, dataset + "_ARPES"}
-    found = [
+    found = {
         source.with_name(name + ext)
         for name in stems for ext in (".inp", ".in")
         if source.with_name(name + ext).is_file()
-    ]
-    return found[0] if len(found) == 1 else None
+    }
+    return found.pop() if len(found) == 1 else None
 
 
 def _resolve_input(spc, input_parameters, input_file):
@@ -137,7 +137,7 @@ def _spc_arrays(spc):
     return mode, raw, {name: raw[:, i].reshape(shape) for i, name in enumerate(names)}
 
 
-def _write_nexus(path, spc, parameters, input_path, input_text, metadata):
+def _write_nexus(path, filename, spc, parameters, input_path, input_text, metadata):
     import h5py
 
     mode, raw, arrays = _spc_arrays(spc)
@@ -161,7 +161,7 @@ def _write_nexus(path, spc, parameters, input_path, input_text, metadata):
 
     with h5py.File(path, "w") as f:
         f.attrs.update(NX_class="NXroot", default="entry", creator="ase2sprkkr",
-                       file_name=path.name,
+                       file_name=filename.name,
                        file_time=datetime.now(timezone.utc).isoformat())
         entry = f.create_group("entry")
         entry.attrs.update(NX_class="NXentry", default="data")
@@ -234,7 +234,15 @@ def _write_nexus(path, spc, parameters, input_path, input_text, metadata):
             data.attrs["column_indices"] = 1
             data.create_dataset("row", data=np.arange(shape[0]))
             data.create_dataset("column", data=np.arange(shape[1]))
-            data.attrs["momentum_coordinates"] = "sprkkr_spc/raw_data columns k_x,k_y"
+            data.attrs["momentum_coordinates"] = "../sprkkr_spc/raw_data columns k_x,k_y"
+            if parameters is not None:
+                # The source scan definition is stored once, under original_input.
+                # In a native K-vector scan this contains KA, K1, K2, NK1, NK2.
+                # No second reconstruction of the generated grid is necessary.
+                if _value(parameters, "SPEC_EL", "K1") is not None:
+                    data.attrs["scan_definition"] = (
+                        "../calculation/original_input/SPEC_EL"
+                    )
         elif len(shape) == 3:
             data.attrs["axes"] = ["energy_index", "azimuth_index", "angle_index"]
             for axis, count, index in zip(
@@ -320,7 +328,7 @@ def write_arpes_nexus(spc, filename, *, input_parameters=None,
             dir=target.parent, delete=False
         ) as tmp:
             temporary = Path(tmp.name)
-        _write_nexus(temporary, spc, parameters, source_path,
+        _write_nexus(temporary, target, spc, parameters, source_path,
                      input_text, dict(metadata or {}))
         os.replace(temporary, target)
     finally:

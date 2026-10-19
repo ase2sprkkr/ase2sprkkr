@@ -158,3 +158,52 @@ def test_independent_nexus_reader(tmp_path):
         write_arpes_nexus(SPC("kx_ky",2),dest)
     with nxopen(str(dest)) as root:
         assert root.get_default().nxsignal.shape==(2,3)
+
+
+
+def test_atomic_output_filename_is_final_target(tmp_path):
+    target=tmp_path/"real-target.nxs"
+    with pytest.warns(UserWarning):
+        write_arpes_nexus(SPC(),target)
+    with h5py.File(target) as f:
+        assert f.attrs["file_name"]=="real-target.nxs"
+
+
+def test_native_au_constant_energy_spc(tmp_path):
+    """The repository's actual seven-column kx/ky calculation must export."""
+    from ase2sprkkr.result_files import ResultFile
+    path=Path(__file__).resolve().parents[1]/"examples"/"Au_kx_ky_ARPES_data.spc"
+    spc=ResultFile.from_file(str(path),try_only="spc")
+    assert spc.MODE()=="kx_ky"
+    assert spc.RAW_DATA().shape[1]==7
+    with pytest.warns(UserWarning,match="No SPR-KKR input"):
+        spc.to_nexus(tmp_path/"au_kmap.nxs")
+    with h5py.File(tmp_path/"au_kmap.nxs") as f:
+        assert f["entry/data"].attrs["sprkkr_mode"]=="kx_ky"
+        np.testing.assert_array_equal(f["entry/data/data"],spc.TOTAL())
+        np.testing.assert_array_equal(f["entry/sprkkr_spc/raw_data"],spc.RAW_DATA())
+
+
+def test_no_physics_reconstructed_from_input(tmp_path):
+    """Original vectors are provenance; export must not recalculate K coordinates."""
+    class Value:
+        def __init__(self,value): self.value=value
+        def __call__(self): return self.value
+    class Group:
+        def __init__(self,**values):
+            for name,value in values.items(): setattr(self,name,Value(value))
+    class Parameters:
+        SPEC_EL=Group(KA=[.3,.4],K1=[1.5,0.],K2=[.5,2.],NK1=3,NK2=2)
+        def to_string(self,*,validate): return "TASK ARPES"
+    path=tmp_path/"native.nxs"
+    write_arpes_nexus(SPC("kx_ky",2),path,input_parameters=Parameters())
+    with h5py.File(path) as f:
+        spec=f["entry/calculation/original_input/SPEC_EL"]
+        np.testing.assert_array_equal(spec["KA"],[.3,.4])
+        np.testing.assert_array_equal(spec["K1"],[1.5,0.])
+        np.testing.assert_array_equal(spec["K2"],[.5,2.])
+        assert spec["NK1"][()]==3
+        assert spec["NK2"][()]==2
+        data=f["entry/data"]
+        assert "k_basis" not in data
+        assert data.attrs["scan_definition"]=="../calculation/original_input/SPEC_EL"
