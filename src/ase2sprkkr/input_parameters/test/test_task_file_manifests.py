@@ -141,6 +141,7 @@ def test_dos_native_energy_constraints():
     from ase2sprkkr.common.warnings import DataValidityError, DataValidityWarning
 
     parameters = InputParameters.create("DOS")
+    parameters.CONTROL.POTFIL = "Fe.pot"
     parameters.ENERGY.NE = 1
     with pytest.raises(DataValidityError, match="two energy points"):
         parameters.validate("save")
@@ -148,3 +149,20 @@ def test_dos_native_energy_constraints():
     parameters.ENERGY.ImE = 0
     with pytest.warns(DataValidityWarning, match="real axis"):
         parameters.validate("save")
+
+
+def test_scf_startup_dos_is_optional(tmp_path):
+    parameters = InputParameters.create("SCF")
+    files = parameters.output_files(str(tmp_path))
+    assert files[-1].optional is True
+    assert not getattr(files[0], "optional", False)
+
+
+def test_bsf_output_file_declarations(tmp_path):
+    for task in ("BSFEK", "BSFKK"):
+        parameters = InputParameters.create(task)
+        parameters.CONTROL.DATASET = "Fe"
+        assert parameters.output_files(str(tmp_path)) == (
+            str(tmp_path / "Fe_BLOCHSF.bsf"),
+            str(tmp_path / "Fe_BLOCHSF_spol.bsf"),
+        )

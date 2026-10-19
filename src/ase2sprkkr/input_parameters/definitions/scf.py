@@ -6,7 +6,7 @@ from ...common.warnings import DataValidityError
 from ._file_manifests import resolve_file
 from .sections import CONTROL, TAU, ENERGY, SCF, SITES, STRCONST, CPA, MODE, TASK
 from ..input_parameters_definitions import InputParametersDefinition
-from ..task_definition import TaskDefinition
+from ..task_definition import TaskDefinition, DeclaredFile
 
 
 class SCFInputParametersDefinition(InputParametersDefinition):
@@ -25,7 +25,7 @@ class SCFInputParametersDefinition(InputParametersDefinition):
         potfil = parameters.CONTROL.POTFIL()
         if potfil:
             files.append(resolve_file(directory, f"{potfil}_new"))
-        files.append(resolve_file(directory, "*_SCFSTART.dos"))
+        files.append(DeclaredFile(resolve_file(directory, "*_SCFSTART.dos"), optional=True))
         return tuple(files)
 
 

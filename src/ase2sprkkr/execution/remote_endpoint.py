@@ -280,6 +280,8 @@ class _RemoteRunContext:
                 output_targets=output_targets,
                 cache_targets=cache_targets,
                 output_patterns=output_patterns,
+                optional_output_targets=sync.get("optional_output_targets", ()),
+                optional_output_patterns=sync.get("optional_output_patterns", ()),
                 cache_patterns=cache_patterns,
                 cache_before=cache_before,
             )
