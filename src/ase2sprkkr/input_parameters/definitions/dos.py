@@ -5,7 +5,7 @@ from ...common.grammar_types import Integer, SetOf
 from ...common.warnings import DataValidityError, DataValidityWarning
 from .sections import CONTROL, TAU, ENERGY, TASK, SITES, MODE, CPA, STRCONST
 from ..input_parameters_definitions import InputParametersDefinition
-from ..task_definition import TaskDefinition
+from ..task_definition import TaskDefinition, TaskFile
 
 
 def _validate_dos(p, _values, why):
@@ -53,6 +53,6 @@ def input_parameters_definition():
         executable="kkrgen",
         mpi=True,
         output_reader="DOS",
-        output_file_templates=("{dataset}.dos",),
+        output_file_templates=(TaskFile("{dataset}.dos", type="DOS"),),
     )
     return schema

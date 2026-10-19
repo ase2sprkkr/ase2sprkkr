@@ -451,6 +451,9 @@ class LaunchSpec:
 
 def _pathlike(value):
     """Normalize path-like values without touching open file objects."""
+    from ..input_parameters.task_definition import TaskFile
+    if isinstance(value, TaskFile):
+        return value
     if isinstance(value, os.PathLike):
         return os.fspath(value)
     return value

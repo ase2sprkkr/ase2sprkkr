@@ -41,5 +41,17 @@ class ResultFileDefinitionRegistry(ModuleRegistry):
                 definitions.setdefault(extension, candidates[0])
         return definitions
 
+    def definition_for_task_file(self, task_file):
+        """Return the known structured format associated with a task file."""
+        return None if task_file.type is None else self[task_file.type]
+
+    def info_for_task_file(self, task_file):
+        """Task-specific info wins over its registered file-format description."""
+        if task_file.info is not None:
+            return task_file.info
+        definition = self.definition_for_task_file(task_file)
+        return None if definition is None else definition.info
+
+
 
 result_file_definition_registry = ResultFileDefinitionRegistry()

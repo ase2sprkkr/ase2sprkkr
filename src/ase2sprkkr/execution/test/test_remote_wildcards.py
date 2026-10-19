@@ -1,4 +1,4 @@
-from ase2sprkkr.input_parameters.task_definition import DeclaredFile
+from ase2sprkkr.input_parameters.task_definition import TaskFile
 import asyncio
 from pathlib import Path
 
@@ -141,8 +141,8 @@ def test_remote_executor_allows_missing_optional_outputs(tmp_path):
     executor, spec, _, _ = _text_run(
         tmp_path,
         declared_output_files=(
-            DeclaredFile(workdir / "missing-*.dat", optional=True),
-            DeclaredFile(workdir / "not-created.dat", optional=True),
+            TaskFile(workdir / "missing-*.dat", optional=True),
+            TaskFile(workdir / "not-created.dat", optional=True),
         ),
         code="print('done')",
     )
@@ -155,7 +155,7 @@ def test_remote_executor_allows_missing_optional_input_pattern(tmp_path):
     workdir = tmp_path / "local" / "calculation"
     executor, spec, _, _ = _text_run(
         tmp_path,
-        declared_input_files=(DeclaredFile(workdir / "missing-*.pot", optional=True),),
+        declared_input_files=(TaskFile(workdir / "missing-*.pot", optional=True),),
         code="print('done')",
     )
     result = executor.create_run(_Reader(), spec).run()

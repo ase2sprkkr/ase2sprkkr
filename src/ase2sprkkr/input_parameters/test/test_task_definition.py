@@ -6,7 +6,7 @@ import pytest
 
 from ..input_parameters import InputParameters
 from ..input_parameters_definitions import InputParametersDefinition
-from ..task_definition import TaskDefinition, DeclaredFile
+from ..task_definition import TaskDefinition, TaskFile
 from ...outputs.readers.default import DefaultOutputReader
 from ...sprkkr.configuration import ConfigurationFile
 
@@ -296,8 +296,8 @@ def test_bsf_tasks_declare_shared_output_reader_identifier():
 def test_optional_file_template_retains_metadata(tmp_path):
     task = TaskDefinition(
         "SCF",
-        input_file_templates=(DeclaredFile("aux.dat", optional=True),),
-        output_file_templates=(DeclaredFile("{dataset}_optional-*.dat", optional=True),),
+        input_file_templates=(TaskFile("aux.dat", optional=True),),
+        output_file_templates=(TaskFile("{dataset}_optional-*.dat", optional=True),),
     )
     parameters = InputParameters.create("SCF")
     parameters.CONTROL.DATASET = "Fe"
@@ -312,12 +312,12 @@ def test_optional_file_template_retains_metadata(tmp_path):
 
 
 def test_optional_file_metadata_affects_task_identity():
-    required = TaskDefinition("SCF", output_file_templates=(DeclaredFile("x", optional=False),))
-    optional = TaskDefinition("SCF", output_file_templates=(DeclaredFile("x", optional=True),))
+    required = TaskDefinition("SCF", output_file_templates=(TaskFile("x", optional=False),))
+    optional = TaskDefinition("SCF", output_file_templates=(TaskFile("x", optional=True),))
     assert required != optional
     assert hash(required) != hash(optional)
     assert optional.output_file_templates[0] != "x"
-    assert required.output_file_templates[0] == "x"
+    assert required.output_file_templates[0].pathname == "x"
     with pytest.raises(AttributeError):
         optional.output_file_templates[0].optional = False
 
@@ -336,7 +336,7 @@ def test_task_execution_rejects_cross_schema_selector_without_retargeting():
 def test_optional_file_declaration_pickle_roundtrip():
     import pickle
 
-    task = TaskDefinition("SCF", output_file_templates=(DeclaredFile("extra.dat", optional=True),))
+    task = TaskDefinition("SCF", output_file_templates=(TaskFile("extra.dat", optional=True),))
     restored = pickle.loads(pickle.dumps(task))
     assert restored == task
     assert restored.output_file_templates[0].optional is True
