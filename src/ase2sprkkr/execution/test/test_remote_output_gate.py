@@ -233,3 +233,33 @@ def test_follow_write_is_idempotent_across_attached_clients(tmp_path):
     finally:
         first.close()
         second.close()
+
+
+def test_remote_follow_transport_failure_is_recoverable_unknown(tmp_path):
+    runner, executor, destination, output = _run(tmp_path, RunState.RUNNING)
+
+    async def disconnected(*_args, **_kwargs):
+        raise ConnectionError("SSH disconnected")
+
+    executor._follow = disconnected
+    result = asyncio.run(runner._monitor())
+    assert result.return_code is None
+    assert runner.state == RunState.UNKNOWN
+    assert runner.failure_phase is None
+    assert runner.failure_message == "SSH disconnected"
+    assert output.closed
+
+
+def test_remote_status_transport_failure_after_follow_is_unknown(tmp_path):
+    runner, executor, destination, output = _run(tmp_path, RunState.RUNNING)
+
+    async def unavailable(*_args, **_kwargs):
+        raise OSError("SSH lost during status query")
+
+    executor._status = unavailable
+    result = asyncio.run(runner._monitor())
+    assert result.return_code is None
+    assert runner._state == RunState.UNKNOWN
+    assert runner.failure_phase is None
+    assert runner.failure_message == "SSH lost during status query"
+    assert output.closed
