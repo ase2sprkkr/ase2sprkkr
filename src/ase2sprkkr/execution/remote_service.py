@@ -142,21 +142,11 @@ def _request_spec(request):
     )
 
 
-def _clean_request_outputs(request, directory, output_path=None, error_path=None):
-    """Remove only this submission's declared outputs on the execution host."""
-    sync = request.get("client_sync") or {}
-    declared = (
-        *request.get("output_files", ()),
-        *sync.get("output_files", ()),
-        *sync.get("output_patterns", ()),
-        output_path, error_path,
-    )
+def _clean_request_outputs(spec, directory, output_path=None, error_path=None):
+    """Clear prior outputs while protecting inputs and caches in the parsed spec."""
+    declared = (*spec.output_files, output_path, error_path)
     protected = (
-        request.get("input_file"), request.get("stdin"),
-        *request.get("input_files", ()),
-        *request.get("cache_files", ()),
-        *(item.get("path") for item in sync.get("cache_files", ())),
-        *sync.get("cache_patterns", ()),
+        spec.input_file, spec.stdin, *spec.input_files, *spec.cache_files,
     )
     clear_declared_outputs(
         (_absolute(directory, path) for path in declared if path is not None),
@@ -173,16 +163,15 @@ def _local_submit(request):
     try:
         directory = Path(request["directory"]).expanduser().resolve()
         directory.mkdir(parents=True, exist_ok=True)
-        spec = materialize_local_spec(
-            _request_spec(dict(request, directory=os.fspath(directory)))
-        )
+        original_spec = _request_spec(dict(request, directory=os.fspath(directory)))
+        spec = materialize_local_spec(original_spec)
 
         output_path = _absolute(directory, spec.output_file)
         error_path = _absolute(directory, spec.error_file)
         for path in (output_path, error_path):
             if path is not None:
                 Path(path).parent.mkdir(parents=True, exist_ok=True)
-        _clean_request_outputs(request, directory, output_path, error_path)
+        _clean_request_outputs(original_spec, directory, output_path, error_path)
     except OSError as exc:
         raise SubmissionNotStarted(str(exc)) from exc
 
