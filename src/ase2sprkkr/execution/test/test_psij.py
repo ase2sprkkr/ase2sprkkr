@@ -248,6 +248,44 @@ def test_psij_stderr_only_does_not_create_stdout(monkeypatch, tmp_path):
     assert not (tmp_path / "run.out").exists()
 
 
+@pytest.mark.parametrize("merged", (False, True))
+def test_psij_preparation_closes_each_output_handle_once(
+    monkeypatch, tmp_path, merged,
+):
+    class NamedOutput:
+        def __init__(self, name):
+            self.name = str(name)
+            self.close_calls = 0
+            self.flush_calls = 0
+
+        def flush(self):
+            self.flush_calls += 1
+
+        def close(self):
+            self.close_calls += 1
+            if self.close_calls != 1:
+                raise AssertionError("Output handle was closed more than once")
+
+    backend = _Backend()
+    executor = _executor(monkeypatch, backend)
+    output = NamedOutput(tmp_path / "run.out")
+    error = output if merged else NamedOutput(tmp_path / "run.err")
+    runner = executor.create_run(ExecutionSpec(
+        argv=("program",), directory=str(tmp_path),
+        input_file=None, output_file=output, error_file=error,
+    ))
+
+    runner._prepare_io()
+
+    assert output.close_calls == 1
+    assert error.close_calls == 1
+    assert output.flush_calls >= 1
+    assert error.flush_calls >= 1
+    assert (tmp_path / "run.out").exists()
+    if not merged:
+        assert (tmp_path / "run.err").exists()
+
+
 def test_psij_merged_output_is_followed_once(monkeypatch, tmp_path):
     backend = _Backend()
     executor = _executor(monkeypatch, backend)
