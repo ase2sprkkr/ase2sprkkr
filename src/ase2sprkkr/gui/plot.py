@@ -190,18 +190,22 @@ class PlotControls:
         self._changing = False
         self.live = live
 
+        # Resolve all options first: dependent sliders must not rely on the
+        # dictionary insertion order of live_options.
         for name, spec in specs.items():
             if "options" in spec:
                 values = tuple(spec["options"])
                 if not values:
                     raise ValueError(f"Empty options for {name}")
                 self.state[name] = values[0]
-            elif "slider" in spec:
+            elif "slider" not in spec:
+                raise ValueError(f"Unknown plot control: {name}")
+
+        for name, spec in specs.items():
+            if "slider" in spec:
                 values = self._values(spec)
                 self._slider_values[name] = values
                 self.state[name] = values[0]
-            else:
-                raise ValueError(f"Unknown plot control: {name}")
 
         if not live or not specs:
             return
