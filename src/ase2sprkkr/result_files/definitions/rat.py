@@ -634,7 +634,7 @@ _kunit_labels = {
 
 
 def draw_plot(axis, x, y, title, name=None, kunit=1, edge=None,
-              slider=None, **kwargs):
+              controls=None, **kwargs):
     axis.set_title(title)
     axis.set_xlabel(r"$E-E_{\rm F}$ (eV)")
     base = _ylabel_base.get(name, "")

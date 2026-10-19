@@ -15,11 +15,13 @@ _EXAMPLE = Path(__file__).resolve().parents[1] / "examples" / "Mo2Se4_ARPES_ARPE
 
 
 def _artists(figure):
-    controller = getattr(figure, "_ase2sprkkr_slider_controller", None)
-    slider_axis = None if controller is None else controller.widget.ax
+    controls = getattr(figure, "_ase2sprkkr_controls", None)
+    control_axes = set() if controls is None else {
+        widget.ax for widget in controls.widgets.values()
+    }
     return [
         axis for axis in figure.axes
-        if axis is not slider_axis and (axis.lines or axis.collections)
+        if axis not in control_axes and (axis.lines or axis.collections)
     ]
 
 
@@ -75,11 +77,11 @@ def test_real_parser_multi_azimuth_slider_draws_all_four_panels(tmp_path):
         spc.plot(show=False, live=True)
         fig = plt.gcf()
         assert len(_artists(fig)) == 4
-        controller = fig._ase2sprkkr_slider_controller
-        assert controller.values == (0, 1, 2)
+        controls = fig._ase2sprkkr_controls
+        assert controls._slider_values["slice"] == (0, 1, 2)
         lines = [ax.lines[0] for ax in _artists(fig)]
         before = np.asarray(lines[0].get_ydata()).copy()
-        controller.widget.set_val(2)
+        controls.widgets["slice"].set_val(2)
         after = np.asarray(lines[0].get_ydata())
         np.testing.assert_allclose(after, 3 * before)
     finally:
@@ -92,6 +94,50 @@ def test_multi_azimuth_static_slice_count(tmp_path):
         spc.plot(show=False, live=False, azimuths=2)
         fig = plt.gcf()
         assert len(_artists(fig)) == 8
-        assert not hasattr(fig, "_ase2sprkkr_slider_controller")
+        assert not hasattr(fig, "_ase2sprkkr_controls")
     finally:
         plt.close("all")
+
+
+def test_controls_switch_np_nt_on_2d_energy_scan(tmp_path):
+    import matplotlib.pyplot as plt
+    source = _multi_azimuth_file(tmp_path)
+    spc = ResultFile.from_file(str(source), unknown=False)
+    # A fast in-memory test of two nontrivial scan axes uses a tiny adapted
+    # three-dimensional array and the same SPC plotting routine.
+    from ase2sprkkr.result_files.definitions.spc import ARPESResultFile
+    class Value:
+        def __init__(self, obj, name, data):
+            self._container = obj
+            self.name = name
+            self.data = data
+        def __call__(self):
+            return self.data
+        def plot(self, **kwargs):
+            from ase2sprkkr.result_files.definitions.spc import create_definition
+            raise NotImplementedError
+    # Test the shared controller independently of the SPC parser dimensions.
+    from ase2sprkkr.gui.plot import Multiplot, colormesh
+    xx, yy = np.meshgrid(np.arange(4), np.arange(5))
+    updates = []
+    with Multiplot(
+        layout=(1, 1), show=False, live=True,
+        live_options={
+            "direction": {"options": ("NP", "NT")},
+            "slice": {"slider": lambda state: range(
+                3 if state["direction"] == "NP" else 4)},
+        },
+    ) as mp:
+        with mp.new_axis() as (axis, kwargs):
+            colormesh(
+                xx, yy,
+                lambda state: updates.append(state.copy()) or
+                np.full((5, 4), state["slice"] + 1.0),
+                axis=axis, **kwargs,
+            )
+    controls = mp.controls
+    controls.widgets["direction"].set_active(1)
+    assert controls._slider_values["slice"] == tuple(range(4))
+    controls.widgets["slice"].set_val(3)
+    assert updates[-1] == {"direction": "NT", "slice": 3}
+    plt.close(mp.figure)
