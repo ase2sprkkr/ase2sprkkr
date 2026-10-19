@@ -213,3 +213,33 @@ def test_remote_executor_tolerates_unmatched_optional_cache_wildcard(tmp_path):
     assert result.output == b"done\n"
     assert not tuple(workdir.glob("not-present-*.pot"))
     assert not tuple((remote_root / "calculation").glob("not-present-*.pot"))
+
+
+def test_local_transfer_batches_use_their_directional_file_primitives(tmp_path):
+    source = tmp_path / "source"
+    dest = tmp_path / "dest"
+    (source / "nested").mkdir(parents=True)
+    (source / "nested" / "result.dat").write_text("data")
+
+    class TracedTransport(LocalTransport):
+        def __init__(self):
+            self.operations = []
+
+        async def put_file(self, src, dst):
+            self.operations.append("put")
+            await super().put_file(src, dst)
+
+        async def get_file(self, src, dst):
+            self.operations.append("get")
+            await super().get_file(src, dst)
+
+    transport = TracedTransport()
+    async def check():
+        await transport.put_files("nested/*.dat", source, dest)
+        assert transport.operations == ["put"]
+        transport.operations.clear()
+        await transport.get_files("nested/*.dat", source, dest)
+        assert transport.operations == ["get", "put"]
+
+    asyncio.run(check())
+    assert (dest / "nested" / "result.dat").read_text() == "data"
