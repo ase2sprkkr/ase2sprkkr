@@ -294,34 +294,31 @@ class _RemoteRunContext:
 
     @staticmethod
     def _manifest_sync(files):
+        outputs, output_patterns = [], []
+        for entry in files.outputs:
+            remote = entry.remote_path
+            if entry.source_pattern is not None or not remote:
+                continue
+            (output_patterns if glob.has_magic(remote) else outputs).append(remote)
+
+        caches, cache_patterns, cache_before = [], [], []
+        for item in files.caches:
+            entry = item.file
+            remote = entry.remote_path
+            if entry.local_path is None:
+                cache_before.append({"path": remote, "signature": item.before})
+            elif entry.source_pattern is None and remote:
+                if glob.has_magic(remote):
+                    cache_patterns.append(remote)
+                else:
+                    caches.append({"path": remote, "before": item.before})
+
         return {
-            "output_files": [
-                entry.remote_path for entry in files.outputs
-                if entry.source_pattern is None and entry.remote_path
-                and not glob.has_magic(entry.remote_path)
-            ],
-            "output_patterns": [
-                entry.remote_path for entry in files.outputs
-                if entry.source_pattern is None and entry.remote_path
-                and glob.has_magic(entry.remote_path)
-            ],
-            "cache_files": [
-                {"path": item.file.remote_path, "before": item.before}
-                for item in files.caches
-                if item.file.source_pattern is None
-                and item.file.local_path is not None and item.file.remote_path
-                and not glob.has_magic(item.file.remote_path)
-            ],
-            "cache_patterns": [
-                item.file.remote_path for item in files.caches
-                if item.file.source_pattern is None
-                and item.file.local_path is not None and item.file.remote_path
-                and glob.has_magic(item.file.remote_path)
-            ],
-            "cache_before": [
-                {"path": item.file.remote_path, "signature": item.before}
-                for item in files.caches if item.file.local_path is None
-            ],
+            "output_files": outputs,
+            "output_patterns": output_patterns,
+            "cache_files": caches,
+            "cache_patterns": cache_patterns,
+            "cache_before": cache_before,
         }
 
     async def attach(self, run, callback=None, output_listener=None, start=True):
