@@ -14,6 +14,7 @@ from .base import (
     ExecutionOutcome,
     FailurePhase,
     OutputObservers,
+    close_output_files,
     file_path,
     finish_monitor,
     wait_for_monitor,
@@ -758,12 +759,7 @@ class RemoteRunner:
                 await asyncio.gather(*tasks, return_exceptions=True)
             # Files already contain every received byte, including incomplete
             # sessions. Closing flushes them without any publish/discard step.
-            seen = set()
-            for target in (self.spec.output_file, self.spec.error_file):
-                if target is not None and id(target) not in seen:
-                    seen.add(id(target))
-                    if hasattr(target, "close"):
-                        target.close()
+            close_output_files(self.spec.output_file, self.spec.error_file)
 
     def _thread_main(self):
         try:
