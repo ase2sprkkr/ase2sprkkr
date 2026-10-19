@@ -23,6 +23,7 @@ from .base import (
 )
 from .remote import FileSyncPolicy, RemoteRunner, _run_sync
 from .stream_protocol import FramedRunningCommand
+from .transport import local_file_digest
 from .run_model import FileEntry, CacheEntry, FileManifest, FileMapping, WorkingDirectory
 from .endpoint import endpoint_for_executor
 
@@ -97,7 +98,6 @@ class _RemoteRun(RemoteRunner):
                         f"Streamed local {kind} size does not match the "
                         f"authoritative remote output: {local}"
                     )
-                from .transport import local_file_digest
                 remote_digest = await self.executor.transport.file_digest(entry.remote_path)
                 if remote_digest is None or local_file_digest(local) != remote_digest:
                     raise RuntimeError(
