@@ -7,7 +7,7 @@ from ase2sprkkr.result_files import ResultFile
 
 
 def test_multiple_definitions_share_extension_without_overwrite():
-    photo = SimpleNamespace(extension="spc")
+    photo = SimpleNamespace(extension="spc", auto_detect=True)
     band = SimpleNamespace(extension="spc")
 
     class TestRegistry(ResultFileDefinitionRegistry):
