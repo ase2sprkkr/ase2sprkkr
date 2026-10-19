@@ -57,8 +57,12 @@ def local_manifest(files, status):
     return discover_local_files(files, include_streams=False)
 
 
-def local_status(backend_id, files=None):
-    facts = status_remote(backend_id)
+def _local_status_from_facts(backend_id, facts, files=None):
+    """Project local supervisor facts into a status without querying it again.
+
+    Recovery already has an authoritative reply; asking the supervisor for
+    status a second time risks replacing that snapshot with newer/unknown facts.
+    """
     status = RunStatus(
         state=RunState(facts["state"]), backend_id=backend_id,
         return_code=facts.get("return_code"), message=facts.get("error"),
@@ -67,6 +71,12 @@ def local_status(backend_id, files=None):
     if files is not None and status.state in _TERMINAL:
         status = replace(status, files=local_manifest(files, status))
     return status
+
+
+def local_status(backend_id, files=None):
+    return _local_status_from_facts(
+        backend_id, status_remote(backend_id), files,
+    )
 
 
 class _ObserverSink:

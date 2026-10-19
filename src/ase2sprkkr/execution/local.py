@@ -16,7 +16,6 @@ from .base import (
     finish_monitor,
     wait_for_monitor,
     RunState,
-    RunStatus,
     SubmissionNotStarted,
 )
 from .file_availability import clear_declared_outputs
@@ -294,7 +293,7 @@ class LocalExecutor(Executor):
 
     def recover_submission(self, run_id, submission, *, submitted_at=None):
         from .remote_service import recover_remote
-        from .local_project import local_manifest
+        from .local_project import _local_status_from_facts
         reply = recover_remote(run_id, {
             "executor": "local",
             "directory": submission.execution.directory.local,
@@ -303,17 +302,9 @@ class LocalExecutor(Executor):
             # The absence of a ticket is not proof that submission never
             # happened. Never authorize an automatic duplicate launch.
             raise NotImplementedError("Submission identity is not recoverable")
-        status = RunStatus(
-            state=RunState(reply["state"]),
-            backend_id=reply["remote_id"],
-            return_code=reply.get("return_code"),
-            message=reply.get("error"),
-            failure_phase=reply.get("failure_phase"),
+        return _local_status_from_facts(
+            reply["remote_id"], reply, submission.files,
         )
-        if status.state in (RunState.FINISHED, RunState.FAILED, RunState.CANCELLED):
-            from dataclasses import replace
-            status = replace(status, files=local_manifest(submission.files, status))
-        return status
 
     def attach(self, run, callback=None, output_listener=None, start=True):
         from .local_project import attach_local
