@@ -108,9 +108,9 @@ class LocalRunner:
             self._output_observers.emit(data.decode("utf8"), kind)
 
     def _output_target(self, kind):
-        if kind == "err" and self.spec.error_file is not None:
-            return self.spec.error_file
-        return self.spec.output_file
+        # A missing stderr target means live observation only, not an
+        # implicit merge into the saved stdout artifact.
+        return self.spec.error_file if kind == "err" else self.spec.output_file
 
     def _forward_output(self, data, kind):
         target = self._output_target(kind)
