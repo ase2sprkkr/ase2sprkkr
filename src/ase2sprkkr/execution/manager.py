@@ -413,7 +413,8 @@ class ExecutionManager:
     def _capture_result_files(self, result_files):
         if result_files is None or result_files.captured_at is not None:
             return result_files
-        return replace(
+        from .file_availability import discover_local_files
+        captured = replace(
             result_files,
             input_versions=self._result_files_snapshot(result_files.input_files),
             output_versions=self._result_files_snapshot(
@@ -421,6 +422,7 @@ class ExecutionManager:
             ),
             captured_at=_now(),
         )
+        return discover_local_files(captured)
 
     def input_file_is_current(self, run):
         record = self.store.get(run) if isinstance(run, str) else self.store.get(run.id)

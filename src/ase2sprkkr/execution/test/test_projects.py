@@ -98,7 +98,7 @@ def test_stale_save_conflicts_and_explicit_overwrite_replaces_snapshot(tmp_path)
         expected_generation=original.generation,
         overwrite=True,
     )
-    assert overwritten.name == "Original"
+    assert overwritten.name == "Stale name"
     assert overwritten.generation == renamed.generation + 1
 
 

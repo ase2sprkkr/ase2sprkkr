@@ -144,6 +144,10 @@ def load_project_result(manager, run):
     record = manager.retrieve_result_files(record)
     record = manager.check_result_files(record)
     result_files = record.files
+    if result_files is not None and result_files.captured_at is None:
+        raise ProjectResultUnavailableError(
+            record, "historical output is unavailable: no authoritative file snapshot"
+        )
     if result_files is None or result_files.output_file is None:
         raise ProjectResultUnavailableError(
             record, "no persisted output result file"
