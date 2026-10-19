@@ -24,6 +24,7 @@ from ._durability import durable_mkdir, durable_write_json, sync_file
 from .base import (
     Executor,
     FailurePhase,
+    file_path,
     RunState,
     RunStatus,
     SubmissionNotStarted,
@@ -65,21 +66,6 @@ def _timestamp(value):
     if parsed.tzinfo is None:
         parsed = parsed.replace(tzinfo=timezone.utc)
     return parsed
-
-
-def _result_file_path(value, directory):
-    if value is None:
-        return None
-    value = getattr(value, "name", value)
-    try:
-        path = os.fspath(value)
-    except TypeError:
-        return None
-    if isinstance(path, int):
-        return None
-    if not os.path.isabs(path):
-        path = os.path.join(directory, path)
-    return os.path.abspath(path)
 
 
 def _unique(values):
@@ -374,7 +360,7 @@ class ExecutionManager:
     def _result_files_for_spec(spec):
         directory = os.path.abspath(os.fspath(spec.directory))
         def absolute(value):
-            return _result_file_path(value, directory)
+            return file_path(value, directory)
         primary_input = absolute(getattr(spec, "input_file", None))
         primary_output = absolute(getattr(spec, "output_file", None))
         error = absolute(getattr(spec, "error_file", None))

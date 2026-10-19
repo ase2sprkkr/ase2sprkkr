@@ -178,3 +178,27 @@ def test_wildcard_parent_completed_after_all_files():
     manifest = manifest.with_file_availability("/local/*.dat", "available")
     assert manifest.availability_state == "available"
     assert len(manifest.outputs) == 3
+
+
+def test_project_manifest_reuses_optional_file_path_semantics(tmp_path):
+    from types import SimpleNamespace
+    from ase2sprkkr.execution.manager import ExecutionManager
+
+    spec = SimpleNamespace(
+        directory=str(tmp_path),
+        input_file="input.dat",
+        input_files=(object(), 1, "input.dat"),
+        output_file="stdout.dat",
+        error_file=None,
+        output_files=("result.dat",),
+        cache_files=("cache.dat",),
+    )
+    manifest = ExecutionManager._result_files_for_spec(spec)
+
+    assert manifest.input_files == (str(tmp_path / "input.dat"),)
+    assert manifest.stdout.local_path == str(tmp_path / "stdout.dat")
+    assert manifest.stderr is None
+    assert [item.local_path for item in manifest.outputs] == [
+        str(tmp_path / "result.dat")
+    ]
+    assert manifest.caches[0].file.local_path == str(tmp_path / "cache.dat")
