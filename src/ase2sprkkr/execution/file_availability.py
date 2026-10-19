@@ -60,10 +60,16 @@ def validate_output_streams(streams, *, protected=()):
         if has_file_magic(target):
             continue
         for declaration in protected_paths:
-            if target in expand_local_candidates(declaration):
-                raise ValueError(
-                    f"Output stream {target} overlaps protected input/cache {declaration}"
+            for candidate in expand_local_candidates(declaration):
+                same_path = os.path.realpath(target) == os.path.realpath(candidate)
+                same_inode = (
+                    os.path.exists(target) and os.path.exists(candidate)
+                    and os.path.samefile(target, candidate)
                 )
+                if same_path or same_inode:
+                    raise ValueError(
+                        f"Output {target} overlaps protected input/cache {declaration}"
+                    )
 
 
 def clear_declared_outputs(paths, *, protected=()):
