@@ -665,6 +665,12 @@ class ExecutionManager:
                 state = RunState.FAILED
                 phase = FailurePhase.ARTIFACTS
                 message = str(exc)
+                result_files = result_files._map_artifacts(
+                    lambda item: replace(
+                        item, availability_state="failed",
+                        availability_message=message,
+                    ) if item.availability_state in (None, "pending") else item
+                )
 
         return self.transition(
             record,

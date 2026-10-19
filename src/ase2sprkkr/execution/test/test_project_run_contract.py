@@ -14,12 +14,12 @@ def test_untracked_run_has_no_store():
         resolve_project_manager(True)
 
 
-def test_project_has_exclusive_project_runs_store(tmp_path):
+def test_project_uses_shared_project_runs_store(tmp_path):
     projects = ProjectRepository(tmp_path / "projects")
     project = projects.create("test")
     manager = ExecutionManager(project_repository=projects).for_project(project)
     assert manager.project_id == project.id
-    assert manager.store.directory == tmp_path / "projects_runs" / project.id
+    assert manager.store.directory == tmp_path / "projects_runs"
     with pytest.raises(ValueError, match="existing project"):
         ExecutionManager(project_repository=projects).create_run(
             object(), object(), process_result=lambda x: x, task="SCF",

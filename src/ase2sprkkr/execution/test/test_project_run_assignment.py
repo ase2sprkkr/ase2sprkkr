@@ -74,7 +74,7 @@ def test_run_is_durable_in_project_namespace_before_backend_submit(tmp_path):
     stored = manager.store.get(run.id)
     assert stored.input_definition == "DOS"
     assert stored.execution.backend_id == "native-1"
-    assert manager.store.directory == tmp_path / "projects_runs" / project.id
+    assert manager.store.directory == tmp_path / "projects_runs"
     assert not hasattr(projects.project(project.id), "persistent_refs")
 
 

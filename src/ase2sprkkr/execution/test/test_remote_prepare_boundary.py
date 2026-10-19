@@ -2,7 +2,7 @@
 
 from ase2sprkkr.execution.remote_endpoint import _RemoteRun
 from ase2sprkkr.execution import (
-    ExecutionManager, ExecutionSpec, FileEntry, FileManifest, FileMapping,
+    ExecutionSpec, FileEntry, FileManifest, FileMapping,
     LaunchSpec, RemoteEndpointExecutor, RunState, RunStore, LocalTransport,
 )
 
@@ -29,9 +29,8 @@ def test_prepared_manifest_is_durable_before_remote_backend_submit(tmp_path, mon
         executor, spec, task="DOS", process_result=lambda outcome: outcome,
     )
     expected = FileManifest(
-        stdout=FileEntry(str(output), "/target/prepared/run.out"),
+        stdout=FileEntry(str(output), "/target/prepared/run.out", availability_state="pending"),
         mapping=FileMapping(str(tmp_path), "/target/prepared"),
-        availability_state="pending",
     )
 
     async def prepare(_runner):

@@ -1,9 +1,9 @@
 import pytest
 
 import ase2sprkkr.execution.manager as manager_module
+from ase2sprkkr.execution.manager import ExecutionManager
 from ase2sprkkr.execution import (
     ArtifactAvailabilityState,
-    ExecutionManager,
     FailurePhase,
     FileManifest,
     FileEntry,
@@ -20,11 +20,9 @@ def test_result_snapshot_sync_failure_is_artifact_failure(tmp_path, monkeypatch)
     record = manager.new_record(
         task="SCF",
         directory=tmp_path,
-        result_files=ResultFilesRecord(
-            output_file=str(output),
-            output_files=(str(output),),
-            availability_state=ArtifactAvailabilityState.PENDING,
-        ),
+        files=FileManifest(stdout=FileEntry(
+            local_path=str(output), availability_state="pending",
+        )),
     )
     record = manager.transition(record, state=RunState.POSTPROCESSING)
 
