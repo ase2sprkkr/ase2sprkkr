@@ -59,6 +59,6 @@ def input_parameters_definition():
     schema.task_selectors = ("BAND",)
     schema._task_definition = TaskDefinition(
         "BAND", executable="kkrspec", mpi=False, output_reader="SPEC",
-        input_file_templates=SPEC_INPUT_FILES, output_file_templates=SPEC_OUTPUT_FILES,
+        input_files=SPEC_INPUT_FILES, output_files=SPEC_OUTPUT_FILES,
     )
     return schema
