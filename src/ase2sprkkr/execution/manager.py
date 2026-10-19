@@ -940,17 +940,10 @@ class ProjectRunner:
 
     @property
     def state(self):
-        state = self._runner.state
-        if state == RunState.NEW and self._record.state != RunState.NEW:
-            return self._record.state
-        if self._record.state != RunState.NEW and state != self._record.state:
-            self._record = self.manager.transition(
-                self._record,
-                state=state,
-                execution=self.execution,
-                failure_phase=self.failure_phase,
-            )
-        return self._record.state if self._record.state != RunState.NEW else state
+        # The persisted lifecycle is authoritative. Backend observations and
+        # RunStore updates belong to explicit operations (refresh/wait), not
+        # to a property read.
+        return self._record.state
 
     def add_output_listener(self, callback):
         return self._runner.add_output_listener(callback)
@@ -1057,11 +1050,10 @@ class ProjectRunner:
                     pass
 
     def wait(self):
-        try:
-            return self._runner.wait()
-        finally:
-            if self._record.state != RunState.NEW:
-                self._sync_completion(self.result)
+        # PostprocessingRunner invokes _sync_completion through its completion
+        # callback before unblocking waiters. Doing it again here would capture
+        # artifacts and persist the terminal transition twice.
+        return self._runner.wait()
 
     def run(self):
         if self._record.state == RunState.NEW:

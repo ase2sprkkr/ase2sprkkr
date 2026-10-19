@@ -252,3 +252,48 @@ def test_failed_download_reader_construction_does_not_reopen_run(tmp_path, monke
     assert current.state == RunState.FAILED
     assert current.failure_phase == FailurePhase.DOWNLOAD
     assert current.files == failed.files
+
+
+def test_wait_does_not_finalize_a_second_time(tmp_path, monkeypatch):
+    store = RunStore(tmp_path / "runs")
+    manager = ExecutionManager(store)
+    completed = []
+    original_complete = manager.complete
+
+    def complete(*args, **kwargs):
+        completed.append(kwargs["state"])
+        return original_complete(*args, **kwargs)
+
+    monkeypatch.setattr(manager, "complete", complete)
+    run = manager.create_run(
+        _Executor(),
+        SimpleNamespace(directory=str(tmp_path)),
+        process_result=lambda outcome: outcome,
+        task="DOS",
+    )
+    run.submit()
+    run.wait()
+    run.wait()
+
+    assert completed == [RunState.FINISHED]
+    assert store.get(run.id).state == RunState.FINISHED
+
+
+def test_state_property_does_not_query_backend_or_persist(tmp_path):
+    store = RunStore(tmp_path / "runs")
+    manager = ExecutionManager(store)
+    run = manager.create_run(
+        _Executor(),
+        SimpleNamespace(directory=str(tmp_path)),
+        process_result=lambda outcome: outcome,
+        task="DOS",
+    )
+
+    class StateQueryForbidden:
+        @property
+        def state(self):
+            raise AssertionError("reading ProjectRunner.state queried the backend")
+
+    run._runner = StateQueryForbidden()
+    assert run.state == RunState.NEW
+    assert store.get(run.id).state == RunState.NEW
