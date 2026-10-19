@@ -81,3 +81,30 @@ def test_late_conflicting_final_state_does_not_replace_known_final_outcome(tmp_p
     assert merged.state == RunState.FINISHED
     # A stale conflicting final update must not overwrite the precise outcome.
     assert merged.return_code == 0
+
+
+def test_late_uncaptured_manifest_cannot_destroy_historical_snapshot(tmp_path):
+    from ase2sprkkr.execution import FileEntry, FileManifest
+
+    manager = ExecutionManager(RunStore(tmp_path / "runs"))
+    output = tmp_path / "out"
+    output.write_bytes(b"historical contents")
+    original = manager.new_record(
+        task="DOS", directory=tmp_path,
+        files=FileManifest(stdout=FileEntry(local_path=str(output))),
+    )
+    running = manager.transition(original, state=RunState.RUNNING)
+    completed = manager.complete(
+        running, state=RunState.FINISHED, return_code=0,
+        artifacts_available=True,
+    )
+    assert completed.files.captured_at is not None
+    assert len(completed.files.output_versions) == 1
+
+    old_manifest = running.files
+    late = manager.transition(
+        running, state=RunState.RUNNING, files=old_manifest,
+    )
+    assert late.files == completed.files
+    assert late.files.output_versions == completed.files.output_versions
+    assert manager.store.get(running.id).files == completed.files

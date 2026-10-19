@@ -481,7 +481,9 @@ class ExecutionManager:
         current = latest.files
         if current is None:
             return requested
-        if current.captured_at is not None and requested.captured_at is not None:
+        if current.captured_at is not None:
+            # Immutable historical evidence: an old runner must not replace
+            # the captured digests with its uncaptured in-memory manifest.
             return current
         return requested
 

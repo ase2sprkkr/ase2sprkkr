@@ -119,6 +119,10 @@ def test_final_run_releases_submission_namespace(tmp_path):
     first = _run(manager, executor, tmp_path)
     first.submit()
     executor.runners[0].finish()
+    # The raw runner is finished, but the project's asynchronous postprocessor
+    # must complete its durable callback before the namespace can be released.
+    first.wait()
+    assert manager.store.get(first.id).state == RunState.FINISHED
 
     second = _run(manager, executor, tmp_path)
     second.submit()
