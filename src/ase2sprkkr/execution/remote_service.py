@@ -138,6 +138,7 @@ def _request_spec(request):
         cache_files=cache_files,
         mpi_argv=None if mpi_argv is None else tuple(mpi_argv),
         launch=LaunchSpec(**(request.get("launch") or {})),
+        mpi_uses_stdin=request.get("mpi_uses_stdin", True),
     )
 
 

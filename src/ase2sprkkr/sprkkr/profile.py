@@ -161,6 +161,7 @@ class SPRKKRProfile:
             cache_files=tuple(cache_files),
             mpi_argv=None if mpi_argv is None else tuple(mpi_argv),
             launch=launch,
+            mpi_uses_stdin=False if mpi_argv is not None else True,
         )
 
 

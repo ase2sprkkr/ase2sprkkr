@@ -314,9 +314,10 @@ class PsijRunner:
             directory=self.spec.directory,
             environment=environment,
             stdin_path=(
-                None
-                if self.spec.launch and self.spec.mpi_argv is not None
-                else self._stdin_path
+                self._stdin_path
+                if not (self.spec.launch and self.spec.mpi_argv is not None)
+                or self.spec.mpi_uses_stdin
+                else None
             ),
             stdout_path=self._stdout_path,
             stderr_path=self._stderr_path,

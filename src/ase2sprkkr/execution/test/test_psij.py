@@ -364,7 +364,7 @@ def test_psij_mpi_process_count_becomes_resource_spec(monkeypatch, tmp_path):
     assert job_spec.arguments == [str(tmp_path / "run.inp")]
     assert job_spec.resources.process_count == 16
     assert job_spec.launcher == "srun"
-    assert job_spec.stdin_path is None
+    assert job_spec.stdin_path == str(tmp_path / "run.inp")
     input_file.close()
     output_file.close()
 
@@ -877,3 +877,17 @@ def test_psij_submit_is_serialized_across_threads(monkeypatch, tmp_path):
     assert len(errors) == 1
     runner.wait()
     input_file.close()
+
+def test_psij_mpi_respects_explicit_stdin_policy(monkeypatch, tmp_path):
+    backend = _Backend()
+    executor = _executor(monkeypatch, backend)
+    spec = ExecutionSpec(
+        argv=("program",), mpi_argv=("parallel",),
+        launch=LaunchSpec.from_mpi(2),
+        input_file=None, output_file=None, directory=str(tmp_path),
+        stdin=str(tmp_path / "stdin.dat"),
+        mpi_uses_stdin=False,
+    )
+    runner = executor.create_run(spec)
+    assert runner._job.spec.stdin_path is None
+    assert replace(spec, mpi_uses_stdin=True).mpi_uses_stdin
