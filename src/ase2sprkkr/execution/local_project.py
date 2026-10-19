@@ -7,7 +7,7 @@ from __future__ import annotations
 
 import asyncio
 import os
-from dataclasses import asdict, replace
+from dataclasses import replace
 from threading import Event, Lock, Thread
 
 from .base import (
@@ -237,11 +237,8 @@ class LocalProjectRunner:
             "id": self._run_id,
             "detached": True,
             "directory": os.fspath(self.spec.directory),
-            "argv": list(self.spec.argv),
+            **self.spec.command_request(),
             "input_file": self.result.input_file,
-            "mpi_argv": None if self.spec.mpi_argv is None else list(self.spec.mpi_argv),
-            "mpi_uses_stdin": self.spec.mpi_uses_stdin,
-            "launch": asdict(self.spec.launch),
             "stdin": _file_path(self.spec.stdin, self.spec.directory),
             "output_file": self.result.output_file,
             "error_file": self.result.error_file,
