@@ -60,6 +60,9 @@ class LocalRunner:
         self._callback_exception = None
         self._failure_phase = None
         self._failure_message = None
+        self._stream_handles = {}
+        self._owned_streams = []
+        self._owned_stdin = None
 
     @property
     def state(self):
@@ -94,7 +97,29 @@ class LocalRunner:
     def _output_target(self, kind):
         # A missing stderr target means live observation only, not an
         # implicit merge into the saved stdout artifact.
-        return self.spec.error_file if kind == "err" else self.spec.output_file
+        return self._stream_handles.get(kind)
+
+    def _open_streams(self):
+        by_path = {}
+        for kind, value in (("out", self.spec.output_file),
+                            ("err", self.spec.error_file)):
+            if value is None:
+                self._stream_handles[kind] = None
+            elif isinstance(value, (str, bytes, os.PathLike)):
+                path = file_path(value, self.spec.directory)
+                if path not in by_path:
+                    os.makedirs(os.path.dirname(path), exist_ok=True)
+                    by_path[path] = open(path, "wb")
+                    self._owned_streams.append(by_path[path])
+                self._stream_handles[kind] = by_path[path]
+            else:
+                self._stream_handles[kind] = value
+
+        stdin = self.spec.stdin
+        if isinstance(stdin, (str, bytes, os.PathLike)):
+            self._owned_stdin = open(file_path(stdin, self.spec.directory), "rb")
+            return self._owned_stdin
+        return stdin
 
     def _forward_output(self, data, kind):
         target = self._output_target(kind)
@@ -152,7 +177,8 @@ class LocalRunner:
                 protected=(*protected, self.result.output_file, self.result.error_file),
             )
             try:
-                self._process = await start_local_process(self.spec)
+                stdin = self._open_streams()
+                self._process = await start_local_process(self.spec, stdin=stdin)
             except BaseException as exc:
                 self._failure_phase = FailurePhase.LAUNCH
                 self._failure_message = str(exc)
@@ -211,7 +237,13 @@ class LocalRunner:
         finally:
             if self._stop_task is not None:
                 await asyncio.gather(self._stop_task, return_exceptions=True)
-            close_output_files(self.spec.output_file, self.spec.error_file)
+            try:
+                close_output_files(
+                    *self._owned_streams, self.spec.output_file, self.spec.error_file,
+                )
+            finally:
+                if self._owned_stdin is not None:
+                    self._owned_stdin.close()
             self._process = None
             self._loop = None
 

@@ -41,3 +41,32 @@ def test_local_stream_targets_are_independent(tmp_path, store_stdout, store_stde
     if store_stderr:
         assert stderr_path.read_bytes() == b"from stderr\n"
         assert stderr.closed
+
+
+def test_local_runner_accepts_named_streams_and_stdin_paths(tmp_path):
+    stdin = tmp_path / "input.dat"
+    stdin.write_bytes(b"hello from stdin\\n")
+    runner = LocalExecutor().create_run(ExecutionSpec(
+        argv=(
+            sys.executable, "-c",
+            "import sys; data=sys.stdin.buffer.read(); "
+            "sys.stdout.buffer.write(data); sys.stderr.buffer.write(b'warning')",
+        ),
+        input_file=None, directory=str(tmp_path), stdin="input.dat",
+        output_file="stdout.dat", error_file="stderr.dat",
+    ))
+    result = runner.run()
+    assert result.return_code == 0
+    assert runner.state is RunState.FINISHED
+    assert (tmp_path / "stdout.dat").read_bytes() == stdin.read_bytes()
+    assert (tmp_path / "stderr.dat").read_bytes() == b"warning"
+
+
+def test_local_runner_accepts_pathlike_stdout(tmp_path):
+    stdout = tmp_path / "nested" / "output.dat"
+    runner = LocalExecutor().create_run(ExecutionSpec(
+        argv=(sys.executable, "-c", "print('ok')"),
+        input_file=None, output_file=stdout, directory=str(tmp_path),
+    ))
+    assert runner.run().return_code == 0
+    assert stdout.read_bytes() == b"ok\\n"
