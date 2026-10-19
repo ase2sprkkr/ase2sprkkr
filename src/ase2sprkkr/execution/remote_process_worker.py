@@ -10,6 +10,7 @@ import sys
 
 from .remote_mailbox import publish_outcome
 from .base import FailurePhase, RunState
+from .local_process import pump_stream
 from .remote_supervisor_stream import SupervisorStreams
 
 _SPEC_ENV = "ASE2SPRKKR_REMOTE_PROCESS_SPEC"
@@ -31,11 +32,6 @@ def _wait_for_parent_release():
             raise RuntimeError("Remote supervisor launch was not released by parent")
     finally:
         os.close(fd)
-
-
-async def _pump(source, kind, streams):
-    while data := await source.read(65536):
-        streams.publish(kind, data)
 
 
 async def _stop_process(process, waiting):
@@ -88,9 +84,13 @@ async def _run(spec):
         )
         state, phase, return_code = RunState.RUNNING, None, None
         waiting = asyncio.create_task(process.wait())
-        pumps = [asyncio.create_task(_pump(process.stdout, "out", streams))]
+        pumps = [asyncio.create_task(
+            pump_stream(process.stdout, lambda data: streams.publish("out", data))
+        )]
         if not streams.merged:
-            pumps.append(asyncio.create_task(_pump(process.stderr, "err", streams)))
+            pumps.append(asyncio.create_task(
+                pump_stream(process.stderr, lambda data: streams.publish("err", data))
+            ))
         # A failing spool must terminate the process rather than deadlock a pipe.
         stop = asyncio.create_task(streams.cancelled.wait())
         lost = (asyncio.create_task(streams.disconnected.wait())
