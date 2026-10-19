@@ -437,7 +437,9 @@ def test_legacy_user_hook_can_read_arpes_without_loading_broken_user_schema(
     )
     (config_dir / "__init__.py").write_text(
         "from ase2sprkkr.input_parameters.input_parameters import InputParameters\n"
+        "InputParameters.definitions['ARPES'].mpi = False\n"
         "assert InputParameters.definitions['ARPES'].name == 'arpes'\n"
+        "assert InputParameters.definitions['ARPES'].mpi is False\n"
     )
     env = os.environ.copy()
     env["XDG_CONFIG_HOME"] = str(tmp_path)
