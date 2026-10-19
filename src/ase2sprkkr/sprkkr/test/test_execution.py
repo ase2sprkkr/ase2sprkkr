@@ -172,4 +172,4 @@ def test_local_binary_output_does_not_abort_observers():
     seen = []
     runner.add_output_listener(lambda text, kind: seen.append((text, kind)))
     assert runner.run().return_code == 0
-    assert seen == [("\\ufffd\\n", "out")]
+    assert seen == [("\ufffd\n", "out")]
