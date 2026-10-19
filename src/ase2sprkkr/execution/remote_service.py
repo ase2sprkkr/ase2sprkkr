@@ -22,7 +22,7 @@ import time
 from pathlib import Path
 from uuid import uuid4
 
-from .growing_file_tail import follow_growing_files
+from .growing_file_tail import follow_job_files
 from .file_availability import clear_declared_outputs
 from .base import ExecutionSpec, FailurePhase, LaunchSpec, RunState, SubmissionNotStarted
 from .remote_process_worker import _SPEC_ENV, _START_FD_ENV
@@ -466,16 +466,11 @@ async def _follow_scheduler_async(remote_id, streams, paths, offsets, poll_inter
     )
     job = executor._psij.Job()
     executor._job_executor.attach(job, handle["native_id"])
-    waiting = asyncio.create_task(asyncio.to_thread(job.wait))
-
     def emit(kind, data):
         streams[kind].write(data)
         streams[kind].flush()
 
-    async def terminal():
-        if not waiting.done():
-            return None
-        await waiting
+    async def terminal(_native_status):
         status = await asyncio.to_thread(status_remote, remote_id)
         if status["state"] in {s.value for s in _FINAL_STATES}:
             return status
@@ -493,14 +488,10 @@ async def _follow_scheduler_async(remote_id, streams, paths, offsets, poll_inter
             "error": getattr(native, "message", None),
         }
 
-    try:
-        return await follow_growing_files(
-            paths, emit, terminal, offsets=offsets,
-            poll_interval=max(poll_interval, 1.0),
-        )
-    finally:
-        if not waiting.done():
-            waiting.cancel()
+    return await follow_job_files(
+        paths, emit, job.wait, terminal=terminal, offsets=offsets,
+        poll_interval=max(poll_interval, 1.0),
+    )
 
 
 def _follow_scheduler(remote_id, streams, paths, offsets, poll_interval):

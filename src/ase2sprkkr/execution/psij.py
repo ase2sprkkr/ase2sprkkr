@@ -13,7 +13,7 @@ from pathlib import Path
 from threading import Event, Lock, Thread
 
 from .file_availability import discover_local_files, clear_declared_outputs
-from .growing_file_tail import follow_growing_files
+from .growing_file_tail import follow_job_files
 from .base import (
     ExecutionOutcome,
     ExecutionSpec,
@@ -424,21 +424,10 @@ class PsijRunner:
         if not paths:
             status = await asyncio.to_thread(self._job.wait)
         else:
-            waiting = asyncio.create_task(asyncio.to_thread(self._job.wait))
-
-            async def terminal():
-                return await waiting if waiting.done() else None
-
-            try:
-                status = await follow_growing_files(
-                    paths, lambda kind, data: self._emit_output(data, kind),
-                    terminal, poll_interval=max(self.executor.poll_interval, 1.0),
-                )
-            finally:
-                if not waiting.done():
-                    # PSI/J owns scheduler cancellation; never cancel its job
-                    # merely because an output listener stopped.
-                    waiting.cancel()
+            status = await follow_job_files(
+                paths, lambda kind, data: self._emit_output(data, kind),
+                self._job.wait, poll_interval=max(self.executor.poll_interval, 1.0),
+            )
 
         self._return_code = getattr(status, "exit_code", None)
         state_name = getattr(getattr(status, "state", None), "name", None)
