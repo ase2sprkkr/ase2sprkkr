@@ -620,9 +620,10 @@ def write_arpes_nexus(spc, filename, *, input_parameters=None,
             data["energy"].attrs["long_name"] = "Calculated initial-state energy E - E_F"
             data["theta"].attrs["units"] = "degree"
             data["theta"].attrs["long_name"] = "Photoelectron polar emission angle (SPR-KKR convention)"
-        for name in ("spin_up", "spin_down", "spin_polarization",
-                     "k_parallel", "determinant"):
+        for name in ("spin_up", "spin_down", "spin_polarization", "determinant"):
             data.create_dataset(name, data=arrays[name])
+        if mode == "energy":
+            data.create_dataset("k_parallel", data=arrays["k_parallel"])
         data["spin_up"].attrs["units"] = "arbitrary_units"
         data["spin_down"].attrs["units"] = "arbitrary_units"
         data["spin_polarization"].attrs["units"] = "1"
