@@ -28,12 +28,13 @@ class _HistoryExecutor(Executor):
         self.output_file = None
         self.restored_output = "original output"
 
-    def fetch_result_files(self, run, files):
+    def fetch_result_files(self, run, files, *, destinations=None):
         files = tuple(files)
         self.fetch_calls.append((run.id, files))
         if self.output_file is None or self.output_file not in files:
             return
-        with open(self.output_file, "w") as output:
+        target = self.output_file if destinations is None else destinations[self.output_file]
+        with open(target, "w") as output:
             output.write(self.restored_output)
 
 
@@ -154,7 +155,25 @@ def test_restored_changed_content_is_rejected_as_overwritten(tmp_path, monkeypat
 
     stored = manager.store.get(record.id)
     assert stored.state == RunState.FINISHED
-    assert stored.files.state == FileState.OVERWRITTEN
+    assert stored.files.state == FileState.MISSING
+    assert not (tmp_path / "run.out").exists()
+    assert not list(tmp_path.glob(".run.out.*.tmp"))
+    assert stored.files.availability_state == ArtifactAvailabilityState.FAILED
+
+
+def test_shared_historical_hash_verification_does_not_depend_on_executor(tmp_path):
+    from ase2sprkkr.execution.manager import HistoricalFileMismatchError
+
+    manager, executor, record = _terminal_run(tmp_path)
+    path = tmp_path / "run.out"
+    path.unlink()
+    executor.restored_output = "contents from another run"
+    with pytest.raises(HistoricalFileMismatchError, match="overwritten"):
+        manager.retrieve_result_files(record.id)
+
+    assert not path.exists()
+    assert not list(tmp_path.glob(".run.out.*.tmp"))
+    assert manager.store.get(record.id).state == RunState.FINISHED
 
 
 def test_retrieval_programming_error_is_not_persisted_as_artifact_failure(tmp_path):

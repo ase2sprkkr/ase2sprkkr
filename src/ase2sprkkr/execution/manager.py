@@ -18,7 +18,7 @@ from uuid import uuid4
 
 
 from ..common.file_locks import FileLock
-from ..common.file_versions import FileState, FileVersion
+from ..common.file_versions import FileState, FileVersion, file_digest
 from ._durability import durable_mkdir, durable_write_json, sync_file
 from .base import (
     Executor,
@@ -33,6 +33,10 @@ from .pool import default_executor_pool
 from .postprocessing import PostprocessingRunner
 from .run_model import Execution, WorkingDirectory, FileManifest, FileEntry, CacheEntry
 from .transport import expand_local_candidates, has_file_magic
+
+
+class HistoricalFileMismatchError(OSError):
+    """Restored contents differ from a run's captured SHA-256 digest."""
 
 
 _RUN_RECORD_SCHEMA_VERSION = 3
@@ -756,14 +760,41 @@ class ExecutionManager:
         if not executor.supports_result_file_retrieval:
             return record
 
+        versions = {
+            os.path.abspath(os.fspath(version.path)): version
+            for version in (() if record.files is None else record.files.all_versions)
+        }
         for path in missing:
+            path = os.path.abspath(os.fspath(path))
+            version = versions.get(path)
+            staged = (
+                Path(path).with_name(f".{Path(path).name}.{uuid4().hex}.tmp")
+                if version is not None and version.digest is not None else None
+            )
             try:
-                executor.fetch_result_files(record, (path,))
+                if staged is None:
+                    executor.fetch_result_files(record, (path,))
+                else:
+                    executor.fetch_result_files(
+                        record, (path,), destinations={path: os.fspath(staged)},
+                    )
+                    if not staged.is_file():
+                        raise FileNotFoundError(
+                            f"Historical artifact was not retrieved: {path}"
+                        )
+                    if file_digest(staged) != version.digest:
+                        raise HistoricalFileMismatchError(
+                            f"Historical result files have been overwritten: {path}"
+                        )
+                    os.replace(staged, path)
             except OSError as exc:
                 self.update_artifact_availability(
                     record, path, ArtifactAvailabilityState.FAILED, str(exc),
                 )
                 raise
+            finally:
+                if staged is not None:
+                    staged.unlink(missing_ok=True)
             refreshed = self.store.get(record.id)
             if path in self._missing_result_files(refreshed.files):
                 record = self.update_artifact_availability(

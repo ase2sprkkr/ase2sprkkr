@@ -1,3 +1,4 @@
+from ase2sprkkr.common.file_versions import FileState, FileVersion
 from ase2sprkkr.execution import (
     LocalTransport, RemoteExecutor, RunRecord, RunState, Execution,
     WorkingDirectory, FileManifest,
@@ -124,3 +125,42 @@ def test_remote_fetch_uses_transport_expansion_for_exact_and_wildcard(tmp_path):
     assert existing.read_text() == "keep"
     assert (local_root / "calc" / "part-b.dat").read_text() == "b"
     assert not (local_root / "calc" / ".hidden.dat").exists()
+
+
+def test_remote_staged_result_keeps_canonical_file_absent(tmp_path):
+    local_root = tmp_path / "local"
+    remote_root = tmp_path / "remote"
+    local_dir = local_root / "calc"
+    remote_dir = remote_root / "calc"
+    local_dir.mkdir(parents=True)
+    remote_dir.mkdir(parents=True)
+    local = local_dir / "run.out"
+    local.write_bytes(b"original result")
+    captured = FileVersion.capture(local, require_digest=True)
+    local.unlink()
+    (remote_dir / "run.out").write_bytes(b"original result")
+
+    executor = RemoteExecutor(LocalTransport())
+    run = RunRecord(
+        id="staged-result", state=RunState.FINISHED,
+        created_at="2026-10-13T08:00:00+00:00",
+        updated_at="2026-10-13T08:00:00+00:00",
+        task="DOS",
+        execution=Execution(
+            endpoint_for_executor(executor),
+            WorkingDirectory(str(local_dir), str(remote_dir)),
+            "backend-id",
+        ),
+        files=FileManifest(
+            mapping=FileMapping(str(local_root), str(remote_root)),
+            output_versions=(captured,),
+            captured_at="2026-10-13T08:00:00+00:00",
+        ),
+    )
+    staged = local_dir / ".staged-run.out"
+    executor.fetch_result_files(
+        run, (local,), destinations={str(local): str(staged)},
+    )
+    assert not local.exists()
+    assert captured.state() is FileState.MISSING
+    assert staged.read_bytes() == b"original result"
