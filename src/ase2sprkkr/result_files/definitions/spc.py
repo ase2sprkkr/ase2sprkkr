@@ -162,7 +162,7 @@ class ARPESDefinition(ResultFileDefinition):
 def create_definition():
 
     def plot(option, azimuth_index=None, azimuth_indices=None,
-             live=False, **kwargs):
+             live=False, slider=None, **kwargs):
         c = option._container
         kw = {
             "show_zero_line": False,
@@ -183,17 +183,21 @@ def create_definition():
             kw["ylabel"] = r"$k_y$ (Å$^{-1}$)"
 
         intensity = option()
-        selected = None
         if c.MODE() == "energy" and c.NP() > 1:
             selected = tuple(azimuth_indices) if azimuth_indices is not None else (
                 0 if azimuth_index is None else azimuth_index,
             )
-            x, y, intensity = (
-                lambda index, data=data: data[:, index, :]
-                for data in (x, y, intensity)
-            )
+            if slider is not None:
+                x, y, intensity = (
+                    lambda index, data=data: data[:, index, :]
+                    for data in (x, y, intensity)
+                )
+            else:
+                x, y, intensity = (
+                    data[:, selected[0], :] for data in (x, y, intensity)
+                )
         kw.update(kwargs)
-        colormesh(x, y, intensity, live=live, slider_values=selected, **kw)
+        colormesh(x, y, intensity, slider=slider, **kw)
 
     def ii(j):
         def fn(data: np.ndarray, section: object) -> np.ndarray:

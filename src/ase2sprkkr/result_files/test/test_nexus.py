@@ -291,10 +291,63 @@ def test_colormesh_callable_slider_shared():
     slider = PlotSlider(fig, (0, 1, 2))
     for ax in axes:
         colormesh(xx, yy, lambda i: calls.append(i) or np.full((3, 3), i + 1.),
-                  slider_values=(0, 1, 2), slider=slider, live=True, axis=ax)
+                  slider=slider, axis=ax)
     widget = slider.widget
     assert calls == [0, 0]
     widget.set_val(2)
     assert calls == [0, 0, 2, 2]
     assert len(fig.axes) == 3  # one common slider, not one per subplot
+    plt.close(fig)
+
+
+
+def test_multiplot_slider_with_mixed_plot_types():
+    """Line plots may ignore a shared slider without rejecting its argument."""
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+    from ase2sprkkr.gui.plot import Multiplot, colormesh, set_up_common_plot
+
+    xx, yy = np.meshgrid(np.arange(3), np.arange(3))
+    selected = []
+    with Multiplot(
+        layout=(1, 2), live=True, slider_values=(0, 1, 2),
+        show=False, layout_kind="adjust"
+    ) as mp:
+        with mp.new_axis(name="map") as (ax, options):
+            colormesh(
+                xx, yy, lambda i: selected.append(i) or np.full((3, 3), i + 1),
+                axis=ax, **options
+            )
+        with mp.new_axis(name="line") as (ax, options):
+            set_up_common_plot(ax, title="Static line", **options)
+            ax.plot([0, 1], [0, 2])
+
+    mp.slider.widget.set_val(2)
+    assert selected == [0, 2]
+    assert len(mp.figure.axes) == 3
+    plt.close(mp.figure)
+
+
+def test_colormesh_standalone_slider_and_static():
+    """The decorated standalone routine creates the same slider owner."""
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+    from ase2sprkkr.gui.plot import colormesh
+
+    xx, yy = np.meshgrid(np.arange(3), np.arange(3))
+    colormesh(xx, yy, lambda k: np.full((3, 3), k + 1),
+              live=True, slider_values=(1, 2, 3), show=False)
+    fig = plt.gcf()
+    controller = fig._ase2sprkkr_slider_controller
+    assert controller.values == (1, 2, 3)
+    assert len(fig.axes) == 2
+    controller.widget.set_val(2)
+    plt.close(fig)
+
+    # No widget or callable plumbing is needed for static image data.
+    colormesh(xx, yy, np.ones((3, 3)), live=False, show=False)
+    fig = plt.gcf()
+    assert not hasattr(fig, "_ase2sprkkr_slider_controller")
     plt.close(fig)

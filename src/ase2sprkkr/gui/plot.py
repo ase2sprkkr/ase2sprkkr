@@ -228,7 +228,9 @@ def plotting_function(func):
     @add_to_signature(func)
     @functools.wraps(func)
     def plot_function(
-        *args, filename=None, show=None, dpi=600, latex=None, figsize=(6, 4), callback=None, axis=None, **kwargs
+        *args, filename=None, show=None, dpi=600, latex=None, figsize=(6, 4),
+        callback=None, axis=None, slider=None, slider_values=None,
+        slider_label="Slice", slider_labels=None, live=False, **kwargs
     ):
         provided_axis = axis is not None
         with single_plot(
@@ -239,19 +241,15 @@ def plotting_function(func):
             figsize=figsize,
             axis=axis,
         ) as (axis, _):
-            if (kwargs.get("live") and kwargs.get("slider_values") is not None
-                    and kwargs.get("slider") is None
-                    and len(kwargs["slider_values"]) > 1):
-                if provided_axis:
-                    raise ValueError(
-                        "Shared live sliders require Multiplot(slider_values=...)"
-                    )
-                kwargs["slider"] = PlotSlider(
-                    axis.figure, kwargs["slider_values"],
-                    kwargs.get("slider_label", "Slice"),
-                    kwargs.get("slider_labels"),
-                )
-            func(*args, axis=axis, **kwargs)
+            if live and slider is None and slider_values is not None:
+                values = tuple(slider_values)
+                if len(values) > 1:
+                    if provided_axis:
+                        raise ValueError(
+                            "Use Multiplot for a shared slider on existing axes"
+                        )
+                    slider = PlotSlider(axis.figure, values, slider_label, slider_labels)
+            func(*args, axis=axis, slider=slider, **kwargs)
             if callback:
                 callback(axis)
 
@@ -259,7 +257,8 @@ def plotting_function(func):
 
 
 def set_up_common_plot(
-    axis, title=None, xlabel=None, ylabel=None, xticklabels=None, yticklabels=None, xticks=None, yticks=None, **kwargs
+    axis, title=None, xlabel=None, ylabel=None, xticklabels=None, yticklabels=None,
+    xticks=None, yticks=None, slider=None, **kwargs
 ):
     loc = locals()
     """
@@ -293,34 +292,17 @@ def colormesh(
     vmin=None,
     vmax=None,
     colorbar=False,
-    live=False,
     slider=None,
-    slider_values=None,
-    slider_label="Slice",
-    slider_labels=None,
     **kwargs,
 ):
-    """Plot a 2D map.
-
-    With slider_values, callable x, y or c receive the selected value.
-    Static output uses the first value; live output adds a shared slider
-    to the figure when there is more than one possible value.
-    """
-    if slider_values is not None:
-        slider_values = tuple(slider_values)
-        if not slider_values:
-            raise ValueError("slider_values must not be empty")
-    elif any(callable(value) for value in (x, y, c)):
-        raise ValueError("Callable plot data require slider_values")
-    if slider_labels is not None:
-        slider_labels = tuple(slider_labels)
-        if slider_values is None or len(slider_labels) != len(slider_values):
-            raise ValueError("slider_labels must match slider_values")
+    """Plot a 2D map, updating callable x/y/c when the owning slider changes."""
+    if slider is None and any(callable(value) for value in (x, y, c)):
+        raise ValueError("Callable plot data require a slider")
 
     def selected(data, value):
         return data(value) if callable(data) else data
 
-    current = slider_values[0] if slider_values is not None else None
+    current = slider.values[0] if slider is not None else None
     initial_x, initial_y, initial_c = (
         selected(data, current) for data in (x, y, c)
     )
@@ -365,11 +347,7 @@ def colormesh(
         )
 
     mesh = make_mesh(initial_x, initial_y, initial_c)
-    if live and slider_values is not None and len(slider_values) > 1:
-        if slider is None:
-            raise ValueError("A live panel requires a figure slider owner")
-        if slider.values != slider_values:
-            raise ValueError("Panel slider values differ from the shared slider")
+    if slider is not None and any(callable(data) for data in (x, y, c)):
 
         def update(value):
             nonlocal mesh
