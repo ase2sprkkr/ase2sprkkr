@@ -12,7 +12,9 @@ def test_scf_declares_new_potential_as_output(tmp_path):
     parameters = InputParameters.create("SCF")
     parameters.CONTROL.POTFIL = "Fe.pot"
 
-    assert parameters.output_files(str(tmp_path)) == (str(tmp_path / "Fe.pot_new"),)
+    assert parameters.output_files(str(tmp_path)) == (
+        str(tmp_path / "Fe.pot_new"), str(tmp_path / "*_SCFSTART.dos"),
+    )
 
 
 def test_scf_fullpot_shape_function_is_optional_cache(tmp_path):
@@ -117,3 +119,32 @@ def test_spec_outputs_follow_polarization_and_task(tmp_path):
         assert parameters.output_files(str(tmp_path)) == (
             str(tmp_path / "Fe_SPEC.out"), str(tmp_path / "Fe_data.spc"),
         )
+
+def test_scf_invalid_grid_and_mixing_are_rejected():
+    import pytest
+    from ase2sprkkr.common.warnings import DataValidityError
+
+    parameters = InputParameters.create("SCF")
+    parameters.ENERGY.GRID = 3
+    parameters.ENERGY.NE = 1
+    with pytest.raises(DataValidityError, match="NE>=2"):
+        parameters.validate("save")
+
+    parameters = InputParameters.create("SCF")
+    parameters.SCF.FULLPOT = True
+    parameters.SCF.ALG = "TCHEBY"
+    with pytest.raises(DataValidityError, match="TCHEBY"):
+        parameters.validate("save")
+
+def test_dos_native_energy_constraints():
+    import pytest
+    from ase2sprkkr.common.warnings import DataValidityError, DataValidityWarning
+
+    parameters = InputParameters.create("DOS")
+    parameters.ENERGY.NE = 1
+    with pytest.raises(DataValidityError, match="two energy points"):
+        parameters.validate("save")
+    parameters.ENERGY.NE = 300
+    parameters.ENERGY.ImE = 0
+    with pytest.warns(DataValidityWarning, match="real axis"):
+        parameters.validate("save")

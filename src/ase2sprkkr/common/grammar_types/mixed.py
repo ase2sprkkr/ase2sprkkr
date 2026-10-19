@@ -35,7 +35,7 @@ class BaseMixed(GrammarType):
         if (isinstance(value, recognized_set_types) and not isinstance(value, unyt.unyt_quantity)
                 and len(value) and isinstance(value[0], str)):
             for candidate in self.types:
-                if isinstance(candidate, SetOf) and candidate.type is self.string_type:
+                if isinstance(candidate, SetOf) and isinstance(candidate.type, self.string_type.__class__):
                     return candidate
         return type_from_value(value)
 
