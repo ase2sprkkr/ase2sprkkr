@@ -293,3 +293,23 @@ def test_submission_cleanup_uses_parsed_manifest_and_protects_caches(tmp_path):
     assert not (tmp_path / "stale.dat").exists()
     for name in ("input.dat", "stdin.dat", "cache.dat", "sync-cache.dat"):
         assert (tmp_path / name).read_text() == name
+
+
+def test_local_project_request_preserves_mpi_stdin_contract(tmp_path):
+    from dataclasses import replace
+    from ase2sprkkr.execution import LaunchSpec
+    from ase2sprkkr.execution.remote_service import _request_spec
+
+    spec = replace(
+        _spec(tmp_path),
+        mpi_argv=("parallel-program",),
+        launch=LaunchSpec.from_mpi(2),
+        mpi_uses_stdin=False,
+    )
+    runner = LocalExecutor().create_project_run(spec, run_id=RUN_ID)
+    request = runner._request()
+
+    assert request["mpi_uses_stdin"] is False
+    reconstructed = _request_spec(request)
+    assert reconstructed.mpi_uses_stdin is False
+    assert reconstructed.mpi_argv == ("parallel-program",)
