@@ -70,7 +70,7 @@ def input_parameters_definition():
                 emin=(None, "Minimum of the energy window in Ry (absolute energy)", -8.0),
                 emax=(None, "Maximum of the energy window in Ry (absolute energy)", 5.0),
                 add=[
-                    V("EWORK_EV", 4.2, info="Inner potential of the bulk crystal in eV"),
+                    V("EWORK_EV", 4.2, info="Surface work function in eV"),
                     V(
                         "IMV_INI_EV", 0.05, info="Imaginary part of the potential in eV (initial state)"
                     ),
@@ -198,11 +198,11 @@ def input_parameters_definition():
                         info="Number of angular values for a rotation in azimuth coordinate.",
                         is_required=False,
                     ),
-                    V("KA", Range(float), info="Scatering in momentum space ", is_required=False),
+                    V("KA", Range(float), info="Reciprocal-space scan origin in inverse angstrom", is_required=False),
                     V(
                         "K1",
                         Range(float),
-                        info="Translating vector of the scatering in momentum space ",
+                        info="K-vector scan displacement in inverse angstrom",
                         is_required=False,
                     ),
                     V("NK1", int, info="Number of momentum steps for the integration", is_required=False),

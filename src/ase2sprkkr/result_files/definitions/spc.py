@@ -14,6 +14,16 @@ from ...gui.plot import change_default_kwargs, colormesh, Multiplot
 
 
 class ARPESResultFile(CommonResultFile, Arithmetic):
+    def to_nexus(self, filename, *, input_parameters=None, input_file=None,
+                 metadata=None):
+        """Export calculated energy/angle ARPES data and its provenance to NeXus."""
+        from ..nexus import write_arpes_nexus
+
+        return write_arpes_nexus(
+            self, filename, input_parameters=input_parameters,
+            input_file=input_file, metadata=metadata
+        )
+
     def plot(
         self,
         layout=(2, 2),
@@ -118,9 +128,12 @@ def create_definition():
                 "MODE",
                 {
                     "energy": [
-                        NV("THETA", "RAW_DATA", i(0), ("NE", "NT")),
-                        NV("ENERGY", "RAW_DATA", i(1), ("NE", "NT")),
-                        NV("K", "RAW_DATA", i(6), ("NE", "NT"), info="K_parallel (pi/A)"),
+                        NV("THETA", "RAW_DATA", i(0), ("NE", "NT"), info="Photoelectron polar angle in degrees"),
+                        NV("ENERGY", "RAW_DATA", i(1), ("NE", "NT"), info="Initial-state energy E - E_F (eV)"),
+                        NV(
+                            "K", "RAW_DATA", i(6), ("NE", "NT"),
+                            info="Native parallel momentum coordinate (1/angstrom; signed angular scan or K-vector displacement)",
+                        ),
                     ],
                     "kx_ky": [
                         NV("KX", "RAW_DATA", i(0), ("NP", "NT"), info="k_x coordinate (1/Å)"),
