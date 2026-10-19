@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import asyncio
+import fcntl
 import os
 import posixpath
 from dataclasses import asdict, replace
@@ -94,6 +95,7 @@ class RemoteRunner:
         self._failure_phase = None
         self._failure_message = None
         self._follow_process = None
+        self._stream_positions = {}
         self._output_targets = dict(output_targets or {})
         self._cache_targets = dict(cache_targets or {})
         self._output_patterns = tuple(output_patterns or ())
@@ -204,10 +206,37 @@ class RemoteRunner:
             self._output_observers.emit(data.decode("utf8", errors="replace"), kind)
 
     def _write_output(self, data, kind):
+        """Persist FOLLOW bytes at their logical offset, not blindly append.
+
+        Another client may attach to the same working directory while this
+        client is still following. Lock the destination inode while comparing
+        overlapping bytes and extending only the missing suffix.
+        """
         target = self.spec.error_file if kind == "err" else self.spec.output_file
-        if target is not None:
-            target.write(data)
-            target.flush()
+        if target is None or not data:
+            return
+        offset = self._stream_positions[kind]
+        target.flush()
+        path = self._local_path(target)
+        with open(path, "r+b", buffering=0) as stream:
+            fcntl.flock(stream.fileno(), fcntl.LOCK_EX)
+            try:
+                stream.seek(0, os.SEEK_END)
+                size = stream.tell()
+                if size < offset:
+                    raise RuntimeError(f"FOLLOW stream was truncated: {path}")
+                overlap = min(size - offset, len(data))
+                if overlap:
+                    stream.seek(offset)
+                    if stream.read(overlap) != data[:overlap]:
+                        raise RuntimeError(f"Conflicting FOLLOW bytes at offset {offset}: {path}")
+                if overlap < len(data):
+                    stream.seek(offset + overlap)
+                    stream.write(data[overlap:])
+                    stream.flush()
+            finally:
+                fcntl.flock(stream.fileno(), fcntl.LOCK_UN)
+        self._stream_positions[kind] = offset + len(data)
 
     @staticmethod
     def _file_name(value):
@@ -359,7 +388,6 @@ class RemoteRunner:
         targets = {}
         patterns = []
         remote_root = await self.executor._resolved_remote_root()
-        removable = set()
 
         for value in self.spec.output_files:
             local = self._local_path(value)
@@ -370,22 +398,13 @@ class RemoteRunner:
                 if remote in patterns:
                     continue
                 patterns.append(remote)
-                for match in await self.executor.transport.expand_files(
-                    remote, remote_root
-                ):
-                    if match not in input_targets:
-                        removable.add(match)
                 continue
             if local in targets:
                 continue
             targets[local] = remote
-            if remote not in input_targets:
-                await self.executor.transport.run(("rm", "-f", "--", remote))
-
-        if removable:
-            await self.executor.transport.run(
-                ("rm", "-f", "--", *sorted(removable))
-            )
+        # Cleanup belongs to the target-side submit operation, where input
+        # and cache wildcard protections are resolved together. Never delete
+        # remote files during client-side staging.
         self._output_targets = targets
         self._output_patterns = tuple(patterns)
 
@@ -674,6 +693,7 @@ class RemoteRunner:
                 else:
                     target.flush()
                     offsets[kind] = os.path.getsize(self._local_path(target))
+            self._stream_positions = dict(offsets)
             self._follow_process = await self.executor._follow(
                 self._remote_directory, self._backend_id, self._files,
                 offsets=offsets,

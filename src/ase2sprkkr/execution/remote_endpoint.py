@@ -97,6 +97,15 @@ class _RemoteRun(RemoteRunner):
                         f"Streamed local {kind} size does not match the "
                         f"authoritative remote output: {local}"
                     )
+                from .transport import local_file_digest
+                remote_digest = await self.executor.transport.file_digest(entry.remote_path)
+                if remote_digest is None or local_file_digest(local) != remote_digest:
+                    raise RuntimeError(
+                        f"Streamed local {kind} contents differ from remote output: {local}"
+                    )
+                if await self.executor.transport.file_signature(entry.remote_path) != signature:
+                    raise RuntimeError(f"Remote {kind} output changed during verification")
+
                 os.utime(local, ns=(stat.st_atime_ns, signature[1]))
             except Exception as exc:
                 self._state = RunState.FAILED

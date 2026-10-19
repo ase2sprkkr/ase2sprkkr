@@ -105,7 +105,7 @@ class LocalRunner:
 
     def _emit_output(self, data, kind):
         if data:
-            self._output_observers.emit(data.decode("utf8"), kind)
+            self._output_observers.emit(data.decode("utf8", errors="replace"), kind)
 
     def _output_target(self, kind):
         # A missing stderr target means live observation only, not an

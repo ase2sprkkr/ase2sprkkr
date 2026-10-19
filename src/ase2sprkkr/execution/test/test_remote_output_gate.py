@@ -96,7 +96,7 @@ def test_unknown_remote_state_does_not_publish_or_download_output(tmp_path):
     assert executor.sync_calls == 0
 
 
-async def _unavailable_output(_required):
+async def _unavailable_output(required):
     raise OSError("remote output could not be downloaded")
 
 
@@ -175,6 +175,10 @@ def test_remote_stderr_incomplete_after_success_is_download_failure(tmp_path):
         async def file_signature(self, remote):
             return (len(b"streamed\n") if remote.endswith(".out") else 8, 0)
 
+        async def file_digest(self, remote):
+            import hashlib
+            return hashlib.sha256(b"streamed\n").hexdigest()
+
     executor = _Executor(RunState.FINISHED)
     executor.transport = Transport()
     runner = _RemoteRun(
@@ -201,3 +205,31 @@ def test_remote_stderr_incomplete_after_success_is_download_failure(tmp_path):
     assert stdout_path.read_bytes() == b"streamed\n"
     assert stderr_path.read_bytes() == b""
     assert output.closed and error.closed
+
+
+
+def test_follow_write_is_idempotent_across_attached_clients(tmp_path):
+    """Two clients consuming the same chunks must not duplicate the output."""
+    from ase2sprkkr.execution.remote import RemoteRunner
+    destination = tmp_path / "output"
+    destination.write_bytes(b"abc")
+    first = destination.open("ab")
+    second = destination.open("ab")
+    try:
+        spec1 = ExecutionSpec(argv=(), input_file=None, output_file=first, directory=str(tmp_path))
+        spec2 = ExecutionSpec(argv=(), input_file=None, output_file=second, directory=str(tmp_path))
+        a = RemoteRunner(_Executor(RunState.RUNNING), spec1)
+        b = RemoteRunner(_Executor(RunState.RUNNING), spec2)
+        a._stream_positions = {"out": 3}
+        b._stream_positions = {"out": 3}
+        a._write_output(b"def", "out")
+        b._write_output(b"def", "out")
+        assert destination.read_bytes() == b"abcdef"
+        assert a._stream_positions["out"] == b._stream_positions["out"] == 6
+        b._stream_positions["out"] = 3
+        with pytest.raises(RuntimeError, match="Conflicting FOLLOW bytes"):
+            b._write_output(b"wrong", "out")
+        assert destination.read_bytes() == b"abcdef"
+    finally:
+        first.close()
+        second.close()
