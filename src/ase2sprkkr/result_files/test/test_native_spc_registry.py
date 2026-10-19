@@ -111,3 +111,13 @@ def test_spc_one_row_retains_two_dimensions():
     f = d.read_from_dict({"RAW_DATA": np.array([[11., 45., .2, .1, .1, .2, .3]])})
     assert f.RAW_DATA().shape == (1, 7)
     assert f.ENERGY()[0] == 11.
+
+def test_spc_discovery_without_existing_spec_log(tmp_path):
+    from ase2sprkkr.outputs.readers.spec import SpecResult
+    spc = tmp_path / "Fe_data.spc"
+    spc.write_text("placeholder")
+    result = SpecResult(
+        None, None, tmp_path, output_file="Fe_SPEC.out", task_name="SPLEED"
+    )
+    assert result.spc_filenames == (str(spc),)
+    assert result.output_values["SPC"].file_type == "spleed_spc"

@@ -40,8 +40,9 @@ class ArpesResult(TaskResult):
         # Without an input file the native TYP=0 flag is unknown, but
         # its two-column data can be identified in SPEC.out. Native still
         # opens an SPC header in this mode; it is not a usable spectrum.
-        if self._task_name == "spleed" and found:
-            if getattr(self, "spleed_intensity", None) is not None:
+        if (self._task_name == "spleed" and found and
+                os.path.isfile(os.fspath(self.output_file))):
+            if self.spleed_intensity is not None:
                 return ()
         return found
 
