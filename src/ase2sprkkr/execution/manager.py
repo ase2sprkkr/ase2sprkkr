@@ -12,7 +12,7 @@ from dataclasses import asdict, dataclass, replace
 from datetime import datetime, timezone
 from enum import Enum
 from pathlib import Path
-from threading import RLock
+from threading import Lock, RLock
 from typing import Any, Optional
 from uuid import uuid4
 
@@ -900,6 +900,8 @@ class ProjectRunner:
         self.executor = executor
         self._runner = runner
         self._record = record
+        self._completion_lock = Lock()
+        self._completion_persisted = False
 
     @property
     def id(self):
@@ -940,17 +942,11 @@ class ProjectRunner:
 
     @property
     def state(self):
+        """Observe runner state without persisting a transition."""
         state = self._runner.state
         if state == RunState.NEW and self._record.state != RunState.NEW:
             return self._record.state
-        if self._record.state != RunState.NEW and state != self._record.state:
-            self._record = self.manager.transition(
-                self._record,
-                state=state,
-                execution=self.execution,
-                failure_phase=self.failure_phase,
-            )
-        return self._record.state if self._record.state != RunState.NEW else state
+        return self._record.state if self._record.state in _FINAL_STATES else state
 
     def add_output_listener(self, callback):
         return self._runner.add_output_listener(callback)
@@ -1023,38 +1019,46 @@ class ProjectRunner:
             )
 
     def _sync_completion(self, result):
-        state = self._runner.state
-        phase = self.failure_phase
-        message = getattr(self._runner, "failure_message", None)
-        error = self._runner.exception
-        if message is None and error is not None:
-            message = str(error)
-        if state not in _FINAL_STATES:
-            return
-        if state == RunState.FAILED and phase is None:
-            phase = FailurePhase.EXECUTION
+        # Callback and wait() can reach this path concurrently. Only the
+        # first successful durable completion may publish and acknowledge it.
+        with self._completion_lock:
+            if self._completion_persisted:
+                return
+            state = self._runner.state
+            phase = self.failure_phase
+            message = getattr(self._runner, "failure_message", None)
+            error = self._runner.exception
+            if message is None and error is not None:
+                message = str(error)
+            if state not in _FINAL_STATES:
+                return
+            if state == RunState.FAILED and phase is None:
+                phase = FailurePhase.EXECUTION
 
-        artifacts_available = phase not in _NO_ARTIFACTS_FAILURES
-        self._record = self.manager.complete(
-            self._record,
-            state=state,
-            execution=self.execution,
-            return_code=getattr(self._runner, "return_code", None),
-            message=message,
-            failure_phase=phase,
-            artifacts_available=artifacts_available,
-            files=self.files,
-        )
-        # ACK is strictly after RunStore's crash-durable terminal transition.
-        # A lost ACK reply is harmless: backend receipts are idempotently deleted.
-        # Keep the persisted result even if the acknowledgement cannot be sent.
-        if self._record.state in _FINAL_STATES and self.backend_id is not None:
-            acknowledge = getattr(self.executor, "acknowledge", None)
-            if acknowledge is not None:
-                try:
-                    acknowledge(self._record)
-                except (OSError, RuntimeError):
-                    pass
+            artifacts_available = phase not in _NO_ARTIFACTS_FAILURES
+            self._record = self.manager.complete(
+                self._record,
+                state=state,
+                execution=self.execution,
+                return_code=getattr(self._runner, "return_code", None),
+                message=message,
+                failure_phase=phase,
+                artifacts_available=artifacts_available,
+                files=self.files,
+            )
+            # ACK is strictly after RunStore's crash-durable terminal transition.
+            # A lost ACK reply is harmless: backend receipts are idempotently deleted.
+            # Keep the persisted result even if the acknowledgement cannot be sent.
+            if self._record.state in _FINAL_STATES and self.backend_id is not None:
+                acknowledge = getattr(self.executor, "acknowledge", None)
+                if acknowledge is not None:
+                    try:
+                        acknowledge(self._record)
+                    except (OSError, RuntimeError):
+                        pass
+
+            if self._record.state in _FINAL_STATES:
+                self._completion_persisted = True
 
     def wait(self):
         try:
