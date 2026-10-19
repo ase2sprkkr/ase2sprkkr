@@ -3,7 +3,7 @@ import json
 
 import pytest
 
-from ase2sprkkr.execution import FailurePhase, RunState
+from ase2sprkkr.execution import FailurePhase, RunState, RunStatus
 from ase2sprkkr.execution import psij, remote_process_worker, remote_service
 
 
@@ -44,6 +44,45 @@ def test_remote_id_is_opaque_backend_handle_without_lifecycle_state(tmp_path):
     assert "state" not in decoded
     assert "failure_phase" not in decoded
     assert set(decoded) == {"kind", "pid", "start_time", "receipt_id", "socket_path"}
+
+
+@pytest.mark.parametrize(
+    "state, return_code, phase, error",
+    [
+        (RunState.UNKNOWN, None, None, None),
+        (RunState.RUNNING, None, None, None),
+        (RunState.FINISHED, 0, None, None),
+        (RunState.CANCELLED, -15, None, None),
+        (RunState.FAILED, 127, FailurePhase.LAUNCH, "spawn failed"),
+        (RunState.FAILED, 7, FailurePhase.EXECUTION, "job failed"),
+    ],
+)
+def test_remote_status_wire_reply_is_shared_between_process_and_psij(
+    monkeypatch, tmp_path, state, return_code, phase, error,
+):
+    _, process_id, _ = _process_handle(tmp_path)
+    _, psij_id = _psij_handle(tmp_path)
+
+    monkeypatch.setattr(
+        remote_service, "_process_outcome",
+        lambda receipt_id: (state, return_code, phase, error),
+    )
+    monkeypatch.setattr(
+        psij, "_slurm_status_native",
+        lambda native_id: RunStatus(
+            state, backend_id=native_id, return_code=return_code,
+            failure_phase=phase, message=error,
+        ),
+    )
+    expected = {
+        "state": state.value,
+        "return_code": return_code,
+        "error": error,
+        "failure_phase": None if phase is None else phase.value,
+    }
+
+    assert remote_service.status_remote(process_id) == expected
+    assert remote_service.status_remote(psij_id) == expected
 
 
 def test_mailbox_receipt_survives_until_client_ack(tmp_path, monkeypatch):

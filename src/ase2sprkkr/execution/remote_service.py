@@ -33,6 +33,16 @@ from ._durability import durable_mkdir, durable_write_json, fsync_directory
 _FINAL_STATES = {RunState.FINISHED, RunState.FAILED, RunState.CANCELLED}
 
 
+def _status_reply(state, return_code=None, *, failure_phase=None, error=None):
+    """Encode backend status facts for the common remote-service wire contract."""
+    return {
+        "state": state.value,
+        "return_code": return_code,
+        "error": error,
+        "failure_phase": None if failure_phase is None else failure_phase.value,
+    }
+
+
 def _submission_ticket(run_id):
     if not isinstance(run_id, str) or re.fullmatch(r"[0-9a-f]{32}", run_id) is None:
         raise ValueError("Invalid project run id")
@@ -351,14 +361,9 @@ def status_remote(remote_id):
             return_code = None
             failure_phase = None
             error = None
-        return {
-            "state": state.value,
-            "return_code": return_code,
-            "error": error,
-            "failure_phase": (
-                None if failure_phase is None else failure_phase.value
-            ),
-        }
+        return _status_reply(
+            state, return_code, failure_phase=failure_phase, error=error,
+        )
 
     if handle["kind"] == "psij":
         if str(handle["backend"]).lower() == "slurm" and handle.get("url") is None:
@@ -369,14 +374,10 @@ def status_remote(remote_id):
                 {"backend": handle["backend"], "url": handle.get("url")}
             )
             status = executor.status_native(handle["native_id"])
-        return {
-            "state": status.state.value,
-            "return_code": status.return_code,
-            "error": status.message,
-            "failure_phase": (
-                None if status.failure_phase is None else status.failure_phase.value
-            ),
-        }
+        return _status_reply(
+            status.state, status.return_code,
+            failure_phase=status.failure_phase, error=status.message,
+        )
     raise ValueError("Unsupported remote execution id")
 
 
@@ -476,14 +477,13 @@ async def _follow_scheduler_async(remote_id, streams, paths, offsets, poll_inter
             return status
         native = job.status
         state = _psij_state(native)
-        return {
-            "state": state.value,
-            "return_code": getattr(native, "exit_code", None),
-            "failure_phase": (
-                FailurePhase.EXECUTION.value if state == RunState.FAILED else None
+        return _status_reply(
+            state, getattr(native, "exit_code", None),
+            failure_phase=(
+                FailurePhase.EXECUTION if state == RunState.FAILED else None
             ),
-            "error": getattr(native, "message", None),
-        }
+            error=getattr(native, "message", None),
+        )
 
     return await follow_job_files(
         paths, emit, job.wait, terminal=terminal, offsets=offsets,
