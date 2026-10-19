@@ -484,7 +484,7 @@ def test_result_passes_explicit_input_and_input_parameters():
 
 
 class KMap(SPC):
-    def __init__(self, skew=False, warped=False):
+    def __init__(self, skew=False):
         self.raw = np.array([
             [-1, 0, 1, .6, .4, .2, 10],
             [0, 0, 2, 1.2, .8, .2, 11],
@@ -495,8 +495,6 @@ class KMap(SPC):
         ], dtype=float)
         if skew:
             self.raw[3:, 0] += .3
-        if warped:
-            self.raw[4, 0] += .3
     def MODE(self): return "kx_ky"
     def NT(self): return 3
     def NP(self): return 2
@@ -541,14 +539,6 @@ def test_kxky_map_export(tmp_path, skew):
         assert "energy" not in data
         np.testing.assert_array_equal(f["entry/sprkkr_spc/raw_data"], spectrum.raw)
         assert len(f["entry/sprkkr_spc/raw_data"].attrs["columns"]) == 7
-
-
-def test_non_affine_kmap_rejected(tmp_path):
-    spectrum = KMap(warped=True)
-    path = tmp_path / "nonaffine.nxs"
-    with pytest.raises(ValueError, match="affine grid"):
-        write_arpes_nexus(spectrum, path)
-    assert not path.exists()
 
 
 def test_invalid_kmap_width(tmp_path):

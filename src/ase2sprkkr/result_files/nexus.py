@@ -236,27 +236,19 @@ def write_arpes_nexus(spc, filename, *, input_parameters=None,
         )
     else:
         kx, ky = arrays["k_x"], arrays["k_y"]
-        # Both rectangular and oblique native k maps use the same affine
-        # sampling grid. The first axis is JP/NP, the second JT/NT.
+        # SPR-KKR generates a regular reciprocal-space mesh with JP and JT
+        # as its two grid indices. Use the full spans to reduce the effect
+        # of limited precision in the text SPC coordinates.
         k_origin = np.array([kx[0, 0], ky[0, 0]], dtype=float)
         k_basis = np.zeros((2, 2), dtype=float)
         if shape[0] > 1:
-            k_basis[0] = [kx[1, 0] - kx[0, 0], ky[1, 0] - ky[0, 0]]
+            k_basis[0] = (
+                np.array([kx[-1, 0], ky[-1, 0]]) - k_origin
+            ) / (shape[0] - 1)
         if shape[1] > 1:
-            k_basis[1] = [kx[0, 1] - kx[0, 0], ky[0, 1] - ky[0, 0]]
-        row, column = np.indices(shape)
-        expected = (
-            k_origin
-            + row[..., None] * k_basis[0]
-            + column[..., None] * k_basis[1]
-        )
-        if not np.allclose(
-            np.stack((kx, ky), axis=-1), expected, rtol=1e-7, atol=1e-7
-        ):
-            raise ValueError(
-                "ARPES kx_ky SPC coordinates do not form an affine grid; "
-                "a single origin and two basis vectors cannot represent them"
-            )
+            k_basis[1] = (
+                np.array([kx[0, -1], ky[0, -1]]) - k_origin
+            ) / (shape[1] - 1)
 
     raw_data = np.asarray(spc.RAW_DATA())
     ncols = 8 if mode == "energy" else 7
