@@ -414,3 +414,33 @@ def test_scheduler_request_protects_remote_cache_wildcards(tmp_path):
     assert "external-cache.pot" in spec.cache_files
     assert "*.pot" in spec.output_files
     assert "case.inp" in spec.input_files
+
+
+
+@pytest.mark.skipif(__import__("sys").platform != "linux", reason="PID identity needs Linux /proc")
+def test_failed_submission_ticket_cannot_leave_calculation_running(tmp_path, monkeypatch):
+    """A ticket write failure happens while the worker is still blocked."""
+    from ase2sprkkr.execution.base import SubmissionNotStarted
+
+    marker = tmp_path / "must-not-run"
+    request = {
+        "id": "a" * 32,
+        "executor": "local",
+        "detached": True,
+        "directory": str(tmp_path),
+        "argv": [
+            __import__("sys").executable, "-c",
+            "from pathlib import Path; Path('must-not-run').write_text('bad')",
+        ],
+        "input_file": None,
+        "output_file": str(tmp_path / "run.out"),
+        "error_file": None,
+    }
+
+    def reject(_run_id, _reply):
+        raise OSError("ticket store unavailable")
+
+    monkeypatch.setattr(remote_service, "_publish_submission", reject)
+    with pytest.raises(SubmissionNotStarted, match="ticket store unavailable"):
+        remote_service.submit_remote(request)
+    assert not marker.exists()
