@@ -3,7 +3,7 @@
 import pytest
 
 from ..base import RunState
-from ..manager import DuplicateSubmissionError
+from ..manager import DuplicateSubmissionError, RunStore
 from ..project_manager import ExecutionManager
 from ..projects import ProjectRepository, ProjectDeleteError
 
@@ -42,3 +42,37 @@ def test_cross_project_active_conflict_and_project_deletion(tmp_path):
     a.complete(first_record, state=RunState.FAILED)
     projects.delete(first.id, expected_generation=first.generation)
     assert all(r.project_id != first.id for r in b.store.runs())
+
+
+def test_for_project_preserves_explicit_run_store(tmp_path):
+    projects = ProjectRepository(tmp_path / "projects")
+    project = projects.create("Project")
+    custom_store = RunStore(tmp_path / "custom-runs")
+    original = ExecutionManager(
+        store=custom_store, project_repository=projects, submitting_grace=17,
+    )
+
+    bound = original.for_project(project)
+
+    assert bound.store is custom_store
+    assert bound.submitting_grace == 17
+    assert bound.executor_pool is original.executor_pool
+    assert bound.for_project(project) is bound
+
+    record = bound.new_record(task="DOS", directory=tmp_path / "work")
+    bound.store.save(record)
+
+    assert custom_store.get(record.id) == record
+    assert record.project_id == project.id
+    assert not (tmp_path / "projects_runs").exists()
+
+
+def test_for_project_without_explicit_store_uses_shared_project_store(tmp_path):
+    projects = ProjectRepository(tmp_path / "projects")
+    project = projects.create("Project")
+    unbound = ExecutionManager(project_repository=projects)
+
+    bound = unbound.for_project(project)
+
+    assert unbound.store is None
+    assert bound.store.directory == tmp_path / "projects_runs"
