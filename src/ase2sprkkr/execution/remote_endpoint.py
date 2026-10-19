@@ -105,16 +105,24 @@ class _RemoteRun(RemoteRunner):
         directory = os.path.abspath(os.fspath(self.spec.directory))
         def local(value):
             return file_path(value, directory)
-        inputs = []
-        for item in (self.spec.input_file, *self.spec.input_files):
-            path = local(item)
-            if path is not None:
-                inputs.append(FileEntry(path, await self.executor.map_path(path)))
-        outputs = []
-        for item in self.spec.output_files:
-            path = local(item)
-            if path is not None and path not in (self.result.output_file, self.result.error_file):
-                outputs.append(FileEntry(path, await self.executor.map_path(path)))
+        # The primary input is normally also declared among input_files.
+        input_paths = dict.fromkeys(
+            path for item in (self.spec.input_file, *self.spec.input_files)
+            if (path := local(item)) is not None
+        )
+        output_paths = dict.fromkeys(
+            path for item in self.spec.output_files
+            if (path := local(item)) is not None
+            and path not in (self.result.output_file, self.result.error_file)
+        )
+        inputs = [
+            FileEntry(path, await self.executor.map_path(path))
+            for path in input_paths
+        ]
+        outputs = [
+            FileEntry(path, await self.executor.map_path(path))
+            for path in output_paths
+        ]
         caches = []
         for item in self.spec.cache_files:
             path = local(item)

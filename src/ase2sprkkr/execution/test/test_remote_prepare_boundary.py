@@ -66,3 +66,35 @@ def test_prepared_manifest_is_durable_before_remote_backend_submit(tmp_path, mon
     assert snapshot.execution.directory.remote == "/target/prepared"
     assert snapshot.files == expected
     assert manager.store.get(run.id).execution.backend_id == "opaque-job"
+
+
+def test_remote_manifest_deduplicates_declared_inputs_and_outputs(tmp_path):
+    import asyncio
+
+    directory = tmp_path / "local"
+    directory.mkdir()
+    executor = RemoteEndpointExecutor(LocalTransport())
+    remote = tmp_path / "remote"
+    inp = directory / "calc.inp"
+    out = directory / "calc.out"
+    auxiliary = directory / "dos.dat"
+    spec = ExecutionSpec(
+        argv=("ignored",), directory=str(directory),
+        input_file=str(inp), input_files=(str(inp), str(inp)),
+        output_file=str(out), output_files=(str(out), str(auxiliary), str(auxiliary)),
+        launch=LaunchSpec(local_root=str(tmp_path), remote_root=str(remote)),
+    )
+    runner = executor.create_run(spec)
+
+    async def check():
+        request = {
+            "client_sync": {
+                "output_file": str(remote / "local" / "calc.out"),
+            }
+        }
+        return await runner._submitted_manifest(request)
+
+    manifest = asyncio.run(check())
+    assert [entry.local_path for entry in manifest.inputs] == [str(inp)]
+    assert [entry.local_path for entry in manifest.outputs] == [str(auxiliary)]
+    assert manifest.stdout.local_path == str(out)
