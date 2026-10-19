@@ -568,10 +568,6 @@ class PsijExecutor(Executor):
             statuses.append(self.status_native(run.execution.backend_id))
         return tuple(statuses)
 
-    @staticmethod
-    def _recovered_files(files, stdout, stderr):
-        return files.with_remote_stream_paths(stdout=stdout, stderr=stderr)
-
     def attach_native_job(self, native_id):
         """Create a fresh attached PSI/J job; never reuse the status cache."""
         job = self._psij.Job()
@@ -695,8 +691,8 @@ class PsijExecutor(Executor):
                 execution,
                 directory=WorkingDirectory(execution.directory.local, directory),
             )
-        files = self._recovered_files(
-            submission.files, facts["stdout"], facts["stderr"],
+        files = submission.files.with_remote_stream_paths(
+            stdout=facts["stdout"], stderr=facts["stderr"],
         )
         state = facts["state"]
         return RunStatus(
