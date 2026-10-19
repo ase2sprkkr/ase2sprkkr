@@ -287,10 +287,12 @@ def test_colormesh_callable_slider_shared():
     fig, axes = plt.subplots(1, 2)
     xx, yy = np.meshgrid(np.arange(3), np.arange(3))
     calls = []
+    from ase2sprkkr.gui.plot import PlotSlider
+    slider = PlotSlider(fig, (0, 1, 2))
     for ax in axes:
         colormesh(xx, yy, lambda i: calls.append(i) or np.full((3, 3), i + 1.),
-                  slider_values=(0, 1, 2), live=True, axis=ax)
-    widget = fig._ase2sprkkr_slider[0]
+                  slider_values=(0, 1, 2), slider=slider, live=True, axis=ax)
+    widget = slider.widget
     assert calls == [0, 0]
     widget.set_val(2)
     assert calls == [0, 0, 2, 2]

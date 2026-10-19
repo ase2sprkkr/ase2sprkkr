@@ -174,6 +174,47 @@ def auto_range(rng, data, eps=1e-4):
     return out
 
 
+
+class PlotSlider:
+    """One figure-owned slider that dispatches a selected value to its plots."""
+
+    def __init__(self, figure, values, label="Slice", labels=None):
+        from matplotlib.widgets import Slider
+
+        self.values = tuple(values)
+        if len(self.values) < 2:
+            raise ValueError("Live slider needs at least two values")
+        self.labels = None if labels is None else tuple(labels)
+        if self.labels is not None and len(self.labels) != len(self.values):
+            raise ValueError("slider_labels must match slider_values")
+        self.callbacks = []
+        self.figure = figure
+        figure.set_layout_engine(None)
+        figure.subplots_adjust(bottom=0.23)
+        slider_axis = figure.add_axes((0.22, 0.06, 0.60, 0.035))
+        self.widget = Slider(
+            slider_axis, label, 0, len(self.values) - 1, valinit=0, valstep=1
+        )
+        self.widget.on_changed(self._changed)
+        self._display_label(0)
+        # Keep the Matplotlib widget alive while the figure is open.
+        figure._ase2sprkkr_slider_controller = self
+
+    def connect(self, callback):
+        self.callbacks.append(callback)
+
+    def _display_label(self, index):
+        value = self.labels[index] if self.labels is not None else self.values[index]
+        self.widget.valtext.set_text(str(value))
+
+    def _changed(self, position):
+        index = int(position)
+        for callback in self.callbacks:
+            callback(self.values[index])
+        self._display_label(index)
+        self.figure.canvas.draw_idle()
+
+
 def plotting_function(func):
     """Decorator, that 'completes' the given function that just draw into a
     matplolib axis.
@@ -189,6 +230,7 @@ def plotting_function(func):
     def plot_function(
         *args, filename=None, show=None, dpi=600, latex=None, figsize=(6, 4), callback=None, axis=None, **kwargs
     ):
+        provided_axis = axis is not None
         with single_plot(
             filename=filename,
             show=show,
@@ -197,6 +239,18 @@ def plotting_function(func):
             figsize=figsize,
             axis=axis,
         ) as (axis, _):
+            if (kwargs.get("live") and kwargs.get("slider_values") is not None
+                    and kwargs.get("slider") is None
+                    and len(kwargs["slider_values"]) > 1):
+                if provided_axis:
+                    raise ValueError(
+                        "Shared live sliders require Multiplot(slider_values=...)"
+                    )
+                kwargs["slider"] = PlotSlider(
+                    axis.figure, kwargs["slider_values"],
+                    kwargs.get("slider_label", "Slice"),
+                    kwargs.get("slider_labels"),
+                )
             func(*args, axis=axis, **kwargs)
             if callback:
                 callback(axis)
@@ -240,6 +294,7 @@ def colormesh(
     vmax=None,
     colorbar=False,
     live=False,
+    slider=None,
     slider_values=None,
     slider_label="Slice",
     slider_labels=None,
@@ -311,28 +366,13 @@ def colormesh(
 
     mesh = make_mesh(initial_x, initial_y, initial_c)
     if live and slider_values is not None and len(slider_values) > 1:
-        from matplotlib.widgets import Slider
+        if slider is None:
+            raise ValueError("A live panel requires a figure slider owner")
+        if slider.values != slider_values:
+            raise ValueError("Panel slider values differ from the shared slider")
 
-        fig = axis.figure
-        existing = getattr(fig, "_ase2sprkkr_slider", None)
-        if existing is None:
-            fig.set_layout_engine(None)
-            fig.subplots_adjust(bottom=0.23)
-            slider_axis = fig.add_axes((0.22, 0.06, 0.60, 0.035))
-            widget = Slider(
-                slider_axis, slider_label, 0, len(slider_values) - 1,
-                valinit=0, valstep=1,
-            )
-            fig._ase2sprkkr_slider = (widget, slider_values, slider_labels)
-        else:
-            widget, values, labels = existing
-            if values != slider_values or labels != slider_labels:
-                raise ValueError("A figure's plots must share the same slider values")
-
-        def update(position):
+        def update(value):
             nonlocal mesh
-            index = int(position)
-            value = slider_values[index]
             xdata, ydata, intensity = (
                 selected(data, value) for data in (x, y, c)
             )
@@ -343,14 +383,8 @@ def colormesh(
                 axis.set_ylim(auto_range(yrange, ydata))
             else:
                 mesh.set_array(np.asarray(intensity))
-            label = slider_labels[index] if slider_labels is not None else value
-            widget.valtext.set_text(str(label))
-            fig.canvas.draw_idle()
 
-        widget.on_changed(update)
-        widget.valtext.set_text(
-            str(slider_labels[0] if slider_labels is not None else slider_values[0])
-        )
+        slider.connect(update)
     if show_zero_line:
         opts = {"lw": 1.0, "color": "black"}
         if isinstance(show_zero_line, dict):
@@ -381,8 +415,17 @@ class Multiplot:
         layout_kind="constrained",
         number_of_plots=None,
         projection=None,
+        live=False,
+        slider_values=None,
+        slider_label="Slice",
+        slider_labels=None,
         **kwargs,
     ):
+        self.slider = None
+        self.live = live
+        self.slider_values = None if slider_values is None else tuple(slider_values)
+        self.slider_label = slider_label
+        self.slider_labels = slider_labels
         self.separate_plots = separate_plots
         self.filename = filename
         self.show = show
@@ -405,6 +448,12 @@ class Multiplot:
 
         if callable(figsize):
             figsize = figsize((1, 1) if separate_plots else layout)
+
+        if separate_plots and live and self.slider_values is not None and len(self.slider_values) > 1:
+            raise ValueError("Shared slider requires a single figure")
+        if live and self.slider_values is not None and len(self.slider_values) > 1 and layout_kind == "constrained":
+            layout_kind = "adjust"
+            self.layout_kind = layout_kind
 
         if separate_plots:
             self.figsize = figsize
@@ -438,6 +487,11 @@ class Multiplot:
         if not self.separate_plots:
             self.context = create_rc_context(latex=self.latex)
             self.context.__enter__()
+            if self.live and self.slider_values is not None and len(self.slider_values) > 1:
+                self.slider = PlotSlider(
+                    self.figure, self.slider_values,
+                    self.slider_label, self.slider_labels,
+                )
         return self
 
     def __exit__(self, type, value, traceback):
@@ -469,6 +523,8 @@ class Multiplot:
 
     @contextmanager
     def new_axis(self, name=None, filename=None, **kwargs):
+        if self.slider is not None:
+            kwargs.setdefault("slider", self.slider)
         for k, v in self.kwargs.items():
              kwargs.setdefault(k, v)
         for k, v in self.specific_kwargs.get(self.index, {}).items():

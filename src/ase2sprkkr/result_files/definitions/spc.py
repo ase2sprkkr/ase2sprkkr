@@ -99,10 +99,6 @@ class ARPESResultFile(CommonResultFile, Arithmetic):
         if layout[0] * layout[1] < 4 * len(slices):
             raise ValueError("The layout has too few axes for the selected slices")
 
-        # A live slider occupies figure space outside the regular axes.
-        # Matplotlib's constrained layout would reposition it on export/show.
-        if live and layout_kind == "constrained":
-            layout_kind = "adjust"
         with Multiplot(
             layout=layout,
             figsize=figsize,
@@ -112,6 +108,13 @@ class ARPESResultFile(CommonResultFile, Arithmetic):
             dpi=dpi,
             separate_plots=separate_plots,
             layout_kind=layout_kind,
+            live=live,
+            slider_values=indices if multi and live else None,
+            slider_label="Azimuth",
+            slider_labels=(
+                tuple(f"{phi[i]:g}°" for i in indices)
+                if phi is not None and multi and live else None
+            ),
             **kwargs,
         ) as mp:
             for selected in slices:
@@ -119,7 +122,7 @@ class ARPESResultFile(CommonResultFile, Arithmetic):
                     with mp.new_axis(name=option.name) as (axis, plot_kwargs):
                         option.plot(
                             azimuth_indices=selected if multi else None,
-                            live=live, phi_values=phi, axis=axis, **plot_kwargs
+                            live=live, axis=axis, **plot_kwargs
                         )
 
     def spc_columns(self):
@@ -159,7 +162,7 @@ class ARPESDefinition(ResultFileDefinition):
 def create_definition():
 
     def plot(option, azimuth_index=None, azimuth_indices=None,
-             live=False, phi_values=None, **kwargs):
+             live=False, **kwargs):
         c = option._container
         kw = {
             "show_zero_line": False,
@@ -181,7 +184,6 @@ def create_definition():
 
         intensity = option()
         selected = None
-        labels = None
         if c.MODE() == "energy" and c.NP() > 1:
             selected = tuple(azimuth_indices) if azimuth_indices is not None else (
                 0 if azimuth_index is None else azimuth_index,
@@ -190,13 +192,8 @@ def create_definition():
                 lambda index, data=data: data[:, index, :]
                 for data in (x, y, intensity)
             )
-            if phi_values is not None:
-                labels = tuple(f"{phi_values[i]:g}°" for i in selected)
         kw.update(kwargs)
-        colormesh(
-            x, y, intensity, live=live, slider_values=selected,
-            slider_labels=labels, slider_label="Azimuth", **kw
-        )
+        colormesh(x, y, intensity, live=live, slider_values=selected, **kw)
 
     def ii(j):
         def fn(data: np.ndarray, section: object) -> np.ndarray:
