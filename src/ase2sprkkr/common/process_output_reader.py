@@ -4,7 +4,7 @@ import asyncio
 import functools
 import os
 import numpy as np
-from threading import Thread
+from .async_utils import run_coro_sync
 from .decorators import maybeclassmethod
 from .file_utils import filename_from_file
 
@@ -176,31 +176,3 @@ async def readline_until(stdout, cond, can_end=True):
             return line.decode("utf8")
 
 
-def run_coro_sync(coro_func):
-    """Run an async coroutine from a synchronous context."""
-    try:
-        asyncio.get_running_loop()
-        in_thread = True
-    except RuntimeError:
-        in_thread = False
-
-    if not in_thread:
-        return asyncio.run(coro_func)
-
-    result = None
-    exc = None
-
-    def runner():
-        nonlocal result, exc
-        try:
-            result = asyncio.run(coro_func)
-        except Exception as e:
-            exc = e
-
-    thread = Thread(target=runner)
-    thread.start()
-    thread.join()
-
-    if exc:
-        raise exc
-    return result

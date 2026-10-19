@@ -21,6 +21,7 @@ from .base import (
     RunState,
     dispatch_cancellation,
 )
+from ..common.async_utils import run_coro_sync as _run_sync
 from ..common.file_versions import file_digest
 from .transport import expand_local_files, has_file_magic
 
@@ -46,30 +47,6 @@ class FileSyncPolicy(str, Enum):
         if self == FileSyncPolicy.MISSING:
             return destination_digest is None
         return source_digest != destination_digest
-
-
-def _run_sync(coro):
-    """Run one transport coroutine from the synchronous executor facade."""
-    try:
-        asyncio.get_running_loop()
-    except RuntimeError:
-        return asyncio.run(coro)
-
-    result = []
-    error = []
-
-    def worker():
-        try:
-            result.append(asyncio.run(coro))
-        except BaseException as exc:
-            error.append(exc)
-
-    thread = Thread(target=worker)
-    thread.start()
-    thread.join()
-    if error:
-        raise error[0]
-    return result[0]
 
 
 class RemoteRunner:
