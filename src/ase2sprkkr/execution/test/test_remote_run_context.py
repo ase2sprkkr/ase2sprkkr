@@ -1,3 +1,7 @@
+import asyncio
+
+import pytest
+
 from ase2sprkkr.execution import Executor, LaunchSpec
 from ase2sprkkr.execution.remote_endpoint import RemoteEndpointExecutor
 
@@ -73,3 +77,52 @@ def test_manifest_sync_groups_declarations_without_replaying_pattern_children():
         "cache_patterns": ["/remote/restart-*.pot"],
         "cache_before": [{"path": "/remote/remote-only.dat", "signature": (5, 7)}],
     }
+
+
+def test_absolute_remote_root_needs_no_remote_home_query(tmp_path, monkeypatch):
+    endpoint = RemoteEndpointExecutor(_Transport())
+    context = endpoint._context(
+        endpoint,
+        LaunchSpec(local_root=tmp_path, remote_root="/scratch/../work"),
+    )
+    calls = []
+
+    async def remote_home():
+        calls.append("home")
+        raise AssertionError("Absolute remote roots must not query remote HOME")
+
+    monkeypatch.setattr(endpoint, "_remote_home", remote_home)
+    directory = tmp_path / "calculation"
+    directory.mkdir()
+    assert asyncio.run(context.map_path(directory)) == "/work/calculation"
+    assert asyncio.run(context.map_directory(directory)) == "/work/calculation"
+    assert asyncio.run(context.unmap_path("/work/calculation")) == directory
+    assert asyncio.run(context._resolved_remote_root()) == "/work"
+    assert calls == []
+
+
+@pytest.mark.parametrize(
+    "root, expected",
+    [
+        (None, "/home/user"),
+        ("~", "/home/user"),
+        ("~/projects", "/home/user/projects"),
+        ("projects", "/home/user/projects"),
+    ],
+)
+def test_home_relative_remote_root_still_resolves_home_once(
+    tmp_path, monkeypatch, root, expected,
+):
+    endpoint = RemoteEndpointExecutor(_Transport())
+    context = endpoint._context(
+        endpoint, LaunchSpec(local_root=tmp_path, remote_root=root),
+    )
+    calls = []
+
+    async def remote_home():
+        calls.append("home")
+        return "/home/user"
+
+    monkeypatch.setattr(endpoint, "_remote_home", remote_home)
+    assert asyncio.run(context._resolved_remote_root()) == expected
+    assert calls == ["home"]
