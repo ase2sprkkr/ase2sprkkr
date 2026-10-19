@@ -20,6 +20,7 @@ from .base import (
     Executor,
     FailurePhase,
     OutputObservers,
+    file_path,
     finish_monitor,
     wait_for_monitor,
     RunState,
@@ -75,14 +76,10 @@ def _load_psij():
 def _path(value, directory=None):
     if value is None:
         return None
-    value = getattr(value, "name", value)
     try:
-        path = os.fspath(value)
-    except TypeError as exc:
+        return file_path(value, directory, required=True)
+    except ValueError as exc:
         raise ValueError("PSI/J execution requires named input/output files") from exc
-    if directory and not os.path.isabs(path):
-        path = os.path.join(directory, path)
-    return os.path.abspath(path)
 
 
 def _scheduler_output(argv):
