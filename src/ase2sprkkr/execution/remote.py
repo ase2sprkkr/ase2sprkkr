@@ -410,6 +410,21 @@ class RemoteRunner:
         self._output_targets = targets
         self._output_patterns = tuple(patterns)
 
+    async def _sync_output_entry(self, local, remote, required, *, source_pattern=None):
+        """Synchronize one concrete output and record its availability."""
+        if source_pattern is not None:
+            self._set_file_availability(
+                local, "pending", remote=remote, source_pattern=source_pattern,
+            )
+        try:
+            available = await self._sync_one_output(local, remote, required)
+        except Exception as exc:
+            self._set_file_availability(local, "failed", str(exc))
+            raise
+        self._set_file_availability(
+            local, "available" if available else "skipped",
+        )
+
     async def _sync_output_files(self, required):
         policy = self.executor.output_files
         if policy == FileSyncPolicy.NEVER:
@@ -426,15 +441,7 @@ class RemoteRunner:
             return
 
         for local, remote in self._output_targets.items():
-            try:
-                available = await self._sync_one_output(local, remote, required)
-            except Exception as exc:
-                self._set_file_availability(local, "failed", str(exc))
-                raise
-            else:
-                self._set_file_availability(
-                    local, "available" if available else "skipped",
-                )
+            await self._sync_output_entry(local, remote, required)
 
         if not self._output_patterns:
             return
@@ -466,22 +473,11 @@ class RemoteRunner:
                     if local in primary:
                         # Primary streams are written incrementally by follow.
                         continue
-                    self._set_file_availability(
-                        local, "pending", remote=remote,
-                        source_pattern=local_pattern,
+                    await self._sync_output_entry(
+                        local, remote, required, source_pattern=local_pattern,
                     )
-                    try:
-                        available = await self._sync_one_output(local, remote, required)
-                    except Exception as exc:
-                        self._set_file_availability(local, "failed", str(exc))
-                        raise
-                    else:
-                        self._set_file_availability(
-                            local, "available" if available else "skipped",
-                        )
 
-                # All matches have been considered successfully. Never mark the
-                # pattern complete before its last individual transfer.
+                # The declaration becomes available only after every match.
                 self._set_file_availability(local_pattern, "available")
             except Exception as exc:
                 self._set_file_availability(local_pattern, "failed", str(exc))
@@ -507,25 +503,37 @@ class RemoteRunner:
             await self.executor.transport.get_file(remote, local)
         return True
 
+    async def _sync_cache_entry(self, local, remote, before, *, source_pattern=None):
+        """Synchronize one concrete cache using its pre-run signature."""
+        if source_pattern is not None:
+            self._set_file_availability(
+                local, "pending", remote=remote, kind="cache",
+                source_pattern=source_pattern,
+            )
+        try:
+            after = await self.executor.transport.file_signature(remote)
+            if (
+                after is None or after == before
+                or (
+                    self.executor.output_files == FileSyncPolicy.MISSING
+                    and local_file_digest(local) is not None
+                )
+            ):
+                state = "skipped"
+            else:
+                await self.executor.transport.get_file(remote, local)
+                state = "available"
+        except Exception as exc:
+            self._set_file_availability(local, "failed", str(exc), kind="cache")
+            raise
+        self._set_file_availability(local, state, kind="cache")
+
     async def _sync_cache_files(self):
-        policy = self.executor.output_files
-        if policy == FileSyncPolicy.NEVER:
+        if self.executor.output_files == FileSyncPolicy.NEVER:
             return
 
         for local, (remote, before) in self._cache_targets.items():
-            try:
-                after = await self.executor.transport.file_signature(remote)
-                if after is None or after == before:
-                    self._set_file_availability(local, "skipped", kind="cache")
-                    continue
-                if policy == FileSyncPolicy.MISSING and local_file_digest(local) is not None:
-                    self._set_file_availability(local, "skipped", kind="cache")
-                    continue
-                await self.executor.transport.get_file(remote, local)
-                self._set_file_availability(local, "available", kind="cache")
-            except Exception as exc:
-                self._set_file_availability(local, "failed", str(exc), kind="cache")
-                raise
+            await self._sync_cache_entry(local, remote, before)
 
         if not self._cache_patterns:
             return
@@ -547,34 +555,10 @@ class RemoteRunner:
                         continue
                     selected.add(remote)
                     local = os.fspath(await self.executor.unmap_path(remote))
-                    self._set_file_availability(
-                        local, "pending", remote=remote, kind="cache",
+                    await self._sync_cache_entry(
+                        local, remote, self._cache_before.get(remote),
                         source_pattern=local_pattern,
                     )
-                    try:
-                        after = await self.executor.transport.file_signature(remote)
-                        if after is None or after == self._cache_before.get(remote):
-                            self._set_file_availability(
-                                local, "skipped", kind="cache",
-                            )
-                            continue
-                        if (
-                            policy == FileSyncPolicy.MISSING
-                            and local_file_digest(local) is not None
-                        ):
-                            self._set_file_availability(
-                                local, "skipped", kind="cache",
-                            )
-                            continue
-                        await self.executor.transport.get_file(remote, local)
-                        self._set_file_availability(
-                            local, "available", kind="cache",
-                        )
-                    except Exception as exc:
-                        self._set_file_availability(
-                            local, "failed", str(exc), kind="cache",
-                        )
-                        raise
                 self._set_file_availability(
                     local_pattern, "available", kind="cache",
                 )
