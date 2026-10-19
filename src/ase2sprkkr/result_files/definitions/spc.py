@@ -13,6 +13,15 @@ from ...common.configuration_definitions import switch
 from ...gui.plot import change_default_kwargs, colormesh, Multiplot
 
 
+# Native SPC columns are shared by the reader and the NeXus writer.
+SPC_COLUMNS = {
+    "energy": ("THETA", "ENERGY", "TOTAL", "UP", "DOWN",
+               "POLARIZATION", "K", "DETERMINANT"),
+    "kx_ky": ("KX", "KY", "TOTAL", "UP", "DOWN",
+              "POLARIZATION", "DETERMINANT"),
+}
+
+
 class ARPESResultFile(CommonResultFile, Arithmetic):
     def to_nexus(self, filename, *, input_parameters=None, input_file=None,
                  metadata=None):
@@ -36,6 +45,9 @@ class ARPESResultFile(CommonResultFile, Arithmetic):
         layout_kind="constrained",
         **kwargs,
     ):
+        multi_azimuth = self.MODE() == "energy" and self.NP() > 1
+        if multi_azimuth and layout == (2, 2):
+            layout = (self.NP(), 4)
         with Multiplot(
             layout=layout,
             figsize=figsize,
@@ -47,13 +59,33 @@ class ARPESResultFile(CommonResultFile, Arithmetic):
             layout_kind=layout_kind,
             **kwargs,
         ) as mp:
-            mp.plot(self.TOTAL)
-            mp.plot(self.UP)
-            mp.plot(self.DOWN)
-            mp.plot(self.POLARIZATION)
+            options = (self.TOTAL, self.UP, self.DOWN, self.POLARIZATION)
+            if multi_azimuth:
+                for ip in range(self.NP()):
+                    for option in options:
+                        with mp.new_axis(name=f"{option.name}_azimuth_{ip + 1}") as (axis, plot_kwargs):
+                            option.plot(azimuth_index=ip, axis=axis, **plot_kwargs)
+            else:
+                for option in options:
+                    mp.plot(option)
+
+    def spc_columns(self):
+        """Native column ordering for this file's detected SPC mode."""
+        return SPC_COLUMNS[self.MODE()]
 
     def _arithmetic_values(self):
-        return [("RAW_DATA", (slice(None), slice(2, 6 if self.MODE() == "energy" else 5)))]
+        # Spin polarization is a ratio, not another additive intensity.
+        return [("RAW_DATA", (slice(None), slice(2, 5)))]
+
+    def _do_arithmetic(self, func, other):
+        super()._do_arithmetic(func, other)
+        if func in ("__iadd__", "__isub__"):
+            up, down = self.UP(), self.DOWN()
+            np.divide(
+                up - down, up + down,
+                out=self.POLARIZATION(), where=(up + down) != 0
+            )
+            self.POLARIZATION()[(up + down) == 0] = 0
 
     def _assert_arithmetic(self, other):
         """Check, that the file can be summed/subtracked from an other file"""
@@ -73,7 +105,7 @@ class ARPESDefinition(ResultFileDefinition):
 
 def create_definition():
 
-    def plot(option, **kwargs):
+    def plot(option, azimuth_index=None, **kwargs):
         c = option._container
         kw = {
             "show_zero_line": False,
@@ -93,8 +125,15 @@ def create_definition():
             kw["xlabel"] = r"$k_x$ (Å$^{-1}$)"
             kw["ylabel"] = r"$k_y$ (Å$^{-1}$)"
 
+        intensity = option()
+        if c.MODE() == "energy" and c.NP() > 1:
+            if azimuth_index is None:
+                raise ValueError("Choose azimuth_index for an energy/angle scan with NP > 1")
+            x, y, intensity = (
+                field[:, azimuth_index, :] for field in (x, y, intensity)
+            )
         kw.update(kwargs)
-        colormesh(x, y, option(), **kw)
+        colormesh(x, y, intensity, **kw)
 
     def ii(j):
         def fn(data: np.ndarray, section: object) -> np.ndarray:
@@ -111,8 +150,12 @@ def create_definition():
         return ii(7 if section["MODE"]() == "energy" else 6)(data, section)
 
     def mode(section: object, _key: object = None) -> str:
-        """Derive the output mode from ``section``."""
-        return "energy" if section["NE"]() > 1 else "kx_ky"
+        """Detect native mode by record width (not by the number of energies)."""
+        columns = section["RAW_DATA"]().shape[1]
+        for mode_name, names in SPC_COLUMNS.items():
+            if len(names) == columns:
+                return mode_name
+        raise ValueError(f"Unrecognized ARPES SPC record width: {columns}")
 
     definition = create_result_file_definition(
         "ARPES",

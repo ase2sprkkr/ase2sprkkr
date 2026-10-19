@@ -55,7 +55,7 @@ class ArpesResult(TaskResult):
     @property
     def arpes(self):
         """ Alias of ``meth:ArpesResult.spc`` """
-        return self.spc()
+        return self.spc
 
     @property
     def output_values(self):

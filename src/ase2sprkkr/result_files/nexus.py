@@ -110,31 +110,42 @@ def _dataset(group, name, value):
 
 
 def _spc_arrays(spc):
-    mode = spc.MODE() if hasattr(spc, "MODE") else "energy"
-    if mode not in ("energy", "kx_ky"):
-        raise ValueError(f"Unsupported ARPES SPC mode: {mode}")
-    raw = np.asarray(spc.RAW_DATA())
-    nt, np_ = int(spc.NT()), int(spc.NP())
-    if nt < 1 or np_ < 1 or raw.ndim != 2:
-        raise ValueError("Invalid SPR-KKR SPC grid dimensions")
-    ne = int(spc.NE()) if hasattr(spc, "NE") else raw.shape[0] // (nt * np_)
-    cols = 8 if mode == "energy" else 7
-    expected_rows = ne * nt * np_ if mode == "energy" else nt * np_
-    if raw.shape != (expected_rows, cols):
-        raise ValueError(
-            f"SPC {mode} must contain {expected_rows} rows of {cols} columns "
-            f"(NE={ne}, NP={np_}, NT={nt}); got {raw.shape}"
-        )
-    shape = (ne, np_, nt) if mode == "energy" and np_ > 1 else (
-        (ne, nt) if mode == "energy" else (np_, nt)
-    )
+    """Use the SPC parser's named fields, shapes and native column contract."""
+    mode = spc.MODE()
+    columns = spc.spc_columns()
+    fields = {
+        "data": "TOTAL", "spin_up": "UP", "spin_down": "DOWN",
+        "spin_polarization": "POLARIZATION", "determinant": "DETERMINANT",
+    }
     if mode == "energy":
-        names = ("theta", "energy", "data", "spin_up", "spin_down",
-                 "spin_polarization", "k_parallel", "determinant")
+        fields.update(theta="THETA", energy="ENERGY", k_parallel="K")
+    elif mode == "kx_ky":
+        fields.update(k_x="KX", k_y="KY")
     else:
-        names = ("k_x", "k_y", "data", "spin_up", "spin_down",
-                 "spin_polarization", "determinant")
-    return mode, raw, {name: raw[:, i].reshape(shape) for i, name in enumerate(names)}
+        raise ValueError(f"Unsupported ARPES SPC mode: {mode}")
+    arrays = {
+        name: np.asarray(getattr(spc, native)()) for name, native in fields.items()
+    }
+    shape = arrays["data"].shape
+    nt, np_ = int(spc.NT()), int(spc.NP())
+    if nt < 1 or np_ < 1 or any(a.shape != shape for a in arrays.values()):
+        raise ValueError("Inconsistent ARPES SPC field dimensions")
+    if shape[-1] != nt or (mode == "kx_ky" and shape != (np_, nt)):
+        raise ValueError("ARPES SPC grid dimensions do not match NT and NP")
+    if mode == "energy":
+        if len(shape) == 2 and np_ != 1:
+            raise ValueError("ARPES SPC NP disagrees with decoded energy-grid shape")
+        if len(shape) == 3 and shape[1] != np_:
+            raise ValueError("ARPES SPC NP disagrees with decoded azimuth grid")
+        if len(shape) not in (2, 3):
+            raise ValueError("Unexpected ARPES SPC energy-grid dimensions")
+    raw = np.asarray(spc.RAW_DATA())
+    if raw.shape != (arrays["data"].size, len(columns)):
+        raise ValueError(
+            f"ARPES SPC raw data must have {len(columns)} columns "
+            "and match the decoded field grid"
+        )
+    return mode, raw, arrays
 
 
 def _write_nexus(path, filename, spc, parameters, input_path, input_text, metadata):
@@ -229,20 +240,25 @@ def _write_nexus(path, filename, spc, parameters, input_path, input_text, metada
         main.attrs["units"] = "arbitrary_units"
         # Coordinate columns are preserved verbatim in the raw SPC below.
         if mode == "kx_ky":
-            data.attrs["axes"] = ["row", "column"]
-            data.attrs["row_indices"] = 0
-            data.attrs["column_indices"] = 1
-            data.create_dataset("row", data=np.arange(shape[0]))
-            data.create_dataset("column", data=np.arange(shape[1]))
-            data.attrs["momentum_coordinates"] = "../sprkkr_spc/raw_data columns k_x,k_y"
-            if parameters is not None:
-                # The source scan definition is stored once, under original_input.
-                # In a native K-vector scan this contains KA, K1, K2, NK1, NK2.
-                # No second reconstruction of the generated grid is necessary.
-                if _value(parameters, "SPEC_EL", "K1") is not None:
-                    data.attrs["scan_definition"] = (
-                        "../calculation/original_input/SPEC_EL"
-                    )
+            # NeXus regular axes cannot encode an oblique reciprocal-space
+            # basis. Display its projections on orthogonal kx/ky axes; native
+            # 2D coordinates are retained exactly in sprkkr_spc/raw_data.
+            warning = (
+                "ARPES kx_ky coordinates are represented as orthogonal "
+                "k_x/k_y axes in NXdata; oblique scans may be displayed "
+                "with distorted geometry. Exact coordinates are in "
+                "entry/sprkkr_spc/raw_data (columns KX, KY)."
+            )
+            warnings.warn(warning, UserWarning, stacklevel=3)
+            data.attrs["coordinate_warning"] = warning
+            data.attrs["axes"] = ["k_y", "k_x"]
+            data.attrs["k_y_indices"] = 0
+            data.attrs["k_x_indices"] = 1
+            kx = data.create_dataset("k_x", data=arrays["k_x"][0, :])
+            ky = data.create_dataset("k_y", data=arrays["k_y"][:, 0])
+            kx.attrs["units"] = ky.attrs["units"] = "1/angstrom"
+            if parameters is not None and _value(parameters, "SPEC_EL", "K1") is not None:
+                data.attrs["scan_definition"] = "../calculation/original_input/SPEC_EL"
         elif len(shape) == 3:
             data.attrs["axes"] = ["energy_index", "azimuth_index", "angle_index"]
             for axis, count, index in zip(
@@ -293,13 +309,7 @@ def _write_nexus(path, filename, spc, parameters, input_path, input_text, metada
         native = entry.create_group("sprkkr_spc")
         native.attrs["NX_class"] = "NXcollection"
         raw_ds = native.create_dataset("raw_data", data=raw)
-        raw_ds.attrs["columns"] = (
-            ("THETA", "ENERGY", "TOTAL", "UP", "DOWN",
-             "POLARIZATION", "K", "DETERMINANT")
-            if mode == "energy" else
-            ("KX", "KY", "TOTAL", "UP", "DOWN",
-             "POLARIZATION", "DETERMINANT")
-        )
+        raw_ds.attrs["columns"] = spc.spc_columns()
         native.create_dataset("nt", data=int(spc.NT()))
         native.create_dataset("np", data=int(spc.NP()))
         native.create_dataset("comment", data=str(spc.COMMENT()))
