@@ -276,7 +276,7 @@ class Arithmetic:
         out *= other
         return out
 
-    def __div__(self, other):
+    def __truediv__(self, other):
         out = self.copy(copy_values=True)
         out /= other
         return out
@@ -308,8 +308,8 @@ class Arithmetic:
         self._do_arithmetic("__imul__", other)
         return self
 
-    def __idiv__(self, other):
-        self._do_arithmetic("__idiv__", other)
+    def __itruediv__(self, other):
+        self._do_arithmetic("__itruediv__", other)
         return self
 
 
