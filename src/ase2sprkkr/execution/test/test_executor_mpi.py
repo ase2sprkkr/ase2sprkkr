@@ -84,6 +84,7 @@ def test_input_parameters_preserve_mpi_launch_intent(tmp_path, monkeypatch):
         assert seen["spec"].mpi_argv == ("kkrscfMPI", input_file.name)
         assert seen["spec"].launch == LaunchSpec.from_mpi("auto")
         assert seen["spec"].stdin is input_file
+        assert seen["spec"].mpi_uses_stdin is False
         created.close()
 
 
@@ -112,7 +113,7 @@ def test_local_executor_materializes_mpi_on_execution_host(monkeypatch, tmp_path
     resolved = materialize_local_spec(spec)
 
     assert resolved.argv == ("srun", "-n", "16", "kkrscfMPI", input_file.name)
-    assert resolved.stdin is None
+    assert resolved.stdin is input_file
     input_file.close()
 
 
@@ -295,3 +296,20 @@ def test_explicit_local_executor_overrides_remote_profile(tmp_path, monkeypatch)
         assert seen["spec"].mpi_argv is None
         assert seen["spec"].launch == LaunchSpec()
         created.close()
+
+def test_mpi_stdin_is_explicit_and_serial_fallback_is_unchanged(monkeypatch, tmp_path):
+    monkeypatch.setattr(
+        "ase2sprkkr.execution.local_process.resolve_mpi_command",
+        lambda mpi: ("mpirun",),
+    )
+    spec = ExecutionSpec(
+        argv=("serial",), mpi_argv=("parallel",),
+        launch=LaunchSpec.from_mpi(True),
+        input_file=None, output_file=None, directory=str(tmp_path),
+        stdin=str(tmp_path / "separate-stdin.dat"),
+    )
+    assert materialize_local_spec(spec).stdin == spec.stdin
+    disabled = materialize_local_spec(
+        __import__("dataclasses").replace(spec, mpi_uses_stdin=False)
+    )
+    assert disabled.stdin is None

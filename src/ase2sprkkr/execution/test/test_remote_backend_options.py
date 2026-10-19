@@ -49,6 +49,7 @@ def test_remote_request_carries_target_executor_options(tmp_path):
     assert request["executor"] == "psij"
     assert request["executor_options"] == {"backend": "slurm", "url": None}
     assert request["argv"] == ["program"]
+    assert request["mpi_uses_stdin"] is True
     assert request["mpi_argv"][0] == "programMPI"
     assert request["mpi_argv"][1].endswith("/calculation/run.inp")
     assert request["launch"] == {

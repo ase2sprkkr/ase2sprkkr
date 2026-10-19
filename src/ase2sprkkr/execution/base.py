@@ -487,6 +487,9 @@ class ExecutionSpec:
     cache_files: Sequence[Any] = ()
     mpi_argv: Optional[Sequence[str]] = None
     launch: LaunchSpec = LaunchSpec()
+    # The MPI command may have a different stdin contract from serial argv.
+    # Generic executors preserve stdin unless the caller explicitly opts out.
+    mpi_uses_stdin: bool = True
 
     def __post_init__(self):
         object.__setattr__(self, "directory", os.fspath(self.directory))

@@ -631,6 +631,7 @@ class RemoteRunner:
                 if self.spec.mpi_argv is None
                 else self._remote_argv(self.spec.mpi_argv, staged)
             ),
+            "mpi_uses_stdin": self.spec.mpi_uses_stdin,
             "launch": asdict(self.spec.launch),
             "input_file": input_target,
             "stdin": stdin_target,
