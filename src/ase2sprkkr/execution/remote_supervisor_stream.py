@@ -255,7 +255,20 @@ class SupervisorStreams:
             self._server.close()
             await self._server.wait_closed()
         if self._followers:
-            await asyncio.gather(*(f.done.wait() for f in tuple(self._followers)))
+            # Terminal publication must not be held hostage indefinitely by a
+            # connected client which reads too slowly to complete its replay.
+            pending = tuple(self._followers)
+            finished, stalled = await asyncio.wait(
+                [asyncio.create_task(f.done.wait()) for f in pending],
+                timeout=2.0,
+            )
+            if stalled:
+                for follower in pending:
+                    if not follower.done.is_set():
+                        follower.writer.transport.abort()
+                await asyncio.wait(stalled, timeout=1.0)
+            for task in stalled:
+                task.cancel()
         for spool in self._spools.values():
             spool.close()
         if self._socket_dir is not None:
