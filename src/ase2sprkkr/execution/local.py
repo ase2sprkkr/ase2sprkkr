@@ -91,10 +91,6 @@ class LocalRunner:
     def add_output_error_listener(self, callback):
         self._output_observers.add_error_listener(callback)
 
-    def _emit_output(self, data, kind):
-        if data:
-            self._output_observers.emit(data.decode("utf8", errors="replace"), kind)
-
     def _output_target(self, kind):
         # A missing stderr target means live observation only, not an
         # implicit merge into the saved stdout artifact.
@@ -105,7 +101,7 @@ class LocalRunner:
         if target is not None:
             target.write(data)
             target.flush()
-        self._emit_output(data, kind)
+        self._output_observers.emit_bytes(data, kind)
 
     async def _stop_process(self):
         await stop_local_process(self._process)

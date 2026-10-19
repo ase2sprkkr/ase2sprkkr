@@ -221,10 +221,6 @@ class RemoteRunner:
     def add_output_error_listener(self, callback):
         self._output_observers.add_error_listener(callback)
 
-    def _emit_output(self, data, kind):
-        if data:
-            self._output_observers.emit(data.decode("utf8", errors="replace"), kind)
-
     def _write_output(self, data, kind):
         """Persist FOLLOW bytes at their logical offset, not blindly append.
 
@@ -620,7 +616,7 @@ class RemoteRunner:
             if not data:
                 return
             self._write_output(data, kind)
-            self._emit_output(data, kind)
+            self._output_observers.emit_bytes(data, kind)
 
     async def _monitor(self):
         stdout_task = stderr_task = None
