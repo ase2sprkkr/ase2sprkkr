@@ -5,6 +5,7 @@ import sys
 import pytest
 
 from ase2sprkkr.execution.base import (
+    file_path,
     ExecutionSpec,
     FailurePhase,
     RunState,
@@ -211,3 +212,29 @@ def test_local_transport_failed_copy_preserves_destination(tmp_path):
     assert destination.read_bytes() == b"old"
 
 
+
+
+def test_file_path_resolves_named_files_and_tolerates_unnamed(tmp_path):
+    output = tmp_path / "output.dat"
+    output.write_text("a")
+    with output.open("rb") as stream:
+        assert file_path(stream, tmp_path) == str(output)
+    assert file_path("relative.dat", tmp_path) == str(tmp_path / "relative.dat")
+    assert file_path(None, tmp_path) is None
+    assert file_path(1, tmp_path) is None
+    assert file_path(object(), tmp_path) is None
+
+
+def test_file_path_flush_is_explicit(tmp_path):
+    class FileLike:
+        name = "output.dat"
+        def __init__(self):
+            self.flush_calls = 0
+        def flush(self):
+            self.flush_calls += 1
+
+    value = FileLike()
+    assert file_path(value, tmp_path) == str(tmp_path / value.name)
+    assert value.flush_calls == 0
+    assert file_path(value, tmp_path, flush=True) == str(tmp_path / value.name)
+    assert value.flush_calls == 1

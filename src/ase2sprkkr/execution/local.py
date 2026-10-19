@@ -12,6 +12,7 @@ from .base import (
     Executor,
     FailurePhase,
     OutputObservers,
+    file_path,
     finish_monitor,
     wait_for_monitor,
     RunState,
@@ -27,21 +28,6 @@ from .local_process import (
 )
 
 
-def _path(value, directory):
-    if value is None:
-        return None
-    value = getattr(value, "name", value)
-    if isinstance(value, int):
-        return None
-    try:
-        path = os.fspath(value)
-    except TypeError:
-        return None
-    if not os.path.isabs(path):
-        path = os.path.join(directory, path)
-    return os.path.abspath(path)
-
-
 class LocalRunner:
     """One local subprocess execution.
 
@@ -53,9 +39,9 @@ class LocalRunner:
         self.spec = spec
         self.callback = callback
         self.result = ExecutionOutcome(
-            output_file=_path(spec.output_file, spec.directory),
-            input_file=_path(spec.input_file, spec.directory),
-            error_file=_path(spec.error_file, spec.directory),
+            output_file=file_path(spec.output_file, spec.directory),
+            input_file=file_path(spec.input_file, spec.directory),
+            error_file=file_path(spec.error_file, spec.directory),
         )
 
         self._state = RunState.NEW
@@ -164,14 +150,14 @@ class LocalRunner:
 
         try:
             protected = [
-                _path(value, self.spec.directory)
+                file_path(value, self.spec.directory)
                 for value in (self.spec.input_file, self.spec.stdin,
                               *self.spec.input_files, *self.spec.cache_files)
             ]
             # Preserve already-open stdout/stderr handles: an unlink would
             # disconnect their inode from the named destination.
             outputs = [
-                _path(value, self.spec.directory)
+                file_path(value, self.spec.directory)
                 for value in self.spec.output_files
             ]
             clear_declared_outputs(

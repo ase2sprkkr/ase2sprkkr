@@ -13,6 +13,7 @@ from uuid import uuid4
 
 from .base import (
     ExecutionSpec,
+    file_path,
     Executor,
     FailurePhase,
     LaunchSpec,
@@ -29,21 +30,6 @@ from .endpoint import endpoint_for_executor
 
 
 _REMOTE_BACKENDS = {"local", "psij"}
-
-
-def _local_path(value, directory):
-    if value is None:
-        return None
-    value = getattr(value, "name", value)
-    try:
-        path = os.fspath(value)
-    except TypeError:
-        return None
-    if isinstance(path, int):
-        return None
-    if not os.path.isabs(path):
-        path = os.path.join(directory, path)
-    return os.path.abspath(path)
 
 
 def _client_status_state(state):
@@ -118,7 +104,7 @@ class _RemoteRun(RemoteRunner):
     async def _submitted_manifest(self, request):
         directory = os.path.abspath(os.fspath(self.spec.directory))
         def local(value):
-            return _local_path(value, directory)
+            return file_path(value, directory)
         inputs = []
         for item in (self.spec.input_file, *self.spec.input_files):
             path = local(item)

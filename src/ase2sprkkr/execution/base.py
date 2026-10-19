@@ -15,6 +15,24 @@ from ..common.decorators import class_property
 from .run_model import Execution, FileManifest
 
 
+def file_path(value, directory=None, *, flush=False):
+    """Resolve a named file or path, returning None for unnamed descriptors."""
+    if value is None:
+        return None
+    if flush and hasattr(value, "flush"):
+        value.flush()
+    value = getattr(value, "name", value)
+    if isinstance(value, int):
+        return None
+    try:
+        path = os.fspath(value)
+    except TypeError:
+        return None
+    if directory is not None and not os.path.isabs(path):
+        path = os.path.join(directory, path)
+    return os.path.abspath(path)
+
+
 def dispatch_cancellation(action):
     """Run a blocking backend cancellation off the calling/GUI thread.
 
