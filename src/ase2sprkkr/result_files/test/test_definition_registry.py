@@ -7,8 +7,8 @@ from ase2sprkkr.result_files import ResultFile
 
 
 def test_multiple_definitions_share_extension_without_overwrite():
-    photo = SimpleNamespace(extension="spc")
-    band = SimpleNamespace(extension="spc")
+    photo = SimpleNamespace(extension="spc", auto_detect=True)
+    band = SimpleNamespace(extension="spc", auto_detect=True)
 
     class TestRegistry(ResultFileDefinitionRegistry):
         def names(self, *, include_aliases=True):
@@ -129,3 +129,26 @@ def test_programmer_errors_are_not_swallowed_in_format_detection(monkeypatch, tm
     monkeypatch.setattr(ResultFile, "definitions", {"spc": broken})
     with pytest.raises(RuntimeError, match="broken parser implementation"):
         ResultFile.from_file(filename)
+
+def test_virtual_result_format_is_only_used_explicitly(monkeypatch, tmp_path):
+    from ase2sprkkr.result_files import definition_registry
+    import pyparsing as pp
+    import pytest
+
+    file = tmp_path / "test.out"
+    file.write_text("not a structured result")
+    class Virtual:
+        name = "VIRTUAL"
+        extension = "out"
+        auto_detect = False
+        def read_from_file(self, filename, potential=None):
+            return "virtual"
+
+    virtual = Virtual()
+    registry = definition_registry.result_file_definition_registry
+    monkeypatch.setattr(registry, "by_extension", lambda: {})
+    monkeypatch.setattr(registry, "values", lambda include_aliases=False: (virtual,))
+    monkeypatch.setattr(ResultFile, "definitions", {"virtual": virtual})
+    with pytest.raises((ValueError, pp.ParseBaseException)):
+        ResultFile.from_file(file, unknown=False)
+    assert ResultFile.from_file(file, try_only="virtual") == "virtual"

@@ -23,7 +23,19 @@ def _single_polarization(parameters):
     return str(parameters.SPEC_PH.NPOL()) not in ("0", "3")
 
 
+def spleed_spc(parameters):
+    """SPLEED always opens a structured SPC file in its default NPOL=1 mode.
+
+    SPEC_RSLAB calls WRHEAD independently of TYP and NREL. For TYP=0 the
+    file contains only a header; its two-column diagram is in SPEC.out.
+    Modern SPEC_INPUT uses NREL=1, and TYP=1/2 write seven data columns.
+    """
+    return "{dataset}_data.spc" if parameters.TASK.TASK() == "SPLEED" else None
+
+
 def data_spc(parameters):
+    if parameters.TASK.TASK() == "SPLEED":
+        return spleed_spc(parameters)
     return "{dataset}_data.spc" if _single_polarization(parameters) else None
 
 

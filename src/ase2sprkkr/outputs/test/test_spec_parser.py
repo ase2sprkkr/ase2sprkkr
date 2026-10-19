@@ -51,13 +51,7 @@ stookes-vector    of the photonfield  0.10000E+01  100.000%    0.000%    0.000%
         result.basis_vectors["reciprocal"],
         [[1.35711, 0.78353], [0.0, 1.56706]],
     )
-    np.testing.assert_allclose(
-        result.spectral_data,
-        [
-            [1.8937e00, -9.6825e-02, 6.1567e-08, -3.9380e-04, 3.0771e-08, 3.0795e-08],
-            [1.9000e00, -9.6825e-02, 5.7837e-08, -4.2368e-04, 2.8906e-08, 2.8931e-08],
-        ],
-    )
+    # Unstructured diagnostic rows inside the text log are not a native SPC ResultFile.
 
 
 def test_arpes_result_uses_native_spec_file_manifest(tmp_path):
@@ -88,14 +82,18 @@ def test_arpes_result_uses_native_spec_file_manifest(tmp_path):
                     str(tmp_path / "sample_data_pol2.spc"),
                 )
 
-def test_spec_reader_uses_native_data_file_and_preserves_band_columns(tmp_path):
+def test_spec_reader_requires_a_native_structured_band_file(tmp_path):
+    import pytest
+    import pyparsing as pp
     from ase2sprkkr.outputs.readers.spec import SpecResult
 
     (tmp_path / "Fe_data.spc").write_text(
-        "# BAND eigenvalues\nNT 1\nNP 1\n1.0D+00 2.0D+00 3.0D+00\n"
+        "# Legacy three-column diagnostic: not a native BAND SPC file\\n"
+        "NT 1\\nNP 1\\n1.0D+00 2.0D+00 3.0D+00\\n"
     )
     result = SpecResult(None, None, tmp_path, output_file="Fe_SPEC.out", task_name="BAND")
-    np.testing.assert_allclose(result.spectral_data, [[1.0, 2.0, 3.0]])
+    with pytest.raises((pp.ParseBaseException, ValueError)):
+        _ = result.spectral_data
 
 
 def test_arpes_registers_both_polarizations_from_native_files(tmp_path):

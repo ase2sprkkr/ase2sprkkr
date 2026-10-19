@@ -126,12 +126,21 @@ def test_spec_outputs_follow_polarization_and_task(tmp_path):
                 )
                 assert output_files == expected
 
-    for task in ("BAND", "SPLEED"):
-        parameters = InputParameters.create(task)
-        parameters.CONTROL.DATASET = "Fe"
-        assert parameters.output_files(str(tmp_path)) == (
+    parameters = InputParameters.create("BAND")
+    parameters.CONTROL.DATASET = "Fe"
+    assert parameters.output_files(str(tmp_path)) == (
+        str(tmp_path / "Fe_SPEC.out"), str(tmp_path / "Fe_data.spc"),
+    )
+
+    parameters = InputParameters.create("SPLEED")
+    parameters.CONTROL.DATASET = "Fe"
+    for diagram in (0, 1, 2):
+        parameters.SPEC_EL.TYP = diagram
+        declared = parameters.output_files(str(tmp_path))
+        assert tuple(map(str, declared)) == (
             str(tmp_path / "Fe_SPEC.out"), str(tmp_path / "Fe_data.spc"),
         )
+        assert all(not f.optional for f in declared)
 
 
 def test_scf_invalid_grid_and_mixing_are_rejected():
@@ -171,8 +180,6 @@ def test_scf_startup_dos_is_optional(tmp_path):
     files = parameters.output_files(str(tmp_path))
     assert next(f for f in files if str(f).endswith("_SCFSTART.dos")).optional
     assert not next(f for f in files if str(f).endswith("Fe.pot_new")).optional
-    # All returned paths, not just explicitly optional ones, are declarations.
-    assert all(isinstance(f.optional, bool) for f in files)
 
 
 def test_bsf_output_file_declarations(tmp_path):
