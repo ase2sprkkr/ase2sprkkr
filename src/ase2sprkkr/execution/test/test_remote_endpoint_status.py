@@ -167,6 +167,18 @@ def test_backend_status_is_mapped_to_client_owned_lifecycle(
 
     assert _client_status_state(state) == expected
 
+@pytest.mark.parametrize(
+    "facts, expected_state",
+    [
+        ({"state": "running"}, RunState.RUNNING),
+        ({"state": "finished", "return_code": 0}, RunState.DOWNLOADING),
+        ({"state": "failed", "return_code": 7, "failure_phase": "execution", "error": "job failed"}, RunState.DOWNLOADING),
+        ({"state": "failed", "failure_phase": "launch", "error": "program missing"}, RunState.FAILED),
+        ({"state": "failed", "failure_phase": "submission"}, RunState.FAILED),
+        ({"state": "cancelled", "return_code": 130}, RunState.CANCELLED),
+        ({"state": "unknown"}, RunState.UNKNOWN),
+    ],
+)
 def test_remote_status_and_recovery_share_backend_facts_mapping(
     facts, expected_state,
 ):
