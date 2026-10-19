@@ -99,6 +99,10 @@ class ARPESResultFile(CommonResultFile, Arithmetic):
         if layout[0] * layout[1] < 4 * len(slices):
             raise ValueError("The layout has too few axes for the selected slices")
 
+        # A live slider occupies figure space outside the regular axes.
+        # Matplotlib's constrained layout would reposition it on export/show.
+        if live and layout_kind == "constrained":
+            layout_kind = "adjust"
         with Multiplot(
             layout=layout,
             figsize=figsize,
