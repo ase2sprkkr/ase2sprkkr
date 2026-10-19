@@ -435,19 +435,50 @@ def recover_remote(run_id, request, *, submitted_at=None):
 
 
 async def _follow_scheduler_async(remote_id, streams, paths, offsets, poll_interval):
-    """Follow scheduler files directly: no process supervisor is involved."""
+    """Follow scheduler-owned files while PSI/J waits for terminal completion."""
+    from .psij import _STATE_MAP
+
+    handle = _decode_handle(remote_id)
+    executor = _psij_executor(
+        {"backend": handle["backend"], "url": handle.get("url")}
+    )
+    job = executor._psij.Job()
+    executor._job_executor.attach(job, handle["native_id"])
+    waiting = asyncio.create_task(asyncio.to_thread(job.wait))
+
     def emit(kind, data):
         streams[kind].write(data)
         streams[kind].flush()
 
     async def terminal():
+        if not waiting.done():
+            return None
+        await waiting
         status = await asyncio.to_thread(status_remote, remote_id)
-        return status if status["state"] in {s.value for s in _FINAL_STATES} else None
+        if status["state"] in {s.value for s in _FINAL_STATES}:
+            return status
+        native = job.status
+        state = _STATE_MAP.get(
+            getattr(getattr(native, "state", None), "name", None),
+            RunState.UNKNOWN,
+        )
+        return {
+            "state": state.value,
+            "return_code": getattr(native, "exit_code", None),
+            "failure_phase": (
+                FailurePhase.EXECUTION.value if state == RunState.FAILED else None
+            ),
+            "error": getattr(native, "message", None),
+        }
 
-    return await follow_growing_files(
-        paths, emit, terminal, offsets=offsets,
-        poll_interval=max(poll_interval, 1.0),
-    )
+    try:
+        return await follow_growing_files(
+            paths, emit, terminal, offsets=offsets,
+            poll_interval=max(poll_interval, 1.0),
+        )
+    finally:
+        if not waiting.done():
+            waiting.cancel()
 
 
 def _follow_scheduler(remote_id, streams, paths, offsets, poll_interval):

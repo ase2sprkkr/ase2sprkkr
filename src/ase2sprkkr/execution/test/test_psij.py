@@ -491,20 +491,32 @@ def test_psij_explicit_wait_timeout_keeps_cached_new_unknown(monkeypatch):
         executor.wait_status_native("native-42", timeout=-1)
 
 
-def test_psij_local_slurm_explicit_wait_polls_only_when_requested(monkeypatch):
+def test_psij_local_slurm_explicit_wait_uses_native_job_wait(monkeypatch):
     executor = _executor(monkeypatch, _Backend())
     observed = []
-    states = [RunState.UNKNOWN, RunState.UNKNOWN, RunState.RUNNING]
 
-    def status(native_id):
-        observed.append(native_id)
-        return psij_backend.RunStatus(states.pop(0), backend_id=native_id)
+    class Job:
+        def wait(self, **kwargs):
+            observed.append(("wait", kwargs))
 
-    monkeypatch.setattr(executor, "status_native", status)
+    class Backend:
+        def attach(self, job, native_id):
+            observed.append(("attach", native_id))
+
+    executor._psij = SimpleNamespace(
+        Job=Job, JobState=SimpleNamespace(QUEUED="QUEUED")
+    )
+    executor._job_executor = Backend()
+    states = [RunState.UNKNOWN, RunState.RUNNING]
+    monkeypatch.setattr(executor, "status_native",
+                        lambda native_id: psij_backend.RunStatus(
+                            states.pop(0), backend_id=native_id
+                        ))
     assert executor.wait_status_native("slurm-123", timeout=0).state == RunState.UNKNOWN
-    assert len(observed) == 1
     assert executor.wait_status_native("slurm-123", timeout=0.1).state == RunState.RUNNING
-    assert observed == ["slurm-123"] * 3
+    assert observed[0] == ("attach", "slurm-123")
+    assert observed[1][0] == "wait"
+
 
 
 def test_psij_status_and_attach_check_complete_endpoint(monkeypatch, tmp_path):

@@ -624,17 +624,13 @@ class PsijExecutor(Executor):
         if status.state != RunState.UNKNOWN or timeout == 0:
             return status
 
-        if self.backend.lower() == "slurm" and self.url is None:
-            # Native Slurm polling has no PSI/J Job to wait on.
-            deadline = time.monotonic() + timeout
-            while (remaining := deadline - time.monotonic()) > 0:
-                time.sleep(min(max(self.poll_interval, 0.01), remaining))
-                status = self.status_native(native_id)
-                if status.state != RunState.UNKNOWN:
-                    break
-            return status
-
-        job = self._status_jobs[str(native_id)]
+        job = self._status_jobs.get(str(native_id))
+        if job is None:
+            job = self._psij.Job()
+            self._job_executor.attach(job, str(native_id))
+            self._status_jobs[str(native_id)] = job
+        # The PSI/J Job object waits for notifications from its executor.
+        # There is no repeated scheduler status query or sleep loop.
         job.wait(
             timeout=timedelta(seconds=timeout),
             target_states=[self._psij.JobState.QUEUED],
