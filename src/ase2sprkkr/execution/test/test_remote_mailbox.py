@@ -19,6 +19,7 @@ def test_terminal_outcome_survives_reads_until_ack():
         "state": "failed",
         "return_code": 7,
         "failure_phase": "execution",
+        "error": None,
     }
     assert remote_mailbox.read_outcome(key) == expected
     assert remote_mailbox.read_outcome(key) == expected

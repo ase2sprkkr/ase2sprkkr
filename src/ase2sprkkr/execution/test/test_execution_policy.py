@@ -121,6 +121,7 @@ def test_unknown_raw_state_is_preserved_and_not_postprocessed():
 
 
 class _NotStartedRunner:
+    backend_id = None
     result = None
     state = RunState.NEW
     exception = None

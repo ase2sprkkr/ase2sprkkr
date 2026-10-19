@@ -97,7 +97,13 @@ def _remote_context(tmp_path):
             ExecutorEndpoint(executor="ssh", host="host"),
             WorkingDirectory(str(tmp_path / "work"), "/remote/work"), "run",
         ),
-        files=FileManifest(mapping=FileMapping(str(tmp_path), "/remote")),
+        files=FileManifest(
+            stdout=FileEntry(
+                local_path=str(tmp_path / "work" / "output.out"),
+                remote_path="/remote/work/output.out",
+            ),
+            mapping=FileMapping(str(tmp_path), "/remote"),
+        ),
     )
     return context, run
 

@@ -22,7 +22,7 @@ def _runner(tmp_path):
         FileEntry(local_path=local, remote_path=remote, availability_state="pending"),
     ))
     runner = RemoteRunner(
-        _Executor(), ExecutionSpec(argv=(), directory=str(tmp_path)),
+        _Executor(), ExecutionSpec(argv=(), input_file=None, output_file=None, directory=str(tmp_path)),
         files=manifest, output_targets={local: remote},
     )
     return runner, local
