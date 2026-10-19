@@ -458,7 +458,7 @@ def recover_remote(run_id, request, *, submitted_at=None):
 
 async def _follow_scheduler_async(remote_id, streams, paths, offsets, poll_interval):
     """Follow scheduler-owned files while PSI/J waits for terminal completion."""
-    from .psij import _STATE_MAP
+    from .psij import _psij_state
 
     handle = _decode_handle(remote_id)
     executor = _psij_executor(
@@ -480,10 +480,7 @@ async def _follow_scheduler_async(remote_id, streams, paths, offsets, poll_inter
         if status["state"] in {s.value for s in _FINAL_STATES}:
             return status
         native = job.status
-        state = _STATE_MAP.get(
-            getattr(getattr(native, "state", None), "name", None),
-            RunState.UNKNOWN,
-        )
+        state = _psij_state(native)
         return {
             "state": state.value,
             "return_code": getattr(native, "exit_code", None),

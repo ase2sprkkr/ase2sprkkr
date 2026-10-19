@@ -267,6 +267,61 @@ def test_psij_merged_output_is_followed_once(monkeypatch, tmp_path):
 
 
 
+@pytest.mark.parametrize(
+    "native_name, return_code, attached, expected",
+    [
+        ("COMPLETED", 7, False, RunState.FAILED),
+        ("COMPLETED", 0, False, RunState.FINISHED),
+        ("COMPLETED", None, False, RunState.FINISHED),
+        ("FAILED", 0, False, RunState.FAILED),
+        ("CANCELED", 1, False, RunState.CANCELLED),
+        ("NEW", None, False, RunState.NEW),
+        ("NEW", None, True, RunState.UNKNOWN),
+        ("ACTIVE", None, True, RunState.RUNNING),
+        (None, None, True, RunState.UNKNOWN),
+    ],
+)
+def test_native_psij_state_normalization(
+    native_name, return_code, attached, expected,
+):
+    native = None if native_name is None else _Status(native_name, return_code)
+    assert psij_backend._psij_state(native, attached=attached) == expected
+
+
+def test_psij_runner_prefers_observed_return_code_over_cached_job_status(
+    monkeypatch, tmp_path,
+):
+    executor = _executor(monkeypatch, _Backend())
+    runner = executor.create_run(ExecutionSpec(
+        argv=("program",), directory=str(tmp_path),
+        input_file=None, output_file=None,
+    ))
+    runner._job.status = _Status("COMPLETED", 0)
+    runner._return_code = 7
+    assert runner.state == RunState.FAILED
+
+
+def test_psij_non_slurm_status_uses_shared_normalization(monkeypatch):
+    executor = _executor(monkeypatch, _Backend())
+    executor.backend = "pbs"
+    executor.url = "remote-pbs"
+
+    class Job:
+        def __init__(self):
+            self.status = _Status("COMPLETED", 9)
+
+    class Backend:
+        def attach(self, job, native_id):
+            assert native_id == "pbs-123"
+
+    executor._psij = SimpleNamespace(Job=Job)
+    executor._job_executor = Backend()
+    result = executor.status_native("pbs-123")
+    assert result.state == RunState.FAILED
+    assert result.return_code == 9
+    assert result.failure_phase == psij_backend.FailurePhase.EXECUTION
+
+
 def test_psij_nonzero_completed_job_is_failed(monkeypatch, tmp_path):
     backend = _Backend()
     executor = _executor(monkeypatch, backend)

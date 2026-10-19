@@ -62,6 +62,24 @@ _SLURM_STATE_MAP = {
 }
 
 
+def _psij_state(status, *, attached=False, return_code=None):
+    """Interpret native PSI/J job facts consistently across all observers.
+
+    A newly attached job reports NEW before PSI/J has received its real
+    scheduler status. That is UNKNOWN, not evidence of a new submission.
+    A completed job with a nonzero exit code is an execution failure.
+    """
+    name = getattr(getattr(status, "state", None), "name", None)
+    if attached and name == "NEW":
+        return RunState.UNKNOWN
+    state = _STATE_MAP.get(name, RunState.UNKNOWN)
+    if return_code is None:
+        return_code = getattr(status, "exit_code", None)
+    if state == RunState.FINISHED and return_code not in (None, 0):
+        return RunState.FAILED
+    return state
+
+
 def _load_psij():
     try:
         import psij
@@ -331,11 +349,7 @@ class PsijRunner:
     def state(self):
         if self._exception is not None:
             return RunState.FAILED
-        state = getattr(getattr(self._job, "status", None), "state", None)
-        mapped = _STATE_MAP.get(getattr(state, "name", None), RunState.UNKNOWN)
-        if mapped == RunState.FINISHED and self.return_code not in (None, 0):
-            return RunState.FAILED
-        return mapped
+        return _psij_state(self._job.status, return_code=self.return_code)
 
     @property
     def exception(self):
@@ -581,13 +595,8 @@ class PsijExecutor(Executor):
             self._job_executor.attach(job, native_id)
             self._status_jobs[native_id] = job
         status = getattr(job, "status", None)
-        name = getattr(getattr(status, "state", None), "name", None)
-        # NEW after attach means no scheduler observation yet, even when
-        # the attached PSI/J Job was previously cached.
-        state = RunState.UNKNOWN if name == "NEW" else _STATE_MAP.get(name, RunState.UNKNOWN)
+        state = _psij_state(status, attached=True)
         return_code = getattr(status, "exit_code", None)
-        if state == RunState.FINISHED and return_code not in (None, 0):
-            state = RunState.FAILED
         return RunStatus(
             state=state, backend_id=native_id,
             return_code=return_code,

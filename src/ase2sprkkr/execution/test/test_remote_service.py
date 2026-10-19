@@ -218,6 +218,28 @@ def test_follow_uses_native_terminal_when_status_query_is_transient_unknown(tmp_
     assert checks == [remote_id]
 
 
+def test_follow_fallback_treats_completed_nonzero_psij_as_failed(
+    tmp_path, monkeypatch,
+):
+    _, remote_id = _psij_handle(tmp_path)
+    observed = []
+    _stub_terminal_psij_job(monkeypatch, "COMPLETED", 7, observed)
+    monkeypatch.setattr(
+        remote_service, "status_remote",
+        lambda _remote_id: {"state": RunState.UNKNOWN.value},
+    )
+    outcome = remote_service.follow_remote(
+        remote_id, io.BytesIO(), io.BytesIO(),
+    )
+    assert outcome == {
+        "state": RunState.FAILED.value,
+        "return_code": 7,
+        "failure_phase": FailurePhase.EXECUTION.value,
+        "error": None,
+    }
+    assert observed == [("attach", "42"), "wait"]
+
+
 def test_supervisor_writes_mailbox_receipt(monkeypatch):
     calls = []
     monkeypatch.setattr(
