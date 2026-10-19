@@ -24,19 +24,13 @@ def _single_polarization(parameters):
 
 
 def spleed_spc(parameters):
-    """Relativistic spin-resolved SPLEED file, emitted only by SPLOUT.
+    """SPLEED always opens a structured SPC file in its default NPOL=1 mode.
 
-    TYP 1/2 with relativistic NREL=1 reaches IFILSPECOU1 in serial.
-    The unpolarized TYP=0 and nonrelativistic cases write only to NOUT1.
-    The file is marked optional because SPLOUT has additional native guards.
+    SPEC_RSLAB calls WRHEAD independently of TYP and NREL. For TYP=0 the
+    file contains only a header; its two-column diagram is in SPEC.out.
+    Modern SPEC_INPUT uses NREL=1, and TYP=1/2 write seven data columns.
     """
-    from ..task_definition import DeclaredFile
-
-    if parameters.TASK.TASK() != "SPLEED":
-        return None
-    if parameters.SPEC_EL.TYP() not in (1, 2):
-        return None
-    return DeclaredFile("{dataset}_data.spc", optional=True)
+    return "{dataset}_data.spc" if parameters.TASK.TASK() == "SPLEED" else None
 
 
 def data_spc(parameters):

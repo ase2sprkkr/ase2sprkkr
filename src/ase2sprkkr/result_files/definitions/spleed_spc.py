@@ -39,7 +39,7 @@ definition = create_result_file_definition(
         V("NT", int),
         V("NP", int),
         V("COMMENT", Prefixed("#"), name_in_grammar=False),
-        V("RAW_DATA", NumpyArray(written_shape=(-1, 7)), name_in_grammar=False),
+        V("RAW_DATA", NumpyArray(shape=(-1, 7), written_shape=(-1, 7)), name_in_grammar=False),
         NV("ENERGY", "RAW_DATA", column(0), info="Incident electron kinetic energy (eV)"),
         NV("THETA", "RAW_DATA", column(1), info="Electron angle (degrees)"),
         NV("INTENSITY", "RAW_DATA", column(2), info="Diffracted beam intensity (RINTG)"),
