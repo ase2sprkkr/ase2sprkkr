@@ -202,3 +202,41 @@ def test_project_manifest_reuses_optional_file_path_semantics(tmp_path):
         str(tmp_path / "result.dat")
     ]
     assert manifest.caches[0].file.local_path == str(tmp_path / "cache.dat")
+
+
+
+def test_recovered_stream_paths_update_only_declared_stream_locations():
+    manifest = FileManifest(
+        inputs=(FileEntry("/local/input", "/remote/input"),),
+        outputs=(FileEntry("/local/artifact", "/remote/artifact"),),
+        caches=(CacheEntry(FileEntry("/local/cache", "/remote/cache"), (12, 34)),),
+        stdout=FileEntry(
+            "/local/stdout", "/previous/stdout",
+            availability_state="pending",
+        ),
+        stderr=FileEntry("/local/stderr"),
+    )
+
+    updated = manifest.with_remote_stream_paths(
+        stdout="/recovered/out", stderr="/recovered/err",
+    )
+
+    assert updated.stdout.remote_path == "/recovered/out"
+    assert updated.stderr.remote_path == "/recovered/err"
+    assert updated.stdout.local_path == manifest.stdout.local_path
+    assert updated.stdout.availability_state == "pending"
+    assert updated.inputs == manifest.inputs
+    assert updated.outputs == manifest.outputs
+    assert updated.caches == manifest.caches
+    assert manifest.stdout.remote_path == "/previous/stdout"
+    assert updated.with_remote_stream_paths(stdout="", stderr=None) is updated
+
+
+def test_recovered_stream_paths_do_not_create_unrecorded_stream():
+    manifest = FileManifest(stdout=FileEntry("/local/stdout"))
+
+    updated = manifest.with_remote_stream_paths(
+        stdout="/remote/out", stderr="/remote/unrecorded.err",
+    )
+    assert updated.stdout.remote_path == "/remote/out"
+    assert updated.stderr is None

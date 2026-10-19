@@ -567,13 +567,7 @@ class PsijExecutor(Executor):
 
     @staticmethod
     def _recovered_files(files, stdout, stderr):
-        from .run_model import FileEntry
-        changes = {}
-        for field, remote in (("stdout", stdout), ("stderr", stderr)):
-            previous = getattr(files, field)
-            if remote and previous is not None:
-                changes[field] = replace(previous, remote_path=remote)
-        return replace(files, **changes) if changes else files
+        return files.with_remote_stream_paths(stdout=stdout, stderr=stderr)
 
     def status_native(self, native_id):
         """Return the currently known native job status without waiting."""

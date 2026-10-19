@@ -611,15 +611,9 @@ class RemoteEndpointExecutor(Executor):
                 execution.directory.local, target_directory,
             ),
         )
-        files = submission.files
-        changes = {}
-        for field, key in (("stdout", "output_file"), ("stderr", "error_file")):
-            remote = state.get(key)
-            old = getattr(files, field)
-            if remote is not None and old is not None:
-                changes[field] = replace(old, remote_path=remote)
-        if changes:
-            files = replace(files, **changes)
+        files = submission.files.with_remote_stream_paths(
+            stdout=state.get("output_file"), stderr=state.get("error_file"),
+        )
         return RunStatus(
             _client_status_state(state),
             backend_id=str(remote_id),
