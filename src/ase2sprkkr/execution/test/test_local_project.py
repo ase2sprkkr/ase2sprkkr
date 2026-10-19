@@ -226,3 +226,16 @@ def test_cancelled_run_preserves_partial_stream_availability(tmp_path):
     manifest = local_manifest(files, RunStatus(RunState.CANCELLED))
     assert manifest.stdout.availability_state == "available"
     assert out.read_bytes() == b"partial output\n"
+
+
+
+def test_terminal_local_runner_never_regresses_to_running(tmp_path, monkeypatch):
+    from ase2sprkkr.execution import local_project
+    runner = LocalExecutor().create_project_run(_spec(tmp_path), run_id=RUN_ID)
+    runner._backend_id = "opaque-handle"
+    runner._state = RunState.FINISHED
+    runner._return_code = 0
+    runner.result.return_code = 0
+    monkeypatch.setattr(local_project, "local_status", lambda *args: RunStatus(RunState.RUNNING))
+    assert runner.state == RunState.FINISHED
+    assert runner.return_code == 0

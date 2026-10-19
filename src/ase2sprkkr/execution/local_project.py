@@ -142,10 +142,10 @@ class LocalProjectRunner:
         if self._backend_id is None:
             return self._state
         status = local_status(self._backend_id, self._files)
-        # Terminal backend facts may already have been acknowledged and
-        # deleted after the client durably stored them. Never turn a known
-        # finished runner back into UNKNOWN.
-        if self._state in _TERMINAL and status.state == RunState.UNKNOWN:
+        # A terminal result is immutable. After acknowledgment the receipt
+        # may disappear while the supervisor process is still shutting down;
+        # querying its PID must not regress FINISHED to RUNNING.
+        if self._state in _TERMINAL:
             return self._state
         self._state = status.state
         self._failure_phase = status.failure_phase
