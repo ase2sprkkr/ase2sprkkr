@@ -10,6 +10,7 @@ the original channel identity cannot be recovered afterwards.
 from __future__ import annotations
 
 import asyncio
+import json
 import struct
 
 
@@ -30,6 +31,11 @@ def encode_stream_frame(kind, data):
         raise ValueError(f"Unknown stream kind: {kind!r}") from exc
     data = bytes(data)
     return _HEADER.pack(code, len(data)) + data
+
+
+def encode_terminal_frame(outcome):
+    data = json.dumps(outcome, separators=(",", ":")).encode("utf8")
+    return _HEADER.pack(b"T", len(data)) + data
 
 
 async def _read_exactly(source, size):
@@ -53,6 +59,13 @@ async def read_stream_frames(source):
             return
         rest = await _read_exactly(source, _HEADER.size - 1)
         code, size = _HEADER.unpack(first + rest)
+        if code == b"T":
+            if size > 4096:
+                raise StreamProtocolError("Terminal frame is too large")
+            yield "terminal", json.loads(await _read_exactly(source, size))
+            return
+        if size > 65536:
+            raise StreamProtocolError("Stream frame is too large")
         try:
             kind = _CODE_TO_KIND[code]
         except KeyError as exc:
@@ -78,6 +91,7 @@ class FramedRunningCommand:
         self._diagnostic_limit = diagnostic_limit
         self._diagnostics = bytearray()
         self._protocol_error = None
+        self.terminal = None
         self._frames_task = asyncio.create_task(self._demultiplex())
         self._diagnostics_task = asyncio.create_task(self._drain_diagnostics())
 
@@ -88,6 +102,9 @@ class FramedRunningCommand:
     async def _demultiplex(self):
         try:
             async for kind, data in read_stream_frames(self._process.stdout):
+                if kind == "terminal":
+                    self.terminal = data
+                    continue
                 (self.stderr if kind == "err" else self.stdout).feed_data(data)
         except asyncio.CancelledError:
             raise

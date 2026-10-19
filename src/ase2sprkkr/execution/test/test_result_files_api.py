@@ -1,10 +1,10 @@
 """Public terminology and capabilities for persistent result files."""
 
-from ase2sprkkr.execution import Executor, FileState, ResultFilesRecord
+from ase2sprkkr.execution import Executor, FileState, FileManifest
 
 
 def test_result_file_names_use_canonical_public_api():
-    record = ResultFilesRecord()
+    record = FileManifest()
 
     assert record.state is FileState.CURRENT
     assert FileState.CURRENT.value == "current"
@@ -16,7 +16,7 @@ def test_result_file_retrieval_capability_is_inferred_from_override():
         pass
 
     class RetrievingExecutor(Executor):
-        def fetch_result_files(self, reference, files):
+        def fetch_result_files(self, run, files):
             pass
 
     class DerivedRetrievingExecutor(RetrievingExecutor):

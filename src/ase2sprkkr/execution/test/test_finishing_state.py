@@ -1,122 +1,168 @@
+from threading import Event, Thread
 from types import SimpleNamespace
 
 from ase2sprkkr.execution import (
-    ExecutionManager,
+    ExecutionOutcome,
     Executor,
     ExecutorPool,
-    RunReference,
+    FailurePhase,
+    PostprocessingRunner,
     RunState,
     RunStatus,
     RunStore,
 )
 
+from ase2sprkkr.execution.manager import ExecutionManager
 
-class _Runner:
-    def __init__(self, callback=None):
-        self.callback = callback
+
+class _Executor(Executor):
+    name = "postprocessing-test"
+
+    def __init__(self, status):
+        self.status_value = status
+
+    def status(self, *runs):
+        return tuple(
+            RunStatus(
+                backend_id=run.execution.backend_id,
+                state=self.status_value,
+                return_code=0 if self.status_value == RunState.FINISHED else 1,
+                failure_phase=(
+                    FailurePhase.EXECUTION
+                    if self.status_value == RunState.FAILED
+                    else None
+                ),
+            )
+            for run in runs
+        )
+
+
+class _RawRunner:
+    def __init__(self):
+        self.result = ExecutionOutcome(return_code=0)
         self.state = RunState.NEW
-        self.reference = None
-        self.result = SimpleNamespace(return_code=0)
+        self.backend_id = "job-1"
         self.exception = None
+        self.failure_phase = None
+        self._done = Event()
 
     def submit(self):
-        self.reference = RunReference(executor="finishing-test", native_id="job-1")
-        self.state = RunState.QUEUED
-
-    def backend_finished(self):
-        self.state = RunState.FINISHED
-
-    def finalize(self):
-        if self.callback:
-            self.callback(self.result)
+        self.state = RunState.RUNNING
 
     def wait(self):
-        self.backend_finished()
-        self.finalize()
+        self._done.wait()
+        self.state = RunState.FINISHED
         return self.result
 
-    def run(self):
-        self.submit()
-        return self.wait()
+    def complete(self):
+        self._done.set()
 
     def cancel(self):
         self.state = RunState.CANCELLED
+        self._done.set()
 
     def add_output_listener(self, callback):
         pass
 
-
-class _Executor(Executor):
-    name = "finishing-test"
-
-    def __init__(self):
-        self.runner = None
-        self.status_value = None
-
-    def create_run(self, reader, spec, callback=None):
-        self.runner = _Runner(callback)
-        return self.runner
-
-    def status(self, *references):
-        assert self.status_value is not None
-        return tuple(
-            RunStatus(
-                reference=reference,
-                state=self.status_value,
-                return_code=0 if self.status_value == RunState.FINISHED else 1,
-            )
-            for reference in references
-        )
+    def add_output_error_listener(self, callback):
+        pass
 
 
-def _run(tmp_path):
-    executor = _Executor()
+def _record(tmp_path, executor, state=RunState.RUNNING):
     manager = ExecutionManager(
         RunStore(tmp_path / "runs"), executor_pool=ExecutorPool()
     )
-    run = manager.create_run(
-        executor,
-        reader=object(),
-        spec=SimpleNamespace(directory=str(tmp_path)),
+    endpoint = manager.register_executor(executor)
+    record = manager.new_record(
         task="DOS",
-        dataset="case",
+        directory=str(tmp_path),
+        endpoint=endpoint,
     )
-    run.submit()
-    return manager, executor, run
+    record = manager.transition(
+        record,
+        state=state,
+        execution=record.execution.submitted("job-1"),
+    )
+    return manager, record
 
 
-def test_live_terminal_backend_state_is_finalizing_until_callback(tmp_path):
-    manager, executor, run = _run(tmp_path)
-    executor.runner.backend_finished()
+def test_refresh_maps_raw_success_to_postprocessing(tmp_path):
+    executor = _Executor(RunState.FINISHED)
+    manager, record = _record(tmp_path, executor)
 
-    assert run.state == RunState.FINALIZING
-    stored = manager.store.get(run.id)
-    assert stored.state == RunState.FINALIZING
+    (refreshed,) = manager.refresh((record,))
 
-    executor.runner.finalize()
-
-    stored = manager.store.get(run.id)
-    assert stored.state == RunState.FINISHED
-    assert not hasattr(stored, "backend_state")
-
-
-def test_refresh_keeps_backend_finished_run_active_until_finalization(tmp_path):
-    manager, executor, run = _run(tmp_path)
-    executor.status_value = RunState.FINISHED
-
-    (refreshed,) = manager.refresh((run.record,))
-
-    assert refreshed.state == RunState.FINALIZING
+    assert refreshed.state == RunState.POSTPROCESSING
     assert refreshed.return_code == 0
     assert refreshed in manager.store.runs(active=True)
 
 
-def test_refresh_keeps_failed_backend_run_active_until_finalization(tmp_path):
-    manager, executor, run = _run(tmp_path)
-    executor.status_value = RunState.EXECUTION_FAILED
+def test_refresh_keeps_raw_execution_failure_terminal(tmp_path):
+    executor = _Executor(RunState.FAILED)
+    manager, record = _record(tmp_path, executor)
 
-    (refreshed,) = manager.refresh((run.record,))
+    (refreshed,) = manager.refresh((record,))
 
-    assert refreshed.state == RunState.FINALIZING
+    assert refreshed.state == RunState.FAILED
+    assert refreshed.failure_phase == FailurePhase.EXECUTION
     assert refreshed.return_code == 1
-    assert refreshed in manager.store.runs(active=True)
+    assert refreshed in manager.store.runs(active=False)
+
+
+def test_postprocessing_is_observable_until_processor_finishes():
+    raw = _RawRunner()
+    entered = Event()
+    release = Event()
+
+    def process(outcome):
+        entered.set()
+        release.wait()
+        return SimpleNamespace(return_code=outcome.return_code)
+
+    runner = PostprocessingRunner(raw, process)
+    runner.submit()
+    raw.complete()
+
+    assert entered.wait(1)
+    assert runner.state == RunState.POSTPROCESSING
+
+    release.set()
+    result = runner.wait()
+
+    assert result.return_code == 0
+    assert runner.state == RunState.FINISHED
+
+
+def test_failed_wait_keeps_original_error_when_backend_status_is_unavailable():
+    class InaccessibleRunner:
+        backend_id = "job-1"
+        exception = None
+        failure_phase = None
+        result = None
+
+        def __init__(self):
+            self.started = False
+
+        @property
+        def state(self):
+            if not self.started:
+                return RunState.NEW
+            raise OSError("backend status unavailable")
+
+        def submit(self):
+            self.started = True
+
+        def wait(self):
+            raise ValueError("original execution failure")
+
+    runner = PostprocessingRunner(InaccessibleRunner(), lambda outcome: outcome)
+    runner.submit()
+    try:
+        import pytest
+        with pytest.raises(ValueError, match="original execution failure"):
+            runner.wait()
+        assert runner.state == RunState.FAILED
+        assert runner.failure_phase == FailurePhase.EXECUTION
+        assert runner.failure_message == "original execution failure"
+    finally:
+        assert runner._done.wait(2), "completion worker must not escape exception handling"

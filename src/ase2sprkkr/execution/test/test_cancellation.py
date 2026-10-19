@@ -21,7 +21,7 @@ class _BackendRunner:
 
     def __init__(self):
         self.state = RunState.NEW
-        self.reference = None
+        self.backend_id = None
         self.result = object()
         self.submitted = 0
         self.cancelled = 0

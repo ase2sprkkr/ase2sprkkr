@@ -148,51 +148,6 @@ def _local_temporary_path(destination):
     return destination.with_name(f".{destination.name}.{uuid4().hex}.tmp")
 
 
-class AtomicLocalFile:
-    """File-like sink that replaces its destination only on explicit commit.
-
-    ``name`` intentionally reports the final path so TaskResult/provenance never
-    exposes the temporary replay path used during an attach.
-    """
-
-    def __init__(self, destination):
-        self.destination = Path(destination)
-        self.temporary_path = _local_temporary_path(self.destination)
-        self._file = self.temporary_path.open("w+b")
-        self.name = os.fspath(self.destination)
-        self._finished = False
-
-    def write(self, data):
-        return self._file.write(data)
-
-    def flush(self):
-        return self._file.flush()
-
-    def fileno(self):
-        return self._file.fileno()
-
-    def commit(self):
-        if self._finished:
-            return
-        self._file.flush()
-        self._file.close()
-        os.replace(self.temporary_path, self.destination)
-        self._finished = True
-
-    def discard(self):
-        if self._finished:
-            return
-        self._file.close()
-        try:
-            self.temporary_path.unlink()
-        except FileNotFoundError:
-            pass
-        self._finished = True
-
-    def close(self):
-        self.discard()
-
-
 class Transport:
     """Run commands and move files on one target machine.
 

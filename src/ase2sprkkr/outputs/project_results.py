@@ -1,15 +1,15 @@
-"""Rehydrate SPR-KKR results from persistent execution records."""
+"""Rehydrate SPR-KKR results from project run records."""
 
 from __future__ import annotations
 
 from ..common.module_registry import RegistryEntryNotFound
-from ..execution import FileState, RunState
+from ..execution import FailurePhase, FileState, RunState
 from ..input_parameters.input_parameters import InputParameters
 from ..input_parameters.task_definition import TaskMismatchError
 from .reader_registry import reader_registry
 
 
-class PersistentResultUnavailableError(RuntimeError):
+class ProjectResultUnavailableError(RuntimeError):
     """A stored run cannot be reconstructed as its historical TaskResult."""
 
     def __init__(self, record, message):
@@ -17,8 +17,8 @@ class PersistentResultUnavailableError(RuntimeError):
         super().__init__(f"Run {record.id}: {message}")
 
 
-class UnrecoverablePersistentResultError(PersistentResultUnavailableError):
-    """Retrying reconstruction with unchanged persisted data cannot succeed."""
+class UnrecoverableProjectResultError(ProjectResultUnavailableError):
+    """The persisted metadata is insufficient to reconstruct this result."""
 
 
 def _record(manager, run):
@@ -26,18 +26,16 @@ def _record(manager, run):
 
 
 def _task_definition_for_record(record):
-    """Return the task definition persisted for this run."""
     try:
         return InputParameters.task_registry[record.task]
     except RegistryEntryNotFound:
-        raise UnrecoverablePersistentResultError(
+        raise UnrecoverableProjectResultError(
             record, f"unknown persisted task {record.task!r}"
         ) from None
 
 
 def _input_parameters_for_record(manager, record, task_definition):
-    """Reconstruct parameters from the exact persisted input schema."""
-    result_files = record.result_files
+    result_files = record.files
     input_file = None if result_files is None else result_files.input_file
     if input_file is None or not manager.input_file_is_current(record):
         return None
@@ -48,7 +46,7 @@ def _input_parameters_for_record(manager, record, task_definition):
     try:
         definition = input_registry[record.input_definition]
     except RegistryEntryNotFound:
-        raise UnrecoverablePersistentResultError(
+        raise UnrecoverableProjectResultError(
             record,
             f"unknown persisted input definition {record.input_definition!r}",
         ) from None
@@ -60,7 +58,7 @@ def _input_parameters_for_record(manager, record, task_definition):
             input_definition=definition,
         )
     except TaskMismatchError as exc:
-        raise UnrecoverablePersistentResultError(
+        raise UnrecoverableProjectResultError(
             record,
             "persisted task does not match historical input "
             f"({record.task!r} != {exc.task_name!r})",
@@ -68,70 +66,90 @@ def _input_parameters_for_record(manager, record, task_definition):
 
 
 def _reader_for_record(manager, record):
-    """Create the reader declared by the persisted task."""
+    """Create the task-owned output reader declared by the persisted task."""
     task_definition = _task_definition_for_record(record)
     parameters = _input_parameters_for_record(manager, record, task_definition)
     reader_class = reader_registry.class_for_task(task_definition)
-
     return reader_class(
         parameters,
         None,
-        record.directory,
+        record.execution.directory.local,
         task_name=record.task,
     )
 
 
-def attach_persistent_run(
+def _result_processor_for_record(manager, record):
+    """Build the generic execution→TaskResult boundary in the outputs layer."""
+    reader = _reader_for_record(manager, record)
+
+    def process_result(outcome):
+        return reader.read_from_file(
+            outcome.output_file,
+            outcome.error_file,
+            return_code=(0 if outcome.return_code is None else outcome.return_code),
+            input_file=outcome.input_file,
+            directory=record.execution.directory.local,
+        )
+
+    return process_result
+
+
+def attach_project_run(
     manager,
     run,
     *,
-    reader=None,
     executor=None,
     callback=None,
     output_listener=None,
 ):
-    """Attach to or explicitly retry finalization of one stored run."""
+    """Reconnect an active run and resume its client-side lifecycle."""
     record = _record(manager, run)
-    if record.state == RunState.FINALIZATION_FAILED:
-        record = manager.retry_finalization(record)
+    if record.state in (RunState.FINISHED, RunState.FAILED, RunState.CANCELLED):
+        raise ProjectResultUnavailableError(
+            record, f"run is already terminal ({record.state.value})"
+        )
 
-    if reader is None:
-        try:
-            reader = _reader_for_record(manager, record)
-        except UnrecoverablePersistentResultError as exc:
-            if record.state == RunState.FINALIZING:
-                manager.fail_finalization(record, exc)
-            raise
+    try:
+        process_result = _result_processor_for_record(manager, record)
+    except UnrecoverableProjectResultError as exc:
+        # If execution is already waiting for result reconstruction, failure to
+        # construct the task-owned processor is itself a postprocessing failure.
+        if record.state == RunState.POSTPROCESSING:
+            manager.complete(
+                record,
+                state=RunState.FAILED,
+                message=str(exc),
+                failure_phase=FailurePhase.POSTPROCESSING,
+                artifacts_available=True,
+            )
+        raise
 
-    # Attach/transport failures are deliberately not classified as finalization
-    # failures here. They may be transient and leave FINALIZING retryable.
     return manager.attach(
         record,
-        reader=reader,
+        process_result=process_result,
         executor=executor,
         callback=callback,
         output_listener=output_listener,
     )
 
 
-def load_persistent_result(manager, run, *, reader=None):
-    """Reconstruct the historical TaskResult of one terminal persistent run.
-
-    Reader selection is determined by the persisted task. When the historical
-    input file is still current and its exact input definition was persisted,
-    parameters are reconstructed from that definition.
-    """
+def load_project_result(manager, run):
+    """Reconstruct the historical TaskResult of one terminal project run."""
     record = _record(manager, run)
-    if record.state == RunState.FINALIZATION_FAILED:
-        raise PersistentResultUnavailableError(
-            record, "result finalization failed; retry finalization first"
+    if record.state not in (RunState.FINISHED, RunState.FAILED, RunState.CANCELLED):
+        raise ProjectResultUnavailableError(
+            record, f"run is still active ({record.state.value})"
         )
 
     record = manager.retrieve_result_files(record)
     record = manager.check_result_files(record)
-    result_files = record.result_files
+    result_files = record.files
+    if result_files is not None and result_files.captured_at is None:
+        raise ProjectResultUnavailableError(
+            record, "historical output is unavailable: no authoritative file snapshot"
+        )
     if result_files is None or result_files.output_file is None:
-        raise PersistentResultUnavailableError(
+        raise ProjectResultUnavailableError(
             record, "no persisted output result file"
         )
 
@@ -143,43 +161,31 @@ def load_persistent_result(manager, run, *, reader=None):
             message = "result files are missing"
         else:
             message = "result files are unavailable"
-        raise PersistentResultUnavailableError(record, message)
+        raise ProjectResultUnavailableError(record, message)
 
     output_file = result_files.output_file
     output_available = manager.output_file_is_current(record)
-    if not output_available and record.state == RunState.FINISHED:
-        raise PersistentResultUnavailableError(
+    if not output_available:
+        raise ProjectResultUnavailableError(
             record, "output result file is unavailable"
         )
 
-    reader_supplied = reader is not None
-    if reader is None:
-        reader = _reader_for_record(manager, record)
-
+    reader = _reader_for_record(manager, record)
     return_code = record.return_code
     if return_code is None:
-        return_code = (
-            0
-            if record.state in (RunState.FINALIZING, RunState.FINISHED)
-            else 1
-        )
+        return_code = 0 if record.state == RunState.FINISHED else 1
 
     input_file = None
     if manager.input_file_is_current(record) and (
-        reader_supplied or getattr(reader, "input_parameters", None) is not None
+        getattr(reader, "input_parameters", None) is not None
     ):
         input_file = result_files.input_file
 
-    if output_available:
-        result = reader.read_from_file(
-            output_file,
-            return_code=return_code,
-            input_file=input_file,
-            directory=record.directory,
-        )
-    else:
-        result = reader.create_result(output_file, input_file)
-        result.complete(None, return_code)
-
+    result = reader.read_from_file(
+        output_file,
+        return_code=return_code,
+        input_file=input_file,
+        directory=record.execution.directory.local,
+    )
     result.run_record = record
     return result

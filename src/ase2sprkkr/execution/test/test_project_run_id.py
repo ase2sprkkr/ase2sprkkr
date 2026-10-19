@@ -6,14 +6,15 @@ from ase2sprkkr.execution import (
     Executor,
     LaunchSpec,
     RunState,
-    RunStore,
+    ProjectRepository,
 )
 from ase2sprkkr.execution.remote_endpoint import RemoteEndpointExecutor
 
 
 class _Runner:
     state = RunState.NEW
-    reference = None
+    backend_id = None
+    exception = None
     result = None
 
     def submit(self):
@@ -38,20 +39,22 @@ class _CapturingExecutor(Executor):
     def __init__(self):
         self.run_id = None
 
-    def create_persistent_run(self, reader, spec, *, run_id, callback=None):
+    def create_project_run(self, spec, *, run_id, callback=None):
         self.run_id = run_id
         return _Runner()
 
-    def create_run(self, reader, spec, callback=None):
-        raise AssertionError("persistent manager must use create_persistent_run")
+    def create_run(self, spec, callback=None):
+        raise AssertionError("project manager must use create_project_run")
 
 
-def test_manager_passes_its_identity_to_persistent_executor(tmp_path):
+def test_manager_passes_its_identity_to_project_executor(tmp_path):
     executor = _CapturingExecutor()
-    manager = ExecutionManager(RunStore(tmp_path / "runs"))
+    projects = ProjectRepository(tmp_path / "projects")
+    project = projects.create("test")
+    manager = ExecutionManager(project_repository=projects).for_project(project)
     spec = SimpleNamespace(directory=str(tmp_path))
 
-    run = manager.create_run(executor, object(), spec, task="DOS", dataset="case")
+    run = manager.create_run(executor, spec, process_result=lambda x: x, task="DOS", dataset="case")
 
     assert executor.run_id == run.id
 
@@ -60,9 +63,8 @@ class _Transport:
     host = "cluster"
 
 
-def test_remote_persistent_runner_uses_manager_run_id(tmp_path):
+def test_remote_project_runner_uses_manager_run_id(tmp_path):
     executor = RemoteEndpointExecutor(_Transport())
-    reader = SimpleNamespace(create_result=lambda output, input_: object())
     spec = ExecutionSpec(
         argv=("true",),
         input_file=None,
@@ -71,8 +73,8 @@ def test_remote_persistent_runner_uses_manager_run_id(tmp_path):
         launch=LaunchSpec(local_root=tmp_path, remote_root="/scratch/work"),
     )
 
-    runner = executor.create_persistent_run(
-        reader, spec, run_id="ase2sprkkr-run-id"
+    runner = executor.create_project_run(
+        spec, run_id="ase2sprkkr-run-id"
     )
 
     assert runner._run_id == "ase2sprkkr-run-id"

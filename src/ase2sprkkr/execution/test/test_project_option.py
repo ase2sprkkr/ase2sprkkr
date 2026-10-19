@@ -3,12 +3,12 @@ from types import SimpleNamespace
 from ase2sprkkr.execution import (
     ExecutionManager,
     Executor,
+    ExecutionOutcome,
     ProjectRepository,
-    RunReference,
     RunState,
-    RunStore,
 )
 from ase2sprkkr.input_parameters.input_parameters import InputParameters
+from ase2sprkkr.input_parameters.task_definition import TaskDefinition
 from ase2sprkkr.sprkkr import calculation as calculation_module
 from ase2sprkkr.sprkkr.calculation import PreparedCalculation
 from ase2sprkkr.sprkkr.calculator import SPRKKR
@@ -16,15 +16,20 @@ from ase2sprkkr.sprkkr.profile import SPRKKRProfile
 
 
 class _Runner:
-    def __init__(self, callback=None):
+    def __init__(self, callback=None, *, spec=None):
         self._callback = callback
         self.state = RunState.NEW
-        self.reference = None
-        self.result = SimpleNamespace(return_code=0)
+        self.backend_id = None
+        self.result = ExecutionOutcome(
+            input_file=None if spec is None else spec.input_file,
+            output_file=None if spec is None else spec.output_file,
+            error_file=None if spec is None else spec.error_file,
+            return_code=0,
+        )
         self.exception = None
 
     def submit(self):
-        self.reference = RunReference(executor="fake", native_id="job-1")
+        self.backend_id = "job-1"
         self.state = RunState.QUEUED
 
     def wait(self):
@@ -53,8 +58,8 @@ class _Executor(Executor):
     def resolve_mpi(self, mpi=None):
         return False
 
-    def create_run(self, reader, spec, callback=None):
-        runner = _Runner(callback)
+    def create_run(self, spec, callback=None):
+        runner = _Runner(callback, spec=spec)
         self.runners.append(runner)
         return runner
 
@@ -83,9 +88,11 @@ def _parameters(monkeypatch, task="DOS"):
     parameters.CONTROL.DATASET = "sample"
     parameters.CONTROL.POTFIL = "sample.pot"
     monkeypatch.setattr(
-        InputParameters,
+        TaskDefinition,
         "output_reader",
-        lambda self, *args, **kwargs: SimpleNamespace(print_output=False),
+        lambda self, *args, **kwargs: SimpleNamespace(
+            read_from_file=lambda *args, **kwargs: SimpleNamespace(return_code=0),
+        ),
     )
     monkeypatch.setattr(InputParameters, "input_files", lambda self, directory: ())
     monkeypatch.setattr(InputParameters, "output_files", lambda self, directory: ())
@@ -94,10 +101,9 @@ def _parameters(monkeypatch, task="DOS"):
 
 
 def _manager(tmp_path):
-    return ExecutionManager(
-        RunStore(tmp_path / "runs"),
-        project_repository=ProjectRepository(tmp_path / "projects"),
-    )
+    projects = ProjectRepository(tmp_path / "projects")
+    project = projects.create("Calculation project")
+    return ExecutionManager(project_repository=projects).for_project(project)
 
 
 def _runner(parameters, tmp_path, manager, executor=None):
@@ -109,11 +115,11 @@ def _runner(parameters, tmp_path, manager, executor=None):
         result_context=SimpleNamespace(directory=str(tmp_path)),
         profile=SPRKKRProfile(),
         executor=executor,
-        persistent=manager,
+        project=manager,
     )
 
 
-def _persistent_record(parameters, tmp_path):
+def _project_record(parameters, tmp_path):
     manager = _manager(tmp_path)
     runner = _runner(parameters, tmp_path, manager)
     assert runner.id
@@ -124,7 +130,7 @@ def _persistent_record(parameters, tmp_path):
 def test_explicit_manager_persists_task_and_dataset(tmp_path, monkeypatch):
     parameters = _parameters(monkeypatch)
 
-    record = _persistent_record(parameters, tmp_path)
+    record = _project_record(parameters, tmp_path)
 
     assert record.task == parameters.task_name
     assert record.input_definition == parameters.definition_name.upper()
@@ -137,7 +143,7 @@ def test_persistence_uses_task_selected_by_shared_schema_values(tmp_path, monkey
     parameters = _parameters(monkeypatch, "ARPES")
     parameters.TASK.TASK = "SPLEED"
 
-    record = _persistent_record(parameters, tmp_path)
+    record = _project_record(parameters, tmp_path)
 
     assert parameters.requested_task_name == "ARPES"
     assert parameters.task_name == "SPLEED"
@@ -151,7 +157,7 @@ def test_persistence_keeps_ase2sprkkr_task_distinct_from_sprkkr_task_value(
 ):
     parameters = _parameters(monkeypatch, "BSFEK")
 
-    record = _persistent_record(parameters, tmp_path)
+    record = _project_record(parameters, tmp_path)
 
     assert parameters.TASK.TASK() == "BSF"
     assert parameters.task_name == "BSFEK"
@@ -162,20 +168,19 @@ def test_persistence_keeps_ase2sprkkr_task_distinct_from_sprkkr_task_value(
 def test_project_bound_manager_is_preserved_by_execution_adapter(tmp_path, monkeypatch):
     parameters = _parameters(monkeypatch)
     manager = _manager(tmp_path)
-    project = manager.projects.create("Calculation project")
-    manager = manager.for_project(project)
+    project = manager.projects.project(manager.project_id)
     runner = _runner(parameters, tmp_path, manager)
 
     runner.submit()
 
-    assert manager.projects.project(project.id).persistent_refs == (runner.id,)
+    assert manager.store.get(runner.id).id == runner.id
     runner.cancel()
 
 
 def test_persistence_defaults_to_calculator_setting(tmp_path, monkeypatch):
     executor = _Executor()
     manager = _manager(tmp_path)
-    calculator = SPRKKR(directory=tmp_path, executor=executor, persistent=manager)
+    calculator = SPRKKR(directory=tmp_path, executor=executor, project=manager)
     captured = {}
 
     class Prepared:
@@ -188,7 +193,7 @@ def test_persistence_defaults_to_calculator_setting(tmp_path, monkeypatch):
 
     calculator.create_run()
 
-    assert captured["persistent"] is manager
+    assert captured["project"] is manager
     assert captured["executor"] is executor
 
 

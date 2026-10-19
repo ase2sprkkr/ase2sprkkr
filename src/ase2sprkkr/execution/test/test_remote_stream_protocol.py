@@ -13,7 +13,7 @@ from ..stream_protocol import (
     encode_stream_frame,
 )
 from ..transport import LocalTransport
-from .test_remote import _Reader, _launch
+from .test_remote import _launch, _processed_run
 
 
 def _reader_with(data):
@@ -121,7 +121,7 @@ def test_remote_transport_stderr_never_enters_calculation_files(tmp_path):
         launch=_launch(local_root, remote_root),
     )
 
-    result = executor.create_run(_Reader(), spec).run()
+    result = _processed_run(executor, spec).run()
 
     assert result.return_code == 0
     assert result.output == b"stdout\n"
@@ -130,3 +130,21 @@ def test_remote_transport_stderr_never_enters_calculation_files(tmp_path):
     assert (workdir / "output.err").read_bytes() == b"stderr\n"
     assert b"Permanently added" not in (workdir / "output.txt").read_bytes()
     assert b"Permanently added" not in (workdir / "output.err").read_bytes()
+
+
+def test_framed_command_delivers_terminal_result_in_band():
+    from ..stream_protocol import encode_terminal_frame
+
+    async def check():
+        command = FramedRunningCommand(_FinishedCommand(
+            STREAM_MAGIC + encode_stream_frame("out", b"hello")
+            + encode_terminal_frame({
+                "state": "failed", "return_code": 4,
+                "failure_phase": "execution", "error": "calculation failed",
+            })
+        ))
+        assert await command.stdout.read() == b"hello"
+        assert await command.wait() == 0
+        assert command.terminal["return_code"] == 4
+        assert command.terminal["failure_phase"] == "execution"
+    asyncio.run(check())

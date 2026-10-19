@@ -1,14 +1,17 @@
+from threading import Event
+
 from ase2sprkkr.execution import (
-    ExecutionManager,
+    
     ExecutorEndpoint,
     ExecutorPool,
     LocalExecutor,
     RemoteEndpointExecutor,
-    RunReference,
     RunState,
     RunStore,
     SshTransport,
 )
+
+from ase2sprkkr.execution.manager import ExecutionManager
 from ase2sprkkr.execution.endpoint import endpoint_for_executor
 from ase2sprkkr.sprkkr.profile import SPRKKRProfile
 
@@ -47,8 +50,8 @@ def test_run_store_roundtrips_endpoint(tmp_path):
 
     loaded = store.get(stored.id)
 
-    assert loaded.endpoint == endpoint
-    assert isinstance(loaded.endpoint, ExecutorEndpoint)
+    assert loaded.execution.endpoint == endpoint
+    assert isinstance(loaded.execution.endpoint, ExecutorEndpoint)
 
 
 def test_manager_reconstructs_local_executor_after_restart(tmp_path):
@@ -68,12 +71,32 @@ def test_manager_reconstructs_local_executor_after_restart(tmp_path):
     assert isinstance(executor, LocalExecutor)
 
 
-def test_attach_reconstructs_persisted_endpoint_with_explicit_reader(tmp_path):
+def test_attach_reconstructs_persisted_endpoint_without_task_reader(tmp_path):
     class AttachedRunner:
-        def __init__(self, reference):
-            self.reference = reference
+        def __init__(self, run):
+            self.backend_id = run.execution.backend_id
             self.state = RunState.RUNNING
             self.result = None
+            self.exception = None
+            self.failure_phase = None
+            self.failure_message = None
+            self._done = Event()
+
+        def start(self):
+            pass
+
+        def wait(self):
+            self._done.wait()
+
+        def cancel(self):
+            self.state = RunState.CANCELLED
+            self._done.set()
+
+        def add_output_listener(self, callback):
+            pass
+
+        def add_output_error_listener(self, callback):
+            pass
 
     class ReconstructedExecutor:
         def __init__(self):
@@ -81,14 +104,16 @@ def test_attach_reconstructs_persisted_endpoint_with_explicit_reader(tmp_path):
 
         def attach(
             self,
-            reference,
-            reader,
+            run,
             callback=None,
             output_listener=None,
             start=True,
         ):
-            self.calls.append((reference, reader, callback, output_listener, start))
-            return AttachedRunner(reference)
+            self.calls.append((run, callback, output_listener, start))
+            runner = AttachedRunner(run)
+            if start:
+                runner.start()
+            return runner
 
     class RecordingPool:
         def __init__(self, executor):
@@ -101,7 +126,6 @@ def test_attach_reconstructs_persisted_endpoint_with_explicit_reader(tmp_path):
 
     store = RunStore(tmp_path / "runs")
     endpoint = ExecutorEndpoint(executor="ssh", host="cluster")
-    reference = RunReference(executor="ssh", native_id="42", computer="cluster")
     first = ExecutionManager(store, executor_pool=ExecutorPool())
     record = first.new_record(
         task="DOS",
@@ -109,20 +133,22 @@ def test_attach_reconstructs_persisted_endpoint_with_explicit_reader(tmp_path):
         endpoint=endpoint,
     )
     store.save(record)
-    record = first.transition(record, state=RunState.RUNNING, reference=reference)
+    record = first.transition(record, state=RunState.RUNNING, execution=record.execution.submitted("42"))
 
     executor = ReconstructedExecutor()
     pool = RecordingPool(executor)
     restarted = ExecutionManager(store, executor_pool=pool)
-    reader = object()
 
-    attached = restarted.attach(record.id, reader=reader)
+    attached = restarted.attach(
+        record.id,
+        process_result=lambda outcome: outcome,
+    )
 
     assert pool.endpoints == [endpoint]
     assert attached.executor is executor
-    assert executor.calls[0][0] == reference
-    assert executor.calls[0][1] is reader
-    assert executor.calls[0][3:] == (None, True)
+    assert executor.calls == [(record, None, None, False)]
+
+    attached.cancel()
 
 
 def test_pool_reconstructs_and_reuses_ssh_endpoint():

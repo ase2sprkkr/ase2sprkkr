@@ -1,22 +1,17 @@
 import os
 import stat
-import sys
 from pathlib import Path
 
 import pytest
 
 import ase2sprkkr.execution._durability as durability
-import ase2sprkkr.execution.detached as detached
-import ase2sprkkr.execution.detached_local as detached_local
 import ase2sprkkr.execution.manager as manager_module
-from ase2sprkkr.execution.base import FailurePhase, RunState
-from ase2sprkkr.execution.detached import run_detached_worker, status_detached, submit_detached
+from ase2sprkkr.execution.base import RunState
 from ase2sprkkr.execution.endpoint import ExecutorEndpoint
+from ase2sprkkr.execution.run_model import FileManifest, FileEntry
 from ase2sprkkr.execution.manager import (
     ExecutionManager,
-    ResultFilesRecord,
     RunStore,
-    SubmissionKey,
 )
 
 
@@ -131,12 +126,8 @@ def test_reserve_syncs_inputs_before_submitting_record(tmp_path, monkeypatch):
     record = manager.new_record(
         task="SCF",
         directory=tmp_path,
-        submission=SubmissionKey(
-            endpoint=ExecutorEndpoint(),
-            directory=str(tmp_path),
-            task="SCF",
-        ),
-        result_files=ResultFilesRecord(input_files=(str(input_file),)),
+        endpoint=ExecutorEndpoint(),
+        files=FileManifest(inputs=(FileEntry(local_path=str(input_file)),)),
     )
     events = []
 
@@ -160,7 +151,7 @@ def test_reserve_syncs_inputs_before_submitting_record(tmp_path, monkeypatch):
     assert events[:2] == [("sync", "input.inp"), ("state", "submitting")]
 
 
-def test_finalize_syncs_outputs_before_terminal_record(tmp_path, monkeypatch):
+def test_artifact_publication_syncs_outputs_before_terminal_record(tmp_path, monkeypatch):
     output_file = tmp_path / "output.out"
     output_file.write_text("result")
     store = RunStore(tmp_path / "runs")
@@ -168,10 +159,10 @@ def test_finalize_syncs_outputs_before_terminal_record(tmp_path, monkeypatch):
     record = manager.new_record(
         task="SCF",
         directory=tmp_path,
-        result_files=ResultFilesRecord(output_files=(str(output_file),)),
+        files=FileManifest(stdout=FileEntry(local_path=str(output_file))),
     )
     store.save(record)
-    record = manager.transition(record, state=RunState.FINALIZING)
+    record = manager.transition(record, state=RunState.POSTPROCESSING)
     events = []
 
     monkeypatch.setattr(
@@ -188,103 +179,10 @@ def test_finalize_syncs_outputs_before_terminal_record(tmp_path, monkeypatch):
 
     monkeypatch.setattr(manager, "transition", tracked_transition)
 
-    finalized = manager.finalize(record, state=RunState.FINISHED, return_code=0)
+    finalized = manager.complete(record, state=RunState.FINISHED, return_code=0, artifacts_available=True)
 
     assert finalized.state == RunState.FINISHED
     assert events[:2] == [("sync", "output.out"), ("state", "finished")]
-    assert len(finalized.result_files.output_versions) == 1
+    assert len(finalized.files.output_versions) == 1
 
 
-def _submit_local_without_helper(tmp_path, monkeypatch, run_id, output):
-    monkeypatch.setattr(detached, "_spawn_detached_worker", lambda *_args: object())
-    return submit_detached(
-        {
-            "id": run_id,
-            "executor": "local",
-            "directory": str(tmp_path),
-            "argv": [sys.executable, "-c", "print('done')"],
-            "output_file": str(output),
-        }
-    )
-
-
-def test_detached_submission_commits_input_then_request_then_state(tmp_path, monkeypatch):
-    input_file = tmp_path / "input.inp"
-    input_file.write_text("input")
-    events = []
-    real_sync = detached.sync_file
-    real_write = detached.durable_write_json
-
-    def tracked_sync(path):
-        events.append("input")
-        return real_sync(path)
-
-    def tracked_write(path, data, **options):
-        events.append(Path(path).name)
-        return real_write(path, data, **options)
-
-    def tracked_spawn(*_args):
-        events.append("spawn")
-        return object()
-
-    monkeypatch.setattr(detached, "sync_file", tracked_sync)
-    monkeypatch.setattr(detached, "durable_write_json", tracked_write)
-    monkeypatch.setattr(detached, "_spawn_detached_worker", tracked_spawn)
-
-    submit_detached(
-        {
-            "id": "ordered-submission",
-            "executor": "local",
-            "directory": str(tmp_path),
-            "argv": ["unused"],
-            "input_file": str(input_file),
-        }
-    )
-
-    assert events == ["input", "request.json", "state.json", "spawn"]
-
-
-def test_detached_local_syncs_streams_before_terminal_state(tmp_path, monkeypatch):
-    output = tmp_path / "calculation.out"
-    run_id = "durable-finish"
-    _submit_local_without_helper(tmp_path, monkeypatch, run_id, output)
-    events = []
-    real_sync = detached_local.sync_stream
-    real_write = detached._write_state_unlocked
-
-    def tracked_sync(stream):
-        events.append("stream")
-        return real_sync(stream)
-
-    def tracked_write(workspace, current_run_id, **changes):
-        if changes.get("state") in {"finished", "failed", "cancelled"}:
-            events.append("terminal")
-        return real_write(workspace, current_run_id, **changes)
-
-    monkeypatch.setattr(detached_local, "sync_stream", tracked_sync)
-    monkeypatch.setattr(detached, "_write_state_unlocked", tracked_write)
-
-    run_detached_worker(tmp_path, run_id)
-
-    assert "stream" in events
-    assert events.index("stream") < events.index("terminal")
-    assert status_detached(tmp_path, run_id)["state"] == "finished"
-
-
-def test_detached_stream_sync_failure_is_finalization_failure(tmp_path, monkeypatch):
-    output = tmp_path / "calculation.out"
-    run_id = "stream-sync-failure"
-    _submit_local_without_helper(tmp_path, monkeypatch, run_id, output)
-
-    def fail_sync(_stream):
-        raise OSError("stream fsync failed")
-
-    monkeypatch.setattr(detached_local, "sync_stream", fail_sync)
-
-    with pytest.raises(OSError, match="stream fsync failed"):
-        run_detached_worker(tmp_path, run_id)
-
-    state = status_detached(tmp_path, run_id)
-    assert state["state"] == "failed"
-    assert state["failure_phase"] == FailurePhase.FINALIZATION.value
-    assert state["return_code"] == 0

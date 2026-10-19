@@ -1,4 +1,6 @@
-from ase2sprkkr.execution import ExecutionManager, RunStore
+from ase2sprkkr.execution import RunStore
+
+from ase2sprkkr.execution.manager import ExecutionManager
 
 
 def test_run_record_persists_task_and_schema(tmp_path):

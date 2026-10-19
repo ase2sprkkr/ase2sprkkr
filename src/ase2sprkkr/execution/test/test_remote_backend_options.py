@@ -1,5 +1,4 @@
 import asyncio
-from types import SimpleNamespace
 
 from ase2sprkkr.execution import (
     ExecutionSpec,
@@ -8,13 +7,6 @@ from ase2sprkkr.execution import (
     MpiSpec,
     RemoteExecutor,
 )
-
-
-class _Reader:
-    print_output = False
-
-    def create_result(self, output_file, input_file):
-        return SimpleNamespace()
 
 
 def test_remote_request_carries_target_executor_options(tmp_path):
@@ -48,7 +40,7 @@ def test_remote_request_carries_target_executor_options(tmp_path):
         stdin=input_file,
         input_files=(input_file, potential),
     )
-    runner = executor.create_run(_Reader(), spec)
+    runner = executor.create_run(spec)
     context = runner.executor
 
     remote_directory = asyncio.run(context.map_directory(directory))
@@ -80,3 +72,18 @@ def test_remote_request_carries_target_executor_options(tmp_path):
 
     input_file.close()
     output_file.close()
+
+def test_nonproject_remote_request_does_not_publish_project_identity(tmp_path):
+    root = tmp_path / "local"
+    directory = root / "work"
+    directory.mkdir(parents=True)
+    executor = RemoteExecutor(LocalTransport(), backend="psij")
+    runner = executor.create_run(ExecutionSpec(
+        argv=("program",), directory=str(directory), input_file=None,
+        output_file=None, launch=LaunchSpec(
+            local_root=root, remote_root=tmp_path / "remote",
+        ),
+    ))
+    request, _manifest = asyncio.run(runner._prepare_async())
+    assert request["id"] is None
+    assert runner._run_id is None

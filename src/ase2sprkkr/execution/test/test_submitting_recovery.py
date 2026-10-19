@@ -1,41 +1,46 @@
+from threading import Event
 from types import SimpleNamespace
 
 import pytest
 
 from ase2sprkkr.execution import (
     DuplicateSubmissionError,
-    ExecutionManager,
     Executor,
     ExecutorPool,
-    RunReference,
     RunState,
     RunStatus,
     RunStore,
 )
 
+from ase2sprkkr.execution.manager import ExecutionManager
+
 
 class _Runner:
     def __init__(self):
         self.state = RunState.NEW
-        self.reference = None
+        self.backend_id = None
         self.result = SimpleNamespace(return_code=None)
         self.exception = None
+        self.failure_phase = None
+        self.failure_message = None
+        self._done = Event()
 
     def submit(self):
         self.state = RunState.QUEUED
-        self.reference = RunReference(executor="recover", native_id="new-job")
+        self.backend_id = "new-job"
 
     def wait(self):
+        self._done.wait()
         return self.result
-
-    def run(self):
-        self.submit()
-        return self.wait()
 
     def cancel(self):
         self.state = RunState.CANCELLED
+        self._done.set()
 
     def add_output_listener(self, callback):
+        pass
+
+    def add_output_error_listener(self, callback):
         pass
 
 
@@ -46,7 +51,7 @@ class _RecoveringExecutor(Executor):
         self.recovered = recovered
         self.recovery_calls = []
 
-    def create_run(self, reader, spec, callback=None):
+    def create_project_run(self, spec, *, run_id, callback=None):
         return _Runner()
 
     def recover_submission(self, run_id, submission, *, submitted_at=None):
@@ -59,8 +64,8 @@ class _RecoveringExecutor(Executor):
 def _run(manager, executor, tmp_path):
     return manager.create_run(
         executor,
-        reader=object(),
         spec=SimpleNamespace(directory=str(tmp_path)),
+        process_result=lambda outcome: outcome,
         task="DOS",
         dataset="case",
     )
@@ -88,9 +93,8 @@ def test_confirmed_absent_stale_submission_releases_namespace(tmp_path):
 
 
 def test_recovered_submission_keeps_duplicate_protection(tmp_path):
-    reference = RunReference(executor="recover", native_id="existing-job")
     executor = _RecoveringExecutor(
-        RunStatus(reference=reference, state=RunState.QUEUED)
+        RunStatus(state=RunState.QUEUED, backend_id="existing-job")
     )
     manager = ExecutionManager(
         RunStore(tmp_path / "runs"),
@@ -106,7 +110,7 @@ def test_recovered_submission_keeps_duplicate_protection(tmp_path):
 
     recovered = manager.store.get(uncertain.id)
     assert recovered.state == RunState.QUEUED
-    assert recovered.reference == reference
+    assert recovered.execution.backend_id == "existing-job"
 
 
 def test_unsupported_recovery_never_releases_submission(tmp_path):

@@ -1,29 +1,17 @@
-import asyncio
 import sys
 import time
+from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
 
-from ..base import ExecutionSpec, LaunchSpec, RunReference, RunState
+from ..base import ExecutionSpec, LaunchSpec, RunState
+from ..manager import RunRecord
+from ..run_model import Execution, WorkingDirectory, FileManifest
+from ..endpoint import endpoint_for_executor
+from ..postprocessing import PostprocessingRunner
 from ..remote_endpoint import RemoteEndpointExecutor
 from ..transport import LocalTransport
-
-
-class _Reader:
-    print_output = False
-
-    def create_result(self, output_file, input_file):
-        return SimpleNamespace(return_code=None, output=None, error=None)
-
-    async def parse_streams(self, stdout, stderr, result):
-        return await asyncio.gather(stdout.read(), stderr.read())
-
-    def complete_result(self, result, output, error, return_code):
-        result.output = output
-        result.error = error
-        result.return_code = return_code
-        return result
 
 
 def _executor(*, backend="local"):
@@ -36,6 +24,37 @@ def _executor(*, backend="local"):
 
 def _launch(local_root, remote_root):
     return LaunchSpec(local_root=local_root, remote_root=remote_root)
+
+
+def _record(runner):
+    return RunRecord(
+        id=runner.backend_id, task="SCF", state=RunState.RUNNING,
+        created_at="2026-10-13T08:00:00+00:00",
+        updated_at="2026-10-13T08:00:00+00:00",
+        execution=runner.execution,
+        files=runner.files,
+    )
+
+
+def _processed(raw):
+    def process(outcome):
+        return SimpleNamespace(
+            return_code=outcome.return_code,
+            output=(
+                b""
+                if outcome.output_file is None
+                else Path(outcome.output_file).read_bytes()
+            ),
+            error=(
+                b""
+                if outcome.error_file is None
+                else Path(outcome.error_file).read_bytes()
+            ),
+        )
+
+    runner = PostprocessingRunner(raw, process)
+    runner.start()
+    return runner
 
 
 def _wait_for_state(runner, expected, timeout=5):
@@ -85,19 +104,20 @@ def test_remote_executor_attach_reconnects_running_run_and_restores_stage_out(tm
         cache_files=(cache,),
         launch=_launch(local_root, remote_root),
     )
-    original = first_executor.create_run(_Reader(), spec)
+    original_raw = first_executor.create_run(spec)
+    original = PostprocessingRunner(original_raw, lambda outcome: outcome)
     original.submit()
     _wait_for_state(original, RunState.RUNNING)
 
-    reference = original.reference
-    assert reference is not None
+    run = _record(original)
+    assert run.execution.backend_id is not None
 
-    # A fresh endpoint object must be able to reconstruct all per-run staging
-    # policy from the persisted request; no live runner state is required.
-    attached = _executor().attach(reference, _Reader())
+    # A fresh endpoint object reconstructs per-run staging policy solely from
+    # persisted run manifest; no task reader or live runner state is used.
+    attached = _processed(_executor().attach(run, start=False))
     (remote_root / "calculation" / "release").write_text("go")
 
-    assert attached.reference == reference
+    assert attached.backend_id == run.execution.backend_id
     result = attached.wait()
 
     assert attached.state == RunState.FINISHED
@@ -132,12 +152,12 @@ def test_remote_executor_attach_replays_finished_run(tmp_path):
         output_files=(output_file,),
         launch=_launch(local_root, remote_root),
     )
-    original = first_executor.create_run(_Reader(), spec)
+    original = first_executor.create_run(spec)
     assert original.run().return_code == 0
-    reference = original.reference
-    assert reference is not None
+    run = _record(original)
+    assert run.execution.backend_id is not None
 
-    attached = _executor().attach(reference, _Reader())
+    attached = _processed(_executor().attach(run, start=False))
     result = attached.wait()
 
     assert attached.state == RunState.FINISHED
@@ -148,11 +168,49 @@ def test_remote_executor_attach_replays_finished_run(tmp_path):
 
 def test_remote_executor_attach_rejects_reference_for_other_backend(tmp_path):
     executor = _executor()
-    reference = RunReference(
-        executor="remote:psij",
-        native_id="job",
-        directory="/remote/calculation",
+    run = RunRecord(
+        id="wrong-backend", task="SCF", state=RunState.RUNNING,
+        created_at="2026-10-13T08:00:00+00:00",
+        updated_at="2026-10-13T08:00:00+00:00",
+        execution=Execution(
+            endpoint_for_executor(_executor(backend="psij")),
+            WorkingDirectory(str(tmp_path), "/remote/calculation"),
+            "job",
+        ),
+        files=FileManifest(),
+    )
+    with pytest.raises(ValueError, match="different remote endpoint"):
+        executor.attach(run)
+
+
+def test_remote_attach_preserves_existing_partial_stream(tmp_path, monkeypatch):
+    import asyncio
+    from ..run_model import FileEntry
+    local_root = tmp_path / "local"
+    remote_root = tmp_path / "remote"
+    local_root.mkdir()
+    remote_root.mkdir()
+    local_output = local_root / "run.out"
+    local_output.write_bytes(b"partial")
+    endpoint = _executor()
+    context = endpoint._context(endpoint, _launch(local_root, remote_root))
+    run = RunRecord(
+        id="partial", task="SCF", state=RunState.RUNNING,
+        created_at="2026-10-13T08:00:00+00:00",
+        updated_at="2026-10-13T08:00:00+00:00",
+        execution=Execution(endpoint_for_executor(endpoint),
+                            WorkingDirectory(str(local_root), str(remote_root)),
+                            "opaque-handle"),
+        files=FileManifest(stdout=FileEntry(
+            local_path=str(local_output),
+            remote_path=str(remote_root / "run.out"),
+        )),
     )
 
-    with pytest.raises(ValueError, match="belongs to"):
-        executor.attach(reference, _Reader())
+    async def status(*args, **kwargs):
+        return {"state": "running"}
+    monkeypatch.setattr(context, "_status", status)
+    runner = asyncio.run(context.attach(run, start=False))
+    assert runner.spec.output_file.tell() == len(b"partial")
+    runner.spec.output_file.close()
+    assert local_output.read_bytes() == b"partial"

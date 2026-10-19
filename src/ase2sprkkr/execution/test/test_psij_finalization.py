@@ -11,7 +11,9 @@ def test_psij_finalization_failure_overrides_completed_backend():
         status=SimpleNamespace(state=SimpleNamespace(name="COMPLETED"))
     )
     runner._exception = None
-    runner._finalization_failed = False
+    runner._failure_phase = None
+    runner._failure_message = None
+    runner._return_code = None
     runner._done = Event()
     runner.callback = None
     runner.result = object()
@@ -24,3 +26,4 @@ def test_psij_finalization_failure_overrides_completed_backend():
 
     assert isinstance(runner._exception, ValueError)
     assert runner.state == RunState.FAILED
+    assert runner.failure_phase.value == "execution"

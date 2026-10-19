@@ -1,30 +1,33 @@
 from types import SimpleNamespace
+from threading import Event
 
 import pytest
 
 from ase2sprkkr.execution import (
     DuplicateSubmissionError,
-    ExecutionManager,
     Executor,
-    RunReference,
     RunState,
     RunStore,
 )
+
+from ase2sprkkr.execution.manager import ExecutionManager
 
 
 class _Runner:
     def __init__(self, callback=None):
         self.callback = callback
         self.state = RunState.NEW
-        self.reference = None
+        self.backend_id = None
+        self._done = Event()
         self.result = SimpleNamespace(return_code=None)
         self.exception = None
 
     def submit(self):
-        self.reference = RunReference(executor="test", native_id="job")
+        self.backend_id = "job"
         self.state = RunState.QUEUED
 
     def wait(self):
+        self._done.wait(2)
         return self.result
 
     def run(self):
@@ -33,6 +36,7 @@ class _Runner:
 
     def cancel(self):
         self.state = RunState.CANCELLED
+        self._done.set()
 
     def add_output_listener(self, callback):
         pass
@@ -40,6 +44,7 @@ class _Runner:
     def finish(self):
         self.result.return_code = 0
         self.state = RunState.FINISHED
+        self._done.set()
         if self.callback:
             self.callback(self.result)
 
@@ -50,7 +55,7 @@ class _Executor(Executor):
     def __init__(self):
         self.runners = []
 
-    def create_run(self, reader, spec, callback=None):
+    def create_run(self, spec, callback=None):
         runner = _Runner(callback)
         self.runners.append(runner)
         return runner
@@ -59,8 +64,8 @@ class _Executor(Executor):
 def _run(manager, executor, directory, *, task="DOS", dataset="case"):
     return manager.create_run(
         executor,
-        reader=object(),
         spec=SimpleNamespace(directory=str(directory)),
+        process_result=lambda outcome: outcome,
         task=task,
         dataset=dataset,
     )
@@ -140,6 +145,6 @@ def test_submitting_record_contains_submission_key_before_backend_submit(tmp_pat
     run.submit()
 
     assert seen[0].state == RunState.SUBMITTING
-    assert seen[0].submission.task == "DOS"
-    assert seen[0].submission.dataset == "case"
-    assert seen[0].submission.directory == str(tmp_path.resolve())
+    assert seen[0].task == "DOS"
+    assert seen[0].dataset == "case"
+    assert seen[0].execution.directory.local == str(tmp_path.resolve())

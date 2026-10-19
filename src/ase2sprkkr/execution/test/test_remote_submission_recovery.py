@@ -1,64 +1,77 @@
-from ase2sprkkr.execution import RunState, SubmissionKey
-from ase2sprkkr.execution.endpoint import ExecutorEndpoint
-from ase2sprkkr.execution.remote_endpoint import RemoteEndpointExecutor
+import pytest
+
+from ase2sprkkr.execution import RunState
+from ase2sprkkr.execution import remote_service
 
 
-class _Transport:
-    host = "cluster"
-
-    def __init__(self, signature):
-        self.signature = signature
-        self.paths = []
-
-    async def file_signature(self, path):
-        self.paths.append(path)
-        return self.signature
+def test_direct_remote_process_without_pending_identity_returns_none(tmp_path, monkeypatch):
+    monkeypatch.setenv("ASE2SPRKKR_REMOTE_STATE_DIR", str(tmp_path))
+    assert remote_service.recover_remote(
+        "a" * 32, {"executor": "local", "directory": "/scratch/case"},
+    ) is None
 
 
-def _submission(directory="/scratch/case"):
-    return SubmissionKey(
-        endpoint=ExecutorEndpoint(executor="ssh", host="cluster"),
-        directory=directory,
-        task="DOS",
-        dataset="case",
+def test_psij_recovery_uses_backend_native_identity(monkeypatch):
+    calls = []
+
+    class Backend:
+        backend = "slurm"
+        url = None
+
+        def recover_native(self, run_id, directory, *, submitted_at=None):
+            calls.append((run_id, directory, submitted_at))
+            return {
+                "native_id": "scheduler-42",
+                "state": RunState.RUNNING,
+                "directory": "/scratch/case",
+                "stdout": "/scratch/case/run.out",
+                "stderr": "/scratch/case/run.err",
+                "return_code": None,
+            }
+
+    monkeypatch.setattr(remote_service, "_psij_executor", lambda options: Backend())
+
+    recovered = remote_service.recover_remote(
+        "client-run",
+        {
+            "executor": "psij",
+            "executor_options": {"backend": "slurm", "url": None},
+            "directory": "/scratch/case",
+        },
+        submitted_at="2026-10-13T08:00:00+02:00",
     )
 
-
-def test_remote_recovery_returns_none_only_for_absent_helper_state():
-    transport = _Transport(None)
-    executor = RemoteEndpointExecutor(transport)
-
-    status = executor.recover_submission("run-123", _submission())
-
-    assert status is None
-    assert transport.paths == [
-        "/scratch/case/.ase2sprkkr/runs/run-123/state.json"
+    assert calls == [
+        ("client-run", "/scratch/case", "2026-10-13T08:00:00+02:00")
     ]
+    assert recovered["state"] == RunState.RUNNING.value
+    assert recovered["directory"] == "/scratch/case"
+    assert recovered["output_file"] == "/scratch/case/run.out"
+
+    handle = remote_service._decode_handle(recovered["remote_id"])
+    assert handle == {
+        "kind": "psij",
+        "backend": "slurm",
+        "url": None,
+        "native_id": "scheduler-42",
+    }
 
 
-def test_remote_recovery_reconstructs_reference_and_status():
-    transport = _Transport((10, 20))
-    executor = RemoteEndpointExecutor(transport)
+def test_psij_recovery_returns_none_when_backend_has_no_match(monkeypatch):
+    class Backend:
+        backend = "slurm"
+        url = None
 
-    async def status(directory, run_id):
-        assert directory == "/scratch/case"
-        assert run_id == "run-123"
-        return {
-            "state": "running",
-            "return_code": None,
-            "error": None,
-            "input_file": "/scratch/case/run.inp",
-            "output_file": "/scratch/case/run.out",
-            "error_file": "/scratch/case/run.err",
-        }
+        def recover_native(self, run_id, directory, *, submitted_at=None):
+            return None
 
-    executor._status = status
+    monkeypatch.setattr(remote_service, "_psij_executor", lambda options: Backend())
 
-    recovered = executor.recover_submission("run-123", _submission())
-
-    assert recovered.state == RunState.RUNNING
-    assert recovered.reference.native_id == "run-123"
-    assert recovered.reference.executor == "remote:local"
-    assert recovered.reference.computer == "cluster"
-    assert recovered.reference.directory == "/scratch/case"
-    assert recovered.reference.output_file == "/scratch/case/run.out"
+    assert remote_service.recover_remote(
+        "client-run",
+        {
+            "executor": "psij",
+            "executor_options": {"backend": "slurm"},
+            "directory": "/scratch/case",
+        },
+    ) is None

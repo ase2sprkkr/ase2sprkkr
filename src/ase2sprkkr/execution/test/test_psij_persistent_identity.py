@@ -35,14 +35,6 @@ _FAKE_PSIJ = SimpleNamespace(
 )
 
 
-class _Reader:
-    print_output = False
-
-    @staticmethod
-    def create_result(output_file, input_file):
-        return object()
-
-
 def _executor(monkeypatch, backend="slurm"):
     monkeypatch.setattr(psij_backend, "_load_psij", lambda: _FAKE_PSIJ)
     return psij_backend.PsijExecutor(backend, job_executor=object())
@@ -58,11 +50,11 @@ def _spec(tmp_path):
     )
 
 
-def test_persistent_slurm_job_carries_ase2sprkkr_identity(monkeypatch, tmp_path):
+def test_project_slurm_job_carries_ase2sprkkr_identity(monkeypatch, tmp_path):
     executor = _executor(monkeypatch, "slurm")
 
-    runner = executor.create_persistent_run(
-        _Reader(), _spec(tmp_path), run_id="run-123"
+    runner = executor.create_project_run(
+        _spec(tmp_path), run_id="run-123"
     )
     job_spec = runner._job.spec
 
@@ -72,11 +64,11 @@ def test_persistent_slurm_job_carries_ase2sprkkr_identity(monkeypatch, tmp_path)
     }
 
 
-def test_persistent_non_slurm_job_uses_environment_only(monkeypatch, tmp_path):
+def test_project_non_slurm_job_uses_environment_only(monkeypatch, tmp_path):
     executor = _executor(monkeypatch, "pbs")
 
-    runner = executor.create_persistent_run(
-        _Reader(), _spec(tmp_path), run_id="run-123"
+    runner = executor.create_project_run(
+        _spec(tmp_path), run_id="run-123"
     )
     job_spec = runner._job.spec
 
@@ -87,7 +79,7 @@ def test_persistent_non_slurm_job_uses_environment_only(monkeypatch, tmp_path):
 def test_nonpersistent_psij_job_has_no_recovery_metadata(monkeypatch, tmp_path):
     executor = _executor(monkeypatch, "slurm")
 
-    runner = executor.create_run(_Reader(), _spec(tmp_path))
+    runner = executor.create_run(_spec(tmp_path))
     job_spec = runner._job.spec
 
     assert job_spec.environment is None

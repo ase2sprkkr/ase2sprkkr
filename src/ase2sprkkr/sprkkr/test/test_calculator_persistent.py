@@ -1,12 +1,14 @@
+"""The removed persistent flag cannot silently reach input parameters."""
+
 from ase2sprkkr.sprkkr.calculator import SPRKKR
 
 
-def test_persistent_is_calculator_parameter(capsys):
-    calculator = SPRKKR(persistent=True)
+def test_project_is_the_supported_execution_scope():
+    calculator = SPRKKR()
+    assert calculator.project is None
+    assert not hasattr(calculator, "persistent")
 
-    assert calculator.persistent is True
-    assert "unknown arguments" not in capsys.readouterr().out
 
-
-def test_persistent_defaults_to_false():
-    assert SPRKKR().persistent is False
+def test_project_argument_is_not_an_input_parameter():
+    project = object()
+    assert SPRKKR(project=project).project is project
