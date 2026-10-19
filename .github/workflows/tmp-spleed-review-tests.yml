@@ -1,0 +1,19 @@
+name: SPLEED focused regression
+on:
+  push:
+    branches: [tmp-spleed-review-tests]
+permissions:
+  contents: read
+jobs:
+  regression:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - run: ./install_dependencies.sh
+      - name: Run result-file and task tests
+        run: |
+          PYTHONPATH=src ASE2SPRKKR_NO_USER_PROFILE=1 python -m pytest -q src/ase2sprkkr/result_files/test src/ase2sprkkr/outputs/test src/ase2sprkkr/input_parameters/test/test_task_file_manifests.py
