@@ -60,5 +60,5 @@ def input_parameters_definition():
                     "use GRID=5 and NE>1 to include it. Native surface point is EF+i*ImE. "
                     "Layer, NLCPA, PROJECT, thermal and many-body workflows are not audited here; MPI not certified."
     )
-    schema._task_definition = TaskDefinition("SIGMA", executable="kkrchi", mpi=False, output_file_templates=("sigma?????.dat",))
+    schema._task_definition = TaskDefinition("SIGMA", executable="kkrchi", mpi=False, output_files=("sigma?????.dat",))
     return schema

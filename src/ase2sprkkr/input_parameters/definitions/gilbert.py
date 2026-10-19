@@ -115,7 +115,7 @@ def input_parameters_definition():
                     "MCS, RDLM and NLCPA workflows are not audited here.",
         info="GILBERT - The Gilbert damping parameter calculation"
     )
-    schema._task_definition = TaskDefinition("GILBERT", executable="kkrchi", output_file_templates=(
+    schema._task_definition = TaskDefinition("GILBERT", executable="kkrchi", output_files=(
             "{dataset}alfa_x.dat",
             "{dataset}alfa_T.dat",
             "{dataset}_alfa_T.agr",
