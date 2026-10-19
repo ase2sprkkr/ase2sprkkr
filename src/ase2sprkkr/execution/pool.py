@@ -51,14 +51,22 @@ class ExecutorPool:
         return self.discard(self.key_for_profile(profile))
 
     def close(self):
-        """Close and remove all currently pooled executors."""
+        """Close every pooled executor, propagating the first close failure."""
         with self._lock:
-            items = tuple(self._executors.items())
+            executors = tuple(self._executors.values())
             self._executors.clear()
-        for _, executor in items:
+        first_error = None
+        for executor in executors:
             close = getattr(executor, "close", None)
-            if close is not None:
+            if close is None:
+                continue
+            try:
                 close()
+            except BaseException as exc:
+                if first_error is None:
+                    first_error = exc
+        if first_error is not None:
+            raise first_error
 
 
 _DEFAULT_EXECUTOR_POOL = ExecutorPool()
