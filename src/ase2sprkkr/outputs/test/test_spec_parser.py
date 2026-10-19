@@ -88,13 +88,20 @@ def test_arpes_result_uses_native_spec_file_manifest(tmp_path):
                     str(tmp_path / "sample_data_pol2.spc"),
                 )
 
-def test_spec_reader_uses_native_data_file_and_preserves_band_columns(tmp_path):
-    from ase2sprkkr.outputs.readers.spec import SpecResult
+def test_spec_reader_uses_native_band_definition_and_preserves_columns(tmp_path, monkeypatch):
+    from ase2sprkkr.result_files import ResultFile
 
-    (tmp_path / "Fe_data.spc").write_text(
-        "# BAND eigenvalues\nNT 1\nNP 1\n1.0D+00 2.0D+00 3.0D+00\n"
-    )
+    # The real BAND format has a structured header. Exercise the reader's
+    # integration with that definition rather than passing an invalid mock
+    # SPC header to the on-disk parser.
+    (tmp_path / "Fe_data.spc").write_text("not parsed: dispatch test only\n")
+    parsed = ResultFile.definitions["band_spc"].read_from_dict({
+        "NT": 1, "NP": 1, "RAW_DATA": np.array([[1.0, 2.0, 3.0]])
+    })
     result = SpecResult(None, None, tmp_path, output_file="Fe_SPEC.out", task_name="BAND")
+    monkeypatch.setattr(result, "parse_result_file", lambda file, potential=None: parsed)
+    assert result.output_values["SPC"].file_type == "band_spc"
+    assert result.spectra == (parsed,)
     np.testing.assert_allclose(result.spectral_data, [[1.0, 2.0, 3.0]])
 
 

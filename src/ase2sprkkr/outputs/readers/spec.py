@@ -44,7 +44,7 @@ class SpecResult(ArpesResult):
         """Two-column SPLEED I(E) data, parsed as a ResultFile from SPEC.out."""
         if self.task_name != "spleed" or self.output_file is None:
             return None
-        from ..result_files import ResultFile
+        from ...result_files import ResultFile
         from ...result_files.definitions.spleed_intensity import SpleedIntensityNotFound
 
         try:
@@ -56,10 +56,13 @@ class SpecResult(ArpesResult):
 
     @cached_property
     def spectral_data(self) -> np.ndarray:
-        """Convenience view of a unique spectrum; no independent parser.
+        """Return one spectrum, using the native format for its source.
 
-        When multiple SPC files are present, choose a spectrum explicitly.
+        Standalone in-memory SPEC text has no SPC attachment; retain its
+        distinct six-column text format without using it to parse SPC files.
         """
+        if not hasattr(self, "_input_parameters") and self.output_file is None:
+            return self._embedded_spectral_data()
         if self.task_name == "spleed":
             spectrum = self.spleed_intensity
             if spectrum is not None:
@@ -68,6 +71,23 @@ class SpecResult(ArpesResult):
         if len(spectra) > 1:
             raise ValueError("Multiple spectral files; select one from result.spectra")
         return spectra[0].RAW_DATA() if spectra else np.array([])
+
+    def _embedded_spectral_data(self):
+        """Read six-column rows embedded in an in-memory SPEC text dump."""
+        content = self._get_file_content()
+        marker = re.search(r"stookes-vector\s+of the photonfield[^\n]*", content)
+        if marker is None:
+            return np.empty((0, 6))
+        rows = []
+        for line in content[marker.end():].splitlines():
+            try:
+                values = [float(v.replace("D", "E").replace("d", "e"))
+                          for v in line.split()]
+            except ValueError:
+                continue
+            if len(values) == 6:
+                rows.append(values)
+        return np.asarray(rows) if rows else np.empty((0, 6))
 
     def _parse_potential_barrier(self) -> None:
         """Parse the potential barrier section of the output."""
