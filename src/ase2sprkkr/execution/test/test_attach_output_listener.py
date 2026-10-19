@@ -37,6 +37,11 @@ class _AttachedRunner:
 
 
 class _AttachExecutor(LocalExecutor):
+    def acknowledge(self, run):
+        # Synthetic backend IDs in this focused listener test are not real
+        # supervisor handles; acknowledgment is tested separately.
+        pass
+
     def attach(self, run, callback=None, output_listener=None, start=True):
         if output_listener is not None:
             output_listener("manager replay\n", "out")

@@ -172,7 +172,7 @@ def test_retrieval_programming_error_is_not_persisted_as_artifact_failure(tmp_pa
     stored = manager.store.get(record.id)
     assert (
         stored.files.availability_state
-        is ArtifactAvailabilityState.AVAILABLE
+        == ArtifactAvailabilityState.AVAILABLE
     )
 
 
