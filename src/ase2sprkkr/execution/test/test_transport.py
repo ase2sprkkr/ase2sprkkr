@@ -133,3 +133,37 @@ def test_transport_missing_file_is_optional_but_provenance_digest_is_strict(tmp_
     assert asyncio.run(LocalTransport().file_digest(missing)) is None
     with pytest.raises(FileNotFoundError):
         file_digest(missing)
+
+
+
+def test_ssh_and_local_globstar_agree_on_hidden_entries(tmp_path):
+    """Remote glob semantics match the local transport, including dotfiles."""
+    from ..transport import _match_relative_path, expand_local_files
+
+    for name in (
+        "shown/one.dat",
+        "shown/.private.dat",
+        ".hidden/other.dat",
+        "shown/.hidden/deep.dat",
+        "shown/nested/two.dat",
+        "shown/nested/.another.dat",
+    ):
+        destination = tmp_path / name
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        destination.write_text(name)
+
+    names = tuple(
+        str(path.relative_to(tmp_path))
+        for path in tmp_path.rglob("*")
+        if path.is_file()
+    )
+    for pattern in (
+        "**/*.dat", "shown/**/*.dat", "**/.*.dat",
+        "**/.hidden/*.dat", ".hidden/*.dat", "shown/one.dat",
+    ):
+        local = {
+            str(os.path.relpath(path, tmp_path))
+            for path in expand_local_files(pattern, tmp_path)
+        }
+        ssh = {name for name in names if _match_relative_path(name, pattern)}
+        assert ssh == local, (pattern, ssh, local)

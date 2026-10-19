@@ -121,8 +121,12 @@ def _match_relative_path(path, pattern):
             return path_index == len(parts)
         current = patterns[pattern_index]
         if current == "**":
+            # Match glob.glob(recursive=True): an implicit wildcard never
+            # descends into a hidden directory or consumes a hidden file.
             return match(path_index, pattern_index + 1) or (
-                path_index < len(parts) and match(path_index + 1, pattern_index)
+                path_index < len(parts)
+                and not parts[path_index].startswith(".")
+                and match(path_index + 1, pattern_index)
             )
         return (
             path_index < len(parts)
