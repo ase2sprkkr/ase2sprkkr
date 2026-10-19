@@ -53,6 +53,10 @@ def test_prepared_manifest_is_durable_before_remote_backend_submit(tmp_path, mon
     # The test substitutes an opaque backend id and disables the monitor;
     # supply the corresponding fake status instead of invoking the CLI.
     executor._status = status
+    # This test is exclusively about the pre-submit durability boundary.
+    # Avoid starting a background completion worker for a synthetic backend
+    # which intentionally has no process to wait for.
+    monkeypatch.setattr(run._runner, "_start_completion", lambda: None)
     run.submit()
 
     assert len(submitted) == 1

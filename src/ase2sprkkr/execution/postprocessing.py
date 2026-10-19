@@ -148,11 +148,13 @@ class PostprocessingRunner:
             self._failure_message = (
                 getattr(self._runner, "failure_message", None) or str(exc)
             )
-            self._state = (
-                RunState.CANCELLED
-                if self._runner.state == RunState.CANCELLED
-                else RunState.FAILED
-            )
+            # A failed wait() can itself mean that the backend is unreachable.
+            # Never replace the original error by a second status-query error.
+            try:
+                cancelled = self._runner.state == RunState.CANCELLED
+            except Exception:
+                cancelled = False
+            self._state = RunState.CANCELLED if cancelled else RunState.FAILED
         finally:
             # Make terminal status visible during the persistence callback.
             self._settled = True

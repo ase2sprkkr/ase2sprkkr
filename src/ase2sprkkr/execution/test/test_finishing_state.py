@@ -131,3 +131,38 @@ def test_postprocessing_is_observable_until_processor_finishes():
 
     assert result.return_code == 0
     assert runner.state == RunState.FINISHED
+
+
+def test_failed_wait_keeps_original_error_when_backend_status_is_unavailable():
+    class InaccessibleRunner:
+        backend_id = "job-1"
+        exception = None
+        failure_phase = None
+        result = None
+
+        def __init__(self):
+            self.started = False
+
+        @property
+        def state(self):
+            if not self.started:
+                return RunState.NEW
+            raise OSError("backend status unavailable")
+
+        def submit(self):
+            self.started = True
+
+        def wait(self):
+            raise ValueError("original execution failure")
+
+    runner = PostprocessingRunner(InaccessibleRunner(), lambda outcome: outcome)
+    runner.submit()
+    try:
+        import pytest
+        with pytest.raises(ValueError, match="original execution failure"):
+            runner.wait()
+        assert runner.state == RunState.FAILED
+        assert runner.failure_phase == FailurePhase.EXECUTION
+        assert runner.failure_message == "original execution failure"
+    finally:
+        assert runner._done.wait(2), "completion worker must not escape exception handling"
