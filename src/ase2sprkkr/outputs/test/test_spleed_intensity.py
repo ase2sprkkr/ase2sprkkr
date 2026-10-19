@@ -10,9 +10,9 @@ from ase2sprkkr.outputs.readers.spec import SpecResult
 def test_two_column_log_is_result_file(tmp_path):
     filename = tmp_path / "Fe_SPEC.out"
     filename.write_text(
-        "diagnostic\n i(e)-diagram\n 0.11000D+02  0.10000D+00\n"
-        " status = 1 2 3\n 0.12000D+02  0.20000D+00\n"
-        " rotation diagram\n 0.13000D+02  0.90000D+00\n"
+        "diagnostic\n i(e)-diagram\n 0.11000D+02   0.10000D+00\n"
+        " status = 1 2 3\n 0.12000D+02   0.20000D+00\n"
+        " rotation diagram\n 0.13000D+02   0.90000D+00\n"
     )
     result = SpecResult(None, None, tmp_path, output_file=filename, task_name="SPLEED")
     spectrum = result.spleed_intensity
@@ -38,6 +38,6 @@ def test_seven_column_output_is_not_two_column_format(tmp_path):
 
 def test_no_diagram_header_cannot_match(tmp_path):
     filename = tmp_path / "Fe_SPEC.out"
-    filename.write_text("unrelated\n 0.11000D+02  0.10000D+00\n")
+    filename.write_text("unrelated\n 0.11000D+02   0.10000D+00\n")
     with pytest.raises(SpleedIntensityNotFound):
         ResultFile.from_file(filename, try_only="spleed_intensity")
