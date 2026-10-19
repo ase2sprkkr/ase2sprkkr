@@ -235,7 +235,8 @@ class ResultFile(ConfigurationFile):
                 return parsed
             remaining = [
                 definition for definition in registry.values(include_aliases=False)
-                if not any(definition is candidate for candidate in candidates)
+                if definition.extension is not None
+                and not any(definition is candidate for candidate in candidates)
             ]
             parsed, further_errors = matches(remaining)
             errors.extend(further_errors)
