@@ -139,7 +139,8 @@ def test_virtual_result_format_is_only_used_explicitly(monkeypatch, tmp_path):
     file.write_text("not a structured result")
     class Virtual:
         name = "VIRTUAL"
-        extension = None
+        extension = "out"
+        auto_detect = False
         def read_from_file(self, filename, potential=None):
             return "virtual"
 

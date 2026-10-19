@@ -7,7 +7,9 @@ def test_native_spc_definitions_are_distinct():
     assert names["band_spc"].extension == "spc"
     assert names["spleed_spc"].extension == "spc"
     assert names["spc"].extension == "spc"
-    assert names["spleed_intensity"].extension is None
+    assert names["spleed_intensity"].extension == "out"
+    assert not names["spleed_intensity"].auto_detect
+    assert "out" not in result_file_definition_registry.by_extension()
     assert len(result_file_definition_registry.by_extension()["spc"]) == 3
 
 def test_band_and_spleed_results_register_typed_spectra(tmp_path):

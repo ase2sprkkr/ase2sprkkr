@@ -67,12 +67,11 @@ class SpleedIntensityResultFile(ResultFile):
 
 class SpleedIntensityDefinition(ResultFileDefinition):
     result_class = SpleedIntensityResultFile
+    auto_detect = False
 
     @property
     def extension(self):
-        # The data occupy a subsection of the common SPEC.out log; do not
-        # claim all *.out files as SPLEED intensity data.
-        return None
+        return "out"
 
     def read_from_file(self, file, allow_dangerous=False, **kwargs):
         if not isinstance(file, (str, os.PathLike)):

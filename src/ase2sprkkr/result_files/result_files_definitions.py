@@ -77,6 +77,9 @@ class ResultFileDefinition(ConfigurationFileDefinition):
     force_order = True
     """ The order of items in a result file is fixed """
 
+    auto_detect = True
+    """Whether this format may be selected without its explicit format name."""
+
     value_name_format = "{:<12}"
 
     child_class = ResultFileValueDefinition

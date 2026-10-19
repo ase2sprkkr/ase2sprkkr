@@ -14,7 +14,7 @@ class ResultFileDefinitionRegistry(ModuleRegistry):
         """Map each extension to *all* definitions that can parse it."""
         grouped = {}
         for definition in self.values(include_aliases=False):
-            if definition.extension is None:
+            if not definition.auto_detect:
                 continue
             extension = definition.extension.lower().lstrip(".")
             grouped.setdefault(extension, []).append(definition)
