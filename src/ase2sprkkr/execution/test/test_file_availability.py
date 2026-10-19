@@ -118,47 +118,47 @@ def test_cleanup_unlinks_symlink_without_deleting_its_target(tmp_path):
 
 def test_protected_output_stream_is_rejected_without_deleting_files(tmp_path):
     import pytest
-    from ase2sprkkr.execution.file_availability import validate_output_streams
+    from ase2sprkkr.execution.file_availability import validate_output_collisions
 
     protected = tmp_path / "restart.pot"
     protected.write_text("density")
     with pytest.raises(ValueError, match="overlaps protected"):
-        validate_output_streams((protected,), protected=(protected,))
+        validate_output_collisions((protected,), protected=(protected,))
     assert protected.read_text() == "density"
 
 
 def test_protected_output_stream_matches_cache_glob(tmp_path):
     import pytest
-    from ase2sprkkr.execution.file_availability import validate_output_streams
+    from ase2sprkkr.execution.file_availability import validate_output_collisions
 
     protected = tmp_path / "restart-1.pot"
     protected.write_text("density")
     with pytest.raises(ValueError, match="overlaps protected"):
-        validate_output_streams(
+        validate_output_collisions(
             (protected,), protected=(tmp_path / "restart-*.pot",),
         )
 
 
 def test_explicit_output_artifact_cannot_overwrite_input(tmp_path):
     import pytest
-    from ase2sprkkr.execution.file_availability import validate_output_streams
+    from ase2sprkkr.execution.file_availability import validate_output_collisions
 
     input_path = tmp_path / "input.dat"
     input_path.write_bytes(b"input")
     with pytest.raises(ValueError, match="overlaps protected"):
-        validate_output_streams((input_path,), protected=(input_path,))
+        validate_output_collisions((input_path,), protected=(input_path,))
     assert input_path.read_bytes() == b"input"
 
 
 def test_output_pattern_can_skip_protected_files(tmp_path):
     from ase2sprkkr.execution.file_availability import (
-        validate_output_streams, clear_declared_outputs,
+        validate_output_collisions, clear_declared_outputs,
     )
     keep = tmp_path / "restart.pot"
     drop = tmp_path / "old.pot"
     keep.write_text("restart")
     drop.write_text("old")
-    validate_output_streams((tmp_path / "*.pot",), protected=(keep,))
+    validate_output_collisions((tmp_path / "*.pot",), protected=(keep,))
     clear_declared_outputs((tmp_path / "*.pot",), protected=(keep,))
     assert keep.read_text() == "restart"
     assert not drop.exists()
@@ -166,26 +166,26 @@ def test_output_pattern_can_skip_protected_files(tmp_path):
 
 def test_protected_output_rejects_symlink_alias(tmp_path):
     import pytest
-    from ase2sprkkr.execution.file_availability import validate_output_streams
+    from ase2sprkkr.execution.file_availability import validate_output_collisions
 
     source = tmp_path / "source.dat"
     source.write_bytes(b"density")
     alias = tmp_path / "alias.out"
     alias.symlink_to(source)
     with pytest.raises(ValueError, match="overlaps protected"):
-        validate_output_streams((alias,), protected=(source,))
+        validate_output_collisions((alias,), protected=(source,))
     assert source.read_bytes() == b"density"
 
 
 def test_protected_output_rejects_hardlink_alias(tmp_path):
     import os
     import pytest
-    from ase2sprkkr.execution.file_availability import validate_output_streams
+    from ase2sprkkr.execution.file_availability import validate_output_collisions
 
     source = tmp_path / "source.dat"
     source.write_bytes(b"density")
     alias = tmp_path / "alias.out"
     os.link(source, alias)
     with pytest.raises(ValueError, match="overlaps protected"):
-        validate_output_streams((alias,), protected=(source,))
+        validate_output_collisions((alias,), protected=(source,))
     assert source.read_bytes() == b"density"

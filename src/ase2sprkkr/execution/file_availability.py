@@ -44,7 +44,7 @@ def discover_local_files(files, *, include_streams=True):
 
 
 
-def validate_output_streams(streams, *, protected=()):
+def validate_output_collisions(streams, *, protected=()):
     """Reject explicit output paths overlapping declared inputs or restart caches.
 
     Broad output patterns retain their existing behavior: matching protected
