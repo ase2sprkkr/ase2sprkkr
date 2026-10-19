@@ -239,3 +239,30 @@ def test_terminal_local_runner_never_regresses_to_running(tmp_path, monkeypatch)
     monkeypatch.setattr(local_project, "local_status", lambda *args: RunStatus(RunState.RUNNING))
     assert runner.state == RunState.FINISHED
     assert runner.return_code == 0
+
+
+def test_project_request_flushes_each_declared_file_once(tmp_path):
+    class NamedFile:
+        def __init__(self, name):
+            self.name = str(tmp_path / name)
+            self.flush_count = 0
+
+        def flush(self):
+            self.flush_count += 1
+
+    output = NamedFile("supplement.out")
+    inp = NamedFile("supplement.in")
+    cache = NamedFile("restart.pot")
+    spec = replace(
+        _spec(tmp_path),
+        output_files=(output,),
+        input_files=(inp,),
+        cache_files=(cache,),
+    )
+    runner = LocalExecutor().create_project_run(spec, run_id=RUN_ID)
+    request = runner._request()
+
+    assert request["output_files"] == [output.name]
+    assert request["input_files"] == [inp.name]
+    assert request["cache_files"] == [cache.name]
+    assert (output.flush_count, inp.flush_count, cache.flush_count) == (1, 1, 1)
