@@ -223,3 +223,26 @@ def test_no_stream_files_are_created(tmp_path):
         finally:
             await streams.finish()
     asyncio.run(run())
+
+
+
+def test_terminal_drops_backpressured_client_without_discarding_output(tmp_path):
+    async def run():
+        output = tmp_path / "out"
+        streams = SupervisorStreams(output, None)
+        await streams.start()
+        writer = None
+        try:
+            reader, writer = await asyncio.open_unix_connection(streams.socket_path)
+            writer.write(b'{"command":"follow","offsets":{"out":0,"err":0}}\n')
+            await writer.drain()
+            assert await reader.readexactly(8) == b"A2SSUPR1"
+            for _ in range(1024):
+                streams.publish("out", b"x" * 8192)
+            streams.terminal({"state": "finished", "return_code": 0})
+            await asyncio.wait_for(streams.finish(), 4)
+            assert output.stat().st_size == 1024 * 8192
+        finally:
+            if writer is not None:
+                writer.close()
+    asyncio.run(run())

@@ -133,6 +133,11 @@ class SupervisorStreams:
     def terminal(self, outcome):
         self._terminal = dict(outcome)
         for follower in tuple(self._followers):
+            # A client that stopped reading must not prevent the detached
+            # supervisor from exiting. Already published bytes remain in the
+            # named spool and can be recovered on a later attach.
+            if follower.writer.transport.get_write_buffer_size() >= _HIGH:
+                follower.writer.transport.abort()
             follower.wake.set()
 
     async def _connect(self, reader, writer):
@@ -198,6 +203,10 @@ class SupervisorStreams:
                                 raise RuntimeError("Supervisor spool truncated")
                             writer.write(frame(kind, offset, data))
                             follower.offsets[kind] += len(data)
+                            if (self._terminal is not None
+                                    and writer.transport.get_write_buffer_size() >= _HIGH):
+                                writer.transport.abort()
+                                return
                             await writer.drain()
                             break
                     else:
