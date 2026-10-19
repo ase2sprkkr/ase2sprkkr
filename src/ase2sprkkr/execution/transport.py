@@ -474,6 +474,55 @@ class SshTransport(Transport):
         finally:
             destination.close()
 
+    async def _transfer_tar(self, producer_command, consumer_command):
+        """Stream an archive between two subprocesses and check both results."""
+        consumer = await asyncio.create_subprocess_exec(
+            *consumer_command,
+            stdin=asyncio.subprocess.PIPE,
+            stdout=asyncio.subprocess.DEVNULL,
+            stderr=asyncio.subprocess.PIPE,
+        )
+        producer = None
+        try:
+            producer = await asyncio.create_subprocess_exec(
+                *producer_command,
+                stdin=asyncio.subprocess.DEVNULL,
+                stdout=asyncio.subprocess.PIPE,
+                stderr=asyncio.subprocess.PIPE,
+            )
+            async def pipe():
+                try:
+                    await self._pipe(producer.stdout, consumer.stdin)
+                except (BrokenPipeError, ConnectionResetError):
+                    # If the extractor fails early, the archive producer can
+                    # otherwise remain blocked on a full stdout pipe.
+                    if producer.returncode is None:
+                        producer.kill()
+
+            _, producer_error, consumer_error, _, _ = await asyncio.gather(
+                pipe(),
+                producer.stderr.read(),
+                consumer.stderr.read(),
+                producer.wait(),
+                consumer.wait(),
+            )
+            for process, command, stderr in (
+                (producer, producer_command, producer_error),
+                (consumer, consumer_command, consumer_error),
+            ):
+                if process.returncode:
+                    raise subprocess.CalledProcessError(
+                        process.returncode, command, stderr=stderr,
+                    )
+        finally:
+            for process in (producer, consumer):
+                if process is not None and process.returncode is None:
+                    process.kill()
+            await asyncio.gather(
+                *(process.wait() for process in (producer, consumer)
+                  if process is not None),
+            )
+
     async def put_files(self, sources, source_root, destination_root):
         source_root = Path(source_root).expanduser().resolve()
         destination_root = posixpath.normpath(os.fspath(destination_root))
@@ -483,34 +532,9 @@ class SshTransport(Transport):
 
         relatives = [os.fspath(Path(source).relative_to(source_root)) for source in files]
         await self.run(("mkdir", "-p", "--", destination_root))
-        remote_command = self._command(("tar", "-C", destination_root, "-xf", "-"))
-        remote = await asyncio.create_subprocess_exec(
-            *remote_command,
-            stdin=asyncio.subprocess.PIPE,
-            stdout=asyncio.subprocess.PIPE,
-            stderr=asyncio.subprocess.PIPE,
-        )
-        local = await asyncio.create_subprocess_exec(
-            "tar", "-C", os.fspath(source_root), "-cf", "-", "--", *relatives,
-            stdout=asyncio.subprocess.PIPE,
-            stderr=asyncio.subprocess.PIPE,
-        )
-        await self._pipe(local.stdout, remote.stdin)
-        local_stderr, remote_stderr = await asyncio.gather(
-            local.stderr.read(), remote.stderr.read()
-        )
-        local_returncode, remote_returncode = await asyncio.gather(
-            local.wait(), remote.wait()
-        )
-        if local_returncode:
-            raise subprocess.CalledProcessError(
-                local_returncode, ("tar", "-C", os.fspath(source_root), "-cf", "-"),
-                stderr=local_stderr,
-            )
-        if remote_returncode:
-            raise subprocess.CalledProcessError(
-                remote_returncode, remote_command, stderr=remote_stderr
-            )
+        producer = ("tar", "-C", os.fspath(source_root), "-cf", "-", "--", *relatives)
+        consumer = self._command(("tar", "-C", destination_root, "-xf", "-"))
+        await self._transfer_tar(producer, consumer)
         return tuple(
             (source, posixpath.join(destination_root, *Path(relative).parts))
             for source, relative in zip(files, relatives)
@@ -525,37 +549,11 @@ class SshTransport(Transport):
 
         relatives = [posixpath.relpath(source, source_root) for source in files]
         destination_root.mkdir(parents=True, exist_ok=True)
-        remote_command = self._command(
+        producer = self._command(
             ("tar", "-C", source_root, "-cf", "-", "--", *relatives)
         )
-        remote = await asyncio.create_subprocess_exec(
-            *remote_command,
-            stdout=asyncio.subprocess.PIPE,
-            stderr=asyncio.subprocess.PIPE,
-        )
-        local = await asyncio.create_subprocess_exec(
-            "tar", "-C", os.fspath(destination_root), "-xf", "-",
-            stdin=asyncio.subprocess.PIPE,
-            stdout=asyncio.subprocess.PIPE,
-            stderr=asyncio.subprocess.PIPE,
-        )
-        await self._pipe(remote.stdout, local.stdin)
-        remote_stderr, local_stderr = await asyncio.gather(
-            remote.stderr.read(), local.stderr.read()
-        )
-        remote_returncode, local_returncode = await asyncio.gather(
-            remote.wait(), local.wait()
-        )
-        if remote_returncode:
-            raise subprocess.CalledProcessError(
-                remote_returncode, remote_command, stderr=remote_stderr
-            )
-        if local_returncode:
-            raise subprocess.CalledProcessError(
-                local_returncode,
-                ("tar", "-C", os.fspath(destination_root), "-xf", "-"),
-                stderr=local_stderr,
-            )
+        consumer = ("tar", "-C", os.fspath(destination_root), "-xf", "-")
+        await self._transfer_tar(producer, consumer)
         return tuple(
             (source, os.fspath(destination_root.joinpath(*PurePosixPath(relative).parts)))
             for source, relative in zip(files, relatives)
