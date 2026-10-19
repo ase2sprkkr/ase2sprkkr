@@ -340,6 +340,32 @@ class InputParametersRegistry(ModuleRegistry):
         return (*declared, *schema_files)
 
 
+class _ExtraTaskRegistry(ModuleRegistry):
+    """Validate explicit task declarations at materialization time."""
+
+    def __init__(self, package, input_parameters_registry):
+        super().__init__(package, "task_definition", factory=True)
+        self.input_parameters_registry = input_parameters_registry
+
+    def prepare_value(self, name, module, task):
+        if not isinstance(task, TaskDefinition):
+            raise RegistryDefinitionError(
+                f"Extra task {name} must be TaskDefinition, got {type(task).__name__}"
+            )
+        if task.name != name:
+            raise RegistryDefinitionError(
+                f"Extra task {task.name} is registered as {name}"
+            )
+        try:
+            self.input_parameters_registry.definition_for_task(task)
+        except RegistryEntryNotFound:
+            raise RegistryDefinitionError(
+                f"Task {task.name} references unknown input schema "
+                f"{task.input_parameters_definition_name}"
+            ) from None
+        return task
+
+
 class TaskRegistry:
     """Authoritative namespace and resolver for SPR-KKR task identities.
 
@@ -360,10 +386,8 @@ class TaskRegistry:
 
     def __init__(self, input_parameters_registry, extra_tasks_package):
         self.input_parameters_registry = input_parameters_registry
-        self.extra_tasks = ModuleRegistry(
-            extra_tasks_package,
-            "task_definition",
-            factory=True,
+        self.extra_tasks = _ExtraTaskRegistry(
+            extra_tasks_package, input_parameters_registry
         )
 
     def _input_task(self, name):
@@ -375,25 +399,9 @@ class TaskRegistry:
 
     def _extra_task(self, name):
         try:
-            task = self.extra_tasks[name]
+            return self.extra_tasks[name]
         except RegistryEntryNotFound:
             return None
-        if not isinstance(task, TaskDefinition):
-            raise RegistryDefinitionError(
-                f"Extra task {name} must be TaskDefinition, got {type(task).__name__}"
-            )
-        if task.name != name:
-            raise RegistryDefinitionError(
-                f"Extra task {task.name} is registered as {name}"
-            )
-        try:
-            self.input_parameters_registry.definition_for_task(task)
-        except RegistryEntryNotFound:
-            raise RegistryDefinitionError(
-                f"Task {task.name} references unknown input schema "
-                f"{task.input_parameters_definition_name}"
-            ) from None
-        return task
 
     def __getitem__(self, name):
         name = self.normalize_name(name)
@@ -417,9 +425,10 @@ class TaskRegistry:
         return True
 
     def names(self):
-        names = set(self.extra_tasks.names())
-        for schema_name in self.input_parameters_registry.names():
-            task = self.input_parameters_registry[schema_name]._task_definition
+        """Enumerate valid tasks; broken unrelated definitions are skipped."""
+        names = {task.name for task in self.extra_tasks.iter_valid_values()}
+        for schema in self.input_parameters_registry.iter_valid_values():
+            task = schema._task_definition
             if task is None:
                 continue
             name = task.name
