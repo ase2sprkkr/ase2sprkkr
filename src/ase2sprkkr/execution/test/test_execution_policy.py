@@ -238,3 +238,32 @@ def test_file_path_flush_is_explicit(tmp_path):
     assert value.flush_calls == 0
     assert file_path(value, tmp_path, flush=True) == str(tmp_path / value.name)
     assert value.flush_calls == 1
+
+
+def test_file_path_strict_contract_preserves_optional_none(tmp_path):
+    from ase2sprkkr.execution.base import file_path
+
+    assert file_path(None, tmp_path, required=True) is None
+    assert file_path("case.out", tmp_path, required=True) == str(tmp_path / "case.out")
+    with pytest.raises(ValueError, match="named file"):
+        file_path(1, tmp_path, required=True)
+    with pytest.raises(ValueError, match="named file"):
+        file_path(object(), tmp_path, required=True)
+
+
+def test_strict_runner_path_errors_remain_backend_specific(tmp_path):
+    from ase2sprkkr.execution.psij import _path as psij_path
+    from ase2sprkkr.execution.remote import RemoteRunner
+
+    spec = ExecutionSpec(
+        argv=(), input_file=None, output_file=None, directory=str(tmp_path),
+    )
+    runner = RemoteRunner(object(), spec)
+    with pytest.raises(ValueError, match="Remote execution requires named files"):
+        runner._local_path(object())
+    with pytest.raises(ValueError, match="Remote execution requires named files"):
+        runner._local_path(1)
+    with pytest.raises(ValueError, match="PSI/J execution requires named"):
+        psij_path(object(), tmp_path)
+    assert runner._local_path(None) is None
+    assert psij_path(None, tmp_path) is None
