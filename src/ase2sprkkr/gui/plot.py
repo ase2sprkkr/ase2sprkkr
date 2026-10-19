@@ -377,6 +377,29 @@ def colormesh(
         )
 
 
+@plotting_function
+def lineplot(x, y, axis=None, slider=None, **kwargs):
+    """Plot a one-dimensional scan, optionally updated by a shared slider."""
+    if slider is None and (callable(x) or callable(y)):
+        raise ValueError("Callable line data require a slider")
+
+    def values(data, index):
+        return np.asarray(data(index) if callable(data) else data).ravel()
+
+    index = slider.values[0] if slider is not None else None
+    set_up_common_plot(axis, **kwargs)
+    (line,) = axis.plot(values(x, index), values(y, index))
+    axis.relim()
+    axis.autoscale_view()
+
+    if slider is not None and (callable(x) or callable(y)):
+        def update(index):
+            line.set_data(values(x, index), values(y, index))
+            axis.relim()
+            axis.autoscale_view()
+        slider.connect(update)
+
+
 class Multiplot:
     """This class can be used for plotting more plots into one resulting image/window."""
 

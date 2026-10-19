@@ -74,6 +74,9 @@ jobs:
       run: |
         python -m pip install "h5py>=3.8" "nexusformat>=2.0"
         python -c "import h5py, nexusformat.nexus"
-    - name: Verify ARPES export, provenance and real SPC fixture
-      run: python -m pytest -q -rs src/ase2sprkkr/result_files/test/test_nexus.py
+    - name: Verify ARPES export and plotting from real SPC files
+      run: >-
+        python -m pytest -q -rs
+        src/ase2sprkkr/result_files/test/test_nexus.py
+        src/ase2sprkkr/result_files/test/test_arpes_plot.py
 

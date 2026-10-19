@@ -11,7 +11,7 @@ from ..result_files import Arithmetic, CommonResultFile
 from ...common.grammar_types import NumpyArray, Prefixed
 from ...common.generated_configuration_definitions import NumpyViewDefinition as NV, GeneratedValueDefinition as GV
 from ...common.configuration_definitions import switch
-from ...gui.plot import change_default_kwargs, colormesh, Multiplot
+from ...gui.plot import change_default_kwargs, colormesh, lineplot, Multiplot
 
 
 # Native SPC columns are shared by the reader and the NeXus writer.
@@ -197,7 +197,34 @@ def create_definition():
                     data[:, selected[0], :] for data in (x, y, intensity)
                 )
         kw.update(kwargs)
-        colormesh(x, y, intensity, slider=slider, **kw)
+        first = intensity(slider.values[0]) if callable(intensity) else intensity
+        if 1 in first.shape:
+            # A singleton mesh contains no Gouraud cells. Show the actual
+            # one-dimensional spectrum rather than an empty pseudocolor plot.
+            if c.MODE() == "energy":
+                variable_is_y = first.shape[1] == 1
+            else:
+                initial_x = x(slider.values[0]) if callable(x) else x
+                initial_y = y(slider.values[0]) if callable(y) else y
+                variable_is_y = np.ptp(initial_y) > np.ptp(initial_x)
+            coordinate = y if variable_is_y else x
+            if callable(coordinate):
+                data = coordinate
+                coordinate = lambda index: data(index).ravel()
+            else:
+                coordinate = coordinate.ravel()
+            if callable(intensity):
+                data = intensity
+                intensity = lambda index: data(index).ravel()
+            else:
+                intensity = intensity.ravel()
+            kw["xlabel"] = kw["ylabel"] if variable_is_y else kw["xlabel"]
+            kw["ylabel"] = option.name
+            for key in ("show_zero_line", "mode", "norm", "vmax", "vmin", "colormap"):
+                kw.pop(key, None)
+            lineplot(coordinate, intensity, slider=slider, **kw)
+        else:
+            colormesh(x, y, intensity, slider=slider, **kw)
 
     def ii(j):
         def fn(data: np.ndarray, section: object) -> np.ndarray:
