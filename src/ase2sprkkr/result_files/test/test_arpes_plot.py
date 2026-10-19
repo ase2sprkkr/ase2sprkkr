@@ -99,45 +99,42 @@ def test_multi_azimuth_static_slice_count(tmp_path):
         plt.close("all")
 
 
-def test_controls_switch_np_nt_on_2d_energy_scan(tmp_path):
-    import matplotlib.pyplot as plt
-    source = _multi_azimuth_file(tmp_path)
-    spc = ResultFile.from_file(str(source), unknown=False)
-    # A fast in-memory test of two nontrivial scan axes uses a tiny adapted
-    # three-dimensional array and the same SPC plotting routine.
-    from ase2sprkkr.result_files.definitions.spc import ARPESResultFile
-    class Value:
-        def __init__(self, obj, name, data):
-            self._container = obj
-            self.name = name
-            self.data = data
-        def __call__(self):
-            return self.data
-        def plot(self, **kwargs):
-            from ase2sprkkr.result_files.definitions.spc import create_definition
-            raise NotImplementedError
-    # Test the shared controller independently of the SPC parser dimensions.
-    from ase2sprkkr.gui.plot import Multiplot, colormesh
-    xx, yy = np.meshgrid(np.arange(4), np.arange(5))
-    updates = []
-    with Multiplot(
-        layout=(1, 1), show=False, live=True,
-        live_options={
-            "direction": {"options": ("NP", "NT")},
-            "slice": {"slider": lambda state: range(
-                3 if state["direction"] == "NP" else 4)},
-        },
-    ) as mp:
-        with mp.new_axis() as (axis, kwargs):
-            colormesh(
-                xx, yy,
-                lambda state: updates.append(state.copy()) or
-                np.full((5, 4), state["slice"] + 1.0),
-                axis=axis, **kwargs,
-            )
-    controls = mp.controls
-    controls.widgets["direction"].set_active(1)
-    assert controls._slider_values["slice"] == tuple(range(4))
-    controls.widgets["slice"].set_val(3)
-    assert updates[-1] == {"direction": "NT", "slice": 3}
-    plt.close(mp.figure)
+
+def test_controls_switch_np_nt_on_real_parser_grid(tmp_path):
+    """A parsed NP x NT spectrum changes slice direction and slider limits."""
+    header, payload = _EXAMPLE.read_text().split("#######################", 1)
+    header = header.replace("NT                 1", "NT                 3")
+    header = header.replace("NP                 1", "NP                 4")
+    lines = []
+    for line in payload.splitlines():
+        if not line.strip():
+            continue
+        values = np.fromstring(line, sep=" ")
+        for ip in range(4):
+            for it in range(3):
+                point = values.copy()
+                point[0] = -10 + 10 * it
+                point[2:5] *= (ip + 1) * (it + 1)
+                lines.append(" ".join(f"{v:.9E}" for v in point))
+    path = tmp_path / "two_angles.spc"
+    path.write_text(header + "#######################\n" + "\n".join(lines) + "\n")
+    spc = ResultFile.from_file(str(path), unknown=False)
+    assert spc.TOTAL().shape == (spc.NE(), 4, 3)
+    try:
+        spc.plot(show=False, live=True)
+        fig = plt.gcf()
+        controls = fig._ase2sprkkr_controls
+        assert len(_artists(fig)) == 4
+        assert controls.state == {"direction": "NP", "slice": 0}
+        assert len(controls._slider_values["slice"]) == 4
+        assert _artists(fig)[0].get_xlabel() == r"$\theta$ (deg)"
+        controls.widgets["slice"].set_val(3)
+        controls.widgets["direction"].set_active(1)
+        assert controls.state == {"direction": "NT", "slice": 0}
+        assert len(controls._slider_values["slice"]) == 3
+        assert _artists(fig)[0].get_xlabel() == "Azimuth index (NP)"
+        controls.widgets["slice"].set_val(2)
+        assert controls.state["slice"] == 2
+        assert len(_artists(fig)) == 4
+    finally:
+        plt.close("all")
