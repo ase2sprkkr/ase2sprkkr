@@ -1,0 +1,23 @@
+name: BAND SPLEED fixes (temporary)
+on:
+  push:
+    branches: [tmp-band-spleed-fix-ci]
+permissions:
+  contents: read
+jobs:
+  targeted:
+    runs-on: ubuntu-latest
+    timeout-minutes: 16
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - run: ./install_dependencies.sh
+      - run: |
+          DO_NOT_RUN_SPRKKR=1 "$GITHUB_WORKSPACE/run_tests" \
+            src/ase2sprkkr/outputs/test/test_spec_parser.py \
+            src/ase2sprkkr/outputs/test/test_spleed_intensity.py \
+            src/ase2sprkkr/result_files/test/test_native_spc_registry.py \
+            src/ase2sprkkr/result_files/test/test_definition_registry.py \
+            src/ase2sprkkr/input_parameters/test/test_task_file_manifests.py
