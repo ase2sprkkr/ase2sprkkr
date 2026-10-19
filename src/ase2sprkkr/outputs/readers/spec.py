@@ -63,14 +63,20 @@ class SpecResult(ArpesResult):
         """
         if not hasattr(self, "_input_parameters") and self.output_file is None:
             return self._embedded_spectral_data()
-        if self.task_name == "spleed":
+        if self._task_name == "spleed" or (
+            self.input_parameters is not None
+            and self.input_parameters.task_name == "SPLEED"
+        ):
             spectrum = self.spleed_intensity
             if spectrum is not None:
                 return spectrum.RAW_DATA()
         spectra = self.spectra
         if len(spectra) > 1:
             raise ValueError("Multiple spectral files; select one from result.spectra")
-        return spectra[0].RAW_DATA() if spectra else np.array([])
+        if spectra:
+            return spectra[0].RAW_DATA()
+        # Older standalone SPEC logs contain the six-column data inline.
+        return self._embedded_spectral_data()
 
     def _embedded_spectral_data(self):
         """Read six-column rows embedded in an in-memory SPEC text dump."""

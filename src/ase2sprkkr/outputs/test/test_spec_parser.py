@@ -60,6 +60,24 @@ stookes-vector    of the photonfield  0.10000E+01  100.000%    0.000%    0.000%
     )
 
 
+def test_standalone_spec_log_retains_embedded_data_without_spc(tmp_path):
+    """Legacy SPEC logs without their SPC file remain readable."""
+    logfile = tmp_path / "Fe_SPEC.out"
+    logfile.write_text(
+        "stookes-vector    of the photonfield  0.10000E+01\\n"
+        "1.8937E+00  -9.6825E-02  6.1567E-08 -3.9380E-04  3.0771E-08  3.0795E-08\\n"
+        "1.9000E+00  -9.6825E-02  5.7837E-08 -4.2368E-04  2.8906E-08  2.8931E-08\\n"
+    )
+    result = SpecResult(None, None, tmp_path, output_file=logfile)
+    np.testing.assert_allclose(
+        result.spectral_data,
+        [
+            [1.8937, -0.096825, 6.1567e-8, -3.9380e-4, 3.0771e-8, 3.0795e-8],
+            [1.9000, -0.096825, 5.7837e-8, -4.2368e-4, 2.8906e-8, 2.8931e-8],
+        ],
+    )
+
+
 def test_arpes_result_uses_native_spec_file_manifest(tmp_path):
     from ase2sprkkr.input_parameters.input_parameters import InputParameters
     from ase2sprkkr.outputs.readers.arpes import ArpesResult
