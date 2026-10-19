@@ -15,7 +15,7 @@ from ..common.decorators import class_property
 from .run_model import Execution, FileManifest
 
 
-def file_path(value, directory=None, *, flush=False):
+def file_path(value, directory=None, *, flush=False, required=False):
     """Resolve a named file or path, returning None for unnamed descriptors."""
     if value is None:
         return None
@@ -23,10 +23,14 @@ def file_path(value, directory=None, *, flush=False):
         value.flush()
     value = getattr(value, "name", value)
     if isinstance(value, int):
+        if required:
+            raise ValueError("A named file or path is required")
         return None
     try:
         path = os.fspath(value)
-    except TypeError:
+    except TypeError as exc:
+        if required:
+            raise ValueError("A named file or path is required") from exc
         return None
     if directory is not None and not os.path.isabs(path):
         path = os.path.join(directory, path)

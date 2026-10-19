@@ -14,6 +14,7 @@ from .base import (
     ExecutionOutcome,
     FailurePhase,
     OutputObservers,
+    file_path,
     finish_monitor,
     wait_for_monitor,
     RunState,
@@ -243,27 +244,13 @@ class RemoteRunner:
                 fcntl.flock(stream.fileno(), fcntl.LOCK_UN)
         self._stream_positions[kind] = offset + len(data)
 
-    @staticmethod
-    def _file_name(value):
+    def _local_path(self, value):
         if value is None:
             return None
-        if hasattr(value, "flush"):
-            value.flush()
-        value = getattr(value, "name", value)
         try:
-            return os.fspath(value)
-        except TypeError as exc:
+            return file_path(value, self.spec.directory, flush=True, required=True)
+        except ValueError as exc:
             raise ValueError("Remote execution requires named files") from exc
-
-    def _local_path(self, value):
-        name = self._file_name(value)
-        if name is None:
-            return None
-        if isinstance(name, int):
-            raise ValueError("Remote execution requires named files")
-        if not os.path.isabs(name):
-            name = os.path.join(self.spec.directory, name)
-        return os.path.abspath(name)
 
     async def _stage_file(self, value, used, *, uploads=None, required=True):
         source = self._local_path(value)
