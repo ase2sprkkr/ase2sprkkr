@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import asyncio
+import fnmatch
 import glob
 import json
 import os
@@ -164,14 +165,55 @@ class RunRecord:
             )
 
 
+def _manifest_accesses(record):
+    """Resolve declared read/write paths on the execution host."""
+    files = record.files
+    directory = record.execution.directory
+    remote = directory.remote is not None
+
+    def path(entry):
+        if entry is None:
+            return None
+        value = entry.remote_path if remote else entry.local_path
+        if value is None:
+            return None
+        return os.path.normpath(
+            value if os.path.isabs(value) else os.path.join(directory.target, value)
+        )
+
+    reads = {path(entry) for entry in files.inputs}
+    reads.update(path(cache.file) for cache in files.caches)
+    writes = {path(entry) for entry in (files.stdout, files.stderr, *files.outputs)}
+    writes.update(path(cache.file) for cache in files.caches)
+    return reads - {None}, writes - {None}
+
+
+def _paths_overlap(first, second):
+    return any(
+        a == b or fnmatch.fnmatchcase(a, b) or fnmatch.fnmatchcase(b, a)
+        for a in first for b in second
+    )
+
+
 def submission_conflicts(left: RunRecord, right: RunRecord) -> bool:
-    """A collision has the same backend, target directory, and task namespace."""
+    """Conservatively exclude overlapping declared read/write operations."""
     a, b = left.execution, right.execution
     if a.endpoint != b.endpoint or a.directory.target != b.directory.target:
         return False
+    # SCF may overwrite canonical potential/density files outside the declared
+    # output set, so retain the broad protection until its manifest is complete.
     if left.task == "SCF" or right.task == "SCF":
         return True
-    return left.task == right.task and left.dataset == right.dataset
+    left_reads, left_writes = _manifest_accesses(left)
+    right_reads, right_writes = _manifest_accesses(right)
+    if (_paths_overlap(left_writes, right_reads | right_writes)
+            or _paths_overlap(right_writes, left_reads)):
+        return True
+    # Without declared writes, preserve namespace-based protection for legacy
+    # and generic executors that cannot describe their output footprint.
+    if not left_writes or not right_writes:
+        return left.task == right.task and left.dataset == right.dataset
+    return False
 
 
 class RunStore:

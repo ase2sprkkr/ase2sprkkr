@@ -152,3 +152,72 @@ def test_submitting_record_contains_submission_key_before_backend_submit(tmp_pat
     assert seen[0].task == "DOS"
     assert seen[0].dataset == "case"
     assert seen[0].execution.directory.local == str(tmp_path.resolve())
+
+
+def test_different_tasks_conflict_on_shared_declared_output(tmp_path):
+    from ase2sprkkr.execution import FileEntry, FileManifest
+    manager = ExecutionManager(RunStore(tmp_path / "runs"))
+    target = str(tmp_path / "same.out")
+    first = manager.new_record(
+        task="DOS", directory=tmp_path, dataset="one",
+        files=FileManifest(stdout=FileEntry(local_path=target)),
+    )
+    second = manager.new_record(
+        task="BSF", directory=tmp_path, dataset="two",
+        files=FileManifest(outputs=(FileEntry(local_path=target),)),
+    )
+    manager.reserve(first)
+    with pytest.raises(DuplicateSubmissionError):
+        manager.reserve(second)
+
+
+def test_declared_input_read_conflicts_with_other_task_output(tmp_path):
+    from ase2sprkkr.execution import FileEntry, FileManifest
+    manager = ExecutionManager(RunStore(tmp_path / "runs"))
+    input_path = tmp_path / "shared.pot"
+    input_path.write_text("density")
+    writer = manager.new_record(
+        task="DOS", directory=tmp_path, dataset="one",
+        files=FileManifest(outputs=(FileEntry(local_path=str(input_path)),)),
+    )
+    reader = manager.new_record(
+        task="BSF", directory=tmp_path, dataset="two",
+        files=FileManifest(
+            inputs=(FileEntry(local_path=str(input_path)),),
+            stdout=FileEntry(local_path=str(tmp_path / "other.out")),
+        ),
+    )
+    manager.reserve(writer)
+    with pytest.raises(DuplicateSubmissionError):
+        manager.reserve(reader)
+
+
+def test_nonoverlapping_declared_outputs_can_run_in_same_directory(tmp_path):
+    from ase2sprkkr.execution import FileEntry, FileManifest
+    manager = ExecutionManager(RunStore(tmp_path / "runs"))
+    first = manager.new_record(
+        task="DOS", directory=tmp_path, dataset="one",
+        files=FileManifest(stdout=FileEntry(local_path=str(tmp_path / "one.out"))),
+    )
+    second = manager.new_record(
+        task="DOS", directory=tmp_path, dataset="one",
+        files=FileManifest(stdout=FileEntry(local_path=str(tmp_path / "two.out"))),
+    )
+    manager.reserve(first)
+    assert manager.reserve(second).state == RunState.SUBMITTING
+
+
+def test_wildcard_declared_output_conflicts_with_concrete_output(tmp_path):
+    from ase2sprkkr.execution import FileEntry, FileManifest
+    manager = ExecutionManager(RunStore(tmp_path / "runs"))
+    first = manager.new_record(
+        task="DOS", directory=tmp_path,
+        files=FileManifest(outputs=(FileEntry(local_path=str(tmp_path / "result-*.dat")),)),
+    )
+    second = manager.new_record(
+        task="BSF", directory=tmp_path,
+        files=FileManifest(stdout=FileEntry(local_path=str(tmp_path / "result-1.dat"))),
+    )
+    manager.reserve(first)
+    with pytest.raises(DuplicateSubmissionError):
+        manager.reserve(second)
