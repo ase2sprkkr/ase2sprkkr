@@ -12,6 +12,8 @@ from .base import (
     Executor,
     FailurePhase,
     OutputObservers,
+    finish_monitor,
+    wait_for_monitor,
     RunState,
     RunStatus,
     SubmissionNotStarted,
@@ -248,12 +250,7 @@ class LocalRunner:
             if self._failure_message is None:
                 self._failure_message = str(exc)
         finally:
-            try:
-                if self.callback:
-                    self.callback(self.result)
-            except BaseException as exc:
-                self._callback_exception = exc
-            self._done.set()
+            finish_monitor(self)
 
     def submit(self):
         with self._lock:
@@ -276,12 +273,7 @@ class LocalRunner:
             raise RuntimeError("Run has not been submitted")
         if self._state == RunState.CANCELLED and self._thread is None:
             return self.result
-        self._done.wait()
-        if self._exception is not None:
-            raise self._exception
-        if self._callback_exception is not None:
-            raise self._callback_exception
-        return self.result
+        return wait_for_monitor(self)
 
     def run(self):
         if self._state == RunState.NEW:
