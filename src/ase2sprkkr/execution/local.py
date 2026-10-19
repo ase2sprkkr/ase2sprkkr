@@ -92,8 +92,7 @@ class LocalRunner:
         self._output_observers.add_error_listener(callback)
 
     def _emit_output(self, data, kind):
-        if data:
-            self._output_observers.emit(data.decode("utf8", errors="replace"), kind)
+        self._output_observers.emit_bytes(data, kind)
 
     def _output_target(self, kind):
         # A missing stderr target means live observation only, not an

@@ -393,8 +393,7 @@ class PsijRunner:
         self._output_observers.add_error_listener(callback)
 
     def _emit_output(self, data, kind):
-        if data:
-            self._output_observers.emit(data.decode("utf8", errors="replace"), kind)
+        self._output_observers.emit_bytes(data, kind)
 
     @staticmethod
     def _flush(value):
