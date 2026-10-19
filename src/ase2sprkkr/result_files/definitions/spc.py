@@ -65,7 +65,11 @@ class ARPESResultFile(CommonResultFile, Arithmetic):
 
         if input_parameters is not None and phi_range is None:
             phi_range = input_parameters.SPEC_EL.PHI()
-        phi = None if phi_range is None else np.linspace(*phi_range, self.NP())
+        if phi_range is not None and len(phi_range) != 2:
+            raise ValueError("phi_range must contain (start_angle, end_angle)")
+        phi = None if phi_range is None else np.linspace(
+            phi_range[0], phi_range[1], self.NP()
+        )
 
         if not multi:
             if azimuths is not None:

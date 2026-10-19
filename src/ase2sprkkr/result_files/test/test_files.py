@@ -35,8 +35,13 @@ class TestOutput:
                     doubled = output + output
                     for option in "ENERGY", "THETA", "K", "DETERMINANT":
                         np.testing.assert_equal(output[option](), doubled[option]())
-                    for option in "TOTAL", "POLARIZATION", "UP", "DOWN":
+                    for option in "TOTAL", "UP", "DOWN":
                         np.testing.assert_equal(2 * output[option](), doubled[option]())
+                    up, down = doubled.UP(), doubled.DOWN()
+                    expected = np.divide(up - down, up + down,
+                                         out=np.zeros_like(up), where=(up + down) != 0)
+                    np.testing.assert_allclose(expected, doubled.POLARIZATION(),
+                                               atol=1e-10)
             elif extension == "dos":
                 if filename == "TaAs_DOS.dos":
                     assert output.n_orbitals(1) == 3
