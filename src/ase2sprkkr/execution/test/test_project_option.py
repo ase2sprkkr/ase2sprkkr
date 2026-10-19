@@ -3,10 +3,12 @@ from types import SimpleNamespace
 from ase2sprkkr.execution import (
     ExecutionManager,
     Executor,
+    ExecutionOutcome,
     ProjectRepository,
     RunState,
 )
 from ase2sprkkr.input_parameters.input_parameters import InputParameters
+from ase2sprkkr.input_parameters.task_definition import TaskDefinition
 from ase2sprkkr.sprkkr import calculation as calculation_module
 from ase2sprkkr.sprkkr.calculation import PreparedCalculation
 from ase2sprkkr.sprkkr.calculator import SPRKKR
@@ -14,11 +16,16 @@ from ase2sprkkr.sprkkr.profile import SPRKKRProfile
 
 
 class _Runner:
-    def __init__(self, callback=None):
+    def __init__(self, callback=None, *, spec=None):
         self._callback = callback
         self.state = RunState.NEW
         self.backend_id = None
-        self.result = SimpleNamespace(return_code=0)
+        self.result = ExecutionOutcome(
+            input_file=None if spec is None else spec.input_file,
+            output_file=None if spec is None else spec.output_file,
+            error_file=None if spec is None else spec.error_file,
+            return_code=0,
+        )
         self.exception = None
 
     def submit(self):
@@ -52,7 +59,7 @@ class _Executor(Executor):
         return False
 
     def create_run(self, spec, callback=None):
-        runner = _Runner(callback)
+        runner = _Runner(callback, spec=spec)
         self.runners.append(runner)
         return runner
 
@@ -81,9 +88,11 @@ def _parameters(monkeypatch, task="DOS"):
     parameters.CONTROL.DATASET = "sample"
     parameters.CONTROL.POTFIL = "sample.pot"
     monkeypatch.setattr(
-        InputParameters,
+        TaskDefinition,
         "output_reader",
-        lambda self, *args, **kwargs: SimpleNamespace(print_output=False),
+        lambda self, *args, **kwargs: SimpleNamespace(
+            read_from_file=lambda *args, **kwargs: SimpleNamespace(return_code=0),
+        ),
     )
     monkeypatch.setattr(InputParameters, "input_files", lambda self, directory: ())
     monkeypatch.setattr(InputParameters, "output_files", lambda self, directory: ())

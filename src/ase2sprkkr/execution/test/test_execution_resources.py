@@ -5,6 +5,7 @@ import pytest
 
 from ase2sprkkr.execution.base import (
     ExecutionResources,
+    ExecutionOutcome,
     ResourceOwnedRunner,
     RunState,
     SubmissionNotStarted,
@@ -65,14 +66,18 @@ class _Prepared:
 
 
 class _Runner:
-    result = SimpleNamespace(return_code=None)
-    reference = None
     exception = None
 
-    def __init__(self, callback=None, *, submit_error=None):
+    def __init__(self, callback=None, *, submit_error=None, spec=None):
         self.callback = callback
         self.submit_error = submit_error
         self._state = RunState.NEW
+        self.result = ExecutionOutcome(
+            input_file=None if spec is None else spec.input_file,
+            output_file=None if spec is None else spec.output_file,
+            error_file=None if spec is None else spec.error_file,
+            return_code=0,
+        )
 
     @property
     def state(self):
@@ -106,7 +111,7 @@ class _Executor:
     def create_run(self, spec, callback=None):
         if self.factory_error is not None:
             raise self.factory_error
-        return _Runner(callback, submit_error=self.submit_error)
+        return _Runner(callback, submit_error=self.submit_error, spec=spec)
 
 
 def _create_run(executor, input_file, output_file):
