@@ -6,7 +6,7 @@ import asyncio
 import os
 import warnings
 from concurrent.futures import Future
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
 from enum import Enum
 from threading import Event, Lock, Thread
 from typing import Any, Optional, Protocol, Sequence, Tuple
@@ -508,6 +508,19 @@ class ExecutionSpec:
                 "mpi_argv",
                 tuple(os.fspath(value) for value in self.mpi_argv),
             )
+
+    def command_request(self, transform=list):
+        """Serialize common command and launch fields for execution services.
+
+        The caller supplies the mapping for command arguments; for remote runs
+        this resolves already-staged local file names to target paths.
+        """
+        return {
+            "argv": transform(self.argv),
+            "mpi_argv": None if self.mpi_argv is None else transform(self.mpi_argv),
+            "mpi_uses_stdin": self.mpi_uses_stdin,
+            "launch": asdict(self.launch),
+        }
 
 
 class Runner(Protocol):

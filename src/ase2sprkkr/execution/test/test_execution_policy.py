@@ -267,3 +267,30 @@ def test_strict_runner_path_errors_remain_backend_specific(tmp_path):
         psij_path(object(), tmp_path)
     assert runner._local_path(None) is None
     assert psij_path(None, tmp_path) is None
+
+
+
+def test_common_command_request_preserves_mpi_and_launch_contract(tmp_path):
+    from ase2sprkkr.execution import ExecutionSpec, LaunchSpec
+
+    spec = ExecutionSpec(
+        argv=("serial", "input.inp"),
+        mpi_argv=("parallel", "input.inp"),
+        mpi_uses_stdin=False,
+        input_file=None, output_file=None,
+        directory=str(tmp_path),
+        launch=LaunchSpec.from_mpi(2),
+    )
+    request = spec.command_request()
+    assert request["argv"] == ["serial", "input.inp"]
+    assert request["mpi_argv"] == ["parallel", "input.inp"]
+    assert request["mpi_uses_stdin"] is False
+
+    transformed = spec.command_request(
+        lambda command: [arg.upper() for arg in command]
+    )
+    assert transformed["argv"] == ["SERIAL", "INPUT.INP"]
+    assert transformed["mpi_argv"] == ["PARALLEL", "INPUT.INP"]
+    assert transformed["launch"] == request["launch"]
+    assert transformed["mpi_uses_stdin"] is False
+    assert spec.argv == ("serial", "input.inp")
