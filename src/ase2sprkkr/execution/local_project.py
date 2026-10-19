@@ -13,6 +13,7 @@ from threading import Event, Lock, Thread
 from .base import (
     ExecutionOutcome, ExecutionSpec, FailurePhase, OutputObservers,
     RunState, RunStatus, dispatch_cancellation,
+    finish_monitor, wait_for_monitor,
 )
 from .file_availability import discover_local_files
 from .remote_service import (
@@ -222,13 +223,16 @@ class LocalProjectRunner:
             self._failure_phase = self._failure_phase or FailurePhase.EXECUTION
             self._state = RunState.FAILED
         finally:
-            self._close_owned_files()
             try:
-                if self.callback:
-                    self.callback(self.result)
+                self._close_owned_files()
             except BaseException as exc:
-                self._callback_exception = exc
-            self._done.set()
+                if self._exception is None:
+                    self._exception = exc
+                    self._failure_message = str(exc)
+                    self._failure_phase = self._failure_phase or FailurePhase.EXECUTION
+                    self._state = RunState.FAILED
+            finally:
+                finish_monitor(self)
 
     def _start_monitor(self):
         with self._lock:
@@ -296,12 +300,7 @@ class LocalProjectRunner:
             if self._state == RunState.NEW:
                 raise RuntimeError("Run has not been submitted")
             raise RuntimeError("Attached run has not been started")
-        self._done.wait()
-        if self._exception is not None:
-            raise self._exception
-        if self._callback_exception is not None:
-            raise self._callback_exception
-        return self.result
+        return wait_for_monitor(self)
 
     def run(self):
         if self._thread is None:

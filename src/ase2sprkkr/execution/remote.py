@@ -14,6 +14,8 @@ from .base import (
     ExecutionOutcome,
     FailurePhase,
     OutputObservers,
+    finish_monitor,
+    wait_for_monitor,
     RunState,
     dispatch_cancellation,
 )
@@ -820,12 +822,7 @@ class RemoteRunner:
         except BaseException as exc:
             self._exception = exc
         finally:
-            try:
-                if self.callback:
-                    self.callback(self.result)
-            except BaseException as exc:
-                self._callback_exception = exc
-            self._done.set()
+            finish_monitor(self)
 
     def _start_monitor(self):
         with self._lock:
@@ -851,12 +848,7 @@ class RemoteRunner:
             if self._state == RunState.NEW:
                 raise RuntimeError("Run has not been submitted")
             raise RuntimeError("Attached run has not been started")
-        self._done.wait()
-        if self._exception is not None:
-            raise self._exception
-        if self._callback_exception is not None:
-            raise self._callback_exception
-        return self.result
+        return wait_for_monitor(self)
 
     def run(self):
         if self._thread is None:
