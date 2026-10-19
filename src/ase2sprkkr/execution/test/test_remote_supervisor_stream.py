@@ -333,7 +333,7 @@ def test_supervisor_finish_is_bounded_when_client_never_drains(tmp_path):
         try:
             await asyncio.wait_for(streams.finish(), 4)
             assert transport.aborted
-            assert not streams._spools["out"].closed is False
+            assert streams._spools["out"].closed
         finally:
             streams._followers.discard(follower)
 
