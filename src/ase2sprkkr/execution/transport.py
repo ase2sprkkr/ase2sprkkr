@@ -283,27 +283,24 @@ class LocalTransport(Transport):
     async def expand_files(self, sources, root):
         return expand_local_files(sources, root)
 
-    async def put_files(self, sources, source_root, destination_root):
+    async def _transfer_files(self, paths, source_root, destination_root, transfer):
+        """Preserve relative layout when copying selected local files."""
         source_root = Path(source_root).expanduser().resolve()
         destination_root = Path(destination_root).expanduser().resolve()
         transfers = []
-        for source in expand_local_files(sources, source_root):
-            relative = Path(source).relative_to(source_root)
-            destination = destination_root / relative
-            await self.put_file(source, destination)
+        for source in paths:
+            destination = destination_root / Path(source).relative_to(source_root)
+            await transfer(source, destination)
             transfers.append((source, os.fspath(destination)))
         return tuple(transfers)
 
+    async def put_files(self, sources, source_root, destination_root):
+        paths = expand_local_files(sources, source_root)
+        return await self._transfer_files(paths, source_root, destination_root, self.put_file)
+
     async def get_files(self, sources, source_root, destination_root):
-        source_root = Path(source_root).expanduser().resolve()
-        destination_root = Path(destination_root).expanduser().resolve()
-        transfers = []
-        for source in await self.expand_files(sources, source_root):
-            relative = Path(source).relative_to(source_root)
-            destination = destination_root / relative
-            await self.get_file(source, destination)
-            transfers.append((source, os.fspath(destination)))
-        return tuple(transfers)
+        paths = await self.expand_files(sources, source_root)
+        return await self._transfer_files(paths, source_root, destination_root, self.get_file)
 
     async def read_file(self, path):
         loop = asyncio.get_running_loop()
