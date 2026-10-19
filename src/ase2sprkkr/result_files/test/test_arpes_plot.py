@@ -15,9 +15,11 @@ _EXAMPLE = Path(__file__).resolve().parents[1] / "examples" / "Mo2Se4_ARPES_ARPE
 
 
 def _artists(figure):
+    controller = getattr(figure, "_ase2sprkkr_slider_controller", None)
+    slider_axis = None if controller is None else controller.widget.ax
     return [
         axis for axis in figure.axes
-        if axis.lines or axis.collections
+        if axis is not slider_axis and (axis.lines or axis.collections)
     ]
 
 
