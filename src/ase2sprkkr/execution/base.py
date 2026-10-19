@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import codecs
+
 import asyncio
 import os
 import warnings
@@ -112,6 +114,7 @@ class OutputObservers:
         self._listeners = [] if listener is None else [listener]
         self._error_listeners = []
         self._lock = Lock()
+        self._decoders = {}
 
     def add(self, callback):
         with self._lock:
@@ -122,9 +125,24 @@ class OutputObservers:
             self._error_listeners.append(callback)
 
     def emit_bytes(self, data, kind):
-        """Decode a raw output chunk and dispatch it to text observers."""
-        if data:
-            self.emit(data.decode("utf8", errors="replace"), kind)
+        """Preserve UTF-8 code points split between binary chunks."""
+        with self._lock:
+            decoder = self._decoders.setdefault(
+                kind, codecs.getincrementaldecoder("utf8")(errors="replace")
+            )
+            text = decoder.decode(data)
+        if text:
+            self.emit(text, kind)
+
+    def finish_bytes(self):
+        """Flush unfinished UTF-8 code points at EOF."""
+        with self._lock:
+            pending = [(kind, decoder.decode(b"", final=True))
+                       for kind, decoder in self._decoders.items()]
+            self._decoders.clear()
+        for kind, text in pending:
+            if text:
+                self.emit(text, kind)
 
     def emit(self, text, kind):
         with self._lock:

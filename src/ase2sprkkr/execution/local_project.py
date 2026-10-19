@@ -220,6 +220,7 @@ class LocalProjectRunner:
                     self._failure_phase = self._failure_phase or FailurePhase.EXECUTION
                     self._state = RunState.FAILED
             finally:
+                self._output_observers.finish_bytes()
                 finish_monitor(self)
 
     def _start_monitor(self):

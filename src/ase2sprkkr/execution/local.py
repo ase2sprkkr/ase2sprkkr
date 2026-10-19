@@ -211,6 +211,7 @@ class LocalRunner:
         finally:
             if self._stop_task is not None:
                 await asyncio.gather(self._stop_task, return_exceptions=True)
+            self._output_observers.finish_bytes()
             close_output_files(self.spec.output_file, self.spec.error_file)
             self._process = None
             self._loop = None

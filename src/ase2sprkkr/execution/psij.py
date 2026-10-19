@@ -460,6 +460,7 @@ class PsijRunner:
             self._failure_phase = self._failure_phase or FailurePhase.EXECUTION
             self._failure_message = self._failure_message or str(exc)
         finally:
+            self._output_observers.finish_bytes()
             finish_monitor(self)
 
     def _start_monitor(self):
