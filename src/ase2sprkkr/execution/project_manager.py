@@ -26,7 +26,11 @@ class ExecutionManager(_ExecutionManager):
             self._project_id = current.id
             if store is None:
                 root = self.projects.directory.parent / "projects_runs"
-                store = RunStore(root)
+                store = RunStore(root, projects_directory=self.projects.directory)
+        if store is not None and self._project_id is not None:
+            if store.projects_directory is not None and store.projects_directory != self.projects.directory:
+                raise ValueError("RunStore belongs to another project repository")
+            store.projects_directory = self.projects.directory
         super().__init__(
             store, executor_pool=executor_pool,
             submitting_grace=submitting_grace,

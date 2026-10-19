@@ -42,3 +42,20 @@ def test_cross_project_active_conflict_and_project_deletion(tmp_path):
     a.complete(first_record, state=RunState.FAILED)
     projects.delete(first.id, expected_generation=first.generation)
     assert all(r.project_id != first.id for r in b.store.runs())
+
+
+def test_deleted_project_cannot_recreate_history_from_stale_runner(tmp_path):
+    projects = ProjectRepository(tmp_path / "projects")
+    root = projects.create("Root")
+    child = projects.create("Child", parent_id=root.id)
+    manager = ExecutionManager(project_repository=projects, project=child)
+    record = manager.new_record(task="DOS", directory=tmp_path / "work")
+    manager.store.save(record)
+    record = manager.complete(record, state=RunState.FAILED)
+
+    projects.delete(child.id, expected_generation=child.generation)
+    with pytest.raises(KeyError, match="no longer exists"):
+        manager.store.save(record)
+    with pytest.raises(KeyError, match="no longer exists"):
+        manager.transition(record, state=RunState.FINISHED)
+    assert manager.store.runs() == ()

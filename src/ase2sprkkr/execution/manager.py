@@ -205,11 +205,26 @@ def submission_conflicts(left: RunRecord, right: RunRecord) -> bool:
 class RunStore:
     """Project run history stored as date-sharded durable JSON files."""
 
-    def __init__(self, directory):
+    def __init__(self, directory, *, projects_directory=None):
         """A run store belongs to exactly one project directory."""
         self.directory = Path(directory).expanduser()
+        self.projects_directory = (
+            None if projects_directory is None else Path(projects_directory).expanduser()
+        )
         self._lock = RLock()
         self._warned_corrupt = set()
+
+    @contextmanager
+    def _project_guard(self, record):
+        """Serialize project-run writes against deletion, including late callbacks."""
+        if record.project_id is None or self.projects_directory is None:
+            yield
+            return
+        project_id = record.project_id
+        with FileLock(self.projects_directory / f".runs-{project_id}.lock"):
+            if not (self.projects_directory / f"{project_id}.json").is_file():
+                raise KeyError(f"Project {project_id} no longer exists")
+            yield
 
     @staticmethod
     def _bucket(created_at):
@@ -286,11 +301,11 @@ class RunStore:
             yield
 
     def save(self, record: RunRecord):
-        with self._lock:
+        with self._project_guard(record), self._lock:
             return self._write_unlocked(record)
 
     def update(self, record: RunRecord, updater):
-        with self._lock, FileLock(self._run_lock_path(record)):
+        with self._project_guard(record), self._lock, FileLock(self._run_lock_path(record)):
             path = self._path(record)
             latest = self._decode(path) if path.is_file() else record
             updated = updater(latest)
