@@ -391,3 +391,26 @@ def test_ssh_psij_cleanup_removes_declared_outputs_before_submit(tmp_path, monke
     }
     response = remote_service.submit_remote(request)
     assert response["remote_id"]
+
+
+
+def test_scheduler_request_protects_remote_cache_wildcards(tmp_path):
+    """PSI/J cleanup must see cache globs, not just locally staged cache files."""
+    request = {
+        "directory": str(tmp_path),
+        "argv": ["program"],
+        "input_file": "case.inp",
+        "input_files": ["case.inp"],
+        "output_file": "case.out",
+        "output_files": ["*.pot", "case.out"],
+        "cache_files": ["known-restart.pot"],
+        "client_sync": {
+            "cache_patterns": ["restart-*.pot"],
+            "cache_files": [{"path": "external-cache.pot", "before": None}],
+        },
+    }
+    spec = remote_service._request_spec(request)
+    assert "restart-*.pot" in spec.cache_files
+    assert "external-cache.pot" in spec.cache_files
+    assert "*.pot" in spec.output_files
+    assert "case.inp" in spec.input_files
