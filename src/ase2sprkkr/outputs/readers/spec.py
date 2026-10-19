@@ -6,12 +6,13 @@ import re
 import numpy as np
 from typing import Dict
 
-from ..task_result import TaskResult, KkrOutputReader
+from ..task_result import KkrOutputReader
+from .arpes import ArpesResult
 from .default import DefaultOutputParser
 from ...common.decorators import cached_property
 
 
-class SpecResult(TaskResult):
+class SpecResult(ArpesResult):
     """
     Class representing the results of a spectral function calculation.
     Provides access to the parsed data from spec.out files.
@@ -91,27 +92,32 @@ class SpecResult(TaskResult):
             self._basis_vectors[match.group(1)][int(match.group(2)) - 1] = [match.group(3), match.group(4)]
 
     def _parse_spectral_data(self) -> None:
-        """Parse the main spectral data table."""
-        content = self._get_file_content()
+        """Read numeric rows from native KKRSPEC .spc output, not stdout.
 
-        # Find the start of the data section (after the header)
-        header_end = re.search(r"stookes-vector\s+of the photonfield", content)
-        if not header_end:
-            self._spectral_data = np.array([])
-            return
-
-        data_start = header_end.end()
-        data_lines = content[data_start:].split("\n")
-
-        # Parse the data lines
+        BAND writes eigenvalue rows with a different column count from
+        photoemission and SPLEED; preserve all native numeric columns.
+        """
+        filenames = self.spc_filenames if hasattr(self, "_input_parameters") else ()
+        if not filenames:
+            # Preserve parsing older standalone SPEC text dumps.
+            content = self._get_file_content()
+            marker = re.search(r"stookes-vector\s+of the photonfield", content)
+            rows = content[marker.end():].splitlines() if marker else ()
+        else:
+            with open(filenames[0], encoding="utf-8") as file:
+                rows = file.readlines()
         data = []
-        for line in data_lines:
-            # Match lines with numbers in scientific notation
-            if re.match(r"^\s*[\d.E+-]+\s+[\d.E+-]+\s+[\d.E+-]+\s+[\d.E+-]+\s+[\d.E+-]+\s+[\d.E-]+$", line):
-                values = [float(x) for x in line.split()]
+        for line in rows:
+            if not line.strip() or line.lstrip().startswith("#"):
+                continue
+            try:
+                values = [float(item.replace("D", "E").replace("d", "e"))
+                          for item in line.split()]
+            except ValueError:
+                continue
+            if values and (not data or len(values) == len(data[0])):
                 data.append(values)
-
-        self._spectral_data = np.array(data) if data else np.array([])
+        self._spectral_data = np.asarray(data) if data else np.array([])
 
     def _get_file_content(self) -> str:
         """Get the content of the output file."""

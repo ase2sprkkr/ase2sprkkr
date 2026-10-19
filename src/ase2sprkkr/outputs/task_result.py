@@ -2,6 +2,8 @@
 
 import asyncio
 import os
+import pyparsing as pp
+from ..common.warnings import DataValidityError
 from ..common.decorators import cached_property, maybeclassmethod
 from ..common.file_utils import FilePath, filename_from_file
 from ..potentials.potentials import Potential
@@ -28,6 +30,7 @@ class TaskResult:
         task_name=None,
     ):
         self._input_parameters = input_parameters
+        self._detected_input_parameters = None
         self._calculator = calculator
         self._task_name = (
             str(task_name).strip().lower() if task_name is not None else None
@@ -68,8 +71,11 @@ class TaskResult:
     def task_name(self):
         if self._task_name is not None:
             return self._task_name
-        task = self.input_parameters.task_definition
-        return str(task.name).strip().lower() if task is not None else None
+        parameters = self.input_parameters
+        task = parameters.task_definition if parameters is not None else None
+        if task is None:
+            raise ValueError("Cannot determine the task of this result from its input")
+        return str(task.name).strip().lower()
 
     @cached_property
     def input_parameters(self):
@@ -78,6 +84,10 @@ class TaskResult:
         source = self.input_parameters_file
         if source is None:
             return None
+        if self._detected_input_parameters is not None:
+            return self._detected_input_parameters
+        # An explicitly registered input is authoritative: parsing errors
+        # here must remain visible to the caller.
         return input_parameters.InputParameters.from_file(source)
 
     def _candidate_input_files(self):
@@ -87,15 +97,19 @@ class TaskResult:
         directory = self.directory
         if not os.path.isdir(directory):
             return ()
-        candidates = glob.glob(os.path.join(directory, "*.inp"))
+        candidates = sorted(
+            {path for suffix in (".inp", ".in")
+             for path in glob.glob(os.path.join(directory, "*" + suffix))}
+        )
         # A paired input name is authoritative even if the directory contains
         # unrelated calculations.
         if self.output_file is not None:
             stem = os.path.splitext(os.path.basename(os.fspath(self.output_file)))[0]
-            paired = os.path.join(directory, stem + ".inp")
-            if paired in candidates:
-                return (paired,)
-        return tuple(sorted(candidates)) if len(candidates) == 1 else ()
+            for suffix in (".inp", ".in"):
+                paired = os.path.join(directory, stem + suffix)
+                if paired in candidates:
+                    return (paired,)
+        return tuple(candidates) if len(candidates) == 1 else ()
 
     @cached_property
     def input_parameters_file(self):
@@ -107,13 +121,15 @@ class TaskResult:
         for filename in self._candidate_input_files():
             try:
                 parameters = input_parameters.InputParameters.from_file(filename)
-            except (OSError, ValueError):
+            except (OSError, UnicodeError, ValueError, pp.ParseBaseException, DataValidityError):
                 continue
             if self._task_name is not None and parameters.task_name != self._task_name.upper():
                 continue
+            self._detected_input_parameters = parameters
             self.files.add_file("input", filename)
             return filename
         return None
+
     @cached_property
     def potential_filename(self):
         """New (output) potential file name"""

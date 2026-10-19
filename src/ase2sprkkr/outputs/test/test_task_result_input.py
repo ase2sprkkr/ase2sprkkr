@@ -81,3 +81,43 @@ def test_autodetect_is_not_ambiguous_or_cross_task(tmp_path):
         (tmp_path / name).write_text("invalid")
     result = TaskResult(None, None, str(tmp_path), task_name="ARPES")
     assert result.input_parameters is None
+
+def test_no_result_task_identity_raises_clear_error(tmp_path):
+    import pytest
+
+    result = TaskResult(None, None, str(tmp_path))
+    assert result.input_parameters is None
+    with pytest.raises(ValueError, match="Cannot determine the task"):
+        _ = result.task_name
+
+
+def test_historical_input_autodetect_accepts_in_suffix(tmp_path):
+    params = InputParameters.create("ARPES")
+    params.CONTROL.DATASET = "sample"
+    params.CONTROL.POTFIL = "sample.pot"
+    source = tmp_path / "sample_SPEC.in"
+    source.write_text(params.to_string(validate=False))
+    result = TaskResult(None, None, str(tmp_path), output_file="sample_SPEC.out", task_name="ARPES")
+    assert result.input_parameters_file == str(source)
+    assert result.input_parameters.task_name == "ARPES"
+
+
+def test_invalid_guessed_input_is_nonfatal_but_explicit_input_error_propagates(
+    tmp_path, monkeypatch
+):
+    import pytest
+
+    path = tmp_path / "legacy.inp"
+    path.write_text("invalid input")
+
+    def invalid_input(_cls, filename):
+        raise ValueError("invalid historical input")
+
+    monkeypatch.setattr(InputParameters, "from_file", classmethod(invalid_input))
+    guessed = TaskResult(None, None, str(tmp_path), task_name="SCF")
+    assert guessed.input_parameters is None
+    assert guessed.input_parameters_file is None
+
+    explicit = TaskResult(None, None, str(tmp_path), input_file=str(path))
+    with pytest.raises(ValueError, match="invalid historical input"):
+        _ = explicit.input_parameters

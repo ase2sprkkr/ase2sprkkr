@@ -17,13 +17,10 @@ def _single_polarization(parameters):
     if parameters.TASK.TASK() in ("BAND", "SPLEED"):
         return True
 
-    photons = parameters.SPEC_PH
-    polarization = photons.POL_P()
-    if polarization in ("P", "C+"):
-        return True
-    if polarization in ("S", "C-"):
-        return False
-    return str(photons.NPOL()) == "1"
+    # NPOL selects the actual number of native outputs; POL_P specifies
+    # the polarization orientation, not the number of calculated channels.
+    # NPOL=0 (unpolarized/dichroism) and NPOL=3 (dichroism) use two.
+    return str(parameters.SPEC_PH.NPOL()) not in ("0", "3")
 
 
 def data_spc(parameters):

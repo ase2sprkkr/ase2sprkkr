@@ -103,15 +103,28 @@ def test_spec_outputs_follow_polarization_and_task(tmp_path):
     for task in ("ARPES", "AIPES", "CLPES"):
         parameters = InputParameters.create(task)
         parameters.CONTROL.DATASET = "Fe"
-        assert parameters.output_files(str(tmp_path)) == (
-            str(tmp_path / "Fe_SPEC.out"), str(tmp_path / "Fe_data.spc"),
-        )
-        parameters.SPEC_PH.POL_P = "S"
-        assert parameters.output_files(str(tmp_path)) == (
+        outputs = (
             str(tmp_path / "Fe_SPEC.out"),
-            str(tmp_path / "Fe_data_pol1.spc"),
-            str(tmp_path / "Fe_data_pol2.spc"),
+            str(tmp_path / "Fe_data.spc"),
         )
+        if task == "CLPES":
+            outputs += (str(tmp_path / "Fe_corewf"),)
+        assert parameters.output_files(str(tmp_path)) == outputs
+
+        # Selecting S polarization does not itself enable two output channels.
+        parameters.SPEC_PH.POL_P = "S"
+        assert parameters.output_files(str(tmp_path)) == outputs
+
+        if task != "CLPES":
+            for npol in (0, 3):
+                parameters.SPEC_PH.NPOL = npol
+                output_files = parameters.output_files(str(tmp_path))
+                expected = (
+                    str(tmp_path / "Fe_SPEC.out"),
+                    str(tmp_path / "Fe_data_pol1.spc"),
+                    str(tmp_path / "Fe_data_pol2.spc"),
+                )
+                assert output_files == expected
 
     for task in ("BAND", "SPLEED"):
         parameters = InputParameters.create(task)
@@ -119,6 +132,7 @@ def test_spec_outputs_follow_polarization_and_task(tmp_path):
         assert parameters.output_files(str(tmp_path)) == (
             str(tmp_path / "Fe_SPEC.out"), str(tmp_path / "Fe_data.spc"),
         )
+
 
 def test_scf_invalid_grid_and_mixing_are_rejected():
     import pytest
