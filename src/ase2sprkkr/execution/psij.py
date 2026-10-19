@@ -708,8 +708,8 @@ class PsijExecutor(Executor):
         if run.execution.endpoint != endpoint_for_executor(self):
             raise ValueError("Run does not belong to this PSI/J endpoint")
         backend_id = run.execution.backend_id
-        if not backend_id or (run.files.stdout is None and run.files.stderr is None):
-            raise ValueError("PSI/J run lacks backend ID or recorded output streams")
+        if not backend_id:
+            raise ValueError("PSI/J run lacks backend ID")
         job = self.attach_native_job(backend_id)
         spec = ExecutionSpec(
             argv=(),
