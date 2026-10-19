@@ -507,7 +507,9 @@ def test_psij_local_slurm_explicit_wait_uses_native_job_wait(monkeypatch):
         Job=Job, JobState=SimpleNamespace(QUEUED="QUEUED")
     )
     executor._job_executor = Backend()
-    states = [RunState.UNKNOWN, RunState.RUNNING]
+    # First immediate probe is UNKNOWN; a second UNKNOWN triggers a native
+    # wait and the final probe observes the job's newly reported state.
+    states = [RunState.UNKNOWN, RunState.UNKNOWN, RunState.RUNNING]
     monkeypatch.setattr(executor, "status_native",
                         lambda native_id: psij_backend.RunStatus(
                             states.pop(0), backend_id=native_id

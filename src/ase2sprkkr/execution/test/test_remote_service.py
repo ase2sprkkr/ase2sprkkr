@@ -158,41 +158,64 @@ def test_psij_cancellation_does_not_invent_terminal_state(monkeypatch, tmp_path)
     assert calls == ["42", "cancel"]
 
 
-def test_follow_does_not_interpret_unknown_as_terminal(tmp_path, monkeypatch):
+def _stub_terminal_psij_job(monkeypatch, state, return_code, observed):
+    from types import SimpleNamespace
+
+    class Job:
+        status = SimpleNamespace(
+            state=SimpleNamespace(name=state),
+            exit_code=return_code,
+            message=None,
+        )
+
+        def wait(self):
+            observed.append("wait")
+            return self.status
+
+    class Backend:
+        _psij = SimpleNamespace(Job=Job)
+        _job_executor = SimpleNamespace(
+            attach=lambda job, native_id: observed.append(("attach", native_id)),
+        )
+
+    monkeypatch.setattr(remote_service, "_psij_executor", lambda _: Backend())
+
+
+def test_follow_waits_for_psij_terminal_without_repeated_status_probes(tmp_path, monkeypatch):
     _, remote_id = _psij_handle(tmp_path)
-    states = iter((
-        RunState.UNKNOWN.value, RunState.UNKNOWN.value,
-        RunState.FINISHED.value,
-    ))
-    seen = []
+    observed = []
+    _stub_terminal_psij_job(monkeypatch, "COMPLETED", 0, observed)
+    checks = []
+
     def status(_remote_id):
-        seen.append(_remote_id)
-        return {"state": next(states)}
+        checks.append(_remote_id)
+        return {"state": RunState.FINISHED.value, "return_code": 0}
+
     monkeypatch.setattr(remote_service, "status_remote", status)
-    outcome = remote_service.follow_remote(
-        remote_id, io.BytesIO(), io.BytesIO(), poll_interval=0.001,
-    )
+    outcome = remote_service.follow_remote(remote_id, io.BytesIO(), io.BytesIO())
+
     assert outcome["state"] == RunState.FINISHED.value
-    assert seen == [remote_id] * 3
+    assert observed == [("attach", "42"), "wait"]
+    assert checks == [remote_id]
 
 
-def test_follow_transient_unknown_resolves_before_terminal_state(tmp_path, monkeypatch):
+def test_follow_uses_native_terminal_when_status_query_is_transient_unknown(tmp_path, monkeypatch):
     _, remote_id = _psij_handle(tmp_path)
-    states = iter((
-        RunState.UNKNOWN.value, RunState.RUNNING.value,
-        RunState.FINISHED.value,
-    ))
-    seen = []
-    def status(_id):
-        seen.append(_id)
-        return {"state": next(states)}
+    observed = []
+    _stub_terminal_psij_job(monkeypatch, "FAILED", 7, observed)
+    checks = []
+    def status(_remote_id):
+        checks.append(_remote_id)
+        return {"state": RunState.UNKNOWN.value}
+
     monkeypatch.setattr(remote_service, "status_remote", status)
-    monkeypatch.setattr(remote_service.time, "sleep", lambda _: None)
-    outcome = remote_service.follow_remote(
-        remote_id, io.BytesIO(), io.BytesIO(), poll_interval=0,
-    )
-    assert outcome["state"] == RunState.FINISHED.value
-    assert seen == [remote_id] * 3
+    outcome = remote_service.follow_remote(remote_id, io.BytesIO(), io.BytesIO())
+
+    assert outcome["state"] == RunState.FAILED.value
+    assert outcome["return_code"] == 7
+    assert outcome["failure_phase"] == FailurePhase.EXECUTION.value
+    assert observed == [("attach", "42"), "wait"]
+    assert checks == [remote_id]
 
 
 def test_supervisor_writes_mailbox_receipt(monkeypatch):
@@ -368,13 +391,21 @@ def test_ssh_psij_cleanup_removes_declared_outputs_before_submit(tmp_path, monke
     output.write_bytes(b"stale")
     kept.write_bytes(b"restart")
 
-    class Runner:
+    from ase2sprkkr.execution.psij import PsijRunner
+
+    class Runner(PsijRunner):
+        def __init__(self, spec):
+            self.spec = spec
+            self._stdout_path = None
+            self._stderr_path = None
+
         backend_id = "native-123"
         state = RunState.RUNNING
         return_code = None
         failure_phase = None
         result = type("Result", (), {"output_file": None, "error_file": None})()
         def submit(self):
+            self._prepare_io()
             assert not output.exists()
             assert kept.read_bytes() == b"restart"
 
@@ -382,7 +413,7 @@ def test_ssh_psij_cleanup_removes_declared_outputs_before_submit(tmp_path, monke
         backend = "slurm"
         url = None
         def create_project_run(self, spec, *, run_id):
-            return Runner()
+            return Runner(spec)
     monkeypatch.setattr(remote_service, "_psij_executor", lambda options: Backend())
     request = {
         "id": "d" * 32, "executor": "psij", "directory": str(tmp_path),
