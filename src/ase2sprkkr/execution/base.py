@@ -21,7 +21,8 @@ def file_path(value, directory=None, *, flush=False, required=False):
         return None
     if flush and hasattr(value, "flush"):
         value.flush()
-    value = getattr(value, "name", value)
+    if not isinstance(value, (str, bytes, os.PathLike)):
+        value = getattr(value, "name", value)
     if isinstance(value, int):
         if required:
             raise ValueError("A named file or path is required")
