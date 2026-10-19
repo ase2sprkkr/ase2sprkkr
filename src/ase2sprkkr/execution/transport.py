@@ -5,7 +5,6 @@ from __future__ import annotations
 import asyncio
 import fnmatch
 import glob
-import hashlib
 import os
 import posixpath
 import shlex
@@ -13,6 +12,8 @@ import shutil
 import subprocess
 from functools import lru_cache
 from pathlib import Path, PurePosixPath
+
+from ..common.file_versions import file_digest
 from typing import Optional, Protocol
 from uuid import uuid4
 
@@ -192,17 +193,6 @@ class Transport:
         raise NotImplementedError
 
 
-def local_file_digest(path):
-    """Return the SHA-256 digest of a local file, or ``None`` if absent."""
-    digest = hashlib.sha256()
-    try:
-        with open(path, "rb") as file:
-            for chunk in iter(lambda: file.read(1024 * 1024), b""):
-                digest.update(chunk)
-    except FileNotFoundError:
-        return None
-    return digest.hexdigest()
-
 
 def local_file_signature(path):
     """Return ``(size, mtime_ns)`` for a local file, or ``None`` if absent."""
@@ -224,7 +214,6 @@ def _parse_remote_file_signature(raw):
 
 
 # Kept temporarily for code using the helper inside the execution package.
-_sha256_file = local_file_digest
 
 
 async def _completed_process(process, argv, input=None, check=True):
@@ -318,7 +307,7 @@ class LocalTransport(Transport):
 
     async def file_digest(self, path):
         loop = asyncio.get_running_loop()
-        return await loop.run_in_executor(None, local_file_digest, path)
+        return await asyncio.to_thread(file_digest, path, missing_ok=True)
 
     async def file_signature(self, path):
         loop = asyncio.get_running_loop()
