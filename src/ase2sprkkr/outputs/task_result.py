@@ -73,7 +73,7 @@ class TaskResult:
 
     @cached_property
     def input_parameters(self):
-        if self._input_parameters:
+        if self._input_parameters is not None:
             return self._input_parameters
         if self.input_parameters_file:
             return input_parameters.InputParameters.from_file(self.input_parameters_file)
