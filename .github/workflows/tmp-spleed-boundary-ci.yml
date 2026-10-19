@@ -1,0 +1,23 @@
+name: SPLEED boundary regression
+on:
+  push:
+    branches: [tmp-spleed-boundary-ci]
+permissions:
+  contents: read
+jobs:
+  targeted:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - run: ./install_dependencies.sh
+      - name: Verify existing and new spectral parsers
+        run: |
+          DO_NOT_RUN_SPRKKR=1 python -m pytest -q \
+            src/ase2sprkkr/outputs/test/test_spec_parser.py \
+            src/ase2sprkkr/outputs/test/test_spleed_intensity.py \
+            src/ase2sprkkr/result_files/test/test_native_spc_registry.py \
+            src/ase2sprkkr/result_files/test/test_definition_registry.py
