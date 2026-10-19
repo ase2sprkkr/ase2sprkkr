@@ -17,7 +17,8 @@ from .base import (
     RunState,
     dispatch_cancellation,
 )
-from .transport import expand_local_files, has_file_magic, local_file_digest
+from ..common.file_versions import file_digest
+from .transport import expand_local_files, has_file_magic
 
 
 class FileSyncPolicy(str, Enum):
@@ -278,7 +279,7 @@ class RemoteRunner:
             used[target] = source
             return target
 
-        local_digest = local_file_digest(source)
+        local_digest = file_digest(source, missing_ok=True)
         remote_digest = await self.executor.transport.file_digest(target)
         transfer = False
 
@@ -495,7 +496,7 @@ class RemoteRunner:
         if policy == FileSyncPolicy.ALWAYS:
             await self.executor.transport.get_file(remote, local)
             return True
-        local_digest = local_file_digest(local)
+        local_digest = file_digest(local, missing_ok=True)
         if policy == FileSyncPolicy.MISSING:
             if local_digest is None:
                 await self.executor.transport.get_file(remote, local)
@@ -516,7 +517,7 @@ class RemoteRunner:
                 after is None or after == before
                 or (
                     self.executor.output_files == FileSyncPolicy.MISSING
-                    and local_file_digest(local) is not None
+                    and file_digest(local, missing_ok=True) is not None
                 )
             ):
                 state = "skipped"

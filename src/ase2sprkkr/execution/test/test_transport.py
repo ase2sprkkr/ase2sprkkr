@@ -1,10 +1,13 @@
 """Tests for command/file transports."""
 
 import asyncio
+import hashlib
+import pytest
 import os
 import sys
 
 from ..transport import LocalTransport, SshTransport
+from ...common.file_versions import FileVersion, file_digest
 
 
 def test_local_transport_run_start_and_files(tmp_path):
@@ -111,3 +114,22 @@ def test_ssh_transport_quotes_remote_command():
         "cluster",
         "cd '/tmp/a b' && exec printf %s 'a b'",
     ]
+
+def test_transport_and_file_version_use_identical_digest(tmp_path):
+    source = tmp_path / "large.bin"
+    payload = b"one" * (400_000) + b"two"
+    source.write_bytes(payload)
+    expected = hashlib.sha256(payload).hexdigest()
+
+    assert file_digest(source) == expected
+    assert file_digest(source, missing_ok=True) == expected
+    assert FileVersion.capture(source, require_digest=True).digest == expected
+    assert asyncio.run(LocalTransport().file_digest(source)) == expected
+
+
+def test_transport_missing_file_is_optional_but_provenance_digest_is_strict(tmp_path):
+    missing = tmp_path / "missing"
+    assert file_digest(missing, missing_ok=True) is None
+    assert asyncio.run(LocalTransport().file_digest(missing)) is None
+    with pytest.raises(FileNotFoundError):
+        file_digest(missing)
