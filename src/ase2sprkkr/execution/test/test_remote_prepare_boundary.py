@@ -6,6 +6,8 @@ from ase2sprkkr.execution import (
     LaunchSpec, RemoteEndpointExecutor, RunState, RunStore, LocalTransport,
 )
 
+from ase2sprkkr.execution.manager import ExecutionManager
+
 
 def test_prepared_manifest_is_durable_before_remote_backend_submit(tmp_path, monkeypatch):
     executor = RemoteEndpointExecutor(LocalTransport())

@@ -5,13 +5,14 @@ import pytest
 
 from ase2sprkkr.execution import (
     DuplicateSubmissionError,
-    ExecutionManager,
     Executor,
     ExecutorPool,
     RunState,
     RunStatus,
     RunStore,
 )
+
+from ase2sprkkr.execution.manager import ExecutionManager
 
 
 class _Runner:

@@ -5,7 +5,6 @@ import pytest
 
 from ase2sprkkr.execution import (
     DuplicateSubmissionError,
-    ExecutionManager,
     ExecutionOutcome,
     Executor,
     ExecutorPool,
@@ -14,6 +13,8 @@ from ase2sprkkr.execution import (
     RunStatus,
     RunStore,
 )
+
+from ase2sprkkr.execution.manager import ExecutionManager
 
 
 class _RawRunner:
