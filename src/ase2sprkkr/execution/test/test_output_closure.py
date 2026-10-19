@@ -1,0 +1,84 @@
+"""Output handle lifecycle shared by local, persistent and remote runners."""
+
+import asyncio
+from types import SimpleNamespace
+
+import pytest
+
+from ase2sprkkr.execution.base import ExecutionSpec, RunState, close_output_files
+from ase2sprkkr.execution.local import LocalRunner
+from ase2sprkkr.execution.local_project import LocalProjectRunner
+from ase2sprkkr.execution.remote import RemoteRunner
+
+
+class _TrackedOutput:
+    def __init__(self, name=None):
+        self.name = name
+        self.close_calls = 0
+
+    def close(self):
+        self.close_calls += 1
+
+    def flush(self):
+        pass
+
+
+@pytest.mark.parametrize(
+    "runner_class, method_name",
+    [
+        (LocalRunner, "_close_output_files"),
+        (LocalProjectRunner, "_close_owned_files"),
+    ],
+)
+@pytest.mark.parametrize("merged", (False, True))
+def test_local_runners_close_unique_output_handles(runner_class, method_name, merged):
+    stdout = _TrackedOutput()
+    stderr = stdout if merged else _TrackedOutput()
+    runner = object.__new__(runner_class)
+    runner.spec = SimpleNamespace(output_file=stdout, error_file=stderr)
+
+    getattr(runner, method_name)()
+
+    assert stdout.close_calls == 1
+    assert stderr.close_calls == 1
+
+
+def test_close_output_files_skips_missing_and_path_declarations():
+    first, second = _TrackedOutput(), _TrackedOutput()
+    close_output_files(None, "out.txt", first, first, second)
+    assert (first.close_calls, second.close_calls) == (1, 1)
+
+
+def test_close_error_does_not_change_previous_failure_behavior():
+    class Faulty:
+        def close(self):
+            raise OSError("cannot close output")
+
+    other = _TrackedOutput()
+    with pytest.raises(OSError, match="cannot close output"):
+        close_output_files(Faulty(), other)
+    assert other.close_calls == 0
+
+
+def test_remote_monitor_closes_merged_output_once_after_follow_failure(tmp_path):
+    output_path = tmp_path / "output.out"
+    output_path.touch()
+    output = _TrackedOutput(str(output_path))
+
+    class UnreachableEndpoint:
+        async def _follow(self, directory, backend_id, files, *, offsets):
+            assert backend_id == "job-1"
+            raise ConnectionError("remote follow interrupted")
+
+    spec = ExecutionSpec(
+        argv=("true",), directory=str(tmp_path),
+        input_file=None, output_file=output, error_file=output,
+    )
+    runner = RemoteRunner(
+        UnreachableEndpoint(), spec,
+        backend_id="job-1", remote_directory="/remote/case",
+    )
+    asyncio.run(runner._monitor())
+
+    assert runner.state == RunState.UNKNOWN
+    assert output.close_calls == 1

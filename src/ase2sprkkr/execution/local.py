@@ -12,6 +12,7 @@ from .base import (
     Executor,
     FailurePhase,
     OutputObservers,
+    close_output_files,
     file_path,
     finish_monitor,
     wait_for_monitor,
@@ -133,13 +134,7 @@ class LocalRunner:
             pass
 
     def _close_output_files(self):
-        closed = set()
-        for file in (self.spec.output_file, self.spec.error_file):
-            if file is None or id(file) in closed:
-                continue
-            closed.add(id(file))
-            if hasattr(file, "close"):
-                file.close()
+        close_output_files(self.spec.output_file, self.spec.error_file)
 
     async def _execute(self):
         self._loop = asyncio.get_running_loop()

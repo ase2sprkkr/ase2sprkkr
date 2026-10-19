@@ -13,7 +13,7 @@ from threading import Event, Lock, Thread
 from .base import (
     ExecutionOutcome, ExecutionSpec, FailurePhase, OutputObservers,
     RunState, RunStatus, dispatch_cancellation,
-    finish_monitor, wait_for_monitor, file_path,
+    close_output_files, finish_monitor, wait_for_monitor, file_path,
 )
 from .file_availability import discover_local_files
 from .remote_service import (
@@ -194,13 +194,7 @@ class LocalProjectRunner:
         return self.result
 
     def _close_owned_files(self):
-        seen = set()
-        for value in (self.spec.output_file, self.spec.error_file):
-            if value is None or id(value) in seen:
-                continue
-            seen.add(id(value))
-            if hasattr(value, "close"):
-                value.close()
+        close_output_files(self.spec.output_file, self.spec.error_file)
 
     def _thread_main(self):
         try:

@@ -37,6 +37,22 @@ def file_path(value, directory=None, *, flush=False, required=False):
     return os.path.abspath(path)
 
 
+def close_output_files(*files):
+    """Close each distinct output handle once, including merged stdout/stderr.
+
+    Path declarations and absent streams do not own a closeable handle.
+    Propagate the first close error, as each runner did before.
+    """
+    seen = set()
+    for file in files:
+        if file is None or id(file) in seen:
+            continue
+        seen.add(id(file))
+        close = getattr(file, "close", None)
+        if close is not None:
+            close()
+
+
 def dispatch_cancellation(action):
     """Run a blocking backend cancellation off the calling/GUI thread.
 
