@@ -410,6 +410,46 @@ class RemoteRunner:
             local, "available" if available else "skipped",
         )
 
+    async def _sync_patterns(self, patterns, *, kind, required=False,
+                             excluded_remote=(), excluded_local=()):
+        """Expand declarations once; the entry handlers own transfer policy."""
+        remote_root = await self.executor._resolved_remote_root()
+        selected = set(excluded_remote)
+        excluded_local = set(excluded_local)
+        for pattern in patterns:
+            local_pattern = os.fspath(await self.executor.unmap_path(pattern))
+            try:
+                matches = await self.executor.transport.expand_files(pattern, remote_root)
+                if not matches:
+                    if required:
+                        raise FileNotFoundError(
+                            f"Declared remote {kind} pattern did not match any files: {pattern}"
+                        )
+                    self._set_file_availability(local_pattern, "skipped", kind=kind)
+                    continue
+                for remote in matches:
+                    if remote in selected:
+                        continue
+                    selected.add(remote)
+                    local = os.fspath(await self.executor.unmap_path(remote))
+                    if local in excluded_local:
+                        continue
+                    if kind == "cache":
+                        await self._sync_cache_entry(
+                            local, remote, self._cache_before.get(remote),
+                            source_pattern=local_pattern,
+                        )
+                    else:
+                        await self._sync_output_entry(
+                            local, remote, required, source_pattern=local_pattern,
+                        )
+                self._set_file_availability(local_pattern, "available", kind=kind)
+            except Exception as exc:
+                self._set_file_availability(
+                    local_pattern, "failed", str(exc), kind=kind,
+                )
+                raise
+
     async def _sync_output_files(self, required):
         policy = self.executor.output_files
         if policy == FileSyncPolicy.NEVER:
@@ -428,45 +468,18 @@ class RemoteRunner:
         for local, remote in self._output_targets.items():
             await self._sync_output_entry(local, remote, required)
 
-        if not self._output_patterns:
-            return
-
-        remote_root = await self.executor._resolved_remote_root()
-        primary = {
-            path
-            for path in (self.result.output_file, self.result.error_file)
-            if path is not None
-        }
-        selected = set()
-        for pattern in self._output_patterns:
-            local_pattern = os.fspath(await self.executor.unmap_path(pattern))
-            try:
-                matches = await self.executor.transport.expand_files(pattern, remote_root)
-                if not matches:
-                    if required:
-                        raise FileNotFoundError(
-                            f"Declared remote output pattern did not match any files: {pattern}"
-                        )
-                    self._set_file_availability(local_pattern, "skipped")
-                    continue
-
-                for remote in matches:
-                    if remote in selected:
-                        continue
-                    selected.add(remote)
-                    local = os.fspath(await self.executor.unmap_path(remote))
-                    if local in primary:
-                        # Primary streams are written incrementally by follow.
-                        continue
-                    await self._sync_output_entry(
-                        local, remote, required, source_pattern=local_pattern,
-                    )
-
-                # The declaration becomes available only after every match.
-                self._set_file_availability(local_pattern, "available")
-            except Exception as exc:
-                self._set_file_availability(local_pattern, "failed", str(exc))
-                raise
+        if self._output_patterns:
+            primary = {
+                path for path in (self.result.output_file, self.result.error_file)
+                if path is not None
+            }
+            await self._sync_patterns(
+                self._output_patterns,
+                kind="output",
+                required=required,
+                excluded_remote=self._output_targets.values(),
+                excluded_local=primary,
+            )
 
     async def _sync_one_output(self, local, remote, required):
         policy = self.executor.output_files
@@ -520,38 +533,12 @@ class RemoteRunner:
         for local, (remote, before) in self._cache_targets.items():
             await self._sync_cache_entry(local, remote, before)
 
-        if not self._cache_patterns:
-            return
-
-        remote_root = await self.executor._resolved_remote_root()
-        selected = set()
-        exact = {remote for remote, _ in self._cache_targets.values()}
-        for pattern in self._cache_patterns:
-            local_pattern = os.fspath(await self.executor.unmap_path(pattern))
-            try:
-                matches = await self.executor.transport.expand_files(pattern, remote_root)
-                if not matches:
-                    self._set_file_availability(
-                        local_pattern, "skipped", kind="cache",
-                    )
-                    continue
-                for remote in matches:
-                    if remote in selected or remote in exact:
-                        continue
-                    selected.add(remote)
-                    local = os.fspath(await self.executor.unmap_path(remote))
-                    await self._sync_cache_entry(
-                        local, remote, self._cache_before.get(remote),
-                        source_pattern=local_pattern,
-                    )
-                self._set_file_availability(
-                    local_pattern, "available", kind="cache",
-                )
-            except Exception as exc:
-                self._set_file_availability(
-                    local_pattern, "failed", str(exc), kind="cache",
-                )
-                raise
+        if self._cache_patterns:
+            await self._sync_patterns(
+                self._cache_patterns,
+                kind="cache",
+                excluded_remote=(remote for remote, _ in self._cache_targets.values()),
+            )
 
     def _remote_argv(self, argv, staged):
         directory = os.path.abspath(self.spec.directory)
