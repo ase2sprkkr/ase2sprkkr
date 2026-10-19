@@ -146,3 +146,15 @@ def test_changing_between_jxc_and_dmi_switches_defaults():
     assert params.requested_task_name == "JXC"
     assert params.task_name == "JXC"
     assert params.TASK.JXC() and not params.TASK.DMI()
+
+
+def test_preparse_accepts_unknown_bracketed_string_set(tmp_path):
+    from ..input_parameters import InputParameters
+
+    params = InputParameters.create("JXC")
+    params.CONTROL.POTFIL = "Fe.pot"
+    params.TASK.SELECT = ["Fe", "Co"]
+    path = tmp_path / "selected.in"
+    params.save_to_file(path, atoms=False)
+    parsed = InputParameters.from_file(path)
+    assert parsed.TASK.SELECT().tolist() == ["Fe", "Co"]

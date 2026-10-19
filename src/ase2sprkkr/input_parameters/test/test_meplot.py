@@ -38,7 +38,8 @@ def test_defaults_discovery_and_round_trip(tmp_path):
     path = tmp_path / "meplot.in"
     p.save_to_file(path, atoms=False)
     parsed = InputParameters.from_file(path)
-    assert parsed.task_name == "meplot"
+    assert parsed.task_name == "MEPLOT"
+    assert parsed.task_definition is InputParameters.task_registry["MEPLOT"]
     assert parsed.to_dict() == p.to_dict()
     for copy in (p.copy(copy_values=True), pickle.loads(pickle.dumps(p))):
         assert copy.to_dict() == p.to_dict()

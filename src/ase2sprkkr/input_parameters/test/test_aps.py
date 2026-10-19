@@ -39,7 +39,8 @@ def test_invalid_shell():
 
 def test_unsupported_sixth_shell():
     p = parameters()
-    with pytest.raises(ValueError):
+    # A forbidden shell is rejected at assignment, before save-time validation.
+    with pytest.raises(DataValidityError, match="TASK.CL"):
         p.TASK.CL = "6S"
 
 

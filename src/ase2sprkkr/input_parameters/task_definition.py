@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 import os
-from typing import Iterable, Optional, Tuple, Union
+from typing import Callable, Iterable, Optional, Tuple, Union
 
 from ..common.doc import process_input_parameters_definition
 from ..common.module_registry import (
@@ -14,7 +14,8 @@ from ..common.module_registry import (
 )
 
 
-_FileTemplate = Union[str, os.PathLike[str]]
+_FilePath = Union[str, os.PathLike[str]]
+_FileTemplate = Union[_FilePath, Callable[[object], Optional[_FilePath]]]
 
 
 def _normalize_identifier(value: str, field: str) -> str:
@@ -36,7 +37,7 @@ def _validate_executable(value: str) -> str:
 
 def _normalize_file_templates(
     templates: Iterable[_FileTemplate], field: str
-) -> Tuple[str, ...]:
+) -> Tuple[_FileTemplate, ...]:
     if isinstance(templates, (str, bytes, os.PathLike)):
         raise TypeError(
             f"{field} must be an iterable of path-like strings, not a single path"
@@ -50,11 +51,14 @@ def _normalize_file_templates(
 
     normalized = []
     for index, item in enumerate(iterator):
+        if callable(item):
+            normalized.append(item)
+            continue
         try:
             path = os.fspath(item)
         except TypeError:
             raise TypeError(
-                f"{field}[{index}] must be a string or os.PathLike, "
+                f"{field}[{index}] must be a path or callback, "
                 f"got {type(item).__name__}"
             ) from None
         if not isinstance(path, str):
@@ -79,9 +83,9 @@ class TaskDefinition:
     executable: str
     mpi: bool
     output_reader_name: Optional[str]
-    input_file_templates: Tuple[str, ...]
-    output_file_templates: Tuple[str, ...]
-    cache_file_templates: Tuple[str, ...]
+    input_file_templates: Tuple[_FileTemplate, ...]
+    output_file_templates: Tuple[_FileTemplate, ...]
+    cache_file_templates: Tuple[_FileTemplate, ...]
 
     def __init__(
         self,
@@ -322,14 +326,20 @@ class InputParametersRegistry(ModuleRegistry):
 
     @staticmethod
     def _resolve_file_templates(parameters, directory, templates):
+        """Resolve static paths or parameter callbacks; None omits a file."""
         dataset = parameters.CONTROL.DATASET()
-        return tuple(
-            path if os.path.isabs(path) else os.path.join(directory, path)
-            for path in (
-                os.fspath(template).format(dataset=dataset)
-                for template in templates
-            )
-        )
+        files = []
+        for template in templates:
+            value = template(parameters) if callable(template) else template
+            if value is None:
+                continue
+            path = os.fspath(value)
+            if not isinstance(path, str):
+                raise TypeError("File callback must return a path or None")
+            path = path.format(dataset=dataset)
+            files.append(path if os.path.isabs(path)
+                         else os.path.join(directory, path))
+        return tuple(files)
 
     def files_for_task(self, task, parameters, directory, kind):
         """Combine declarative task templates with schema-specific file rules."""

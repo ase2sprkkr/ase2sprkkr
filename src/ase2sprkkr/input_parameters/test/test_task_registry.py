@@ -387,3 +387,28 @@ def test_create_from_dmi_result_keeps_dmi_defaults():
     assert params.requested_task_name == "DMI"
     assert params.TASK.DMI() and not params.TASK.JXC()
     assert params.ENERGY.EMIN() == -0.35
+
+
+def _optional_task_file(parameters):
+    return "{dataset}.optional" if parameters.CONTROL.PRINT() else None
+
+
+def test_file_template_callbacks_skip_none_and_support_pickle(tmp_path):
+    parameters = InputParameters.create("ARPES")
+    parameters.CONTROL.DATASET = "Fe"
+    parameters.CONTROL.PRINT = 0
+    task = TaskDefinition(
+        "ARPES", name="FILE_CALLBACK_TEST",
+        input_file_templates=("{dataset}.required", _optional_task_file),
+    )
+    registry = InputParameters.input_parameters_registry
+    assert registry.files_for_task(task, parameters, str(tmp_path), "input") == (
+        str(tmp_path / "Fe.required"),
+    )
+    parameters.CONTROL.PRINT = 1
+    assert registry.files_for_task(task, parameters, str(tmp_path), "input") == (
+        str(tmp_path / "Fe.required"), str(tmp_path / "Fe.optional"),
+    )
+    restored = pickle.loads(pickle.dumps(task))
+    assert restored == task
+    assert restored.input_file_templates[1] is _optional_task_file
