@@ -133,9 +133,6 @@ class LocalRunner:
         except RuntimeError:
             pass
 
-    def _close_output_files(self):
-        close_output_files(self.spec.output_file, self.spec.error_file)
-
     async def _execute(self):
         self._loop = asyncio.get_running_loop()
         if self._cancel_requested.is_set():
@@ -219,7 +216,7 @@ class LocalRunner:
         finally:
             if self._stop_task is not None:
                 await asyncio.gather(self._stop_task, return_exceptions=True)
-            self._close_output_files()
+            close_output_files(self.spec.output_file, self.spec.error_file)
             self._process = None
             self._loop = None
 

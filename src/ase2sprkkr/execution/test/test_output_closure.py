@@ -1,7 +1,6 @@
 """Output handle lifecycle shared by local, persistent and remote runners."""
 
 import asyncio
-from types import SimpleNamespace
 
 import pytest
 
@@ -23,21 +22,31 @@ class _TrackedOutput:
         pass
 
 
-@pytest.mark.parametrize(
-    "runner_class, method_name",
-    [
-        (LocalRunner, "_close_output_files"),
-        (LocalProjectRunner, "_close_owned_files"),
-    ],
-)
+@pytest.mark.parametrize("backend", ("local", "local_project"))
 @pytest.mark.parametrize("merged", (False, True))
-def test_local_runners_close_unique_output_handles(runner_class, method_name, merged):
-    stdout = _TrackedOutput()
-    stderr = stdout if merged else _TrackedOutput()
-    runner = object.__new__(runner_class)
-    runner.spec = SimpleNamespace(output_file=stdout, error_file=stderr)
+def test_local_runners_close_unique_output_handles(monkeypatch, tmp_path, backend, merged):
+    stdout = _TrackedOutput(str(tmp_path / "stdout.out"))
+    stderr = stdout if merged else _TrackedOutput(str(tmp_path / "stderr.err"))
+    spec = ExecutionSpec(
+        argv=("true",), directory=str(tmp_path),
+        input_file=None, output_file=stdout, error_file=stderr,
+    )
 
-    getattr(runner, method_name)()
+    if backend == "local":
+        async def fail_to_launch(_spec):
+            raise RuntimeError("launch failed")
+
+        monkeypatch.setattr("ase2sprkkr.execution.local.start_local_process", fail_to_launch)
+        runner = LocalRunner(spec)
+        with pytest.raises(RuntimeError, match="launch failed"):
+            asyncio.run(runner._execute())
+        assert runner.state == RunState.FAILED
+    else:
+        runner = LocalProjectRunner(None, spec)
+        monkeypatch.setattr(runner, "_monitor", lambda: None)
+        runner._thread_main()
+        assert runner._done.is_set()
+        assert runner.exception is None
 
     assert stdout.close_calls == 1
     assert stderr.close_calls == 1

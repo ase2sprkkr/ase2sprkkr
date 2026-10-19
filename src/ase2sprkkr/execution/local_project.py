@@ -193,9 +193,6 @@ class LocalProjectRunner:
         self._refresh()
         return self.result
 
-    def _close_owned_files(self):
-        close_output_files(self.spec.output_file, self.spec.error_file)
-
     def _thread_main(self):
         try:
             self._monitor()
@@ -206,7 +203,7 @@ class LocalProjectRunner:
             self._state = RunState.FAILED
         finally:
             try:
-                self._close_owned_files()
+                close_output_files(self.spec.output_file, self.spec.error_file)
             except BaseException as exc:
                 if self._exception is None:
                     self._exception = exc
