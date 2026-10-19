@@ -8,6 +8,7 @@ from ase2sprkkr.execution.remote import FileSyncPolicy, RemoteRunner
 
 class _Follow:
     def __init__(self, output=b"streamed\n", error=b""):
+        self.terminal = None
         self.stdout = asyncio.StreamReader()
         self.stderr = asyncio.StreamReader()
         self.stdout.feed_data(output)
@@ -157,3 +158,46 @@ def test_cancelled_backend_survives_diagnostic_download_failure(tmp_path):
     assert runner.failure_phase is None
     assert runner.files.availability_state == "failed"
     assert destination.read_bytes() == b"streamed\n"
+
+
+
+def test_remote_stderr_incomplete_after_success_is_download_failure(tmp_path):
+    """FINISHED must not hide a truncated stderr FOLLOW stream."""
+    from ase2sprkkr.execution.base import FailurePhase
+    from ase2sprkkr.execution.remote_endpoint import _RemoteRun
+
+    stdout_path = tmp_path / "run.out"
+    stderr_path = tmp_path / "run.err"
+    output = stdout_path.open("wb")
+    error = stderr_path.open("wb")
+
+    class Transport:
+        async def file_signature(self, remote):
+            return (len(b"streamed\n") if remote.endswith(".out") else 8, 0)
+
+    executor = _Executor(RunState.FINISHED)
+    executor.transport = Transport()
+    runner = _RemoteRun(
+        executor,
+        ExecutionSpec(
+            argv=(), input_file=None, output_file=output,
+            error_file=error, directory=str(tmp_path),
+        ),
+        backend_id="opaque-handle", remote_directory="/work/case",
+        files=FileManifest(
+            stdout=FileEntry(str(stdout_path), "/work/case/run.out"),
+            stderr=FileEntry(str(stderr_path), "/work/case/run.err"),
+        ).initialize_availability(),
+        state=RunState.RUNNING,
+    )
+
+    with pytest.raises(RuntimeError, match="stderr size does not match"):
+        asyncio.run(runner._monitor())
+
+    assert runner.state == RunState.FAILED
+    assert runner.failure_phase == FailurePhase.DOWNLOAD
+    assert runner.files.stderr.availability_state == "failed"
+    assert runner.files.stdout.availability_state == "available"
+    assert stdout_path.read_bytes() == b"streamed\n"
+    assert stderr_path.read_bytes() == b""
+    assert output.closed and error.closed

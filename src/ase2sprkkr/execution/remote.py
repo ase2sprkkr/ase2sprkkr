@@ -392,9 +392,16 @@ class RemoteRunner:
     async def _sync_output_files(self, required):
         policy = self.executor.output_files
         if policy == FileSyncPolicy.NEVER:
+            # FOLLOW transfers primary streams even when separate artifact
+            # synchronization is disabled.
+            primary = {path for path in (self.result.output_file, self.result.error_file)
+                       if path is not None}
             for entry in (() if self._files is None else self._files.artifacts):
                 if entry.availability_state == "pending":
-                    self._set_file_availability(entry.local_path, "skipped")
+                    self._set_file_availability(
+                        entry.local_path,
+                        "available" if entry.local_path in primary else "skipped",
+                    )
             return
 
         for local, remote in self._output_targets.items():
@@ -722,9 +729,8 @@ class RemoteRunner:
             ):
                 # The stream helper may stop because a backend identity was lost
                 # (for example a direct-process hard crash before its durable
-                # outcome barrier). Without an authoritative terminal backend
-                # fact, streamed bytes are provisional and must not replace the
-                # previously published local artifacts.
+                # outcome barrier). Received bytes remain on disk, but no
+                # successful execution may be reported.
                 self._state = RunState.UNKNOWN
                 self._failure_phase = None
                 if self._failure_message is None:

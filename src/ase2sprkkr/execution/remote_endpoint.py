@@ -70,26 +70,40 @@ class _RemoteRun(RemoteRunner):
         self._prepared = None
 
     async def _monitor(self):
-        local_output = self.result.output_file
         result = await super()._monitor()
-        remote_output = None if self.files is None or self.files.stdout is None else self.files.stdout.remote_path
-        if (
-            self.state == RunState.FINISHED
-            and local_output is not None
-            and remote_output is not None
-        ):
-            signature = await self.executor.transport.file_signature(remote_output)
-            if signature is not None:
-                stat = os.stat(local_output)
-                if stat.st_size != signature[0]:
-                    self._state = RunState.FAILED
-                    self._failure_phase = FailurePhase.DOWNLOAD
-                    self._failure_message = (
-                        "Streamed local output size does not match the authoritative "
-                        f"remote output: {local_output}"
+        if self.state != RunState.FINISHED or self.files is None:
+            return result
+
+        # A broken follow connection can leave either channel incomplete even
+        # when the backend finished successfully. Verify both physical files.
+        checked = set()
+        for kind, entry in (("stdout", self.files.stdout),
+                            ("stderr", self.files.stderr)):
+            if entry is None or entry.local_path is None or entry.remote_path is None:
+                continue
+            local = entry.local_path
+            if local in checked:
+                continue  # Merged stdout/stderr is one physical file.
+            checked.add(local)
+            try:
+                signature = await self.executor.transport.file_signature(entry.remote_path)
+                if signature is None:
+                    raise FileNotFoundError(
+                        f"Remote {kind} output is missing: {entry.remote_path}"
                     )
-                    raise RuntimeError(self._failure_message)
-                os.utime(local_output, ns=(stat.st_atime_ns, signature[1]))
+                stat = os.stat(local)
+                if stat.st_size != signature[0]:
+                    raise RuntimeError(
+                        f"Streamed local {kind} size does not match the "
+                        f"authoritative remote output: {local}"
+                    )
+                os.utime(local, ns=(stat.st_atime_ns, signature[1]))
+            except Exception as exc:
+                self._state = RunState.FAILED
+                self._failure_phase = FailurePhase.DOWNLOAD
+                self._failure_message = str(exc)
+                self._set_file_availability(local, "failed", str(exc))
+                raise
         return result
 
     async def _submitted_manifest(self, request):
