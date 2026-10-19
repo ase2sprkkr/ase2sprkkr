@@ -667,16 +667,15 @@ class RemoteEndpointExecutor(Executor):
             remote = entry.remote_path if entry is not None else None
             if remote is None:
                 remote = await context.map_path(local)
-            if glob.has_magic(local):
-                for matched in await self.transport.expand_files(remote, remote_root):
-                    destination = await context.unmap_path(matched)
-                    if not destination.is_file():
-                        await self.transport.get_file(matched, destination)
-                continue
-            if os.path.isfile(local):
-                continue
-            if await self.transport.file_signature(remote) is not None:
-                await self.transport.get_file(remote, local)
+            # Exact paths and wildcards have the same source-side selection
+            # and use the transport's verified single-file download.
+            for matched in await self.transport.expand_files(remote, remote_root):
+                destination = (
+                    os.fspath(await context.unmap_path(matched))
+                    if glob.has_magic(remote) else local
+                )
+                if not os.path.isfile(destination):
+                    await self.transport.get_file(matched, destination)
 
     def fetch_result_files(self, run, files):
         return _run_sync(self._fetch_result_files(run, files))

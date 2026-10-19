@@ -63,3 +63,64 @@ def test_remote_executor_fetches_only_requested_historical_files(tmp_path):
     assert not local_later.exists()
     assert local_output.stat().st_mtime_ns == remote_output.stat().st_mtime_ns
     assert local_second.stat().st_mtime_ns == remote_second.stat().st_mtime_ns
+
+
+
+def test_remote_fetch_uses_transport_expansion_for_exact_and_wildcard(tmp_path):
+    import os
+
+    class SpyTransport(LocalTransport):
+        def __init__(self):
+            self.expanded = []
+            self.downloaded = []
+
+        async def expand_files(self, sources, root):
+            self.expanded.append(os.fspath(sources))
+            return await super().expand_files(sources, root)
+
+        async def get_file(self, source, destination):
+            self.downloaded.append(os.fspath(source))
+            return await super().get_file(source, destination)
+
+    local_root = tmp_path / "local"
+    remote_root = tmp_path / "remote"
+    (local_root / "calc").mkdir(parents=True)
+    remote_dir = remote_root / "calc"
+    remote_dir.mkdir(parents=True)
+
+    (remote_dir / "exact.dat").write_text("exact")
+    (remote_dir / "part-a.dat").write_text("a")
+    (remote_dir / "part-b.dat").write_text("b")
+    (remote_dir / ".hidden.dat").write_text("hidden")
+    existing = local_root / "calc" / "part-a.dat"
+    existing.write_text("keep")
+
+    transport = SpyTransport()
+    executor = RemoteExecutor(transport)
+    run = RunRecord(
+        id="wildcard-fetch", state=RunState.FINISHED,
+        created_at="2026-10-13T08:00:00+00:00",
+        updated_at="2026-10-13T08:00:00+00:00",
+        task="DOS",
+        execution=Execution(
+            endpoint_for_executor(executor),
+            WorkingDirectory(str(local_root / "calc"), str(remote_dir)),
+            "opaque-handle",
+        ),
+        files=FileManifest(mapping=FileMapping(str(local_root), str(remote_root))),
+    )
+
+    executor.fetch_result_files(
+        run, (local_root / "calc" / "exact.dat",
+              local_root / "calc" / "part-*.dat"),
+    )
+    assert transport.expanded == [
+        str(remote_dir / "exact.dat"), str(remote_dir / "part-*.dat"),
+    ]
+    assert transport.downloaded == [
+        str(remote_dir / "exact.dat"), str(remote_dir / "part-b.dat"),
+    ]
+    assert (local_root / "calc" / "exact.dat").read_text() == "exact"
+    assert existing.read_text() == "keep"
+    assert (local_root / "calc" / "part-b.dat").read_text() == "b"
+    assert not (local_root / "calc" / ".hidden.dat").exists()
