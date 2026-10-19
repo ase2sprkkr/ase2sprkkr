@@ -38,6 +38,8 @@ def run():
             raise ArgparseError(self, message)
 
         def exit(self, status=0, message=None):
+            if status == 0:
+                raise SystemExit(0)
             raise ArgparseError(self, message or "")
 
     parser = Parser(

@@ -292,3 +292,63 @@ def test_aliases_are_immutable(tmp_path, monkeypatch):
 
     with pytest.raises(TypeError):
         registry.aliases["FIRST"] = "OTHER"
+
+
+def test_tolerant_enumeration_skips_broken_modules_once(tmp_path, monkeypatch):
+    from ..module_registry import RegistryLoadWarning
+
+    package = _package(
+        tmp_path,
+        monkeypatch,
+        "_ase2sprkkr_registry_tolerant",
+        {
+            "valid": "value = 42\n",
+            "missing_export": "other = 0\n",
+            "import_failure": "import _missing_registry_dependency\n",
+            "factory_failure": (
+                "def value():\n"
+                "    raise ValueError('broken factory')\n"
+            ),
+        },
+    )
+    registry = ModuleRegistry(package, "value", factory=True)
+
+    assert set(registry.names()) == {
+        "VALID", "MISSING_EXPORT", "IMPORT_FAILURE", "FACTORY_FAILURE"
+    }
+    assert "_ase2sprkkr_registry_tolerant.valid" not in sys.modules
+    with pytest.warns(RegistryLoadWarning) as recorded:
+        assert list(registry.iter_valid_values()) == [42]
+    assert len(recorded) == 3
+    messages = "\n".join(str(item.message) for item in recorded)
+    assert "MISSING_EXPORT" in messages.upper()
+    assert "IMPORT_FAILURE" in messages.upper()
+    assert "FACTORY_FAILURE" in messages.upper()
+
+    import warnings
+    with warnings.catch_warnings(record=True) as repeated:
+        warnings.simplefilter("always")
+        assert list(registry.iter_valid_values()) == [42]
+    assert not repeated
+
+    with pytest.raises(RegistryDefinitionError, match="required export"):
+        registry["MISSING_EXPORT"]
+    with pytest.raises(ModuleNotFoundError):
+        registry["IMPORT_FAILURE"]
+    with pytest.raises(ValueError, match="broken factory"):
+        registry["FACTORY_FAILURE"]
+
+
+def test_filtered_tolerant_enumeration_does_not_import_unrelated_modules(
+    tmp_path, monkeypatch
+):
+    package = _package(
+        tmp_path, monkeypatch, "_ase2sprkkr_registry_filtered",
+        {
+            "valid": "value = 7\n",
+            "unrelated": "raise RuntimeError('unexpected import')\n",
+        },
+    )
+    registry = ModuleRegistry(package, "value")
+    assert list(registry.iter_valid_values(names=["VALID"])) == [7]
+    assert "_ase2sprkkr_registry_filtered.unrelated" not in sys.modules
