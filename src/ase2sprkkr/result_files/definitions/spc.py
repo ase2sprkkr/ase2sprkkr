@@ -217,8 +217,8 @@ def create_definition():
 
                 def xlabel(state):
                     if state.get("direction", "NP") == "NT":
-                        return r"$\\phi$ (deg)" if phi_values is not None else "Azimuth index (NP)"
-                    return r"$\\theta$ (deg)"
+                        return r"$\phi$ (deg)" if phi_values is not None else "Azimuth index (NP)"
+                    return r"$\theta$ (deg)"
 
                 kw["xlabel"] = xlabel(controls.state)
                 # Labels belong to the plot; changing direction changes x.
