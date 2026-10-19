@@ -45,7 +45,11 @@ def discover_local_files(files, *, include_streams=True):
 
 
 def validate_output_streams(streams, *, protected=()):
-    """Reject a stream that would overwrite a declared input or restart cache."""
+    """Reject explicit output paths overlapping declared inputs or restart caches.
+
+    Broad output patterns retain their existing behavior: matching protected
+    files are skipped by clear_declared_outputs rather than removed.
+    """
     protected_paths = tuple(
         os.path.abspath(os.fspath(p)) for p in protected if p is not None
     )
@@ -53,6 +57,8 @@ def validate_output_streams(streams, *, protected=()):
         if stream is None:
             continue
         target = os.path.abspath(os.fspath(stream))
+        if has_file_magic(target):
+            continue
         for declaration in protected_paths:
             if target in expand_local_candidates(declaration):
                 raise ValueError(

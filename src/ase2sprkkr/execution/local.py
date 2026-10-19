@@ -160,7 +160,7 @@ class LocalRunner:
                 for value in self.spec.output_files
             ]
             validate_output_streams(
-                (self.result.output_file, self.result.error_file),
+                (*outputs, self.result.output_file, self.result.error_file),
                 protected=protected,
             )
             clear_declared_outputs(

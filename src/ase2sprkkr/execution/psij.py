@@ -414,7 +414,8 @@ class PsijRunner:
                           *self.spec.cache_files)
         ]
         validate_output_streams(
-            (self._stdout_path, self._stderr_path), protected=protected,
+            (*self.spec.output_files, self._stdout_path, self._stderr_path),
+            protected=protected,
         )
         self._flush(self.spec.output_file)
         self._flush(self.spec.error_file)
