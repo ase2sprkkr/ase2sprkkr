@@ -81,6 +81,8 @@ class ArpesResult(TaskResult):
     @property
     def output_values(self):
         self._register_spc_files()
+        if self.task_name == "spleed":
+            self.spleed_intensity
         return super().output_values
 
     def _register_spc_files(self):

@@ -48,11 +48,13 @@ class SpecResult(ArpesResult):
         from ...result_files.definitions.spleed_intensity import SpleedIntensityNotFound
 
         try:
-            return ResultFile.from_file(
+            result = ResultFile.from_file(
                 self.path_to("output"), try_only="spleed_intensity"
             )
         except SpleedIntensityNotFound:
             return None
+        self.files.add_file("SPLEED_INTENSITY", self.path_to("output"), "spleed_intensity")
+        return result
 
     @cached_property
     def spectral_data(self) -> np.ndarray:

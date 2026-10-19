@@ -20,6 +20,7 @@ def test_two_column_log_is_result_file(tmp_path):
     np.testing.assert_allclose(spectrum.ENERGY(), [11, 12])
     np.testing.assert_allclose(spectrum.INTENSITY(), [0.1, 0.2])
     assert spectrum.RAW_DATA().shape == (2, 2)
+    assert result.output_values["SPLEED_INTENSITY"].file_type == "spleed_intensity"
 
 
 def test_seven_column_output_is_not_two_column_format(tmp_path):
