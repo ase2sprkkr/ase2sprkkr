@@ -232,7 +232,18 @@ def _parse_remote_file_signature(raw):
 
 
 async def _completed_process(process, argv, input=None, check=True):
-    stdout, stderr = await process.communicate(input)
+    try:
+        stdout, stderr = await process.communicate(input)
+    except BaseException:
+        # Cancelling a command must not abandon its subprocess (or leave an
+        # unreaped zombie). This also handles failures during pipe I/O.
+        if process.returncode is None:
+            try:
+                process.kill()
+            except ProcessLookupError:
+                pass
+        await process.wait()
+        raise
     result = subprocess.CompletedProcess(tuple(argv), process.returncode, stdout, stderr)
     if check and result.returncode:
         raise subprocess.CalledProcessError(
@@ -418,11 +429,7 @@ class SshTransport(Transport):
                     stdout=destination_file,
                     stderr=asyncio.subprocess.PIPE,
                 )
-                _, stderr = await process.communicate()
-                if process.returncode:
-                    raise subprocess.CalledProcessError(
-                        process.returncode, command, stderr=stderr
-                    )
+                await _completed_process(process, command)
             if await self.file_signature(source) != signature:
                 raise RuntimeError(f"Remote file changed while downloading: {source}")
             stat = temporary.stat()

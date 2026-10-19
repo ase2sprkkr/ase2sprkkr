@@ -4,6 +4,8 @@ import asyncio
 import hashlib
 import pytest
 import os
+import signal
+import subprocess
 import sys
 
 from ..transport import LocalTransport, SshTransport
@@ -269,3 +271,110 @@ def test_ssh_batch_tar_pipeline_drains_stderr_during_copy():
     asyncio.run(asyncio.wait_for(
         transport._transfer_tar(producer, consumer), timeout=5,
     ))
+
+
+async def _wait_for_command_pid(path):
+    for _ in range(500):
+        if path.exists():
+            return int(path.read_text())
+        await asyncio.sleep(0.01)
+    raise AssertionError("Subprocess never reported its PID")
+
+
+async def _cancel_and_check_reaped(task, pid):
+    task.cancel()
+    with pytest.raises(asyncio.CancelledError):
+        await asyncio.wait_for(task, timeout=5)
+    with pytest.raises(ProcessLookupError):
+        os.kill(pid, 0)
+
+
+@pytest.mark.skipif(os.name != "posix", reason="PID cleanup assertion is POSIX-only")
+@pytest.mark.parametrize("factory", (LocalTransport, _LoopbackSshTransport))
+def test_transport_run_cancellation_reaps_subprocess(tmp_path, factory):
+    pid_file = tmp_path / "command.pid"
+
+    async def check():
+        command = (
+            sys.executable, "-c",
+            f"import os, time; open({str(pid_file)!r}, 'w').write(str(os.getpid())); "
+            "time.sleep(30)",
+        )
+        task = asyncio.create_task(factory().run(command))
+        pid = None
+        try:
+            pid = await _wait_for_command_pid(pid_file)
+            await _cancel_and_check_reaped(task, pid)
+        finally:
+            if not task.done():
+                task.cancel()
+                await asyncio.gather(task, return_exceptions=True)
+            if pid is not None:
+                try:
+                    os.kill(pid, signal.SIGKILL)
+                except ProcessLookupError:
+                    pass
+
+    asyncio.run(check())
+
+
+@pytest.mark.skipif(os.name != "posix", reason="Requires POSIX shell and PID semantics")
+def test_ssh_get_file_cancellation_reaps_process_and_removes_temp(tmp_path):
+    pid_file = tmp_path / "download.pid"
+    source = tmp_path / "source"
+    destination = tmp_path / "downloaded"
+    source.write_bytes(b"source bytes")
+    destination.write_bytes(b"old destination")
+
+    class SlowDownloadTransport(_LoopbackSshTransport):
+        def _command(self, argv, cwd=None):
+            if argv[0] == "cat":
+                return (
+                    sys.executable, "-c",
+                    f"import os, time; open({str(pid_file)!r}, 'w').write(str(os.getpid())); "
+                    "time.sleep(30)",
+                )
+            return super()._command(argv, cwd)
+
+    async def check():
+        task = asyncio.create_task(SlowDownloadTransport().get_file(source, destination))
+        pid = None
+        try:
+            pid = await _wait_for_command_pid(pid_file)
+            await _cancel_and_check_reaped(task, pid)
+        finally:
+            if not task.done():
+                task.cancel()
+                await asyncio.gather(task, return_exceptions=True)
+            if pid is not None:
+                try:
+                    os.kill(pid, signal.SIGKILL)
+                except ProcessLookupError:
+                    pass
+
+    asyncio.run(check())
+    assert destination.read_bytes() == b"old destination"
+    assert not tuple(tmp_path.glob(".downloaded.*.tmp"))
+
+
+@pytest.mark.skipif(os.name != "posix", reason="Requires POSIX shell tools")
+def test_ssh_get_file_preserves_subprocess_failure(tmp_path):
+    source = tmp_path / "source"
+    source.write_bytes(b"source bytes")
+    destination = tmp_path / "downloaded"
+
+    class FailingDownloadTransport(_LoopbackSshTransport):
+        def _command(self, argv, cwd=None):
+            if argv[0] == "cat":
+                return (
+                    sys.executable, "-c",
+                    "import sys; sys.stderr.write('download failed'); sys.exit(17)",
+                )
+            return super()._command(argv, cwd)
+
+    with pytest.raises(subprocess.CalledProcessError) as failure:
+        asyncio.run(FailingDownloadTransport().get_file(source, destination))
+    assert failure.value.returncode == 17
+    assert b"download failed" in failure.value.stderr
+    assert not destination.exists()
+    assert not tuple(tmp_path.glob(".downloaded.*.tmp"))
