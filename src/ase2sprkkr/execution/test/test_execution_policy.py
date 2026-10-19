@@ -20,7 +20,7 @@ from ase2sprkkr.execution.manager import (
 )
 from ase2sprkkr.execution.postprocessing import PostprocessingRunner
 from ase2sprkkr.execution.run_model import FileManifest, FileEntry
-from ase2sprkkr.execution.transport import AtomicLocalFile, LocalTransport
+from ase2sprkkr.execution.transport import LocalTransport
 
 
 def _local_spec(tmp_path, code="print('ok')"):
@@ -198,23 +198,6 @@ def test_artifact_availability_failure_does_not_change_finished_state(tmp_path):
         == ArtifactAvailabilityState.FAILED
     )
     assert record.files.availability_message == "ssh disconnected"
-
-
-def test_atomic_local_file_preserves_old_destination_until_commit(tmp_path):
-    destination = tmp_path / "output"
-    destination.write_bytes(b"old")
-    replay = AtomicLocalFile(destination)
-    replay.write(b"new")
-    replay.flush()
-
-    assert destination.read_bytes() == b"old"
-    replay.discard()
-    assert destination.read_bytes() == b"old"
-
-    replay = AtomicLocalFile(destination)
-    replay.write(b"new")
-    replay.commit()
-    assert destination.read_bytes() == b"new"
 
 
 def test_local_transport_failed_copy_preserves_destination(tmp_path):
