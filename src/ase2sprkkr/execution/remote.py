@@ -19,7 +19,8 @@ from .base import (
     finish_monitor,
     wait_for_monitor,
     RunState,
-    dispatch_cancellation,
+    request_cancellation,
+    start_monitor,
 )
 from ..common.file_versions import file_digest
 from .transport import expand_local_files, has_file_magic
@@ -769,19 +770,10 @@ class RemoteRunner:
         finally:
             finish_monitor(self)
 
-    def _start_monitor(self):
-        with self._lock:
-            if self._thread is not None:
-                return
-            if self._backend_id is None:
-                raise RuntimeError("Run has no backend reference")
-            self._thread = Thread(target=self._thread_main, daemon=True)
-            self._thread.start()
-
     def start(self):
         if self._backend_id is None:
             return self.submit()
-        return self._start_monitor()
+        return start_monitor(self, missing_backend="Run has no backend reference")
 
     def submit(self):
         raise NotImplementedError(
@@ -806,11 +798,9 @@ class RemoteRunner:
     def cancel(self):
         if self._backend_id is None:
             raise RuntimeError("Run has not been submitted")
-        with self._lock:
-            if self._cancel_future is None:
-                self._cancel_future = dispatch_cancellation(
-                    lambda: _run_sync(
-                        self.executor._cancel(self._remote_directory, self._backend_id)
-                    )
-                )
-            return self._cancel_future
+        return request_cancellation(
+            self,
+            lambda: _run_sync(
+                self.executor._cancel(self._remote_directory, self._backend_id)
+            ),
+        )
