@@ -288,6 +288,7 @@ class PsijRunner:
         self._attached = attached
         self._files = None
         self._cancel_future = None
+        self._observation_unknown = False
 
         self._psij = executor._psij
         self._job = job or self._create_job()
@@ -349,6 +350,8 @@ class PsijRunner:
     def state(self):
         if self._exception is not None:
             return RunState.FAILED
+        if self._observation_unknown:
+            return RunState.UNKNOWN
         return _psij_state(self._job.status, return_code=self.return_code)
 
     @property
@@ -431,13 +434,35 @@ class PsijRunner:
             if path is not None and path not in paths.values():
                 paths[kind] = path
 
+        def wait_for_job():
+            try:
+                return self._job.wait()
+            except (OSError, ConnectionError, TimeoutError) as exc:
+                # Return the observation error as a value so the follower
+                # can drain already-written bytes before returning.
+                return exc
+
         if not paths:
-            status = await asyncio.to_thread(self._job.wait)
+            status = await asyncio.to_thread(wait_for_job)
         else:
             status = await follow_job_files(
                 paths, lambda kind, data: self._output_observers.emit_bytes(data, kind),
-                self._job.wait, poll_interval=max(self.executor.poll_interval, 1.0),
+                wait_for_job, poll_interval=max(self.executor.poll_interval, 1.0),
             )
+        if isinstance(status, (OSError, ConnectionError, TimeoutError)):
+            self._observation_unknown = True
+            self._failure_phase = None
+            self._failure_message = str(status)
+            self._update_files()
+            return self.result
+        if status is None or _psij_state(status) not in (
+            RunState.FINISHED, RunState.FAILED, RunState.CANCELLED,
+        ):
+            self._observation_unknown = True
+            self._failure_phase = None
+            self._failure_message = "PSI/J wait returned no terminal job status"
+            self._update_files()
+            return self.result
 
         self._return_code = getattr(status, "exit_code", None)
         state_name = getattr(getattr(status, "state", None), "name", None)

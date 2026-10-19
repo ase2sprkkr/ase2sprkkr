@@ -978,3 +978,42 @@ def test_psij_mpi_respects_explicit_stdin_policy(monkeypatch, tmp_path):
     runner = executor.create_run(spec)
     assert runner._job.spec.stdin_path is None
     assert replace(spec, mpi_uses_stdin=True).mpi_uses_stdin
+
+
+def test_psij_wait_connection_failure_remains_unknown(monkeypatch, tmp_path):
+    import asyncio
+    from ase2sprkkr.execution.base import ExecutionSpec, RunState
+
+    executor = _executor(monkeypatch, _Backend())
+    runner = executor.create_run(ExecutionSpec(
+        argv=("program",), directory=str(tmp_path),
+        input_file=None, output_file=None,
+    ))
+
+    def disconnected():
+        raise ConnectionError("scheduler unavailable")
+
+    runner._job.wait = disconnected
+    runner._job.status = _Status("ACTIVE")
+    assert asyncio.run(runner._monitor()) is runner.result
+    assert runner.state is RunState.UNKNOWN
+    assert runner.failure_phase is None
+    assert runner.failure_message == "scheduler unavailable"
+    assert runner.exception is None
+
+
+def test_psij_wait_inconclusive_status_does_not_invent_exit_code(monkeypatch, tmp_path):
+    import asyncio
+    from ase2sprkkr.execution.base import ExecutionSpec, RunState
+
+    executor = _executor(monkeypatch, _Backend())
+    runner = executor.create_run(ExecutionSpec(
+        argv=("program",), directory=str(tmp_path),
+        input_file=None, output_file=None,
+    ))
+    runner._job.wait = lambda: None
+    runner._job.status = _Status("ACTIVE")
+    asyncio.run(runner._monitor())
+    assert runner.state is RunState.UNKNOWN
+    assert runner.return_code is None
+    assert runner.failure_phase is None
