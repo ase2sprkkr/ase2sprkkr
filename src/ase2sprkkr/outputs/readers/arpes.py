@@ -81,7 +81,7 @@ class ArpesResult(TaskResult):
     @property
     def output_values(self):
         self._register_spc_files()
-         return super().output_values
+        return super().output_values
 
     def _register_spc_files(self):
         filenames = self.spc_filenames

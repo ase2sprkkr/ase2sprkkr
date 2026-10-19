@@ -226,8 +226,10 @@ class ResultFile(ConfigurationFile):
                 unknown = False
         else:
             if first_try is None:
-                ext = os.path.splitext(filename_path)[1].lower().lstrip(".") if filename_path else ""
-                candidates = list(by_extension.get(ext, ()))
+                basename = os.path.basename(filename_path).lower() if filename_path else ""
+                suffixes = sorted(by_extension, key=len, reverse=True)
+                candidates = list(next((by_extension[ext] for ext in suffixes
+                                        if basename.endswith("." + ext)), ()))
             else:
                 candidates = resolve(first_try, prefer_extension=True)
             parsed, errors = matches(candidates)

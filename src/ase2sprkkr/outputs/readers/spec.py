@@ -92,7 +92,7 @@ class SpecResult(ArpesResult):
     @staticmethod
     def _inline_spectral_data(content):
         """Legacy text-log photoemission table (not a native SPC parser)."""
-        marker = re.search(r"stookes-vector\\s+of the photonfield", content)
+        marker = re.search(r"stookes-vector\s+of the photonfield", content)
         if marker is None:
             return np.array([])
         data = []
