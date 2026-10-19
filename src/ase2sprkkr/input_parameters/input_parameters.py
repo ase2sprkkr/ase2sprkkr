@@ -3,8 +3,7 @@
 from __future__ import annotations
 
 import io
-import pyparsing as pp
-
+from collections.abc import Mapping
 from . import definitions, tasks
 from .task_definition import InputParametersRegistry, TaskRegistry
 from ..sprkkr.configuration import (
@@ -15,8 +14,29 @@ from ..sprkkr.configuration import (
 from ..common.configuration_containers import BaseConfigurationContainer
 from ..common.repeated_configuration_containers import RepeatedConfigurationContainer
 from ..common.decorators import cached_class_property
-from ..common.warnings import DataValidityError
 from ..potentials.potentials import Potential
+
+class _LazyInputParametersDefinitions(Mapping):
+    """Read-only compatibility mapping that materializes only requested schemas.
+
+    User-installed definitions can be malformed or require optional packages.
+    Merely requesting a different definition must not import those modules.
+    """
+
+    def __init__(self, registry):
+        self._registry = registry
+
+    def __getitem__(self, name):
+        return self._registry[name]
+
+    def __iter__(self):
+        return iter(self._registry.names())
+
+    def __len__(self):
+        return len(self._registry.names())
+
+    def __contains__(self, name):
+        return name in self._registry
 
 
 class InputSection(ConfigurationSection):
@@ -72,9 +92,18 @@ class InputParameters(ConfigurationFile):
         self._outputfile = inputfile if outputfile is False else outputfile
 
     @property
+    def task_name(self):
+        """Return the ASE2SPRKKR task represented by the current values."""
+        name = self._definition.task_definition_name(self)
+        if name is None:
+            return None
+        return str(name).strip().upper()
+
+    @property
     def task_definition(self):
         """Return the task represented by the current values, if any."""
-        return self.task_registry.task_for_parameters(self)
+        name = self.task_name
+        return None if name is None else self.task_registry[name]
 
     def task_definition_required(self):
         """Return the task represented by the current values, failing if detached."""
@@ -84,12 +113,6 @@ class InputParameters(ConfigurationFile):
                 "These input parameters are not associated with an SPR-KKR task definition"
             )
         return task
-
-    @property
-    def task_name(self):
-        """Return the ASE2SPRKKR task represented by the current values."""
-        task = self.task_definition
-        return None if task is None else task.name
 
     @property
     def requested_task_name(self):
@@ -249,10 +272,8 @@ class InputParameters(ConfigurationFile):
 
     @cached_class_property
     def definitions(cls):
-        return {
-            name: cls.input_parameters_registry[name]
-            for name in cls.input_parameters_registry.names()
-        }
+        """Legacy definition mapping; lookup does not load unrelated schemas."""
+        return _LazyInputParametersDefinitions(cls.input_parameters_registry)
 
     @classmethod
     def is_task_name(cls, name):
@@ -282,47 +303,12 @@ class InputParameters(ConfigurationFile):
 
     @classmethod
     def from_file(cls, filename, allow_dangerous: bool = False):
-        """Try registered schemas, preferring a task matching ``CONTROL.ADSI``.
+        """Read with the IPD class-level selector autodetection."""
+        from .input_parameters_definitions import InputParametersDefinition
 
-        SPR-KKR schemas intentionally overlap, so a permissive schema can parse
-        an input intended for another task. ``ADSI`` normally identifies the
-        task, but it is user-editable and therefore only disambiguates when it
-        names a registered task and disagrees with the first successful parse.
-        """
-        last = None
-        first_match = None
-        is_stream = hasattr(filename, "seek")
-        for definition in cls.definitions.values():
-            if is_stream:
-                filename.seek(0)
-            try:
-                parsed = definition.read_from_file(
-                    filename, allow_dangerous=allow_dangerous
-                )
-            except (pp.ParseBaseException, DataValidityError) as e:
-                last = e
-                continue
-
-            try:
-                adsi = parsed.CONTROL.ADSI()
-            except (AttributeError, KeyError):
-                return parsed
-            if not isinstance(adsi, str):
-                return parsed
-
-            adsi = cls.task_registry.normalize_name(adsi)
-            if adsi not in cls.task_registry:
-                return parsed
-            if parsed.task_name == adsi:
-                return parsed
-            if first_match is None:
-                first_match = parsed
-
-        if first_match is not None:
-            return first_match
-        if last is None:
-            raise ValueError("No SPR-KKR input-parameter definitions are available")
-        raise last
+        return InputParametersDefinition.from_file(
+            filename, allow_dangerous=allow_dangerous
+        )
 
     def __repr__(self):
         task = self.task_definition

@@ -3,31 +3,34 @@
 from ..common.file_fingerprints import FileFingerprint
 from ..common.file_versions import FileState, FileVersion, FileVersionCaptureError
 from .base import (
+    ExecutionOutcome,
     ExecutionResources,
     ExecutionSpec,
     Executor,
+    FailurePhase,
     LaunchSpec,
     MpiNotFoundWarning,
     MpiSpec,
     ResourceOwnedRunner,
     Runner,
-    RunReference,
     RunState,
     RunStatus,
+)
+from .run_model import (
+    Execution, WorkingDirectory, FileEntry, CacheEntry, FileMapping, FileManifest,
 )
 from .endpoint import ExecutorEndpoint
 from .local import LocalExecutor, LocalRunner
 from .manager import (
+    ArtifactAvailabilityState,
     CorruptRunRecord,
     DuplicateSubmissionError,
-    FileRetrievalState,
-    PersistentRunner,
-    ResultFilesRecord,
+    ProjectRunner,
     RunRecord,
     RunStore,
-    SubmissionKey,
 )
 from .pool import ExecutorPool, default_executor_pool
+from .postprocessing import PostprocessingRunner
 from .projects import (
     Project,
     ProjectConflictError,
@@ -42,36 +45,40 @@ from .remote import FileSyncPolicy, RemoteRunner
 from .remote_endpoint import RemoteEndpointExecutor
 from .transport import LocalTransport, RunningCommand, SshTransport, Transport
 
-# Public remote executors represent reusable endpoint identity only. Per-run
-# filesystem mapping and synchronization are carried by LaunchSpec.
 RemoteExecutor = RemoteEndpointExecutor
 
 __all__ = [
+    "ArtifactAvailabilityState",
+    "Execution",
+    "WorkingDirectory",
+    "FileEntry",
+    "CacheEntry",
+    "FileMapping",
+    "FileManifest",
+    "ExecutionOutcome",
     "ExecutionResources",
     "ExecutionSpec",
     "Executor",
     "ExecutorEndpoint",
+    "FailurePhase",
     "LaunchSpec",
     "MpiSpec",
     "MpiNotFoundWarning",
+    "PostprocessingRunner",
     "ResourceOwnedRunner",
     "Runner",
-    "RunReference",
     "RunState",
     "RunStatus",
-    "SubmissionKey",
     "DuplicateSubmissionError",
     "FileFingerprint",
     "FileState",
     "FileVersion",
     "FileVersionCaptureError",
-    "FileRetrievalState",
-    "ResultFilesRecord",
     "RunRecord",
     "RunStore",
     "CorruptRunRecord",
     "ExecutionManager",
-    "PersistentRunner",
+    "ProjectRunner",
     "Project",
     "ProjectRepository",
     "ProjectRepositoryError",

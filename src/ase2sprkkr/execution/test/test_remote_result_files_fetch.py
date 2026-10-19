@@ -1,6 +1,9 @@
-import json
-
-from ase2sprkkr.execution import LocalTransport, RemoteExecutor, RunReference
+from ase2sprkkr.execution import (
+    LocalTransport, RemoteExecutor, RunRecord, RunState, Execution,
+    WorkingDirectory, FileManifest,
+)
+from ase2sprkkr.execution.run_model import FileMapping
+from ase2sprkkr.execution.endpoint import endpoint_for_executor
 
 
 def test_remote_executor_fetches_only_requested_historical_files(tmp_path):
@@ -27,27 +30,18 @@ def test_remote_executor_fetches_only_requested_historical_files(tmp_path):
     local_first = local_directory / "result-1.dat"
     local_first.write_text("keep-local")
 
-    run_id = "historical-run"
-    metadata = remote_directory / ".ase2sprkkr" / "runs" / run_id
-    metadata.mkdir(parents=True)
-    (metadata / "request.json").write_text(
-        json.dumps(
-            {
-                "launch": {
-                    "local_root": str(local_root),
-                    "remote_root": str(remote_root),
-                    "input_sync": "changed",
-                    "output_sync": "changed",
-                }
-            }
-        )
-    )
-
     executor = RemoteExecutor(LocalTransport())
-    reference = RunReference(
-        executor="remote:local",
-        native_id=run_id,
-        directory=str(remote_directory),
+    run = RunRecord(
+        id="historical", state=RunState.FINISHED,
+        created_at="2026-10-13T08:00:00+00:00",
+        updated_at="2026-10-13T08:00:00+00:00",
+        task="DOS",
+        execution=Execution(
+            endpoint_for_executor(executor),
+            WorkingDirectory(str(local_directory), str(remote_directory)),
+            "opaque-historical-handle",
+        ),
+        files=FileManifest(mapping=FileMapping(str(local_root), str(remote_root))),
     )
     local_input = local_directory / "run.inp"
     local_potential = local_directory / "start.pot"
@@ -57,7 +51,7 @@ def test_remote_executor_fetches_only_requested_historical_files(tmp_path):
 
     assert executor.supports_result_file_retrieval is True
     executor.fetch_result_files(
-        reference,
+        run,
         (local_input, local_potential, local_output, local_second),
     )
 

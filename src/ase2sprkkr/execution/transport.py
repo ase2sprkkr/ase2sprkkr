@@ -5,7 +5,6 @@ from __future__ import annotations
 import asyncio
 import fnmatch
 import glob
-import hashlib
 import os
 import posixpath
 import shlex
@@ -13,6 +12,8 @@ import shutil
 import subprocess
 from functools import lru_cache
 from pathlib import Path, PurePosixPath
+
+from ..common.file_versions import file_digest
 from typing import Optional, Protocol
 from uuid import uuid4
 
@@ -148,51 +149,6 @@ def _local_temporary_path(destination):
     return destination.with_name(f".{destination.name}.{uuid4().hex}.tmp")
 
 
-class AtomicLocalFile:
-    """File-like sink that replaces its destination only on explicit commit.
-
-    ``name`` intentionally reports the final path so TaskResult/provenance never
-    exposes the temporary replay path used during an attach.
-    """
-
-    def __init__(self, destination):
-        self.destination = Path(destination)
-        self.temporary_path = _local_temporary_path(self.destination)
-        self._file = self.temporary_path.open("w+b")
-        self.name = os.fspath(self.destination)
-        self._finished = False
-
-    def write(self, data):
-        return self._file.write(data)
-
-    def flush(self):
-        return self._file.flush()
-
-    def fileno(self):
-        return self._file.fileno()
-
-    def commit(self):
-        if self._finished:
-            return
-        self._file.flush()
-        self._file.close()
-        os.replace(self.temporary_path, self.destination)
-        self._finished = True
-
-    def discard(self):
-        if self._finished:
-            return
-        self._file.close()
-        try:
-            self.temporary_path.unlink()
-        except FileNotFoundError:
-            pass
-        self._finished = True
-
-    def close(self):
-        self.discard()
-
-
 class Transport:
     """Run commands and move files on one target machine.
 
@@ -237,17 +193,6 @@ class Transport:
         raise NotImplementedError
 
 
-def local_file_digest(path):
-    """Return the SHA-256 digest of a local file, or ``None`` if absent."""
-    digest = hashlib.sha256()
-    try:
-        with open(path, "rb") as file:
-            for chunk in iter(lambda: file.read(1024 * 1024), b""):
-                digest.update(chunk)
-    except FileNotFoundError:
-        return None
-    return digest.hexdigest()
-
 
 def local_file_signature(path):
     """Return ``(size, mtime_ns)`` for a local file, or ``None`` if absent."""
@@ -269,7 +214,6 @@ def _parse_remote_file_signature(raw):
 
 
 # Kept temporarily for code using the helper inside the execution package.
-_sha256_file = local_file_digest
 
 
 async def _completed_process(process, argv, input=None, check=True):
@@ -363,7 +307,7 @@ class LocalTransport(Transport):
 
     async def file_digest(self, path):
         loop = asyncio.get_running_loop()
-        return await loop.run_in_executor(None, local_file_digest, path)
+        return await asyncio.to_thread(file_digest, path, missing_ok=True)
 
     async def file_signature(self, path):
         loop = asyncio.get_running_loop()

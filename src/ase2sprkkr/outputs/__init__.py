@@ -1,19 +1,19 @@
-"""SPR-KKR output readers and persistent-result reconstruction helpers."""
+"""SPR-KKR output readers and project-result reconstruction helpers."""
 
 from .file_provenance import capture_result_file_versions
-from .persistent import (
-    PersistentResultUnavailableError,
-    UnrecoverablePersistentResultError,
-    attach_persistent_run,
-    load_persistent_result,
+from .project_results import (
+    ProjectResultUnavailableError,
+    UnrecoverableProjectResultError,
+    attach_project_run,
+    load_project_result,
 )
 from .task_result import TaskResult
 
 __all__ = [
-    "PersistentResultUnavailableError",
-    "UnrecoverablePersistentResultError",
+    "ProjectResultUnavailableError",
+    "UnrecoverableProjectResultError",
     "TaskResult",
-    "attach_persistent_run",
+    "attach_project_run",
     "capture_result_file_versions",
-    "load_persistent_result",
+    "load_project_result",
 ]

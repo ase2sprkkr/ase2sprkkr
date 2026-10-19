@@ -1,12 +1,17 @@
 import importlib
+import io
+import os
 import pickle
+import subprocess
+import sys
+from collections.abc import Mapping
 from types import SimpleNamespace
 
 import numpy as np
 import pytest
 
 from ...common.module_registry import RegistryDefinitionError, RegistryEntryNotFound
-from ..input_parameters import InputParameters
+from ..input_parameters import InputParameters, _LazyInputParametersDefinitions
 from ..task_definition import InputParametersRegistry, TaskDefinition, TaskRegistry
 
 
@@ -303,3 +308,154 @@ def test_malformed_extra_task_is_definition_error(tmp_path, monkeypatch):
     registry = TaskRegistry(InputParametersRegistry(definitions_package), tasks_package)
     with pytest.raises(RegistryDefinitionError, match="must be TaskDefinition"):
         registry["BROKEN"]
+
+def test_jxc_and_dmi_are_distinct_tasks_sharing_one_schema():
+    schema = InputParameters.input_parameters_registry["JXC"]
+    jxc = InputParameters.task_registry["JXC"]
+    dmi = InputParameters.task_registry["DMI"]
+    assert schema._task_definition is None
+    assert jxc.name == "JXC"
+    assert dmi.name == "DMI"
+    assert dmi is not jxc
+    assert jxc.input_parameters_definition_name == "JXC"
+    assert dmi.input_parameters_definition_name == "JXC"
+    assert InputParameters.input_parameters_registry.definition_for_task(jxc) is schema
+    assert InputParameters.input_parameters_registry.definition_for_task(dmi) is schema
+    assert "JXC" in InputParameters.task_registry.names()
+    assert "DMI" in InputParameters.task_registry.names()
+    assert InputParameters.task_registry["JXC"] is jxc
+    assert InputParameters.task_registry["DMI"] is dmi
+
+
+def test_shared_schema_task_lookup_is_lazy(tmp_path, monkeypatch):
+    definitions = _package(
+        tmp_path, monkeypatch, "_lazy_distinct_task_ipds", {
+            "shared": (
+                "from ase2sprkkr.input_parameters.input_parameters_definitions "
+                "import InputParametersDefinition\n"
+                "def input_parameters_definition():\n"
+                "    return InputParametersDefinition('shared', [])\n"
+            ),
+            "broken": (
+                "def input_parameters_definition():\n"
+                "    raise AssertionError('Unrelated IPD was constructed')\n"
+            ),
+        },
+    )
+    tasks = _package(tmp_path, monkeypatch, "_lazy_distinct_task_entries", {
+        "first": (
+            "from ase2sprkkr.input_parameters.task_definition import TaskDefinition\n"
+            "def task_definition():\n"
+            "    return TaskDefinition('SHARED', name='FIRST')\n"
+        ),
+        "second": (
+            "from ase2sprkkr.input_parameters.task_definition import TaskDefinition\n"
+            "def task_definition():\n"
+            "    return TaskDefinition('SHARED', name='SECOND')\n"
+        ),
+    })
+    ip_registry = InputParametersRegistry(definitions)
+    registry = TaskRegistry(ip_registry, tasks)
+    assert registry["FIRST"].name == "FIRST"
+    assert "SHARED" in ip_registry._values
+    assert "BROKEN" not in ip_registry._values
+    assert "SECOND" not in registry.extra_tasks._values
+    assert "_lazy_distinct_task_ipds.broken" not in __import__("sys").modules
+
+
+def test_read_for_distinct_task_requires_matching_native_identity():
+    from ...input_parameters.task_definition import TaskMismatchError
+    ip_registry = InputParameters.input_parameters_registry
+    dmi = InputParameters.task_registry["DMI"]
+    jxc = InputParameters.task_registry["JXC"]
+    params = InputParameters.create("DMI")
+    params.CONTROL.POTFIL = "Fe.pot"
+    text = params.to_string(validate=True)
+    parsed = ip_registry.read_for_task(dmi, io.StringIO(text))
+    assert parsed.task_name == "DMI"
+    assert parsed.task_definition is dmi
+    assert parsed.requested_task_name == "DMI"
+    with pytest.raises(TaskMismatchError):
+        ip_registry.read_for_task(jxc, io.StringIO(text))
+
+
+def test_create_from_dmi_result_keeps_dmi_defaults():
+    result = SimpleNamespace(
+        last_iteration=SimpleNamespace(
+            energy=SimpleNamespace(EMIN=lambda: -0.35)
+        )
+    )
+    dmi = InputParameters.task_registry["DMI"]
+    params = InputParameters.input_parameters_registry.create_from_result(dmi, result)
+    assert params.task_name == "DMI"
+    assert params.requested_task_name == "DMI"
+    assert params.TASK.DMI() and not params.TASK.JXC()
+    assert params.ENERGY.EMIN() == -0.35
+
+
+def test_compatibility_definition_mapping_loads_only_requested_schema(
+    tmp_path, monkeypatch
+):
+    package = _package(
+        tmp_path,
+        monkeypatch,
+        "_lazy_user_definition_entries",
+        {
+            "valid": (
+                "from ase2sprkkr.input_parameters.input_parameters_definitions "
+                "import InputParametersDefinition\n"
+                "def input_parameters_definition():\n"
+                "    return InputParametersDefinition('valid', [])\n"
+            ),
+            "marpes": "input_parameters = object()\n",
+        },
+    )
+    mapping = _LazyInputParametersDefinitions(InputParametersRegistry(package))
+
+    assert isinstance(mapping, Mapping)
+    assert set(mapping) == {"VALID", "MARPES"}
+    assert "MARPES" in mapping  # Discovery is not module materialization.
+    assert mapping["VALID"].name == "valid"
+
+    with pytest.raises(
+        RegistryDefinitionError,
+        match="does not define required export 'input_parameters_definition'",
+    ):
+        mapping["MARPES"]
+
+
+def test_legacy_user_hook_can_read_arpes_without_loading_broken_user_schema(
+    tmp_path,
+):
+    # Reproduce an import-time preference using InputParameters.definitions.
+    # The separate user-installed MARPES module is intentionally malformed.
+    config_dir = tmp_path / "ase2sprkkr"
+    custom_schemas = config_dir / "input_parameters"
+    custom_schemas.mkdir(parents=True)
+    (custom_schemas / "marpes.py").write_text(
+        "input_parameters = object()\n"
+    )
+    (config_dir / "__init__.py").write_text(
+        "from ase2sprkkr.input_parameters.input_parameters import InputParameters\n"
+        "InputParameters.definitions['ARPES'].mpi = False\n"
+        "assert InputParameters.definitions['ARPES'].name == 'arpes'\n"
+        "assert InputParameters.definitions['ARPES'].mpi is False\n"
+    )
+    env = os.environ.copy()
+    env["XDG_CONFIG_HOME"] = str(tmp_path)
+    env.pop("ASE2SPRKKR_NO_USER_PROFILE", None)
+
+    # Do not execute in XDG_CONFIG_HOME: its ase2sprkkr directory would
+    # shadow the installed package on sys.path in a fresh Python process.
+    working_dir = tmp_path / "work"
+    working_dir.mkdir()
+    completed = subprocess.run(
+        [sys.executable, "-c", "import ase2sprkkr"],
+        env=env,
+        cwd=working_dir,
+        capture_output=True,
+        text=True,
+        timeout=45,
+        check=False,
+    )
+    assert completed.returncode == 0, completed.stderr

@@ -4,8 +4,6 @@ from __future__ import annotations
 
 import json
 import logging
-import os
-import tempfile
 from contextlib import contextmanager
 from dataclasses import dataclass, replace
 from pathlib import Path
@@ -16,10 +14,11 @@ from uuid import UUID, uuid4
 from platformdirs import user_state_dir
 
 from ..common.file_locks import FileLock
+from ._durability import durable_mkdir, durable_write_json, fsync_directory
 
 logger = logging.getLogger(__name__)
 
-_PROJECT_SCHEMA_VERSION = 1
+_PROJECT_SCHEMA_VERSION = 2
 _HIERARCHY_LOCK = ".hierarchy.lock"
 ProjectChangedListener = Callable[[str], None]
 
@@ -55,7 +54,7 @@ class ProjectDeleteError(ProjectRepositoryError):
 class Project:
     """One immutable project snapshot.
 
-    Projects organize persistent ASE2SPRKKR runs independently of any user
+    Projects provide the namespace for tracked ASE2SPRKKR runs independently of any user
     interface. Local editing methods return another snapshot at the same
     generation; :class:`ProjectRepository` advances ``generation`` only after a
     successful persistent save.
@@ -65,7 +64,6 @@ class Project:
     generation: int
     name: str
     parent_id: str | None = None
-    persistent_refs: tuple[str, ...] = ()
 
     def __post_init__(self) -> None:
         project_id = _project_id(self.id)
@@ -75,13 +73,9 @@ class Project:
         parent_id = None if self.parent_id is None else _project_id(self.parent_id)
         if parent_id == project_id:
             raise ValueError("Project cannot be its own parent")
-        refs = tuple(_persistent_ref(value) for value in self.persistent_refs)
-        if len(set(refs)) != len(refs):
-            raise ValueError("Project contains duplicate persistent run references")
         object.__setattr__(self, "id", project_id)
         object.__setattr__(self, "name", name)
         object.__setattr__(self, "parent_id", parent_id)
-        object.__setattr__(self, "persistent_refs", refs)
 
     def rename(self, name: str) -> "Project":
         """Return this project with a validated display name."""
@@ -94,24 +88,6 @@ class Project:
         if parent == self.id:
             raise ValueError("Project cannot be its own parent")
         return self if parent == self.parent_id else replace(self, parent_id=parent)
-
-    def add_run(self, persistent_ref: str) -> "Project":
-        """Return this project referencing one additional persistent run."""
-        ref = _persistent_ref(persistent_ref)
-        if ref in self.persistent_refs:
-            return self
-        return replace(self, persistent_refs=(*self.persistent_refs, ref))
-
-    def remove_run(self, persistent_ref: str) -> "Project":
-        """Return this project without one persistent-run reference."""
-        ref = _persistent_ref(persistent_ref)
-        if ref not in self.persistent_refs:
-            return self
-        return replace(
-            self,
-            persistent_refs=tuple(value for value in self.persistent_refs if value != ref),
-        )
-
 
 def default_projects_directory() -> Path:
     """Return the ASE2SPRKKR state directory containing project JSON files."""
@@ -131,13 +107,6 @@ def _project_name(value: str) -> str:
     if not name:
         raise ValueError("Project name must not be empty")
     return name
-
-
-def _persistent_ref(value: str) -> str:
-    ref = str(value).strip()
-    if not ref:
-        raise ValueError("Persistent run reference must not be empty")
-    return ref
 
 
 def validate_hierarchy(projects: tuple[Project, ...]) -> None:
@@ -172,56 +141,6 @@ def validate_hierarchy(projects: tuple[Project, ...]) -> None:
 
     for project_id in by_id:
         visit(project_id)
-
-
-def _fsync_directory(directory: Path) -> None:
-    """Best-effort durability barrier for an updated directory entry."""
-    flags = os.O_RDONLY
-    if hasattr(os, "O_DIRECTORY"):
-        flags |= os.O_DIRECTORY
-    try:
-        descriptor = os.open(directory, flags)
-    except OSError:
-        return
-    try:
-        try:
-            os.fsync(descriptor)
-        except OSError:
-            pass
-    finally:
-        os.close(descriptor)
-
-
-def _atomic_write_json(path: Path, data: dict) -> None:
-    """Atomically replace one project JSON document."""
-    path.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
-    temporary: Path | None = None
-    try:
-        with tempfile.NamedTemporaryFile(
-            mode="w",
-            encoding="utf-8",
-            dir=path.parent,
-            prefix=f".{path.name}.",
-            suffix=".tmp",
-            delete=False,
-        ) as stream:
-            temporary = Path(stream.name)
-            json.dump(data, stream, indent=2)
-            stream.flush()
-            os.fsync(stream.fileno())
-        try:
-            os.chmod(temporary, 0o600)
-        except OSError:
-            pass
-        os.replace(temporary, path)
-        temporary = None
-        _fsync_directory(path.parent)
-    finally:
-        if temporary is not None:
-            try:
-                temporary.unlink()
-            except FileNotFoundError:
-                pass
 
 
 class ProjectRepository:
@@ -374,7 +293,7 @@ class ProjectRepository:
         return saved
 
     def delete(self, project_id: str, *, expected_generation: int) -> None:
-        """Delete a non-root leaf project without touching referenced runs."""
+        """Delete an inactive leaf project and its globally stored run history."""
         canonical = _project_id(project_id)
         with self._hierarchy_lock(), self._project_lock(canonical):
             current = self._read_path(self._json_path(canonical))
@@ -388,12 +307,26 @@ class ProjectRepository:
             projects = self._read_projects()
             if any(item.parent_id == canonical for item in projects):
                 raise ProjectDeleteError("Projects with child projects cannot be deleted")
-            try:
-                self._json_path(canonical).unlink()
-            except OSError as exc:
-                raise ProjectRepositoryError(
-                    f"Cannot delete project {canonical!r}: {exc}"
-                ) from exc
+            from .manager import RunStore, _FINAL_STATES
+            run_store = RunStore(self.directory.parent / "projects_runs")
+            with run_store.submission_lock():
+                histories = tuple(
+                    record for record in run_store.runs()
+                    if record.project_id == canonical
+                )
+                if any(record.state not in _FINAL_STATES for record in histories):
+                    raise ProjectDeleteError("Cannot delete a project with active runs")
+                try:
+                    self._json_path(canonical).unlink()
+                    fsync_directory(self.directory)
+                    for record in histories:
+                        record_path = run_store._path(record)
+                        record_path.unlink(missing_ok=True)
+                        fsync_directory(record_path.parent)
+                except OSError as exc:
+                    raise ProjectRepositoryError(
+                        f"Cannot delete project {canonical!r}: {exc}"
+                    ) from exc
 
         with self._state_lock:
             self._known.pop(canonical, None)
@@ -457,8 +390,8 @@ class ProjectRepository:
 
     def _write(self, project: Project) -> None:
         try:
-            self.directory.mkdir(parents=True, exist_ok=True, mode=0o700)
-            _atomic_write_json(
+            durable_mkdir(self.directory, parents=True, exist_ok=True, mode=0o700)
+            durable_write_json(
                 self._json_path(project.id),
                 {
                     "schema_version": _PROJECT_SCHEMA_VERSION,
@@ -466,8 +399,9 @@ class ProjectRepository:
                     "generation": project.generation,
                     "name": project.name,
                     "parent_id": project.parent_id,
-                    "persistent_refs": list(project.persistent_refs),
-                },
+                    },
+                mode=0o600,
+                indent=2,
             )
         except OSError as exc:
             raise ProjectRepositoryError(

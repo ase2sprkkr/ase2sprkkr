@@ -5,6 +5,7 @@ import pytest
 
 from ase2sprkkr.execution.base import (
     ExecutionResources,
+    ExecutionOutcome,
     ResourceOwnedRunner,
     RunState,
     SubmissionNotStarted,
@@ -19,7 +20,11 @@ class _Task:
     mpi = False
 
     def output_reader(self, **kwargs):
-        return object()
+        return SimpleNamespace(
+            read_from_file=lambda *args, **options: SimpleNamespace(
+                return_code=options.get("return_code"),
+            ),
+        )
 
 
 class _Parameters:
@@ -61,14 +66,18 @@ class _Prepared:
 
 
 class _Runner:
-    result = SimpleNamespace(return_code=None)
-    reference = None
     exception = None
 
-    def __init__(self, callback=None, *, submit_error=None):
+    def __init__(self, callback=None, *, submit_error=None, spec=None):
         self.callback = callback
         self.submit_error = submit_error
         self._state = RunState.NEW
+        self.result = ExecutionOutcome(
+            input_file=None if spec is None else spec.input_file,
+            output_file=None if spec is None else spec.output_file,
+            error_file=None if spec is None else spec.error_file,
+            return_code=0,
+        )
 
     @property
     def state(self):
@@ -99,10 +108,10 @@ class _Executor:
         self.factory_error = factory_error
         self.submit_error = submit_error
 
-    def create_run(self, reader, spec, callback=None):
+    def create_run(self, spec, callback=None):
         if self.factory_error is not None:
             raise self.factory_error
-        return _Runner(callback, submit_error=self.submit_error)
+        return _Runner(callback, submit_error=self.submit_error, spec=spec)
 
 
 def _create_run(executor, input_file, output_file):
@@ -156,6 +165,9 @@ def test_completion_releases_files_without_wait():
 
     runner.submit()
 
+    # Finalization is asynchronous, but owning resources must be released
+    # even when the caller never invokes the public wait() method.
+    assert runner._runner._done.wait(3)
     assert runner.state == RunState.FINISHED
     assert input_file.closed
     assert output_file.closed

@@ -62,8 +62,7 @@ def test_input_parameters_preserve_mpi_launch_intent(tmp_path, monkeypatch):
             seen["executor_mpi"] = mpi
             return LaunchSpec.from_mpi(mpi)
 
-        def create_run(self, output_reader, spec, callback=None):
-            assert output_reader is reader
+        def create_run(self, spec, callback=None):
             seen["spec"] = spec
             return runner
 
@@ -79,7 +78,7 @@ def test_input_parameters_preserve_mpi_launch_intent(tmp_path, monkeypatch):
             executor=Executor(),
         )
 
-        assert created.result is runner.result
+        assert created.result is None  # Unsubmitted postprocessing has no result
         assert seen["executor_mpi"] == "auto"
         assert seen["spec"].argv == ("kkrscf",)
         assert seen["spec"].mpi_argv == ("kkrscfMPI", input_file.name)
@@ -139,7 +138,7 @@ def test_required_local_mpi_without_launcher_fails(monkeypatch, tmp_path):
 
 def test_local_auto_warns_and_falls_back_to_serial(monkeypatch, tmp_path):
     monkeypatch.setattr(
-        "ase2sprkkr.execution.local.resolve_mpi_command", lambda mpi: None
+        "ase2sprkkr.execution.local_process.resolve_mpi_command", lambda mpi: None
     )
     input_file = (tmp_path / "run.inp").open("w+")
     spec = ExecutionSpec(
@@ -162,7 +161,7 @@ def test_local_auto_warns_and_falls_back_to_serial(monkeypatch, tmp_path):
 
 def test_local_auto_can_disable_missing_mpi_warning(monkeypatch, tmp_path):
     monkeypatch.setattr(
-        "ase2sprkkr.execution.local.resolve_mpi_command", lambda mpi: None
+        "ase2sprkkr.execution.local_process.resolve_mpi_command", lambda mpi: None
     )
     input_file = (tmp_path / "run.inp").open("w+")
     spec = ExecutionSpec(
@@ -268,8 +267,7 @@ def test_explicit_local_executor_overrides_remote_profile(tmp_path, monkeypatch)
             seen["mpi"] = mpi
             return LaunchSpec()
 
-        def create_run(self, output_reader, spec, callback=None):
-            assert output_reader is reader
+        def create_run(self, spec, callback=None):
             seen["spec"] = spec
             return runner
 
@@ -291,7 +289,7 @@ def test_explicit_local_executor_overrides_remote_profile(tmp_path, monkeypatch)
             executor=executor,
         )
 
-        assert created.result is runner.result
+        assert created.result is None  # Unsubmitted postprocessing has no result
         assert seen["mpi"] == "auto"
         assert seen["spec"].argv == ("kkrscf",)
         assert seen["spec"].mpi_argv is None

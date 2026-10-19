@@ -2,10 +2,11 @@ from types import SimpleNamespace
 
 import pytest
 
-from ase2sprkkr.execution import ExecutionManager, RunState, RunStore
-from ase2sprkkr.outputs.persistent import (
-    PersistentResultUnavailableError,
-    load_persistent_result,
+from ase2sprkkr.execution import RunState, RunStore
+from ase2sprkkr.execution.manager import ExecutionManager
+from ase2sprkkr.outputs.project_results import (
+    ProjectResultUnavailableError,
+    load_project_result,
 )
 
 
@@ -26,10 +27,10 @@ def test_later_primary_output_is_not_mistaken_for_uncaptured_history(tmp_path):
     record = manager.new_record(
         task="DOS",
         directory=tmp_path,
-        result_files=manager._result_files_for_spec(spec),
+        files=manager._result_files_for_spec(spec),
     )
     store.save(record)
-    record = manager.finalize(record, state=RunState.FINISHED, return_code=0)
+    record = manager.complete(record, state=RunState.FINISHED, return_code=0, artifacts_available=False)
 
     # The original run produced no output. Reusing the directory later must not
     # make this unrelated file part of the historical result.
@@ -39,5 +40,5 @@ def test_later_primary_output_is_not_mistaken_for_uncaptured_history(tmp_path):
         def read_from_file(self, *args, **kwargs):
             raise AssertionError("uncaptured output must never be parsed")
 
-    with pytest.raises(PersistentResultUnavailableError, match="unavailable"):
-        load_persistent_result(manager, record.id, reader=Reader())
+    with pytest.raises(ProjectResultUnavailableError, match="unavailable"):
+        load_project_result(manager, record.id)

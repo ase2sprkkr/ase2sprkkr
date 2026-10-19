@@ -1,590 +1,222 @@
-import json
-import os
-import warnings
+from threading import Event
 from types import SimpleNamespace
 
 import pytest
 
 from ase2sprkkr.execution import (
-    CorruptRunRecord,
-    ExecutionManager,
+    DuplicateSubmissionError,
+    ExecutionOutcome,
     Executor,
-    FileState,
-    RunReference,
+    ExecutorPool,
+    FailurePhase,
     RunState,
     RunStatus,
     RunStore,
 )
-from ase2sprkkr.outputs.persistent import load_persistent_result
+
+from ase2sprkkr.execution.manager import ExecutionManager
 
 
-class _FakeRunner:
-    def __init__(self, callback=None):
-        self.callback = callback
+class _RawRunner:
+    def __init__(self, on_submit=None):
+        self.on_submit = on_submit
         self.state = RunState.NEW
-        self.reference = None
-        self.result = SimpleNamespace(return_code=None)
+        self.backend_id = None
+        self.result = ExecutionOutcome(return_code=None)
         self.exception = None
-        self.on_submit = None
+        self.failure_phase = None
+        self.failure_message = None
+        self._done = Event()
+
+    @property
+    def return_code(self):
+        return self.result.return_code
 
     def submit(self):
         if self.on_submit:
             self.on_submit()
-        self.reference = RunReference(executor="test", native_id="native-1")
+        self.backend_id = "native-1"
         self.state = RunState.QUEUED
 
     def wait(self):
+        self._done.wait()
         return self.result
 
-    def run(self):
-        self.submit()
-        return self.wait()
+    def finish(self, return_code=0):
+        self.result.return_code = return_code
+        if return_code == 0:
+            self.state = RunState.FINISHED
+            self.failure_phase = None
+            self.failure_message = None
+        else:
+            self.state = RunState.FAILED
+            self.failure_phase = FailurePhase.EXECUTION
+            self.failure_message = f"process exited with {return_code}"
+        self._done.set()
 
     def cancel(self):
         self.state = RunState.CANCELLED
+        self._done.set()
 
     def add_output_listener(self, callback):
         pass
 
-    def finish(self, return_code=0):
-        self.result.return_code = return_code
-        self.state = (
-            RunState.FINISHED if return_code == 0 else RunState.EXECUTION_FAILED
-        )
-        if self.callback:
-            self.callback(self.result)
+    def add_output_error_listener(self, callback):
+        pass
 
 
-class _FakeExecutor(Executor):
+class _Executor(Executor):
     name = "test"
 
     def __init__(self):
         self.runners = []
         self.status_calls = []
+        self.on_submit = None
 
-    def create_run(self, reader, spec, callback=None):
-        runner = _FakeRunner(callback=callback)
+    def create_project_run(self, spec, *, run_id, callback=None):
+        runner = _RawRunner(on_submit=self.on_submit)
         self.runners.append(runner)
         return runner
 
-    def status(self, *references):
-        self.status_calls.append(references)
-        return tuple(
-            RunStatus(reference, RunState.RUNNING) for reference in references
-        )
+    def status(self, *runs):
+        self.status_calls.append(runs)
+        return tuple(RunStatus(RunState.RUNNING, backend_id=run.execution.backend_id) for run in runs)
 
 
-def _spec(tmp_path):
-    return SimpleNamespace(directory=str(tmp_path))
-
-
-def _result_files_spec(tmp_path):
-    input_file = tmp_path / "run.inp"
-    output_file = tmp_path / "run.out"
-    generated = tmp_path / "case.dat"
-    cache = tmp_path / "cache.dat"
-    input_file.write_text("input")
-    cache.write_text("cache-before")
+def _spec(tmp_path, *, dataset="case"):
     return SimpleNamespace(
         directory=str(tmp_path),
-        input_file=str(input_file),
-        output_file=str(output_file),
-        input_files=(str(input_file),),
-        output_files=(str(output_file), str(generated)),
-        cache_files=(str(cache),),
+        input_file=str(tmp_path / f"{dataset}.inp"),
+        output_file=str(tmp_path / f"{dataset}.out"),
+        input_files=(),
+        output_files=(),
     )
 
 
-def test_persistent_run_is_first_saved_as_submitting(tmp_path):
-    store = RunStore(tmp_path / "runs")
-    manager = ExecutionManager(store)
-    executor = _FakeExecutor()
+def _manager(tmp_path):
+    return ExecutionManager(
+        RunStore(tmp_path / "runs"), executor_pool=ExecutorPool()
+    )
+
+
+def test_submit_persists_submitting_before_backend_call(tmp_path):
+    manager = _manager(tmp_path)
+    executor = _Executor()
     run = manager.create_run(
         executor,
-        reader=object(),
-        spec=_spec(tmp_path),
+        _spec(tmp_path),
+        process_result=lambda outcome: outcome,
         task="ARPES",
         dataset="case",
     )
-    backend = executor.runners[0]
     seen = []
-    backend.on_submit = lambda: seen.append(store.get(run.id).state)
+    executor.on_submit = lambda: seen.append(manager.store.get(run.id).state)
+    # The runner already captured the callable during construction.
+    executor.runners[0].on_submit = executor.on_submit
 
     run.submit()
 
     assert seen == [RunState.SUBMITTING]
-    stored = store.get(run.id)
+    stored = manager.store.get(run.id)
     assert stored.state == RunState.QUEUED
     assert stored.finished_at is None
-    assert stored.reference == backend.reference
+    assert stored.execution.backend_id == executor.runners[0].backend_id
     assert stored.task == "ARPES"
     assert stored.dataset == "case"
 
 
-def test_run_id_exists_before_submit_and_double_submit_is_rejected(tmp_path):
-    manager = ExecutionManager(RunStore(tmp_path / "runs"))
-    executor = _FakeExecutor()
+def test_success_runs_postprocessing_before_finished(tmp_path):
+    manager = _manager(tmp_path)
+    executor = _Executor()
+    processed = []
     run = manager.create_run(
         executor,
-        reader=object(),
-        spec=_spec(tmp_path),
-        task="SCF",
-    )
-
-    assert run.id
-    assert run.record.state == RunState.NEW
-    assert run.record.finished_at is None
-
-    run.submit()
-    with pytest.raises(RuntimeError, match="already queued"):
-        run.submit()
-
-
-def test_completion_callback_persists_final_result(tmp_path):
-    store = RunStore(tmp_path / "runs")
-    manager = ExecutionManager(store)
-    executor = _FakeExecutor()
-    run = manager.create_run(
-        executor,
-        reader=object(),
-        spec=_spec(tmp_path),
+        _spec(tmp_path),
+        process_result=lambda outcome: processed.append(outcome) or outcome,
         task="DOS",
     )
-
     run.submit()
-    executor.runners[0].finish(return_code=0)
+    executor.runners[0].finish(0)
 
-    stored = store.get(run.id)
-    assert stored.state == RunState.FINISHED
-    assert stored.return_code == 0
-    assert stored.finished_at == stored.updated_at
+    result = run.wait()
 
-
-@pytest.mark.parametrize(
-    "state",
-    (
-        RunState.FINISHED,
-        RunState.EXECUTION_FAILED,
-        RunState.FINALIZATION_FAILED,
-        RunState.CANCELLED,
-    ),
-)
-def test_first_terminal_transition_sets_immutable_finished_at(tmp_path, state):
-    manager = ExecutionManager(RunStore(tmp_path / "runs"))
-    record = manager.new_record(task="DOS", directory=tmp_path)
-    record = manager.transition(record, state=RunState.RUNNING)
-    assert record.finished_at is None
-
-    record = manager.transition(record, state=RunState.FINALIZING)
-    assert record.finished_at is None
-
-    record = manager.transition(record, state=state)
-    finished_at = record.finished_at
-    assert finished_at == record.updated_at
-
-    updated = manager.transition(record, message="later metadata update")
-    assert updated.finished_at == finished_at
-
-
-def test_completion_captures_inputs_and_outputs_separately(tmp_path):
-    store = RunStore(tmp_path / "runs")
-    manager = ExecutionManager(store)
-    executor = _FakeExecutor()
-    spec = _result_files_spec(tmp_path)
-    run = manager.create_run(executor, object(), spec, task="DOS", dataset="case")
-
-    run.submit()
-    (tmp_path / "run.out").write_text("output")
-    (tmp_path / "case.dat").write_text("data")
-    executor.runners[0].finish()
-
-    stored = store.get(run.id)
-    assert stored.state == RunState.FINISHED
-    assert stored.result_files.state is FileState.CURRENT
-    assert stored.result_files.captured_at is not None
-    assert {os.fspath(item.path) for item in stored.result_files.input_versions} == {
-        str(tmp_path / "run.inp")
-    }
-    assert {os.fspath(item.path) for item in stored.result_files.output_versions} == {
-        str(tmp_path / "run.out"),
-        str(tmp_path / "case.dat"),
-    }
-    assert all(item.digest for item in stored.result_files.all_versions)
-    assert str(tmp_path / "cache.dat") not in stored.result_files.manifests
-
-
-def test_missing_captured_glob_member_counts_as_missing(tmp_path):
-    store = RunStore(tmp_path / "runs")
-    manager = ExecutionManager(store)
-    executor = _FakeExecutor()
-    input_file = tmp_path / "run.inp"
-    output_file = tmp_path / "run.out"
-    pattern = tmp_path / "case-*.dat"
-    input_file.write_text("input")
-    spec = SimpleNamespace(
-        directory=str(tmp_path),
-        input_file=str(input_file),
-        output_file=str(output_file),
-        input_files=(str(input_file),),
-        output_files=(str(output_file), str(pattern)),
-        cache_files=(),
-    )
-    run = manager.create_run(executor, object(), spec, task="DOS")
-
-    run.submit()
-    output_file.write_text("output")
-    first = tmp_path / "case-1.dat"
-    second = tmp_path / "case-2.dat"
-    first.write_text("one")
-    second.write_text("two")
-    executor.runners[0].finish()
-    stored = store.get(run.id)
-    second.unlink()
-
-    assert manager._missing_result_files(stored.result_files) == (str(second),)
-
-
-def test_new_glob_member_does_not_change_historical_snapshot(tmp_path):
-    store = RunStore(tmp_path / "runs")
-    manager = ExecutionManager(store)
-    executor = _FakeExecutor()
-    input_file = tmp_path / "run.inp"
-    output_file = tmp_path / "run.out"
-    pattern = tmp_path / "case-*.dat"
-    input_file.write_text("input")
-    spec = SimpleNamespace(
-        directory=str(tmp_path),
-        input_file=str(input_file),
-        output_file=str(output_file),
-        input_files=(str(input_file),),
-        output_files=(str(output_file), str(pattern)),
-        cache_files=(),
-    )
-    run = manager.create_run(executor, object(), spec, task="DOS")
-
-    run.submit()
-    output_file.write_text("output")
-    historical = tmp_path / "case-1.dat"
-    historical.write_text("one")
-    executor.runners[0].finish()
-    later = tmp_path / "case-2.dat"
-    later.write_text("from another calculation")
-
-    updated = manager.check_result_files(run.id)
-
-    assert updated.result_files.state is FileState.CURRENT
-    assert {os.fspath(item.path) for item in updated.result_files.output_versions} == {
-        str(output_file),
-        str(historical),
-    }
-
-
-def test_changed_result_file_is_overwritten_without_changing_outcome(tmp_path):
-    store = RunStore(tmp_path / "runs")
-    manager = ExecutionManager(store)
-    executor = _FakeExecutor()
-    spec = _result_files_spec(tmp_path)
-    run = manager.create_run(executor, object(), spec, task="DOS")
-
-    run.submit()
-    (tmp_path / "run.out").write_text("output")
-    (tmp_path / "case.dat").write_text("first")
-    executor.runners[0].finish()
-    finished = store.get(run.id)
-    (tmp_path / "case.dat").write_text("changed contents")
-
-    updated = manager.check_result_files(run.id)
-
-    assert updated.state == RunState.FINISHED
-    assert updated.return_code == 0
-    assert updated.result_files.state is FileState.OVERWRITTEN
-    assert updated.finished_at == finished.finished_at
-
-
-def test_restoring_original_contents_restores_current_state(tmp_path):
-    store = RunStore(tmp_path / "runs")
-    manager = ExecutionManager(store)
-    executor = _FakeExecutor()
-    spec = _result_files_spec(tmp_path)
-    run = manager.create_run(executor, object(), spec, task="DOS")
-
-    run.submit()
-    (tmp_path / "run.out").write_text("output")
-    generated = tmp_path / "case.dat"
-    generated.write_text("first")
-    executor.runners[0].finish()
-    generated.write_text("other")
-    assert manager.check_result_files(run.id).result_files.state is FileState.OVERWRITTEN
-
-    generated.write_text("first")
-
-    assert manager.check_result_files(run.id).result_files.state is FileState.CURRENT
-
-
-def test_same_size_content_change_with_restored_mtime_marks_result_overwritten(tmp_path):
-    store = RunStore(tmp_path / "runs")
-    manager = ExecutionManager(store)
-    executor = _FakeExecutor()
-    spec = _result_files_spec(tmp_path)
-    run = manager.create_run(executor, object(), spec, task="DOS")
-
-    run.submit()
-    (tmp_path / "run.out").write_text("output")
-    generated = tmp_path / "case.dat"
-    generated.write_text("first")
-    executor.runners[0].finish()
-    original = generated.stat()
-    generated.write_text("other")
-    os.utime(
-        generated,
-        ns=(original.st_atime_ns, original.st_mtime_ns),
-    )
-
-    updated = manager.check_result_files(run.id)
-
-    assert updated.result_files.state is FileState.OVERWRITTEN
-
-
-@pytest.mark.parametrize("filename", ["run.out", "case.dat"])
-def test_output_metadata_change_keeps_result_current(tmp_path, filename):
-    store = RunStore(tmp_path / "runs")
-    manager = ExecutionManager(store)
-    executor = _FakeExecutor()
-    spec = _result_files_spec(tmp_path)
-    run = manager.create_run(executor, object(), spec, task="DOS")
-
-    run.submit()
-    (tmp_path / "run.out").write_text("output")
-    (tmp_path / "case.dat").write_text("data")
-    executor.runners[0].finish()
-    path = tmp_path / filename
-    stat = path.stat()
-    os.utime(path, ns=(stat.st_atime_ns, stat.st_mtime_ns + 1_000_000))
-
-    updated = manager.check_result_files(run.id)
-
-    assert updated.result_files.state is FileState.CURRENT
-
-
-def test_input_change_does_not_invalidate_current_output(tmp_path):
-    store = RunStore(tmp_path / "runs")
-    manager = ExecutionManager(store)
-    executor = _FakeExecutor()
-    spec = _result_files_spec(tmp_path)
-    run = manager.create_run(executor, object(), spec, task="DOS")
-
-    run.submit()
-    (tmp_path / "run.out").write_text("output")
-    (tmp_path / "case.dat").write_text("data")
-    executor.runners[0].finish()
-    input_file = tmp_path / "run.inp"
-    input_file.write_text("changed input")
-
-    updated = manager.check_result_files(run.id)
-
-    assert updated.result_files.state is FileState.CURRENT
-    assert manager.input_file_is_current(updated) is False
-
-
-def test_changed_cache_does_not_mark_result_overwritten(tmp_path):
-    store = RunStore(tmp_path / "runs")
-    manager = ExecutionManager(store)
-    executor = _FakeExecutor()
-    spec = _result_files_spec(tmp_path)
-    run = manager.create_run(executor, object(), spec, task="DOS")
-
-    run.submit()
-    (tmp_path / "run.out").write_text("output")
-    (tmp_path / "case.dat").write_text("data")
-    executor.runners[0].finish()
-    (tmp_path / "cache.dat").write_text("cache-after-with-different-size")
-
-    updated = manager.check_result_files(run.id)
-
-    assert updated.state == RunState.FINISHED
-    assert updated.result_files.state is FileState.CURRENT
-
-
-def test_load_persistent_result_parses_output_without_backend_refresh(tmp_path):
-    store = RunStore(tmp_path / "runs")
-    manager = ExecutionManager(store)
-    executor = _FakeExecutor()
-    spec = _result_files_spec(tmp_path)
-    run = manager.create_run(executor, object(), spec, task="DOS")
-
-    run.submit()
-    (tmp_path / "run.out").write_text("output")
-    (tmp_path / "case.dat").write_text("data")
-    executor.runners[0].finish()
-
-    calls = []
-
-    class Reader:
-        def read_from_file(self, output, **kwargs):
-            calls.append((output, kwargs))
-            return SimpleNamespace(return_code=kwargs["return_code"])
-
-    result = load_persistent_result(manager, run.id, reader=Reader())
-
-    assert calls == [
-        (
-            str(tmp_path / "run.out"),
-            {
-                "return_code": 0,
-                "input_file": str(tmp_path / "run.inp"),
-                "directory": str(tmp_path),
-            },
-        )
-    ]
     assert result.return_code == 0
-    assert result.run_record.state == RunState.FINISHED
-    assert executor.status_calls == []
+    assert processed == [result]
+    stored = manager.store.get(run.id)
+    assert stored.state == RunState.FINISHED
+    assert stored.failure_phase is None
+    assert stored.finished_at is not None
 
 
-def test_load_persistent_result_omits_stale_input_context(tmp_path):
-    store = RunStore(tmp_path / "runs")
-    manager = ExecutionManager(store)
-    executor = _FakeExecutor()
-    spec = _result_files_spec(tmp_path)
-    run = manager.create_run(executor, object(), spec, task="DOS")
-
+def test_execution_failure_skips_result_processor(tmp_path):
+    manager = _manager(tmp_path)
+    executor = _Executor()
+    processed = []
+    run = manager.create_run(
+        executor,
+        _spec(tmp_path),
+        process_result=lambda outcome: processed.append(outcome) or outcome,
+        task="DOS",
+    )
     run.submit()
-    (tmp_path / "run.out").write_text("output")
-    (tmp_path / "case.dat").write_text("data")
-    executor.runners[0].finish()
-    (tmp_path / "run.inp").write_text("changed input")
-    calls = []
+    executor.runners[0].finish(7)
 
-    class Reader:
-        def read_from_file(self, output, **kwargs):
-            calls.append(kwargs)
-            return SimpleNamespace(return_code=kwargs["return_code"])
+    result = run.wait()
 
-    result = load_persistent_result(manager, run.id, reader=Reader())
-
-    assert calls[0]["input_file"] is None
-    assert result.run_record.result_files.state is FileState.CURRENT
+    assert result.return_code == 7
+    assert processed == []
+    stored = manager.store.get(run.id)
+    assert stored.state == RunState.FAILED
+    assert stored.failure_phase == FailurePhase.EXECUTION
+    assert stored.return_code == 7
 
 
-def test_refresh_batches_referenced_runs(tmp_path):
-    store = RunStore(tmp_path / "runs")
-    manager = ExecutionManager(store)
-    executor = _FakeExecutor()
-    representative = RunReference(executor="test", native_id="registered")
-    manager.register_executor(executor, reference=representative)
-
+def test_refresh_batches_status_queries(tmp_path):
+    manager = _manager(tmp_path)
+    executor = _Executor()
+    endpoint = manager.register_executor(executor)
     records = []
-    for native_id in ("one", "two"):
-        record = manager.new_record(task="DOS", directory=tmp_path)
+    for index in range(2):
+        record = manager.new_record(
+            task="DOS",
+            directory=tmp_path / str(index),
+            endpoint=endpoint,
+        )
         record = manager.transition(
             record,
             state=RunState.QUEUED,
-            reference=RunReference(executor="test", native_id=native_id),
+            execution=record.execution.submitted(str(index)),
         )
         records.append(record)
 
     refreshed = manager.refresh(records)
 
-    assert len(executor.status_calls) == 1
-    assert executor.status_calls[0] == tuple(record.reference for record in records)
     assert [record.state for record in refreshed] == [
         RunState.RUNNING,
         RunState.RUNNING,
     ]
+    assert executor.status_calls == [tuple(records)]
 
 
-def test_run_store_shards_records_and_marks_schema(tmp_path):
-    store = RunStore(tmp_path / "runs")
-    manager = ExecutionManager(store)
-    record = manager.new_record(task="ARPES", directory=tmp_path)
-    record = manager.transition(record, state=RunState.SUBMITTING, reference=None)
-
-    path = tmp_path / "runs" / record.created_at[:10] / f"{record.id}.json"
-    data = json.loads(path.read_text())
-
-    assert path.is_file()
-    assert data["schema_version"] == 1
-    assert data["task"] == "ARPES"
-    assert data["input_definition"] is None
-    assert "requested_task" not in data
-    assert "task_definition" not in data
-    assert "backend_state" not in data
-    assert data["finished_at"] is None
-
-
-def test_run_store_persists_file_digests(tmp_path):
-    store = RunStore(tmp_path / "runs")
-    manager = ExecutionManager(store)
-    spec = _result_files_spec(tmp_path)
-    record = manager.new_record(
+def test_duplicate_submission_is_blocked_by_persisted_namespace(tmp_path):
+    manager = _manager(tmp_path)
+    executor = _Executor()
+    first = manager.create_run(
+        executor,
+        _spec(tmp_path),
+        process_result=lambda outcome: outcome,
         task="DOS",
-        directory=tmp_path,
-        result_files=manager._result_files_for_spec(spec),
+        dataset="case",
     )
-    store.save(record)
-    (tmp_path / "run.out").write_text("output")
-    (tmp_path / "case.dat").write_text("data")
-    record = manager.finalize(record, state=RunState.FINISHED)
+    first.submit()
 
-    path = tmp_path / "runs" / record.created_at[:10] / f"{record.id}.json"
-    data = json.loads(path.read_text())
-
-    assert all(
-        version["digest"]
-        for version in data["result_files"]["input_versions"]
-        + data["result_files"]["output_versions"]
+    second = manager.create_run(
+        executor,
+        _spec(tmp_path),
+        process_result=lambda outcome: outcome,
+        task="DOS",
+        dataset="case",
     )
-    assert "state" not in data["result_files"]
 
-
-@pytest.mark.parametrize("schema_version", [0, 2, 3, 4, 5])
-def test_run_store_rejects_other_schema_versions(tmp_path, schema_version):
-    store = RunStore(tmp_path / "runs")
-    manager = ExecutionManager(store)
-    record = manager.new_record(task="DOS", directory=tmp_path)
-    store.save(record)
-    path = tmp_path / "runs" / record.created_at[:10] / f"{record.id}.json"
-    data = json.loads(path.read_text())
-    data["schema_version"] = schema_version
-    path.write_text(json.dumps(data))
-
-    with pytest.raises(CorruptRunRecord, match="unsupported schema version"):
-        store.get(record.id)
-
-
-def test_run_store_listing_warns_once_and_skips_corrupt_record(tmp_path):
-    store = RunStore(tmp_path / "runs")
-    manager = ExecutionManager(store)
-    valid = manager.new_record(task="SCF", directory=tmp_path)
-    valid = manager.transition(valid, state=RunState.SUBMITTING, reference=None)
-    broken = tmp_path / "runs" / valid.created_at[:10] / "broken.json"
-    broken.write_text("{")
-
-    with pytest.warns(RuntimeWarning, match="Corrupt run record"):
-        assert store.runs() == (valid,)
-    with warnings.catch_warnings(record=True) as caught:
-        warnings.simplefilter("always")
-        assert store.runs() == (valid,)
-    assert not caught
-
-
-def test_weaker_observation_does_not_degrade_final_record(tmp_path):
-    store = RunStore(tmp_path / "runs")
-    manager = ExecutionManager(store)
-    reference = RunReference(executor="test", native_id="one")
-    record = manager.new_record(task="DOS", directory=tmp_path)
-    record = manager.transition(
-        record,
-        state=RunState.FINISHED,
-        reference=reference,
-        return_code=0,
-        message="completed",
-    )
-    finished_at = record.finished_at
-
-    updated = manager.update(record, RunStatus(reference, RunState.RUNNING))
-
-    assert updated.state == RunState.FINISHED
-    assert updated.return_code == 0
-    assert updated.message == "completed"
-    assert updated.finished_at == finished_at
+    with pytest.raises(DuplicateSubmissionError):
+        second.submit()

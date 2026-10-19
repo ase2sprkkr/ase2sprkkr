@@ -67,10 +67,10 @@ def test_remote_executor_over_ssh(docker_execution_image):
         ExecutionManager,
         ExecutorPool,
         RemoteExecutor,
-        RunStore,
+        ProjectRepository,
         SshTransport,
     )
-    from ase2sprkkr.outputs.persistent import attach_persistent_run
+    from ase2sprkkr.outputs.project_results import load_project_result
     from ase2sprkkr.sprkkr.calculator import SPRKKR
     from ase2sprkkr.sprkkr.profile import SPRKKRProfile
 
@@ -148,9 +148,11 @@ def test_remote_executor_over_ssh(docker_execution_image):
                 local_root=tmp,
                 remote_root="/home/tester/ase2sprkkr-runs",
             )
+            projects = ProjectRepository(tmp / "projects")
+            project = projects.create("SSH integration")
             manager = ExecutionManager(
-                RunStore(tmp / "runs"), executor_pool=ExecutorPool()
-            )
+                executor_pool=ExecutorPool(), project_repository=projects
+            ).for_project(project)
             output_seen = Event()
             output = []
             first_output_at = []
@@ -169,7 +171,7 @@ def test_remote_executor_over_ssh(docker_execution_image):
                 directory=workdir,
                 executor=executor,
                 profile=profile,
-                persistent=manager,
+                project=manager,
                 empty_spheres=False,
                 print_output=False,
             )
@@ -182,10 +184,10 @@ def test_remote_executor_over_ssh(docker_execution_image):
             except subprocess.CalledProcessError as exc:
                 _remote_error(exc)
 
-            assert runner.reference is not None
-            assert runner.reference.computer == "tester@127.0.0.1"
+            assert runner.backend_id is not None
+            assert runner.execution.endpoint.host == "tester@127.0.0.1"
             assert (
-                runner.reference.directory
+                runner.execution.directory.remote
                 == "/home/tester/ase2sprkkr-runs/calculation"
             )
             _wait_for_live_output(runner, output_seen, output)
@@ -202,7 +204,7 @@ def test_remote_executor_over_ssh(docker_execution_image):
             remote_potential = (
                 potfil
                 if posixpath.isabs(potfil)
-                else posixpath.join(runner.reference.directory, potfil)
+                else posixpath.join(runner.execution.directory.remote, potfil)
             )
             remote_pot_new = remote_potential + "_new"
             subprocess.run(ssh + ["test", "-s", remote_pot_new], check=True)
@@ -212,19 +214,20 @@ def test_remote_executor_over_ssh(docker_execution_image):
             )
 
             # Simulate a client restart. A fresh manager/pool knows only the
-            # persisted run id; it must reconstruct SSH endpoint identity,
-            # task reader and the saved per-run LaunchSpec before replaying the
-            # finished output.
+            # persisted run id. It must reconstruct endpoint identity from the
+            # client-owned record, while terminal result replay is handled by
+            # the outputs layer rather than by attaching a live runner.
             run_id = runner.id
             restarted = ExecutionManager(
-                RunStore(tmp / "runs"), executor_pool=ExecutorPool()
-            )
-            attached = attach_persistent_run(restarted, run_id)
-            replayed = attached.wait()
+                executor_pool=ExecutorPool(), project_repository=projects
+            ).for_project(project)
+            record = restarted.store.get(run_id)
+            restarted_executor = restarted.executor_for(record)
+            replayed = load_project_result(restarted, run_id)
 
-            assert attached.executor is not executor
-            assert attached.executor.transport.host == "tester@127.0.0.1"
-            assert attached.executor.transport.options == options
+            assert restarted_executor is not executor
+            assert restarted_executor.transport.host == "tester@127.0.0.1"
+            assert restarted_executor.transport.options == options
             assert replayed.return_code == 0
             assert len(replayed.iterations) > 0
         finally:

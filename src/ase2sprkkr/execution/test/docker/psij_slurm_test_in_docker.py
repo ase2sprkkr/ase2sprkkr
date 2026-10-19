@@ -3,7 +3,7 @@
 from tempfile import TemporaryDirectory
 
 from ase.build import bulk
-from ase2sprkkr.execution import PsijExecutor, PsijRunner, RunState
+from ase2sprkkr.execution import PsijExecutor, RunState
 from ase2sprkkr.sprkkr.calculator import SPRKKR
 
 
@@ -24,14 +24,11 @@ def main():
         runner = calculator.create_run(
             options={"NITER": 2, "NKTAB": 5, "NE": 5},
         )
-        assert isinstance(runner, PsijRunner)
+        assert runner.executor is executor
         assert runner.state == RunState.NEW
 
         runner.submit()
-        reference = runner.reference
-        assert reference is not None
-        assert reference.executor == "psij:slurm"
-        assert reference.native_id
+        assert runner.backend_id is not None
 
         result = runner.wait()
         assert runner.state == RunState.FINISHED

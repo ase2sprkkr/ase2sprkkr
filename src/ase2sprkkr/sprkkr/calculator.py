@@ -65,7 +65,7 @@ class SPRKKR(BaseCalculator):
         executable_dir: Optional[Union[str, bool]] = None,
         profile=None,
         executor=None,
-        persistent=False,
+        project=None,
         **kwargs,
     ):
         if potential is not None and not isinstance(potential, (bool, str)):
@@ -103,7 +103,7 @@ class SPRKKR(BaseCalculator):
             executable_suffix=executable_suffix,
         )
         self.executor = executor
-        self.persistent = persistent
+        self.project = project
         self.label = label
         self._counter = 0
 
@@ -360,7 +360,7 @@ class SPRKKR(BaseCalculator):
         gdb=False,
         profile: Optional[SPRKKRProfile] = None,
         executor=None,
-        persistent=None,
+        project=None,
         restart_scf: bool = False,
         error_file=None,
     ):
@@ -385,8 +385,8 @@ class SPRKKR(BaseCalculator):
             self.profile if profile is None else profile
         )
         print_output = first_non_none(print_output, self.print_output)
-        if persistent is None:
-            persistent = self.persistent
+        if project is None:
+            project = self.project
         if executor is None and not explicit_profile:
             executor = self.executor
 
@@ -409,7 +409,7 @@ class SPRKKR(BaseCalculator):
             result_context=self,
             profile=run_profile,
             executor=executor,
-            persistent=persistent,
+            project=project,
             print_output=print_output,
             read_callback=read_callback,
             callback=callback,
@@ -461,7 +461,7 @@ class SPRKKR(BaseCalculator):
         gdb=False,
         profile=None,
         executor=None,
-        persistent=None,
+        project=None,
         restart_scf: bool = False,
         error_file=None,
     ):
@@ -505,7 +505,7 @@ class SPRKKR(BaseCalculator):
             gdb=gdb,
             profile=run_profile,
             executor=executor,
-            persistent=persistent,
+            project=project,
             restart_scf=restart_scf,
             error_file=error_file,
         )
