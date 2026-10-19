@@ -201,43 +201,50 @@ def write_arpes_nexus(spc, filename, *, input_parameters=None,
     except ImportError as exc:
         raise ImportError("ARPES NeXus export requires h5py (install ase2sprkkr[nexus])") from exc
 
-    if hasattr(spc, "MODE") and spc.MODE() != "energy":
-        raise ValueError(
-            "NeXus ARPES energy/angle export does not support the kx_ky SPC mode"
-        )
-
+    mode = spc.MODE() if hasattr(spc, "MODE") else "energy"
+    if mode not in ("energy", "kx_ky"):
+        raise ValueError(f"Unknown ARPES SPC mode: {mode}")
     values = {
-        "theta": spc.THETA(),
-        "energy": spc.ENERGY(),
         "total": spc.TOTAL(),
         "spin_up": spc.UP(),
         "spin_down": spc.DOWN(),
         "spin_polarization": spc.POLARIZATION(),
-        "k_parallel": spc.K(),
         "determinant": spc.DETERMINANT(),
     }
+    if mode == "energy":
+        values.update(theta=spc.THETA(), energy=spc.ENERGY(), k_parallel=spc.K())
+    else:
+        values.update(k_x=spc.KX(), k_y=spc.KY())
     arrays = {name: np.asarray(value) for name, value in values.items()}
-    if int(spc.NP()) != 1:
-        raise ValueError("The eight-column ARPES SPC export requires NP=1; azimuthal scans need a separate format")
+    if mode == "energy" and int(spc.NP()) != 1:
+        raise ValueError("Energy/angle SPC requires NP=1")
     shape = arrays["total"].shape
     if len(shape) != 2 or min(shape) == 0:
         raise ValueError("ARPES spectrum must form a non-empty (energy, angle) grid")
-    if shape[1] != int(spc.NT()):
-        raise ValueError("ARPES SPC NT does not match the angular grid")
+    if shape[1] != int(spc.NT()) or (mode == "kx_ky" and shape[0] != int(spc.NP())):
+        raise ValueError("ARPES SPC dimensions do not match the declared grid")
     if any(value.shape != shape for value in arrays.values()):
         raise ValueError("ARPES SPC columns have inconsistent dimensions")
     if any(not np.issubdtype(value.dtype, np.number) for value in arrays.values()):
         raise ValueError("ARPES SPC arrays must be numeric")
 
-    energy, theta = arrays["energy"], arrays["theta"]
-    rectilinear = (
-        np.allclose(energy, energy[:, :1], equal_nan=True)
-        and np.allclose(theta, theta[:1, :], equal_nan=True)
-    )
+    if mode == "energy":
+        energy, theta = arrays["energy"], arrays["theta"]
+        rectilinear = (
+            np.allclose(energy, energy[:, :1], equal_nan=True)
+            and np.allclose(theta, theta[:1, :], equal_nan=True)
+        )
+    else:
+        kx, ky = arrays["k_x"], arrays["k_y"]
+        rectilinear = (
+            np.allclose(kx, kx[:1, :], equal_nan=True)
+            and np.allclose(ky, ky[:, :1], equal_nan=True)
+        )
 
     raw_data = np.asarray(spc.RAW_DATA())
-    if raw_data.ndim != 2 or raw_data.shape != (shape[0] * shape[1], 8):
-        raise ValueError("ARPES SPC raw data must have eight columns and NE*NT rows")
+    ncols = 8 if mode == "energy" else 7
+    if raw_data.ndim != 2 or raw_data.shape != (shape[0] * shape[1], ncols):
+        raise ValueError(f"ARPES SPC {mode} raw data must have {ncols} columns and match the grid")
     input_parameters, resolved_input_file = _input_for_export(
         spc, input_parameters, input_file
     )
@@ -385,12 +392,18 @@ def write_arpes_nexus(spc, filename, *, input_parameters=None,
             photon_geometry.create_dataset("geometry_mode", data="emission_angle_dependent")
             # In SPEC_VBRUN, THEQ = THETA_electron - FIXTHQ, then SPEC_TILT.
             # This is the pre-tilt angle, not a fabricated lab-frame angle.
-            angle = photon_geometry.create_dataset(
-                "polar_angle_before_tilt",
-                data=arrays["theta"] - float(photon_theta_fix)
-            )
-            angle.attrs["units"] = "degree"
-            angle.attrs["long_name"] = "Native photon polar angle before SPEC_TILT"
+            if mode == "energy":
+                angle = photon_geometry.create_dataset(
+                    "polar_angle_before_tilt",
+                    data=arrays["theta"] - float(photon_theta_fix)
+                )
+                angle.attrs["units"] = "degree"
+                angle.attrs["long_name"] = "Native photon polar angle before SPEC_TILT"
+            else:
+                photon_geometry.create_dataset(
+                    "angular_grid_note",
+                    data="The constant-energy SPC does not store emission-angle grid."
+                )
             photon_geometry.create_dataset("calculation", data=(
                 "SPEC_VBRUN: THEQ = THETA_electron - FIXTHQ; "
                 "SPEC_TILT may rotate photon incidence for sample tilt"
@@ -559,10 +572,34 @@ def write_arpes_nexus(spc, filename, *, input_parameters=None,
 
         data = entry.create_group("data")
         data.attrs.update(NX_class="NXdata", signal="data")
+        data.attrs["sprkkr_mode"] = mode
         intensity = data.create_dataset("data", data=arrays["total"])
         intensity.attrs["long_name"] = "Calculated total photoemission intensity"
         intensity.attrs["units"] = "arbitrary_units"
-        if rectilinear:
+        if mode == "kx_ky":
+            if rectilinear:
+                data.attrs["axes"] = ["k_y", "k_x"]
+                data.attrs["k_y_indices"] = 0
+                data.attrs["k_x_indices"] = 1
+                data.create_dataset("k_x", data=kx[0, :])
+                data.create_dataset("k_y", data=ky[:, 0])
+            else:
+                data.attrs["axes"] = ["row_index", "column_index"]
+                data.attrs["row_index_indices"] = 0
+                data.attrs["column_index_indices"] = 1
+                data.create_dataset("row_index", data=np.arange(shape[0]))
+                data.create_dataset("column_index", data=np.arange(shape[1]))
+                data.create_dataset("k_x", data=kx)
+                data.create_dataset("k_y", data=ky)
+                data.attrs["k_x_indices"] = [0, 1]
+                data.attrs["k_y_indices"] = [0, 1]
+            data["k_x"].attrs["units"] = "1/angstrom"
+            data["k_y"].attrs["units"] = "1/angstrom"
+            data.attrs["fixed_energy_note"] = (
+                "Constant-energy momentum map: the single energy is not recorded "
+                "in the native SPC columns."
+            )
+        elif rectilinear:
             data.attrs["axes"] = ["energy", "theta"]
             data.attrs["energy_indices"] = 0
             data.attrs["theta_indices"] = 1
@@ -578,10 +615,11 @@ def write_arpes_nexus(spc, filename, *, input_parameters=None,
             data.create_dataset("theta", data=theta)
             data.attrs["energy_indices"] = [0, 1]
             data.attrs["theta_indices"] = [0, 1]
-        data["energy"].attrs["units"] = "eV"
-        data["energy"].attrs["long_name"] = "Calculated initial-state energy E - E_F"
-        data["theta"].attrs["units"] = "degree"
-        data["theta"].attrs["long_name"] = "Photoelectron polar emission angle (SPR-KKR convention)"
+        if mode == "energy":
+            data["energy"].attrs["units"] = "eV"
+            data["energy"].attrs["long_name"] = "Calculated initial-state energy E - E_F"
+            data["theta"].attrs["units"] = "degree"
+            data["theta"].attrs["long_name"] = "Photoelectron polar emission angle (SPR-KKR convention)"
         for name in ("spin_up", "spin_down", "spin_polarization",
                      "k_parallel", "determinant"):
             data.create_dataset(name, data=arrays[name])
@@ -592,25 +630,26 @@ def write_arpes_nexus(spc, filename, *, input_parameters=None,
         data["spin_polarization"].attrs["formula"] = "(I_1 - I_2) / (I_1 + I_2)"
         data["spin_up"].attrs["long_name"] = "SPR-KKR spin channel 1 (labelled spin up)"
         data["spin_down"].attrs["long_name"] = "SPR-KKR spin channel 2 (labelled spin down)"
-        data["k_parallel"].attrs["units"] = "1/angstrom"
-        data.attrs["k_parallel_indices"] = [0, 1]
-        data["k_parallel"].attrs["long_name"] = "Native SPR-KKR k_parallel coordinate"
-        if scan_k1 is not None:
-            data["k_parallel"].attrs["coordinate_definition"] = (
-                "Unsigned distance in reciprocal space from KA (for 1D K-vector scans)"
-            )
-        elif input_parameters is not None:
-            data["k_parallel"].attrs["coordinate_definition"] = (
-                "Signed k_parallel = 0.5123 sqrt(E_kin[eV]) sin(theta) [1/angstrom]"
-            )
-        else:
-            data["k_parallel"].attrs["coordinate_definition"] = (
-                "KPARAF output; signed angular k_parallel or offset from KA in K-vector scans"
-            )
+        if mode == "energy":
+            data["k_parallel"].attrs["units"] = "1/angstrom"
+            data.attrs["k_parallel_indices"] = [0, 1]
+            data["k_parallel"].attrs["long_name"] = "Native SPR-KKR k_parallel coordinate"
+            if scan_k1 is not None:
+                data["k_parallel"].attrs["coordinate_definition"] = (
+                    "Unsigned distance in reciprocal space from KA (for 1D K-vector scans)"
+                )
+            elif input_parameters is not None:
+                data["k_parallel"].attrs["coordinate_definition"] = (
+                    "Signed k_parallel = 0.5123 sqrt(E_kin[eV]) sin(theta) [1/angstrom]"
+                )
+            else:
+                data["k_parallel"].attrs["coordinate_definition"] = (
+                    "KPARAF output; signed angular k_parallel or offset from KA in K-vector scans"
+                )
         data["determinant"].attrs["long_name"] = (
             "Squared modulus of internal complex determinant (SPR-KKR diagnostic)"
         )
-        if photon_energy is not None and work_function is not None:
+        if mode == "energy" and photon_energy is not None and work_function is not None:
             kinetic_energy = data.create_dataset(
                 "kinetic_energy",
                 data=energy + float(photon_energy) - float(work_function),
@@ -629,10 +668,11 @@ def write_arpes_nexus(spc, filename, *, input_parameters=None,
         source = entry.create_group("sprkkr_spc")
         source.attrs["NX_class"] = "NXcollection"
         source.create_dataset("raw_data", data=raw_data)
-        source["raw_data"].attrs["columns"] = [
-            "THETA", "ENERGY", "TOTAL", "UP", "DOWN",
-            "POLARIZATION", "K", "DETERMINANT"
-        ]
+        source["raw_data"].attrs["columns"] = (
+            ["THETA", "ENERGY", "TOTAL", "UP", "DOWN", "POLARIZATION", "K", "DETERMINANT"]
+            if mode == "energy" else
+            ["KX", "KY", "TOTAL", "UP", "DOWN", "POLARIZATION", "DETERMINANT"]
+        )
         source.create_dataset("nt", data=int(spc.NT()))
         source.create_dataset("np", data=int(spc.NP()))
         source.create_dataset("comment", data=str(spc.COMMENT()))

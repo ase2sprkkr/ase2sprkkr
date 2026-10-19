@@ -483,12 +483,58 @@ def test_result_passes_explicit_input_and_input_parameters():
     assert kwargs["input_parameters"] == "already-known"
 
 
-def test_kxky_spc_mode_is_not_mistaken_for_energy_spectrum(tmp_path):
-    """The current native SPC parser distinguishes energy and kx/ky modes."""
-    class KxKy(SPC):
-        def MODE(self):
-            return "kx_ky"
-    target = tmp_path / "kxky.nxs"
-    with pytest.raises(ValueError, match="kx_ky"):
-        write_arpes_nexus(KxKy(), target)
-    assert not target.exists()
+class KMap(SPC):
+    def __init__(self, irregular=False):
+        self.raw = np.array([
+            [-1, 0, 1, .6, .4, .2, 10],
+            [0, 0, 2, 1.2, .8, .2, 11],
+            [1, 0, 3, 1.8, 1.2, .2, 12],
+            [-1, 1, 4, 2.4, 1.6, .2, 13],
+            [0, 1, 5, 3, 2, .2, 14],
+            [1, 1, 6, 3.6, 2.4, .2, 15],
+        ], dtype=float)
+        if irregular:
+            self.raw[3, 0] = -.7
+    def MODE(self): return "kx_ky"
+    def NT(self): return 3
+    def NP(self): return 2
+    def KX(self): return self.raw[:, 0].reshape(2, 3)
+    def KY(self): return self.raw[:, 1].reshape(2, 3)
+    def TOTAL(self): return self.raw[:, 2].reshape(2, 3)
+    def UP(self): return self.raw[:, 3].reshape(2, 3)
+    def DOWN(self): return self.raw[:, 4].reshape(2, 3)
+    def POLARIZATION(self): return self.raw[:, 5].reshape(2, 3)
+    def DETERMINANT(self): return self.raw[:, 6].reshape(2, 3)
+
+
+def test_kxky_map_export(tmp_path):
+    map = KMap()
+    path = tmp_path / "map.nxs"
+    with pytest.warns(UserWarning, match="No SPR-KKR input"):
+        write_arpes_nexus(map, path)
+    with h5py.File(path) as f:
+        data = f["entry/data"]
+        assert list(data.attrs["axes"]) == ["k_y", "k_x"]
+        np.testing.assert_array_equal(data["k_x"], [-1, 0, 1])
+        np.testing.assert_array_equal(data["k_y"], [0, 1])
+        np.testing.assert_array_equal(data["data"], map.TOTAL())
+        assert data["k_x"].attrs["units"] == "1/angstrom"
+        assert "energy" not in data
+        assert len(f["entry/sprkkr_spc/raw_data"].attrs["columns"]) == 7
+
+
+def test_nonrectilinear_kmap(tmp_path):
+    map = KMap(irregular=True)
+    with pytest.warns(UserWarning):
+        write_arpes_nexus(map, tmp_path / "curved.nxs")
+    with h5py.File(tmp_path / "curved.nxs") as f:
+        d = f["entry/data"]
+        assert list(d.attrs["axes"]) == ["row_index", "column_index"]
+        np.testing.assert_array_equal(d["k_x"], map.KX())
+
+
+def test_invalid_kmap_width(tmp_path):
+    map = KMap()
+    map.raw = np.pad(map.raw, ((0,0),(0,1)))
+    with pytest.raises(ValueError, match="7 columns"):
+        write_arpes_nexus(map, tmp_path / "invalid.nxs")

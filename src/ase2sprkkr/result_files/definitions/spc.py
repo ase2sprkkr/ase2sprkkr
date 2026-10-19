@@ -102,7 +102,7 @@ def create_definition():
         """Reshape determinant ``data`` using dimensions from ``section``."""
         if section["MODE"]() == "energy":
             return data[:, 7].reshape(section["NE"](), section["NT"]())
-        return data[:, 6].reshape(section["NE"](), section["NT"]())
+        return data[:, 6].reshape(section["NP"](), section["NT"]())
 
     def ii(j):
         def fn(data: np.ndarray, section: object) -> np.ndarray:
@@ -122,7 +122,7 @@ def create_definition():
             V("NT", int),
             V("NP", int),
             V("COMMENT", Prefixed("#"), name_in_grammar=False),
-            V("RAW_DATA", NumpyArray(written_shape=(-1, 8)), name_in_grammar=False),
+            V("RAW_DATA", NumpyArray(), name_in_grammar=False),
             GV("MODE", mode),
             *switch(
                 "MODE",
