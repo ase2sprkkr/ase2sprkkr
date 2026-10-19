@@ -61,7 +61,8 @@ class _Follower:
 class SupervisorStreams:
     """One event loop writes the spools and fans out output to followers."""
 
-    def __init__(self, stdout_path=None, stderr_path=None, *, detached=True):
+    def __init__(self, stdout_path=None, stderr_path=None, *, detached=True,
+                 socket_dir=None):
         self.paths = {"out": None if stdout_path is None else os.fspath(stdout_path),
                       "err": None if stderr_path is None else os.fspath(stderr_path)}
         self.merged = (stdout_path is not None and stderr_path is not None
@@ -78,7 +79,7 @@ class SupervisorStreams:
         self._followers = set()
         self._server = None
         self._terminal = None
-        self._socket_dir = None
+        self._socket_dir = socket_dir
         self.socket_path = None
 
     async def start(self):
@@ -88,7 +89,8 @@ class SupervisorStreams:
                 # Truncate the declared stream at launch. Keep the actual file
                 # available during execution and after failure or cancellation.
                 self._spools[kind] = open(path, "wb", buffering=0)
-        self._socket_dir = tempfile.mkdtemp(prefix="ase2sprkkr-follow-")
+        if self._socket_dir is None:
+            self._socket_dir = tempfile.mkdtemp(prefix="ase2sprkkr-follow-")
         self.socket_path = os.path.join(self._socket_dir, "socket")
         self._server = await asyncio.start_unix_server(self._connect, self.socket_path)
         os.chmod(self.socket_path, 0o600)

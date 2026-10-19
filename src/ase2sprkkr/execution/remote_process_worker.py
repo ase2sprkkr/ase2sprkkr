@@ -57,6 +57,7 @@ async def _run(spec):
     streams = SupervisorStreams(
         spec.get("output_file"), spec.get("error_file"),
         detached=spec.get("detached", True),
+        socket_dir=spec.get("socket_dir"),
     )
     await streams.start()
     os.write(int(spec["socket_fd"]), (streams.socket_path + "\n").encode())

@@ -16,6 +16,8 @@ import signal
 import socket
 import subprocess
 import sys
+import tempfile
+import shutil
 import time
 from pathlib import Path
 from uuid import uuid4
@@ -185,6 +187,8 @@ def _local_submit(request):
 
     run_id = str(request.get("id") or uuid4().hex)
     receipt_id = uuid4().hex
+    socket_dir = tempfile.mkdtemp(prefix="ase2sprkkr-follow-")
+    socket_path = os.path.join(socket_dir, "socket")
 
     worker_spec = {
         "argv": list(spec.argv),
@@ -193,6 +197,7 @@ def _local_submit(request):
         "output_file": output_path,
         "error_file": error_path,
         "receipt_id": receipt_id,
+        "socket_dir": socket_dir,
         "detached": bool(request.get("detached", True)),
     }
     env = os.environ.copy()
@@ -203,6 +208,8 @@ def _local_submit(request):
     worker_spec["socket_fd"] = socket_write_fd
     env[_SPEC_ENV] = json.dumps(worker_spec, separators=(",", ":"))
     env[_START_FD_ENV] = str(start_fd)
+    process = None
+    published = False
     try:
         try:
             try:
@@ -225,30 +232,44 @@ def _local_submit(request):
 
         info = _process_info(process.pid)
         if info is None:
-            try:
-                os.killpg(process.pid, signal.SIGKILL)
-            except ProcessLookupError:
-                pass
             raise RuntimeError("Started remote process disappeared before identification")
         start_time, _ = info
-        os.write(release_fd, b"1")
-        # An advertised handle must refer to an already-listening supervisor.
-        with os.fdopen(socket_read_fd, "rb", closefd=True) as ready:
-            socket_path = ready.readline().decode("utf8").rstrip("\n")
-        if not socket_path:
-            raise RuntimeError("Remote supervisor did not create its follow socket")
-    finally:
-        os.close(release_fd)
-
-    remote_id = _encode_handle(
-        {
+        remote_id = _encode_handle({
             "kind": "process",
             "pid": process.pid,
             "start_time": start_time,
             "receipt_id": receipt_id,
             "socket_path": socket_path,
-        }
-    )
+        })
+
+        # Durable identity precedes releasing the supervisor. Until this
+        # receipt is safely stored, the child cannot launch a calculation.
+        if request.get("detached"):
+            _publish_submission(run_id, {"remote_id": remote_id})
+            published = True
+
+        os.write(release_fd, b"1")
+        with os.fdopen(socket_read_fd, "rb", closefd=True) as ready:
+            socket_read_fd = None
+            observed_path = ready.readline().decode("utf8").rstrip("\n")
+        if observed_path != socket_path:
+            raise RuntimeError("Remote supervisor did not create its follow socket")
+    except BaseException as exc:
+        if not published and process is not None:
+            try:
+                os.killpg(process.pid, signal.SIGKILL)
+            except ProcessLookupError:
+                pass
+        if not published:
+            shutil.rmtree(socket_dir, ignore_errors=True)
+        if isinstance(exc, OSError) and not published:
+            raise SubmissionNotStarted(str(exc)) from exc
+        raise
+    finally:
+        os.close(release_fd)
+        if socket_read_fd is not None:
+            os.close(socket_read_fd)
+
     reply = {
         "remote_id": remote_id,
         "state": RunState.RUNNING.value,
@@ -259,8 +280,6 @@ def _local_submit(request):
         "return_code": None,
         "failure_phase": None,
     }
-    if request.get("detached"):
-        _publish_submission(run_id, {"remote_id": remote_id})
     return reply
 
 
