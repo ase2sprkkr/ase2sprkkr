@@ -45,6 +45,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
+nexus = ["h5py>=3.8"]
 jupyter = [
     "jupyterlab",
     "nbformat",

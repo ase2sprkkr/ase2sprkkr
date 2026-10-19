@@ -4,6 +4,7 @@ from ..task_result import TaskResult, KkrOutputReader
 from .default import DefaultOutputParser
 from ...common.decorators import cached_property
 import os
+from pathlib import Path
 
 
 class ArpesResult(TaskResult):
@@ -11,13 +12,40 @@ class ArpesResult(TaskResult):
     containing the results of Angle resolved photoelectron electroscopy,
     using the :py:attr:`~spc` property."""
 
+    def to_nexus(self, filename, *, input_file=None, metadata=None):
+        """Export ARPES spectrum and recover input provenance when available."""
+        if input_file is None:
+            input_file = self.input_parameters_file
+        else:
+            input_file = Path(input_file)
+            if not input_file.is_absolute():
+                input_file = Path(self.directory) / input_file
+        return self.spc.to_nexus(
+            filename,
+            input_parameters=self._input_parameters,
+            input_file=input_file,
+            metadata=metadata,
+        )
+
     @cached_property
     def spc_filename(self):
         """Spectroscopy results file name"""
-        fname = self.input_parameters.CONTROL.DATASET() + "_ARPES_data.spc"
-        if self.directory:
-            fname = os.path.join(self.directory, fname)
-        return fname
+        parameters = self.input_parameters
+        if parameters is not None:
+            return os.path.join(
+                self.directory, parameters.CONTROL.DATASET() + "_ARPES_data.spc"
+            )
+        matches = list(Path(self.directory).glob("*_ARPES_data.spc"))
+        if len(matches) == 1:
+            return str(matches[0])
+        if not matches:
+            raise FileNotFoundError(
+                f"No ARPES spectrum found in {self.directory}"
+            )
+        raise ValueError(
+            f"Several ARPES SPC files exist in {self.directory}; "
+            "provide a corresponding input file or choose the SPC explicitly"
+        )
 
     @cached_property
     def spc(self):

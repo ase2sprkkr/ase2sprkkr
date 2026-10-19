@@ -57,3 +57,23 @@ jobs:
     uses: ase2sprkkr/guy4kkr/.github/workflows/backend-compatibility.yml@master
     with:
       ase2sprkkr_ref: ${{ github.sha }}
+
+  # h5py is optional; do not allow an import skip to hide failed exports.
+  arpes-nexus:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v6
+    - uses: actions/setup-python@v6
+      with:
+        python-version: '3.12'
+    - run: |
+        mkdir -p ~/.config/matplotlib
+        echo "text.usetex : False" >> ~/.config/matplotlib/matplotlibrc
+    - run: ./install_dependencies.sh
+    - name: Install NeXus writers and independent reader
+      run: |
+        python -m pip install "h5py>=3.8" "nexusformat>=2.0"
+        python -c "import h5py, nexusformat.nexus"
+    - name: Verify ARPES export, provenance and real SPC fixture
+      run: python -m pytest -q -rs src/ase2sprkkr/result_files/test/test_nexus.py
+
