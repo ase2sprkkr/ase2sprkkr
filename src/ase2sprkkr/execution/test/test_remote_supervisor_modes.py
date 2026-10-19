@@ -209,3 +209,35 @@ def test_receipt_write_failure_never_emits_durable_terminal_claim(tmp_path, monk
         "error": "Unable to persist terminal receipt: mailbox fsync failed",
     }]
     assert (tmp_path / "stdout").read_bytes() == b"payload\n"
+
+
+
+def test_supervisor_pumps_both_binary_channels_to_separate_files(tmp_path, monkeypatch):
+    reported = []
+    monkeypatch.setattr(
+        remote_process_worker, "publish_outcome",
+        lambda *args, **kwargs: reported.append((args, kwargs)),
+    )
+
+    async def run():
+        rd, wr = os.pipe()
+        spec = _spec(
+            tmp_path, wr, detached=True,
+            argv=[
+                sys.executable, "-c",
+                "import sys; "
+                "sys.stdout.buffer.write(b'A' * 65536 + bytes([0, 255])); "
+                "sys.stdout.buffer.flush(); "
+                "sys.stderr.buffer.write(b'B' * 65536 + bytes([1, 254])); "
+                "sys.stderr.buffer.flush()",
+            ],
+        )
+        return_code = await asyncio.wait_for(remote_process_worker._run(spec), 5)
+        with os.fdopen(rd, "rb") as pipe:
+            assert pipe.readline()
+        return return_code
+
+    assert asyncio.run(run()) == 0
+    assert (tmp_path / "stdout").read_bytes() == b"A" * 65536 + bytes([0, 255])
+    assert (tmp_path / "stderr").read_bytes() == b"B" * 65536 + bytes([1, 254])
+    assert reported[0][0][1].value == "finished"
