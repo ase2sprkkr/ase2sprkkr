@@ -13,7 +13,8 @@ def test_task_registry_unifies_colocated_and_shared_task_declarations():
     arpes = task_registry["ARPES"]
     spleed = task_registry["SPLEED"]
     arpes_schema = input_registry.definition_for_task(arpes)
-    assert arpes_schema is input_registry.definition_for_task(spleed)
+    assert arpes_schema is not input_registry.definition_for_task(spleed)
     assert arpes_schema._task_definition is None
     assert arpes.input_parameters_definition_name == arpes_schema.name.upper()
-    assert spleed.input_parameters_definition_name == arpes_schema.name.upper()
+    assert spleed.input_parameters_definition_name == "SPLEED"
+    assert input_registry.definition_for_task(spleed)._task_definition is spleed

@@ -336,14 +336,14 @@ def _task_definition():
             ),
             V(
                 "NK1",
-                int,
+                Integer(min=2),
                 condition=_kk_item,
                 info="number of k-points along k1",
                 is_optional=True,
             ),
             V(
                 "NK2",
-                int,
+                Integer(min=2),
                 condition=_kk_item,
                 info="number of k-points along k2",
                 is_optional=True,
@@ -353,14 +353,14 @@ def _task_definition():
                 SetOf(float, length=3),
                 condition=_kk_item,
                 is_optional=True,
-                info="first k-vector to span a two-dimensional region in k-space",
+                info="First endpoint of the K-K region; native subtracts KA, then orthogonalizes the second direction.",
             ),
             V(
                 "K2",
                 SetOf(float, length=3),
                 condition=_kk_item,
                 is_optional=True,
-                info="second k-vector to span a two-dimensional region in k-space",
+                info="Second endpoint of the K-K region; native subtracts KA and orthogonalizes relative to K1-KA.",
             ),
         ],
     )

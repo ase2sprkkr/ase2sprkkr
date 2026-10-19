@@ -39,9 +39,8 @@ def test_preparse_ipd_is_cached_and_contains_only_repeated_task():
 def test_mapping_is_declarative_and_independent_of_adsi():
     mapping = _task_selector_map()
     assert mapping["JXC"] == mapping["DMI"]
-    assert mapping["ARPES"] == mapping["SPLEED"]
-    assert mapping["ARPES"] == mapping["AIPES"]
-    assert mapping["ARPES"] == mapping["BAND"]
+    for task in ("ARPES", "SPLEED", "AIPES", "BAND"):
+        assert mapping[task] == (InputParameters.definition(task),)
     assert mapping["BSF"] == (InputParameters.definition("BSF"),)
     for definition in InputParameters.definitions.values():
         assert definition.accepted_task_selectors()

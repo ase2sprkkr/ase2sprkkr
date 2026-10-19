@@ -88,6 +88,12 @@ class InputParameters(ConfigurationFile):
             raise RuntimeError(
                 "These input parameters are not associated with an SPR-KKR task definition"
             )
+        expected = self.input_parameters_registry.definition_for_task(task)
+        if expected is not self._definition:
+            raise RuntimeError(
+                f"Task {task.name} uses a different input schema; "
+                "use change_task() to switch schemas explicitly."
+            )
         return task
 
     @property
@@ -313,3 +319,20 @@ class InputParameters(ConfigurationFile):
                 retain_invalid="none",
                 report_invalid="ignore",
             )
+
+            # Explicit TASK.TASK may select a different canonical schema.
+            # Preserve requested provenance while keeping the effective task
+            # and its input definition consistent.
+            effective = self.task_definition
+            if effective is not None:
+                canonical = self.input_parameters_registry.definition_for_task(effective)
+                if canonical is not self._definition:
+                    values = self.to_dict(only_changed="explicit")
+                    self._definition = canonical
+                    self._init_members_from_the_definition()
+                    self.set(
+                        values,
+                        unknown="ignore",
+                        retain_invalid="none",
+                        report_invalid="ignore",
+                    )

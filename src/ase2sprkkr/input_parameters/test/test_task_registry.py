@@ -31,12 +31,13 @@ def test_standard_task_comes_from_input_parameters_definition():
     assert "SCF" not in InputParameters.task_registry.extra_tasks.names()
 
 
-def test_spec_tasks_share_schema_and_requested_task_is_default():
+def test_spec_tasks_have_specialized_schemas_and_requested_task_is_default():
     schema = InputParameters.input_parameters_registry["ARPES"]
     spleed = InputParameters.create("SPLEED")
 
     assert schema._task_definition is None
-    assert spleed._definition is schema
+    assert spleed._definition is InputParameters.input_parameters_registry["SPLEED"]
+    assert spleed._definition is not schema
     assert spleed.requested_task_name == "SPLEED"
     assert spleed.TASK.TASK() == "SPLEED"
     assert not spleed.TASK.TASK.is_set()
@@ -81,7 +82,7 @@ def test_input_and_task_registry_namespaces_are_distinct():
     task_names = set(InputParameters.task_registry.names())
 
     assert {"ARPES", "BSF"} <= input_names
-    assert "SPLEED" not in input_names
+    assert {"SPLEED", "AIPES", "BAND"} <= input_names
     assert "BSFEK" not in input_names
     assert "BSF" not in task_names
     assert {"ARPES", "SPLEED", "BSFEK", "BSFKK"} <= task_names
