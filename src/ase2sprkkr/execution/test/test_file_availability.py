@@ -64,3 +64,18 @@ def test_clear_outputs_preserves_inputs_and_cache(tmp_path):
     assert cache_file.read_text() == "old"
     assert not output_file.exists()
     assert not other.exists()
+
+
+def test_clear_outputs_preserves_wildcard_cache_matches(tmp_path):
+    from ..file_availability import clear_declared_outputs
+
+    cache = tmp_path / "restart-1.pot"
+    output = tmp_path / "result-1.pot"
+    cache.write_bytes(b"restart state")
+    output.write_bytes(b"stale result")
+    clear_declared_outputs(
+        [str(tmp_path / "*.pot")],
+        protected=[str(tmp_path / "restart-*.pot")],
+    )
+    assert cache.read_bytes() == b"restart state"
+    assert not output.exists()

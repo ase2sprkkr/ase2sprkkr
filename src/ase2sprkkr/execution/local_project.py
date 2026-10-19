@@ -40,14 +40,13 @@ def _file_path(value, directory=None):
 
 
 def local_manifest(files, status):
-    """Resolve local file availability without confusing stale files with output.
+    """Resolve stream availability, including partial cancelled-run output.
 
-    A failed launch (and a cancelled run) never publishes stream files. The
-    supervisor commits streams only for completed processes; a publication
-    failure is explicitly an artifacts failure, not a successful execution.
+    The supervisor writes streams directly during execution. Cancellation and
+    execution failure do not retract already written bytes.
     """
     published = (
-        status.state == RunState.FINISHED or
+        status.state in (RunState.FINISHED, RunState.CANCELLED) or
         (status.state == RunState.FAILED and status.failure_phase == FailurePhase.EXECUTION)
     )
     for entry in (files.stdout, files.stderr):

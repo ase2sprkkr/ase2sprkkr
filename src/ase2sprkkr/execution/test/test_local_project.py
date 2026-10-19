@@ -215,3 +215,14 @@ def test_terminal_runner_state_survives_outcome_acknowledgement(tmp_path):
     LocalExecutor().acknowledge(_record(tmp_path, runner.backend_id))
     assert runner.state == RunState.FINISHED
     assert runner.return_code == 0
+
+
+def test_cancelled_run_preserves_partial_stream_availability(tmp_path):
+    out = tmp_path / "out.txt"
+    out.write_bytes(b"partial output\n")
+    files = FileManifest(
+        stdout=FileEntry(local_path=str(out), availability_state="pending"),
+    )
+    manifest = local_manifest(files, RunStatus(RunState.CANCELLED))
+    assert manifest.stdout.availability_state == "available"
+    assert out.read_bytes() == b"partial output\n"
