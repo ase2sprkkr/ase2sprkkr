@@ -301,11 +301,11 @@ class RunStore:
             yield
 
     def save(self, record: RunRecord):
-        with self._project_guard(record), self._lock:
+        with self._lock, self._project_guard(record):
             return self._write_unlocked(record)
 
     def update(self, record: RunRecord, updater):
-        with self._project_guard(record), self._lock, FileLock(self._run_lock_path(record)):
+        with self._lock, self._project_guard(record), FileLock(self._run_lock_path(record)):
             path = self._path(record)
             latest = self._decode(path) if path.is_file() else record
             updated = updater(latest)
