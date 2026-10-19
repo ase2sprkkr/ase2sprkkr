@@ -125,6 +125,10 @@ def test_controls_switch_np_nt_on_real_parser_grid(tmp_path):
         fig = plt.gcf()
         controls = fig._ase2sprkkr_controls
         assert len(_artists(fig)) == 4
+        np.testing.assert_allclose(
+            np.asarray(_artists(fig)[0].collections[0].get_array()),
+            spc.TOTAL()[:, 0, :]
+        )
         assert controls.state == {"direction": "NP", "slice": 0}
         assert len(controls._slider_values["slice"]) == 4
         assert _artists(fig)[0].get_xlabel() == r"$\theta$ (deg)"
@@ -133,8 +137,16 @@ def test_controls_switch_np_nt_on_real_parser_grid(tmp_path):
         assert controls.state == {"direction": "NT", "slice": 0}
         assert len(controls._slider_values["slice"]) == 3
         assert _artists(fig)[0].get_xlabel() == "Azimuth index (NP)"
+        np.testing.assert_allclose(
+            np.asarray(_artists(fig)[0].collections[0].get_array()),
+            spc.TOTAL()[:, :, 0]
+        )
         controls.widgets["slice"].set_val(2)
         assert controls.state["slice"] == 2
+        np.testing.assert_allclose(
+            np.asarray(_artists(fig)[0].collections[0].get_array()),
+            spc.TOTAL()[:, :, 2]
+        )
         assert len(_artists(fig)) == 4
     finally:
         plt.close("all")
