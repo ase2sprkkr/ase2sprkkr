@@ -172,3 +172,40 @@ def test_failed_final_output_sync_is_reported_as_artifact_failure(tmp_path, monk
     assert args[2] == 0
     assert args[3] == FailurePhase.ARTIFACTS
     assert kwargs["error"] == "Failed to sync process output: cannot fsync output"
+
+
+def test_receipt_write_failure_never_emits_durable_terminal_claim(tmp_path, monkeypatch):
+    from ..remote_supervisor_stream import SupervisorStreams
+
+    observed = []
+    original_terminal = SupervisorStreams.terminal
+
+    def record_terminal(self, outcome):
+        observed.append(outcome)
+        original_terminal(self, outcome)
+
+    monkeypatch.setattr(SupervisorStreams, "terminal", record_terminal)
+
+    def fail_receipt(*args, **kwargs):
+        raise OSError("mailbox fsync failed")
+
+    monkeypatch.setattr(remote_process_worker, "publish_outcome", fail_receipt)
+    monkeypatch.setattr(remote_process_worker, "_write_outcome", fail_receipt)
+
+    async def check():
+        rd, wr = os.pipe()
+        spec = _spec(tmp_path, wr, detached=True, argv=[
+            sys.executable, "-c", "print('payload', flush=True)",
+        ])
+        assert await asyncio.wait_for(remote_process_worker._run(spec), 5) == 0
+        with os.fdopen(rd, "rb") as read_pipe:
+            assert read_pipe.readline()
+
+    asyncio.run(check())
+    assert observed == [{
+        "state": "unknown",
+        "return_code": None,
+        "failure_phase": None,
+        "error": "Unable to persist terminal receipt: mailbox fsync failed",
+    }]
+    assert (tmp_path / "stdout").read_bytes() == b"payload\\n"

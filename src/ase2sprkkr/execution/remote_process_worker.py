@@ -158,6 +158,15 @@ async def _run(spec):
                 publish_outcome(spec["receipt_id"], state, return_code, phase, error=message)
             else:
                 _write_outcome(spec["receipt_id"], state, return_code, phase)
+        except OSError as exc:
+            # No durable terminal receipt exists. The client must preserve its
+            # active run and retry recovery, never commit FINISHED from a socket.
+            outcome = {
+                "state": RunState.UNKNOWN.value,
+                "return_code": None,
+                "failure_phase": None,
+                "error": f"Unable to persist terminal receipt: {exc}",
+            }
         finally:
             streams.terminal(outcome)
             await streams.finish()
