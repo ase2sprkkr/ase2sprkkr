@@ -240,3 +240,32 @@ def test_recovered_stream_paths_do_not_create_unrecorded_stream():
     )
     assert updated.stdout.remote_path == "/remote/out"
     assert updated.stderr is None
+
+
+@pytest.mark.parametrize("existing", [False, True])
+@pytest.mark.parametrize(
+    "state, message, error",
+    [
+        ("invalid", None, "availability state"),
+        ("available", "unexpected error", "availability error"),
+    ],
+)
+def test_manifest_availability_validation_is_shared_with_file_entry(existing, state, message, error):
+    manifest = FileManifest(
+        outputs=(FileEntry("/local/result"),) if existing else (),
+    )
+    with pytest.raises(ValueError, match=error):
+        manifest.with_file_availability("/local/result", state, message)
+
+
+def test_submitted_uses_execution_backend_id_validation():
+    execution = Execution(ExecutorEndpoint(), WorkingDirectory("/tmp"))
+    with pytest.raises(ValueError, match="backend_id cannot be empty"):
+        execution.submitted("")
+    bound = execution.submitted(42)
+    assert bound.backend_id == "42"
+    assert bound.submitted(42) == bound
+    with pytest.raises(ValueError, match="backend_id cannot be empty"):
+        bound.submitted("")
+    with pytest.raises(ValueError, match="Cannot replace"):
+        bound.submitted("other")
