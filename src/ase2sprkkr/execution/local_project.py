@@ -13,7 +13,7 @@ from threading import Event, Lock, Thread
 from .base import (
     ExecutionOutcome, ExecutionSpec, FailurePhase, OutputObservers,
     RunState, RunStatus, dispatch_cancellation,
-    finish_monitor, wait_for_monitor,
+    finish_monitor, wait_for_monitor, file_path,
 )
 from .file_availability import discover_local_files
 from .remote_service import (
@@ -24,20 +24,8 @@ _TERMINAL = {RunState.FINISHED, RunState.FAILED, RunState.CANCELLED}
 
 
 def _file_path(value, directory=None):
-    if value is None:
-        return None
-    if hasattr(value, "flush"):
-        value.flush()
-    value = getattr(value, "name", value)
-    if isinstance(value, int):
-        return None
-    try:
-        path = os.fspath(value)
-    except TypeError:
-        return None
-    if directory is not None and not os.path.isabs(path):
-        path = os.path.join(directory, path)
-    return os.path.abspath(path)
+    # Local project submission flushes file objects before publishing paths.
+    return file_path(value, directory, flush=True)
 
 
 def local_manifest(files, status):
