@@ -7,7 +7,7 @@ def test_native_spc_definitions_are_distinct():
     assert names["band_spc"].extension == "spc"
     assert names["spleed_spc"].extension == "spc"
     assert names["spc"].extension == "spc"
-    assert names["spleed_intensity"].extension == "out"
+    assert names["spleed_intensity"].extension is None
     assert len(result_file_definition_registry.by_extension()["spc"]) == 3
 
 def test_band_and_spleed_results_register_typed_spectra(tmp_path):
@@ -55,7 +55,7 @@ def test_band_plot_uses_one_scatter_plot_and_correct_k_axis(monkeypatch):
         monkeypatch.setattr(band_spc, "single_plot", fake_single_plot)
         fake = SimpleNamespace(
             NT=lambda: nt,
-            RAW_DATA=lambda: np.array([[0.0, -1.0, 8.0], [0.5, 1.5, 12.0]]),
+            RAW_DATA=lambda: np.array([[0.0, -1.0, 8.0, 0.2], [0.5, 1.5, 12.0, -0.3]]),
         )
         actual = band_spc.BandSPCResultFile.plot(
             fake, filename="band.png", show=False
@@ -97,7 +97,7 @@ def test_band_plot_can_skip_fermi_line(monkeypatch):
     monkeypatch.setattr(band_spc, "single_plot", fake_single_plot)
     fake = SimpleNamespace(
         NT=lambda: 1,
-        RAW_DATA=lambda: np.array([[0.0, 0.0, 0.0]]),
+        RAW_DATA=lambda: np.array([[0.0, 0.0, 0.0, 0.0]]),
     )
     band_spc.BandSPCResultFile.plot(fake, axis=axis, show_fermi=False, s=3)
     assert len(axis.points) == 1
@@ -121,3 +121,13 @@ def test_spc_discovery_without_existing_spec_log(tmp_path):
     )
     assert result.spc_filenames == (str(spc),)
     assert result.output_values["SPC"].file_type == "spleed_spc"
+
+def test_band_four_columns_and_complex_components():
+    import numpy as np
+    d = ResultFile.definitions["band_spc"]
+    f = d.read_from_dict({"RAW_DATA": np.array([[0., -1., .25, -.125]])})
+    assert f.RAW_DATA().shape == (1, 4)
+    np.testing.assert_allclose(f.K_EIG(), [0.])
+    np.testing.assert_allclose(f.E_EIG(), [-1.])
+    np.testing.assert_allclose(f.T_EIG_REAL(), [.25])
+    np.testing.assert_allclose(f.T_EIG_IMAG(), [-.125])
