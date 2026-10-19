@@ -484,7 +484,7 @@ def test_result_passes_explicit_input_and_input_parameters():
 
 
 class KMap(SPC):
-    def __init__(self, irregular=False):
+    def __init__(self, skew=False, warped=False):
         self.raw = np.array([
             [-1, 0, 1, .6, .4, .2, 10],
             [0, 0, 2, 1.2, .8, .2, 11],
@@ -493,8 +493,10 @@ class KMap(SPC):
             [0, 1, 5, 3, 2, .2, 14],
             [1, 1, 6, 3.6, 2.4, .2, 15],
         ], dtype=float)
-        if irregular:
-            self.raw[3, 0] = -.7
+        if skew:
+            self.raw[3:, 0] += .3
+        if warped:
+            self.raw[4, 0] += .3
     def MODE(self): return "kx_ky"
     def NT(self): return 3
     def NP(self): return 2
@@ -507,34 +509,64 @@ class KMap(SPC):
     def DETERMINANT(self): return self.raw[:, 6].reshape(2, 3)
 
 
-def test_kxky_map_export(tmp_path):
-    map = KMap()
+@pytest.mark.parametrize("skew", [False, True])
+def test_kxky_map_export(tmp_path, skew):
+    spectrum = KMap(skew=skew)
     path = tmp_path / "map.nxs"
     with pytest.warns(UserWarning, match="No SPR-KKR input"):
-        write_arpes_nexus(map, path)
+        write_arpes_nexus(spectrum, path)
     with h5py.File(path) as f:
         data = f["entry/data"]
-        assert list(data.attrs["axes"]) == ["k_y", "k_x"]
-        np.testing.assert_array_equal(data["k_x"], [-1, 0, 1])
-        np.testing.assert_array_equal(data["k_y"], [0, 1])
-        np.testing.assert_array_equal(data["data"], map.TOTAL())
-        assert data["k_x"].attrs["units"] == "1/angstrom"
+        assert data.attrs["sprkkr_mode"] == "kx_ky"
+        assert list(data.attrs["axes"]) == ["row", "column"]
+        assert data["data"].shape == (2, 3)
+        assert list(data["row"][:]) == [0, 1]
+        assert list(data["column"][:]) == [0, 1, 2]
+        np.testing.assert_array_equal(data["k_origin"], [-1, 0])
+        np.testing.assert_allclose(
+            data["k_basis"], [[.3 if skew else 0., 1.], [1., 0.]]
+        )
+        assert data["k_basis"].attrs["units"] == "1/angstrom"
+        assert "k_x" not in data
+        assert "k_y" not in data
+        row, col = np.indices(data["data"].shape)
+        reconstructed = (
+            data["k_origin"][()]
+            + row[..., None] * data["k_basis"][0]
+            + col[..., None] * data["k_basis"][1]
+        )
+        np.testing.assert_allclose(reconstructed[..., 0], spectrum.KX())
+        np.testing.assert_allclose(reconstructed[..., 1], spectrum.KY())
+        np.testing.assert_array_equal(data["data"], spectrum.TOTAL())
         assert "energy" not in data
+        np.testing.assert_array_equal(f["entry/sprkkr_spc/raw_data"], spectrum.raw)
         assert len(f["entry/sprkkr_spc/raw_data"].attrs["columns"]) == 7
 
 
-def test_nonrectilinear_kmap(tmp_path):
-    map = KMap(irregular=True)
-    with pytest.warns(UserWarning):
-        write_arpes_nexus(map, tmp_path / "curved.nxs")
-    with h5py.File(tmp_path / "curved.nxs") as f:
-        d = f["entry/data"]
-        assert list(d.attrs["axes"]) == ["row_index", "column_index"]
-        np.testing.assert_array_equal(d["k_x"], map.KX())
+def test_non_affine_kmap_rejected(tmp_path):
+    spectrum = KMap(warped=True)
+    path = tmp_path / "nonaffine.nxs"
+    with pytest.raises(ValueError, match="affine grid"):
+        write_arpes_nexus(spectrum, path)
+    assert not path.exists()
 
 
 def test_invalid_kmap_width(tmp_path):
-    map = KMap()
-    map.raw = np.pad(map.raw, ((0,0),(0,1)))
+    spectrum = KMap()
+    spectrum.raw = np.pad(spectrum.raw, ((0, 0), (0, 1)))
+    path = tmp_path / "invalid.nxs"
     with pytest.raises(ValueError, match="7 columns"):
-        write_arpes_nexus(map, tmp_path / "invalid.nxs")
+        write_arpes_nexus(spectrum, path)
+    assert not path.exists()
+
+
+def test_kxky_nexus_reader(tmp_path):
+    from nexusformat.nexus import nxopen
+
+    target = tmp_path / "k-map.nxs"
+    with pytest.warns(UserWarning, match="No SPR-KKR input"):
+        write_arpes_nexus(KMap(skew=True), target)
+    with nxopen(str(target)) as root:
+        data = root.get_default()
+        assert data.nxsignal.shape == (2, 3)
+        np.testing.assert_allclose(data["k_basis"].nxvalue, [[.3, 1.], [1., 0.]])

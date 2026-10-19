@@ -236,10 +236,27 @@ def write_arpes_nexus(spc, filename, *, input_parameters=None,
         )
     else:
         kx, ky = arrays["k_x"], arrays["k_y"]
-        rectilinear = (
-            np.allclose(kx, kx[:1, :], equal_nan=True)
-            and np.allclose(ky, ky[:, :1], equal_nan=True)
+        # Both rectangular and oblique native k maps use the same affine
+        # sampling grid. The first axis is JP/NP, the second JT/NT.
+        k_origin = np.array([kx[0, 0], ky[0, 0]], dtype=float)
+        k_basis = np.zeros((2, 2), dtype=float)
+        if shape[0] > 1:
+            k_basis[0] = [kx[1, 0] - kx[0, 0], ky[1, 0] - ky[0, 0]]
+        if shape[1] > 1:
+            k_basis[1] = [kx[0, 1] - kx[0, 0], ky[0, 1] - ky[0, 0]]
+        row, column = np.indices(shape)
+        expected = (
+            k_origin
+            + row[..., None] * k_basis[0]
+            + column[..., None] * k_basis[1]
         )
+        if not np.allclose(
+            np.stack((kx, ky), axis=-1), expected, rtol=1e-7, atol=1e-7
+        ):
+            raise ValueError(
+                "ARPES kx_ky SPC coordinates do not form an affine grid; "
+                "a single origin and two basis vectors cannot represent them"
+            )
 
     raw_data = np.asarray(spc.RAW_DATA())
     ncols = 8 if mode == "energy" else 7
@@ -577,24 +594,21 @@ def write_arpes_nexus(spc, filename, *, input_parameters=None,
         intensity.attrs["long_name"] = "Calculated total photoemission intensity"
         intensity.attrs["units"] = "arbitrary_units"
         if mode == "kx_ky":
-            if rectilinear:
-                data.attrs["axes"] = ["k_y", "k_x"]
-                data.attrs["k_y_indices"] = 0
-                data.attrs["k_x_indices"] = 1
-                data.create_dataset("k_x", data=kx[0, :])
-                data.create_dataset("k_y", data=ky[:, 0])
-            else:
-                data.attrs["axes"] = ["row_index", "column_index"]
-                data.attrs["row_index_indices"] = 0
-                data.attrs["column_index_indices"] = 1
-                data.create_dataset("row_index", data=np.arange(shape[0]))
-                data.create_dataset("column_index", data=np.arange(shape[1]))
-                data.create_dataset("k_x", data=kx)
-                data.create_dataset("k_y", data=ky)
-                data.attrs["k_x_indices"] = [0, 1]
-                data.attrs["k_y_indices"] = [0, 1]
-            data["k_x"].attrs["units"] = "1/angstrom"
-            data["k_y"].attrs["units"] = "1/angstrom"
+            data.attrs["axes"] = ["row", "column"]
+            data.attrs["row_indices"] = 0
+            data.attrs["column_indices"] = 1
+            data.create_dataset("row", data=np.arange(shape[0]))
+            data.create_dataset("column", data=np.arange(shape[1]))
+            origin = data.create_dataset("k_origin", data=k_origin)
+            basis = data.create_dataset("k_basis", data=k_basis)
+            origin.attrs["units"] = "1/angstrom"
+            basis.attrs["units"] = "1/angstrom"
+            basis.attrs["long_name"] = (
+                "Momentum increments for row (NP) and column (NT)"
+            )
+            data.attrs["coordinate_transform"] = (
+                "[kx, ky] = k_origin + row*k_basis[0] + column*k_basis[1]"
+            )
             data.attrs["fixed_energy_note"] = (
                 "Constant-energy momentum map: the single energy is not recorded "
                 "in the native SPC columns."
