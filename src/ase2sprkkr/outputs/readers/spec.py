@@ -2,6 +2,7 @@
 Parser for spec.out files containing spectral function calculations.
 """
 
+import os
 import re
 import numpy as np
 from typing import Dict
@@ -42,7 +43,8 @@ class SpecResult(ArpesResult):
     @cached_property
     def spleed_intensity(self):
         """Two-column SPLEED I(E) data, parsed as a ResultFile from SPEC.out."""
-        if self.task_name != "spleed" or self.output_file is None:
+        if (self.task_name != "spleed" or self.output_file is None
+                or not os.path.isfile(self.path_to("output"))):
             return None
         from ...result_files import ResultFile
         from ...result_files.definitions.spleed_intensity import SpleedIntensityNotFound
