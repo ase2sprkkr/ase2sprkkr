@@ -23,6 +23,7 @@ from .base import (
     RunState,
     RunStatus,
     SubmissionNotStarted,
+    dispatch_cancellation,
 )
 
 
@@ -269,6 +270,7 @@ class PsijRunner:
         self._thread = None
         self._attached = attached
         self._files = None
+        self._cancel_future = None
 
         self._psij = executor._psij
         self._job = job or self._create_job()
@@ -518,7 +520,10 @@ class PsijRunner:
     def cancel(self):
         if self._thread is None and not self._attached:
             raise RuntimeError("Run has not been submitted")
-        self._job.cancel()
+        with self._lock:
+            if self._cancel_future is None:
+                self._cancel_future = dispatch_cancellation(self._job.cancel)
+            return self._cancel_future
 
 
 class PsijExecutor(Executor):

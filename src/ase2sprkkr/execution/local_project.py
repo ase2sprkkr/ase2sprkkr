@@ -12,7 +12,7 @@ from threading import Event, Lock, Thread
 
 from .base import (
     ExecutionOutcome, ExecutionSpec, FailurePhase, OutputObservers,
-    RunState, RunStatus,
+    RunState, RunStatus, dispatch_cancellation,
 )
 from .file_availability import discover_local_files
 from .remote_service import (
@@ -124,6 +124,7 @@ class LocalProjectRunner:
         self._thread = None
         self._exception = None
         self._callback_exception = None
+        self._cancel_future = None
         if start:
             self.start()
 
@@ -313,7 +314,12 @@ class LocalProjectRunner:
     def cancel(self):
         if self._backend_id is None:
             raise RuntimeError("Run has not been submitted")
-        cancel_remote(self._backend_id)
+        with self._lock:
+            if self._cancel_future is None:
+                self._cancel_future = dispatch_cancellation(
+                    lambda: cancel_remote(self._backend_id)
+                )
+            return self._cancel_future
 
 
 def attach_local(executor, run, *, callback=None, output_listener=None, start=True):

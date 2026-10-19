@@ -15,6 +15,7 @@ from .base import (
     FailurePhase,
     OutputObservers,
     RunState,
+    dispatch_cancellation,
 )
 from .transport import expand_local_files, has_file_magic, local_file_digest
 
@@ -96,6 +97,7 @@ class RemoteRunner:
         self._failure_message = None
         self._follow_process = None
         self._stream_positions = {}
+        self._cancel_future = None
         self._output_targets = dict(output_targets or {})
         self._cache_targets = dict(cache_targets or {})
         self._output_patterns = tuple(output_patterns or ())
@@ -869,16 +871,11 @@ class RemoteRunner:
     def cancel(self):
         if self._backend_id is None:
             raise RuntimeError("Run has not been submitted")
-        status = _run_sync(
-            self.executor._cancel(
-                self._remote_directory,
-                self._backend_id,
-            )
-        )
-        self._state = RunState(status.get("state", "cancelled"))
-        if status.get("return_code") is not None:
-            self._return_code = status["return_code"]
-            self.result.return_code = self._return_code
-        phase = status.get("failure_phase")
-        self._failure_phase = None if phase is None else FailurePhase(phase)
-        self._failure_message = status.get("error")
+        with self._lock:
+            if self._cancel_future is None:
+                self._cancel_future = dispatch_cancellation(
+                    lambda: _run_sync(
+                        self.executor._cancel(self._remote_directory, self._backend_id)
+                    )
+                )
+            return self._cancel_future

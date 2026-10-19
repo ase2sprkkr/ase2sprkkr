@@ -5,13 +5,33 @@ from __future__ import annotations
 import asyncio
 import os
 import warnings
+from concurrent.futures import Future
 from dataclasses import dataclass
 from enum import Enum
-from threading import Event, Lock
+from threading import Event, Lock, Thread
 from typing import Any, Optional, Protocol, Sequence, Tuple
 
 from ..common.decorators import class_property
 from .run_model import Execution, FileManifest
+
+
+def dispatch_cancellation(action):
+    """Run a blocking backend cancellation off the calling/GUI thread.
+
+    The returned Future exposes errors, while the normal monitor remains
+    authoritative for the terminal run state.
+    """
+    future = Future()
+
+    def worker():
+        if future.set_running_or_notify_cancel():
+            try:
+                future.set_result(action())
+            except BaseException as exc:
+                future.set_exception(exc)
+
+    Thread(target=worker, daemon=True).start()
+    return future
 
 
 class MpiNotFoundWarning(UserWarning):
