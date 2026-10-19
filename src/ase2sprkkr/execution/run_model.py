@@ -55,12 +55,10 @@ class Execution:
 
     def submitted(self, backend_id: str):
         """Return the execution bound to its immutable backend identity."""
-        backend_id = str(backend_id)
-        if not backend_id:
-            raise ValueError("backend_id cannot be empty")
-        if self.backend_id is not None and self.backend_id != backend_id:
+        submitted = replace(self, backend_id=backend_id)
+        if self.backend_id is not None and self.backend_id != submitted.backend_id:
             raise ValueError("Cannot replace an assigned backend identity")
-        return replace(self, backend_id=backend_id)
+        return submitted
 
 
 
@@ -233,10 +231,6 @@ class FileManifest:
         """
         import os
         path = os.fspath(local_path)
-        if state not in ("pending", "available", "failed", "skipped"):
-            raise ValueError("Invalid per-file availability state")
-        if message is not None and state != "failed":
-            raise ValueError("An availability error belongs to a failed file")
         matches = any(x.local_path == path for x in self.artifacts)
         if matches:
             return self._map_artifacts(
