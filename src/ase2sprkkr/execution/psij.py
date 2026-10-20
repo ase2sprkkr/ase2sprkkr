@@ -20,6 +20,7 @@ from .base import (
     Executor,
     FailurePhase,
     OutputObservers,
+    close_output_files,
     file_path,
     finish_monitor,
     wait_for_monitor,
@@ -393,18 +394,9 @@ class PsijRunner:
     def add_output_error_listener(self, callback):
         self._output_observers.add_error_listener(callback)
 
-    @staticmethod
-    def _flush(value):
-        if value is not None and hasattr(value, "flush"):
-            value.flush()
-
-    @staticmethod
-    def _close(value):
-        if value is not None and hasattr(value, "close"):
-            value.close()
-
     def _prepare_io(self):
-        self._flush(self.spec.input_file)
+        if self.spec.input_file is not None and hasattr(self.spec.input_file, "flush"):
+            self.spec.input_file.flush()
         protected = [
             _path(value, self.spec.directory)
             for value in (self.spec.input_file, self.spec.stdin, *self.spec.input_files,
@@ -415,10 +407,10 @@ class PsijRunner:
              self._stdout_path, self._stderr_path),
             protected=protected,
         )
-        self._flush(self.spec.output_file)
-        self._flush(self.spec.error_file)
-        self._close(self.spec.output_file)
-        self._close(self.spec.error_file)
+        for stream in (self.spec.output_file, self.spec.error_file):
+            if stream is not None and hasattr(stream, "flush"):
+                stream.flush()
+        close_output_files(self.spec.output_file, self.spec.error_file)
         declared = [
             _path(value, self.spec.directory)
             for value in (*self.spec.output_files, self.spec.output_file,

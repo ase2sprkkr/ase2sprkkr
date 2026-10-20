@@ -978,3 +978,36 @@ def test_psij_mpi_respects_explicit_stdin_policy(monkeypatch, tmp_path):
     runner = executor.create_run(spec)
     assert runner._job.spec.stdin_path is None
     assert replace(spec, mpi_uses_stdin=True).mpi_uses_stdin
+
+
+@pytest.mark.parametrize("merged", (False, True))
+def test_psij_preparation_closes_each_output_handle_once(monkeypatch, tmp_path, merged):
+    class NamedOutput:
+        def __init__(self, name):
+            self.name = str(name)
+            self.close_calls = 0
+            self.flush_calls = 0
+
+        def flush(self):
+            self.flush_calls += 1
+
+        def close(self):
+            self.close_calls += 1
+            if self.close_calls != 1:
+                raise AssertionError("Output handle was closed more than once")
+
+    executor = _executor(monkeypatch, _Backend())
+    output = NamedOutput(tmp_path / "run.out")
+    error = output if merged else NamedOutput(tmp_path / "run.err")
+    runner = executor.create_run(ExecutionSpec(
+        argv=("program",), directory=str(tmp_path),
+        input_file=None, output_file=output, error_file=error,
+    ))
+    runner._prepare_io()
+    assert output.close_calls == 1
+    assert error.close_calls == 1
+    assert output.flush_calls >= 1
+    assert error.flush_calls >= 1
+    assert (tmp_path / "run.out").exists()
+    if not merged:
+        assert (tmp_path / "run.err").exists()
