@@ -52,7 +52,7 @@ async def _launch_managed_process(spec, stdin, stderr):
         )
         os.close(read_fd)
         read_fd = None
-        ready = await asyncio.wait_for(watchdog.stdout.readexactly(1), 5.0)
+        ready = await watchdog.stdout.readexactly(1)
         if ready != b"R":
             raise RuntimeError("Calculation watchdog failed to initialize")
         # A tiny exec trampoline joins the group using os.setpgid().

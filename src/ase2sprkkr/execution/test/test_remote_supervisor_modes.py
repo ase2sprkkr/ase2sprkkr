@@ -417,3 +417,38 @@ def test_launch_failure_after_child_creation_waits_for_calculation(tmp_path, mon
 
     asyncio.run(check())
     assert calls == ["watchdog", "calculation"]
+
+
+def test_watchdog_eof_during_ready_handshake_cleans_up(tmp_path, monkeypatch):
+    """A watchdog dying before readiness must not launch a calculation."""
+    import pytest
+    import subprocess
+
+    events = []
+
+    class FailedWatchdog:
+        pid = 1234
+
+        class stdout:
+            @staticmethod
+            async def readexactly(_size):
+                raise asyncio.IncompleteReadError(b"", 1)
+
+        async def wait(self):
+            events.append("reaped")
+
+    async def spawn(*argv, **kwargs):
+        events.append("started")
+        return FailedWatchdog()
+
+    monkeypatch.setattr(remote_process_worker.asyncio, "create_subprocess_exec", spawn)
+
+    async def check():
+        with pytest.raises(asyncio.IncompleteReadError):
+            await remote_process_worker._launch_managed_process(
+                _spec(tmp_path, -1, detached=True),
+                subprocess.DEVNULL, asyncio.subprocess.PIPE,
+            )
+
+    asyncio.run(check())
+    assert events == ["started", "reaped"]
