@@ -324,7 +324,9 @@ def test_supervisor_sigkill_stops_calculation_and_grandchild(tmp_path):
     spec = _spec(tmp_path, wr, detached=True, argv=[
         sys.executable, "-c", calculation,
     ])
-    spec["socket_dir"] = str(tmp_path / "socket-dir")
+    socket_dir = tmp_path / "socket-dir"
+    socket_dir.mkdir()  # The submitter creates this directory before starting the worker.
+    spec["socket_dir"] = str(socket_dir)
     env = os.environ.copy()
     env[remote_process_worker._SPEC_ENV] = json.dumps(spec)
     supervisor = subprocess.Popen(
