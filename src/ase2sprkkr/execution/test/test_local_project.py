@@ -345,3 +345,18 @@ def test_terminal_project_runner_does_not_query_backend(monkeypatch, tmp_path):
     )
     assert runner.state is RunState.FINISHED
     assert runner.state is RunState.FINISHED
+
+
+def test_project_request_ignores_unnamed_optional_declarations(tmp_path):
+    from dataclasses import replace
+
+    spec = replace(
+        _spec(tmp_path),
+        output_files=(None, "a.dat", object()),
+        input_files=(None, "b.inp", 1),
+        cache_files=(None, "restart.pot", object()),
+    )
+    request = LocalExecutor().create_project_run(spec, run_id=RUN_ID)._request()
+    assert request["output_files"] == [str(tmp_path / "a.dat")]
+    assert request["input_files"] == [str(tmp_path / "b.inp")]
+    assert request["cache_files"] == [str(tmp_path / "restart.pot")]
