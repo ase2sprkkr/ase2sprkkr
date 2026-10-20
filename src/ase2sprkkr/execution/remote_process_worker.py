@@ -41,6 +41,7 @@ async def _launch_managed_process(spec, stdin, stderr):
     """
     read_fd, write_fd = os.pipe()
     watchdog = None
+    process = None
     try:
         watchdog = await asyncio.create_subprocess_exec(
             sys.executable, "-m", "ase2sprkkr.execution.remote_process_watchdog",
@@ -84,6 +85,10 @@ async def _launch_managed_process(spec, stdin, stderr):
         os.close(write_fd)
         if watchdog is not None:
             await watchdog.wait()
+        # A calculation may already have been spawned when its exec
+        # handshake fails or the launch coroutine is cancelled.
+        if process is not None:
+            await process.wait()
         raise
     finally:
         if read_fd is not None:

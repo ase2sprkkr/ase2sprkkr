@@ -372,3 +372,48 @@ def test_supervisor_sigkill_stops_calculation_and_grandchild(tmp_path):
                     os.kill(pid, signal.SIGKILL)
                 except ProcessLookupError:
                     pass
+
+
+def test_launch_failure_after_child_creation_waits_for_calculation(tmp_path, monkeypatch):
+    """The watchdog stopping a group does not reap the calculation child."""
+    import subprocess
+
+    calls = []
+
+    class Watchdog:
+        pid = 1234
+
+        class stdout:
+            @staticmethod
+            async def readexactly(_n):
+                return b"R"
+
+        async def wait(self):
+            calls.append("watchdog")
+
+    class Calculation:
+        async def wait(self):
+            calls.append("calculation")
+
+    async def spawn(*argv, **kwargs):
+        return Calculation() if "--exec" in argv else Watchdog()
+
+    async def cancelled_handshake(*args):
+        raise asyncio.CancelledError
+
+    monkeypatch.setattr(remote_process_worker.asyncio, "create_subprocess_exec", spawn)
+    monkeypatch.setattr(remote_process_worker.asyncio, "to_thread", cancelled_handshake)
+
+    async def check():
+        spec = _spec(tmp_path, -1, detached=True)
+        try:
+            await remote_process_worker._launch_managed_process(
+                spec, subprocess.DEVNULL, asyncio.subprocess.PIPE,
+            )
+        except asyncio.CancelledError:
+            pass
+        else:
+            assert False, "The simulated cancellation must propagate"
+
+    asyncio.run(check())
+    assert calls == ["watchdog", "calculation"]
