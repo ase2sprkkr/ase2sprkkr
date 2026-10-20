@@ -1,6 +1,8 @@
 import argparse
 from types import SimpleNamespace
 
+import pytest
+
 from ase2sprkkr.configuration import definition
 from ase2sprkkr.tools.commands import config as config_command
 
@@ -78,19 +80,51 @@ def test_config_set_profile_is_atomic_on_invalid_member(monkeypatch, capsys):
     assert "Invalid configuration value" in capsys.readouterr().out
 
 
-def test_config_set_rejects_reserved_profile(monkeypatch, capsys):
+@pytest.mark.parametrize(
+    ("field", "value"),
+    (
+        ("profiles.ase.mpi", "8"),
+        ("profiles.ase", "{mpi: 8}"),
+    ),
+)
+def test_config_set_rejects_reserved_profile(monkeypatch, capsys, field, value):
+    config = definition.create_object()
+
+    saved = _run_with_config(monkeypatch, config, "--set", field, value)
+
+    assert "ase" not in config.profiles._values
+    assert saved == []
+    assert "reserved profile name" in capsys.readouterr().out
+
+
+def test_config_set_creates_profile_with_mpi_warning(monkeypatch):
     config = definition.create_object()
 
     saved = _run_with_config(
-        monkeypatch,
-        config,
-        "--set",
-        "profiles.ase.mpi",
-        "8",
+        monkeypatch, config, "--set", "profiles.cluster.mpi_warning", "false",
     )
 
-    assert saved == []
-    assert "reserved profile name" in capsys.readouterr().out
+    profile = config.profiles["cluster"]
+    assert profile.mpi() == "auto"
+    assert profile.mpi_warning() is False
+    assert saved == [{"profiles": {"cluster": {"mpi_warning": False}}}]
+
+
+def test_config_set_profile_mapping_updates_existing_profile(monkeypatch):
+    config = definition.create_object()
+    profile = config.profiles.add("cluster")
+    profile.executable_suffix.set(".x")
+
+    saved = _run_with_config(
+        monkeypatch, config, "--set", "profiles.cluster",
+        "{mpi: 4, executable_dir: /opt/sprkkr}",
+    )
+
+    profile = config.profiles["cluster"]
+    assert profile.mpi() == 4
+    assert profile.executable_dir() == "/opt/sprkkr"
+    assert profile.executable_suffix() == ".x"
+    assert len(saved) == 1
 
 
 def test_config_unset_removes_named_profile(monkeypatch):

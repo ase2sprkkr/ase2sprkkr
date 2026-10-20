@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import asyncio
+import logging
+from collections import OrderedDict
 import os
 import shlex
 import subprocess
@@ -10,10 +12,10 @@ import time
 from datetime import datetime, timedelta
 from dataclasses import replace
 from pathlib import Path
-from threading import Event, Lock
+from threading import Event, Lock, RLock
 
 from .file_availability import discover_local_files, clear_declared_outputs, validate_output_collisions
-from .growing_file_tail import follow_job_files
+from .growing_file_tail import follow_growing_files
 from .base import (
     ExecutionOutcome,
     ExecutionSpec,
@@ -30,6 +32,16 @@ from .base import (
     request_cancellation,
     start_monitor,
 )
+
+
+_log = logging.getLogger(__name__)
+
+_OBSERVATION_STOPPED = object()
+
+
+def _ignore_job_status(job, status):
+    """PSI/J 0.9.11 wraps None as a broken callable on unsubscribe."""
+    pass
 
 
 _STATE_MAP = {
@@ -290,6 +302,10 @@ class PsijRunner:
         self._attached = attached
         self._files = None
         self._cancel_future = None
+        self._observed_state = None
+        self._observation_stopped = Event()
+        self._observation_signal_lock = Lock()
+        self._observation_wakeup = None
 
         self._psij = executor._psij
         self._job = job or self._create_job()
@@ -351,7 +367,10 @@ class PsijRunner:
     def state(self):
         if self._exception is not None:
             return RunState.FAILED
-        return _psij_state(self._job.status, return_code=self.return_code)
+        if self._observed_state is not None:
+            return self._observed_state
+        return _psij_state(self._job.status, attached=self._attached,
+                           return_code=self.return_code)
 
     @property
     def exception(self):
@@ -359,6 +378,9 @@ class PsijRunner:
 
     @property
     def return_code(self):
+        if self._observed_state is not None:
+            # A completed wait() is authoritative even without an exit code.
+            return self._return_code
         if self._return_code is not None:
             return self._return_code
         return getattr(getattr(self._job, "status", None), "exit_code", None)
@@ -424,25 +446,109 @@ class PsijRunner:
             if path is not None and path not in paths.values():
                 paths[kind] = path
 
-        if not paths:
-            status = await asyncio.to_thread(self._job.wait)
-        else:
-            status = await follow_job_files(
-                paths, lambda kind, data: self._output_observers.emit_bytes(data, kind),
-                self._job.wait, poll_interval=max(self.executor.poll_interval, 1.0),
+        # PSI/J calls status callbacks on backend threads. Forward terminal
+        # facts and explicit detach requests into this monitor's event loop.
+        loop = asyncio.get_running_loop()
+        terminal = loop.create_future()
+        completed = []
+
+        def publish(status):
+            if not terminal.done():
+                terminal.set_result(status)
+
+        def schedule(status):
+            try:
+                if not loop.is_closed():
+                    loop.call_soon_threadsafe(publish, status)
+            except RuntimeError:
+                # Loop shutdown after an observer has detached.
+                pass
+
+        def receive(status):
+            if self._observation_stopped.is_set():
+                return
+            if _psij_state(status) not in (
+                RunState.FINISHED, RunState.FAILED, RunState.CANCELLED,
+            ):
+                return
+            completed.append(status)
+            schedule(status)
+
+        with self._observation_signal_lock:
+            self._observation_wakeup = lambda: schedule(_OBSERVATION_STOPPED)
+            if self._observation_stopped.is_set():
+                self._observation_wakeup()
+
+        detach = None
+        read_error = None
+        try:
+            if not self._observation_stopped.is_set():
+                detach = self.executor._observe_job(self._job, receive)
+                # A job may finish before registration or during it.
+                receive(self._job.status)
+            if not paths:
+                status = await terminal
+            else:
+                async def terminal_status():
+                    return terminal.result() if terminal.done() else None
+
+                status = await follow_growing_files(
+                    paths, lambda kind, data: self._output_observers.emit_bytes(data, kind),
+                    terminal_status, poll_interval=max(self.executor.poll_interval, 1.0),
+                )
+        except OSError as exc:
+            read_error = exc
+            status = completed[-1] if completed else None
+        finally:
+            if detach is not None:
+                detach()
+            with self._observation_signal_lock:
+                self._observation_wakeup = None
+
+        if status is _OBSERVATION_STOPPED:
+            status = None
+
+        observed_state = _psij_state(status) if status is not None else RunState.UNKNOWN
+        if observed_state not in (
+            RunState.FINISHED, RunState.FAILED, RunState.CANCELLED,
+        ):
+            self._observed_state = RunState.UNKNOWN
+            self._failure_phase = None
+            self._failure_message = (
+                str(read_error) if read_error is not None
+                else "PSI/J observation has no terminal job status"
             )
+            # The job might still be writing its outputs. Do not finalize
+            # their manifest on an inconclusive scheduler observation.
+            return self.result
 
         self._return_code = getattr(status, "exit_code", None)
-        state_name = getattr(getattr(status, "state", None), "name", None)
-        if self._return_code is None:
-            self._return_code = 0 if state_name == "COMPLETED" else 1
+        # The scheduler may know FAILED/CANCELED without knowing the process
+        # exit status; retain None rather than inventing an exit code.
         self.result.return_code = self._return_code
-        self._update_files()
-        if state_name != "CANCELED" and (state_name == "FAILED" or self._return_code != 0):
+        self._observed_state = observed_state
+        if observed_state == RunState.FAILED:
             self._failure_phase = FailurePhase.EXECUTION
             self._failure_message = getattr(status, "message", None) or (
-                f"PSI/J job exited with status {self._return_code}"
+                f"PSI/J job failed with exit code {self._return_code}"
+                if self._return_code is not None else "PSI/J job failed"
             )
+        if read_error is not None and observed_state == RunState.FINISHED:
+            self._observed_state = RunState.FAILED
+            self._failure_phase = FailurePhase.ARTIFACTS
+            self._failure_message = str(read_error)
+            return self.result
+        if read_error is not None:
+            # A failed or cancelled scheduler job remains terminal regardless
+            # of whether its output stream could be read.
+            return self.result
+        try:
+            self._update_files()
+        except OSError as exc:
+            if observed_state == RunState.FINISHED:
+                self._observed_state = RunState.FAILED
+                self._failure_phase = FailurePhase.ARTIFACTS
+                self._failure_message = str(exc)
         return self.result
 
     def _thread_main(self):
@@ -463,6 +569,8 @@ class PsijRunner:
 
     def submit(self):
         with self._submit_lock:
+            if self._attached:
+                raise RuntimeError("Cannot submit an attached PSI/J job")
             if self._thread is not None or self.state != RunState.NEW:
                 raise RuntimeError(f"Run is already {self.state.value}")
             try:
@@ -476,6 +584,7 @@ class PsijRunner:
             # rejected the job. Leave project submission recoverable even when
             # the native ID has not reached this process.
             self.executor._job_executor.submit(self._job)
+            self.executor._cache_submitted_job(self._job)
             start_monitor(self)
 
     def wait(self):
@@ -492,6 +601,14 @@ class PsijRunner:
         if self._thread is None:
             self.start()
         return await asyncio.to_thread(self.wait)
+
+    def stop_observation(self):
+        """Stop monitoring without cancelling the scheduler calculation."""
+        self._observation_stopped.set()
+        with self._observation_signal_lock:
+            wakeup = self._observation_wakeup
+        if wakeup is not None:
+            wakeup()
 
     def cancel(self):
         if self._thread is None and not self._attached:
@@ -522,7 +639,10 @@ class PsijExecutor(Executor):
             if job_executor is not None
             else self._psij.JobExecutor.get_instance(backend, url=url, config=config)
         )
-        self._status_jobs = {}
+        self._jobs = OrderedDict()
+        self._observers = {}
+        self._jobs_lock = RLock()
+        self._max_idle_jobs = 64
 
     def create_run(self, spec: ExecutionSpec, callback=None):
         return PsijRunner(self, spec, callback=callback)
@@ -548,20 +668,87 @@ class PsijExecutor(Executor):
             statuses.append(self.status_native(run.execution.backend_id))
         return tuple(statuses)
 
+    def _trim_jobs(self):
+        idle = sum(job not in self._observers for job in self._jobs.values())
+        for native_id, job in tuple(self._jobs.items()):
+            if idle <= self._max_idle_jobs:
+                break
+            if job not in self._observers:
+                del self._jobs[native_id]
+                idle -= 1
+
+    def _cache_submitted_job(self, job):
+        native_id = job.native_id
+        if native_id is not None:
+            with self._jobs_lock:
+                self._jobs[str(native_id)] = job
+                self._jobs.move_to_end(str(native_id))
+                self._trim_jobs()
+
     def attach_native_job(self, native_id):
-        """Create a fresh attached PSI/J job; never reuse the status cache."""
-        job = self._psij.Job()
-        self._job_executor.attach(job, native_id)
-        return job
+        native_id = str(native_id)
+        with self._jobs_lock:
+            job = self._jobs.get(native_id)
+            if job is None:
+                job = self._psij.Job()
+                self._job_executor.attach(job, native_id)
+                self._jobs[native_id] = job
+            self._jobs.move_to_end(native_id)
+            self._trim_jobs()
+            return job
+
+    def _observe_job(self, job, observer):
+        with self._jobs_lock:
+            observers = self._observers.get(job)
+            if observers is None:
+                # Register the first observer *before* installing the native
+                # callback: PSI/J may call it synchronously. Roll back when
+                # registration fails so a later attach can retry.
+                observers = {observer}
+                self._observers[job] = observers
+                try:
+                    job.set_job_status_callback(self._dispatch_job_status)
+                except BaseException:
+                    del self._observers[job]
+                    raise
+            else:
+                observers.add(observer)
+
+        def detach():
+            with self._jobs_lock:
+                current = self._observers.get(job)
+                if current is None:
+                    return
+                current.discard(observer)
+                if current:
+                    return
+                del self._observers[job]
+                # PSI/J 0.9.11 incorrectly wraps None as a callback.
+                # This is best-effort teardown: failing to unregister must
+                # not replace a monitor's original failure or its terminal
+                # result. The dispatcher has no subscribers after removal.
+                try:
+                    job.set_job_status_callback(_ignore_job_status)
+                except Exception:
+                    _log.exception("Failed to disable PSI/J job status callback")
+                native_id = job.native_id
+                if (native_id is not None
+                        and self._jobs.get(str(native_id)) is job
+                        and _psij_state(job.status) in (
+                            RunState.FINISHED, RunState.FAILED, RunState.CANCELLED,
+                        )):
+                    del self._jobs[str(native_id)]
+                self._trim_jobs()
+        return detach
+
+    def _dispatch_job_status(self, job, status):
+        with self._jobs_lock:
+            observers = tuple(self._observers.get(job, ()))
+        for observer in observers:
+            observer(status)
 
     def _status_job(self, native_id):
-        """Reuse a single attached PSI/J job for repeated status observations."""
-        native_id = str(native_id)
-        job = self._status_jobs.get(native_id)
-        if job is None:
-            job = self.attach_native_job(native_id)
-            self._status_jobs[native_id] = job
-        return job
+        return self.attach_native_job(native_id)
 
     def status_native(self, native_id):
         """Return the currently known native job status without waiting."""
@@ -569,9 +756,14 @@ class PsijExecutor(Executor):
         if self.backend.lower() == "slurm" and self.url is None:
             return _slurm_status_native(native_id)
 
-        status = getattr(self._status_job(native_id), "status", None)
+        job = self._status_job(native_id)
+        status = getattr(job, "status", None)
         state = _psij_state(status, attached=True)
         return_code = getattr(status, "exit_code", None)
+        if state in (RunState.FINISHED, RunState.FAILED, RunState.CANCELLED):
+            with self._jobs_lock:
+                if job not in self._observers and self._jobs.get(native_id) is job:
+                    del self._jobs[native_id]
         return RunStatus(
             state=state, backend_id=native_id,
             return_code=return_code,
@@ -688,8 +880,8 @@ class PsijExecutor(Executor):
         if run.execution.endpoint != endpoint_for_executor(self):
             raise ValueError("Run does not belong to this PSI/J endpoint")
         backend_id = run.execution.backend_id
-        if not backend_id or (run.files.stdout is None and run.files.stderr is None):
-            raise ValueError("PSI/J run lacks backend ID or recorded output streams")
+        if not backend_id:
+            raise ValueError("PSI/J run lacks backend ID")
         job = self.attach_native_job(backend_id)
         spec = ExecutionSpec(
             argv=(),

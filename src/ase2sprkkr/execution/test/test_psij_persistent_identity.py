@@ -1,5 +1,7 @@
 from types import SimpleNamespace
 
+import pytest
+
 from ase2sprkkr.execution import ExecutionSpec
 from ase2sprkkr.execution import psij as psij_backend
 
@@ -50,30 +52,19 @@ def _spec(tmp_path):
     )
 
 
-def test_project_slurm_job_carries_ase2sprkkr_identity(monkeypatch, tmp_path):
-    executor = _executor(monkeypatch, "slurm")
-
-    runner = executor.create_project_run(
-        _spec(tmp_path), run_id="run-123"
-    )
+@pytest.mark.parametrize("backend", ("slurm", "pbs"))
+def test_project_job_carries_ase2sprkkr_identity(monkeypatch, tmp_path, backend):
+    executor = _executor(monkeypatch, backend)
+    runner = executor.create_project_run(_spec(tmp_path), run_id="run-123")
     job_spec = runner._job.spec
 
     assert job_spec.environment == {"ASE2SPRKKR_RUN_ID": "run-123"}
-    assert job_spec.attributes.custom_attributes == {
-        "slurm.comment": "ase2sprkkr:run-123"
-    }
-
-
-def test_project_non_slurm_job_uses_environment_only(monkeypatch, tmp_path):
-    executor = _executor(monkeypatch, "pbs")
-
-    runner = executor.create_project_run(
-        _spec(tmp_path), run_id="run-123"
-    )
-    job_spec = runner._job.spec
-
-    assert job_spec.environment == {"ASE2SPRKKR_RUN_ID": "run-123"}
-    assert job_spec.attributes is None
+    if backend == "slurm":
+        assert job_spec.attributes.custom_attributes == {
+            "slurm.comment": "ase2sprkkr:run-123",
+        }
+    else:
+        assert job_spec.attributes is None
 
 
 def test_nonpersistent_psij_job_has_no_recovery_metadata(monkeypatch, tmp_path):

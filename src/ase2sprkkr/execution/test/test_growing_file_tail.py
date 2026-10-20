@@ -225,3 +225,181 @@ def test_follow_job_files_cancelled_observation_does_not_cancel_job(tmp_path):
         assert await asyncio.to_thread(exited.wait, 2)
 
     asyncio.run(check())
+
+
+def test_terminal_output_drain_is_bounded_when_producer_keeps_writing(tmp_path):
+    async def check():
+        path = tmp_path / "stream"
+        path.write_bytes(b"A" * (65536 * 2))
+        received = []
+        checks = []
+        def on_chunk(kind, data):
+            received.append(data)
+            # An ongoing producer appends more data for every chunk we read.
+            with path.open("ab") as sink:
+                sink.write(b"more data")
+
+        async def terminal():
+            checks.append(True)
+            return "unknown"
+
+        result = await asyncio.wait_for(follow_growing_files(
+            {"out": path}, on_chunk, terminal, poll_interval=0.01,
+        ), 3)
+        assert result == "unknown"
+        assert 2 <= len(received) <= 3
+        assert len(checks) == 1
+
+    asyncio.run(check())
+
+
+
+def test_read_error_does_not_wait_for_scheduler_job_to_end(tmp_path, monkeypatch):
+    from threading import Event
+
+    entered, release = Event(), Event()
+
+    def wait():
+        entered.set()
+        release.wait(10)
+        return "finished"
+
+    def unreadable(self, *args, **kwargs):
+        raise PermissionError("output inaccessible")
+
+    monkeypatch.setattr(GrowingFileTail, "read_available", unreadable)
+
+    async def check():
+        with pytest.raises(PermissionError, match="inaccessible"):
+            await asyncio.wait_for(
+                follow_job_files(
+                    {"out": tmp_path / "job.out"}, lambda *_: None,
+                    wait, poll_interval=0.01,
+                ), 2,
+            )
+        assert await asyncio.to_thread(entered.wait, 1)
+        assert not release.is_set()
+
+    # Release only after asyncio.run has shut down its executor; this would
+    # block with the former to_thread implementation.
+    try:
+        asyncio.run(check())
+    finally:
+        release.set()
+
+
+def test_terminal_creates_output_after_empty_read(tmp_path):
+    async def check():
+        path = tmp_path / "late.out"
+        seen = []
+
+        async def terminal():
+            path.write_bytes(b"last bytes")
+            return "finished"
+
+        result = await asyncio.wait_for(
+            follow_growing_files(
+                {"out": path}, lambda kind, data: seen.append((kind, data)),
+                terminal, poll_interval=0.01,
+            ), 2,
+        )
+        assert result == "finished"
+        assert seen == [("out", b"last bytes")]
+
+    asyncio.run(check())
+
+
+
+@pytest.mark.parametrize("change", ("remove", "truncate"))
+def test_terminal_drain_ends_if_snapshotted_bytes_disappear(
+    tmp_path, monkeypatch, change,
+):
+    """Simulate a file disappearing *after* the terminal size was frozen."""
+    async def check():
+        path = tmp_path / "out"
+        path.write_bytes(b"X" * (65536 * 3))
+        original_snapshot = GrowingFileTail.snapshot_sizes
+        snapshots = []
+
+        def snapshot(tail):
+            sizes = original_snapshot(tail)
+            snapshots.append(sizes)
+            if len(snapshots) == 1:
+                # Only the initial terminal snapshot triggers the race.
+                # A later size probe must observe the missing/truncated file.
+                if change == "remove":
+                    path.unlink()
+                else:
+                    path.write_bytes(b"")
+            return sizes
+
+        monkeypatch.setattr(GrowingFileTail, "snapshot_sizes", snapshot)
+
+        async def terminal():
+            return "finished"
+
+        seen = []
+        assert await asyncio.wait_for(follow_growing_files(
+            {"out": path}, lambda kind, data: seen.append(data),
+            terminal, poll_interval=0.01,
+        ), 1) == "finished"
+        assert snapshots[0] == {"out": 65536 * 3}
+        assert snapshots[-1] == {"out": 0}
+        assert seen == [b"X" * 65536]
+
+    asyncio.run(check())
+
+
+def test_continuous_output_yields_to_scheduler_completion(tmp_path):
+    async def check():
+        path = tmp_path / "busy"
+        path.write_bytes(b"X" * (65536 * 10))
+        completed = asyncio.Event()
+        received = []
+
+        def on_chunk(kind, data):
+            received.append(data)
+            with path.open("ab") as stream:
+                stream.write(data)
+
+        async def mark_terminal():
+            await asyncio.sleep(0)
+            completed.set()
+
+        asyncio.create_task(mark_terminal())
+
+        async def terminal():
+            return "finished" if completed.is_set() else None
+
+        result = await asyncio.wait_for(follow_growing_files(
+            {"out": path}, on_chunk, terminal, poll_interval=0.01,
+        ), 1)
+        assert result == "finished"
+        # Without an actual event-loop yield an ever-growing file can keep
+        # terminal notification queued forever. Allow scheduling variations.
+        assert len(received) < 100
+
+    asyncio.run(check())
+
+
+def test_callback_wakes_silent_file_follower_without_poll_timeout(tmp_path):
+    async def check():
+        loop = asyncio.get_running_loop()
+        completed = loop.create_future()
+        entered = asyncio.Event()
+        seen = []
+
+        async def terminal():
+            entered.set()
+            return "finished" if completed.done() else None
+
+        task = asyncio.create_task(follow_growing_files(
+            {"out": tmp_path / "does-not-exist"}, lambda *args: seen.append(args),
+            terminal, poll_interval=30, wakeup=completed,
+        ))
+        await asyncio.wait_for(entered.wait(), 1)
+        completed.set_result(True)
+        assert await asyncio.wait_for(task, 2) == "finished"
+        assert seen == []
+
+    asyncio.run(check())

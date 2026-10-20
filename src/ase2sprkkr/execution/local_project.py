@@ -288,8 +288,6 @@ def attach_local(executor, run, *, callback=None, output_listener=None, start=Tr
     if _decode_handle(backend_id).get("kind") != "process":
         raise ValueError("Local project does not have a supervisor handle")
     files = run.files
-    if files.stdout is None and files.stderr is None:
-        raise ValueError("This run has no replayable stdout or stderr")
     spec = ExecutionSpec(
         argv=(), input_file=files.input_file,
         output_file=files.output_file,

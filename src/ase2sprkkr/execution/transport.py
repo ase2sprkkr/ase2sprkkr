@@ -401,7 +401,11 @@ class SshTransport(Transport):
             )
             await self.run(("mv", "-f", "--", temporary, destination))
         except BaseException:
-            await self.run(("rm", "-f", "--", temporary), check=False)
+            # Remote cleanup is best-effort and must not mask the upload error.
+            try:
+                await self.run(("rm", "-f", "--", temporary), check=False)
+            except Exception:
+                pass
             raise
 
     async def get_file(self, source, destination):
@@ -426,11 +430,14 @@ class SshTransport(Transport):
             stat = temporary.stat()
             os.utime(temporary, ns=(stat.st_atime_ns, signature[1]))
             os.replace(temporary, destination)
-        finally:
+        except BaseException:
+            # Failure to remove the temporary download must not mask the
+            # primary transfer error, including cancellation.
             try:
                 temporary.unlink()
-            except FileNotFoundError:
+            except OSError:
                 pass
+            raise
 
     async def expand_files(self, sources, root):
         root = posixpath.normpath(os.fspath(root))

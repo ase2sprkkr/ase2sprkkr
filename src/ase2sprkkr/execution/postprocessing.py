@@ -214,5 +214,14 @@ class PostprocessingRunner:
             self.start()
         return await asyncio.to_thread(self.wait)
 
+    def stop_observation(self):
+        """Stop this client's monitor; leave the backend calculation intact."""
+        stop = getattr(self._runner, "stop_observation", None)
+        if stop is None:
+            raise NotImplementedError(
+                "This execution backend cannot detach its observation"
+            )
+        return stop()
+
     def cancel(self):
         return self._runner.cancel()

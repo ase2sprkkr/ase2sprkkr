@@ -480,7 +480,12 @@ class ExecutionManager:
         requested = RunState(requested)
         if latest.state in _FINAL_STATES:
             return latest.state
-        if requested == RunState.UNKNOWN or latest.state == RunState.UNKNOWN:
+        if requested == RunState.UNKNOWN:
+            # Uncertainty cannot retract confirmed execution completion.
+            if latest.state in (RunState.POSTPROCESSING, RunState.DOWNLOADING):
+                return latest.state
+            return requested
+        if latest.state == RunState.UNKNOWN:
             return requested
         if _STATE_RANK[requested] < _STATE_RANK[latest.state]:
             return latest.state
@@ -511,11 +516,21 @@ class ExecutionManager:
         message=_UNCHANGED,
         failure_phase=_UNCHANGED,
         files=_UNCHANGED,
+        expected_updated_at=_UNCHANGED,
     ):
         def merge(latest):
+            if (expected_updated_at is not _UNCHANGED
+                    and latest.updated_at != expected_updated_at):
+                # An independent refresh has superseded this observation.
+                return latest
             final_locked = latest.state in _FINAL_STATES
             now = _now()
             merged_state = self._merged_state(latest, state)
+            if (state is not None and RunState(state) == RunState.UNKNOWN
+                    and merged_state != RunState.UNKNOWN):
+                # Ignore the entire stale observation, including its message
+                # and artifact metadata, not merely its proposed state.
+                return latest
             changes = {"state": merged_state, "updated_at": now}
             if latest.state not in _FINAL_STATES and merged_state in _FINAL_STATES:
                 changes["finished_at"] = now
@@ -529,8 +544,12 @@ class ExecutionManager:
             if return_code is not _UNCHANGED and return_code is not None:
                 if not final_locked or latest.return_code is None:
                     changes["return_code"] = return_code
-            if message is not _UNCHANGED and message is not None:
-                if not final_locked or latest.message is None:
+            if message is not _UNCHANGED:
+                if message is None and latest.state == RunState.UNKNOWN and merged_state != RunState.UNKNOWN:
+                    # A later scheduler observation supersedes the stale
+                    # connection-error diagnostic.
+                    changes["message"] = None
+                elif message is not None and (not final_locked or latest.message is None):
                     changes["message"] = message
             if failure_phase is not _UNCHANGED:
                 normalized = _failure_phase(failure_phase)
@@ -633,8 +652,6 @@ class ExecutionManager:
         phase = _failure_phase(status.failure_phase)
         return_code = status.return_code
         state = RunState.POSTPROCESSING if status.state == RunState.FINISHED else status.state
-        if state == RunState.FAILED and return_code is None:
-            return_code = 1
         execution = status.execution
         if execution is None and status.backend_id is not None:
             execution = record.execution.submitted(status.backend_id)
@@ -808,6 +825,8 @@ class ExecutionManager:
     def _complete(project_run, result, callback):
         project_run._sync_completion(result)
         if callback is not None:
+            # Completion of observation, including UNKNOWN, is notification.
+            # It is not proof that the backend calculation finished.
             callback(result)
 
     def create_run(
@@ -913,6 +932,7 @@ class ProjectRunner:
         self._record = record
         self._completion_lock = Lock()
         self._completion_persisted = False
+        self._monitor_record_version = record.updated_at
 
     @property
     def id(self):
@@ -957,6 +977,9 @@ class ProjectRunner:
         state = self._runner.state
         if state == RunState.NEW and self._record.state != RunState.NEW:
             return self._record.state
+        if state == RunState.UNKNOWN and self._record.state != RunState.NEW:
+            # The completed observer cannot overwrite a newer refresh.
+            return self._record.state
         return self._record.state if self._record.state in _FINAL_STATES else state
 
     def add_output_listener(self, callback):
@@ -969,6 +992,7 @@ class ProjectRunner:
         if self._record.state != RunState.NEW:
             raise RuntimeError(f"Run is already {self._record.state.value}")
         self._record = self.manager.reserve(self._record)
+        self._monitor_record_version = self._record.updated_at
         try:
             prepare = getattr(self._runner, "prepare_submission", None)
             if prepare is not None and prepare():
@@ -980,6 +1004,7 @@ class ProjectRunner:
                     execution=self.execution,
                     files=self.files if self.files is not None else _UNCHANGED,
                 )
+                self._monitor_record_version = self._record.updated_at
             result = self._runner.submit()
         except SubmissionNotStarted as exc:
             phase = self.failure_phase or FailurePhase.SUBMISSION
@@ -1009,25 +1034,37 @@ class ProjectRunner:
         if backend_id is None:
             raise RuntimeError("Executor submit returned without a backend ID")
         self.manager.register_executor(self.executor, self._record.execution.endpoint)
-        self._record = self.manager.transition(
-            self._record,
-            state=self._runner.state,
-            execution=self.execution,
-            failure_phase=self.failure_phase,
-            files=self.files if self.files is not None else _UNCHANGED,
-        )
+        with self._completion_lock:
+            # A fast monitor may have already persisted an UNKNOWN or
+            # terminal result. Do not overwrite that result with an older
+            # status observed during submission.
+            if not self._completion_persisted:
+                self._record = self.manager.transition(
+                    self._record,
+                    state=self._runner.state,
+                    execution=self.execution,
+                    failure_phase=self.failure_phase,
+                    files=self.files if self.files is not None else _UNCHANGED,
+                )
+                self._monitor_record_version = self._record.updated_at
         self.manager._acknowledge_submission(self.executor, self._record)
         return result
 
     def start(self):
         self._runner.start()
-        if self.backend_id is not None:
-            self._record = self.manager.transition(
-                self._record,
-                state=self._runner.state,
-                execution=self.execution,
-                failure_phase=self.failure_phase,
-            )
+        with self._completion_lock:
+            # An attached PSI/J job can initially report NEW before the
+            # scheduler provides its actual state.
+            state = self._runner.state
+            if (not self._completion_persisted and self.backend_id is not None
+                    and state != RunState.NEW):
+                self._record = self.manager.transition(
+                    self._record,
+                    state=state,
+                    execution=self.execution,
+                    failure_phase=self.failure_phase,
+                )
+                self._monitor_record_version = self._record.updated_at
 
     def _sync_completion(self, result):
         # Callback and wait() can reach this path concurrently. Only the
@@ -1041,6 +1078,16 @@ class ProjectRunner:
             error = self._runner.exception
             if message is None and error is not None:
                 message = str(error)
+            if state == RunState.UNKNOWN:
+                # The observer ended, not necessarily the calculation.
+                # No final artifact publication or completion timestamp.
+                self._record = self.manager.transition(
+                    self._record, state=state, execution=self.execution,
+                    message=message,
+                    expected_updated_at=self._monitor_record_version,
+                )
+                self._completion_persisted = True
+                return
             if state not in _FINAL_STATES:
                 return
             if state == RunState.FAILED and phase is None:
@@ -1087,17 +1134,27 @@ class ProjectRunner:
         return await asyncio.to_thread(self.run)
 
     def refresh(self):
-        self._record = self.manager.refresh((self._record,))[0]
-        return self._record
+        with self._completion_lock:
+            self._record = self.manager.refresh((self._record,))[0]
+            return self._record
+
+    def stop_observation(self):
+        """Detach this client without cancelling its still-running job.
+
+        The completion callback persists a recoverable UNKNOWN observation.
+        Call wait() to ensure the monitor has finished and been detached.
+        """
+        return self._runner.stop_observation()
 
     def cancel(self):
         try:
             return self._runner.cancel()
         finally:
-            if self._record.state != RunState.NEW:
-                self._record = self.manager.transition(
-                    self._record,
-                    state=self._runner.state,
-                    execution=self.execution,
-                    failure_phase=self.failure_phase,
-                )
+            with self._completion_lock:
+                if self._record.state != RunState.NEW and not self._completion_persisted:
+                    self._record = self.manager.transition(
+                        self._record,
+                        state=self._runner.state,
+                        execution=self.execution,
+                        failure_phase=self.failure_phase,
+                    )

@@ -299,11 +299,6 @@ class _RemoteRunContext:
         return _RemoteRun(self, spec, callback=callback, run_id=run_id)
 
     async def attach(self, run, callback=None, output_listener=None, start=True):
-        if run.files.stdout is None and run.files.stderr is None:
-            raise ValueError(
-                "This run has no stored stdout or stderr; only live observation "
-                "during the original session was possible"
-            )
         execution = run.execution
         if execution.backend_id is None or execution.directory.remote is None:
             raise ValueError("Remote run lacks backend ID or target directory")

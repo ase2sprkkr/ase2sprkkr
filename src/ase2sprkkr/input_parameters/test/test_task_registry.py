@@ -37,6 +37,14 @@ def test_standard_task_comes_from_input_parameters_definition():
 
 def test_spec_tasks_share_schema_and_requested_task_is_default():
     schema = InputParameters.input_parameters_registry["ARPES"]
+    task_registry = InputParameters.task_registry
+    registry = InputParameters.input_parameters_registry
+    arpes_task = task_registry["ARPES"]
+    spleed_task = task_registry["SPLEED"]
+    assert registry.definition_for_task(arpes_task) is schema
+    assert registry.definition_for_task(spleed_task) is schema
+    assert arpes_task.input_parameters_definition_name == schema.name.upper()
+    assert spleed_task.input_parameters_definition_name == schema.name.upper()
     spleed = InputParameters.create("SPLEED")
 
     assert schema._task_definition is None

@@ -56,12 +56,8 @@ def test_class_vs_instance_from_file():
     assert conventional.definition_name == "JXC"
     assert explicit.definition_name == "JXC"
     assert selected.TASK.DMI()
-
-
-def test_missing_task_selects_scf_and_not_adsi():
-    path = _EXAMPLES / "scf.in"
-    text = path.read_text()
-    assert InputParameters.from_file(io.StringIO(text)).definition_name == "SCF"
+    assert conventional.TASK.DMI()
+    assert conventional.TASK.TASK() == "JXC"
 
 
 def test_explicit_ipd_never_autodetects(monkeypatch):

@@ -496,3 +496,61 @@ def test_transport_run_uses_start_and_preserves_completion(factory, check, send_
     assert transport.started[0][2] == (
         asyncio.subprocess.PIPE if send_input else None
     )
+
+
+def test_ssh_upload_preserves_original_error_when_remote_cleanup_fails(tmp_path):
+    source = tmp_path / "source.txt"
+    source.write_bytes(b"payload")
+    transport = SshTransport("unused", ssh="/missing-ase2sprkkr-ssh-executable")
+    commands = []
+
+    async def fake_run(argv, *, cwd=None, input=None, check=True):
+        commands.append(tuple(argv))
+        if argv[0] == "rm":
+            raise OSError("cleanup connection unavailable")
+        return subprocess.CompletedProcess(argv, 0, b"", b"")
+
+    transport.run = fake_run
+
+    async def check():
+        with pytest.raises(FileNotFoundError) as original:
+            await transport.put_file(source, "/remote/destination.txt")
+        assert "missing-ase2sprkkr-ssh-executable" in str(original.value)
+
+    asyncio.run(check())
+    assert [command[0] for command in commands] == ["mkdir", "rm"]
+
+
+def test_ssh_download_preserves_original_error_when_temp_unlink_fails(
+    tmp_path, monkeypatch,
+):
+    from .. import transport as module
+
+    transport = SshTransport("unused", ssh="/missing-ase2sprkkr-ssh-executable")
+
+    async def signature(path):
+        return 5, 1_000_000_000
+
+    transport.file_signature = signature
+    staged = tmp_path / "staged.tmp"
+    cleanup_calls = []
+
+    class UndeletableTemporary:
+        def open(self, *args, **kwargs):
+            return staged.open(*args, **kwargs)
+
+        def unlink(self):
+            cleanup_calls.append(True)
+            raise PermissionError("cannot remove staged download")
+
+    monkeypatch.setattr(module, "_local_temporary_path",
+                        lambda destination: UndeletableTemporary())
+
+    async def check():
+        with pytest.raises(FileNotFoundError) as original:
+            await transport.get_file("/remote/output", tmp_path / "result")
+        assert "missing-ase2sprkkr-ssh-executable" in str(original.value)
+
+    asyncio.run(check())
+    assert cleanup_calls == [True]
+    assert not (tmp_path / "result").exists()

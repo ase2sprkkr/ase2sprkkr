@@ -136,17 +136,22 @@ def test_remote_executor_syncs_cache_wildcards_in_both_directions(tmp_path):
 
 
 def test_exact_and_wildcard_outputs_share_availability_tracking(tmp_path):
+    from .test_remote import _SpyTransport
+
+    transport = _SpyTransport()
     workdir = tmp_path / "local" / "calculation"
     exact = workdir / "bands.dat"
+    overlap = workdir / "part-a.dat"
     pattern = workdir / "part-*.dat"
-    executor, spec, _, _ = _text_run(
-        tmp_path,
-        declared_output_files=(exact, pattern),
+    executor, spec, _, remote_root = _text_run(
+        tmp_path, transport,
+        declared_output_files=(exact, overlap, pattern),
         code=(
             "from pathlib import Path; "
             "Path('bands.dat').write_text('exact'); "
             "Path('part-a.dat').write_text('a'); "
-            "Path('part-b.dat').write_text('b')"
+            "Path('part-b.dat').write_text('b'); "
+            "Path('part-c.dat').write_text('c')"
         ),
     )
     runner = _processed_run(executor, spec)
@@ -154,14 +159,22 @@ def test_exact_and_wildcard_outputs_share_availability_tracking(tmp_path):
 
     entries = {entry.local_path: entry for entry in runner.files.outputs}
     assert exact.read_text() == "exact"
-    assert (workdir / "part-a.dat").read_text() == "a"
-    assert (workdir / "part-b.dat").read_text() == "b"
+    assert overlap.read_text() == "a"
+    for name, expected in (("part-b.dat", "b"), ("part-c.dat", "c")):
+        path = workdir / name
+        assert path.read_text() == expected
+        assert entries[str(path)].availability_state == "available"
+        assert entries[str(path)].source_pattern == str(pattern)
+
     assert entries[str(exact)].availability_state == "available"
+    assert entries[str(overlap)].availability_state == "available"
     assert entries[str(pattern)].availability_state == "available"
-    for name in ("part-a.dat", "part-b.dat"):
-        entry = entries[str(workdir / name)]
-        assert entry.availability_state == "available"
-        assert entry.source_pattern == str(pattern)
+
+    remote_workdir = remote_root / "calculation"
+    for name in ("bands.dat", "part-a.dat", "part-b.dat", "part-c.dat"):
+        assert sum(
+            src == remote_workdir / name for src, _ in transport.get_files
+        ) == 1
 
 
 def test_exact_and_wildcard_caches_keep_individual_sync_states(tmp_path):
@@ -243,34 +256,6 @@ def test_local_transfer_batches_use_their_directional_file_primitives(tmp_path):
 
     asyncio.run(check())
     assert (dest / "nested" / "result.dat").read_text() == "data"
-
-
-def test_overlapping_exact_and_wildcard_outputs_are_transferred_once(tmp_path):
-    from .test_remote import _SpyTransport
-
-    transport = _SpyTransport()
-    workdir = tmp_path / "local" / "calculation"
-    exact = workdir / "value-a.dat"
-    pattern = workdir / "value-*.dat"
-    executor, spec, _, remote_root = _text_run(
-        tmp_path, transport,
-        declared_output_files=(exact, pattern),
-        code=(
-            "from pathlib import Path; "
-            "Path('value-a.dat').write_text('a'); "
-            "Path('value-b.dat').write_text('b')"
-        ),
-    )
-    runner = _processed_run(executor, spec)
-    runner.run()
-    remote_a = remote_root / "calculation" / "value-a.dat"
-    remote_b = remote_root / "calculation" / "value-b.dat"
-    assert sum(src == remote_a for src, _ in transport.get_files) == 1
-    assert sum(src == remote_b for src, _ in transport.get_files) == 1
-    entries = {item.local_path: item for item in runner.files.outputs}
-    assert entries[str(exact)].availability_state == "available"
-    assert entries[str(pattern)].availability_state == "available"
-    assert exact.read_text() == "a"
 
 
 def test_overlapping_exact_and_wildcard_caches_are_transferred_once(tmp_path):

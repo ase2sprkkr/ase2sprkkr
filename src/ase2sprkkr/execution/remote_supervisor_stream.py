@@ -194,11 +194,20 @@ class SupervisorStreams:
                     raise ValueError("Attached execution already has a client")
                 self._session_follower = follower
                 self.connected.set()
-                disconnect_watch = asyncio.create_task(reader.read(1))
-                disconnect_watch.add_done_callback(
-                    lambda _: (self.disconnected.set(), follower.wake.set())
-                )
             self._followers.add(follower)
+            # Detached clients can disconnect while a calculation is silent.
+            # Observe EOF for *every* follower so an idle socket does not
+            # remain in _followers until the next output or terminal event.
+            disconnect_watch = asyncio.create_task(reader.read(1))
+
+            def on_disconnect(task):
+                if task.cancelled():
+                    return
+                if not self.detached:
+                    self.disconnected.set()
+                follower.wake.set()
+
+            disconnect_watch.add_done_callback(on_disconnect)
             writer.write(MAGIC)
             while True:
                 if disconnect_watch is not None and disconnect_watch.done():

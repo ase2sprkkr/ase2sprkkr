@@ -68,34 +68,27 @@ def test_durable_write_propagates_directory_barrier_failure(tmp_path, monkeypatc
     assert not tuple(tmp_path.glob(".*.tmp"))
 
 
-def test_durable_mkdir_syncs_each_new_directory_entry(tmp_path, monkeypatch):
-    synced = []
-    monkeypatch.setattr(
-        durability,
-        "fsync_directory",
-        lambda directory: synced.append(Path(directory)),
-    )
-
-    durability.durable_mkdir(tmp_path / "one" / "two", parents=True)
-
-    assert synced == [tmp_path, tmp_path / "one"]
-
-
-def test_durable_mkdir_syncs_parent_when_directory_already_exists(
-    tmp_path, monkeypatch
+@pytest.mark.parametrize("already_exists", (False, True))
+def test_durable_mkdir_syncs_parent_directory_entries(
+    tmp_path, monkeypatch, already_exists,
 ):
-    directory = tmp_path / "created-by-lock-helper"
-    directory.mkdir()
+    directory = tmp_path / "one"
+    if already_exists:
+        directory.mkdir()
+        target = directory
+        expected = [tmp_path]
+    else:
+        target = directory / "two"
+        expected = [tmp_path, directory]
     synced = []
     monkeypatch.setattr(
-        durability,
-        "fsync_directory",
-        lambda path: synced.append(Path(path)),
+        durability, "fsync_directory",
+        lambda parent: synced.append(Path(parent)),
     )
 
-    durability.durable_mkdir(directory, parents=True, exist_ok=True)
+    durability.durable_mkdir(target, parents=True, exist_ok=already_exists)
 
-    assert synced == [tmp_path]
+    assert synced == expected
 
 
 def test_run_store_uses_durable_json_writer(tmp_path, monkeypatch):

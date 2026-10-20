@@ -3,7 +3,11 @@ import shlex
 import pytest
 
 from ase2sprkkr.configuration import definition
-from ase2sprkkr.configuration_yaml import load_configuration_yaml
+from ase2sprkkr.configuration_yaml import (
+    load_configuration_yaml,
+    load_yaml_document,
+    save_configuration_yaml,
+)
 from ase2sprkkr.sprkkr.profile import (
     ExecutorEndpoint,
     LaunchParameters,
@@ -13,31 +17,35 @@ from ase2sprkkr.sprkkr.profile import (
 )
 
 
-def test_configured_profiles_expose_mutability_contract():
-    config = definition.create_object()
-
-    profile = config.profiles.add("cluster")
-
-    assert profile.read_only is False
-    assert config.profiles["cluster"].read_only is False
-
-
 def test_profile_shell_strings_round_trip_to_runtime_argv(tmp_path):
     path = tmp_path / "config.yaml"
-    path.write_text(
-        "profiles:\n"
-        "  cluster:\n"
-        "    mpi: srun -n 8\n"
-        "    ssh_options: -p 2222 -i '/tmp/key file'\n",
-        encoding="utf8",
-    )
     config = definition.create_object()
+    configured = config.profiles.add("cluster")
+    configured.mpi.set(["srun", "-n", "8"])
+    configured.ssh_options.set(["-p", "2222", "-i", "/tmp/key file"])
 
-    load_configuration_yaml(config, path)
-    profile = resolve_sprkkr_profile("cluster", configuration=config)
+    save_configuration_yaml(config, path)
+    data = load_yaml_document(path)
+    assert data["profiles"]["cluster"]["mpi"] == "srun -n 8"
+    assert data["profiles"]["cluster"]["ssh_options"] == (
+        "-p 2222 -i '/tmp/key file'"
+    )
+
+    loaded = definition.create_object()
+    load_configuration_yaml(loaded, path)
+    profile = resolve_sprkkr_profile("cluster", configuration=loaded)
 
     assert profile.mpi == ("srun", "-n", "8")
     assert profile.ssh_options == ("-p", "2222", "-i", "/tmp/key file")
+
+
+def test_single_argument_mpi_runner_remains_an_argv_sequence():
+    config = definition.create_object()
+    profile = config.profiles.add("cluster")
+
+    profile.mpi.set(["srun"])
+
+    assert profile.mpi().tolist() == ["srun"]
 
 
 def test_explicit_runtime_shell_strings_are_split():
@@ -54,10 +62,15 @@ def test_explicit_runtime_shell_strings_are_split():
     )
 
 
-def test_mpi_auto_keeps_symbolic_semantics():
-    profile = resolve_sprkkr_profile(SPRKKRProfile(mpi="auto"))
+@pytest.mark.parametrize("explicit", (False, True), ids=("default", "explicit-auto"))
+def test_mpi_auto_keeps_symbolic_semantics(explicit):
+    selected = SPRKKRProfile(mpi="auto") if explicit else SPRKKRProfile()
+    profile = resolve_sprkkr_profile(selected)
 
     assert profile.mpi == "auto"
+    assert profile.mpi_warning is True
+    assert profile.launch_parameters.mpi == "auto"
+    assert profile.launch_parameters.mpi_warning is True
 
 
 def test_ase_command_locates_sprkkr_executable_family():

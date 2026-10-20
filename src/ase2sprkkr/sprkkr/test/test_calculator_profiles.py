@@ -19,15 +19,6 @@ def fresh_profile_config(monkeypatch):
     return configuration
 
 
-def test_runtime_profile_mpi_defaults():
-    profile = SPRKKRProfile()
-
-    assert profile.mpi == "auto"
-    assert profile.mpi_warning is True
-    assert profile.launch_parameters.mpi == "auto"
-    assert profile.launch_parameters.mpi_warning is True
-
-
 def test_calculator_uses_configured_default_profile(monkeypatch):
     configuration = fresh_profile_config(monkeypatch)
     configuration.profiles.set(

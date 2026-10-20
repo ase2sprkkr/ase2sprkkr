@@ -175,10 +175,14 @@ def test_none_stream_paths_are_live_only(tmp_path):
     assert runner.wait().return_code == 0
     assert not (tmp_path / "out.txt").exists()
     assert not (tmp_path / "err.txt").exists()
-    with pytest.raises(ValueError, match="no replayable"):
-        LocalExecutor().attach(
-            _record(tmp_path, runner.backend_id, stdout=False, stderr=False),
-        )
+    attached = LocalExecutor().attach(
+        _record(tmp_path, runner.backend_id, stdout=False, stderr=False),
+        start=False,
+    )
+    assert attached.backend_id == runner.backend_id
+    assert attached.result.output_file is None
+    assert attached.result.error_file is None
+    assert attached.state == RunState.FINISHED
 
 
 def test_terminal_without_ticket_is_still_accessible_by_handle(tmp_path):

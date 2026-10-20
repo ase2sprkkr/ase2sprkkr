@@ -183,7 +183,13 @@ def _psij_executor():
     executor.poll_interval = 0.01
     executor._psij = SimpleNamespace(Job=Job)
     executor._job_executor = JobExecutor()
-    executor._status_jobs = {}
+    from collections import OrderedDict
+    from threading import RLock
+
+    executor._jobs = OrderedDict()
+    executor._observers = {}
+    executor._jobs_lock = RLock()
+    executor._max_idle_jobs = 64
     return executor
 
 
