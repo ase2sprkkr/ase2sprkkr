@@ -154,3 +154,24 @@ def test_remote_manifest_uses_same_declarations_as_local(tmp_path):
     assert manifest.outputs[0].remote_path == str(remote / "local" / "one.dat")
     assert manifest.caches[0].file.remote_path == str(remote / "local" / "restart.pot")
     assert len(manifest.caches) == 1
+
+
+
+def test_remote_stdin_keeps_separate_primary_input_identity(tmp_path):
+    import asyncio
+    from dataclasses import asdict
+
+    local = tmp_path / "local"
+    remote = tmp_path / "remote"
+    local.mkdir()
+    spec = ExecutionSpec(
+        argv=("ignored",), input_file=None, output_file="stdout.dat",
+        directory=str(local), stdin="stdin.dat",
+        launch=LaunchSpec(local_root=str(tmp_path), remote_root=str(remote)),
+    )
+    runner = RemoteEndpointExecutor(LocalTransport()).create_run(spec)
+    manifest = asyncio.run(runner._submitted_manifest({}))
+    assert manifest.input_file is None
+    assert manifest.input_files == (str(local / "stdin.dat"),)
+    assert manifest.stdin.remote_path == str(remote / "local" / "stdin.dat")
+    assert FileManifest(**asdict(manifest)) == manifest

@@ -170,9 +170,13 @@ def _manifest_accesses(record):
             value if os.path.isabs(value) else os.path.join(directory.target, value)
         )
 
-    reads = {path(entry) for entry in files.inputs}
-    reads.update(path(cache.file) for cache in files.caches)
+    reads = {path(entry) for entry in files.input_entries}
     writes = {path(entry) for entry in (files.stdout, files.stderr, *files.outputs)}
+    # Remote staging can overwrite inputs unless synchronization is NEVER.
+    if remote and (files.mapping is None or files.mapping.input_sync != "never"):
+        writes.update(reads)
+    # A calculation may update an already existing cache.
+    reads.update(path(cache.file) for cache in files.caches)
     writes.update(path(cache.file) for cache in files.caches)
     return reads - {None}, writes - {None}
 
@@ -838,10 +842,6 @@ class ExecutionManager:
             dataset=dataset,
             directory=spec.directory,
             endpoint=endpoint,
-            remote_directory=(
-                executor.submission_directory(spec)
-                if endpoint.executor not in ("local", "psij") else None
-            ),
             files=FileManifest.from_spec(spec),
             run_id=run_id,
         )
@@ -854,7 +854,7 @@ class ExecutionManager:
         if set_manifest is not None:
             set_manifest(record.files)
         processed = PostprocessingRunner(raw, process_result)
-        project_run = ProjectRunner(self, executor, processed, record)
+        project_run = ProjectRunner(self, executor, processed, record, spec=spec)
         processed.callback = lambda result: self._complete(
             project_run, result, callback
         )
@@ -914,11 +914,12 @@ class ExecutionManager:
 class ProjectRunner:
     """Caller-owned runner that persists the public lifecycle directly."""
 
-    def __init__(self, manager, executor, runner, record):
+    def __init__(self, manager, executor, runner, record, *, spec=None):
         self.manager = manager
         self.executor = executor
         self._runner = runner
         self._record = record
+        self._spec = spec
         self._completion_lock = Lock()
         self._completion_persisted = False
 
@@ -976,6 +977,18 @@ class ProjectRunner:
     def submit(self):
         if self._record.state != RunState.NEW:
             raise RuntimeError(f"Run is already {self._record.state.value}")
+        # Resolve SSH paths outside the submission lock, but persist the real
+        # target-side identities inside the atomic reservation.
+        files, remote_directory = self.executor.reservation_context(
+            self._spec, self._record.files,
+        )
+        execution = self._record.execution
+        if remote_directory is not None:
+            execution = replace(
+                execution,
+                directory=replace(execution.directory, remote=remote_directory),
+            )
+        self._record = replace(self._record, files=files, execution=execution)
         self._record = self.manager.reserve(self._record)
         try:
             prepare = getattr(self._runner, "prepare_submission", None)

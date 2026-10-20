@@ -7,6 +7,7 @@ import ase2sprkkr.outputs.project_results as project_output
 from ase2sprkkr.execution import (
     ExecutionOutcome,
     Executor,
+    ExecutionSpec,
     FailurePhase,
     RunState,
     RunStore,
@@ -62,7 +63,7 @@ def test_finished_run_is_persisted_before_callback_without_wait(tmp_path):
     finished = Event()
     run = manager.create_run(
         _Executor(),
-        SimpleNamespace(directory=str(tmp_path)),
+        ExecutionSpec(argv=(), input_file=None, output_file=None, directory=str(tmp_path)),
         process_result=lambda outcome: outcome,
         task="DOS",
         callback=lambda result: finished.set(),
@@ -84,7 +85,7 @@ def test_result_processor_failure_is_postprocessing_failure(tmp_path):
 
     run = manager.create_run(
         executor,
-        SimpleNamespace(directory=str(tmp_path)),
+        ExecutionSpec(argv=(), input_file=None, output_file=None, directory=str(tmp_path)),
         process_result=fail,
         task="DOS",
     )

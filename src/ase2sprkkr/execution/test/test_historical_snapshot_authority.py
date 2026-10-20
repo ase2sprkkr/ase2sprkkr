@@ -2,7 +2,7 @@ from types import SimpleNamespace
 
 import pytest
 
-from ase2sprkkr.execution import RunState, RunStore, FileManifest
+from ase2sprkkr.execution import ExecutionSpec, RunState, RunStore, FileManifest
 from ase2sprkkr.execution.manager import ExecutionManager
 from ase2sprkkr.outputs.project_results import (
     ProjectResultUnavailableError,
@@ -16,13 +16,13 @@ def test_later_primary_output_is_not_mistaken_for_uncaptured_history(tmp_path):
     input_file = tmp_path / "run.inp"
     output_file = tmp_path / "run.out"
     input_file.write_text("input")
-    spec = SimpleNamespace(
+    spec = ExecutionSpec(
+        argv=(),
         directory=str(tmp_path),
         input_file=str(input_file),
         output_file=str(output_file),
         input_files=(str(input_file),),
         output_files=(str(output_file),),
-        cache_files=(),
     )
     record = manager.new_record(
         task="DOS",

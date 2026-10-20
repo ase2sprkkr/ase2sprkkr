@@ -5,6 +5,7 @@ import pytest
 
 from ase2sprkkr.execution import (
     DuplicateSubmissionError,
+    ExecutionSpec,
     Executor,
     RunState,
     RunStore,
@@ -64,7 +65,9 @@ class _Executor(Executor):
 def _run(manager, executor, directory, *, task="DOS", dataset="case"):
     return manager.create_run(
         executor,
-        spec=SimpleNamespace(directory=str(directory)),
+        spec=ExecutionSpec(
+            argv=(), input_file=None, output_file=None, directory=str(directory),
+        ),
         process_result=lambda outcome: outcome,
         task=task,
         dataset=dataset,
@@ -289,3 +292,134 @@ def test_shared_input_is_not_a_conflict(tmp_path):
     )
     manager.reserve(first)
     assert manager.reserve(second).state == RunState.SUBMITTING
+
+
+@pytest.mark.parametrize("cache_exists", [False, True])
+def test_shared_cache_blocks_concurrent_writers_with_distinct_outputs(
+    tmp_path, cache_exists,
+):
+    from ase2sprkkr.execution import CacheEntry, FileEntry, FileManifest
+
+    cache = tmp_path / "shared.tau.dir"
+    if cache_exists:
+        cache.write_text("existing cache")
+    manager = ExecutionManager(RunStore(tmp_path / "runs"))
+
+    def record(task):
+        return manager.new_record(
+            task=task, dataset=task, directory=tmp_path,
+            files=FileManifest(
+                outputs=(FileEntry(local_path=str(tmp_path / f"{task}.out")),),
+                caches=(CacheEntry(FileEntry(local_path=str(cache))),),
+            ),
+        )
+
+    first = manager.reserve(record("DOS"))
+    assert first.state == RunState.SUBMITTING
+    with pytest.raises(DuplicateSubmissionError):
+        manager.reserve(record("BSF"))
+
+
+def test_missing_cache_producer_still_blocks_later_reader(tmp_path):
+    from ase2sprkkr.execution import CacheEntry, FileEntry, FileManifest
+
+    manager = ExecutionManager(RunStore(tmp_path / "runs"))
+    cache = tmp_path / "shared.tau.dir"
+
+    def record(task):
+        return manager.new_record(
+            task=task, directory=tmp_path,
+            files=FileManifest(
+                outputs=(FileEntry(local_path=str(tmp_path / f"{task}.out")),),
+                caches=(CacheEntry(FileEntry(local_path=str(cache))),),
+            ),
+        )
+
+    manager.reserve(record("DOS"))
+    cache.write_text("partial data")
+    with pytest.raises(DuplicateSubmissionError):
+        manager.reserve(record("BSF"))
+
+
+def test_remote_file_collision_uses_target_identity(tmp_path):
+    from ase2sprkkr.execution import ExecutorEndpoint, FileEntry, FileManifest
+
+    manager = ExecutionManager(RunStore(tmp_path / "runs"))
+    endpoint = ExecutorEndpoint(executor="ssh", host="remote-host")
+    first = manager.new_record(
+        task="DOS", directory=tmp_path / "one", endpoint=endpoint,
+        remote_directory="/remote/job",
+        files=FileManifest(outputs=(
+            FileEntry(local_path=str(tmp_path / "one" / "a"),
+                      remote_path="/remote/job/result"),)),
+    )
+    second = manager.new_record(
+        task="BSF", directory=tmp_path / "two", endpoint=endpoint,
+        remote_directory="/remote/job",
+        files=FileManifest(inputs=(
+            FileEntry(local_path=str(tmp_path / "two" / "b"),
+                      remote_path="/remote/job/result"),)),
+    )
+    manager.reserve(first)
+    with pytest.raises(DuplicateSubmissionError):
+        manager.reserve(second)
+
+
+
+def test_stdin_read_conflicts_with_output_writer(tmp_path):
+    from ase2sprkkr.execution import FileEntry, FileManifest
+
+    manager = ExecutionManager(RunStore(tmp_path / "runs"))
+    shared = tmp_path / "shared.in"
+    reader = manager.new_record(
+        task="DOS", directory=tmp_path, dataset="reader",
+        files=FileManifest.from_spec(ExecutionSpec(
+            argv=("cat",), input_file=None, output_file="reader.out",
+            directory=str(tmp_path), stdin=str(shared),
+        )),
+    )
+    writer = manager.new_record(
+        task="BSF", directory=tmp_path, dataset="writer",
+        files=FileManifest(outputs=(FileEntry(local_path=str(shared)),)),
+    )
+    assert reader.files.input_file is None
+    manager.reserve(reader)
+    with pytest.raises(DuplicateSubmissionError):
+        manager.reserve(writer)
+
+
+def test_two_stdin_readers_can_run_concurrently(tmp_path):
+    from ase2sprkkr.execution import FileManifest
+
+    manager = ExecutionManager(RunStore(tmp_path / "runs"))
+    for task in ("DOS", "BSF"):
+        record = manager.new_record(
+            task=task, directory=tmp_path, dataset=task,
+            files=FileManifest.from_spec(ExecutionSpec(
+                argv=("cat",), input_file=None, output_file=f"{task}.out",
+                directory=str(tmp_path), stdin="shared.in",
+            )),
+        )
+        assert manager.reserve(record).state == RunState.SUBMITTING
+
+
+def test_auxiliary_read_without_primary_still_conflicts_with_writer(tmp_path):
+    from ase2sprkkr.execution import FileEntry, FileManifest
+
+    manager = ExecutionManager(RunStore(tmp_path / "runs"))
+    reader = manager.new_record(
+        task="DOS", directory=tmp_path,
+        files=FileManifest.from_spec(ExecutionSpec(
+            argv=("cat",), input_file=None, input_files=("aux.in",),
+            output_file="reader.out", directory=str(tmp_path),
+        )),
+    )
+    writer = manager.new_record(
+        task="BSF", directory=tmp_path,
+        files=FileManifest(outputs=(
+            FileEntry(local_path=str(tmp_path / "aux.in")),)),
+    )
+    assert reader.files.input_file is None
+    manager.reserve(reader)
+    with pytest.raises(DuplicateSubmissionError):
+        manager.reserve(writer)

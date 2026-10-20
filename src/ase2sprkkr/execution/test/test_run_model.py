@@ -3,6 +3,7 @@ from dataclasses import asdict
 import pytest
 
 from ase2sprkkr.execution.endpoint import ExecutorEndpoint
+from ase2sprkkr.execution.base import ExecutionSpec
 from ase2sprkkr.execution.run_model import (
     CacheEntry, Execution, FileEntry, FileManifest, WorkingDirectory,
 )
@@ -181,9 +182,8 @@ def test_wildcard_parent_completed_after_all_files():
 
 
 def test_project_manifest_reuses_optional_file_path_semantics(tmp_path):
-    from types import SimpleNamespace
-
-    spec = SimpleNamespace(
+    spec = ExecutionSpec(
+        argv=(),
         directory=str(tmp_path),
         input_file="input.dat",
         input_files=(object(), 1, "input.dat"),
@@ -271,9 +271,8 @@ def test_submitted_uses_execution_backend_id_validation():
 
 
 def test_manifest_from_spec_normalizes_stream_overlaps(tmp_path):
-    from types import SimpleNamespace
-
-    spec = SimpleNamespace(
+    spec = ExecutionSpec(
+        argv=(),
         directory=str(tmp_path),
         input_file="input.inp", input_files=("input.inp", "other.inp", "other.inp"),
         output_file="stdout.out", error_file="stderr.err",
@@ -304,3 +303,61 @@ def test_legacy_duplicate_stderr_declaration_is_updated_together():
     assert updated.stderr.availability_state == "available"
     assert updated.outputs[0].availability_state == "available"
     assert updated.output_files == (path,)
+
+
+
+def test_stdin_is_read_input_not_primary_input(tmp_path):
+    spec = ExecutionSpec(
+        argv=("cat",), input_file=None, output_file="output.txt",
+        directory=str(tmp_path), stdin="shared.txt",
+    )
+    manifest = FileManifest.from_spec(spec)
+    shared = str(tmp_path / "shared.txt")
+    assert manifest.input_file is None
+    assert manifest.stdin == FileEntry(local_path=shared)
+    assert manifest.input_files == (shared,)
+    assert manifest.manifests == (shared, str(tmp_path / "output.txt"))
+    assert FileManifest(**asdict(manifest)) == manifest
+
+
+def test_stdin_matching_primary_input_deduplicates_local_reads(tmp_path):
+    spec = ExecutionSpec(
+        argv=("cat",), input_file="shared.txt", output_file=None,
+        directory=str(tmp_path), stdin="shared.txt",
+        input_files=("shared.txt", "extra.txt"),
+    )
+    manifest = FileManifest.from_spec(spec)
+    shared = str(tmp_path / "shared.txt")
+    extra = str(tmp_path / "extra.txt")
+    assert manifest.input_file == shared
+    assert manifest.input_files == (shared, extra)
+    assert len(manifest.input_entries) == 3
+    assert FileManifest(**asdict(manifest)) == manifest
+
+
+def test_stdin_read_entry_may_be_remote_only():
+    manifest = FileManifest(stdin=FileEntry(remote_path="/scratch/stdin.in"))
+    assert manifest.input_file is None
+    assert manifest.input_files == ()
+    assert manifest.input_entries == (manifest.stdin,)
+    assert FileManifest(**asdict(manifest)) == manifest
+
+
+def test_auxiliary_input_does_not_become_primary_input(tmp_path):
+    spec = ExecutionSpec(
+        argv=("true",), directory=str(tmp_path), input_file=None,
+        output_file=None, input_files=("aux.dat",),
+    )
+    manifest = FileManifest.from_spec(spec)
+    assert manifest.input_file is None
+    assert manifest.input_files == (str(tmp_path / "aux.dat"),)
+    assert manifest.primary_input_declared is False
+    assert FileManifest(**asdict(manifest)) == manifest
+
+
+def test_legacy_manifest_keeps_first_input_as_primary():
+    legacy = FileManifest(inputs=(FileEntry(local_path="/local/input"),))
+    assert legacy.input_file == "/local/input"
+    stored = asdict(legacy)
+    del stored["primary_input_declared"]
+    assert FileManifest(**stored).input_file == "/local/input"

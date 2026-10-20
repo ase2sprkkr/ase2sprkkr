@@ -5,6 +5,7 @@ import pytest
 
 from ase2sprkkr.execution import (
     DuplicateSubmissionError,
+    ExecutionSpec,
     Executor,
     ExecutorPool,
     RunState,
@@ -64,7 +65,9 @@ class _RecoveringExecutor(Executor):
 def _run(manager, executor, tmp_path):
     return manager.create_run(
         executor,
-        spec=SimpleNamespace(directory=str(tmp_path)),
+        spec=ExecutionSpec(
+            argv=(), input_file=None, output_file=None, directory=str(tmp_path),
+        ),
         process_result=lambda outcome: outcome,
         task="DOS",
         dataset="case",

@@ -6,6 +6,7 @@ import pytest
 from ase2sprkkr.execution import (
     DuplicateSubmissionError,
     ExecutionOutcome,
+    ExecutionSpec,
     Executor,
     ExecutorPool,
     FailurePhase,
@@ -84,12 +85,11 @@ class _Executor(Executor):
 
 
 def _spec(tmp_path, *, dataset="case"):
-    return SimpleNamespace(
+    return ExecutionSpec(
+        argv=(),
         directory=str(tmp_path),
         input_file=str(tmp_path / f"{dataset}.inp"),
         output_file=str(tmp_path / f"{dataset}.out"),
-        input_files=(),
-        output_files=(),
     )
 
 

@@ -52,7 +52,7 @@ def test_manager_passes_its_identity_to_project_executor(tmp_path):
     projects = ProjectRepository(tmp_path / "projects")
     project = projects.create("test")
     manager = ExecutionManager(project_repository=projects).for_project(project)
-    spec = SimpleNamespace(directory=str(tmp_path))
+    spec = ExecutionSpec(argv=(), input_file=None, output_file=None, directory=str(tmp_path))
 
     run = manager.create_run(executor, spec, process_result=lambda x: x, task="DOS", dataset="case")
 

@@ -128,38 +128,27 @@ class _RemoteRun(RemoteRunner):
         return result
 
     async def _submitted_manifest(self, request):
-        local = FileManifest.from_spec(self.spec)
-
-        async def mapped(entry):
-            return replace(entry, remote_path=await self.executor.map_path(entry.local_path))
-
-        inputs = tuple([await mapped(entry) for entry in local.inputs])
-        outputs = tuple([await mapped(entry) for entry in local.outputs])
+        # Reuse pre-reservation mapping, then attach staging observations.
+        local = await self.executor.map_manifest(FileManifest.from_spec(self.spec))
         caches = []
         for cache in local.caches:
-            entry = await mapped(cache.file)
-            previous = self._cache_targets.get(entry.local_path)
-            caches.append(CacheEntry(entry, None if previous is None else previous[1]))
+            previous = self._cache_targets.get(cache.file.local_path)
+            caches.append(replace(
+                cache, before=None if previous is None else previous[1],
+            ))
         for remote, before in self._cache_before.items():
             caches.append(CacheEntry(FileEntry(remote_path=remote), before))
 
         sync = request.get("client_sync") or {}
-        mapping = FileMapping(
-            local_root=os.fspath(self.executor.local_root),
-            remote_root=await self.executor._resolved_remote_root(),
-            input_sync=self.executor.input_files.value,
-            output_sync=self.executor.output_files.value,
-        )
         return replace(
             local,
-            inputs=inputs, outputs=outputs, caches=tuple(caches),
+            caches=tuple(caches),
             stdout=None if local.stdout is None else replace(
                 local.stdout, remote_path=sync.get("output_file"),
             ),
             stderr=None if local.stderr is None else replace(
                 local.stderr, remote_path=sync.get("error_file"),
             ),
-            mapping=mapping,
         )
 
     async def _prepare_async(self):
@@ -282,6 +271,32 @@ class _RemoteRunContext:
 
     async def map_directory(self, directory):
         return await self.map_path(directory)
+
+    async def map_manifest(self, files):
+        """Map all declared paths through the same target filesystem policy."""
+        async def mapped(entry):
+            if entry is None:
+                return None
+            return replace(entry, remote_path=await self.map_path(entry.local_path))
+
+        return replace(
+            files,
+            inputs=tuple([await mapped(entry) for entry in files.inputs]),
+            stdin=await mapped(files.stdin),
+            outputs=tuple([await mapped(entry) for entry in files.outputs]),
+            caches=tuple([
+                replace(cache, file=await mapped(cache.file))
+                for cache in files.caches
+            ]),
+            stdout=await mapped(files.stdout),
+            stderr=await mapped(files.stderr),
+            mapping=FileMapping(
+                local_root=os.fspath(self.local_root),
+                remote_root=await self._resolved_remote_root(),
+                input_sync=self.input_files.value,
+                output_sync=self.output_files.value,
+            ),
+        )
 
     async def _submit(self, request):
         return await self.endpoint._submit(request)
@@ -484,6 +499,16 @@ class RemoteEndpointExecutor(Executor):
             return posixpath.join(await self._remote_home(), directory[2:])
         return directory
 
+    def reservation_context(self, spec, files):
+        """Map the manifest and canonical directory together at submission."""
+        async def resolve():
+            context = self._context(self, spec.launch)
+            manifest = await context.map_manifest(files)
+            directory = await context.map_directory(spec.directory)
+            return manifest, directory
+
+        return _run_sync(resolve())
+
     def submission_directory(self, spec):
         launch = spec.launch
         relative = _relative_local_path(
@@ -644,6 +669,7 @@ class RemoteEndpointExecutor(Executor):
             entry = next(
                 (item for item in (
                     *run.files.inputs,
+                    run.files.stdin,
                     *run.files.outputs,
                     *(cache.file for cache in run.files.caches),
                     run.files.stdout,

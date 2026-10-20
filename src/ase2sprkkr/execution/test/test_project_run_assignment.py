@@ -5,7 +5,7 @@ from types import SimpleNamespace
 import pytest
 
 from ase2sprkkr.execution import (
-    ExecutionManager, Executor, ProjectRepository, RunState,
+    ExecutionManager, ExecutionSpec, Executor, ProjectRepository, RunState,
 )
 
 
@@ -59,7 +59,7 @@ def test_run_is_durable_in_project_namespace_before_backend_submit(tmp_path):
     manager, projects, project = _fixture(tmp_path)
     executor = _Executor()
     run = manager.create_run(
-        executor, SimpleNamespace(directory=str(tmp_path)),
+        executor, ExecutionSpec(argv=(), input_file=None, output_file=None, directory=str(tmp_path)),
         process_result=lambda outcome: outcome, task="DOS",
         input_definition="dos",
     )
@@ -84,7 +84,7 @@ def test_missing_project_cannot_create_tracked_run(tmp_path):
     executor = _Executor()
     with pytest.raises(ValueError, match="existing project"):
         manager.create_run(
-            executor, SimpleNamespace(directory=str(tmp_path)),
+            executor, ExecutionSpec(argv=(), input_file=None, output_file=None, directory=str(tmp_path)),
             process_result=lambda outcome: outcome, task="DOS",
         )
     assert not hasattr(executor, "runner")
@@ -96,7 +96,7 @@ def test_invalid_project_is_rejected_before_backend_is_created(tmp_path):
     executor = _Executor()
     with pytest.raises((KeyError, ValueError)):
         manager.create_run(
-            executor, SimpleNamespace(directory=str(tmp_path)),
+            executor, ExecutionSpec(argv=(), input_file=None, output_file=None, directory=str(tmp_path)),
             process_result=lambda outcome: outcome, task="DOS",
             project="missing",
         )
