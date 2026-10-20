@@ -6,6 +6,7 @@ import asyncio
 import fcntl
 import os
 import posixpath
+import posixpath
 from dataclasses import replace
 from enum import Enum
 from threading import Event, Lock, Thread
@@ -100,6 +101,8 @@ class RemoteRunner:
         self._output_patterns = tuple(output_patterns or ())
         self._cache_patterns = tuple(cache_patterns or ())
         self._cache_before = dict(cache_before or {})
+        self._pattern_matches = {}
+        self._downloaded = {}
         self.result = ExecutionOutcome(
             output_file=self._local_path(spec.output_file),
             input_file=self._local_path(spec.input_file),
@@ -367,14 +370,69 @@ class RemoteRunner:
         self._output_targets = targets
         self._output_patterns = tuple(patterns)
 
+    async def _preflight_downloads(self):
+        """Reject ambiguous local targets before fetching any declared files.
+
+        A file may appear in output/cache/wildcard declarations more than once,
+        but it must always have the same remote source. Expand patterns once
+        here and reuse their matches during synchronization.
+        """
+        sources = {}
+        self._pattern_matches = {}
+        self._downloaded = {}
+
+        def register(local, remote):
+            target = os.path.normcase(os.path.realpath(os.path.abspath(os.fspath(local))))
+            source = posixpath.normpath(os.fspath(remote))
+            old = sources.get(target)
+            if old is not None and old != source:
+                raise ValueError(
+                    f"Remote artifacts {old!r} and {source!r} map to "
+                    f"the same local file {target!r}"
+                )
+            sources[target] = source
+
+        for local, remote in self._output_targets.items():
+            register(local, remote)
+        for local, (remote, _before) in self._cache_targets.items():
+            register(local, remote)
+
+        # Primary output streams arrive via FOLLOW rather than get_file().
+        for local in (self.result.output_file, self.result.error_file):
+            if local is not None:
+                register(local, await self.executor.map_path(local))
+
+        remote_root = await self.executor._resolved_remote_root()
+        for kind, patterns in (
+            ("output", self._output_patterns),
+            ("cache", self._cache_patterns),
+        ):
+            for pattern in patterns:
+                matches = tuple(
+                    await self.executor.transport.expand_files(pattern, remote_root)
+                )
+                self._pattern_matches[kind, pattern] = matches
+                for remote in matches:
+                    register(await self.executor.unmap_path(remote), remote)
+
+    @staticmethod
+    def _artifact_key(local):
+        return os.path.normcase(os.path.realpath(os.path.abspath(os.fspath(local))))
+
     async def _sync_output_entry(self, local, remote, required, *, source_pattern=None):
         """Synchronize one concrete output and record its availability."""
         if source_pattern is not None:
             self._set_file_availability(
                 local, "pending", remote=remote, source_pattern=source_pattern,
             )
+        key = self._artifact_key(local)
         try:
-            available = await self._sync_one_output(local, remote, required)
+            if key in self._downloaded:
+                available = True
+            else:
+                available = await self._sync_one_output(local, remote, required)
+                if available:
+                    self._downloaded[key] = remote
         except Exception as exc:
             self._set_file_availability(local, "failed", str(exc))
             raise
@@ -391,7 +449,9 @@ class RemoteRunner:
         for pattern in patterns:
             local_pattern = os.fspath(await self.executor.unmap_path(pattern))
             try:
-                matches = await self.executor.transport.expand_files(pattern, remote_root)
+                matches = self._pattern_matches.get((kind, pattern))
+                if matches is None:
+                    matches = await self.executor.transport.expand_files(pattern, remote_root)
                 if not matches:
                     if required:
                         raise FileNotFoundError(
@@ -465,6 +525,10 @@ class RemoteRunner:
         local_digest = file_digest(local, missing_ok=True)
         if policy.should_transfer(remote_digest, local_digest):
             await self.executor.transport.get_file(remote, local)
+            # The expected remote digest is already available. A successful
+            # transport call alone does not establish equal file contents.
+            if file_digest(local, missing_ok=True) != remote_digest:
+                raise OSError(f"Downloaded output differs from remote source: {remote}")
         return True
 
     async def _sync_cache_entry(self, local, remote, before, *, source_pattern=None):
@@ -474,6 +538,10 @@ class RemoteRunner:
                 local, "pending", remote=remote, kind="cache",
                 source_pattern=source_pattern,
             )
+        key = self._artifact_key(local)
+        if key in self._downloaded:
+            self._set_file_availability(local, "available", kind="cache")
+            return
         try:
             after = await self.executor.transport.file_signature(remote)
             if (
@@ -487,6 +555,7 @@ class RemoteRunner:
             else:
                 await self.executor.transport.get_file(remote, local)
                 state = "available"
+                self._downloaded[key] = remote
         except Exception as exc:
             self._set_file_availability(local, "failed", str(exc), kind="cache")
             raise
@@ -692,6 +761,8 @@ class RemoteRunner:
 
             self._state = RunState.DOWNLOADING
             try:
+                if self.executor.output_files != FileSyncPolicy.NEVER:
+                    await self._preflight_downloads()
                 await self._sync_output_files(required=backend_state == RunState.FINISHED)
                 await self._sync_cache_files()
             except Exception as exc:
