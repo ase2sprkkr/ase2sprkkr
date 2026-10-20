@@ -10,6 +10,7 @@ from ..common.grammar_types.data import RestOfTheFile
 import io
 import os
 import re
+from numbers import Number
 
 
 class UnknownDataValue(ConfigurationValue):
@@ -254,12 +255,15 @@ class CommonResultFile(ResultFile):
 
 class Arithmetic:
     def _check_arithmetic(self, other):
-        if hasattr(self, "_assert_arithmetic"):
-            try:
-                self._assert_arithmetic(other)
-            except AssertionError as e:
-                raise ValueError("The results are not compatible for addition or subtraction.") from e
-        pass
+        if isinstance(other, Number):
+            return
+        if not isinstance(other, type(self)):
+            raise TypeError(
+                f"Cannot combine {type(self).__name__} with {type(other).__name__}"
+            )
+        check = getattr(self, "_assert_arithmetic", None)
+        if check is not None:
+            check(other)
 
     def __add__(self, other):
         out = self.copy(copy_values=True)
@@ -282,7 +286,7 @@ class Arithmetic:
         return out
 
     def __rmul__(self, other):
-        out = self.copy()
+        out = self.copy(copy_values=True)
         out *= other
         return out
 
@@ -292,7 +296,8 @@ class Arithmetic:
         if callable(vals):
             vals = vals()
         for val, selector in vals:
-            getattr(self[val]()[selector], func)(other[val]()[selector])
+            operand = other if isinstance(other, Number) else other[val]()[selector]
+            getattr(self[val]()[selector], func)(operand)
 
     def __iadd__(self, other):
         self._check_arithmetic(other)
@@ -305,10 +310,12 @@ class Arithmetic:
         return self
 
     def __imul__(self, other):
+        self._check_arithmetic(other)
         self._do_arithmetic("__imul__", other)
         return self
 
     def __itruediv__(self, other):
+        self._check_arithmetic(other)
         self._do_arithmetic("__itruediv__", other)
         return self
 

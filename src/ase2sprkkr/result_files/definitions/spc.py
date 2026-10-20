@@ -148,24 +148,26 @@ class ARPESResultFile(CommonResultFile, Arithmetic):
 
     def _do_arithmetic(self, func, other):
         super()._do_arithmetic(func, other)
-        if func in ("__iadd__", "__isub__"):
-            up, down = self.UP(), self.DOWN()
-            np.divide(
-                up - down, up + down,
-                out=self.POLARIZATION(), where=(up + down) != 0
-            )
-            self.POLARIZATION()[(up + down) == 0] = 0
+        # Polarization is derived from the modified spin intensities.
+        up, down = self.UP(), self.DOWN()
+        total = up + down
+        polarization = self.POLARIZATION()
+        np.divide(up - down, total, out=polarization, where=total != 0)
+        polarization[total == 0] = 0
 
     def _assert_arithmetic(self, other):
-        """Check, that the file can be summed/subtracked from an other file"""
-        assert self.MODE() == other.MODE()
-        assert self.RAW_DATA().shape == other.RAW_DATA().shape
-        if self.MODE() == "energy":
-            assert np.allclose(other.ENERGY(), self.ENERGY())
-            assert np.allclose(other.THETA(), self.THETA())
-        else:
-            assert np.allclose(other.KX(), self.KX())
-            assert np.allclose(other.KY(), self.KY())
+        """Do not combine spectra with different sampled coordinates."""
+        if self.MODE() != other.MODE():
+            raise ValueError("ARPES modes are different")
+        if self.RAW_DATA().shape != other.RAW_DATA().shape:
+            raise ValueError("ARPES data shapes are different")
+        if self.NT() != other.NT() or self.NP() != other.NP():
+            raise ValueError("ARPES grid dimensions are different")
+        axes = ("ENERGY", "THETA", "K") if self.MODE() == "energy" else ("KX", "KY")
+        for name in axes:
+            left, right = self[name](), other[name]()
+            if left.shape != right.shape or not np.allclose(left, right):
+                raise ValueError(f"ARPES {name} coordinates are different")
 
 
 class ARPESDefinition(ResultFileDefinition):
