@@ -769,3 +769,67 @@ def test_always_sync_keeps_missing_source_semantics(tmp_path, monkeypatch):
         )
 
     asyncio.run(check())
+
+
+@pytest.mark.parametrize("already_present", (False, True))
+def test_missing_cache_policy_does_not_hash_existing_local_cache(
+    tmp_path, monkeypatch, already_present,
+):
+    """MISSING depends on local existence, not a digest of restart contents."""
+    from .. import remote as remote_module
+
+    def forbidden_digest(*args, **kwargs):
+        raise AssertionError("Cache existence check must not hash local data")
+
+    monkeypatch.setattr(remote_module, "file_digest", forbidden_digest)
+    root = tmp_path / "local"
+    root.mkdir()
+    remote_root = tmp_path / "remote"
+    remote_root.mkdir()
+    local = root / "restart.dat"
+    remote = remote_root / "restart.dat"
+    remote.write_bytes(b"new remote restart")
+    if already_present:
+        local.write_bytes(b"previous local restart")
+
+    executor = _executor(LocalTransport())
+    runner = executor.create_run(ExecutionSpec(
+        argv=("true",), directory=str(root),
+        launch=_launch(
+            root, remote_root, output_files=FileSyncPolicy.MISSING,
+        ),
+    ))
+
+    # This signature differs from the current remote file, requiring the
+    # cache policy to decide whether the changed result should be copied.
+    asyncio.run(runner._sync_cache_entry(
+        str(local), str(remote), before=(0, 0),
+    ))
+
+    assert local.read_bytes() == (
+        b"previous local restart" if already_present else b"new remote restart"
+    )
+
+
+def test_missing_cache_policy_skips_absent_remote_cache_without_hash(tmp_path, monkeypatch):
+    from .. import remote as remote_module
+
+    monkeypatch.setattr(
+        remote_module, "file_digest",
+        lambda *args, **kwargs: pytest.fail("Unexpected local digest"),
+    )
+    root = tmp_path / "local"
+    root.mkdir()
+    remote_root = tmp_path / "remote"
+    remote_root.mkdir()
+    runner = _executor(LocalTransport()).create_run(ExecutionSpec(
+        argv=("true",), directory=str(root),
+        launch=_launch(
+            root, remote_root, output_files=FileSyncPolicy.MISSING,
+        ),
+    ))
+    local = root / "restart.dat"
+    asyncio.run(runner._sync_cache_entry(
+        str(local), str(remote_root / "restart.dat"), before=(0, 0),
+    ))
+    assert not local.exists()

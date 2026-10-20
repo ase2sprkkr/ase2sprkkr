@@ -518,7 +518,7 @@ class RemoteRunner:
                 after is None or after == before
                 or (
                     self.executor.output_files == FileSyncPolicy.MISSING
-                    and file_digest(local, missing_ok=True) is not None
+                    and os.path.isfile(local)
                 )
             ):
                 state = "skipped"
