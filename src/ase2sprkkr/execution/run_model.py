@@ -192,11 +192,15 @@ class FileManifest:
             )
     @property
     def artifacts(self):
-        """Output streams, declared outputs and caches (one status per local file)."""
+        """One status per local artifact; unresolved or failed duplicates dominate."""
         entries = (self.stdout, self.stderr, *self.outputs, *(x.file for x in self.caches))
+        priority = {"skipped": 0, "available": 1, None: 2, "pending": 2, "failed": 3}
         unique = {}
         for entry in entries:
-            if entry is not None and entry.local_path is not None:
+            if entry is None or entry.local_path is None:
+                continue
+            previous = unique.get(entry.local_path)
+            if previous is None or priority[entry.availability_state] > priority[previous.availability_state]:
                 unique[entry.local_path] = entry
         return tuple(unique.values())
 

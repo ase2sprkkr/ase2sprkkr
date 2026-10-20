@@ -304,3 +304,30 @@ def test_legacy_duplicate_stderr_declaration_is_updated_together():
     assert updated.stderr.availability_state == "available"
     assert updated.outputs[0].availability_state == "available"
     assert updated.output_files == (path,)
+
+
+def test_merged_stream_failure_is_not_masked_by_other_status():
+    path = "/local/combined"
+    manifest = FileManifest(
+        stdout=FileEntry(path, availability_state="failed", availability_message="disk full"),
+        stderr=FileEntry(path, availability_state="pending"),
+    )
+    assert len(manifest.artifacts) == 1
+    assert manifest.availability_state == "failed"
+    assert manifest.availability_message == "disk full"
+    assert manifest.failed_artifacts == (manifest.stdout,)
+    assert FileManifest(**asdict(manifest)).availability_state == "failed"
+
+
+def test_legacy_duplicate_statuses_are_aggregated_conservatively():
+    path = "/local/stdout"
+    manifest = FileManifest(
+        stdout=FileEntry(path, availability_state="available"),
+        outputs=(FileEntry(path, availability_state="pending"),),
+    )
+    assert manifest.availability_state == "pending"
+    available = replace(
+        manifest, outputs=(FileEntry(path, availability_state="skipped"),)
+    )
+    assert available.availability_state == "available"
+    assert available.artifacts == (available.stdout,)
