@@ -552,7 +552,10 @@ class RemoteRunner:
             )
         key = self._artifact_key(local)
         if key in self._downloaded:
-            self._set_file_availability(local, "available", kind="cache")
+            self._set_file_availability(
+                local, "available", kind="cache", source_pattern=source_pattern,
+                remote=remote,
+            )
             return
         try:
             after = await self.executor.transport.file_signature(remote)

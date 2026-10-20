@@ -289,7 +289,33 @@ class FileManifest:
                     availability_message=message,
                 )
 
-            return self._map_artifacts(update)
+            updated = self._map_artifacts(update)
+            if source_pattern is not None:
+                # A match may already exist in a different role (output vs
+                # cache). Preserve the wildcard's own provenance record.
+                role_entries = (
+                    updated.outputs if kind == "output"
+                    else tuple(cache.file for cache in updated.caches)
+                    if kind == "cache" else ()
+                )
+                if not any(
+                    entry.local_path == path
+                    and entry.source_pattern == source_pattern
+                    for entry in role_entries
+                ):
+                    child = FileEntry(
+                        local_path=path, remote_path=remote_path,
+                        availability_state=state, availability_message=message,
+                        source_pattern=source_pattern,
+                    )
+                    if kind == "output":
+                        return replace(updated, outputs=(*updated.outputs, child))
+                    if kind == "cache":
+                        return replace(
+                            updated, caches=(*updated.caches, CacheEntry(child)),
+                        )
+                    raise ValueError(f"Unknown artifact kind: {kind!r}")
+            return updated
         file = FileEntry(
             local_path=path, remote_path=remote_path,
             availability_state=state, availability_message=message,
