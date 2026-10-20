@@ -20,7 +20,7 @@ class SPC:
                         rows.append([10 + jt, -1. + ie, 1 + jt + 3*jp + 6*ie,
                                      1., 2., -.333, .5+jt, 3.])
                     else:
-                        rows.append([.5 + jt + .25*jp, -1. + .5*jp,
+                        rows.append([.5 + jt, -1. + .5*jp,
                                      1+jt+3*jp, 1.,2.,-.333,3.])
         self.raw=np.asarray(rows,float)
 
@@ -68,14 +68,18 @@ def test_native_modes(tmp_path, mode, np_):
         assert "original_input" not in f["entry/calculation"]
         if mode=="kx_ky":
             assert "energy" not in data
-            assert "coordinate_warning" in data.attrs
+            assert "coordinate_warning" not in data.attrs
             assert list(data.attrs["axes"]) == ["k_y", "k_x"]
             np.testing.assert_allclose(data["k_x"], spc.KX()[0])
             np.testing.assert_allclose(data["k_y"], spc.KY()[:, 0])
+            assert data["k_x"].attrs["units"] == "1/angstrom"
+            assert data["k_y"].attrs["units"] == "1/angstrom"
             assert "k_origin" not in data
             assert "k_basis" not in data
         else:
             assert data["energy"].attrs["units"]=="eV"
+            assert data["k_parallel"].attrs["units"] == "1/angstrom"
+            assert "native_units" not in data["k_parallel"].attrs
 
 
 def test_explicit_input_precedence_and_original_options(tmp_path,monkeypatch):
@@ -174,7 +178,7 @@ def test_real_wse2_spectrum(tmp_path):
 
 
 def test_independent_nexus_reader(tmp_path):
-    from nexusformat.nexus import nxopen
+    nxopen = pytest.importorskip("nexusformat.nexus").nxopen
     dest=tmp_path/"reader.nxs"
     with pytest.warns(UserWarning):
         write_arpes_nexus(SPC("kx_ky",2),dest)
@@ -355,3 +359,181 @@ def test_static_separate_plots_with_callable_data(tmp_path):
     assert mp.controls.state == {"slice": 1}
     assert not mp.controls.widgets
     plt.close("all")
+
+
+def test_nexus_axes_are_in_storage_order_not_plot_xy_order(tmp_path):
+    """For a 2D image, signal[0, :] is the first y row, not the first x column."""
+    spc = SPC("kx_ky", 2)
+    with pytest.warns(UserWarning, match="No SPR-KKR input"):
+        write_arpes_nexus(spc, tmp_path / "orientation.nxs")
+    with h5py.File(tmp_path / "orientation.nxs") as f:
+        group = f["entry/data"]
+        assert list(group.attrs["axes"]) == ["k_y", "k_x"]
+        assert group.attrs["k_y_indices"] == 0
+        assert group.attrs["k_x_indices"] == 1
+        assert group["data"][1, 2] == spc.raw[1 * spc.NT() + 2, 2]
+        assert group["k_x"][2] == spc.raw[2, 0]
+        assert group["k_y"][1] == spc.raw[spc.NT(), 1]
+
+
+
+def test_energy_theta_axes_follow_storage_order(tmp_path):
+    # Intensity has rows of constant energy, with theta varying by column.
+    spc = SPC("energy")
+    with pytest.warns(UserWarning, match="No SPR-KKR input"):
+        write_arpes_nexus(spc, tmp_path / "energy_axes.nxs")
+    with h5py.File(tmp_path / "energy_axes.nxs") as f:
+        group = f["entry/data"]
+        assert list(group.attrs["axes"]) == ["energy", "theta"]
+        assert group.attrs["energy_indices"] == 0
+        assert group.attrs["theta_indices"] == 1
+        np.testing.assert_array_equal(group["energy"], spc.ENERGY()[:, 0])
+        np.testing.assert_array_equal(group["theta"], spc.THETA()[0, :])
+        assert group["data"][1, 2] == spc.raw[spc.NT() + 2, 2]
+
+
+def test_oblique_k_grid_uses_native_two_dimensional_coordinates(tmp_path):
+    spc = SPC("kx_ky", 3)
+    for i in range(spc.NP()):
+        for j in range(spc.NT()):
+            n = i * spc.NT() + j
+            spc.raw[n, 0] = j + 0.3 * i
+            spc.raw[n, 1] = i + 0.2 * j
+    with pytest.warns(UserWarning, match="No SPR-KKR input"):
+        write_arpes_nexus(spc, tmp_path / "oblique.nxs")
+    with h5py.File(tmp_path / "oblique.nxs") as f:
+        group = f["entry/data"]
+        assert list(group.attrs["axes"]) == ["k_y", "k_x"]
+        assert list(group.attrs["k_x_indices"]) == [0, 1]
+        assert list(group.attrs["k_y_indices"]) == [0, 1]
+        assert "coordinate_warning" not in group.attrs
+        assert group["k_x"].attrs["units"] == "1/angstrom"
+        assert group["k_y"].attrs["units"] == "1/angstrom"
+        np.testing.assert_array_equal(group["k_x"], spc.KX())
+        np.testing.assert_array_equal(group["k_y"], spc.KY())
+        assert group["k_x"][1, 1] == pytest.approx(1.3)
+        assert group["k_y"][1, 1] == pytest.approx(1.2)
+        assert group["data"][1, 1] == spc.TOTAL()[1, 1]
+
+
+
+def test_small_nonseparable_offset_is_not_lost(tmp_path):
+    # The former np.allclose default tolerance would drop this native value.
+    spc = SPC("kx_ky", 2)
+    spc.raw[spc.NT(), 0] += 1e-10
+    with pytest.warns(UserWarning, match="No SPR-KKR input"):
+        write_arpes_nexus(spc, tmp_path / "small_offset.nxs")
+    with h5py.File(tmp_path / "small_offset.nxs") as f:
+        group = f["entry/data"]
+        assert list(group.attrs["axes"]) == ["k_y", "k_x"]
+        # Only k_x is coupled; k_y remains a genuine one-dimensional axis.
+        assert group["k_x"].shape == (spc.NP(), spc.NT())
+        assert list(group.attrs["k_x_indices"]) == [0, 1]
+        assert group["k_y"].shape == (spc.NP(),)
+        assert group.attrs["k_y_indices"] == 0
+        np.testing.assert_array_equal(group["k_x"], spc.KX())
+        assert group["k_x"][1, 0] != group["k_x"][0, 0]
+
+
+def test_three_dimensional_physical_coordinates_are_default(tmp_path):
+    spc = SPC("energy", 2)
+    with pytest.warns(UserWarning, match="No SPR-KKR input"):
+        write_arpes_nexus(spc, tmp_path / "angle3d.nxs")
+    with h5py.File(tmp_path / "angle3d.nxs") as f:
+        data = f["entry/data"]
+        assert list(data.attrs["axes"]) == ["energy", "azimuth_index", "theta"]
+        assert data.attrs["energy_indices"] == 0
+        assert data.attrs["theta_indices"] == 2
+        assert data["energy"].shape == (spc.ne,)
+        assert data["theta"].shape == (spc.nt,)
+        np.testing.assert_array_equal(data["data"], spc.TOTAL())
+
+    # A coupled coordinate must retain all its physical values instead
+    # of being silently replaced by a coordinate index.
+    spc.raw[:, 0] += np.repeat(np.arange(spc.ne), spc.np_ * spc.nt)
+    with pytest.warns(UserWarning, match="No SPR-KKR input"):
+        write_arpes_nexus(spc, tmp_path / "coupled3d.nxs")
+    with h5py.File(tmp_path / "coupled3d.nxs") as f:
+        data = f["entry/data"]
+        assert data["theta"].shape == (spc.ne, spc.np_, spc.nt)
+        assert list(data.attrs["theta_indices"]) == [0, 1, 2]
+        np.testing.assert_array_equal(data["theta"], spc.THETA())
+
+
+def test_native_k_parallel_is_inverse_angstrom(tmp_path):
+    from ase2sprkkr.result_files import ResultFile
+    source = Path(__file__).resolve().parents[1] / "examples" / "WSe2_ARPES.spc"
+    spc = ResultFile.from_file(str(source), try_only="spc")
+    with pytest.warns(UserWarning, match="No SPR-KKR input"):
+        spc.to_nexus(tmp_path / "units.nxs")
+    with h5py.File(tmp_path / "units.nxs") as f:
+        ds = f["entry/data/k_parallel"]
+        assert ds.attrs["units"] == "1/angstrom"
+        assert "native_units" not in ds.attrs
+        np.testing.assert_array_equal(ds, spc.K())
+
+
+def test_extended_scan_provenance(tmp_path):
+    class Opt:
+        def __init__(self, value): self.value = value
+        def __call__(self): return self.value
+    class Sect:
+        def __init__(self, **options):
+            for key, value in options.items():
+                setattr(self, key, Opt(value))
+    class Parameters:
+        TASK = Sect(INPVER=1, STRVER=1, IQ_AT_SURF=2)
+        SPEC_EL = Sect(K3=[1., 0.], K4=[0., 1.], NK3=7, NK4=8,
+                       TYP=3, ISTR=[1, 2], POL0=[0, 0, 1])
+        SPEC_STR = Sect(NLAT_G_VEC=57, TRANSP_BAR=False)
+        def to_string(self, *, validate): return "TASK ARPES"
+    write_arpes_nexus(SPC(), tmp_path / "provenance.nxs",
+                      input_parameters=Parameters())
+    with h5py.File(tmp_path / "provenance.nxs") as f:
+        original = f["entry/calculation/original_input"]
+        assert original["TASK/IQ_AT_SURF"][()] == 2
+        assert original["SPEC_EL/NK3"][()] == 7
+        assert original["SPEC_EL/NK4"][()] == 8
+        assert original["SPEC_EL/TYP"][()] == 3
+        np.testing.assert_array_equal(original["SPEC_EL/K3"], [1., 0.])
+        np.testing.assert_array_equal(original["SPEC_EL/K4"], [0., 1.])
+        assert original["SPEC_STR/NLAT_G_VEC"][()] == 57
+        assert not bool(original["SPEC_STR/TRANSP_BAR"][()])
+
+
+def test_native_wse2_k_parallel_physical_units_from_energy_dispersion():
+    """Energy spacing independently establishes 1/angstrom, not pi/angstrom.
+
+    At fixed theta, the free-electron relation yields
+    dE = (hbar^2 / 2m) * d(k_parallel^2) / sin(theta)^2.
+    This does not require knowing the photon energy or work function.
+    """
+    from ase2sprkkr.result_files import ResultFile
+    source = Path(__file__).resolve().parents[1] / "examples" / "WSe2_ARPES.spc"
+    spc = ResultFile.from_file(str(source), try_only="spc")
+    assert spc.NP() == 1
+    # The NT points at each energy have the same polar angles.
+    last_angle_per_energy = spc.RAW_DATA()[spc.NT() - 1::spc.NT()]
+    assert np.allclose(last_angle_per_energy[:, 0], 20)
+    angle = np.deg2rad(last_angle_per_energy[:, 0])
+    k_parallel = last_angle_per_energy[:, 6]
+    kinetic_energy = 3.80998212 * (k_parallel / np.sin(angle))**2
+    initial_energy = last_angle_per_energy[:, 1]
+    slope = np.polyfit(initial_energy, kinetic_energy, 1)[0]
+    assert slope == pytest.approx(1.0, abs=0.002)
+    # Misinterpreting this momentum as pi/angstrom would give slope pi**2.
+    assert slope * np.pi**2 != pytest.approx(1.0, abs=0.002)
+
+
+def test_native_mo2se4_k_parallel_physical_unit(tmp_path):
+    """The native SPC momentum data are exported in inverse angstroms."""
+    from ase2sprkkr.result_files import ResultFile
+    source = Path(__file__).resolve().parents[1] / "examples" / "Mo2Se4_ARPES_ARPES_data.spc"
+    spc = ResultFile.from_file(str(source), try_only="spc")
+    with pytest.warns(UserWarning, match="No SPR-KKR input"):
+        spc.to_nexus(tmp_path / "mo2se4.nxs")
+    with h5py.File(tmp_path / "mo2se4.nxs") as f:
+        ds = f["entry/data/k_parallel"]
+        assert ds.attrs["units"] == "1/angstrom"
+        assert "native_units" not in ds.attrs
+        np.testing.assert_array_equal(ds, spc.K())
