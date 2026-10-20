@@ -247,14 +247,11 @@ class RunStore:
         return path.with_name(f".{record.id}.lock")
 
     def _path_for_id(self, run_id):
-        if not self.directory.is_dir():
-            raise FileNotFoundError(run_id)
         filename = f"{run_id}.json"
-        for day in sorted(self.directory.iterdir(), reverse=True):
-            if day.is_dir():
-                path = day / filename
-                if path.is_file():
-                    return path
+        for day in self._day_directories(newest=True):
+            path = day / filename
+            if path.is_file():
+                return path
         raise FileNotFoundError(run_id)
 
     @staticmethod
@@ -814,10 +811,6 @@ class ExecutionManager:
             except (OSError, RuntimeError):
                 # The receipt remains recoverable until a subsequent refresh.
                 pass
-
-    def _submission_context(self, executor, spec):
-        provider = getattr(executor, "submission_context", None)
-        return None if provider is None else provider(spec)
 
     @staticmethod
     def _complete(project_run, result, callback):
