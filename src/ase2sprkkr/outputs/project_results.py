@@ -152,7 +152,10 @@ def retry_project_postprocessing(manager, run):
     # Reader construction is outside the transition: programming errors and
     # missing definitions must leave the original failure record unchanged.
     processor = _result_processor_for_record(manager, record)
-    return manager.retry_postprocessing(record, processor)
+    result = manager.retry_postprocessing(record, processor)
+    # TaskResult provenance belongs to the outputs layer, not ExecutionManager.
+    result.run_record = manager.store.get(record.id)
+    return result
 
 
 def load_project_result(manager, run):

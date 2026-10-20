@@ -256,7 +256,6 @@ def test_failed_download_reader_construction_does_not_reopen_run(tmp_path, monke
 
 def test_postprocessing_retry_uses_saved_files_without_backend(tmp_path):
     from ase2sprkkr.execution import FileEntry, FileManifest
-    from ase2sprkkr.outputs import retry_project_postprocessing
     manager = ExecutionManager(RunStore(tmp_path / "runs"))
     output = tmp_path / "run.out"
     output.write_text("original result")
@@ -288,7 +287,6 @@ def test_postprocessing_retry_uses_saved_files_without_backend(tmp_path):
     assert latest.execution.backend_id == "existing-backend"
     assert latest.files.input_versions == failed.files.input_versions
     assert latest.files.output_versions == failed.files.output_versions
-    assert result.run_record.id == failed.id
     with pytest.raises(ValueError, match="Only postprocessing failures"):
         manager.retry_postprocessing(failed.id, parser)
 
@@ -370,3 +368,104 @@ def test_postprocessing_retry_reader_constructor_error_does_not_reopen(tmp_path,
     with pytest.raises(RuntimeError, match="broken reader"):
         retry_project_postprocessing(manager, failed.id)
     assert manager.store.get(failed.id).state == RunState.FAILED
+
+
+def test_project_retry_attaches_run_provenance(tmp_path, monkeypatch):
+    from ase2sprkkr.execution import FileEntry, FileManifest
+    from ase2sprkkr.outputs import retry_project_postprocessing
+
+    manager = ExecutionManager(RunStore(tmp_path / "runs"))
+    output = tmp_path / "run.out"
+    output.write_text("saved data")
+    record = manager.new_record(
+        task="DOS", directory=tmp_path,
+        files=FileManifest(stdout=FileEntry(local_path=str(output))),
+    )
+    record = manager.transition(
+        record, state=RunState.POSTPROCESSING,
+        execution=record.execution.submitted("job-existing"),
+    )
+    failed = manager.complete(
+        record, state=RunState.FAILED, return_code=0,
+        failure_phase=FailurePhase.POSTPROCESSING, artifacts_available=True,
+    )
+    monkeypatch.setattr(
+        project_output, "_result_processor_for_record",
+        lambda _manager, _record: lambda outcome: SimpleNamespace(value="parsed"),
+    )
+    result = retry_project_postprocessing(manager, failed.id)
+    assert result.value == "parsed"
+    assert result.run_record.id == failed.id
+    assert result.run_record.state == RunState.FINISHED
+
+
+def test_postprocessing_retry_only_one_caller_can_claim_run(tmp_path):
+    from threading import Thread
+    from ase2sprkkr.execution import FileEntry, FileManifest
+
+    manager = ExecutionManager(RunStore(tmp_path / "runs"))
+    output = tmp_path / "run.out"
+    output.write_text("saved data")
+    record = manager.new_record(
+        task="DOS", directory=tmp_path,
+        files=FileManifest(stdout=FileEntry(local_path=str(output))),
+    )
+    record = manager.transition(
+        record, state=RunState.POSTPROCESSING,
+        execution=record.execution.submitted("job-existing"),
+    )
+    failed = manager.complete(
+        record, state=RunState.FAILED, return_code=0,
+        failure_phase=FailurePhase.POSTPROCESSING, artifacts_available=True,
+    )
+
+    processing = Event()
+    release = Event()
+    errors = []
+
+    def parse(outcome):
+        processing.set()
+        if not release.wait(5):
+            raise TimeoutError("test retry parser was not released")
+        return outcome
+
+    def first_attempt():
+        try:
+            manager.retry_postprocessing(failed.id, parse)
+        except BaseException as exc:
+            errors.append(exc)
+
+    worker = Thread(target=first_attempt)
+    worker.start()
+    try:
+        assert processing.wait(5), "first retry did not acquire the run"
+        with pytest.raises(ValueError, match="Only postprocessing failures"):
+            manager.retry_postprocessing(failed.id, lambda outcome: outcome)
+        assert manager.store.get(failed.id).state == RunState.POSTPROCESSING
+    finally:
+        release.set()
+        worker.join(5)
+    assert not worker.is_alive()
+    assert not errors
+    assert manager.store.get(failed.id).state == RunState.FINISHED
+
+
+def test_retry_accepts_plain_processing_result(tmp_path):
+    from ase2sprkkr.execution import FileEntry, FileManifest
+    manager = ExecutionManager(RunStore(tmp_path / "runs"))
+    output = tmp_path / "run.out"
+    output.write_text("contents")
+    record = manager.new_record(
+        task="DOS", directory=tmp_path,
+        files=FileManifest(stdout=FileEntry(local_path=str(output))),
+    )
+    record = manager.transition(
+        record, state=RunState.POSTPROCESSING,
+        execution=record.execution.submitted("job-existing"),
+    )
+    failed = manager.complete(
+        record, state=RunState.FAILED, return_code=0,
+        failure_phase=FailurePhase.POSTPROCESSING, artifacts_available=True,
+    )
+    assert manager.retry_postprocessing(failed.id, lambda _: 42) == 42
+    assert manager.store.get(failed.id).state == RunState.FINISHED

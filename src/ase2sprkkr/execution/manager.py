@@ -803,8 +803,6 @@ class ExecutionManager:
             return_code=reopened.return_code, files=files,
             artifacts_available=False,
         )
-        if hasattr(result, "run_record"):
-            result.run_record = finalized
         return result
 
     def retrieve_result_files(self, run):
