@@ -311,12 +311,12 @@ def create_definition():
                         NV("ENERGY", "RAW_DATA", ii(1), info="Initial-state energy E - E_F (eV)"),
                         NV(
                             "K", "RAW_DATA", ii(6),
-                            info="Native parallel momentum coordinate (1/angstrom)",
+                            info="Parallel electron momentum (1/angstrom)",
                         ),
                     ],
                     "kx_ky": [
-                        NV("KX", "RAW_DATA", ii(0), info="k_x coordinate (1/Å)"),
-                        NV("KY", "RAW_DATA", ii(1), info="k_y coordinate (1/Å)"),
+                        NV("KX", "RAW_DATA", ii(0), info="k_x coordinate (1/angstrom)"),
+                        NV("KY", "RAW_DATA", ii(1), info="k_y coordinate (1/angstrom)"),
                     ],
                 },
             ),

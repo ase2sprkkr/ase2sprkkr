@@ -17,14 +17,17 @@ import numpy as np
 # A single declarative map for optional, *original* SPR-KKR settings.
 # Values in this map are not inferred effective values.
 _INPUT_OPTIONS = {
-    "TASK": ("TASK", "INPVER", "STRVER", "MILLER_HKL", "CRYS_VEC"),
+    "TASK": ("TASK", "INPVER", "STRVER", "IQ_AT_SURF",
+             "MILLER_HKL", "CRYS_VEC"),
     "ENERGY": ("EMIN", "EMAX", "NE", "EWORK_EV", "IMV_INI_EV", "IMV_FIN_EV"),
     "SPEC_PH": ("EPHOT", "THETA", "PHI", "POL_P", "NPOL", "ICIRC",
                 "IDREH", "ALQ", "DELQ", "IFSP", "THETA_FIX"),
-    "SPEC_EL": ("THETA", "PHI", "NT", "NP", "KA", "K1", "K2",
-                "NK1", "NK2", "SPOL", "PSPIN", "POL_E",
+    "SPEC_EL": ("THETA", "PHI", "NT", "NP", "KA",
+                "K1", "K2", "K3", "K4", "NK1", "NK2", "NK3", "NK4",
+                "SPOL", "PSPIN", "POL_E", "TYP", "ISTR", "POL0", "POL0L",
                 "Q1", "Q2", "Q3", "Q4", "BETA1", "BETA2", "ROTAXIS"),
-    "SPEC_STR": ("SURF_BAR", "N_LAYDBL", "N_LAYER"),
+    "SPEC_STR": ("SURF_BAR", "TRANSP_BAR", "N_LAYDBL",
+                 "NLAT_G_VEC", "N_LAYER"),
 }
 _EXPORT_METADATA = {
     "photon_energy": ("SPEC_PH", "EPHOT"),
@@ -244,57 +247,61 @@ def _write_nexus(path, filename, spc, parameters, input_path, input_text, metada
         main.attrs["units"] = "arbitrary_units"
         # Coordinate columns are preserved verbatim in the raw SPC below.
         if mode == "kx_ky":
-            # NeXus regular axes cannot encode an oblique reciprocal-space
-            # basis. Display its projections on orthogonal kx/ky axes; native
-            # 2D coordinates are retained exactly in sprkkr_spc/raw_data.
-            warning = (
-                "ARPES kx_ky coordinates are represented as orthogonal "
-                "k_x/k_y axes in NXdata; oblique scans may be displayed "
-                "with distorted geometry. Exact coordinates are in "
-                "entry/sprkkr_spc/raw_data (columns KX, KY)."
-            )
-            warnings.warn(warning, UserWarning, stacklevel=3)
-            data.attrs["coordinate_warning"] = warning
+            # SPC records are ordered (NP, NT): y/row index first,
+            # x/column index second. Do not transpose intensity data.
+            # Oblique scans have genuinely 2D coordinates; NXdata supports
+            # multidimensional axis arrays via the *_indices attributes.
+            # Each coordinate may span either one or both data dimensions.
+            # Only collapse exactly constant coordinates: tolerances would
+            # silently discard real (albeit small) deviations from a grid.
             data.attrs["axes"] = ["k_y", "k_x"]
-            data.attrs["k_y_indices"] = 0
-            data.attrs["k_x_indices"] = 1
-            kx = data.create_dataset("k_x", data=arrays["k_x"][0, :])
-            ky = data.create_dataset("k_y", data=arrays["k_y"][:, 0])
-            kx.attrs["units"] = ky.attrs["units"] = "1/angstrom"
+            for name, dimension, reference, selector in (
+                ("k_y", 0, arrays["k_y"][:, :1], (slice(None), 0)),
+                ("k_x", 1, arrays["k_x"][:1, :], (0, slice(None))),
+            ):
+                coordinate = arrays[name]
+                if np.allclose(coordinate, reference, rtol=0, atol=0,
+                               equal_nan=True):
+                    data.create_dataset(name, data=coordinate[selector])
+                    data.attrs[name + "_indices"] = dimension
+                else:
+                    data.create_dataset(name, data=coordinate)
+                    data.attrs[name + "_indices"] = [0, 1]
+                data[name].attrs["units"] = "1/angstrom"
             if parameters is not None and _value(parameters, "SPEC_EL", "K1") is not None:
                 data.attrs["scan_definition"] = "../calculation/original_input/SPEC_EL"
         elif len(shape) == 3:
-            data.attrs["axes"] = ["energy_index", "azimuth_index", "angle_index"]
-            for axis, count, index in zip(
-                ("energy_index", "azimuth_index", "angle_index"), shape, range(3)
+            # Prefer physical axes over indices, even for nonseparable
+            # coordinates. The azimuth has no physical SPC column; its
+            # scan index is retained without inventing angles from input.
+            energy, theta = arrays["energy"], arrays["theta"]
+            data.attrs["axes"] = ["energy", "azimuth_index", "theta"]
+            data.create_dataset("azimuth_index", data=np.arange(shape[1]))
+            data.attrs["azimuth_index_indices"] = 1
+            for name, coordinate, dim, reduced in (
+                ("energy", energy, 0, energy[:, :1, :1]),
+                ("theta", theta, 2, theta[:1, :1, :]),
             ):
-                data.create_dataset(axis, data=np.arange(count))
-                data.attrs[axis + "_indices"] = index
-            for coord in ("theta", "energy"):
-                data.create_dataset(coord, data=arrays[coord])
-                data.attrs[coord + "_indices"] = [0, 1, 2]
+                if np.allclose(coordinate, reduced, rtol=0, atol=0, equal_nan=True):
+                    selector = (slice(None), 0, 0) if dim == 0 else (0, 0, slice(None))
+                    data.create_dataset(name, data=coordinate[selector])
+                    data.attrs[name + "_indices"] = dim
+                else:
+                    data.create_dataset(name, data=coordinate)
+                    data.attrs[name + "_indices"] = [0, 1, 2]
         else:
             energy, theta = arrays["energy"], arrays["theta"]
-            separable = (
-                np.allclose(energy, energy[:, :1], equal_nan=True)
-                and np.allclose(theta, theta[:1, :], equal_nan=True)
-            )
-            if separable:
-                data.attrs["axes"] = ["energy", "theta"]
-                data.attrs["energy_indices"] = 0
-                data.attrs["theta_indices"] = 1
-                data.create_dataset("energy", data=energy[:, 0])
-                data.create_dataset("theta", data=theta[0, :])
-            else:
-                data.attrs["axes"] = ["energy_index", "angle_index"]
-                for axis, count, index in zip(
-                    ("energy_index", "angle_index"), shape, range(2)
-                ):
-                    data.create_dataset(axis, data=np.arange(count))
-                    data.attrs[axis + "_indices"] = index
-                for coord in ("energy", "theta"):
-                    data.create_dataset(coord, data=arrays[coord])
-                    data.attrs[coord + "_indices"] = [0, 1]
+            data.attrs["axes"] = ["energy", "theta"]
+            for name, coordinate, dim, reduced, selector in (
+                ("energy", energy, 0, energy[:, :1], (slice(None), 0)),
+                ("theta", theta, 1, theta[:1, :], (0, slice(None))),
+            ):
+                if np.allclose(coordinate, reduced, rtol=0, atol=0, equal_nan=True):
+                    data.create_dataset(name, data=coordinate[selector])
+                    data.attrs[name + "_indices"] = dim
+                else:
+                    data.create_dataset(name, data=coordinate)
+                    data.attrs[name + "_indices"] = [0, 1]
 
         if mode == "energy":
             data["energy"].attrs["units"] = "eV"
@@ -304,6 +311,8 @@ def _write_nexus(path, filename, spc, parameters, input_path, input_text, metada
             data.attrs["k_parallel_indices"] = list(range(len(shape)))
         for name in ("spin_up", "spin_down", "spin_polarization", "determinant"):
             data.create_dataset(name, data=arrays[name])
+        for name in ("spin_up", "spin_down"):
+            data[name].attrs["units"] = "arbitrary_units"
         data["spin_polarization"].attrs["units"] = "1"
         data["spin_polarization"].attrs["formula"] = "(I_1 - I_2) / (I_1 + I_2)"
         data.attrs["auxiliary_signals"] = [
