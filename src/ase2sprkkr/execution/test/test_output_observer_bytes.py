@@ -73,7 +73,7 @@ def test_psij_monitor_forwards_follow_bytes(monkeypatch):
         assert paths == {"out": "job.out", "err": "job.err"}
         on_chunk("out", "výstup".encode("utf8"))
         on_chunk("err", b"warning:\xff")
-        return SimpleNamespace(exit_code=0, state=SimpleNamespace(name="COMPLETED"))
+        return SimpleNamespace(exit_code=0, state=SimpleNamespace(name="COMPLETED")), None
 
     monkeypatch.setattr(psij_module, "follow_job_files", follow)
     runner = object.__new__(PsijRunner)
@@ -86,6 +86,7 @@ def test_psij_monitor_forwards_follow_bytes(monkeypatch):
     )
     runner.result = SimpleNamespace(return_code=None)
     runner._files = None
+    runner._observed_state = None
 
     result = asyncio.run(runner._monitor())
 

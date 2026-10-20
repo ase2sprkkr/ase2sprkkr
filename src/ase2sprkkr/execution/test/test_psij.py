@@ -1011,3 +1011,261 @@ def test_psij_preparation_closes_each_output_handle_once(monkeypatch, tmp_path, 
     assert (tmp_path / "run.out").exists()
     if not merged:
         assert (tmp_path / "run.err").exists()
+
+def test_psij_wait_connection_failure_remains_unknown(monkeypatch, tmp_path):
+    executor = _executor(monkeypatch, _Backend())
+    runner = executor.create_run(ExecutionSpec(
+        argv=("program",), directory=str(tmp_path),
+        input_file=None, output_file=None,
+    ))
+
+    def disconnected():
+        raise ConnectionError("scheduler unavailable")
+
+    runner._job.wait = disconnected
+    runner._job.status = _Status("ACTIVE")
+    assert asyncio.run(runner._monitor()) is runner.result
+    assert runner.state is RunState.UNKNOWN
+    assert runner.failure_phase is None
+    assert runner.failure_message == "scheduler unavailable"
+    assert runner.exception is None
+
+
+def test_psij_wait_inconclusive_status_does_not_invent_exit_code(monkeypatch, tmp_path):
+    executor = _executor(monkeypatch, _Backend())
+    runner = executor.create_run(ExecutionSpec(
+        argv=("program",), directory=str(tmp_path),
+        input_file=None, output_file=None,
+    ))
+    runner._job.wait = lambda: None
+    runner._job.status = _Status("ACTIVE")
+    asyncio.run(runner._monitor())
+    assert runner.state is RunState.UNKNOWN
+    assert runner.return_code is None
+    assert runner.failure_phase is None
+
+
+@pytest.mark.parametrize("wait_error", (False, True))
+def test_psij_inconclusive_wait_with_output_drains_and_returns(
+    monkeypatch, tmp_path, wait_error,
+):
+    executor = _executor(monkeypatch, _Backend())
+    output = tmp_path / "run.out"
+    runner = executor.create_run(ExecutionSpec(
+        argv=("program",), directory=str(tmp_path), input_file=None,
+        output_file=str(output),
+    ))
+    received = []
+    runner.add_output_listener(lambda data, kind: received.append((kind, data)))
+
+    def inconclusive_wait():
+        output.write_text("final bytes")
+        if wait_error:
+            raise ConnectionError("scheduler unavailable")
+        return None
+
+    runner._job.wait = inconclusive_wait
+    runner._job.status = _Status("COMPLETED", 9)
+    asyncio.run(asyncio.wait_for(runner._monitor(), 3))
+    assert runner.state is RunState.UNKNOWN
+    assert runner.return_code is None
+    assert runner.result.return_code is None
+    assert runner.failure_phase is None
+    assert received == [("out", "final bytes")]
+
+
+@pytest.mark.parametrize(
+    "native_state, exit_code, expected",
+    (("COMPLETED", 0, RunState.FINISHED),
+     ("COMPLETED", 7, RunState.FAILED),
+     ("FAILED", 9, RunState.FAILED)),
+)
+def test_psij_wait_terminal_status_overrides_stale_job_status(
+    monkeypatch, tmp_path, native_state, exit_code, expected,
+):
+    executor = _executor(monkeypatch, _Backend())
+    runner = executor.create_run(ExecutionSpec(
+        argv=("program",), directory=str(tmp_path),
+        input_file=None, output_file=None,
+    ))
+    runner._job.status = _Status("ACTIVE")
+    runner._job.wait = lambda: _Status(native_state, exit_code)
+    asyncio.run(runner._monitor())
+    assert runner.state is expected
+    assert runner.return_code == exit_code
+    assert runner.result.return_code == exit_code
+
+
+def test_psij_unknown_does_not_finalize_manifest(monkeypatch, tmp_path):
+    executor = _executor(monkeypatch, _Backend())
+    runner = executor.create_run(ExecutionSpec(
+        argv=("program",), directory=str(tmp_path),
+        input_file=None, output_file=None,
+    ))
+    present = tmp_path / "still-growing.dat"
+    present.write_bytes(b"incomplete")
+    runner.set_manifest(FileManifest(outputs=(
+        FileEntry(local_path=str(present), availability_state="pending"),
+        FileEntry(local_path=str(tmp_path / "later.dat"), availability_state="pending"),
+    )))
+    runner._job.status = _Status("ACTIVE")
+    runner._job.wait = lambda: None
+    asyncio.run(runner._monitor())
+    assert all(entry.availability_state == "pending" for entry in runner.files.outputs)
+
+
+def test_psij_unknown_is_persisted_and_refresh_remains_authoritative(
+    monkeypatch, tmp_path,
+):
+    from ase2sprkkr.execution.manager import ExecutionManager, RunStore
+    from ase2sprkkr.execution.base import RunStatus
+
+    executor = _executor(monkeypatch, _Backend())
+    store = RunStore(tmp_path / "history")
+    manager = ExecutionManager(store)
+    run = manager.create_run(
+        executor,
+        ExecutionSpec(
+            argv=("program",), directory=str(tmp_path), input_file=None,
+            output_file=str(tmp_path / "run.out"),
+        ),
+        task="DOS", process_result=lambda outcome: outcome,
+    )
+    raw = run._runner._runner
+    raw._job.wait = lambda: None
+
+    run.submit()
+    run.wait()
+    record = store.get(run.id)
+    assert record.state is RunState.UNKNOWN
+    assert record.finished_at is None
+    assert record.files.captured_at is None
+    assert record.files.stdout.availability_state == "pending"
+    assert record.message == "PSI/J wait returned no terminal job status"
+    assert run.state is RunState.UNKNOWN
+
+    executor.status = lambda *runs: (
+        RunStatus(RunState.RUNNING, backend_id=run.backend_id),
+    )
+    assert run.refresh().state is RunState.RUNNING
+    assert run.state is RunState.RUNNING
+    assert store.get(run.id).state is RunState.RUNNING
+    assert store.get(run.id).message is None
+
+    executor.status = lambda *runs: (
+        RunStatus(RunState.FINISHED, backend_id=run.backend_id, return_code=0),
+    )
+    assert run.refresh().state is RunState.POSTPROCESSING
+    assert run.state is RunState.POSTPROCESSING
+    assert store.get(run.id).finished_at is None
+
+
+def test_psij_attached_new_status_never_resubmits_or_clears_output(
+    monkeypatch, tmp_path,
+):
+    from ase2sprkkr.execution.manager import ExecutionManager, RunStore
+
+    class PendingAttachBackend(_Backend):
+        def submit(self, job):
+            raise AssertionError("An attached job must not be submitted again")
+
+        def attach(self, job, native_id):
+            self.attached = native_id
+            job.native_id = native_id
+            job.status = _Status("NEW")
+            job._done.set()
+
+    backend = PendingAttachBackend()
+    executor = _executor(monkeypatch, backend)
+    output = tmp_path / "run.out"
+    output.write_bytes(b"existing calculation output")
+    record = _psij_run(tmp_path, "456")
+    manager = ExecutionManager(RunStore(tmp_path / "history"))
+    manager.store.save(record)
+
+    run = manager.attach(
+        record, executor=executor, process_result=lambda outcome: outcome,
+    )
+    run.wait()
+    assert backend.attached == "456"
+    assert run.state is RunState.UNKNOWN
+    assert output.read_bytes() == b"existing calculation output"
+    assert manager.store.get(record.id).state is RunState.UNKNOWN
+
+
+def test_psij_old_unknown_cannot_overwrite_later_scheduler_refresh(
+    monkeypatch, tmp_path,
+):
+    from ase2sprkkr.execution.manager import ExecutionManager, RunStore
+    from ase2sprkkr.execution.base import RunStatus
+
+    entered, release = threading.Event(), threading.Event()
+    executor = _executor(monkeypatch, _Backend())
+    manager = ExecutionManager(RunStore(tmp_path / "history"))
+    run = manager.create_run(
+        executor, ExecutionSpec(
+            argv=("program",), directory=str(tmp_path),
+            input_file=None, output_file=None,
+        ), task="DOS", process_result=lambda outcome: outcome,
+    )
+
+    def unavailable():
+        entered.set()
+        assert release.wait(5)
+        raise ConnectionError("older observation")
+
+    run._runner._runner._job.wait = unavailable
+    try:
+        run.submit()
+        assert entered.wait(5)
+        executor.status = lambda *runs: (
+            RunStatus(RunState.FINISHED, backend_id=run.backend_id, return_code=0),
+        )
+        assert run.refresh().state is RunState.POSTPROCESSING
+    finally:
+        release.set()
+    run.wait()
+    stored = manager.store.get(run.id)
+    assert stored.state is RunState.POSTPROCESSING
+    assert stored.message is None
+    assert stored.return_code == 0
+
+
+def test_psij_output_permission_error_is_unknown_not_execution_failure(
+    monkeypatch, tmp_path,
+):
+    from ase2sprkkr.execution.growing_file_tail import GrowingFileTail
+
+    executor = _executor(monkeypatch, _Backend())
+    runner = executor.create_run(ExecutionSpec(
+        argv=("program",), directory=str(tmp_path), input_file=None,
+        output_file=str(tmp_path / "run.out"),
+    ))
+    def denied(self, *args, **kwargs):
+        raise PermissionError("cannot read scheduler output")
+
+    monkeypatch.setattr(GrowingFileTail, "read_available", denied)
+    asyncio.run(runner._monitor())
+    assert runner.state is RunState.UNKNOWN
+    assert runner.exception is None
+    assert runner.failure_phase is None
+    assert "cannot read" in runner.failure_message
+
+
+@pytest.mark.parametrize("native_state", ["COMPLETED", "FAILED", "CANCELED"])
+def test_psij_does_not_invent_missing_exit_code(monkeypatch, tmp_path, native_state):
+    executor = _executor(monkeypatch, _Backend())
+    runner = executor.create_run(ExecutionSpec(
+        argv=("program",), directory=str(tmp_path),
+        input_file=None, output_file=None,
+    ))
+    runner._job.wait = lambda: _Status(native_state)
+    asyncio.run(runner._monitor())
+    assert runner.return_code is None
+    assert runner.result.return_code is None
+    assert runner.state is {
+        "COMPLETED": RunState.FINISHED,
+        "FAILED": RunState.FAILED,
+        "CANCELED": RunState.CANCELLED,
+    }[native_state]
+

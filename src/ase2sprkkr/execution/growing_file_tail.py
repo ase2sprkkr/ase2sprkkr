@@ -92,7 +92,17 @@ class GrowingFileTail:
             pass
         self._changed.set()
 
-    def read_available(self, paths=None):
+    def snapshot_sizes(self):
+        """Freeze bytes already present when job completion is observed."""
+        sizes = {}
+        for kind, path in self.paths.items():
+            try:
+                sizes[kind] = 0 if path is None else os.path.getsize(path)
+            except FileNotFoundError:
+                sizes[kind] = 0
+        return sizes
+
+    def read_available(self, paths=None, *, max_sizes=None):
         """Return bounded (channel, bytes) chunks; never block at EOF."""
         paths = self.paths if paths is None else paths
         chunks = []
@@ -120,7 +130,11 @@ class GrowingFileTail:
                     if size < offset:  # truncated or replaced in place
                         offset = 0
                     source.seek(offset)
-                    data = source.read(self.chunk_size)
+                    remaining = (
+                        self.chunk_size if max_sizes is None else
+                        min(self.chunk_size, max(0, max_sizes[kind] - offset))
+                    )
+                    data = source.read(remaining)
             except FileNotFoundError:
                 continue
             self.offsets[kind] = offset + len(data)
@@ -147,17 +161,29 @@ async def follow_growing_files(paths, on_chunk, terminal, *, offsets=None,
     async with GrowingFileTail(
         paths, offsets=offsets, poll_interval=poll_interval,
     ) as tail:
+        finished = None
+        limits = None
         while True:
-            chunks = tail.read_available()
+            chunks = tail.read_available(max_sizes=limits)
             for kind, data in chunks:
                 on_chunk(kind, data)
-            if chunks:
+            if finished is None:
+                # A producer may write indefinitely after contact is lost.
+                # Check the wait outcome after every bounded read.
+                finished = await terminal()
+                if finished is not None:
+                    limits = tail.snapshot_sizes()
+            if finished is not None:
+                # Drain only bytes that existed when the outcome arrived.
+                if not chunks or all(
+                    tail.offsets[kind] is not None
+                    and tail.offsets[kind] >= size
+                    for kind, size in limits.items()
+                ):
+                    return finished
                 continue
-            outcome = await terminal()
-            if outcome is not None:
-                return outcome
-            await tail.wait_for_change()
-
+            if not chunks:
+                await tail.wait_for_change()
 
 async def follow_job_files(paths, on_chunk, wait, *, terminal=None, offsets=None,
                            poll_interval=1.0):

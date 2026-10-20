@@ -225,3 +225,30 @@ def test_follow_job_files_cancelled_observation_does_not_cancel_job(tmp_path):
         assert await asyncio.to_thread(exited.wait, 2)
 
     asyncio.run(check())
+
+
+def test_terminal_output_drain_is_bounded_when_producer_keeps_writing(tmp_path):
+    async def check():
+        path = tmp_path / "stream"
+        path.write_bytes(b"A" * (65536 * 2))
+        received = []
+        checks = []
+        def on_chunk(kind, data):
+            received.append(data)
+            # An ongoing producer appends more data for every chunk we read.
+            with path.open("ab") as sink:
+                sink.write(b"more data")
+
+        async def terminal():
+            checks.append(True)
+            return "unknown"
+
+        result = await asyncio.wait_for(follow_growing_files(
+            {"out": path}, on_chunk, terminal, poll_interval=0.01,
+        ), 3)
+        assert result == "unknown"
+        assert 2 <= len(received) <= 3
+        assert len(checks) == 1
+
+    asyncio.run(check())
+

@@ -290,6 +290,7 @@ class PsijRunner:
         self._attached = attached
         self._files = None
         self._cancel_future = None
+        self._observed_state = None
 
         self._psij = executor._psij
         self._job = job or self._create_job()
@@ -351,7 +352,10 @@ class PsijRunner:
     def state(self):
         if self._exception is not None:
             return RunState.FAILED
-        return _psij_state(self._job.status, return_code=self.return_code)
+        if self._observed_state is not None:
+            return self._observed_state
+        return _psij_state(self._job.status, attached=self._attached,
+                           return_code=self.return_code)
 
     @property
     def exception(self):
@@ -359,6 +363,8 @@ class PsijRunner:
 
     @property
     def return_code(self):
+        if self._observed_state == RunState.UNKNOWN:
+            return None
         if self._return_code is not None:
             return self._return_code
         return getattr(getattr(self._job, "status", None), "exit_code", None)
@@ -429,20 +435,48 @@ class PsijRunner:
             if path is not None and path not in paths.values():
                 paths[kind] = path
 
-        if not paths:
-            status = await asyncio.to_thread(self._job.wait)
-        else:
-            status = await follow_job_files(
-                paths, lambda kind, data: self._output_observers.emit_bytes(data, kind),
-                self._job.wait, poll_interval=max(self.executor.poll_interval, 1.0),
+        def wait_for_job():
+            try:
+                return self._job.wait(), None
+            except OSError as exc:
+                # Return the observation as a value so final output bytes can
+                # be drained. The tuple is non-None even if job.wait() returns
+                # None, which avoids confusing it with "still waiting".
+                return None, exc
+
+        try:
+            if not paths:
+                status, error = await asyncio.to_thread(wait_for_job)
+            else:
+                status, error = await follow_job_files(
+                    paths, lambda kind, data: self._output_observers.emit_bytes(data, kind),
+                    wait_for_job, poll_interval=max(self.executor.poll_interval, 1.0),
+                )
+        except OSError as exc:
+            # Failure to read scheduler output is not a failed calculation.
+            status, error = None, exc
+
+        observed_state = _psij_state(status) if status is not None else RunState.UNKNOWN
+        if error is not None or observed_state not in (
+            RunState.FINISHED, RunState.FAILED, RunState.CANCELLED,
+        ):
+            self._observed_state = RunState.UNKNOWN
+            self._failure_phase = None
+            self._failure_message = (
+                str(error) if error is not None
+                else "PSI/J wait returned no terminal job status"
             )
+            # The job might still be writing its outputs. Do not finalize
+            # their manifest on an inconclusive scheduler observation.
+            return self.result
 
         self._return_code = getattr(status, "exit_code", None)
         state_name = getattr(getattr(status, "state", None), "name", None)
-        if self._return_code is None:
-            self._return_code = 0 if state_name == "COMPLETED" else 1
+        # The scheduler may know FAILED/CANCELED without knowing the process
+        # exit status; retain None rather than inventing an exit code.
         self.result.return_code = self._return_code
         self._update_files()
+        self._observed_state = observed_state
         if state_name != "CANCELED" and (state_name == "FAILED" or self._return_code != 0):
             self._failure_phase = FailurePhase.EXECUTION
             self._failure_message = getattr(status, "message", None) or (
@@ -467,6 +501,8 @@ class PsijRunner:
 
     def submit(self):
         with self._submit_lock:
+            if self._attached:
+                raise RuntimeError("Cannot submit an attached PSI/J job")
             if self._thread is not None or self.state != RunState.NEW:
                 raise RuntimeError(f"Run is already {self.state.value}")
             try:
