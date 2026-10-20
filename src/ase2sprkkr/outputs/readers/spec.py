@@ -153,11 +153,13 @@ class SpecResult(ArpesResult):
             self._basis_vectors[match.group(1)][int(match.group(2)) - 1] = [match.group(3), match.group(4)]
 
     def _get_file_content(self) -> str:
-        """Get the content of the output file."""
+        """Reuse captured SPEC text; fall back to disk for unparsed results."""
         if not hasattr(self, "_file_content"):
-            if hasattr(self, "output_file") and self.output_file:
-                with open(self.output_file, "r") as f:
-                    self._file_content = f.read()
+            if hasattr(self, "output_lines"):
+                self._file_content = "\n".join(self.output_lines)
+            elif self.output_file is not None:
+                with open(self.output_file, "r") as stream:
+                    self._file_content = stream.read()
             else:
                 self._file_content = ""
         return self._file_content
@@ -230,17 +232,6 @@ class SpecOutputParser(DefaultOutputParser):
                     break
                 rows.append(values)
         return np.asarray(rows) if rows else np.array([])
-
-    async def read_output(self, stdout, result):
-        """Read and parse the output from the spec.out file."""
-        await super().read_output(stdout, result)
-
-        # Additional parsing specific to spec.out
-        if hasattr(result, "output_lines"):
-            result.output_content = "\n".join(result.output_lines)
-
-        return result
-
 
 class SpecOutputReader(KkrOutputReader):
     """Process class for spectral function calculations."""

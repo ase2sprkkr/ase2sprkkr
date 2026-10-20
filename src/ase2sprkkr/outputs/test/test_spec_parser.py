@@ -1,6 +1,9 @@
+import asyncio
+
 import numpy as np
 
-from ase2sprkkr.outputs.readers.spec import SpecResult
+from ase2sprkkr.outputs.readers.default import DefaultOutputParser
+from ase2sprkkr.outputs.readers.spec import SpecResult, SpecOutputParser, SpecOutputReader
 
 
 def test_spec_result_properties():
@@ -139,3 +142,69 @@ def test_spectra_includes_both_polarizations_in_result_values(tmp_path, monkeypa
         )
         assert tuple(k for k in result.output_values if k.startswith("SPC")) == ("SPC", "SPC_2")
         assert result.output_values["SPC_2"].path() == str(tmp_path / "Fe_data_pol2.spc")
+
+
+def test_spec_parser_uses_stream_text_without_reopening_output(tmp_path, monkeypatch):
+    """SPEC output read by DefaultOutputParser is already in output_lines."""
+    result = SpecResult(None, None, tmp_path, task_name="BAND")
+    parser = SpecOutputReader(None, None, tmp_path).parser
+    assert isinstance(parser, SpecOutputParser)
+    assert SpecOutputParser.read_output is DefaultOutputParser.read_output
+
+    async def skip_common_header(_stream, _result):
+        pass
+
+    monkeypatch.setattr(parser, "read_commons", skip_common_header)
+
+    async def parse():
+        stream = asyncio.StreamReader()
+        stream.feed_data(
+            b"# ibar: 2\n"
+            b"lattice constant: 4.5\n"
+            b"real basis 1: 1.0 0.0\n"
+            b"stookes-vector of the photonfield\n"
+            b"1.0 2.0 3.0 4.0 5.0 6.0\n"
+        )
+        stream.feed_eof()
+        await parser.read_output(stream, result)
+
+    asyncio.run(parse())
+
+    assert result.output_file is None
+    assert result.potential_barrier == {"ibar": 2}
+    assert result.lattice_constants == {"a": 4.5}
+    np.testing.assert_allclose(result.basis_vectors["real"][0], [1, 0])
+    np.testing.assert_allclose(result.spectral_data, [[1, 2, 3, 4, 5, 6]])
+    assert result._get_file_content() is result._file_content
+    assert not hasattr(result, "output_content")
+
+
+def test_spec_result_falls_back_to_file_without_parser_output(tmp_path):
+    output = tmp_path / "from-file.out"
+    output.write_text("# ibar: 3\n")
+    result = SpecResult(None, None, tmp_path, output_file=output, task_name="BAND")
+
+    assert result.potential_barrier == {"ibar": 3}
+
+
+def test_spec_parser_prefers_stream_snapshot_over_existing_file(tmp_path, monkeypatch):
+    output = tmp_path / "Fe_SPEC.out"
+    output.write_text("# ibar: 99\n")
+    result = SpecResult(None, None, tmp_path, output_file=output, task_name="BAND")
+    parser = SpecOutputReader(None, None, tmp_path).parser
+
+    async def skip_common_header(_stream, _result):
+        pass
+
+    monkeypatch.setattr(parser, "read_commons", skip_common_header)
+
+    async def parse():
+        stream = asyncio.StreamReader()
+        stream.feed_data(b"# ibar: 4\n")
+        stream.feed_eof()
+        await parser.read_output(stream, result)
+
+    asyncio.run(parse())
+
+    assert result.potential_barrier == {"ibar": 4}
+    assert result._get_file_content() == "# ibar: 4"
