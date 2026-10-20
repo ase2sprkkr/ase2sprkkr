@@ -411,21 +411,34 @@ def status_remote(remote_id):
 def cancel_remote(remote_id, timeout=1.0):
     handle = _decode_handle(remote_id)
     if handle["kind"] == "process":
-        outcome = _process_outcome(handle["receipt_id"])
-        if outcome is not None:
-            return status_remote(remote_id)
+        # An existing receipt is final and immutable; do not re-read it or
+        # send a cancellation request to an already completed supervisor.
+        status = status_remote(remote_id)
+        if status["state"] in {state.value for state in _FINAL_STATES}:
+            return status
         try:
             with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as conn:
                 conn.settimeout(timeout)
                 conn.connect(handle["socket_path"])
                 conn.sendall(b'{"command":"cancel"}\n')
-                reply = conn.recv(256)
-                if b'"accepted":true' not in reply:
+                reply = bytearray()
+                while b"\n" not in reply:
+                    if len(reply) >= 4096:
+                        raise RuntimeError("Supervisor cancellation reply is too large")
+                    part = conn.recv(min(256, 4096 - len(reply)))
+                    if not part:
+                        raise RuntimeError("Supervisor cancellation reply is incomplete")
+                    reply.extend(part)
+                try:
+                    response = json.loads(reply.partition(b"\n")[0])
+                except (UnicodeDecodeError, ValueError) as exc:
+                    raise RuntimeError("Invalid supervisor cancellation reply") from exc
+                if not isinstance(response, dict) or response.get("accepted") is not True:
                     raise RuntimeError("Supervisor rejected cancellation")
         except (FileNotFoundError, ConnectionRefusedError):
-            return status_remote(remote_id)
-        # The request is not a terminal fact. Only the supervisor waits for and
-        # publishes the final child outcome.
+            # Supervisor exited between checking the receipt and connecting.
+            pass
+        # Acceptance is not a terminal fact; query authoritative status again.
         return status_remote(remote_id)
 
     if handle["kind"] == "psij":
@@ -434,8 +447,7 @@ def cancel_remote(remote_id, timeout=1.0):
         )
         job = executor.attach_native_job(handle["native_id"])
         job.cancel()
-        state = status_remote(remote_id)
-        return state
+        return status_remote(remote_id)
     raise ValueError("Unsupported remote execution id")
 
 

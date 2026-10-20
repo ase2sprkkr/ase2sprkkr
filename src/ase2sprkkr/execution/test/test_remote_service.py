@@ -335,6 +335,64 @@ def test_cancel_requests_supervisor_without_inventing_terminal_state(
     assert not outcome.exists()
 
 
+@pytest.mark.parametrize(
+    "chunks, accepted",
+    [
+        ([b'{"accep', b'ted" : true}', b'\n'], True),
+        ([b'{"accepted":false}\n'], False),
+        ([b'{"accepted":1}\n'], False),
+        ([b'{"accepted":true'], False),
+        ([b'{invalid}\n'], False),
+    ],
+)
+def test_cancel_supervisor_ack_is_framed_json(tmp_path, monkeypatch, chunks, accepted):
+    _, remote_id, _ = _process_handle(tmp_path)
+    monkeypatch.setenv("ASE2SPRKKR_REMOTE_STATE_DIR", str(tmp_path))
+    monkeypatch.setattr(remote_service, "_process_running", lambda _handle: True)
+
+    class Connection:
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *_args):
+            pass
+
+        def settimeout(self, _timeout):
+            pass
+
+        def connect(self, _path):
+            pass
+
+        def sendall(self, _data):
+            pass
+
+        def recv(self, _count):
+            return chunks.pop(0) if chunks else b""
+
+    monkeypatch.setattr(remote_service.socket, "socket", lambda *args: Connection())
+    if accepted:
+        assert remote_service.cancel_remote(remote_id)["state"] == RunState.RUNNING.value
+    else:
+        with pytest.raises(RuntimeError, match="Supervisor|supervisor"):
+            remote_service.cancel_remote(remote_id)
+
+
+def test_cancel_terminal_receipt_is_read_only_once(tmp_path, monkeypatch):
+    _, remote_id, _ = _process_handle(tmp_path)
+    observed = []
+    def outcome(_receipt_id):
+        observed.append(_receipt_id)
+        return RunState.FINISHED, 0, None, None
+
+    monkeypatch.setattr(remote_service, "_process_outcome", outcome)
+    monkeypatch.setattr(
+        remote_service.socket, "socket",
+        lambda *args: pytest.fail("Do not contact finished supervisor"),
+    )
+    assert remote_service.cancel_remote(remote_id)["return_code"] == 0
+    assert observed == ["a" * 32]
+
+
 def test_cancel_after_natural_completion_keeps_backend_outcome(tmp_path, monkeypatch):
     _, remote_id, _ = _process_handle(tmp_path)
     monkeypatch.setenv("ASE2SPRKKR_REMOTE_STATE_DIR", str(tmp_path))
