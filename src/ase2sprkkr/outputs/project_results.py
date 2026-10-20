@@ -157,11 +157,13 @@ def load_project_result(manager, run):
     try:
         record = manager.retrieve_result_files(record)
     except HistoricalFileMismatchError as exc:
+        # Retrieval records a failed artifact before raising. Use its newly
+        # persisted state in the error; a successful retrieval already returns
+        # the latest record and requires no second read.
         raise ProjectResultUnavailableError(
-            manager.check_result_files(record),
+            manager.store.get(record.id),
             "result files have been overwritten on the execution backend",
         ) from exc
-    record = manager.check_result_files(record)
     result_files = record.files
     if result_files is not None and result_files.captured_at is None:
         raise ProjectResultUnavailableError(
