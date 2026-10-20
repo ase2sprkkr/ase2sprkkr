@@ -182,7 +182,6 @@ def test_wildcard_parent_completed_after_all_files():
 
 def test_project_manifest_reuses_optional_file_path_semantics(tmp_path):
     from types import SimpleNamespace
-    from ase2sprkkr.execution.manager import ExecutionManager
 
     spec = SimpleNamespace(
         directory=str(tmp_path),
@@ -193,7 +192,7 @@ def test_project_manifest_reuses_optional_file_path_semantics(tmp_path):
         output_files=("result.dat",),
         cache_files=("cache.dat",),
     )
-    manifest = ExecutionManager._result_files_for_spec(spec)
+    manifest = FileManifest.from_spec(spec)
 
     assert manifest.input_files == (str(tmp_path / "input.dat"),)
     assert manifest.stdout.local_path == str(tmp_path / "stdout.dat")
@@ -269,3 +268,39 @@ def test_submitted_uses_execution_backend_id_validation():
         bound.submitted("")
     with pytest.raises(ValueError, match="Cannot replace"):
         bound.submitted("other")
+
+
+def test_manifest_from_spec_normalizes_stream_overlaps(tmp_path):
+    from types import SimpleNamespace
+
+    spec = SimpleNamespace(
+        directory=str(tmp_path),
+        input_file="input.inp", input_files=("input.inp", "other.inp", "other.inp"),
+        output_file="stdout.out", error_file="stderr.err",
+        output_files=("stdout.out", "stderr.err", "result.dat", "result.dat"),
+        cache_files=("restart.pot", "restart.pot"),
+    )
+    files = FileManifest.from_spec(spec)
+    assert files.input_files == (str(tmp_path / "input.inp"), str(tmp_path / "other.inp"))
+    assert files.stdout.local_path == str(tmp_path / "stdout.out")
+    assert files.stderr.local_path == str(tmp_path / "stderr.err")
+    assert tuple(x.local_path for x in files.outputs) == (str(tmp_path / "result.dat"),)
+    assert files.output_files == (
+        str(tmp_path / "stdout.out"),
+        str(tmp_path / "stderr.err"),
+        str(tmp_path / "result.dat"),
+    )
+    assert len(files.caches) == 1
+    assert FileManifest(**asdict(files)) == files
+
+
+def test_legacy_duplicate_stderr_declaration_is_updated_together():
+    path = "/local/stderr"
+    files = FileManifest(
+        stderr=FileEntry(path, availability_state="pending"),
+        outputs=(FileEntry(path, availability_state="pending"),),
+    )
+    updated = files.with_file_availability(path, "available")
+    assert updated.stderr.availability_state == "available"
+    assert updated.outputs[0].availability_state == "available"
+    assert updated.output_files == (path,)

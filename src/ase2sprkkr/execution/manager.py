@@ -18,12 +18,11 @@ from uuid import uuid4
 
 
 from ..common.file_locks import FileLock
-from ..common.file_versions import FileState, FileVersion
+from ..common.file_versions import FileState, FileVersion, file_digest
 from ._durability import durable_mkdir, durable_write_json, sync_file
 from .base import (
     Executor,
     FailurePhase,
-    file_path,
     RunState,
     RunStatus,
     SubmissionNotStarted,
@@ -31,8 +30,12 @@ from .base import (
 from .endpoint import ExecutorEndpoint, endpoint_for_executor
 from .pool import default_executor_pool
 from .postprocessing import PostprocessingRunner
-from .run_model import Execution, WorkingDirectory, FileManifest, FileEntry, CacheEntry
+from .run_model import Execution, WorkingDirectory, FileManifest
 from .transport import expand_local_candidates, has_file_magic
+
+
+class HistoricalFileMismatchError(OSError):
+    """Restored contents differ from a run's captured SHA-256 digest."""
 
 
 _RUN_RECORD_SCHEMA_VERSION = 3
@@ -355,25 +358,6 @@ class ExecutionManager:
 
     def executor_for(self, record):
         return self.executor_pool.for_endpoint(record.execution.endpoint)
-
-    @staticmethod
-    def _result_files_for_spec(spec):
-        directory = os.path.abspath(os.fspath(spec.directory))
-        def absolute(value):
-            return file_path(value, directory)
-        primary_input = absolute(getattr(spec, "input_file", None))
-        primary_output = absolute(getattr(spec, "output_file", None))
-        error = absolute(getattr(spec, "error_file", None))
-        inputs = _unique((primary_input, *(absolute(x) for x in getattr(spec, "input_files", ()))))
-        outputs = _unique((primary_output, *(absolute(x) for x in getattr(spec, "output_files", ()))))
-        caches = _unique(absolute(x) for x in getattr(spec, "cache_files", ()))
-        return FileManifest(
-            inputs=tuple(FileEntry(local_path=x) for x in inputs if x is not None),
-            outputs=tuple(FileEntry(local_path=x) for x in outputs if x is not None and x != primary_output),
-            caches=tuple(CacheEntry(FileEntry(local_path=x)) for x in caches if x is not None),
-            stdout=None if primary_output is None else FileEntry(local_path=primary_output),
-            stderr=None if error is None else FileEntry(local_path=error),
-        ).initialize_availability()
 
     @staticmethod
     def _concrete_result_files(manifests):
@@ -756,14 +740,41 @@ class ExecutionManager:
         if not executor.supports_result_file_retrieval:
             return record
 
+        versions = {
+            os.path.abspath(os.fspath(version.path)): version
+            for version in (() if record.files is None else record.files.all_versions)
+        }
         for path in missing:
+            path = os.path.abspath(os.fspath(path))
+            version = versions.get(path)
+            staged = (
+                Path(path).with_name(f".{Path(path).name}.{uuid4().hex}.tmp")
+                if version is not None and version.digest is not None else None
+            )
             try:
-                executor.fetch_result_files(record, (path,))
+                if staged is None:
+                    executor.fetch_result_files(record, (path,))
+                else:
+                    executor.fetch_result_files(
+                        record, (path,), destinations={path: os.fspath(staged)},
+                    )
+                    if not staged.is_file():
+                        raise FileNotFoundError(
+                            f"Historical artifact was not retrieved: {path}"
+                        )
+                    if file_digest(staged) != version.digest:
+                        raise HistoricalFileMismatchError(
+                            f"Historical result files have been overwritten: {path}"
+                        )
+                    os.replace(staged, path)
             except OSError as exc:
                 self.update_artifact_availability(
                     record, path, ArtifactAvailabilityState.FAILED, str(exc),
                 )
                 raise
+            finally:
+                if staged is not None:
+                    staged.unlink(missing_ok=True)
             refreshed = self.store.get(record.id)
             if path in self._missing_result_files(refreshed.files):
                 record = self.update_artifact_availability(
@@ -823,7 +834,7 @@ class ExecutionManager:
                 executor.submission_directory(spec)
                 if endpoint.executor not in ("local", "psij") else None
             ),
-            files=self._result_files_for_spec(spec),
+            files=FileManifest.from_spec(spec),
             run_id=run_id,
         )
         self.register_executor(executor, endpoint)

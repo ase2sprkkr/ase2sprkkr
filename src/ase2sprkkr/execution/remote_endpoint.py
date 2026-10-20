@@ -13,7 +13,7 @@ from uuid import uuid4
 
 from .base import (
     ExecutionSpec,
-    file_path,
+    start_monitor,
     Executor,
     FailurePhase,
     LaunchSpec,
@@ -128,38 +128,21 @@ class _RemoteRun(RemoteRunner):
         return result
 
     async def _submitted_manifest(self, request):
-        directory = os.path.abspath(os.fspath(self.spec.directory))
-        def local(value):
-            return file_path(value, directory)
-        # The primary input is normally also declared among input_files.
-        input_paths = dict.fromkeys(
-            path for item in (self.spec.input_file, *self.spec.input_files)
-            if (path := local(item)) is not None
-        )
-        output_paths = dict.fromkeys(
-            path for item in self.spec.output_files
-            if (path := local(item)) is not None
-            and path not in (self.result.output_file, self.result.error_file)
-        )
-        inputs = [
-            FileEntry(path, await self.executor.map_path(path))
-            for path in input_paths
-        ]
-        outputs = [
-            FileEntry(path, await self.executor.map_path(path))
-            for path in output_paths
-        ]
+        local = FileManifest.from_spec(self.spec)
+
+        async def mapped(entry):
+            return replace(entry, remote_path=await self.executor.map_path(entry.local_path))
+
+        inputs = tuple([await mapped(entry) for entry in local.inputs])
+        outputs = tuple([await mapped(entry) for entry in local.outputs])
         caches = []
-        cache_paths = dict.fromkeys(
-            path for item in self.spec.cache_files
-            if (path := local(item)) is not None
-        )
-        for path in cache_paths:
-            remote = await self.executor.map_path(path)
-            previous = self._cache_targets.get(path)
-            caches.append(CacheEntry(FileEntry(path, remote), None if previous is None else previous[1]))
+        for cache in local.caches:
+            entry = await mapped(cache.file)
+            previous = self._cache_targets.get(entry.local_path)
+            caches.append(CacheEntry(entry, None if previous is None else previous[1]))
         for remote, before in self._cache_before.items():
             caches.append(CacheEntry(FileEntry(remote_path=remote), before))
+
         sync = request.get("client_sync") or {}
         mapping = FileMapping(
             local_root=os.fspath(self.executor.local_root),
@@ -167,12 +150,17 @@ class _RemoteRun(RemoteRunner):
             input_sync=self.executor.input_files.value,
             output_sync=self.executor.output_files.value,
         )
-        return FileManifest(
-            inputs=tuple(inputs), outputs=tuple(outputs), caches=tuple(caches),
-            stdout=None if self.result.output_file is None else FileEntry(self.result.output_file, sync.get("output_file")),
-            stderr=None if self.result.error_file is None else FileEntry(self.result.error_file, sync.get("error_file")),
+        return replace(
+            local,
+            inputs=inputs, outputs=outputs, caches=tuple(caches),
+            stdout=None if local.stdout is None else replace(
+                local.stdout, remote_path=sync.get("output_file"),
+            ),
+            stderr=None if local.stderr is None else replace(
+                local.stderr, remote_path=sync.get("error_file"),
+            ),
             mapping=mapping,
-        ).initialize_availability()
+        )
 
     async def _prepare_async(self):
         run_id = self._run_id or uuid4().hex
@@ -233,7 +221,7 @@ class _RemoteRun(RemoteRunner):
             self._backend_id = str(remote_id)
             self._remote_directory = request["directory"]
             self._files = manifest
-        self._start_monitor()
+        start_monitor(self, missing_backend="Run has no backend reference")
 
 
 class _RemoteRunContext:
@@ -642,10 +630,14 @@ class RemoteEndpointExecutor(Executor):
             spec, callback=callback, run_id=run_id
         )
 
-    async def _fetch_result_files(self, run, files):
+    async def _fetch_result_files(self, run, files, *, destinations=None):
         self._validate_run(run)
         context = self._context(self, self._launch_from_manifest(run.files))
         remote_root = await context._resolved_remote_root()
+        destinations = {} if destinations is None else {
+            os.path.abspath(os.fspath(path)): os.fspath(target)
+            for path, target in destinations.items()
+        }
         for value in files:
             local = os.path.abspath(os.fspath(value))
             entry = next(
@@ -668,11 +660,14 @@ class RemoteEndpointExecutor(Executor):
                     os.fspath(await context.unmap_path(matched))
                     if glob.has_magic(remote) else local
                 )
-                if not os.path.isfile(destination):
-                    await self.transport.get_file(matched, destination)
+                target = destinations.get(destination, destination)
+                if not os.path.isfile(target):
+                    await self.transport.get_file(matched, target)
 
-    def fetch_result_files(self, run, files):
-        return _run_sync(self._fetch_result_files(run, files))
+    def fetch_result_files(self, run, files, *, destinations=None):
+        return _run_sync(self._fetch_result_files(
+            run, files, destinations=destinations,
+        ))
 
     async def _attach(self, run, callback=None, output_listener=None, start=True):
         self._validate_run(run)

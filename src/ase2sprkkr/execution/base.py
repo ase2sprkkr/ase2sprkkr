@@ -72,6 +72,25 @@ def dispatch_cancellation(action):
     return future
 
 
+def start_monitor(runner, *, missing_backend=None):
+    """Start a runner's monitor once, under its lifecycle lock."""
+    with runner._lock:
+        if runner._thread is not None:
+            return
+        if missing_backend is not None and runner._backend_id is None:
+            raise RuntimeError(missing_backend)
+        runner._thread = Thread(target=runner._thread_main, daemon=True)
+        runner._thread.start()
+
+
+def request_cancellation(runner, action):
+    """Dispatch cancellation once and reuse its Future on repeat requests."""
+    with runner._lock:
+        if runner._cancel_future is None:
+            runner._cancel_future = dispatch_cancellation(action)
+        return runner._cancel_future
+
+
 def finish_monitor(runner):
     """Deliver the callback and unblock waiters after backend-specific cleanup."""
     try:
@@ -575,7 +594,13 @@ class Executor:
     def supports_result_file_retrieval(cls):
         return cls.fetch_result_files is not Executor.fetch_result_files
 
-    def fetch_result_files(self, run, files):
+    def fetch_result_files(self, run, files, *, destinations=None):
+        """Retrieve *files*, optionally staging each canonical local path.
+
+        destinations maps requested local paths to alternate local targets;
+        the requested paths still select the remote sources. The caller owns
+        verification and publication of staged downloads.
+        """
         raise NotImplementedError(
             f"{type(self).__name__} cannot retrieve persistent result files"
         )

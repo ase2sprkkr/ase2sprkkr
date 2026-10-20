@@ -8,6 +8,7 @@ from ase2sprkkr.execution import (
     Executor,
     ExecutorPool,
     FileState,
+    FileManifest,
     RunState,
     RunStore,
 )
@@ -28,12 +29,13 @@ class _HistoryExecutor(Executor):
         self.output_file = None
         self.restored_output = "original output"
 
-    def fetch_result_files(self, run, files):
+    def fetch_result_files(self, run, files, *, destinations=None):
         files = tuple(files)
         self.fetch_calls.append((run.id, files))
         if self.output_file is None or self.output_file not in files:
             return
-        with open(self.output_file, "w") as output:
+        target = self.output_file if destinations is None else destinations[self.output_file]
+        with open(target, "w") as output:
             output.write(self.restored_output)
 
 
@@ -70,7 +72,7 @@ def _terminal_run(tmp_path, *, state=RunState.FINISHED, return_code=0, task="DOS
         task=task,
         directory=tmp_path,
         endpoint=endpoint,
-        files=manager._result_files_for_spec(spec),
+        files=FileManifest.from_spec(spec),
     )
     record = manager.store.save(record)
     record = manager.complete(
@@ -154,14 +156,32 @@ def test_restored_changed_content_is_rejected_as_overwritten(tmp_path, monkeypat
 
     stored = manager.store.get(record.id)
     assert stored.state == RunState.FINISHED
-    assert stored.files.state == FileState.OVERWRITTEN
+    assert stored.files.state == FileState.MISSING
+    assert not (tmp_path / "run.out").exists()
+    assert not list(tmp_path.glob(".run.out.*.tmp"))
+    assert stored.files.availability_state == ArtifactAvailabilityState.FAILED
+
+
+def test_shared_historical_hash_verification_does_not_depend_on_executor(tmp_path):
+    from ase2sprkkr.execution.manager import HistoricalFileMismatchError
+
+    manager, executor, record = _terminal_run(tmp_path)
+    path = tmp_path / "run.out"
+    path.unlink()
+    executor.restored_output = "contents from another run"
+    with pytest.raises(HistoricalFileMismatchError, match="overwritten"):
+        manager.retrieve_result_files(record.id)
+
+    assert not path.exists()
+    assert not list(tmp_path.glob(".run.out.*.tmp"))
+    assert manager.store.get(record.id).state == RunState.FINISHED
 
 
 def test_retrieval_programming_error_is_not_persisted_as_artifact_failure(tmp_path):
     manager, executor, record = _terminal_run(tmp_path)
     (tmp_path / "run.out").unlink()
 
-    def broken_fetch(reference, files):
+    def broken_fetch(reference, files, *, destinations=None):
         raise KeyError("programming error")
 
     executor.fetch_result_files = broken_fetch
@@ -183,7 +203,7 @@ def test_finished_history_without_available_output_is_not_synthesized(tmp_path):
     record = manager.new_record(
         task="DOS",
         directory=tmp_path,
-        files=manager._result_files_for_spec(spec),
+        files=FileManifest.from_spec(spec),
     )
     record = manager.store.save(record)
     record = manager.complete(
