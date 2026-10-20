@@ -671,3 +671,20 @@ def test_file_sync_transfer_decision_is_direction_independent(
     policy, source, destination, expected,
 ):
     assert policy.should_transfer(source, destination) is expected
+
+
+def test_remote_argv_reuses_staged_path_identity(tmp_path):
+    """Relative, absolute and Path arguments share the staging resolver."""
+    from ..remote import RemoteRunner
+
+    work = tmp_path / "work"
+    source = work / "input.dat"
+    runner = object.__new__(RemoteRunner)
+    runner.spec = SimpleNamespace(directory=str(work))
+    arguments = ("program", "input.dat", source, "--verbose", "./missing.dat")
+    staged = {str(source): "/remote/work/input.dat"}
+
+    assert runner._remote_argv(arguments, staged) == [
+        "program", "/remote/work/input.dat", "/remote/work/input.dat",
+        "--verbose", "./missing.dat",
+    ]
