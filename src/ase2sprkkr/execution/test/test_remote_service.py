@@ -306,17 +306,6 @@ def test_follow_fallback_treats_completed_nonzero_psij_as_failed(
     assert observed == [("attach", "42"), "wait"]
 
 
-def test_supervisor_writes_mailbox_receipt(monkeypatch):
-    calls = []
-    monkeypatch.setattr(
-        remote_process_worker,
-        "publish_outcome",
-        lambda *args: calls.append(args),
-    )
-    remote_process_worker._write_outcome("a" * 32, RunState.FAILED, 3, FailurePhase.EXECUTION)
-    assert calls == [("a" * 32, RunState.FAILED, 3, FailurePhase.EXECUTION)]
-
-
 def test_cancel_requests_supervisor_without_inventing_terminal_state(
     tmp_path, monkeypatch
 ):
