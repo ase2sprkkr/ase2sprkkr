@@ -36,16 +36,12 @@ def main():
     finally:
         os.close(read_fd)
 
+    # This watchdog is itself a member and the leader of the target group,
+    # so the group cannot disappear while it is sending these signals.
     group = os.getpgrp()
-    try:
-        os.killpg(group, signal.SIGTERM)
-    except ProcessLookupError:
-        return
+    os.killpg(group, signal.SIGTERM)
     time.sleep(1.0)
-    try:
-        os.killpg(group, signal.SIGKILL)
-    except ProcessLookupError:
-        pass
+    os.killpg(group, signal.SIGKILL)
 
 
 if __name__ == "__main__":
