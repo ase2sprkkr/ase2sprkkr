@@ -289,44 +289,37 @@ def test_live_only_channel_is_delivered_during_other_channel_replay():
     asyncio.run(run())
 
 
-def test_backpressured_live_only_channel_disconnects_instead_of_losing_bytes():
-    async def run():
-        streams = SupervisorStreams("saved-stdout", None)
-        writer = _FakeFollowerWriter(buffered=_HIGH)
-        follower = _Follower(writer, {"out": 0, "err": 0}, replay=True)
-        streams._followers.add(follower)
-
-        streams.publish("err", b"must not vanish")
-
-        assert writer.transport.aborted
-        assert follower.offsets["err"] == 0
-        assert writer.frames == []
-
-    asyncio.run(run())
-
-
-@pytest.mark.parametrize("spooled", (False, True))
+@pytest.mark.parametrize(
+    "spooled, replaying",
+    [
+        (False, False),  # Live-only stdout
+        (True, False),   # Saved stdout can be replayed
+        (False, True),   # Live-only stderr while saved stdout is replayed
+    ],
+)
 @pytest.mark.parametrize("already_full", (False, True))
-def test_publish_backpressure_before_and_after_write(spooled, already_full):
+def test_publish_backpressure_before_and_after_write(spooled, replaying, already_full):
     async def check():
-        streams = SupervisorStreams("saved-stdout" if spooled else None, None)
+        streams = SupervisorStreams("saved-stdout" if spooled or replaying else None, None)
+        kind = "err" if replaying else "out"
         data = b"payload"
-        wire = frame("out", 0, data)
+        wire = frame(kind, 0, data)
         # Either begin over the limit or cross it on this particular write.
         buffered = _HIGH if already_full else _HIGH - len(wire) + 1
         writer = _FakeFollowerWriter(buffered=buffered)
-        follower = _Follower(writer, {"out": 0, "err": 0}, replay=False)
+        follower = _Follower(writer, {"out": 0, "err": 0}, replay=replaying)
         streams._followers.add(follower)
 
-        streams.publish("out", data)
+        streams.publish(kind, data)
 
         assert writer.frames == ([] if already_full else [wire])
-        assert follower.offsets["out"] == (0 if already_full else len(data))
+        assert follower.offsets[kind] == (0 if already_full else len(data))
         if spooled:
             assert follower.replay
             assert follower.wake.is_set()
             assert not writer.transport.aborted
         else:
+            # No spool for this channel: disconnect rather than lose bytes.
             assert writer.transport.aborted
 
     asyncio.run(check())
@@ -383,3 +376,90 @@ def test_supervisor_finish_is_bounded_when_client_never_drains(tmp_path):
             streams._followers.discard(follower)
 
     asyncio.run(run())
+
+
+
+def test_supervisor_start_closes_first_stream_if_second_cannot_open(tmp_path):
+    async def check():
+        out = tmp_path / "out"
+        err = tmp_path / "stderr-is-a-directory"
+        err.mkdir()
+        streams = SupervisorStreams(out, err)
+        with pytest.raises(IsADirectoryError):
+            await streams.start()
+        assert streams._spools["out"].closed
+        assert streams._server is None
+        assert streams.socket_path is None
+
+    asyncio.run(check())
+
+
+def test_supervisor_start_closes_streams_and_directory_on_socket_bind_error(
+    tmp_path, monkeypatch,
+):
+    async def fail_bind(*args, **kwargs):
+        raise OSError("cannot bind supervisor socket")
+
+    monkeypatch.setattr(asyncio, "start_unix_server", fail_bind)
+
+    async def check():
+        streams = SupervisorStreams(tmp_path / "out", tmp_path / "err")
+        with pytest.raises(OSError, match="cannot bind supervisor socket"):
+            await streams.start()
+        assert all(handle.closed for handle in streams._spools.values())
+        assert streams._server is None
+        assert not (tmp_path / "out").is_dir()
+        assert not __import__("os").path.exists(streams._socket_dir)
+
+    asyncio.run(check())
+
+
+def test_supervisor_start_closes_bound_server_if_chmod_fails(tmp_path, monkeypatch):
+    from .. import remote_supervisor_stream as module
+
+    def fail_chmod(path, mode):
+        raise OSError("socket permissions unavailable")
+
+    monkeypatch.setattr(module.os, "chmod", fail_chmod)
+
+    async def check():
+        streams = SupervisorStreams(tmp_path / "out", None)
+        with pytest.raises(OSError, match="socket permissions unavailable"):
+            await streams.start()
+        assert streams._spools["out"].closed
+        assert streams._server is not None
+        assert not streams._server.is_serving()
+        assert not __import__("os").path.exists(streams._socket_dir)
+
+    asyncio.run(check())
+
+
+def test_supervisor_start_preserves_failure_when_cleanup_also_fails(
+    tmp_path, monkeypatch,
+):
+    """A second failure from finish() must not mask the original error."""
+    import os
+    startup_error = OSError("socket bind failed")
+    cleanup_error = OSError("cleanup failed")
+    original_finish = SupervisorStreams.finish
+
+    async def fail_bind(*args, **kwargs):
+        raise startup_error
+
+    async def cleanup_then_fail(self):
+        await original_finish(self)
+        raise cleanup_error
+
+    monkeypatch.setattr(asyncio, "start_unix_server", fail_bind)
+    monkeypatch.setattr(SupervisorStreams, "finish", cleanup_then_fail)
+
+    async def check():
+        streams = SupervisorStreams(tmp_path / "out", None)
+        with pytest.raises(OSError) as raised:
+            await streams.start()
+        assert raised.value is startup_error
+        assert raised.value.__cause__ is cleanup_error
+        assert streams._spools["out"].closed
+        assert not os.path.exists(streams._socket_dir)
+
+    asyncio.run(check())

@@ -1,5 +1,6 @@
 from types import SimpleNamespace
 
+import pytest
 from ase.build import bulk
 
 from ...sprkkr.calculator import SPRKKR
@@ -15,13 +16,30 @@ class _Runner:
         return self.result
 
 
-def test_create_run_only_prepares_runner(tmp_path, monkeypatch):
-    calculator = SPRKKR(
-        atoms=bulk("Al"),
-        directory=tmp_path,
-        mpi=False,
-        empty_spheres=False,
-    )
+@pytest.mark.parametrize(
+    "case", ("standard", "explicit-file-names", "project"),
+)
+def test_create_run_only_prepares_runner(tmp_path, monkeypatch, case):
+    project = object()
+    if case == "standard":
+        calculator = SPRKKR(
+            atoms=bulk("Al"), directory=tmp_path,
+            mpi=False, empty_spheres=False,
+        )
+        options = dict(
+            input_file="custom.inp", potential_file="custom.pot",
+            create_subdirs=True,
+        )
+    elif case == "explicit-file-names":
+        calculator = SPRKKR(directory=False, empty_spheres=False)
+        options = dict(
+            input_file="custom.inp", potential_file="custom.pot",
+            output_file="custom.out", directory=False,
+        )
+    else:
+        calculator = SPRKKR(directory=tmp_path)
+        options = dict(project=project)
+
     runner = _Runner()
     seen = {}
 
@@ -37,17 +55,15 @@ def test_create_run_only_prepares_runner(tmp_path, monkeypatch):
 
     monkeypatch.setattr(calculator, "prepare", prepare)
 
-    created = calculator.create_run(
-        input_file="custom.inp",
-        potential_file="custom.pot",
-        create_subdirs=True,
-    )
+    created = calculator.create_run(**options)
 
     assert created is runner
     assert not runner.ran
-    assert seen["prepare"]["input_file"] == "custom.inp"
-    assert seen["prepare"]["potential_file"] == "custom.pot"
-    assert seen["prepare"]["create_subdirs"] is True
+    if case == "project":
+        assert seen["run"]["project"] is project
+    else:
+        for name, value in options.items():
+            assert seen["prepare"][name] == value
     assert seen["run"]["result_context"] is calculator
 
 

@@ -5,7 +5,7 @@ from types import SimpleNamespace
 
 import pytest
 
-from ase2sprkkr.execution.base import finish_monitor, start_monitor, wait_for_monitor
+from ase2sprkkr.execution.base import RunState, finish_monitor, start_monitor, wait_for_monitor
 
 
 def _runner(callback=None, error=None):
@@ -15,6 +15,8 @@ def _runner(callback=None, error=None):
         _exception=error,
         _callback_exception=None,
         _done=Event(),
+        _thread=object(),  # Model a monitor already started and completed.
+        _state=RunState.FINISHED,
     )
 
 

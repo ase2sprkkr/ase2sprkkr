@@ -43,18 +43,14 @@ def test_rejects_invalid_id_and_nonterminal_state(tmp_path):
     assert list(tmp_path.rglob("*.json")) == []
 
 
-def test_receipt_uses_configured_state_root(tmp_path, monkeypatch):
+@pytest.mark.parametrize("override", (True, False), ids=("explicit", "xdg"))
+def test_receipt_state_root_respects_override_and_xdg(tmp_path, monkeypatch, override):
     key = uuid4().hex
-    monkeypatch.setenv("ASE2SPRKKR_REMOTE_STATE_DIR", str(tmp_path / "explicit"))
-    assert remote_mailbox._path(key) == (
-        tmp_path / "explicit" / "remote-outcomes" / f"{key}.json"
-    )
-
-
-def test_receipt_uses_xdg_state_home_when_no_override(tmp_path, monkeypatch):
-    key = uuid4().hex
-    monkeypatch.delenv("ASE2SPRKKR_REMOTE_STATE_DIR", raising=False)
-    monkeypatch.setenv("XDG_STATE_HOME", str(tmp_path / "xdg"))
-    assert remote_mailbox._path(key) == (
-        tmp_path / "xdg" / "ase2sprkkr" / "remote-outcomes" / f"{key}.json"
-    )
+    if override:
+        monkeypatch.setenv("ASE2SPRKKR_REMOTE_STATE_DIR", str(tmp_path / "explicit"))
+        root = tmp_path / "explicit"
+    else:
+        monkeypatch.delenv("ASE2SPRKKR_REMOTE_STATE_DIR", raising=False)
+        monkeypatch.setenv("XDG_STATE_HOME", str(tmp_path / "xdg"))
+        root = tmp_path / "xdg" / "ase2sprkkr"
+    assert remote_mailbox._path(key) == root / "remote-outcomes" / f"{key}.json"

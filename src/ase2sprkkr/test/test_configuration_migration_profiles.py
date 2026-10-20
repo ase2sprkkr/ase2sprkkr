@@ -29,7 +29,8 @@ def test_migration_converts_legacy_execution_settings_to_default_profile(
         source,
         "config.executables.dir = '/opt/sprkkr'\n"
         "config.executables.suffix = '_v8'\n"
-        "config.running.mpi = 4\n",
+        "config.running.mpi = 4\n"
+        "config.running.mpi_warning = False\n",
     )
 
     with warnings.catch_warnings(record=True) as caught:
@@ -41,6 +42,7 @@ def test_migration_converts_legacy_execution_settings_to_default_profile(
     assert "legacy" not in migrated.profiles
     profile = migrated.profiles["local"]
     assert profile.mpi() == 4
+    assert profile.mpi_warning() is False
     assert profile.executable_dir() == "/opt/sprkkr"
     assert profile.executable_suffix() == "_v8"
 
@@ -49,6 +51,7 @@ def test_migration_converts_legacy_execution_settings_to_default_profile(
     assert "legacy" not in data["profiles"]
     assert data["profiles"]["local"] == {
         "mpi": 4,
+        "mpi_warning": False,
         "executable_dir": "/opt/sprkkr",
         "executable_suffix": "_v8",
     }

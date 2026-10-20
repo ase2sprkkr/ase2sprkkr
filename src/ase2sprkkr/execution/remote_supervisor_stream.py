@@ -83,18 +83,27 @@ class SupervisorStreams:
         self.socket_path = None
 
     async def start(self):
-        for kind, path in self.paths.items():
-            if path is not None:
-                Path(path).parent.mkdir(parents=True, exist_ok=True)
-                # Truncate the declared stream at launch. Keep the actual file
-                # available during execution and after failure or cancellation.
-                self._spools[kind] = open(path, "wb", buffering=0)
-        if self._socket_dir is None:
-            self._socket_dir = tempfile.mkdtemp(prefix="ase2sprkkr-follow-")
-        self.socket_path = os.path.join(self._socket_dir, "socket")
-        self._server = await asyncio.start_unix_server(self._connect, self.socket_path)
-        os.chmod(self.socket_path, 0o600)
-        return self.socket_path
+        try:
+            for kind, path in self.paths.items():
+                if path is not None:
+                    Path(path).parent.mkdir(parents=True, exist_ok=True)
+                    # Truncate the declared stream at launch. Keep the actual file
+                    # available during execution and after failure or cancellation.
+                    self._spools[kind] = open(path, "wb", buffering=0)
+            if self._socket_dir is None:
+                self._socket_dir = tempfile.mkdtemp(prefix="ase2sprkkr-follow-")
+            self.socket_path = os.path.join(self._socket_dir, "socket")
+            self._server = await asyncio.start_unix_server(self._connect, self.socket_path)
+            os.chmod(self.socket_path, 0o600)
+            return self.socket_path
+        except BaseException as startup_error:
+            # Keep the original startup failure as the raised exception,
+            # while retaining the cleanup failure as its explicit cause.
+            try:
+                await self.finish()
+            except BaseException as cleanup_error:
+                raise startup_error from cleanup_error
+            raise
 
     def publish(self, kind, data):
         if self._terminal is not None:

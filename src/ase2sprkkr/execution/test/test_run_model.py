@@ -2,9 +2,11 @@ from dataclasses import asdict
 
 import pytest
 
+from ase2sprkkr.execution.base import LaunchSpec
 from ase2sprkkr.execution.endpoint import ExecutorEndpoint
 from ase2sprkkr.execution.run_model import (
-    CacheEntry, Execution, FileEntry, FileManifest, WorkingDirectory,
+    ArtifactAvailabilityState, CacheEntry, Execution, FileEntry, FileManifest,
+    FileMapping, FileSyncPolicy, WorkingDirectory,
 )
 
 
@@ -281,3 +283,67 @@ def test_legacy_duplicate_stderr_declaration_is_updated_together():
     assert updated.stderr.availability_state == "available"
     assert updated.outputs[0].availability_state == "available"
     assert updated.output_files == (path,)
+
+def test_availability_enum_is_shared_between_model_and_manager():
+    from ase2sprkkr.execution import ArtifactAvailabilityState
+    from ase2sprkkr.execution.manager import ArtifactAvailabilityState as ManagerState
+    from ase2sprkkr.execution.run_model import ArtifactAvailabilityState as ModelState
+
+    assert ModelState is ManagerState is ArtifactAvailabilityState
+    assert {state.value for state in ModelState} == {
+        "pending", "available", "failed", "skipped",
+    }
+
+
+@pytest.mark.parametrize("state", list(ArtifactAvailabilityState))
+def test_file_entry_accepts_enum_but_serializes_status_as_string(state):
+    entry = FileEntry("/local/file", availability_state=state)
+    assert type(entry.availability_state) is str
+    assert entry.availability_state == state.value
+    assert asdict(entry)["availability_state"] == state.value
+    assert FileEntry(**asdict(entry)) == entry
+
+
+def test_invalid_artifact_availability_is_rejected():
+    with pytest.raises(ValueError, match="availability"):
+        FileEntry("/local/file", availability_state="new-state")
+    with pytest.raises(ValueError, match="error belongs"):
+        FileEntry(
+            "/local/file",
+            availability_state=ArtifactAvailabilityState.PENDING,
+            availability_message="error",
+        )
+
+
+def test_file_sync_policy_validation_uses_the_runtime_enum():
+    from ase2sprkkr.execution.remote import FileSyncPolicy as RemoteFileSyncPolicy
+
+    assert RemoteFileSyncPolicy is FileSyncPolicy
+    for input_policy in FileSyncPolicy:
+        for output_policy in FileSyncPolicy:
+            mapping = FileMapping("/local", "/remote", input_policy, output_policy)
+            assert type(mapping.input_sync) is str
+            assert type(mapping.output_sync) is str
+            assert mapping.input_sync == input_policy.value
+            assert mapping.output_sync == output_policy.value
+            assert FileMapping(**asdict(mapping)) == mapping
+
+    with pytest.raises(ValueError, match="synchronization policy"):
+        FileMapping("/local", "/remote", input_sync="unsupported")
+    with pytest.raises(ValueError, match="synchronization policy"):
+        FileMapping("/local", "/remote", output_sync="unsupported")
+
+
+@pytest.mark.parametrize("name", ("input_sync", "output_sync"))
+@pytest.mark.parametrize("policy", list(FileSyncPolicy))
+def test_launch_sync_policies_are_validated_and_serialized(name, policy):
+    launch = LaunchSpec(**{name: policy})
+    assert type(getattr(launch, name)) is str
+    assert getattr(launch, name) == policy.value
+    assert LaunchSpec(**asdict(launch)) == launch
+
+
+@pytest.mark.parametrize("name", ("input_sync", "output_sync"))
+def test_launch_rejects_unknown_sync_policies(name):
+    with pytest.raises(ValueError, match="synchronization policy"):
+        LaunchSpec(**{name: "unsupported"})

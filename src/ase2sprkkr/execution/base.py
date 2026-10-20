@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import asyncio
+import codecs
 import os
 import warnings
 from concurrent.futures import Future
@@ -12,7 +13,7 @@ from threading import Event, Lock, Thread
 from typing import Any, Optional, Protocol, Sequence, Tuple
 
 from ..common.decorators import class_property
-from .run_model import Execution, FileManifest
+from .run_model import Execution, FileManifest, FileSyncPolicy
 
 
 def file_path(value, directory=None, *, flush=False, required=False):
@@ -104,7 +105,11 @@ def finish_monitor(runner):
 
 
 def wait_for_monitor(runner):
-    """Propagate execution errors before callback errors after completion."""
+    """Await a started monitor; propagate execution errors before callback errors."""
+    if runner._thread is None:
+        if runner._state == RunState.NEW:
+            raise RuntimeError("Run has not been submitted")
+        raise RuntimeError("Attached run has not been started")
     runner._done.wait()
     if runner._exception is not None:
         raise runner._exception
@@ -132,6 +137,7 @@ class OutputObservers:
         self._listeners = [] if listener is None else [listener]
         self._error_listeners = []
         self._lock = Lock()
+        self._decoders = {}
 
     def add(self, callback):
         with self._lock:
@@ -142,9 +148,28 @@ class OutputObservers:
             self._error_listeners.append(callback)
 
     def emit_bytes(self, data, kind):
-        """Decode a raw output chunk and dispatch it to text observers."""
-        if data:
-            self.emit(data.decode("utf8", errors="replace"), kind)
+        """Preserve UTF-8 characters spanning successive byte chunks."""
+        if not data:
+            return
+        with self._lock:
+            decoder = self._decoders.setdefault(
+                kind, codecs.getincrementaldecoder("utf8")(errors="replace")
+            )
+            text = decoder.decode(data)
+        if text:
+            self.emit(text, kind)
+
+    def finish_bytes(self):
+        """Flush incomplete UTF-8 sequences once at the end of observation."""
+        with self._lock:
+            pending = [
+                (kind, decoder.decode(b"", final=True))
+                for kind, decoder in self._decoders.items()
+            ]
+            self._decoders.clear()
+        for kind, text in pending:
+            if text:
+                self.emit(text, kind)
 
     def emit(self, text, kind):
         with self._lock:
@@ -479,8 +504,8 @@ class LaunchSpec:
     mpi: MpiSpec = MpiSpec()
     local_root: Optional[str] = None
     remote_root: Optional[str] = None
-    input_sync: str = "changed"
-    output_sync: str = "changed"
+    input_sync: str = FileSyncPolicy.CHANGED.value
+    output_sync: str = FileSyncPolicy.CHANGED.value
 
     def __post_init__(self):
         mpi = self.mpi
@@ -494,8 +519,11 @@ class LaunchSpec:
             if value is not None:
                 object.__setattr__(self, name, os.fspath(value))
         for name in ("input_sync", "output_sync"):
-            value = getattr(self, name)
-            object.__setattr__(self, name, getattr(value, "value", value))
+            try:
+                value = FileSyncPolicy(getattr(self, name))
+            except ValueError as exc:
+                raise ValueError(f"Invalid {name} file synchronization policy") from exc
+            object.__setattr__(self, name, value.value)
 
     def __bool__(self):
         return self.mpi.requested

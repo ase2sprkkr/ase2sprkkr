@@ -18,6 +18,14 @@ _START_FD_ENV = "ASE2SPRKKR_REMOTE_PROCESS_START_FD"
 _LAUNCH_FAILURE_RETURN_CODE = 127
 
 
+def _exception_message(exc):
+    """Include explicitly chained failures in the persisted run outcome."""
+    message = str(exc)
+    if exc.__cause__ is not None:
+        message += f"; secondary error: {exc.__cause__}"
+    return message
+
+
 def _wait_for_parent_release():
     value = os.environ.pop(_START_FD_ENV, None)
     if value is None:
@@ -51,13 +59,19 @@ async def _run(spec):
         detached=spec.get("detached", True),
         socket_dir=spec.get("socket_dir"),
     )
-    await streams.start()
-    os.write(int(spec["socket_fd"]), (streams.socket_path + "\n").encode())
-    os.close(int(spec["socket_fd"]))
     state, phase, return_code, message = RunState.FAILED, FailurePhase.LAUNCH, 127, None
     opened = []
     process = None
+    streams_started = False
     try:
+        try:
+            await streams.start()
+            streams_started = True
+            os.write(int(spec["socket_fd"]), (streams.socket_path + "\n").encode())
+        finally:
+            # Closing the handshake FD also wakes a waiting parent when the
+            # supervisor cannot create its FOLLOW socket.
+            os.close(int(spec["socket_fd"]))
         if not streams.detached:
             try:
                 await asyncio.wait_for(streams.connected.wait(), timeout=30)
@@ -129,23 +143,34 @@ async def _run(spec):
             if lost is not None:
                 lost.cancel()
     except OSError as exc:
-        message = str(exc)
+        message = _exception_message(exc)
         state, phase = RunState.FAILED, (FailurePhase.LAUNCH if process is None
                                          else FailurePhase.EXECUTION)
     except Exception as exc:
-        message = str(exc)
+        message = _exception_message(exc)
         state, phase = RunState.FAILED, FailurePhase.EXECUTION
         if process is not None and process.returncode is None:
             await _stop_process(process, asyncio.create_task(process.wait()))
         return_code = process.returncode if process is not None else 127
     finally:
         for f in opened:
-            f.close()
-        try:
-            streams.sync()
-        except OSError as exc:
-            state, phase = RunState.FAILED, FailurePhase.ARTIFACTS
-            message = f"Failed to sync process output: {exc}"
+            try:
+                f.close()
+            except OSError as exc:
+                # Failure to close stdin must not suppress the primary launch
+                # error or prevent the durable terminal outcome from being
+                # published. On an otherwise successful run it is a failure.
+                if state == RunState.FINISHED:
+                    state, phase = RunState.FAILED, FailurePhase.EXECUTION
+                    message = f"Failed to close process input: {exc}"
+                elif message is None:
+                    message = f"Failed to close process input: {exc}"
+        if streams_started:
+            try:
+                streams.sync()
+            except OSError as exc:
+                state, phase = RunState.FAILED, FailurePhase.ARTIFACTS
+                message = f"Failed to sync process output: {exc}"
         outcome = {"state": state.value, "return_code": return_code,
                    "failure_phase": None if phase is None else phase.value,
                    "error": message}
@@ -163,8 +188,11 @@ async def _run(spec):
                 "error": f"Unable to persist terminal receipt: {exc}",
             }
         finally:
-            streams.terminal(outcome)
-            await streams.finish()
+            # start() already attempted cleanup if startup failed. There is
+            # no server to notify in that case; avoid a second failing cleanup.
+            if streams_started:
+                streams.terminal(outcome)
+                await streams.finish()
     return return_code if return_code is not None else 127
 
 

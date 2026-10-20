@@ -137,57 +137,40 @@ def test_required_local_mpi_without_launcher_fails(monkeypatch, tmp_path):
     input_file.close()
 
 
-def test_local_auto_warns_and_falls_back_to_serial(monkeypatch, tmp_path):
+@pytest.mark.parametrize("warn", (True, False), ids=("warn", "silent"))
+def test_local_auto_mpi_fallback_respects_warning_option(monkeypatch, tmp_path, warn):
     monkeypatch.setattr(
-        "ase2sprkkr.execution.local_process.resolve_mpi_command", lambda mpi: None
+        "ase2sprkkr.execution.local_process.resolve_mpi_command",
+        lambda mpi: None,
     )
     input_file = (tmp_path / "run.inp").open("w+")
     spec = ExecutionSpec(
         argv=("kkrscf",),
         mpi_argv=("kkrscfMPI", input_file.name),
-        launch=LaunchSpec.from_mpi("auto"),
+        launch=LaunchSpec(mpi=MpiSpec(autodetect=True, warning=warn)),
         input_file=input_file,
         output_file=None,
         directory=str(tmp_path),
         stdin=input_file,
     )
 
-    with pytest.warns(MpiNotFoundWarning, match="without MPI"):
-        resolved = materialize_local_spec(spec)
+    try:
+        with warnings.catch_warnings(record=True) as caught:
+            warnings.simplefilter("always")
+            resolved = materialize_local_spec(spec)
 
-    assert resolved.argv == ("kkrscf",)
-    assert resolved.stdin is input_file
-    input_file.close()
-
-
-def test_local_auto_can_disable_missing_mpi_warning(monkeypatch, tmp_path):
-    monkeypatch.setattr(
-        "ase2sprkkr.execution.local_process.resolve_mpi_command", lambda mpi: None
-    )
-    input_file = (tmp_path / "run.inp").open("w+")
-    spec = ExecutionSpec(
-        argv=("kkrscf",),
-        mpi_argv=("kkrscfMPI", input_file.name),
-        launch=LaunchSpec(
-            mpi=MpiSpec(autodetect=True, warning=False)
-        ),
-        input_file=input_file,
-        output_file=None,
-        directory=str(tmp_path),
-        stdin=input_file,
-    )
-
-    with warnings.catch_warnings(record=True) as caught:
-        warnings.simplefilter("always")
-        resolved = materialize_local_spec(spec)
-
-    assert not caught
-    assert resolved.argv == ("kkrscf",)
-    assert resolved.stdin is input_file
-    input_file.close()
+        assert len(caught) == int(warn)
+        if warn:
+            assert issubclass(caught[0].category, MpiNotFoundWarning)
+            assert "without MPI" in str(caught[0].message)
+        assert resolved.argv == ("kkrscf",)
+        assert resolved.stdin is input_file
+    finally:
+        input_file.close()
 
 
-def test_remote_endpoint_warns_from_remote_autodetection(monkeypatch):
+@pytest.mark.parametrize("warn", (True, False), ids=("warn", "silent"))
+def test_remote_endpoint_mpi_warning_probe_respects_option(monkeypatch, warn):
     endpoint = object.__new__(RemoteEndpointExecutor)
     endpoint.backend = "local"
     calls = []
@@ -207,43 +190,22 @@ def test_remote_endpoint_warns_from_remote_autodetection(monkeypatch):
                 "autodetect": True,
                 "launcher": [],
                 "process_count": None,
-                "warning": True,
+                "warning": warn,
             }
         },
     }
 
-    with pytest.warns(MpiNotFoundWarning, match="remote host"):
+    with warnings.catch_warnings(record=True) as caught:
+        warnings.simplefilter("always")
         asyncio.run(endpoint._submit(payload))
 
-    assert [call[0] for call in calls] == ["resolve-mpi", "submit"]
-
-
-def test_remote_endpoint_skips_warning_probe_when_disabled(monkeypatch):
-    endpoint = object.__new__(RemoteEndpointExecutor)
-    endpoint.backend = "local"
-    calls = []
-
-    async def request(action, *args, payload=None):
-        calls.append((action, args, payload))
-        return {"state": "queued", "directory": "/remote/run"}
-
-    monkeypatch.setattr(endpoint, "_json_request", request)
-    payload = {
-        "directory": "/remote/run",
-        "launch": {
-            "mpi": {
-                "required": False,
-                "autodetect": True,
-                "launcher": [],
-                "process_count": None,
-                "warning": False,
-            }
-        },
-    }
-
-    asyncio.run(endpoint._submit(payload))
-
-    assert [call[0] for call in calls] == ["submit"]
+    assert [call[0] for call in calls] == (
+        ["resolve-mpi", "submit"] if warn else ["submit"]
+    )
+    assert len(caught) == int(warn)
+    if warn:
+        assert issubclass(caught[0].category, MpiNotFoundWarning)
+        assert "remote host" in str(caught[0].message)
 
 
 def test_explicit_local_executor_overrides_remote_profile(tmp_path, monkeypatch):

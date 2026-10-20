@@ -7,10 +7,7 @@ from ase2sprkkr.execution import (
     FailurePhase, RunState, WorkingDirectory,
 )
 from ase2sprkkr.execution.endpoint import endpoint_for_executor
-from ase2sprkkr.execution.remote_endpoint import (
-    RemoteEndpointExecutor,
-    _client_status_state,
-)
+from ase2sprkkr.execution.remote_endpoint import RemoteEndpointExecutor
 
 
 class _Transport:
@@ -148,31 +145,12 @@ def test_remote_recovery_can_report_unsupported_backend_recovery():
 
 
 @pytest.mark.parametrize(
-    "backend_state, phase, expected",
-    [
-        ("running", None, RunState.RUNNING),
-        ("finished", None, RunState.DOWNLOADING),
-        ("failed", "execution", RunState.DOWNLOADING),
-        ("failed", "download", RunState.DOWNLOADING),
-        ("failed", "launch", RunState.FAILED),
-        ("failed", "submission", RunState.FAILED),
-        ("cancelled", None, RunState.CANCELLED),
-        ("unknown", None, RunState.UNKNOWN),
-    ],
-)
-def test_backend_status_is_mapped_to_client_owned_lifecycle(
-    backend_state, phase, expected
-):
-    state = {"state": backend_state, "failure_phase": phase}
-
-    assert _client_status_state(state) == expected
-
-@pytest.mark.parametrize(
     "facts, expected_state",
     [
         ({"state": "running"}, RunState.RUNNING),
         ({"state": "finished", "return_code": 0}, RunState.DOWNLOADING),
         ({"state": "failed", "return_code": 7, "failure_phase": "execution", "error": "job failed"}, RunState.DOWNLOADING),
+        ({"state": "failed", "failure_phase": "download", "error": "transfer failed"}, RunState.DOWNLOADING),
         ({"state": "failed", "failure_phase": "launch", "error": "program missing"}, RunState.FAILED),
         ({"state": "failed", "failure_phase": "submission"}, RunState.FAILED),
         ({"state": "cancelled", "return_code": 130}, RunState.CANCELLED),

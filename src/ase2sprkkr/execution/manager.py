@@ -10,7 +10,6 @@ import warnings
 from contextlib import contextmanager
 from dataclasses import asdict, dataclass, replace
 from datetime import datetime, timezone
-from enum import Enum
 from pathlib import Path
 from threading import Lock, RLock
 from typing import Any, Optional
@@ -30,7 +29,9 @@ from .base import (
 from .endpoint import ExecutorEndpoint, endpoint_for_executor
 from .pool import default_executor_pool
 from .postprocessing import PostprocessingRunner
-from .run_model import Execution, WorkingDirectory, FileManifest
+from .run_model import (
+    ArtifactAvailabilityState, Execution, WorkingDirectory, FileManifest,
+)
 from .transport import expand_local_candidates, has_file_magic
 
 
@@ -87,15 +88,6 @@ class CorruptRunRecord(RuntimeError):
     def __init__(self, path, message):
         self.path = Path(path)
         super().__init__(f"Corrupt run record {self.path}: {message}")
-
-
-class ArtifactAvailabilityState(str, Enum):
-    """Whether this run's declared artifacts are locally usable."""
-
-    PENDING = "pending"
-    AVAILABLE = "available"
-    FAILED = "failed"
-    SKIPPED = "skipped"
 
 
 class DuplicateSubmissionError(RuntimeError):

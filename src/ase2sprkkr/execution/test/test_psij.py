@@ -1011,3 +1011,32 @@ def test_psij_preparation_closes_each_output_handle_once(monkeypatch, tmp_path, 
     assert (tmp_path / "run.out").exists()
     if not merged:
         assert (tmp_path / "run.err").exists()
+
+
+def test_psij_preparation_reuses_declared_outputs_for_check_and_cleanup(
+    monkeypatch, tmp_path,
+):
+    """Streams and declared wildcard outputs are cleaned, inputs/caches kept."""
+    input_file = tmp_path / "run.inp"
+    cache_file = tmp_path / "restart.pot"
+    output_file = tmp_path / "run.out"
+    error_file = tmp_path / "run.err"
+    extra_output = tmp_path / "result-1.dat"
+    for path in (input_file, cache_file, output_file, error_file, extra_output):
+        path.write_bytes(b"previous contents")
+
+    executor = _executor(monkeypatch, _Backend())
+    runner = executor.create_run(ExecutionSpec(
+        argv=("program",), directory=str(tmp_path),
+        input_file=str(input_file), output_file=str(output_file),
+        error_file=str(error_file),
+        output_files=("result-*.dat", "run.out"),
+        cache_files=("restart.pot",),
+    ))
+    runner._prepare_io()
+
+    assert input_file.read_bytes() == b"previous contents"
+    assert cache_file.read_bytes() == b"previous contents"
+    assert output_file.read_bytes() == b""
+    assert error_file.read_bytes() == b""
+    assert not extra_output.exists()

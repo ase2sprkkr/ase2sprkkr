@@ -17,12 +17,12 @@ from .base import (
     RunStatus,
 )
 from .run_model import (
-    Execution, WorkingDirectory, FileEntry, CacheEntry, FileMapping, FileManifest,
+    ArtifactAvailabilityState, Execution, WorkingDirectory, FileEntry,
+    CacheEntry, FileMapping, FileManifest,
 )
 from .endpoint import ExecutorEndpoint
 from .local import LocalExecutor, LocalRunner
 from .manager import (
-    ArtifactAvailabilityState,
     CorruptRunRecord,
     DuplicateSubmissionError,
     ProjectRunner,

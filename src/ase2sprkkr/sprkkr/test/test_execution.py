@@ -141,17 +141,19 @@ def test_local_runner_submit_then_wait():
     assert runner.state == RunState.FINISHED
 
 
-def test_local_runner_cancel_is_thread_safe():
+def test_local_runner_cancel_is_thread_safe(monkeypatch):
+    from ...execution import local
+
     runner = _local_run("import time; time.sleep(30)")
     caller_thread = threading.get_ident()
     stopped_from = []
-    original_stop = runner._stop_process
+    original_stop = local.stop_local_process
 
-    async def stop():
+    async def stop(process):
         stopped_from.append(threading.get_ident())
-        await original_stop()
+        await original_stop(process)
 
-    runner._stop_process = stop
+    monkeypatch.setattr(local, "stop_local_process", stop)
     runner.submit()
 
     deadline = time.monotonic() + 5

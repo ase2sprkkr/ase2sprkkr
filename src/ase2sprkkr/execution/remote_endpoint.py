@@ -7,6 +7,7 @@ import json
 import os
 import posixpath
 import warnings
+from contextlib import ExitStack
 from dataclasses import asdict, replace
 from pathlib import Path, PurePosixPath
 from uuid import uuid4
@@ -340,14 +341,15 @@ class _RemoteRunContext:
                     local = await self.unmap_path(remote)
                     cache_targets[os.fspath(local)] = (remote, before)
 
-        output_file = None if output_local is None else open(output_local, "ab")
-        if error_local is None:
-            error_file = None
-        elif error_local == output_local:
-            error_file = output_file
-        else:
-            error_file = open(error_local, "ab")
-        try:
+        with ExitStack() as streams:
+            output_file = (None if output_local is None else
+                           streams.enter_context(open(output_local, "ab")))
+            if error_local is None:
+                error_file = None
+            elif error_local == output_local:
+                error_file = output_file
+            else:
+                error_file = streams.enter_context(open(error_local, "ab"))
             spec = ExecutionSpec(
                 argv=(),
                 input_file=None if input_local is None else os.fspath(input_local),
@@ -384,12 +386,8 @@ class _RemoteRunContext:
             runner._failure_message = status.get("error")
             if start:
                 runner.start()
+            streams.pop_all()  # Runner owns the streams after successful attach.
             return runner
-        except BaseException:
-            for file in (output_file, error_file):
-                if file is not None and not file.closed:
-                    file.close()
-            raise
 
 
 class RemoteEndpointExecutor(Executor):

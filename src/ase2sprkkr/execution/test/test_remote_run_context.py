@@ -164,3 +164,60 @@ def test_home_relative_remote_root_still_resolves_home_once(
     monkeypatch.setattr(endpoint, "_remote_home", remote_home)
     assert asyncio.run(context._resolved_remote_root()) == expected
     assert calls == ["home"]
+
+
+def test_attach_closes_stdout_if_opening_stderr_fails(tmp_path, monkeypatch):
+    """A failed second open must release the first stream immediately."""
+    import builtins
+    from ase2sprkkr.execution import RunState
+    from ase2sprkkr.execution.endpoint import endpoint_for_executor
+    from ase2sprkkr.execution.manager import RunRecord
+    from ase2sprkkr.execution.run_model import (
+        Execution, FileEntry, FileManifest, WorkingDirectory,
+    )
+    from ase2sprkkr.execution.transport import LocalTransport
+    from ase2sprkkr.execution import remote_endpoint
+
+    local, remote = tmp_path / "local", tmp_path / "remote"
+    local.mkdir()
+    remote.mkdir()
+    stdout = local / "stdout.txt"
+    stderr = local / "stderr.txt"
+    endpoint = RemoteEndpointExecutor(LocalTransport())
+    context = endpoint._context(endpoint, LaunchSpec(
+        local_root=local, remote_root=remote,
+    ))
+    run = RunRecord(
+        id="stream-open-failure", task="SCF", state=RunState.RUNNING,
+        created_at="2026-10-13T08:00:00+00:00",
+        updated_at="2026-10-13T08:00:00+00:00",
+        execution=Execution(
+            endpoint_for_executor(endpoint),
+            WorkingDirectory(str(local), str(remote)), "remote-id",
+        ),
+        files=FileManifest(
+            stdout=FileEntry(str(stdout), str(remote / "stdout.txt")),
+            stderr=FileEntry(str(stderr), str(remote / "stderr.txt")),
+        ),
+    )
+
+    async def status(*args, **kwargs):
+        return {"state": "running"}
+
+    monkeypatch.setattr(context, "_status", status)
+    opened = []
+    actual_open = builtins.open
+
+    def failing_open(path, *args, **kwargs):
+        if str(path) == str(stderr):
+            raise PermissionError("stderr not writable")
+        stream = actual_open(path, *args, **kwargs)
+        if str(path) == str(stdout):
+            opened.append(stream)
+        return stream
+
+    monkeypatch.setattr(remote_endpoint, "open", failing_open, raising=False)
+    with pytest.raises(PermissionError, match="stderr not writable"):
+        asyncio.run(context.attach(run, start=False))
+    assert len(opened) == 1
+    assert opened[0].closed

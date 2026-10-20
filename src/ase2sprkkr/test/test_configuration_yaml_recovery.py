@@ -13,26 +13,36 @@ def fresh_config():
     return definition.create_object()
 
 
-def test_invalid_profile_does_not_disable_other_profiles(tmp_path):
+@pytest.mark.parametrize(
+    ("invalid_yaml", "valid_yaml", "valid_name", "expected_mpi", "expected_dir"),
+    (
+        (
+            "  broken:\n    mpi:\n      nonsense: true\n"
+            "    executable_dir: /opt/broken\n",
+            "  local:\n    mpi: 4\n    executable_dir: /opt/local\n",
+            "local", 4, "/opt/local",
+        ),
+        (
+            "  broken:\n    mpi: 8\n    executble_dir: /typo\n",
+            "  valid:\n    mpi: 2\n",
+            "valid", 2, None,
+        ),
+    ),
+    ids=("invalid-mpi", "unknown-profile-key"),
+)
+def test_invalid_profile_does_not_disable_other_profiles(
+    tmp_path, invalid_yaml, valid_yaml, valid_name, expected_mpi, expected_dir,
+):
     path = tmp_path / "config.yaml"
-    path.write_text(
-        "profiles:\n"
-        "  local:\n"
-        "    mpi: 4\n"
-        "    executable_dir: /opt/local\n"
-        "  broken:\n"
-        "    mpi:\n"
-        "      nonsense: true\n"
-        "    executable_dir: /opt/broken\n",
-        encoding="utf8",
-    )
+    path.write_text("profiles:\n" + valid_yaml + invalid_yaml, encoding="utf8")
 
     config = fresh_config()
     with pytest.warns(YamlConfigurationWarning, match="profile 'broken'"):
         load_configuration_yaml(config, path)
 
-    assert config.profiles["local"].mpi() == 4
-    assert config.profiles["local"].executable_dir() == "/opt/local"
+    assert config.profiles[valid_name].mpi() == expected_mpi
+    if expected_dir is not None:
+        assert config.profiles[valid_name].executable_dir() == expected_dir
     assert "broken" not in config.profiles
 
 
@@ -54,26 +64,6 @@ def test_invalid_section_option_does_not_disable_siblings(tmp_path):
     assert config.running.mpi_warning() is False
     assert config.nomad.token() == "valid-token"
     assert config.running.print_output() == "info"
-
-
-def test_unknown_profile_member_invalidates_whole_profile(tmp_path):
-    path = tmp_path / "config.yaml"
-    path.write_text(
-        "profiles:\n"
-        "  broken:\n"
-        "    mpi: 8\n"
-        "    executble_dir: /typo\n"
-        "  valid:\n"
-        "    mpi: 2\n",
-        encoding="utf8",
-    )
-
-    config = fresh_config()
-    with pytest.warns(YamlConfigurationWarning, match="profile 'broken'"):
-        load_configuration_yaml(config, path)
-
-    assert "broken" not in config.profiles
-    assert config.profiles["valid"].mpi() == 2
 
 
 def test_stored_ase_profile_is_rejected_but_other_profiles_load(tmp_path):

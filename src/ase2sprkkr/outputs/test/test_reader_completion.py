@@ -57,27 +57,19 @@ def test_successful_run_with_parser_exception_does_not_finalize():
     assert result.completions == []
 
 
-def test_process_failure_outweighs_parser_exception():
+@pytest.mark.parametrize("parser_raises", (False, True), ids=("stream-error", "parser-error"))
+def test_process_failure_preserves_error_precedence(parser_raises):
     reader = _reader()
-    reader.parser.raise_on_nonzero = True
+    reader.parser.raise_on_nonzero = parser_raises
     result = _Result()
     parse_error = RuntimeError("incomplete stream")
 
-    with pytest.raises(ValueError, match="process failed"):
+    error_type = ValueError if parser_raises else RuntimeError
+    message = "process failed" if parser_raises else "incomplete stream"
+    with pytest.raises(error_type, match=message) as exc:
         reader.complete_result(result, parse_error, "stderr", 2)
 
-    assert reader.parser.calls == [(None, "stderr", 2)]
-    assert result.completions == []
-
-
-def test_nonraising_error_parser_preserves_stream_exception():
-    reader = _reader()
-    result = _Result()
-    parse_error = RuntimeError("incomplete stream")
-
-    with pytest.raises(RuntimeError) as exc:
-        reader.complete_result(result, parse_error, "stderr", 2)
-
-    assert exc.value is parse_error
+    if not parser_raises:
+        assert exc.value is parse_error
     assert reader.parser.calls == [(None, "stderr", 2)]
     assert result.completions == []

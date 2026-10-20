@@ -54,13 +54,19 @@ def parse_agr(path):
 
 
 @pytest.fixture(scope="module")
-def generated_data():
+def rat_result():
     from ase2sprkkr.result_files.definitions.rat import RATResultFile
 
-    of = RATResultFile.from_file(RAT_FILE)
+    return RATResultFile.from_file(RAT_FILE)
+
+
+@pytest.fixture(scope="module")
+def generated_data(rat_result):
     # Fortran default: WGAUSS = 0.0 (no Gaussian broadening)
     # Fortran uses Fuggle-Inglesfield core-hole widths — request by name
-    return of.generate_data(gauss_width=0.0, core_hole_width="fuggle-inglesfield")
+    return rat_result.generate_data(
+        gauss_width=0.0, core_hole_width="fuggle-inglesfield",
+    )
 
 
 @pytest.fixture(scope="module")
@@ -85,15 +91,26 @@ def ref_sumrule():
     return spin, orb  # (spin SSR, orbital OSR) – normalised to max=100
 
 
-class TestPlotCaptions:
-    def test_subject_is_derived_from_header_tables(self):
-        from ase2sprkkr.result_files.definitions.rat import RATResultFile
+@pytest.fixture(scope="module")
+def aligned_xas(generated_data, ref_xas):
+    """Python XAS interpolated to significant reference energy points."""
+    ref_pol, _ = ref_xas
+    energy = generated_data["ENERGY"]
+    generated = generated_data["XAS"][0]
+    reference = ref_pol[:, 1]
+    interpolated = interp1d(
+        energy, generated, bounds_error=False, fill_value=0,
+    )(ref_pol[:, 0])
+    significant = reference > 0.05
+    return interpolated[significant], reference[significant]
 
-        of = RATResultFile.from_file(RAT_FILE)
-        assert of.absorbing_element == "Cu"
-        assert of.system_formula == "Cu"
-        assert of.spectrum_subject == "of Cu in Cu"
-        assert of.xray_edge == r"L_{2,3}"
+
+class TestPlotCaptions:
+    def test_subject_is_derived_from_header_tables(self, rat_result):
+        assert rat_result.absorbing_element == "Cu"
+        assert rat_result.system_formula == "Cu"
+        assert rat_result.spectrum_subject == "of Cu in Cu"
+        assert rat_result.xray_edge == r"L_{2,3}"
 
 
 # ---------------------------------------------------------------------------
@@ -104,19 +121,10 @@ class TestPlotCaptions:
 class TestEnergyGrid:
     """The generated energy grid must match the reference exactly."""
 
-    def test_n_points(self, generated_data, ref_xas):
-        ref_pol, _ = ref_xas
-        assert len(generated_data["ENERGY"]) == len(ref_pol), "Number of energy points differs from reference"
-
-    def test_energy_range(self, generated_data, ref_xas):
-        ref_pol, _ = ref_xas
-        e = generated_data["ENERGY"]
-        assert abs(e[0] - ref_pol[0, 0]) < 0.01, "Start energy differs from reference"
-        assert abs(e[-1] - ref_pol[-1, 0]) < 0.01, "End energy differs from reference"
-
     def test_energy_values(self, generated_data, ref_xas):
         ref_pol, _ = ref_xas
         e = generated_data["ENERGY"]
+        assert len(e) == len(ref_pol), "Number of energy points differs from reference"
         max_err = np.max(np.abs(e - ref_pol[:, 0]))
         assert max_err < 0.01, f"Max energy deviation {max_err:.4f} eV exceeds 0.01 eV"
 
@@ -146,30 +154,16 @@ class TestPolarizationSpectrum:
         ratio = py.max() / ref.max()
         assert 0.80 < ratio < 1.20, f"Peak amplitude ratio {ratio:.3f} outside [0.80, 1.20]"
 
-    def test_pointwise_median_ratio(self, generated_data, ref_xas):
+    def test_pointwise_median_ratio(self, aligned_xas):
         """Median point-wise ratio of Python/Reference should be close to 1."""
-        ref_pol, _ = ref_xas
-        e = generated_data["ENERGY"]
-        py = generated_data["XAS"][0]
-        ref = ref_pol[:, 1]
-        # evaluate Python at reference energy points
-        f = interp1d(e, py, bounds_error=False, fill_value=0)
-        py_at_ref = f(ref_pol[:, 0])
-        mask = ref > 0.05  # only compare where spectrum is significant
-        ratio = py_at_ref[mask] / ref[mask]
-        median = np.median(ratio)
+        generated, reference = aligned_xas
+        median = np.median(generated / reference)
         assert 0.90 < median < 1.10, f"Median Python/Reference ratio {median:.3f} outside [0.90, 1.10]"
 
-    def test_pointwise_rms(self, generated_data, ref_xas):
+    def test_pointwise_rms(self, aligned_xas):
         """RMS relative error over significant region should be below 15 %."""
-        ref_pol, _ = ref_xas
-        e = generated_data["ENERGY"]
-        py = generated_data["XAS"][0]
-        ref = ref_pol[:, 1]
-        f = interp1d(e, py, bounds_error=False, fill_value=0)
-        py_at_ref = f(ref_pol[:, 0])
-        mask = ref > 0.05
-        rms = np.sqrt(np.mean(((py_at_ref[mask] - ref[mask]) / ref[mask]) ** 2))
+        generated, reference = aligned_xas
+        rms = np.sqrt(np.mean(((generated - reference) / reference) ** 2))
         assert rms < 0.15, f"RMS relative error {rms:.3f} exceeds 0.15"
 
     def test_broad_shape(self, generated_data, ref_xas):
@@ -206,14 +200,12 @@ class TestDifferenceSpectrum:
         assert ref_max < 1e-6, f"Reference difference is non-trivial: max={ref_max:.2e} Mb"
         assert py_max < 1e-6, f"Python difference is non-trivial: max={py_max:.2e} Mb"
 
-    def test_three_input_polarizations_default_to_mcd(self):
+    def test_three_input_polarizations_default_to_mcd(self, rat_result, generated_data):
         """Like XBand, RXAS must use + and - unless MLD is requested."""
-        from ase2sprkkr.result_files.definitions.rat import RATResultFile
-
-        of = RATResultFile.from_file(RAT_FILE)
-        common = dict(gauss_width=0.0, core_hole_width="fuggle-inglesfield")
-        mcd = of.compute_data(**common)
-        mld = of.compute_data(**common, mld=True)
+        mcd = generated_data
+        mld = rat_result.compute_data(
+            gauss_width=0.0, core_hole_width="fuggle-inglesfield", mld=True,
+        )
 
         # Cu's + and - spectra are identical to floating-point precision.  Its
         # z spectrum differs slightly, making this sensitive to selecting the

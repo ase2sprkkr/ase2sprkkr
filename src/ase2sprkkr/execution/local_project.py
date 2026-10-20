@@ -208,6 +208,7 @@ class LocalProjectRunner:
             self._failure_phase = self._failure_phase or FailurePhase.EXECUTION
             self._state = RunState.FAILED
         finally:
+            self._output_observers.finish_bytes()
             try:
                 close_output_files(self.spec.output_file, self.spec.error_file)
             except BaseException as exc:
@@ -264,10 +265,6 @@ class LocalProjectRunner:
         return start_monitor(self, missing_backend="Local run has no backend identity")
 
     def wait(self):
-        if self._thread is None:
-            if self._state == RunState.NEW:
-                raise RuntimeError("Run has not been submitted")
-            raise RuntimeError("Attached run has not been started")
         return wait_for_monitor(self)
 
     def run(self):

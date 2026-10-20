@@ -81,6 +81,8 @@ def test_terminal_remote_state_may_publish_streamed_output(tmp_path):
     assert destination.read_bytes() == b"streamed\n"
     assert output.closed is True
     assert executor.sync_calls == 2
+    assert runner.files.availability_state == "available"
+    assert runner.files.availability_message is None
 
 
 def test_unknown_remote_state_does_not_publish_or_download_output(tmp_path):
@@ -139,15 +141,6 @@ def test_failed_backend_keeps_execution_failure_when_diagnostics_cannot_download
     assert "could not be downloaded" in runner.files.availability_message
     assert destination.read_bytes() == b"streamed\n"
     assert output.closed is True
-
-
-def test_completed_remote_download_marks_files_available(tmp_path):
-    runner, _, destination, _ = _run(tmp_path, RunState.FINISHED)
-    asyncio.run(runner._monitor())
-    assert runner.state == RunState.FINISHED
-    assert runner.files.availability_state == "available"
-    assert runner.files.availability_message is None
-    assert destination.read_bytes() == b"streamed\n"
 
 
 def test_cancelled_backend_survives_diagnostic_download_failure(tmp_path):

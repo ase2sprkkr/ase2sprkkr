@@ -44,8 +44,12 @@ class _Executor(Executor):
     name = "project-test"
 
     def create_project_run(self, spec, *, run_id, callback=None):
+        self.run_id = run_id
         self.runner = _Runner()
         return self.runner
+
+    def create_run(self, spec, callback=None):
+        raise AssertionError("project run must use create_project_run")
 
 
 def _fixture(tmp_path):
@@ -70,6 +74,7 @@ def test_run_is_durable_in_project_namespace_before_backend_submit(tmp_path):
 
     run.submit()
 
+    assert executor.run_id == run.id
     assert observed == [RunState.SUBMITTING]
     stored = manager.store.get(run.id)
     assert stored.input_definition == "DOS"

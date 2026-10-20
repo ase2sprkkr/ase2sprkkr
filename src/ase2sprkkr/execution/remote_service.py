@@ -393,9 +393,7 @@ def status_remote(remote_id):
             from .psij import _slurm_status_native
             status = _slurm_status_native(handle["native_id"])
         else:
-            executor = _psij_executor(
-                {"backend": handle["backend"], "url": handle.get("url")}
-            )
+            executor = _psij_executor(handle)
             status = executor.status_native(handle["native_id"])
         return _status_reply(
             status.state, status.return_code,
@@ -425,9 +423,7 @@ def cancel_remote(remote_id, timeout=1.0):
         return status_remote(remote_id)
 
     if handle["kind"] == "psij":
-        executor = _psij_executor(
-            {"backend": handle["backend"], "url": handle.get("url")}
-        )
+        executor = _psij_executor(handle)
         job = executor.attach_native_job(handle["native_id"])
         job.cancel()
         state = status_remote(remote_id)
@@ -484,9 +480,7 @@ async def _follow_scheduler_async(remote_id, streams, paths, offsets, poll_inter
     from .psij import _psij_state
 
     handle = _decode_handle(remote_id)
-    executor = _psij_executor(
-        {"backend": handle["backend"], "url": handle.get("url")}
-    )
+    executor = _psij_executor(handle)
     job = executor.attach_native_job(handle["native_id"])
 
     def emit(kind, data):

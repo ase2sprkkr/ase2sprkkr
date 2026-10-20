@@ -94,30 +94,54 @@ class TestRepeatedCountParsing:
         with pytest.raises(Exception):
             parent.parse(data_many)
 
-    def test_repeated_count_from_dependency(self):
+    @pytest.mark.parametrize(
+        ("count_mode", "parent_values", "values"),
+        (
+            ("dependency", {"N": 3}, (1, 2, 3)),
+            ("double", {"N": 2}, (1, 2, 3, 4)),
+            ("sum", {"N": 2, "M": 1}, (10, 20, 30)),
+        ),
+        ids=("value-dependency", "callable-double", "callable-multiple-dependencies"),
+    )
+    def test_repeated_count_from_dependency(self, count_mode, parent_values, values):
+        def double_n(N):
+            return int(N) * 2
+
+        def total(N, M):
+            return int(N) + int(M)
+
+        repeated_count = {
+            "dependency": "N",
+            "double": double_n,
+            "sum": total,
+        }[count_mode]
         item = S(
             "ITEM",
             members=[V("VAL", int, name_in_grammar=False)],
             is_repeated=Repeated.REPEATED,
-            repeated_count="N",
+            repeated_count=repeated_count,
             repeated_with_name=True,
         )
-        parent = S("PARENT", members=[V("N", int), item])
+        parent = S(
+            "PARENT",
+            members=[*(V(name, int) for name in parent_values), item],
+        )
         root = IP([parent])
 
-        data = "PARENT\n\tN=3\n\tITEM\n\t\t1\n\tITEM\n\t\t2\n\tITEM\n\t\t3\n"
-        parsed = root.read_from_string(data)
-        items = parsed.PARENT.ITEM
-        assert len(items) == 3
-        assert [it["VAL"]() for it in items.values()] == [1, 2, 3]
+        def input_data(rows):
+            return (
+                "PARENT\n"
+                + "".join(f"\t{name}={value}\n" for name, value in parent_values.items())
+                + "".join(f"\tITEM\n\t\t{value}\n" for value in rows)
+            )
 
-        data_few = "PARENT\n\tN=3\n\tITEM\n\t\t1\n\tITEM\n\t\t2\n"
-        with pytest.raises(Exception):
-            parent.parse(data_few)
+        parsed = root.read_from_string(input_data(values))
+        assert [it["VAL"]() for it in parsed.PARENT.ITEM.values()] == list(values)
 
-        data_many = "PARENT\n\tN=3\n\tITEM\n\t\t1\n\tITEM\n\t\t2\n\tITEM\n\t\t3\n\tITEM\n\t\t4\n"
         with pytest.raises(Exception):
-            parent.parse(data_many)
+            parent.parse(input_data(values[:-1]))
+        with pytest.raises(Exception):
+            parent.parse(input_data((*values, 99)))
 
     def test_repeated_count_one_can_be_parsed_repeatedly(self):
         item = S(
@@ -135,56 +159,6 @@ class TestRepeatedCountParsing:
 
         assert first.PARENT.ITEM[0].VAL() == 10
         assert second.PARENT.ITEM[0].VAL() == 10
-
-    def test_repeated_count_callable(self):
-        def double_n(N):
-            return int(N) * 2
-
-        item = S(
-            "ITEM",
-            members=[V("VAL", int, name_in_grammar=False)],
-            is_repeated=Repeated.REPEATED,
-            repeated_count=double_n,
-            repeated_with_name=True,
-        )
-        parent = S("PARENT", members=[V("N", int), item])
-        root = IP([parent])
-
-        data = "PARENT\n\tN=2\n\tITEM\n\t\t1\n\tITEM\n\t\t2\n\tITEM\n\t\t3\n\tITEM\n\t\t4\n"
-        parsed = root.read_from_string(data)
-        items = parsed.PARENT.ITEM
-        assert len(items) == 4
-        assert [it["VAL"]() for it in items.values()] == [1, 2, 3, 4]
-
-        data_few = "PARENT\n\tN=2\n\tITEM\n\t\t1\n\tITEM\n\t\t2\n"
-        with pytest.raises(Exception):
-            parent.parse(data_few)
-
-        data_many = "PARENT\n\tN=2\n\tITEM\n\t\t1\n\tITEM\n\t\t2\n\tITEM\n\t\t3\n\tITEM\n\t\t4\n\tITEM\n\t\t5\n"
-        with pytest.raises(Exception):
-            parent.parse(data_many)
-
-    def test_repeated_count_callable_with_multiple_dependencies(self):
-        def total(N, M):
-            return int(N) + int(M)
-
-        item = S(
-            "ITEM",
-            members=[V("VAL", int, name_in_grammar=False)],
-            is_repeated=Repeated.REPEATED,
-            repeated_count=total,
-            repeated_with_name=True,
-        )
-        parent = S("PARENT", members=[V("N", int), V("M", int), item])
-        root = IP([parent])
-
-        parsed = root.read_from_string(
-            "PARENT\n\tN=2\n\tM=1\n"
-            "\tITEM\n\t\t10\n"
-            "\tITEM\n\t\t20\n"
-            "\tITEM\n\t\t30\n"
-        )
-        assert [instance["VAL"]() for instance in parsed.PARENT.ITEM.values()] == [10, 20, 30]
 
     def test_repeated_count_dependency_from_parent_section(self):
         item = S(

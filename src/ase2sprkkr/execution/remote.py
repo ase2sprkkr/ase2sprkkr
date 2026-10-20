@@ -7,7 +7,6 @@ import fcntl
 import os
 import posixpath
 from dataclasses import replace
-from enum import Enum
 from threading import Event, Lock, Thread
 
 from .base import (
@@ -25,29 +24,7 @@ from .base import (
 from ..common.async_utils import run_coro_sync as _run_sync
 from ..common.file_versions import file_digest
 from .transport import expand_local_files, has_file_magic
-
-
-class FileSyncPolicy(str, Enum):
-    """Policy controlling transfers between local and remote workspaces."""
-
-    CHANGED = "changed"
-    ALWAYS = "always"
-    MISSING = "missing"
-    NEVER = "never"
-
-    def should_transfer(self, source_digest, destination_digest):
-        """Apply the direction-independent transfer rule to file digests.
-
-        The caller handles missing mandatory files separately; a missing
-        source is never transferable, including with ALWAYS.
-        """
-        if self == FileSyncPolicy.NEVER or source_digest is None:
-            return False
-        if self == FileSyncPolicy.ALWAYS:
-            return True
-        if self == FileSyncPolicy.MISSING:
-            return destination_digest is None
-        return source_digest != destination_digest
+from .run_model import FileSyncPolicy
 
 
 class RemoteRunner:
@@ -520,21 +497,8 @@ class RemoteRunner:
                 await self._stage_input_pattern(value, used)
             else:
                 await self._stage_file(value, used)
-        staged = {source: target for target, source in used.items()}
-
-        input_path = self.result.input_file
-        input_target = staged.get(input_path)
-        if input_target is None:
-            input_target = await self._stage_file(self.spec.input_file, used)
-            staged = {source: target for target, source in used.items()}
-
-        stdin_target = None
-        if self.spec.stdin is not None:
-            stdin_path = self._local_path(self.spec.stdin)
-            stdin_target = staged.get(stdin_path)
-            if stdin_target is None:
-                stdin_target = await self._stage_file(self.spec.stdin, used)
-                staged = {source: target for target, source in used.items()}
+        input_target = await self._stage_file(self.spec.input_file, used)
+        stdin_target = await self._stage_file(self.spec.stdin, used)
 
         await self._prepare_cache_files(used)
         staged = {source: target for target, source in used.items()}
@@ -738,6 +702,7 @@ class RemoteRunner:
         except BaseException as exc:
             self._exception = exc
         finally:
+            self._output_observers.finish_bytes()
             finish_monitor(self)
 
     def start(self):
@@ -751,10 +716,6 @@ class RemoteRunner:
         )
 
     def wait(self):
-        if self._thread is None:
-            if self._state == RunState.NEW:
-                raise RuntimeError("Run has not been submitted")
-            raise RuntimeError("Attached run has not been started")
         return wait_for_monitor(self)
 
     def run(self):

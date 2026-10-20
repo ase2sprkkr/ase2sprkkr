@@ -269,12 +269,8 @@ class LocalTransport(Transport):
 
     async def run(self, argv, *, cwd=None, input=None, check=True):
         argv = tuple(os.fspath(arg) for arg in argv)
-        process = await asyncio.create_subprocess_exec(
-            *argv,
-            cwd=cwd,
-            stdin=asyncio.subprocess.PIPE if input is not None else None,
-            stdout=asyncio.subprocess.PIPE,
-            stderr=asyncio.subprocess.PIPE,
+        process = await self.start(
+            argv, cwd=cwd, stdin=asyncio.subprocess.PIPE if input is not None else None,
         )
         return await _completed_process(process, argv, input=input, check=check)
 
@@ -361,11 +357,8 @@ class SshTransport(Transport):
 
     async def run(self, argv, *, cwd=None, input=None, check=True):
         command = self._command(argv, cwd)
-        process = await asyncio.create_subprocess_exec(
-            *command,
-            stdin=asyncio.subprocess.PIPE if input is not None else None,
-            stdout=asyncio.subprocess.PIPE,
-            stderr=asyncio.subprocess.PIPE,
+        process = await self.start(
+            argv, cwd=cwd, stdin=asyncio.subprocess.PIPE if input is not None else None,
         )
         return await _completed_process(process, command, input=input, check=check)
 

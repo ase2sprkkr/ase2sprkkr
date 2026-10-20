@@ -7,6 +7,7 @@ references.  This module contains only serializable value objects.
 from __future__ import annotations
 
 from dataclasses import dataclass, replace
+from enum import Enum
 from typing import Optional
 
 from ..common.file_versions import FileState, FileVersion
@@ -62,6 +63,15 @@ class Execution:
 
 
 
+class ArtifactAvailabilityState(str, Enum):
+    """Availability of a declared local artifact."""
+
+    PENDING = "pending"
+    AVAILABLE = "available"
+    FAILED = "failed"
+    SKIPPED = "skipped"
+
+
 @dataclass(frozen=True)
 class FileEntry:
     """Location of one file, with no assumptions about its content."""
@@ -83,11 +93,17 @@ class FileEntry:
                 object.__setattr__(self, name, os.fspath(value))
         if self.local_path is None and self.remote_path is None:
             raise ValueError("A file entry must have at least one location")
-        if self.availability_state is not None and self.availability_state not in (
-            "pending", "available", "failed", "skipped"
+        if self.availability_state is not None:
+            try:
+                availability = ArtifactAvailabilityState(self.availability_state)
+            except ValueError as exc:
+                raise ValueError("Invalid per-file availability state") from exc
+            # Persist JSON-compatible strings, not implementation-specific enums.
+            object.__setattr__(self, "availability_state", availability.value)
+        if (
+            self.availability_message is not None
+            and self.availability_state != ArtifactAvailabilityState.FAILED
         ):
-            raise ValueError("Invalid per-file availability state")
-        if self.availability_message is not None and self.availability_state != "failed":
             raise ValueError("An availability error belongs to a failed file")
 
 
@@ -105,23 +121,50 @@ class CacheEntry:
             object.__setattr__(self, "before", tuple(self.before))
 
 
+class FileSyncPolicy(str, Enum):
+    """Policy controlling transfers between local and remote workspaces."""
+
+    CHANGED = "changed"
+    ALWAYS = "always"
+    MISSING = "missing"
+    NEVER = "never"
+
+    def should_transfer(self, source_digest, destination_digest):
+        """Apply the direction-independent transfer rule to file digests.
+
+        The caller handles missing mandatory files separately; a missing
+        source is never transferable, including with ALWAYS.
+        """
+        if self == FileSyncPolicy.NEVER or source_digest is None:
+            return False
+        if self == FileSyncPolicy.ALWAYS:
+            return True
+        if self == FileSyncPolicy.MISSING:
+            return destination_digest is None
+        return source_digest != destination_digest
+
+
 @dataclass(frozen=True)
 class FileMapping:
     """Resolved mapping and transfer policy of this run's file manifest."""
 
     local_root: str
     remote_root: str
-    input_sync: str = "changed"
-    output_sync: str = "changed"
+    input_sync: str = FileSyncPolicy.CHANGED.value
+    output_sync: str = FileSyncPolicy.CHANGED.value
 
     def __post_init__(self):
         import os
 
         object.__setattr__(self, "local_root", os.fspath(self.local_root))
         object.__setattr__(self, "remote_root", os.fspath(self.remote_root))
-        policies = {"changed", "always", "missing", "never"}
-        if self.input_sync not in policies or self.output_sync not in policies:
-            raise ValueError("Invalid file synchronization policy")
+        try:
+            input_sync = FileSyncPolicy(self.input_sync)
+            output_sync = FileSyncPolicy(self.output_sync)
+        except ValueError as exc:
+            raise ValueError("Invalid file synchronization policy") from exc
+        object.__setattr__(self, "input_sync", input_sync.value)
+        object.__setattr__(self, "output_sync", output_sync.value)
 
 
 @dataclass(frozen=True)

@@ -1,7 +1,5 @@
 import asyncio
 import sys
-from types import SimpleNamespace
-
 import pytest
 
 from ..base import ExecutionSpec
@@ -78,6 +76,33 @@ def test_framed_command_reports_helper_failure_with_diagnostic():
     asyncio.run(check())
 
 
+class _DiagnosticProcess:
+    """Proxy a real subprocess while replacing its transport diagnostic channel."""
+
+    def __init__(self, process, diagnostic):
+        self._process = process
+        self.stdout = process.stdout
+        self.stderr = diagnostic
+
+    @property
+    def returncode(self):
+        return self._process.returncode
+
+    async def wait(self):
+        return await self._process.wait()
+
+    async def communicate(self, input=None):
+        stdout, stderr = await self._process.communicate(input)
+        diagnostic = await self.stderr.read()
+        return stdout, (stderr or b"") + diagnostic
+
+    def terminate(self):
+        self._process.terminate()
+
+    def kill(self):
+        self._process.kill()
+
+
 class _DiagnosticTransport(LocalTransport):
     """Inject an SSH-like diagnostic into the transport control channel."""
 
@@ -86,13 +111,7 @@ class _DiagnosticTransport(LocalTransport):
         diagnostic = asyncio.StreamReader()
         diagnostic.feed_data(b"Warning: Permanently added test host\n")
         diagnostic.feed_eof()
-        return SimpleNamespace(
-            stdout=process.stdout,
-            stderr=diagnostic,
-            wait=process.wait,
-            terminate=process.terminate,
-            returncode=process.returncode,
-        )
+        return _DiagnosticProcess(process, diagnostic)
 
 
 def test_remote_transport_stderr_never_enters_calculation_files(tmp_path):

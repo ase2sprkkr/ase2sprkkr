@@ -10,57 +10,41 @@ class _Transport:
     host = "cluster"
 
 
-def test_remote_submission_directory_uses_target_namespace_without_io(tmp_path):
+@pytest.mark.parametrize(
+    ("relative", "remote_root", "expected"),
+    (
+        ("project/case", "/scratch/a", "/scratch/a/project/case"),
+        ("project/case", "/scratch/b", "/scratch/b/project/case"),
+        ("case", None, "~/case"),
+        ("case", "~", "~/case"),
+    ),
+    ids=("target-a", "target-b", "implicit-home", "explicit-home"),
+)
+def test_remote_submission_directory_uses_target_namespace_without_io(
+    tmp_path, relative, remote_root, expected,
+):
     executor = RemoteEndpointExecutor(_Transport())
-    directory = tmp_path / "project" / "case"
+    directory = tmp_path / relative
     directory.mkdir(parents=True)
 
-    first = ExecutionSpec(
+    options = {} if remote_root is None else {"remote_root": remote_root}
+    spec = ExecutionSpec(
         argv=("true",),
         input_file=None,
         output_file=None,
         directory=directory,
-        launch=LaunchSpec(local_root=tmp_path, remote_root="/scratch/a"),
+        launch=LaunchSpec(local_root=tmp_path, **options),
     )
-    second = ExecutionSpec(
-        argv=("true",),
-        input_file=None,
-        output_file=None,
-        directory=directory,
-        launch=LaunchSpec(local_root=tmp_path, remote_root="/scratch/b"),
-    )
-
-    assert executor.submission_directory(first) == "/scratch/a/project/case"
-    assert executor.submission_directory(second) == "/scratch/b/project/case"
+    assert executor.submission_directory(spec) == expected
 
 
-def test_remote_home_variants_have_same_symbolic_namespace(tmp_path):
-    executor = RemoteEndpointExecutor(_Transport())
-    directory = tmp_path / "case"
-    directory.mkdir()
-
-    implicit = ExecutionSpec(
-        argv=("true",),
-        input_file=None,
-        output_file=None,
-        directory=directory,
-        launch=LaunchSpec(local_root=tmp_path),
-    )
-    explicit = ExecutionSpec(
-        argv=("true",),
-        input_file=None,
-        output_file=None,
-        directory=directory,
-        launch=LaunchSpec(local_root=tmp_path, remote_root="~"),
-    )
-
-    assert executor.submission_directory(implicit) == "~/case"
-    assert executor.submission_directory(explicit) == "~/case"
-
-
-@pytest.mark.parametrize("name", ("case", "case-alias"))
+@pytest.mark.parametrize(
+    ("name", "suffix"),
+    (("case", "/case"), ("case-alias", "/case"), (".", "")),
+    ids=("regular", "symlink-alias", "root"),
+)
 def test_context_and_submission_directory_share_local_path_resolution(
-    tmp_path, name,
+    tmp_path, name, suffix,
 ):
     local_root = tmp_path / "workspace"
     directory = local_root / "case"
@@ -79,7 +63,7 @@ def test_context_and_submission_directory_share_local_path_resolution(
         return "/home/cluster"
 
     executor._remote_home = home
-    expected = "/scratch/project/case"
+    expected = "/scratch/project" + suffix
     assert executor.submission_directory(spec) == expected
     assert asyncio.run(context.map_path(local_root / name)) == expected
 
@@ -105,22 +89,3 @@ def test_context_and_submission_directory_reject_symlink_escaping_root(
         executor.submission_directory(spec)
     with pytest.raises(ValueError, match="outside mapped root"):
         asyncio.run(context.map_path(local_root / "escape"))
-
-
-def test_context_and_submission_directory_map_root_itself(tmp_path):
-    executor = RemoteEndpointExecutor(_Transport())
-    launch = LaunchSpec(
-        local_root=tmp_path, remote_root="/scratch/root",
-    )
-    spec = ExecutionSpec(
-        argv=("true",), directory=tmp_path,
-        input_file=None, output_file=None, launch=launch,
-    )
-    context = executor._context(executor, launch)
-
-    async def home():
-        return "/home/cluster"
-
-    executor._remote_home = home
-    assert executor.submission_directory(spec) == "/scratch/root"
-    assert asyncio.run(context.map_path(tmp_path)) == "/scratch/root"

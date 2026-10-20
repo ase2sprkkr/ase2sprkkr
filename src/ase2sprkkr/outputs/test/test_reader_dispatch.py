@@ -146,29 +146,25 @@ def test_builtin_legacy_output_fingerprints(tmp_path):
     assert reader_registry.detect(unrelated) is None
 
 
-def test_malformed_reader_module_does_not_fall_back(tmp_path, monkeypatch):
+@pytest.mark.parametrize(
+    ("case", "module_source", "diagnostic"),
+    (
+        ("missing", "class SomethingElse:\n    pass\n", "BrokenOutputReader"),
+        ("wrong_type", "BrokenOutputReader = object()\n", "KkrOutputReader subclass"),
+    ),
+)
+def test_reader_registry_rejects_invalid_module_exports(
+    tmp_path, monkeypatch, case, module_source, diagnostic,
+):
     package = _reader_package(
         tmp_path,
         monkeypatch,
-        "_ase2sprkkr_reader_registry_malformed",
-        {"broken": "class SomethingElse:\n    pass\n"},
+        f"_ase2sprkkr_reader_registry_invalid_{case}",
+        {"broken": module_source},
     )
     registry = OutputReaderRegistry(package)
 
-    with pytest.raises(RegistryDefinitionError, match="BrokenOutputReader"):
-        registry.class_for_task_name("BROKEN")
-
-
-def test_reader_registry_rejects_wrong_export_type(tmp_path, monkeypatch):
-    package = _reader_package(
-        tmp_path,
-        monkeypatch,
-        "_ase2sprkkr_reader_registry_wrong_type",
-        {"broken": "BrokenOutputReader = object()\n"},
-    )
-    registry = OutputReaderRegistry(package)
-
-    with pytest.raises(RegistryDefinitionError, match="KkrOutputReader subclass"):
+    with pytest.raises(RegistryDefinitionError, match=diagnostic):
         registry.class_for_task_name("BROKEN")
 
 

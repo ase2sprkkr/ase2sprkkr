@@ -276,7 +276,9 @@ def test_ssh_batch_tar_pipeline_drains_stderr_during_copy():
 async def _wait_for_command_pid(path):
     for _ in range(500):
         if path.exists():
-            return int(path.read_text())
+            contents = path.read_text().strip()
+            if contents:
+                return int(contents)
         await asyncio.sleep(0.01)
     raise AssertionError("Subprocess never reported its PID")
 
@@ -455,3 +457,42 @@ def test_ssh_endpoint_compression_roundtrips_from_transport():
         assert endpoint.ssh_zstd is compressed
         restored = create_executor_from_endpoint(endpoint)
         assert restored.transport.zstd is compressed
+
+
+@pytest.mark.parametrize("factory", (LocalTransport, _LoopbackSshTransport))
+@pytest.mark.parametrize("check", (False, True))
+@pytest.mark.parametrize("send_input", (False, True))
+def test_transport_run_uses_start_and_preserves_completion(factory, check, send_input):
+    class Observed(factory):
+        def __init__(self):
+            super().__init__()
+            self.started = []
+
+        async def start(self, argv, *, cwd=None, stdin=None):
+            self.started.append((tuple(argv), cwd, stdin))
+            return await super().start(argv, cwd=cwd, stdin=stdin)
+
+    transport = Observed()
+    async def execute():
+        return await transport.run(
+            (sys.executable, "-c",
+             "import sys; sys.stdout.buffer.write(sys.stdin.buffer.read()); "
+             "sys.stderr.write('diagnostic'); sys.exit(7)"),
+            input=b"payload" if send_input else None, check=check,
+        )
+
+    if check:
+        with pytest.raises(subprocess.CalledProcessError) as error:
+            asyncio.run(execute())
+        assert error.value.returncode == 7
+        assert error.value.output == (b"payload" if send_input else b"")
+        assert error.value.stderr == b"diagnostic"
+    else:
+        result = asyncio.run(execute())
+        assert result.returncode == 7
+        assert result.stdout == (b"payload" if send_input else b"")
+        assert result.stderr == b"diagnostic"
+    assert len(transport.started) == 1
+    assert transport.started[0][2] == (
+        asyncio.subprocess.PIPE if send_input else None
+    )

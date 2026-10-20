@@ -103,18 +103,12 @@ class LocalRunner:
             target.flush()
         self._output_observers.emit_bytes(data, kind)
 
-    async def _stop_process(self):
-        await stop_local_process(self._process)
-
     def _ensure_stop_task(self):
         if self._process is None or self._process.returncode is not None:
             return None
         if self._stop_task is None or self._stop_task.done():
-            self._stop_task = asyncio.create_task(self._stop_process())
+            self._stop_task = asyncio.create_task(stop_local_process(self._process))
         return self._stop_task
-
-    def _schedule_stop(self):
-        self._ensure_stop_task()
 
     def cancel(self):
         self._cancel_requested.set()
@@ -124,7 +118,7 @@ class LocalRunner:
                 self._state = RunState.CANCELLED
             return
         try:
-            loop.call_soon_threadsafe(self._schedule_stop)
+            loop.call_soon_threadsafe(self._ensure_stop_task)
         except RuntimeError:
             pass
 
@@ -210,11 +204,12 @@ class LocalRunner:
                 self._state = RunState.FAILED
                 self._failure_phase = FailurePhase.EXECUTION
             if self._process is not None and self._process.returncode is None:
-                await self._stop_process()
+                await stop_local_process(self._process)
             raise
         finally:
             if self._stop_task is not None:
                 await asyncio.gather(self._stop_task, return_exceptions=True)
+            self._output_observers.finish_bytes()
             close_output_files(self.spec.output_file, self.spec.error_file)
             self._process = None
             self._loop = None
