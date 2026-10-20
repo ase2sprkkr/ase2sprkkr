@@ -399,9 +399,16 @@ class RemoteRunner:
             register(local, remote)
 
         # Primary output streams arrive via FOLLOW rather than get_file().
-        for local in (self.result.output_file, self.result.error_file):
+        for local, entry in (
+            (self.result.output_file, None if self._files is None else self._files.stdout),
+            (self.result.error_file, None if self._files is None else self._files.stderr),
+        ):
             if local is not None:
-                register(local, await self.executor.map_path(local))
+                remote = (
+                    entry.remote_path if entry is not None and entry.remote_path
+                    else await self.executor.map_path(local)
+                )
+                register(local, remote)
 
         remote_root = await self.executor._resolved_remote_root()
         for kind, patterns in (
