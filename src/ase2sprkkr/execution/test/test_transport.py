@@ -378,3 +378,40 @@ def test_ssh_get_file_preserves_subprocess_failure(tmp_path):
     assert b"download failed" in failure.value.stderr
     assert not destination.exists()
     assert not tuple(tmp_path.glob(".downloaded.*.tmp"))
+
+
+@pytest.mark.parametrize("factory", (LocalTransport, _LoopbackSshTransport))
+@pytest.mark.parametrize("check", (False, True))
+def test_transport_run_reuses_start_with_input_and_exit_policy(factory, check):
+    class Observed(factory):
+        def __init__(self):
+            super().__init__()
+            self.started = []
+
+        async def start(self, argv, *, cwd=None, stdin=None):
+            self.started.append((tuple(argv), cwd, stdin))
+            return await super().start(argv, cwd=cwd, stdin=stdin)
+
+    # LocalTransport has no __init__, while the loopback SSH variant does.
+    transport = Observed()
+    async def execute():
+        return await transport.run(
+            (sys.executable, "-c",
+             "import sys; sys.stdout.buffer.write(sys.stdin.buffer.read()); "
+             "sys.stderr.write('diagnostic'); sys.exit(7)"),
+            input=b"payload", check=check,
+        )
+
+    if check:
+        with pytest.raises(subprocess.CalledProcessError) as error:
+            asyncio.run(execute())
+        assert error.value.returncode == 7
+        assert error.value.output == b"payload"
+        assert error.value.stderr == b"diagnostic"
+    else:
+        result = asyncio.run(execute())
+        assert result.returncode == 7
+        assert result.stdout == b"payload"
+        assert result.stderr == b"diagnostic"
+    assert len(transport.started) == 1
+    assert transport.started[0][2] == asyncio.subprocess.PIPE
