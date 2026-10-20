@@ -93,8 +93,6 @@ async def stop_local_process(process, *, process_group=False, timeout=1.0):
     if process is None or (process.returncode is not None and not process_group):
         return
 
-    deadline = (asyncio.get_running_loop().time() + timeout
-                if process_group else None)
     try:
         if process_group:
             os.killpg(process.pid, signal.SIGTERM)
@@ -104,16 +102,17 @@ async def stop_local_process(process, *, process_group=False, timeout=1.0):
         await process.wait()
         return
 
-    try:
-        await asyncio.wait_for(process.wait(), timeout)
-        if not process_group:
-            return
-    except asyncio.TimeoutError:
-        if not process_group and process.returncode is not None:
-            return
-
     if process_group:
-        await asyncio.sleep(max(0, deadline - asyncio.get_running_loop().time()))
+        # The leader may finish before other members of its group.
+        await asyncio.sleep(timeout)
+    else:
+        try:
+            await asyncio.wait_for(process.wait(), timeout)
+            return
+        except asyncio.TimeoutError:
+            if process.returncode is not None:
+                return
+
     try:
         if process_group:
             os.killpg(process.pid, signal.SIGKILL)
