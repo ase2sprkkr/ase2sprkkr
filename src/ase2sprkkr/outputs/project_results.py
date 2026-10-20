@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from ..common.module_registry import RegistryEntryNotFound
 from ..execution import FailurePhase, FileState, RunState
+from ..execution.manager import HistoricalFileMismatchError
 from ..input_parameters.input_parameters import InputParameters
 from ..input_parameters.task_definition import TaskMismatchError
 from .reader_registry import reader_registry
@@ -153,7 +154,13 @@ def load_project_result(manager, run):
             record, f"run is still active ({record.state.value})"
         )
 
-    record = manager.retrieve_result_files(record)
+    try:
+        record = manager.retrieve_result_files(record)
+    except HistoricalFileMismatchError as exc:
+        raise ProjectResultUnavailableError(
+            manager.check_result_files(record),
+            "result files have been overwritten on the execution backend",
+        ) from exc
     record = manager.check_result_files(record)
     result_files = record.files
     if result_files is not None and result_files.captured_at is None:

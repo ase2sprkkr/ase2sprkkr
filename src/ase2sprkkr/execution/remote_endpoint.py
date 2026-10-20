@@ -642,10 +642,14 @@ class RemoteEndpointExecutor(Executor):
             spec, callback=callback, run_id=run_id
         )
 
-    async def _fetch_result_files(self, run, files):
+    async def _fetch_result_files(self, run, files, *, destinations=None):
         self._validate_run(run)
         context = self._context(self, self._launch_from_manifest(run.files))
         remote_root = await context._resolved_remote_root()
+        destinations = {} if destinations is None else {
+            os.path.abspath(os.fspath(path)): os.fspath(target)
+            for path, target in destinations.items()
+        }
         for value in files:
             local = os.path.abspath(os.fspath(value))
             entry = next(
@@ -668,11 +672,14 @@ class RemoteEndpointExecutor(Executor):
                     os.fspath(await context.unmap_path(matched))
                     if glob.has_magic(remote) else local
                 )
-                if not os.path.isfile(destination):
-                    await self.transport.get_file(matched, destination)
+                target = destinations.get(destination, destination)
+                if not os.path.isfile(target):
+                    await self.transport.get_file(matched, target)
 
-    def fetch_result_files(self, run, files):
-        return _run_sync(self._fetch_result_files(run, files))
+    def fetch_result_files(self, run, files, *, destinations=None):
+        return _run_sync(self._fetch_result_files(
+            run, files, destinations=destinations,
+        ))
 
     async def _attach(self, run, callback=None, output_listener=None, start=True):
         self._validate_run(run)

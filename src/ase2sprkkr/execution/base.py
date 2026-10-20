@@ -575,7 +575,13 @@ class Executor:
     def supports_result_file_retrieval(cls):
         return cls.fetch_result_files is not Executor.fetch_result_files
 
-    def fetch_result_files(self, run, files):
+    def fetch_result_files(self, run, files, *, destinations=None):
+        """Retrieve *files*, optionally staging each canonical local path.
+
+        destinations maps requested local paths to alternate local targets;
+        the requested paths still select the remote sources. The caller owns
+        verification and publication of staged downloads.
+        """
         raise NotImplementedError(
             f"{type(self).__name__} cannot retrieve persistent result files"
         )
