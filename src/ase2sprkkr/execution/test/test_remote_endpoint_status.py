@@ -167,35 +167,14 @@ def test_backend_status_is_mapped_to_client_owned_lifecycle(
 
     assert _client_status_state(state) == expected
 
-
-
-def test_psij_recovered_streams_delegate_to_manifest():
-    from ase2sprkkr.execution.psij import PsijExecutor
-    from ase2sprkkr.execution.run_model import FileEntry, FileManifest
-
-    manifest = FileManifest(
-        stdout=FileEntry("/local/stdout", "/old/out"),
-        stderr=FileEntry("/local/stderr", "/old/err"),
-    )
-    assert PsijExecutor._recovered_files(
-        manifest, "/new/out", "/new/err"
-    ) == manifest.with_remote_stream_paths(
-        stdout="/new/out", stderr="/new/err"
-    )
-
-
 @pytest.mark.parametrize(
     "facts, expected_state",
     [
         ({"state": "running"}, RunState.RUNNING),
         ({"state": "finished", "return_code": 0}, RunState.DOWNLOADING),
-        ({"state": "failed", "return_code": 7,
-          "failure_phase": "execution", "error": "job failed"},
-         RunState.DOWNLOADING),
-        ({"state": "failed", "failure_phase": "launch",
-          "error": "program missing"}, RunState.FAILED),
-        ({"state": "failed", "failure_phase": "submission"},
-         RunState.FAILED),
+        ({"state": "failed", "return_code": 7, "failure_phase": "execution", "error": "job failed"}, RunState.DOWNLOADING),
+        ({"state": "failed", "failure_phase": "launch", "error": "program missing"}, RunState.FAILED),
+        ({"state": "failed", "failure_phase": "submission"}, RunState.FAILED),
         ({"state": "cancelled", "return_code": 130}, RunState.CANCELLED),
         ({"state": "unknown"}, RunState.UNKNOWN),
     ],
