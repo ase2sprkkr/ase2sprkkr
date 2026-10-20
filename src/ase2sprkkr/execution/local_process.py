@@ -4,8 +4,6 @@ from __future__ import annotations
 
 import asyncio
 import errno
-import os
-import signal
 import warnings
 from dataclasses import replace
 
@@ -84,40 +82,26 @@ async def pump_stream(source, sink, *, eof=None):
             eof()
 
 
-async def stop_local_process(process, *, process_group=False, timeout=1.0):
-    """Terminate a process, escalating after ``timeout``.
-
-    A group leader may exit after SIGTERM while its descendants remain alive.
-    In group mode, finish the grace period and signal the *group* again.
-    """
-    if process is None or (process.returncode is not None and not process_group):
+async def stop_local_process(process, *, timeout=1.0):
+    """Terminate one local process, escalating to kill after ``timeout``."""
+    if process is None or process.returncode is not None:
         return
 
     try:
-        if process_group:
-            os.killpg(process.pid, signal.SIGTERM)
-        else:
-            process.terminate()
+        process.terminate()
     except ProcessLookupError:
         await process.wait()
         return
 
-    if process_group:
-        # The leader may finish before other members of its group.
-        await asyncio.sleep(timeout)
-    else:
-        try:
-            await asyncio.wait_for(process.wait(), timeout)
+    try:
+        await asyncio.wait_for(process.wait(), timeout)
+        return
+    except asyncio.TimeoutError:
+        if process.returncode is not None:
             return
-        except asyncio.TimeoutError:
-            if process.returncode is not None:
-                return
 
     try:
-        if process_group:
-            os.killpg(process.pid, signal.SIGKILL)
-        else:
-            process.kill()
+        process.kill()
     except ProcessLookupError:
         pass
     await process.wait()
