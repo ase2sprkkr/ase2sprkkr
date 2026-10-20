@@ -1269,3 +1269,33 @@ def test_psij_does_not_invent_missing_exit_code(monkeypatch, tmp_path, native_st
         "CANCELED": RunState.CANCELLED,
     }[native_state]
 
+
+
+def test_psij_terminal_wait_without_exit_does_not_use_stale_status(monkeypatch, tmp_path):
+    executor = _executor(monkeypatch, _Backend())
+    runner = executor.create_run(ExecutionSpec(
+        argv=("program",), directory=str(tmp_path), input_file=None, output_file=None,
+    ))
+    runner._job.status = _Status("FAILED", 7)
+    runner._job.wait = lambda: _Status("COMPLETED")
+    asyncio.run(runner._monitor())
+    assert runner.state is RunState.FINISHED
+    assert runner.return_code is None
+    assert runner.failure_phase is None
+
+
+def test_psij_confirmed_completion_is_not_undone_by_unknown_refresh(
+    monkeypatch, tmp_path,
+):
+    from ase2sprkkr.execution.manager import ExecutionManager, RunStore
+    from ase2sprkkr.execution.base import RunStatus
+    executor = _executor(monkeypatch, _Backend())
+    manager = ExecutionManager(RunStore(tmp_path / "history"))
+    record = manager.new_record(task="DOS", directory=tmp_path, endpoint=None)
+    manager.store.save(record)
+    record = manager.transition(record, state=RunState.RUNNING)
+    record = manager.update(record, RunStatus(RunState.FINISHED))
+    assert record.state is RunState.POSTPROCESSING
+    older = manager.update(record, RunStatus(RunState.UNKNOWN, message="disconnected"))
+    assert older.state is RunState.POSTPROCESSING
+    assert older.message is None

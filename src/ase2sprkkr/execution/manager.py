@@ -488,7 +488,12 @@ class ExecutionManager:
         requested = RunState(requested)
         if latest.state in _FINAL_STATES:
             return latest.state
-        if requested == RunState.UNKNOWN or latest.state == RunState.UNKNOWN:
+        if requested == RunState.UNKNOWN:
+            # Uncertainty cannot retract confirmed execution completion.
+            if latest.state in (RunState.POSTPROCESSING, RunState.DOWNLOADING):
+                return latest.state
+            return requested
+        if latest.state == RunState.UNKNOWN:
             return requested
         if _STATE_RANK[requested] < _STATE_RANK[latest.state]:
             return latest.state
@@ -529,6 +534,11 @@ class ExecutionManager:
             final_locked = latest.state in _FINAL_STATES
             now = _now()
             merged_state = self._merged_state(latest, state)
+            if (state is not None and RunState(state) == RunState.UNKNOWN
+                    and merged_state != RunState.UNKNOWN):
+                # Ignore the entire stale observation, including its message
+                # and artifact metadata, not merely its proposed state.
+                return latest
             changes = {"state": merged_state, "updated_at": now}
             if latest.state not in _FINAL_STATES and merged_state in _FINAL_STATES:
                 changes["finished_at"] = now
@@ -650,8 +660,6 @@ class ExecutionManager:
         phase = _failure_phase(status.failure_phase)
         return_code = status.return_code
         state = RunState.POSTPROCESSING if status.state == RunState.FINISHED else status.state
-        if state == RunState.FAILED and return_code is None:
-            return_code = 1
         execution = status.execution
         if execution is None and status.backend_id is not None:
             execution = record.execution.submitted(status.backend_id)
@@ -824,7 +832,9 @@ class ExecutionManager:
     @staticmethod
     def _complete(project_run, result, callback):
         project_run._sync_completion(result)
-        if callback is not None and project_run._runner.state in _FINAL_STATES:
+        if callback is not None:
+            # Completion of observation, including UNKNOWN, is notification.
+            # It is not proof that the backend calculation finished.
             callback(result)
 
     def create_run(
@@ -1002,6 +1012,7 @@ class ProjectRunner:
                     execution=self.execution,
                     files=self.files if self.files is not None else _UNCHANGED,
                 )
+                self._monitor_record_version = self._record.updated_at
             result = self._runner.submit()
         except SubmissionNotStarted as exc:
             phase = self.failure_phase or FailurePhase.SUBMISSION

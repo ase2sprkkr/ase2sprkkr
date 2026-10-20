@@ -11,6 +11,7 @@ import ctypes
 import os
 import sys
 from pathlib import Path
+from threading import Thread
 
 
 # Directory watches also detect an output file created after observation starts
@@ -193,7 +194,31 @@ async def follow_job_files(paths, on_chunk, wait, *, terminal=None, offsets=None
     caller's terminal facts. The common follower drains output before returning
     those facts. Cancelling observation does not cancel the scheduler job.
     """
-    waiting = asyncio.create_task(asyncio.to_thread(wait))
+    # A failed or cancelled observation must not make asyncio.run() wait
+    # for a still-running scheduler calculation. Keep wait in a daemon thread.
+    loop = asyncio.get_running_loop()
+    waiting = loop.create_future()
+
+    def deliver(value, error):
+        if waiting.done():
+            return
+        if error is not None:
+            waiting.set_exception(error)
+        else:
+            waiting.set_result(value)
+
+    def invoke_wait():
+        try:
+            value, error = wait(), None
+        except BaseException as exc:
+            value, error = None, exc
+        try:
+            loop.call_soon_threadsafe(deliver, value, error)
+        except RuntimeError:
+            if not loop.is_closed():
+                raise
+
+    Thread(target=invoke_wait, daemon=True, name="psij-job-wait").start()
 
     async def outcome():
         if not waiting.done():

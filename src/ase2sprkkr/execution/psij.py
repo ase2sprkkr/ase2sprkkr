@@ -363,8 +363,9 @@ class PsijRunner:
 
     @property
     def return_code(self):
-        if self._observed_state == RunState.UNKNOWN:
-            return None
+        if self._observed_state is not None:
+            # A completed wait() is authoritative even without an exit code.
+            return self._return_code
         if self._return_code is not None:
             return self._return_code
         return getattr(getattr(self._job, "status", None), "exit_code", None)
@@ -475,13 +476,22 @@ class PsijRunner:
         # The scheduler may know FAILED/CANCELED without knowing the process
         # exit status; retain None rather than inventing an exit code.
         self.result.return_code = self._return_code
-        self._update_files()
         self._observed_state = observed_state
-        if state_name != "CANCELED" and (state_name == "FAILED" or self._return_code != 0):
+        if observed_state == RunState.FAILED:
             self._failure_phase = FailurePhase.EXECUTION
             self._failure_message = getattr(status, "message", None) or (
-                f"PSI/J job exited with status {self._return_code}"
+                f"PSI/J job failed with exit code {self._return_code}"
+                if self._return_code is not None else "PSI/J job failed"
             )
+        try:
+            self._update_files()
+        except OSError as exc:
+            if observed_state == RunState.FINISHED:
+                # Execution succeeded; local result discovery did not.
+                self._observed_state = RunState.FAILED
+                self._failure_phase = FailurePhase.ARTIFACTS
+                self._failure_message = str(exc)
+            # Otherwise preserve the scheduler's FAILED or CANCELLED status.
         return self.result
 
     def _thread_main(self):

@@ -57,6 +57,7 @@ def test_reading_state_does_not_write_to_store():
 def test_finalization_is_once_even_if_wait_and_callback_both_request_it():
     manager, raw, executor = _Manager(), _Runner(), _Executor()
     record = SimpleNamespace(id="run", state=RunState.RUNNING,
+                             updated_at="2026-10-20T10:00:00+00:00",
                              execution=SimpleNamespace(submitted=lambda x: x))
     run = ProjectRunner(manager, executor, raw, record)
     raw.state = RunState.FINISHED
@@ -70,6 +71,7 @@ def test_finalization_is_once_even_if_wait_and_callback_both_request_it():
 def test_unknown_observation_is_written_once_but_not_finalized():
     manager, raw, executor = _Manager(), _Runner(), _Executor()
     record = SimpleNamespace(id="run", state=RunState.RUNNING,
+                             updated_at="2026-10-20T10:00:00+00:00",
                              execution=SimpleNamespace(submitted=lambda x: x))
     run = ProjectRunner(manager, executor, raw, record)
     raw.state = RunState.UNKNOWN
@@ -96,10 +98,10 @@ def test_unknown_observation_does_not_fire_completion_callback():
     delivered = []
     raw.state = RunState.UNKNOWN
     ExecutionManager._complete(run, raw.result, delivered.append)
-    assert delivered == []
+    assert delivered == [raw.result]
 
     raw.state = RunState.FINISHED
     new_run = ProjectRunner(manager, executor, raw, record)
     ExecutionManager._complete(new_run, raw.result, delivered.append)
-    assert delivered == [raw.result]
+    assert delivered == [raw.result, raw.result]
 
