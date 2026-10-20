@@ -761,6 +761,8 @@ class ExecutionManager:
                 raise ValueError("Only postprocessing failures of successful backend runs can be retried")
             if files is None or files.captured_at is None or files.output_file is None:
                 raise ValueError("Postprocessing retry requires captured output artifacts")
+            if files.failed_artifacts:
+                raise ValueError("Postprocessing retry requires locally available artifacts")
             if (not files.output_versions
                     or any(version.state() is not FileState.CURRENT
                            for version in files.all_versions)
