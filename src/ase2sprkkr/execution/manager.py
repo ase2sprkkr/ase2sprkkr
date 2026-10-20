@@ -724,9 +724,6 @@ class ExecutionManager:
 
         return self.store.update(record, reopen)
 
-    def check_result_files(self, run):
-        return self.store.get(run) if isinstance(run, str) else self.store.get(run.id)
-
     def retrieve_result_files(self, run):
         record = self.store.get(run) if isinstance(run, str) else self.store.get(run.id)
         if record.state not in _FINAL_STATES:
