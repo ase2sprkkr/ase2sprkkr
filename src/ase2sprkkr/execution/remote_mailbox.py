@@ -13,15 +13,18 @@ _RECEIPT = re.compile(r"[0-9a-f]{32}\Z")
 _TERMINAL = {RunState.FINISHED, RunState.FAILED, RunState.CANCELLED}
 
 
+def _state_root():
+    """Common state directory for temporary handoff tickets and outcomes."""
+    root = os.environ.get("ASE2SPRKKR_REMOTE_STATE_DIR")
+    if root:
+        return Path(root).expanduser()
+    return Path(os.environ.get("XDG_STATE_HOME", "~/.local/state")).expanduser() / "ase2sprkkr"
+
+
 def _path(receipt_id):
     if not isinstance(receipt_id, str) or not _RECEIPT.fullmatch(receipt_id):
         raise ValueError("Invalid remote receipt ID")
-    root = os.environ.get("ASE2SPRKKR_REMOTE_STATE_DIR")
-    if root:
-        base = Path(root).expanduser()
-    else:
-        base = Path(os.environ.get("XDG_STATE_HOME", "~/.local/state")).expanduser() / "ase2sprkkr"
-    return base / "remote-outcomes" / (receipt_id + ".json")
+    return _state_root() / "remote-outcomes" / (receipt_id + ".json")
 
 
 def publish_outcome(receipt_id, state, return_code, failure_phase=None, *, error=None):

@@ -27,7 +27,7 @@ from .growing_file_tail import follow_job_files
 from .file_availability import clear_declared_outputs, validate_output_collisions
 from .base import ExecutionSpec, FailurePhase, LaunchSpec, RunState, SubmissionNotStarted
 from .remote_process_worker import _SPEC_ENV, _START_FD_ENV
-from .remote_mailbox import publish_outcome, read_outcome, acknowledge_outcome, _path as _outcome_path
+from .remote_mailbox import publish_outcome, read_outcome, acknowledge_outcome, _state_root
 from ._durability import durable_mkdir, durable_write_json, fsync_directory
 
 
@@ -47,7 +47,7 @@ def _status_reply(state, return_code=None, *, failure_phase=None, error=None):
 def _submission_ticket(run_id):
     if not isinstance(run_id, str) or re.fullmatch(r"[0-9a-f]{32}", run_id) is None:
         raise ValueError("Invalid project run id")
-    return _outcome_path(run_id).parent.parent / "remote-submissions" / (run_id + ".json")
+    return _state_root() / "remote-submissions" / (run_id + ".json")
 
 
 def _publish_submission(run_id, reply):
