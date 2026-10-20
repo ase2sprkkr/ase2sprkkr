@@ -25,8 +25,16 @@ class ExecutionManager(_ExecutionManager):
             current = self.projects.project(identity)
             self._project_id = current.id
             if store is None:
-                root = self.projects.directory.parent / "projects_runs"
-                store = RunStore(root)
+                store = RunStore(self.projects.runs_directory)
+        if self._project_id is not None:
+            if store.directory.resolve() != self.projects.runs_directory.resolve():
+                raise ValueError(
+                    "Project-bound runs must use the shared projects_runs store"
+                )
+            if (store.projects_directory is not None
+                    and store.projects_directory.resolve() != self.projects.directory.resolve()):
+                raise ValueError("RunStore is bound to another project repository")
+            store.projects_directory = self.projects.directory
         super().__init__(
             store, executor_pool=executor_pool,
             submitting_grace=submitting_grace,
