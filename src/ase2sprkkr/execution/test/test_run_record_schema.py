@@ -1,4 +1,5 @@
 import json
+from dataclasses import replace
 
 import pytest
 
@@ -83,3 +84,31 @@ def test_persisted_execution_identity_cannot_be_replaced(tmp_path):
             first, execution=replace(first.execution, backend_id="job-43"),
         )
     assert manager.store.get(record.id).execution.backend_id == "job-42"
+
+
+def test_run_store_lookup_reuses_newest_day_order(tmp_path):
+    store = RunStore(tmp_path / "runs")
+    created = "2026-10-17T12:34:56+00:00"
+    old = RunRecord(
+        id="same-id", state=RunState.RUNNING,
+        created_at=created, updated_at=created, task="DOS",
+        execution=Execution(ExecutorEndpoint(), WorkingDirectory(str(tmp_path))),
+        files=FileManifest(),
+    )
+    newest = replace(
+        old, created_at="2026-10-19T12:34:56+00:00",
+        updated_at="2026-10-19T12:34:56+00:00", task="BSF",
+    )
+    store.save(old)
+    store.save(newest)
+    (store.directory / "unrelated-file.txt").write_text("not a shard")
+
+    assert tuple(day.name for day in store._day_directories(newest=True)) == (
+        "2026-10-19", "2026-10-17",
+    )
+    assert store.get("same-id") == newest
+
+
+def test_run_store_lookup_preserves_missing_directory_error(tmp_path):
+    with pytest.raises(FileNotFoundError, match="missing-run"):
+        RunStore(tmp_path / "absent").get("missing-run")
