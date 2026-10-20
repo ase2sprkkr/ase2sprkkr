@@ -21,6 +21,7 @@ def test_profile_uses_execution_endpoint_value():
         executor="ssh",
         host="cluster",
         ssh_options=("-p", "2222"),
+        ssh_zstd=True,
         remote_command=("ase2sprkkr", "remote"),
         psij_backend="slurm",
         psij_url="local://slurm",
@@ -30,6 +31,7 @@ def test_profile_uses_execution_endpoint_value():
         executor="ssh",
         host="cluster",
         ssh_options=("-p", "2222"),
+        ssh_zstd=True,
         remote_command=("ase2sprkkr", "remote"),
         psij_backend="slurm",
         psij_url="local://slurm",
@@ -39,7 +41,9 @@ def test_profile_uses_execution_endpoint_value():
 def test_run_store_roundtrips_endpoint(tmp_path):
     store = RunStore(tmp_path / "runs")
     manager = ExecutionManager(store, executor_pool=ExecutorPool())
-    endpoint = ExecutorEndpoint(executor="ssh", host="cluster", ssh_options=("-v",))
+    endpoint = ExecutorEndpoint(
+        executor="ssh", host="cluster", ssh_options=("-v",), ssh_zstd=True,
+    )
     record = manager.new_record(
         task="DOS",
         directory=tmp_path,
@@ -156,6 +160,7 @@ def test_pool_reconstructs_and_reuses_ssh_endpoint():
         executor="ssh",
         host="cluster",
         ssh_options=("-p", "2222"),
+        ssh_zstd=True,
         remote_command=("ase2sprkkr", "remote"),
         psij_backend="slurm",
         psij_url="local://slurm",
@@ -170,6 +175,7 @@ def test_pool_reconstructs_and_reuses_ssh_endpoint():
     assert isinstance(first.transport, SshTransport)
     assert first.transport.host == "cluster"
     assert first.transport.options == ("-p", "2222")
+    assert first.transport.zstd is True
     assert first.backend == "psij"
     assert first.backend_options == {"backend": "slurm", "url": "local://slurm"}
 

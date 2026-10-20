@@ -552,3 +552,52 @@ def test_failed_submission_ticket_cannot_leave_calculation_running(tmp_path, mon
     with pytest.raises(SubmissionNotStarted, match="ticket store unavailable"):
         remote_service.submit_remote(request)
     assert not marker.exists()
+
+
+def test_remote_cleanup_preserves_cache_matches_while_removing_stale_outputs(tmp_path):
+    from ase2sprkkr.execution.base import ExecutionSpec
+
+    # Output patterns may include protected inputs/caches, but must only
+    # remove results, not restart state.
+    work = tmp_path / "calculation"
+    work.mkdir()
+    cache = work / "restart.out"
+    stale = work / "obsolete.out"
+    stdout = work / "run.log"
+    input_file = work / "main.inp"
+    for file in (cache, stale, stdout, input_file):
+        file.write_text(file.name)
+
+    spec = ExecutionSpec(
+        argv=(), directory=str(work), input_file="main.inp",
+        output_file="run.log", output_files=("*.out",),
+        cache_files=("restart.out",),
+    )
+    remote_service._clean_request_outputs(spec, work, str(stdout))
+
+    assert cache.read_text() == "restart.out"
+    assert input_file.read_text() == "main.inp"
+    assert not stale.exists()
+    assert not stdout.exists()
+
+
+def test_remote_cleanup_checks_collisions_before_deleting_any_output(tmp_path):
+    from ase2sprkkr.execution.base import ExecutionSpec
+
+    work = tmp_path / "calculation"
+    work.mkdir()
+    cache = work / "restart.dat"
+    stale = work / "old.dat"
+    cache.write_text("restart")
+    stale.write_text("old")
+
+    spec = ExecutionSpec(
+        argv=(), directory=str(work), input_file=None, output_file=None,
+        output_files=("old.dat", "restart.dat"),
+        cache_files=("restart.dat",),
+    )
+    with pytest.raises(ValueError, match="overlaps protected"):
+        remote_service._clean_request_outputs(spec, work)
+
+    assert stale.read_text() == "old"
+    assert cache.read_text() == "restart"

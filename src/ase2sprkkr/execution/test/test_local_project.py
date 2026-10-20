@@ -295,29 +295,9 @@ def test_submission_cleanup_uses_parsed_manifest_and_protects_caches(tmp_path):
         assert (tmp_path / name).read_text() == name
 
 
-def test_local_project_request_preserves_mpi_stdin_contract(tmp_path):
-    from dataclasses import replace
-    from ase2sprkkr.execution import LaunchSpec
-    from ase2sprkkr.execution.remote_service import _request_spec
-
-    spec = replace(
-        _spec(tmp_path),
-        mpi_argv=("parallel-program",),
-        launch=LaunchSpec.from_mpi(2),
-        mpi_uses_stdin=False,
-    )
-    runner = LocalExecutor().create_project_run(spec, run_id=RUN_ID)
-    request = runner._request()
-
-    assert request["mpi_uses_stdin"] is False
-    reconstructed = _request_spec(request)
-    assert reconstructed.mpi_uses_stdin is False
-    assert reconstructed.mpi_argv == ("parallel-program",)
-
-
-
 def test_local_project_request_uses_common_command_fields(tmp_path):
     from ase2sprkkr.execution import LaunchSpec
+    from ase2sprkkr.execution.remote_service import _request_spec
 
     spec = replace(
         _spec(tmp_path),
@@ -328,6 +308,9 @@ def test_local_project_request_uses_common_command_fields(tmp_path):
     request = LocalExecutor().create_project_run(spec, run_id=RUN_ID)._request()
     for key, value in spec.command_request().items():
         assert request[key] == value
+    reconstructed = _request_spec(request)
+    assert reconstructed.mpi_uses_stdin is False
+    assert reconstructed.mpi_argv == spec.mpi_argv
 
 
 def test_terminal_project_runner_does_not_query_backend(monkeypatch, tmp_path):
@@ -343,7 +326,6 @@ def test_terminal_project_runner_does_not_query_backend(monkeypatch, tmp_path):
         "ase2sprkkr.execution.local_project.local_status",
         lambda *args: pytest.fail("Terminal runner must not query backend"),
     )
-    assert runner.state is RunState.FINISHED
     assert runner.state is RunState.FINISHED
 
 

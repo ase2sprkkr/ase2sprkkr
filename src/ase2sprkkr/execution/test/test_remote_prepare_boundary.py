@@ -68,59 +68,6 @@ def test_prepared_manifest_is_durable_before_remote_backend_submit(tmp_path, mon
     assert manager.store.get(run.id).execution.backend_id == "opaque-job"
 
 
-def test_remote_manifest_deduplicates_declared_inputs_and_outputs(tmp_path):
-    import asyncio
-
-    directory = tmp_path / "local"
-    directory.mkdir()
-    executor = RemoteEndpointExecutor(LocalTransport())
-    remote = tmp_path / "remote"
-    inp = directory / "calc.inp"
-    out = directory / "calc.out"
-    auxiliary = directory / "dos.dat"
-    spec = ExecutionSpec(
-        argv=("ignored",), directory=str(directory),
-        input_file=str(inp), input_files=(str(inp), str(inp)),
-        output_file=str(out), output_files=(str(out), str(auxiliary), str(auxiliary)),
-        launch=LaunchSpec(local_root=str(tmp_path), remote_root=str(remote)),
-    )
-    runner = executor.create_run(spec)
-
-    async def check():
-        request = {
-            "client_sync": {
-                "output_file": str(remote / "local" / "calc.out"),
-            }
-        }
-        return await runner._submitted_manifest(request)
-
-    manifest = asyncio.run(check())
-    assert [entry.local_path for entry in manifest.inputs] == [str(inp)]
-    assert [entry.local_path for entry in manifest.outputs] == [str(auxiliary)]
-    assert manifest.stdout.local_path == str(out)
-
-
-def test_remote_manifest_deduplicates_cache_declarations(tmp_path):
-    import asyncio
-
-    directory = tmp_path / "local"
-    directory.mkdir()
-    executor = RemoteEndpointExecutor(LocalTransport())
-    remote = tmp_path / "remote"
-    cache = directory / "restart.dat"
-    spec = ExecutionSpec(
-        argv=("ignored",), directory=str(directory), input_file=None,
-        output_file=None, cache_files=(str(cache), str(cache)),
-        launch=LaunchSpec(local_root=str(tmp_path), remote_root=str(remote)),
-    )
-    runner = executor.create_run(spec)
-    manifest = asyncio.run(runner._submitted_manifest({}))
-
-    assert len(manifest.caches) == 1
-    assert manifest.caches[0].file.local_path == str(cache)
-    assert manifest.caches[0].file.remote_path == str(remote / "local" / "restart.dat")
-
-
 def test_remote_manifest_uses_same_declarations_as_local(tmp_path):
     import asyncio
     from ase2sprkkr.execution.run_model import FileManifest
@@ -130,7 +77,7 @@ def test_remote_manifest_uses_same_declarations_as_local(tmp_path):
     remote = tmp_path / "target"
     spec = ExecutionSpec(
         argv=("ignored",), directory=str(directory),
-        input_file="main.inp", input_files=("main.inp", "extra.inp"),
+        input_file="main.inp", input_files=("main.inp", "main.inp", "extra.inp", "extra.inp"),
         output_file="main.out", error_file="main.err",
         output_files=("main.out", "main.err", "one.dat", "one.dat", "two.dat"),
         cache_files=("restart.pot", "restart.pot"),
@@ -143,7 +90,14 @@ def test_remote_manifest_uses_same_declarations_as_local(tmp_path):
         "client_sync": {"output_file": str(remote / "local" / "main.out"),
                         "error_file": str(remote / "local" / "main.err")},
     }))
+    assert tuple(e.local_path for e in manifest.inputs) == (
+        str(directory / "main.inp"), str(directory / "extra.inp"),
+    )
     assert tuple(e.local_path for e in manifest.inputs) == local.input_files
+    assert tuple(e.remote_path for e in manifest.inputs) == (
+        str(remote / "local" / "main.inp"),
+        str(remote / "local" / "extra.inp"),
+    )
     assert tuple(e.local_path for e in manifest.outputs) == tuple(e.local_path for e in local.outputs)
     assert tuple(e.local_path for e in manifest.outputs) == (
         str(directory / "one.dat"), str(directory / "two.dat"),
@@ -154,3 +108,48 @@ def test_remote_manifest_uses_same_declarations_as_local(tmp_path):
     assert manifest.outputs[0].remote_path == str(remote / "local" / "one.dat")
     assert manifest.caches[0].file.remote_path == str(remote / "local" / "restart.pot")
     assert len(manifest.caches) == 1
+
+
+def test_remote_file_preparation_deduplicates_paths_before_mapping(tmp_path):
+    """Exact and wildcard declarations share the same normalization rules."""
+    import asyncio
+
+    directory = tmp_path / "work"
+    directory.mkdir()
+    remote = tmp_path / "remote"
+    executor = RemoteEndpointExecutor(LocalTransport())
+    spec = ExecutionSpec(
+        argv=("ignored",), directory=str(directory),
+        input_file=None, output_file="stdout.out",
+        output_files=(
+            None, "stdout.out", "one.dat", "./one.dat",
+            "cut-*.dat", "./cut-*.dat",
+        ),
+        cache_files=(
+            None, "restart.dat", "./restart.dat",
+            "checkpoint-*.dat", "./checkpoint-*.dat",
+        ),
+        launch=LaunchSpec(local_root=str(tmp_path), remote_root=str(remote)),
+    )
+    runner = executor.create_run(spec)
+
+    async def prepare():
+        used = {}
+        await runner._prepare_cache_files(used)
+        await runner._prepare_output_files()
+        return used
+
+    used = asyncio.run(prepare())
+    assert runner._output_targets == {
+        str(directory / "one.dat"): str(remote / "work" / "one.dat"),
+    }
+    assert runner._output_patterns == (str(remote / "work" / "cut-*.dat"),)
+    assert runner._cache_targets == {
+        str(directory / "restart.dat"): (
+            str(remote / "work" / "restart.dat"), None,
+        ),
+    }
+    assert runner._cache_patterns == (
+        str(remote / "work" / "checkpoint-*.dat"),
+    )
+    assert used == {str(remote / "work" / "restart.dat"): str(directory / "restart.dat")}

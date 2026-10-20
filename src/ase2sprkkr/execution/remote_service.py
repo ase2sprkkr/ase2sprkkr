@@ -27,7 +27,7 @@ from .growing_file_tail import follow_job_files
 from .file_availability import clear_declared_outputs, validate_output_collisions
 from .base import ExecutionSpec, FailurePhase, LaunchSpec, RunState, SubmissionNotStarted
 from .remote_process_worker import _SPEC_ENV, _START_FD_ENV
-from .remote_mailbox import publish_outcome, read_outcome, acknowledge_outcome, _path as _outcome_path
+from .remote_mailbox import publish_outcome, read_outcome, acknowledge_outcome, _state_root
 from ._durability import durable_mkdir, durable_write_json, fsync_directory
 
 
@@ -47,7 +47,7 @@ def _status_reply(state, return_code=None, *, failure_phase=None, error=None):
 def _submission_ticket(run_id):
     if not isinstance(run_id, str) or re.fullmatch(r"[0-9a-f]{32}", run_id) is None:
         raise ValueError("Invalid project run id")
-    return _outcome_path(run_id).parent.parent / "remote-submissions" / (run_id + ".json")
+    return _state_root() / "remote-submissions" / (run_id + ".json")
 
 
 def _publish_submission(run_id, reply):
@@ -176,19 +176,18 @@ def _request_spec(request):
 
 def _clean_request_outputs(spec, directory, output_path=None, error_path=None):
     """Clear prior outputs while protecting inputs and caches in the parsed spec."""
-    declared = (*spec.output_files, output_path, error_path)
-    protected = (
-        spec.input_file, spec.stdin, *spec.input_files, *spec.cache_files,
+    declared = tuple(
+        _absolute(directory, path)
+        for path in (*spec.output_files, output_path, error_path)
+        if path is not None
     )
-    validate_output_collisions(
-        (*(_absolute(directory, item) for item in spec.output_files),
-         output_path, error_path),
-        protected=(_absolute(directory, path) for path in protected if path is not None),
+    protected = tuple(
+        _absolute(directory, path)
+        for path in (spec.input_file, spec.stdin, *spec.input_files, *spec.cache_files)
+        if path is not None
     )
-    clear_declared_outputs(
-        (_absolute(directory, path) for path in declared if path is not None),
-        protected=(_absolute(directory, path) for path in protected if path is not None),
-    )
+    validate_output_collisions(declared, protected=protected)
+    clear_declared_outputs(declared, protected=protected)
 
 
 def _local_submit(request):
@@ -239,20 +238,17 @@ def _local_submit(request):
     published = False
     try:
         try:
-            try:
-                process = subprocess.Popen(
-                    [sys.executable, "-m", "ase2sprkkr.execution.remote_process_worker"],
-                    cwd=directory,
-                    stdin=subprocess.DEVNULL,
-                    stdout=subprocess.DEVNULL,
-                    stderr=subprocess.DEVNULL,
-                    env=env,
-                    start_new_session=True,
-                    close_fds=True,
-                    pass_fds=(start_fd, socket_write_fd),
-                )
-            except OSError as exc:
-                raise SubmissionNotStarted(str(exc)) from exc
+            process = subprocess.Popen(
+                [sys.executable, "-m", "ase2sprkkr.execution.remote_process_worker"],
+                cwd=directory,
+                stdin=subprocess.DEVNULL,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+                env=env,
+                start_new_session=True,
+                close_fds=True,
+                pass_fds=(start_fd, socket_write_fd),
+            )
         finally:
             os.close(start_fd)
             os.close(socket_write_fd)
@@ -517,12 +513,6 @@ async def _follow_scheduler_async(remote_id, streams, paths, offsets, poll_inter
     )
 
 
-def _follow_scheduler(remote_id, streams, paths, offsets, poll_interval):
-    return asyncio.run(
-        _follow_scheduler_async(remote_id, streams, paths, offsets, poll_interval)
-    )
-
-
 def follow_remote(
     remote_id,
     stdout,
@@ -544,7 +534,9 @@ def follow_remote(
     }
 
     if handle["kind"] == "psij":
-        return _follow_scheduler(remote_id, streams, paths, offsets, poll_interval)
+        return asyncio.run(
+            _follow_scheduler_async(remote_id, streams, paths, offsets, poll_interval)
+        )
     if handle["kind"] != "process":
         raise ValueError("Unknown execution backend")
     from .remote_supervisor_stream import follow_socket

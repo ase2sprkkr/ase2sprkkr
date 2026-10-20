@@ -5,7 +5,7 @@ from types import SimpleNamespace
 
 import pytest
 
-from ..base import ExecutionSpec, LaunchSpec, RunState, SubmissionNotStarted
+from ..base import ExecutionSpec, FailurePhase, LaunchSpec, RunState, SubmissionNotStarted
 from ..postprocessing import PostprocessingRunner
 from ..remote import FileSyncPolicy
 from ..remote_endpoint import RemoteEndpointExecutor
@@ -688,3 +688,60 @@ def test_remote_argv_reuses_staged_path_identity(tmp_path):
         "program", "/remote/work/input.dat", "/remote/work/input.dat",
         "--verbose", "./missing.dat",
     ]
+
+
+@pytest.mark.parametrize("preflight", (False, True))
+def test_remote_preparation_failure_has_one_classification(tmp_path, preflight):
+    """Direct submission and persisted preflight must report the same failure."""
+    directory = tmp_path / "local"
+    directory.mkdir()
+    spec = ExecutionSpec(
+        argv=("ignored",), directory=str(directory),
+        input_file=str(directory / "missing.inp"), output_file=None,
+        launch=LaunchSpec(
+            local_root=str(tmp_path), remote_root=str(tmp_path / "remote"),
+            input_sync="always",
+        ),
+    )
+    runner = RemoteEndpointExecutor(LocalTransport()).create_run(spec)
+
+    with pytest.raises(SubmissionNotStarted, match="Local input file"):
+        if preflight:
+            runner.prepare_submission()
+        else:
+            runner.submit()
+
+    assert runner.failure_phase == FailurePhase.SUBMISSION
+    assert "Local input file" in runner.failure_message
+    assert runner.backend_id is None
+    assert runner.state == RunState.NEW
+
+
+@pytest.mark.parametrize("preflight", (False, True))
+def test_remote_submit_failure_is_not_misclassified_as_failed_preparation(
+    tmp_path, monkeypatch, preflight,
+):
+    directory = tmp_path / "local"
+    directory.mkdir()
+    spec = ExecutionSpec(
+        argv=("ignored",), directory=str(directory),
+        input_file=None, output_file=None,
+        launch=LaunchSpec(
+            local_root=str(tmp_path), remote_root=str(tmp_path / "remote"),
+        ),
+    )
+    executor = RemoteEndpointExecutor(LocalTransport())
+    runner = executor.create_run(spec)
+
+    async def fail_after_preparation(_request):
+        raise OSError("backend submission uncertain")
+
+    monkeypatch.setattr(executor, "_submit", fail_after_preparation)
+    if preflight:
+        runner.prepare_submission()
+
+    with pytest.raises(OSError, match="backend submission uncertain"):
+        runner.submit()
+
+    assert runner.failure_phase is None
+    assert runner.backend_id is None

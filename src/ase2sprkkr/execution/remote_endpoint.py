@@ -163,14 +163,21 @@ class _RemoteRun(RemoteRunner):
         )
 
     async def _prepare_async(self):
-        run_id = self._run_id or uuid4().hex
-        remote_directory = await self.executor.map_directory(self.spec.directory)
-        await self.executor.transport.run(("mkdir", "-p", "--", remote_directory))
-        request = await self._prepare_request(run_id, remote_directory)
-        if self._run_id is None:
-            request["id"] = None
-        manifest = await self._submitted_manifest(request)
-        return request, manifest
+        try:
+            run_id = self._run_id or uuid4().hex
+            remote_directory = await self.executor.map_directory(self.spec.directory)
+            await self.executor.transport.run(("mkdir", "-p", "--", remote_directory))
+            request = await self._prepare_request(run_id, remote_directory)
+            if self._run_id is None:
+                request["id"] = None
+            manifest = await self._submitted_manifest(request)
+            return request, manifest
+        except Exception as exc:
+            # No calculation has been launched yet. Persisted preflight and
+            # direct submission must classify this known failure identically.
+            self._failure_phase = FailurePhase.SUBMISSION
+            self._failure_message = str(exc)
+            raise SubmissionNotStarted(str(exc)) from exc
 
     def prepare_submission(self):
         """Complete all staging before the client commits SUBMITTING metadata."""
@@ -179,24 +186,14 @@ class _RemoteRun(RemoteRunner):
                 raise RuntimeError(f"Run is already {self._state.value}")
             if self._prepared is not None:
                 return
-            try:
-                request, manifest = _run_sync(self._prepare_async())
-            except Exception as exc:
-                self._failure_phase = FailurePhase.SUBMISSION
-                self._failure_message = str(exc)
-                raise SubmissionNotStarted(str(exc)) from exc
+            request, manifest = _run_sync(self._prepare_async())
             self._prepared = (request, manifest)
             self._remote_directory = request["directory"]
             self._files = manifest
 
     async def _submit_async(self):
         if self._prepared is None:
-            try:
-                request, manifest = await self._prepare_async()
-            except Exception as exc:
-                self._failure_phase = FailurePhase.SUBMISSION
-                self._failure_message = str(exc)
-                raise SubmissionNotStarted(str(exc)) from exc
+            request, manifest = await self._prepare_async()
         else:
             request, manifest = self._prepared
 
@@ -300,35 +297,6 @@ class _RemoteRunContext:
     def create_run(self, spec, callback=None, *, run_id=None):
         return _RemoteRun(self, spec, callback=callback, run_id=run_id)
 
-    @staticmethod
-    def _manifest_sync(files):
-        outputs, output_patterns = [], []
-        for entry in files.outputs:
-            remote = entry.remote_path
-            if entry.source_pattern is not None or not remote:
-                continue
-            (output_patterns if glob.has_magic(remote) else outputs).append(remote)
-
-        caches, cache_patterns, cache_before = [], [], []
-        for item in files.caches:
-            entry = item.file
-            remote = entry.remote_path
-            if entry.local_path is None:
-                cache_before.append({"path": remote, "signature": item.before})
-            elif entry.source_pattern is None and remote:
-                if glob.has_magic(remote):
-                    cache_patterns.append(remote)
-                else:
-                    caches.append({"path": remote, "before": item.before})
-
-        return {
-            "output_files": outputs,
-            "output_patterns": output_patterns,
-            "cache_files": caches,
-            "cache_patterns": cache_patterns,
-            "cache_before": cache_before,
-        }
-
     async def attach(self, run, callback=None, output_listener=None, start=True):
         if run.files.stdout is None and run.files.stderr is None:
             raise ValueError(
@@ -339,32 +307,38 @@ class _RemoteRunContext:
         if execution.backend_id is None or execution.directory.remote is None:
             raise ValueError("Remote run lacks backend ID or target directory")
         status = await self._status(execution.directory.remote, execution.backend_id, run.files)
-        sync = self._manifest_sync(run.files)
         local_directory = Path(execution.directory.local)
         local_directory.mkdir(parents=True, exist_ok=True)
         input_local = run.files.input_file
         output_local = run.files.output_file
         error_local = None if run.files.stderr is None else run.files.stderr.local_path
 
-        output_targets = {}
-        for remote in sync.get("output_files", ()):
-            local = await self.unmap_path(remote)
-            output_targets[os.fspath(local)] = remote
+        # A persisted FileManifest already holds typed paths and baselines.
+        # Rebuild runner state directly, without a client_sync round-trip.
+        output_targets, output_patterns = {}, []
+        for entry in run.files.outputs:
+            remote = entry.remote_path
+            if not remote or entry.source_pattern is not None:
+                continue
+            if glob.has_magic(remote):
+                output_patterns.append(remote)
+            else:
+                local = await self.unmap_path(remote)
+                output_targets[os.fspath(local)] = remote
 
-        cache_targets = {}
-        for item in sync.get("cache_files", ()):
-            before = item.get("before")
-            if isinstance(before, list):
-                before = tuple(before)
-            local = await self.unmap_path(item["path"])
-            cache_targets[os.fspath(local)] = (item["path"], before)
-
-        cache_before = {}
-        for item in sync.get("cache_before", ()):
-            before = item.get("signature")
-            if isinstance(before, list):
-                before = tuple(before)
-            cache_before[item["path"]] = before
+        cache_targets, cache_patterns, cache_before = {}, [], {}
+        for cache in run.files.caches:
+            entry = cache.file
+            remote = entry.remote_path
+            before = tuple(cache.before) if isinstance(cache.before, list) else cache.before
+            if entry.local_path is None:
+                cache_before[remote] = before
+            elif entry.source_pattern is None and remote:
+                if glob.has_magic(remote):
+                    cache_patterns.append(remote)
+                else:
+                    local = await self.unmap_path(remote)
+                    cache_targets[os.fspath(local)] = (remote, before)
 
         output_file = None if output_local is None else open(output_local, "ab")
         if error_local is None:
@@ -400,8 +374,8 @@ class _RemoteRunContext:
                 state=_client_status_state(status),
                 output_targets=output_targets,
                 cache_targets=cache_targets,
-                output_patterns=tuple(sync.get("output_patterns", ())),
-                cache_patterns=tuple(sync.get("cache_patterns", ())),
+                output_patterns=tuple(output_patterns),
+                cache_patterns=tuple(cache_patterns),
                 cache_before=cache_before,
             )
             runner._return_code = status.get("return_code")

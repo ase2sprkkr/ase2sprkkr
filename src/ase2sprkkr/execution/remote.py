@@ -295,6 +295,15 @@ class RemoteRunner:
                 await self.executor._resolved_remote_root(),
             )
 
+    def _unique_declared_paths(self, values, *, excluded=()):
+        """Yield normalized file declarations once, preserving their order."""
+        seen = set(excluded)
+        for value in values:
+            local = self._local_path(value)
+            if local is not None and local not in seen:
+                seen.add(local)
+                yield local, has_file_magic(local)
+
     async def _prepare_cache_files(self, used):
         targets = {}
         patterns = []
@@ -302,15 +311,9 @@ class RemoteRunner:
         output_policy = self.executor.output_files
         remote_root = await self.executor._resolved_remote_root()
 
-        for value in self.spec.cache_files:
-            local = self._local_path(value)
-            if local is None:
-                continue
-
-            if has_file_magic(local):
+        for local, pattern in self._unique_declared_paths(self.spec.cache_files):
+            if pattern:
                 remote_pattern = await self.executor.map_path(local)
-                if remote_pattern in patterns:
-                    continue
                 patterns.append(remote_pattern)
                 # Cache patterns use the same transfer logic as inputs,
                 # but an unmatched cache pattern is optional.
@@ -324,8 +327,6 @@ class RemoteRunner:
                         )
                 continue
 
-            if local in targets:
-                continue
             # Cache inputs obey precisely the same staging policy as ordinary
             # inputs, except that a missing local cache is allowed.
             remote = await self._stage_file(local, used, required=False)
@@ -348,19 +349,14 @@ class RemoteRunner:
         targets = {}
         patterns = []
 
-        for value in self.spec.output_files:
-            local = self._local_path(value)
-            if local is None or local in primary:
-                continue
+        for local, pattern in self._unique_declared_paths(
+            self.spec.output_files, excluded=primary,
+        ):
             remote = await self.executor.map_path(local)
-            if has_file_magic(local):
-                if remote in patterns:
-                    continue
+            if pattern:
                 patterns.append(remote)
-                continue
-            if local in targets:
-                continue
-            targets[local] = remote
+            else:
+                targets[local] = remote
         # Cleanup belongs to the target-side submit operation, where input
         # and cache wildcard protections are resolved together. Never delete
         # remote files during client-side staging.

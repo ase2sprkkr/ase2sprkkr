@@ -49,34 +49,72 @@ def test_different_run_staging_policies_share_one_endpoint(tmp_path):
     assert second.remote_root == "/scratch/two"
 
 
-def test_manifest_sync_groups_declarations_without_replaying_pattern_children():
-    from ase2sprkkr.execution.run_model import FileEntry, FileManifest, CacheEntry
-    from ase2sprkkr.execution.remote_endpoint import _RemoteRunContext
+def test_attach_restores_typed_manifest_without_sync_dictionary(tmp_path, monkeypatch):
+    from ase2sprkkr.execution import RunState
+    from ase2sprkkr.execution.endpoint import endpoint_for_executor
+    from ase2sprkkr.execution.manager import RunRecord
+    from ase2sprkkr.execution.run_model import (
+        FileEntry, FileManifest, CacheEntry, Execution, WorkingDirectory,
+    )
+    from ase2sprkkr.execution.transport import LocalTransport
 
-    manifest = FileManifest(
+    local = tmp_path / "local"
+    remote = tmp_path / "remote"
+    local.mkdir()
+    remote.mkdir()
+
+    def entry(name, **kwargs):
+        return FileEntry(str(local / name), str(remote / name), **kwargs)
+
+    files = FileManifest(
+        stdout=entry("stdout.txt"),
         outputs=(
-            FileEntry("/local/exact.out", "/remote/exact.out"),
-            FileEntry("/local/data-*.out", "/remote/data-*.out"),
-            FileEntry("/local/data-a.out", "/remote/data-a.out",
-                      source_pattern="/local/data-*.out"),
-            FileEntry("/local/local-only.out"),
+            entry("exact.out"),
+            entry("data-*.out"),
+            entry("data-a.out", source_pattern=str(local / "data-*.out")),
+            FileEntry(str(local / "local-only.out")),
         ),
         caches=(
-            CacheEntry(FileEntry("/local/cache.dat", "/remote/cache.dat"), (2, 3)),
-            CacheEntry(FileEntry("/local/restart-*.pot", "/remote/restart-*.pot")),
-            CacheEntry(FileEntry("/local/restart-a.pot", "/remote/restart-a.pot",
-                                 source_pattern="/local/restart-*.pot")),
-            CacheEntry(FileEntry(remote_path="/remote/remote-only.dat"), (5, 7)),
-            CacheEntry(FileEntry(local_path="/local/local-only-cache.dat")),
+            CacheEntry(entry("cache.dat"), (2, 3)),
+            CacheEntry(entry("restart-*.pot")),
+            CacheEntry(entry("restart-a.pot",
+                             source_pattern=str(local / "restart-*.pot"))),
+            CacheEntry(FileEntry(remote_path=str(remote / "remote-only.dat")), (5, 7)),
+            CacheEntry(FileEntry(str(local / "local-only-cache.dat"))),
         ),
     )
-    assert _RemoteRunContext._manifest_sync(manifest) == {
-        "output_files": ["/remote/exact.out"],
-        "output_patterns": ["/remote/data-*.out"],
-        "cache_files": [{"path": "/remote/cache.dat", "before": (2, 3)}],
-        "cache_patterns": ["/remote/restart-*.pot"],
-        "cache_before": [{"path": "/remote/remote-only.dat", "signature": (5, 7)}],
-    }
+    endpoint = RemoteEndpointExecutor(LocalTransport())
+    context = endpoint._context(endpoint, LaunchSpec(local_root=local, remote_root=remote))
+    run = RunRecord(
+        id="test-manifest", task="SCF", state=RunState.RUNNING,
+        created_at="2026-10-13T08:00:00+00:00",
+        updated_at="2026-10-13T08:00:00+00:00",
+        execution=Execution(
+            endpoint_for_executor(endpoint), WorkingDirectory(str(local), str(remote)),
+            "opaque-id",
+        ),
+        files=files,
+    )
+
+    async def status(*args, **kwargs):
+        return {"state": "running"}
+
+    monkeypatch.setattr(context, "_status", status)
+    runner = asyncio.run(context.attach(run, start=False))
+    try:
+        assert runner._output_targets == {
+            str(local / "exact.out"): str(remote / "exact.out"),
+        }
+        assert runner._output_patterns == (str(remote / "data-*.out"),)
+        assert runner._cache_targets == {
+            str(local / "cache.dat"): (str(remote / "cache.dat"), (2, 3)),
+        }
+        assert runner._cache_patterns == (str(remote / "restart-*.pot"),)
+        assert runner._cache_before == {
+            str(remote / "remote-only.dat"): (5, 7),
+        }
+    finally:
+        runner.spec.output_file.close()
 
 
 def test_absolute_remote_root_needs_no_remote_home_query(tmp_path, monkeypatch):

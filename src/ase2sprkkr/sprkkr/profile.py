@@ -59,6 +59,7 @@ class SPRKKRProfile:
     psij_backend: Any = None
     psij_url: Any = None
     mpi_warning: bool = True
+    ssh_zstd: bool = False
 
     @property
     def endpoint(self):
@@ -66,6 +67,7 @@ class SPRKKRProfile:
             executor=self.executor,
             host=self.host,
             ssh_options=self.ssh_options,
+            ssh_zstd=self.ssh_zstd,
             remote_command=self.remote_command,
             psij_backend=self.psij_backend,
             psij_url=self.psij_url,
@@ -259,6 +261,7 @@ def _configured_profile(profile, configuration):
         local_root=_profile_value(profile, "local_root"),
         remote_root=_profile_value(profile, "remote_root"),
         ssh_options=_shell_argv(_profile_value(profile, "ssh_options")),
+        ssh_zstd=bool(_profile_value(profile, "ssh_zstd")),
         remote_command=_shell_argv(_profile_value(profile, "remote_command")),
         input_sync=_profile_value(profile, "input_sync") or "changed",
         output_sync=_profile_value(profile, "output_sync") or "changed",

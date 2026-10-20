@@ -290,6 +290,11 @@ definition = ConfigFileDefinition(
                     info="Additional arguments passed to ssh, such as ['-p', '2222'].",
                 ),
                 V(
+                    "ssh_zstd",
+                    False,
+                    info="Use tar --zstd for batch SSH file transfers (requires zstd on both ends).",
+                ),
+                V(
                     "remote_command",
                     Array(AlwaysQString.I),
                     is_optional=True,

@@ -41,3 +41,20 @@ def test_rejects_invalid_id_and_nonterminal_state(tmp_path):
     with pytest.raises(ValueError, match="terminal"):
         remote_mailbox.publish_outcome(uuid4().hex, RunState.RUNNING, None)
     assert list(tmp_path.rglob("*.json")) == []
+
+
+def test_receipt_uses_configured_state_root(tmp_path, monkeypatch):
+    key = uuid4().hex
+    monkeypatch.setenv("ASE2SPRKKR_REMOTE_STATE_DIR", str(tmp_path / "explicit"))
+    assert remote_mailbox._path(key) == (
+        tmp_path / "explicit" / "remote-outcomes" / f"{key}.json"
+    )
+
+
+def test_receipt_uses_xdg_state_home_when_no_override(tmp_path, monkeypatch):
+    key = uuid4().hex
+    monkeypatch.delenv("ASE2SPRKKR_REMOTE_STATE_DIR", raising=False)
+    monkeypatch.setenv("XDG_STATE_HOME", str(tmp_path / "xdg"))
+    assert remote_mailbox._path(key) == (
+        tmp_path / "xdg" / "ase2sprkkr" / "remote-outcomes" / f"{key}.json"
+    )

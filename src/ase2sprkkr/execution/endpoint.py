@@ -23,6 +23,7 @@ class ExecutorEndpoint:
     remote_command: Any = ()
     psij_backend: Any = None
     psij_url: Any = None
+    ssh_zstd: bool = False
 
     def __post_init__(self):
         object.__setattr__(self, "executor", str(self.executor or "local"))
@@ -84,6 +85,7 @@ def endpoint_for_executor(executor) -> ExecutorEndpoint:
             executor="ssh",
             host=transport.host,
             ssh_options=transport.options,
+            ssh_zstd=transport.zstd,
             remote_command=executor.command,
             psij_backend=psij_backend,
             psij_url=psij_url,
@@ -130,7 +132,9 @@ def create_executor_from_endpoint(endpoint: ExecutorEndpoint):
                 "url": endpoint.psij_url,
             }
         return RemoteEndpointExecutor(
-            SshTransport(endpoint.host, options=endpoint.ssh_options),
+            SshTransport(
+                endpoint.host, options=endpoint.ssh_options, zstd=endpoint.ssh_zstd,
+            ),
             **kwargs,
         )
     raise ValueError(

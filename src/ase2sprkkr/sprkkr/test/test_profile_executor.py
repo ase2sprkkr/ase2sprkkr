@@ -36,6 +36,7 @@ def test_named_ssh_profile_resolves_executor_settings(monkeypatch):
                 "local_root": "/home/user/work",
                 "remote_root": "/scratch/user/work",
                 "ssh_options": ["-p", "2222"],
+                "ssh_zstd": True,
                 "remote_command": ["/opt/ase2sprkkr/bin/ase2sprkkr", "remote"],
                 "input_sync": "missing",
                 "output_sync": "always",
@@ -51,6 +52,7 @@ def test_named_ssh_profile_resolves_executor_settings(monkeypatch):
     assert profile.local_root == "/home/user/work"
     assert profile.remote_root == "/scratch/user/work"
     assert profile.ssh_options == ("-p", "2222")
+    assert profile.ssh_zstd is True
     assert profile.remote_command == (
         "/opt/ase2sprkkr/bin/ase2sprkkr",
         "remote",
@@ -73,6 +75,7 @@ def test_ssh_profile_creates_endpoint_only_executor():
         local_root="/home/user/work",
         remote_root="/scratch/user/work",
         ssh_options=("-p", "2222"),
+        ssh_zstd=True,
         remote_command=("custom-ase2sprkkr", "remote"),
         input_sync="missing",
         output_sync="always",
@@ -84,6 +87,7 @@ def test_ssh_profile_creates_endpoint_only_executor():
     assert isinstance(executor.transport, SshTransport)
     assert executor.transport.host == "user@cluster"
     assert executor.transport.options == ("-p", "2222")
+    assert executor.transport.zstd is True
     assert executor.command == ("custom-ase2sprkkr", "remote")
     input_file = SimpleNamespace(name="/home/user/work/test.inp")
     spec = profile.create_execution(

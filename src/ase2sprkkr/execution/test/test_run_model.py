@@ -180,30 +180,6 @@ def test_wildcard_parent_completed_after_all_files():
     assert len(manifest.outputs) == 3
 
 
-def test_project_manifest_reuses_optional_file_path_semantics(tmp_path):
-    from types import SimpleNamespace
-
-    spec = SimpleNamespace(
-        directory=str(tmp_path),
-        input_file="input.dat",
-        input_files=(object(), 1, "input.dat"),
-        output_file="stdout.dat",
-        error_file=None,
-        output_files=("result.dat",),
-        cache_files=("cache.dat",),
-    )
-    manifest = FileManifest.from_spec(spec)
-
-    assert manifest.input_files == (str(tmp_path / "input.dat"),)
-    assert manifest.stdout.local_path == str(tmp_path / "stdout.dat")
-    assert manifest.stderr is None
-    assert [item.local_path for item in manifest.outputs] == [
-        str(tmp_path / "result.dat")
-    ]
-    assert manifest.caches[0].file.local_path == str(tmp_path / "cache.dat")
-
-
-
 def test_recovered_stream_paths_update_only_declared_stream_locations():
     manifest = FileManifest(
         inputs=(FileEntry("/local/input", "/remote/input"),),
@@ -275,10 +251,11 @@ def test_manifest_from_spec_normalizes_stream_overlaps(tmp_path):
 
     spec = SimpleNamespace(
         directory=str(tmp_path),
-        input_file="input.inp", input_files=("input.inp", "other.inp", "other.inp"),
+        input_file="input.inp",
+        input_files=("input.inp", "other.inp", "other.inp", None, object(), 1),
         output_file="stdout.out", error_file="stderr.err",
-        output_files=("stdout.out", "stderr.err", "result.dat", "result.dat"),
-        cache_files=("restart.pot", "restart.pot"),
+        output_files=("stdout.out", "stderr.err", "result.dat", "result.dat", None, object()),
+        cache_files=("restart.pot", "restart.pot", None, object()),
     )
     files = FileManifest.from_spec(spec)
     assert files.input_files == (str(tmp_path / "input.inp"), str(tmp_path / "other.inp"))

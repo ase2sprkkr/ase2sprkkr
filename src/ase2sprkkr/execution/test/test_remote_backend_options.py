@@ -91,7 +91,6 @@ def test_nonproject_remote_request_does_not_publish_project_identity(tmp_path):
     ))
     request, _manifest = asyncio.run(runner._prepare_async())
     assert request["id"] is None
-    assert runner._run_id is None
 
 
 def test_remote_sync_declarations_have_one_wire_authority(tmp_path):

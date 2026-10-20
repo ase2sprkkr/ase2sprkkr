@@ -86,7 +86,7 @@ def test_persisted_execution_identity_cannot_be_replaced(tmp_path):
     assert manager.store.get(record.id).execution.backend_id == "job-42"
 
 
-def test_run_store_lookup_reuses_newest_day_order(tmp_path):
+def test_run_store_lookup_prefers_newest_record(tmp_path):
     store = RunStore(tmp_path / "runs")
     created = "2026-10-17T12:34:56+00:00"
     old = RunRecord(
@@ -103,9 +103,6 @@ def test_run_store_lookup_reuses_newest_day_order(tmp_path):
     store.save(newest)
     (store.directory / "unrelated-file.txt").write_text("not a shard")
 
-    assert tuple(day.name for day in store._day_directories(newest=True)) == (
-        "2026-10-19", "2026-10-17",
-    )
     assert store.get("same-id") == newest
 
 

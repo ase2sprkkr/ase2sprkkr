@@ -194,8 +194,8 @@ def test_strict_transfer_refuses_wildcard_symlink_outside_source_root(tmp_path):
 class _LoopbackSshTransport(SshTransport):
     """Exercise the real SSH transfer implementation without an SSH server."""
 
-    def __init__(self):
-        super().__init__("local-test")
+    def __init__(self, *, zstd=False):
+        super().__init__("local-test", zstd=zstd)
 
     def _command(self, argv, cwd=None):
         assert cwd is None
@@ -416,3 +416,42 @@ def test_ssh_file_probes_use_same_absent_and_error_contract(
     assert calls == [
         (("sh", "-c", f'[ -f "$1" ] || exit 3; {command}', "sh", path), False),
     ]
+
+
+@pytest.mark.parametrize("zstd", (False, True))
+def test_ssh_batch_tar_uses_explicit_compression_without_probing(tmp_path, zstd):
+    source = tmp_path / "source"
+    source.mkdir()
+    (source / "one.dat").write_bytes(b"content")
+    destination = tmp_path / "remote"
+    returned = tmp_path / "returned"
+    transport = _LoopbackSshTransport(zstd=zstd)
+    commands = []
+
+    async def record(producer, consumer):
+        commands.append((producer, consumer))
+
+    transport._transfer_tar = record
+
+    async def check():
+        await transport.put_files("one.dat", source, destination)
+        await transport.get_files("one.dat", source, returned)
+
+    asyncio.run(check())
+    assert len(commands) == 2
+    for producer, consumer in commands:
+        assert ("--zstd" in producer) is zstd
+        assert ("--zstd" in consumer) is zstd
+
+
+def test_ssh_endpoint_compression_roundtrips_from_transport():
+    from ..endpoint import endpoint_for_executor, create_executor_from_endpoint
+    from ..remote_endpoint import RemoteEndpointExecutor
+
+    for compressed in (False, True):
+        endpoint = endpoint_for_executor(
+            RemoteEndpointExecutor(SshTransport("cluster", zstd=compressed))
+        )
+        assert endpoint.ssh_zstd is compressed
+        restored = create_executor_from_endpoint(endpoint)
+        assert restored.transport.zstd is compressed
