@@ -301,3 +301,92 @@ def test_overlapping_exact_and_wildcard_caches_are_transferred_once(tmp_path):
     assert entries[str(exact)].availability_state == "available"
     assert entries[str(pattern)].availability_state == "available"
     assert exact.read_text() == "new"
+
+
+def test_output_and_cache_alias_share_one_download(tmp_path):
+    from .test_remote import _SpyTransport
+
+    transport = _SpyTransport()
+    workdir = tmp_path / "local" / "calculation"
+    workdir.mkdir(parents=True)
+    shared = workdir / "shared.dat"
+    shared.write_text("before")
+    executor, spec, _, remote_root = _text_run(
+        tmp_path, transport,
+        declared_output_files=(shared,),
+        declared_cache_files=(shared,),
+        code=(
+            "from pathlib import Path; "
+            "Path('shared.dat').write_text('after'); print('done')"
+        ),
+    )
+    runner = _processed_run(executor, spec)
+    runner.run()
+    remote_file = remote_root / "calculation" / "shared.dat"
+    assert shared.read_text() == "after"
+    assert sum(src == remote_file for src, _ in transport.get_files) == 1
+    assert runner.files.availability_state == "available"
+    assert runner.files.outputs[0].availability_state == "available"
+    assert runner.files.caches[0].file.availability_state == "available"
+
+
+def test_output_and_cache_pattern_alias_preserves_both_roles(tmp_path):
+    from .test_remote import _SpyTransport
+
+    transport = _SpyTransport()
+    workdir = tmp_path / "local" / "calculation"
+    pattern = workdir / "part-*.dat"
+    executor, spec, _, remote_root = _text_run(
+        tmp_path, transport,
+        declared_output_files=(pattern,),
+        declared_cache_files=(pattern,),
+        code=(
+            "from pathlib import Path; "
+            "Path('part-a.dat').write_text('new'); print('done')"
+        ),
+    )
+    runner = _processed_run(executor, spec)
+    runner.run()
+    local = str(workdir / "part-a.dat")
+    remote = remote_root / "calculation" / "part-a.dat"
+    assert sum(src == remote for src, _ in transport.get_files) == 1
+    assert any(x.local_path == local for x in runner.files.outputs)
+    assert any(x.file.local_path == local for x in runner.files.caches)
+
+
+def test_preflight_rejects_conflicting_output_sources_without_copy(tmp_path):
+    import pytest
+    from .test_remote import _SpyTransport
+
+    transport = _SpyTransport()
+    workdir = tmp_path / "local" / "calculation"
+    local = workdir / "one.dat"
+    executor, spec, _, remote_root = _text_run(tmp_path, transport)
+    run = executor.create_run(spec)
+    run._output_targets = {str(local): str(remote_root / "calculation" / "one.dat")}
+    run._cache_targets = {str(local): (str(remote_root / "calculation" / "two.dat"), None)}
+    with pytest.raises(ValueError, match="same local file"):
+        asyncio.run(run._preflight_downloads())
+    assert transport.get_files == []
+
+
+def test_downloaded_output_digest_mismatch_preserves_existing_file(tmp_path):
+    from .test_remote import _SpyTransport
+
+    class CorruptTransport(_SpyTransport):
+        async def get_file(self, source, destination):
+            await super().get_file(source, destination)
+            from pathlib import Path
+            Path(destination).write_bytes(b"corrupted")
+
+    transport = CorruptTransport()
+    executor, spec, workdir, remote_root = _text_run(tmp_path, transport)
+    run = executor.create_run(spec)
+    local = workdir / "artifact.dat"
+    local.write_bytes(b"old")
+    remote = remote_root / "calculation" / "artifact.dat"
+    remote.parent.mkdir(parents=True, exist_ok=True)
+    remote.write_bytes(b"correct")
+    with pytest.raises(OSError, match="differs from remote source"):
+        asyncio.run(run._sync_one_output(str(local), str(remote), True))
+    assert local.read_bytes() == b"old"
