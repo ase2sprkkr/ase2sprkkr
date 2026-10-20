@@ -550,21 +550,10 @@ class RemoteRunner:
                 await self._stage_input_pattern(value, used)
             else:
                 await self._stage_file(value, used)
-        staged = {source: target for target, source in used.items()}
-
-        input_path = self.result.input_file
-        input_target = staged.get(input_path)
-        if input_target is None:
-            input_target = await self._stage_file(self.spec.input_file, used)
-            staged = {source: target for target, source in used.items()}
-
-        stdin_target = None
-        if self.spec.stdin is not None:
-            stdin_path = self._local_path(self.spec.stdin)
-            stdin_target = staged.get(stdin_path)
-            if stdin_target is None:
-                stdin_target = await self._stage_file(self.spec.stdin, used)
-                staged = {source: target for target, source in used.items()}
+        # _stage_file already deduplicates staged targets. There is no need
+        # to repeatedly invert the map to check input/stdin membership.
+        input_target = await self._stage_file(self.spec.input_file, used)
+        stdin_target = await self._stage_file(self.spec.stdin, used)
 
         await self._prepare_cache_files(used)
         staged = {source: target for target, source in used.items()}

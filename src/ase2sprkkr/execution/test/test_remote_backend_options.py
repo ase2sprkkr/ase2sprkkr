@@ -1,5 +1,7 @@
 import asyncio
 
+import pytest
+
 from ase2sprkkr.execution import (
     ExecutionSpec,
     LaunchSpec,
@@ -119,3 +121,57 @@ def test_remote_sync_declarations_have_one_wire_authority(tmp_path):
     restored = _request_spec(request)
     assert str(remote_dir / "plot-*.dat") in restored.output_files
     assert str(remote_dir / "restart.dat") in restored.cache_files
+
+
+@pytest.mark.parametrize("already_declared", (False, True))
+@pytest.mark.parametrize("separate_stdin", (False, True))
+def test_remote_staging_reuses_input_and_stdin_uploads(
+    tmp_path, already_declared, separate_stdin,
+):
+    """Each physical input is uploaded once, even when used in several roles."""
+    class CountingTransport(LocalTransport):
+        def __init__(self):
+            self.uploads = []
+
+        async def put_file(self, source, destination):
+            self.uploads.append((str(source), str(destination)))
+            await super().put_file(source, destination)
+
+    root = tmp_path / "local"
+    directory = root / "work"
+    directory.mkdir(parents=True)
+    input_path = directory / "run.inp"
+    input_path.write_text("input")
+    stdin_path = directory / "stdin.dat" if separate_stdin else input_path
+    if separate_stdin:
+        stdin_path.write_text("stdin")
+    transport = CountingTransport()
+    endpoint = RemoteExecutor(transport)
+    remote_root = tmp_path / "remote"
+    spec = ExecutionSpec(
+        argv=("program", str(input_path), str(stdin_path)),
+        directory=str(directory),
+        input_file=input_path,
+        stdin=stdin_path,
+        input_files=(input_path, stdin_path) if already_declared else (),
+        cache_files=(stdin_path,),
+        launch=LaunchSpec(local_root=root, remote_root=remote_root),
+    )
+    runner = endpoint.create_run(spec)
+    remote_dir = remote_root / "work"
+    request = asyncio.run(runner._prepare_request("test-run", str(remote_dir)))
+
+    expected = {
+        str(input_path): str(remote_dir / input_path.name),
+        str(stdin_path): str(remote_dir / stdin_path.name),
+    }
+    assert request["input_file"] == expected[str(input_path)]
+    assert request["stdin"] == expected[str(stdin_path)]
+    assert request["argv"] == [
+        "program", expected[str(input_path)], expected[str(stdin_path)],
+    ]
+    assert set(request["input_files"]) == set(expected.values())
+    assert len(transport.uploads) == len(expected)
+    assert set(transport.uploads) == set(expected.items())
+    for source, destination in expected.items():
+        assert Path(source).read_bytes() == Path(destination).read_bytes()
