@@ -49,6 +49,7 @@ class ExecutionManager(_ExecutionManager):
         if self._project_id == current.id:
             return self
         return type(self)(
+            store=self.store,
             executor_pool=self.executor_pool,
             submitting_grace=self.submitting_grace,
             project_repository=self.projects,
