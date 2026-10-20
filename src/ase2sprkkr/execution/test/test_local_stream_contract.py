@@ -4,6 +4,8 @@ import sys
 
 import pytest
 
+from .. import local
+
 from ..base import ExecutionSpec, RunState
 from ..local import LocalExecutor
 
@@ -41,3 +43,56 @@ def test_local_stream_targets_are_independent(tmp_path, store_stdout, store_stde
     if store_stderr:
         assert stderr_path.read_bytes() == b"from stderr\n"
         assert stderr.closed
+
+
+def test_local_runner_repeated_cancel_stops_one_process_once(tmp_path, monkeypatch):
+    calls = []
+    stop = local.stop_local_process
+
+    async def observed_stop(process):
+        calls.append(process.pid)
+        await stop(process)
+
+    monkeypatch.setattr(local, "stop_local_process", observed_stop)
+    runner = LocalExecutor().create_run(ExecutionSpec(
+        argv=(sys.executable, "-c", "import time; time.sleep(10)"),
+        directory=str(tmp_path), input_file=None, output_file=None,
+    ))
+
+    runner.submit()
+    pid = int(runner.backend_id)
+    runner.cancel()
+    runner.cancel()
+    runner.wait()
+
+    assert runner.state == RunState.CANCELLED
+    assert calls == [pid]
+
+
+def test_local_runner_pump_error_stops_child_without_stop_adapter(
+    tmp_path, monkeypatch,
+):
+    calls = []
+    stop = local.stop_local_process
+
+    async def observed_stop(process):
+        calls.append(process.pid)
+        await stop(process)
+
+    async def failing_pump(source, sink, *, eof=None):
+        raise RuntimeError("output pump failed")
+
+    monkeypatch.setattr(local, "stop_local_process", observed_stop)
+    monkeypatch.setattr(local, "pump_stream", failing_pump)
+    runner = LocalExecutor().create_run(ExecutionSpec(
+        argv=(sys.executable, "-c", "import time; time.sleep(10)"),
+        directory=str(tmp_path), input_file=None, output_file=None,
+    ))
+
+    runner.submit()
+    pid = int(runner.backend_id)
+    with pytest.raises(RuntimeError, match="output pump failed"):
+        runner.wait()
+
+    assert runner.state == RunState.FAILED
+    assert calls == [pid]
