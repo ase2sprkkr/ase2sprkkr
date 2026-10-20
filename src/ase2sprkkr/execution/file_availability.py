@@ -43,6 +43,35 @@ def discover_local_files(files, *, include_streams=True):
     return files
 
 
+
+def validate_output_collisions(streams, *, protected=()):
+    """Reject explicit output paths overlapping declared inputs or restart caches.
+
+    Broad output patterns retain their existing behavior: matching protected
+    files are skipped by clear_declared_outputs rather than removed.
+    """
+    protected_paths = tuple(
+        os.path.abspath(os.fspath(p)) for p in protected if p is not None
+    )
+    for stream in streams:
+        if stream is None:
+            continue
+        target = os.path.abspath(os.fspath(stream))
+        if has_file_magic(target):
+            continue
+        for declaration in protected_paths:
+            for candidate in expand_local_candidates(declaration):
+                same_path = os.path.realpath(target) == os.path.realpath(candidate)
+                same_inode = (
+                    os.path.exists(target) and os.path.exists(candidate)
+                    and os.path.samefile(target, candidate)
+                )
+                if same_path or same_inode:
+                    raise ValueError(
+                        f"Output {target} overlaps protected input/cache {declaration}"
+                    )
+
+
 def clear_declared_outputs(paths, *, protected=()):
     """Remove old declared results without destroying inputs or restart caches.
 

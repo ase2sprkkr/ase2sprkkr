@@ -22,6 +22,7 @@ from .base import (
     request_cancellation,
     start_monitor,
 )
+from ..common.async_utils import run_coro_sync as _run_sync
 from ..common.file_versions import file_digest
 from .transport import expand_local_files, has_file_magic
 
@@ -47,30 +48,6 @@ class FileSyncPolicy(str, Enum):
         if self == FileSyncPolicy.MISSING:
             return destination_digest is None
         return source_digest != destination_digest
-
-
-def _run_sync(coro):
-    """Run one transport coroutine from the synchronous executor facade."""
-    try:
-        asyncio.get_running_loop()
-    except RuntimeError:
-        return asyncio.run(coro)
-
-    result = []
-    error = []
-
-    def worker():
-        try:
-            result.append(asyncio.run(coro))
-        except BaseException as exc:
-            error.append(exc)
-
-    thread = Thread(target=worker)
-    thread.start()
-    thread.join()
-    if error:
-        raise error[0]
-    return result[0]
 
 
 class RemoteRunner:
@@ -530,15 +507,12 @@ class RemoteRunner:
             )
 
     def _remote_argv(self, argv, staged):
-        directory = os.path.abspath(self.spec.directory)
         out = []
         for arg in argv:
             value = os.fspath(arg)
-            try:
-                path = value if os.path.isabs(value) else os.path.join(directory, value)
-                replacement = staged.get(os.path.abspath(path))
-            except (TypeError, ValueError):
-                replacement = None
+            # Match the path identity used when staging; never flush command
+            # arguments or reinterpret non-path arguments as file handles.
+            replacement = staged.get(file_path(value, self.spec.directory))
             out.append(replacement or value)
         return out
 

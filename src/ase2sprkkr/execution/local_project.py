@@ -138,14 +138,11 @@ class LocalProjectRunner:
         return self._backend_id
 
     def _refresh(self):
-        if self._backend_id is None:
+        # A terminal result is immutable. After acknowledgment the receipt
+        # may disappear while the supervisor process is still shutting down.
+        if self._backend_id is None or self._state in _TERMINAL:
             return self._state
         status = local_status(self._backend_id, self._files)
-        # A terminal result is immutable. After acknowledgment the receipt
-        # may disappear while the supervisor process is still shutting down;
-        # querying its PID must not regress FINISHED to RUNNING.
-        if self._state in _TERMINAL:
-            return self._state
         self._state = status.state
         self._failure_phase = status.failure_phase
         self._failure_message = status.message
@@ -223,6 +220,12 @@ class LocalProjectRunner:
                 finish_monitor(self)
 
     def _request(self):
+        def paths(values):
+            return [
+                path for value in values
+                if (path := _file_path(value, self.spec.directory)) is not None
+            ]
+
         return {
             "executor": "local",
             "id": self._run_id,
@@ -233,18 +236,9 @@ class LocalProjectRunner:
             "stdin": _file_path(self.spec.stdin, self.spec.directory),
             "output_file": self.result.output_file,
             "error_file": self.result.error_file,
-            "output_files": [
-                path for value in self.spec.output_files
-                if (path := _file_path(value, self.spec.directory)) is not None
-            ],
-            "input_files": [
-                path for value in self.spec.input_files
-                if (path := _file_path(value, self.spec.directory)) is not None
-            ],
-            "cache_files": [
-                path for value in self.spec.cache_files
-                if (path := _file_path(value, self.spec.directory)) is not None
-            ],
+            "output_files": paths(self.spec.output_files),
+            "input_files": paths(self.spec.input_files),
+            "cache_files": paths(self.spec.cache_files),
         }
 
     def submit(self):

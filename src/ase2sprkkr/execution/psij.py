@@ -12,7 +12,7 @@ from dataclasses import replace
 from pathlib import Path
 from threading import Event, Lock
 
-from .file_availability import discover_local_files, clear_declared_outputs
+from .file_availability import discover_local_files, clear_declared_outputs, validate_output_collisions
 from .growing_file_tail import follow_job_files
 from .base import (
     ExecutionOutcome,
@@ -20,6 +20,7 @@ from .base import (
     Executor,
     FailurePhase,
     OutputObservers,
+    close_output_files,
     file_path,
     finish_monitor,
     wait_for_monitor,
@@ -393,27 +394,23 @@ class PsijRunner:
     def add_output_error_listener(self, callback):
         self._output_observers.add_error_listener(callback)
 
-    @staticmethod
-    def _flush(value):
-        if value is not None and hasattr(value, "flush"):
-            value.flush()
-
-    @staticmethod
-    def _close(value):
-        if value is not None and hasattr(value, "close"):
-            value.close()
-
     def _prepare_io(self):
-        self._flush(self.spec.input_file)
-        self._flush(self.spec.output_file)
-        self._flush(self.spec.error_file)
-        self._close(self.spec.output_file)
-        self._close(self.spec.error_file)
+        if self.spec.input_file is not None and hasattr(self.spec.input_file, "flush"):
+            self.spec.input_file.flush()
         protected = [
             _path(value, self.spec.directory)
             for value in (self.spec.input_file, self.spec.stdin, *self.spec.input_files,
                           *self.spec.cache_files)
         ]
+        validate_output_collisions(
+            (*(_path(item, self.spec.directory) for item in self.spec.output_files),
+             self._stdout_path, self._stderr_path),
+            protected=protected,
+        )
+        for stream in (self.spec.output_file, self.spec.error_file):
+            if stream is not None and hasattr(stream, "flush"):
+                stream.flush()
+        close_output_files(self.spec.output_file, self.spec.error_file)
         declared = [
             _path(value, self.spec.directory)
             for value in (*self.spec.output_files, self.spec.output_file,

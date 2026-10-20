@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import asyncio
 import base64
+import binascii
 import json
 import os
 import re
@@ -23,7 +24,7 @@ from pathlib import Path
 from uuid import uuid4
 
 from .growing_file_tail import follow_job_files
-from .file_availability import clear_declared_outputs
+from .file_availability import clear_declared_outputs, validate_output_collisions
 from .base import ExecutionSpec, FailurePhase, LaunchSpec, RunState, SubmissionNotStarted
 from .remote_process_worker import _SPEC_ENV, _START_FD_ENV
 from .remote_mailbox import publish_outcome, read_outcome, acknowledge_outcome, _path as _outcome_path
@@ -79,13 +80,34 @@ def _encode_handle(data):
 
 
 def _decode_handle(value):
-    value = str(value)
+    if not isinstance(value, str):
+        raise ValueError("Invalid remote execution id")
     padding = "=" * (-len(value) % 4)
     try:
-        data = json.loads(base64.urlsafe_b64decode(value + padding).decode("utf8"))
-    except (ValueError, json.JSONDecodeError) as exc:
+        payload = base64.b64decode(value + padding, altchars=b"-_", validate=True)
+        data = json.loads(payload.decode("utf8"))
+    except (binascii.Error, UnicodeError, ValueError, TypeError) as exc:
         raise ValueError("Invalid remote execution id") from exc
-    if not isinstance(data, dict) or "kind" not in data:
+    if not isinstance(data, dict):
+        raise ValueError("Invalid remote execution id")
+    kind = data.get("kind")
+    if kind == "process":
+        valid = (
+            type(data.get("pid")) is int and data["pid"] > 0
+            and isinstance(data.get("start_time"), str) and bool(data["start_time"])
+            and isinstance(data.get("receipt_id"), str)
+            and re.fullmatch(r"[0-9a-f]{32}", data["receipt_id"]) is not None
+            and isinstance(data.get("socket_path"), str) and bool(data["socket_path"])
+        )
+    elif kind == "psij":
+        valid = (
+            isinstance(data.get("backend"), str) and bool(data["backend"])
+            and (data.get("url") is None or isinstance(data["url"], str))
+            and isinstance(data.get("native_id"), str) and bool(data["native_id"])
+        )
+    else:
+        valid = False
+    if not valid:
         raise ValueError("Invalid remote execution id")
     return data
 
@@ -157,6 +179,11 @@ def _clean_request_outputs(spec, directory, output_path=None, error_path=None):
     declared = (*spec.output_files, output_path, error_path)
     protected = (
         spec.input_file, spec.stdin, *spec.input_files, *spec.cache_files,
+    )
+    validate_output_collisions(
+        (*(_absolute(directory, item) for item in spec.output_files),
+         output_path, error_path),
+        protected=(_absolute(directory, path) for path in protected if path is not None),
     )
     clear_declared_outputs(
         (_absolute(directory, path) for path in declared if path is not None),

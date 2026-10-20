@@ -245,14 +245,15 @@ class _RemoteRunContext:
         return await self.endpoint._remote_home()
 
     async def _resolved_remote_root(self):
+        root = self.remote_root
+        if root is not None and posixpath.isabs(root):
+            return posixpath.normpath(root)
         home = await self._remote_home()
-        if self.remote_root is None or self.remote_root == "~":
+        if root is None or root == "~":
             return home
-        if self.remote_root.startswith("~/"):
-            return posixpath.join(home, self.remote_root[2:])
-        if not posixpath.isabs(self.remote_root):
-            return posixpath.join(home, self.remote_root)
-        return posixpath.normpath(self.remote_root)
+        if root.startswith("~/"):
+            return posixpath.join(home, root[2:])
+        return posixpath.join(home, root)
 
     async def map_path(self, path):
         relative = _relative_local_path(path, self.local_root)

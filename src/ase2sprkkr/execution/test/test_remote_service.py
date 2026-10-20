@@ -1,3 +1,4 @@
+import base64
 import io
 import json
 
@@ -83,6 +84,34 @@ def test_remote_status_wire_reply_is_shared_between_process_and_psij(
 
     assert remote_service.status_remote(process_id) == expected
     assert remote_service.status_remote(psij_id) == expected
+
+
+@pytest.mark.parametrize("payload", [
+    "!",
+    "%%%invalid",
+    base64.urlsafe_b64encode(b"not JSON").decode(),
+    base64.urlsafe_b64encode(b"\xff").decode(),
+    base64.urlsafe_b64encode(b"[]").decode(),
+    base64.urlsafe_b64encode(b'{"kind":"process"}').decode(),
+    base64.urlsafe_b64encode(b'{"kind":"psij","backend":"slurm"}').decode(),
+    base64.urlsafe_b64encode(b'{"kind":"unknown"}').decode(),
+])
+def test_malformed_remote_id_is_rejected_at_decode_boundary(payload):
+    with pytest.raises(ValueError, match="Invalid remote execution id"):
+        remote_service._decode_handle(payload)
+
+
+def test_remote_id_rejects_wrong_field_types():
+    for handle in (
+        {"kind": "process", "pid": True, "start_time": "10",
+         "receipt_id": "a" * 32, "socket_path": "/tmp/socket"},
+        {"kind": "process", "pid": 11, "start_time": "10",
+         "receipt_id": "../bad", "socket_path": "/tmp/socket"},
+        {"kind": "psij", "backend": "", "native_id": "10", "url": None},
+        {"kind": "psij", "backend": "slurm", "native_id": None, "url": None},
+    ):
+        with pytest.raises(ValueError, match="Invalid remote execution id"):
+            remote_service._decode_handle(remote_service._encode_handle(handle))
 
 
 def test_mailbox_receipt_survives_until_client_ack(tmp_path, monkeypatch):
@@ -275,17 +304,6 @@ def test_follow_fallback_treats_completed_nonzero_psij_as_failed(
         "error": None,
     }
     assert observed == [("attach", "42"), "wait"]
-
-
-def test_supervisor_writes_mailbox_receipt(monkeypatch):
-    calls = []
-    monkeypatch.setattr(
-        remote_process_worker,
-        "publish_outcome",
-        lambda *args: calls.append(args),
-    )
-    remote_process_worker._write_outcome("a" * 32, RunState.FAILED, 3, FailurePhase.EXECUTION)
-    assert calls == [("a" * 32, RunState.FAILED, 3, FailurePhase.EXECUTION)]
 
 
 def test_cancel_requests_supervisor_without_inventing_terminal_state(

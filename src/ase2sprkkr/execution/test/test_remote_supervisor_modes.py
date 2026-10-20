@@ -24,7 +24,7 @@ def test_attached_run_stops_when_follow_connection_drops(tmp_path, monkeypatch):
     async def check():
         captured = []
         monkeypatch.setattr(remote_process_worker, "publish_outcome",
-                            lambda *args: captured.append(args))
+                            lambda *args, **kwargs: captured.append((args, kwargs)))
         rd, wr = os.pipe()
         task = asyncio.create_task(remote_process_worker._run(_spec(tmp_path, wr, detached=False)))
         with os.fdopen(rd, "rb") as pipe:
@@ -36,7 +36,8 @@ def test_attached_run_stops_when_follow_connection_drops(tmp_path, monkeypatch):
         writer.close()
         await writer.wait_closed()
         assert await asyncio.wait_for(task, timeout=5) != 0
-        assert captured[0][1].value == "cancelled"
+        assert captured[0][0][1].value == "cancelled"
+        assert captured[0][1] == {"error": None}
     asyncio.run(check())
 
 
@@ -44,7 +45,7 @@ def test_detached_run_survives_follow_disconnect(tmp_path, monkeypatch):
     async def check():
         captured = []
         monkeypatch.setattr(remote_process_worker, "publish_outcome",
-                            lambda *args: captured.append(args))
+                            lambda *args, **kwargs: captured.append((args, kwargs)))
         rd, wr = os.pipe()
         spec = _spec(tmp_path, wr, detached=True, argv=[
             sys.executable, "-c",
@@ -61,7 +62,8 @@ def test_detached_run_survives_follow_disconnect(tmp_path, monkeypatch):
         await writer.wait_closed()
         assert await asyncio.wait_for(task, timeout=5) == 0
         assert (tmp_path / "stdout").read_bytes() == b"first\nlast\n"
-        assert captured[0][1].value == "finished"
+        assert captured[0][0][1].value == "finished"
+        assert captured[0][1] == {"error": None}
     asyncio.run(check())
 
 
@@ -190,7 +192,6 @@ def test_receipt_write_failure_never_emits_durable_terminal_claim(tmp_path, monk
         raise OSError("mailbox fsync failed")
 
     monkeypatch.setattr(remote_process_worker, "publish_outcome", fail_receipt)
-    monkeypatch.setattr(remote_process_worker, "_write_outcome", fail_receipt)
 
     async def check():
         rd, wr = os.pipe()

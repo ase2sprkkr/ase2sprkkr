@@ -18,10 +18,6 @@ _START_FD_ENV = "ASE2SPRKKR_REMOTE_PROCESS_START_FD"
 _LAUNCH_FAILURE_RETURN_CODE = 127
 
 
-def _write_outcome(receipt_id, state, return_code, failure_phase=None):
-    publish_outcome(receipt_id, state, return_code, failure_phase)
-
-
 def _wait_for_parent_release():
     value = os.environ.pop(_START_FD_ENV, None)
     if value is None:
@@ -154,10 +150,9 @@ async def _run(spec):
                    "failure_phase": None if phase is None else phase.value,
                    "error": message}
         try:
-            if message is not None:
-                publish_outcome(spec["receipt_id"], state, return_code, phase, error=message)
-            else:
-                _write_outcome(spec["receipt_id"], state, return_code, phase)
+            publish_outcome(
+                spec["receipt_id"], state, return_code, phase, error=message,
+            )
         except OSError as exc:
             # No durable terminal receipt exists. The client must preserve its
             # active run and retry recovery, never commit FINISHED from a socket.

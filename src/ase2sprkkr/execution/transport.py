@@ -232,7 +232,18 @@ def _parse_remote_file_signature(raw):
 
 
 async def _completed_process(process, argv, input=None, check=True):
-    stdout, stderr = await process.communicate(input)
+    try:
+        stdout, stderr = await process.communicate(input)
+    except BaseException:
+        # Cancelling a command must not abandon its subprocess (or leave an
+        # unreaped zombie). This also handles failures during pipe I/O.
+        if process.returncode is None:
+            try:
+                process.kill()
+            except ProcessLookupError:
+                pass
+        await process.wait()
+        raise
     result = subprocess.CompletedProcess(tuple(argv), process.returncode, stdout, stderr)
     if check and result.returncode:
         raise subprocess.CalledProcessError(
@@ -418,11 +429,7 @@ class SshTransport(Transport):
                     stdout=destination_file,
                     stderr=asyncio.subprocess.PIPE,
                 )
-                _, stderr = await process.communicate()
-                if process.returncode:
-                    raise subprocess.CalledProcessError(
-                        process.returncode, command, stderr=stderr
-                    )
+                await _completed_process(process, command)
             if await self.file_signature(source) != signature:
                 raise RuntimeError(f"Remote file changed while downloading: {source}")
             stat = temporary.stat()
@@ -562,16 +569,10 @@ class SshTransport(Transport):
     async def read_file(self, path):
         return (await self.run(("cat", "--", os.fspath(path)))).stdout
 
-    async def file_digest(self, path):
-        path = os.fspath(path)
+    async def _file_probe(self, path, command):
+        """Run a remote file query; absent files are not command failures."""
         result = await self.run(
-            (
-                "sh",
-                "-c",
-                '[ -f "$1" ] || exit 3; sha256sum -- "$1"',
-                "sh",
-                path,
-            ),
+            ("sh", "-c", f'[ -f "$1" ] || exit 3; {command}', "sh", os.fspath(path)),
             check=False,
         )
         if result.returncode == 3:
@@ -583,27 +584,12 @@ class SshTransport(Transport):
                 output=result.stdout,
                 stderr=result.stderr,
             )
-        return result.stdout.decode("ascii").split(None, 1)[0]
+        return result.stdout
+
+    async def file_digest(self, path):
+        output = await self._file_probe(path, 'sha256sum -- "$1"')
+        return None if output is None else output.decode("ascii").split(None, 1)[0]
 
     async def file_signature(self, path):
-        path = os.fspath(path)
-        result = await self.run(
-            (
-                "sh",
-                "-c",
-                '[ -f "$1" ] || exit 3; stat -c "%s|%Y|%y" -- "$1"',
-                "sh",
-                path,
-            ),
-            check=False,
-        )
-        if result.returncode == 3:
-            return None
-        if result.returncode:
-            raise subprocess.CalledProcessError(
-                result.returncode,
-                result.args,
-                output=result.stdout,
-                stderr=result.stderr,
-            )
-        return _parse_remote_file_signature(result.stdout)
+        output = await self._file_probe(path, 'stat -c "%s|%Y|%y" -- "$1"')
+        return None if output is None else _parse_remote_file_signature(output)

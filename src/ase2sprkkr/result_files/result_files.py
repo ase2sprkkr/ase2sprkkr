@@ -184,42 +184,32 @@ class ResultFile(ConfigurationFile):
             else:
                 first_try = ""
 
-        first = None
-        if first_try:
-            out = None
-            try:
-                out = cls.from_file(
-                    filename,
-                    first_try=False,
-                    try_only=first_try,
-                    potential=potential,
-                )
-            except Exception as e:
-                first = e
-            if out:
-                return out
+        # try_only constrains the permitted readers; first_try changes only
+        # their order. Do not bypass the constraint with a recursive call.
+        definitions = cls.definitions
+        if try_only is None:
+            allowed = tuple(definitions)
+        elif isinstance(try_only, str):
+            allowed = (try_only,)
         else:
-            last = None
+            allowed = tuple(try_only)
+        if isinstance(first_try, str):
+            preferred = (first_try,)
+        else:
+            preferred = tuple(first_try or ())
 
-        if try_only:
-            if isinstance(try_only, str):
-                try_only = [try_only]
-            for i in try_only:
-                if i in cls.definitions:
-                    try:
-                        return cls.definitions[i].read_from_file(
-                            filename, potential=potential
-                        )
-                    except Exception as e:
-                        last = e
-        else:
-            for ext, i in cls.definitions.items():
-                if first_try and ext in first_try:
-                    continue
-                try:
-                    return i.read_from_file(filename, potential=potential)
-                except Exception as e:
-                    last = e
+        first = last = None
+        for extension in dict.fromkeys((*preferred, *allowed)):
+            if extension not in allowed or extension not in definitions:
+                continue
+            try:
+                return definitions[extension].read_from_file(
+                    filename, potential=potential
+                )
+            except Exception as exc:
+                if extension in preferred and first is None:
+                    first = exc
+                last = exc
         if unknown is None:
             unknown = try_only is None
         if unknown:

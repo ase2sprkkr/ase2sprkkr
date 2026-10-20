@@ -12,7 +12,7 @@ from dataclasses import asdict, dataclass, replace
 from datetime import datetime, timezone
 from enum import Enum
 from pathlib import Path
-from threading import RLock
+from threading import Lock, RLock
 from typing import Any, Optional
 from uuid import uuid4
 
@@ -177,21 +177,38 @@ def _manifest_accesses(record):
     return reads - {None}, writes - {None}
 
 
+def _path_overlap(a, b):
+    """Conservatively compare literal paths and glob declarations."""
+    a_magic, b_magic = has_file_magic(a), has_file_magic(b)
+    if not a_magic:
+        return fnmatch.fnmatchcase(a, b) if b_magic else a == b
+    if not b_magic:
+        return fnmatch.fnmatchcase(b, a)
+    if a == b:
+        return True
+
+    # Glob/glob intersection is not generally decidable by fnmatch.
+    # Only disjoint literal prefixes can prove that no collision is possible.
+    def prefix(pattern):
+        return pattern[:min((pattern.find(c) for c in "*?[" if c in pattern),
+                            default=len(pattern))]
+
+    pa, pb = prefix(a), prefix(b)
+    return pa.startswith(pb) or pb.startswith(pa)
+
+
 def _paths_overlap(first, second):
-    return any(
-        a == b or fnmatch.fnmatchcase(a, b) or fnmatch.fnmatchcase(b, a)
-        for a in first for b in second
-    )
+    return any(_path_overlap(a, b) for a in first for b in second)
 
 
 def submission_conflicts(left: RunRecord, right: RunRecord) -> bool:
     """Conservatively exclude overlapping declared read/write operations."""
     a, b = left.execution, right.execution
-    if a.endpoint != b.endpoint or a.directory.target != b.directory.target:
+    if a.endpoint != b.endpoint:
         return False
-    # SCF may overwrite canonical potential/density files outside the declared
-    # output set, so retain the broad protection until its manifest is complete.
-    if left.task == "SCF" or right.task == "SCF":
+    same_directory = a.directory.target == b.directory.target
+    # SCF can overwrite undeclared canonical files in its working directory.
+    if same_directory and (left.task == "SCF" or right.task == "SCF"):
         return True
     left_reads, left_writes = _manifest_accesses(left)
     right_reads, right_writes = _manifest_accesses(right)
@@ -201,7 +218,8 @@ def submission_conflicts(left: RunRecord, right: RunRecord) -> bool:
     # Without declared writes, preserve namespace-based protection for legacy
     # and generic executors that cannot describe their output footprint.
     if not left_writes or not right_writes:
-        return left.task == right.task and left.dataset == right.dataset
+        return (same_directory and left.task == right.task
+                and left.dataset == right.dataset)
     return False
 
 
@@ -229,14 +247,11 @@ class RunStore:
         return path.with_name(f".{record.id}.lock")
 
     def _path_for_id(self, run_id):
-        if not self.directory.is_dir():
-            raise FileNotFoundError(run_id)
         filename = f"{run_id}.json"
-        for day in sorted(self.directory.iterdir(), reverse=True):
-            if day.is_dir():
-                path = day / filename
-                if path.is_file():
-                    return path
+        for day in self._day_directories(newest=True):
+            path = day / filename
+            if path.is_file():
+                return path
         raise FileNotFoundError(run_id)
 
     @staticmethod
@@ -724,9 +739,6 @@ class ExecutionManager:
 
         return self.store.update(record, reopen)
 
-    def check_result_files(self, run):
-        return self.store.get(run) if isinstance(run, str) else self.store.get(run.id)
-
     def retrieve_result_files(self, run):
         record = self.store.get(run) if isinstance(run, str) else self.store.get(run.id)
         if record.state not in _FINAL_STATES:
@@ -799,10 +811,6 @@ class ExecutionManager:
             except (OSError, RuntimeError):
                 # The receipt remains recoverable until a subsequent refresh.
                 pass
-
-    def _submission_context(self, executor, spec):
-        provider = getattr(executor, "submission_context", None)
-        return None if provider is None else provider(spec)
 
     @staticmethod
     def _complete(project_run, result, callback):
@@ -911,6 +919,8 @@ class ProjectRunner:
         self.executor = executor
         self._runner = runner
         self._record = record
+        self._completion_lock = Lock()
+        self._completion_persisted = False
 
     @property
     def id(self):
@@ -951,17 +961,11 @@ class ProjectRunner:
 
     @property
     def state(self):
+        """Observe runner state without persisting a transition."""
         state = self._runner.state
         if state == RunState.NEW and self._record.state != RunState.NEW:
             return self._record.state
-        if self._record.state != RunState.NEW and state != self._record.state:
-            self._record = self.manager.transition(
-                self._record,
-                state=state,
-                execution=self.execution,
-                failure_phase=self.failure_phase,
-            )
-        return self._record.state if self._record.state != RunState.NEW else state
+        return self._record.state if self._record.state in _FINAL_STATES else state
 
     def add_output_listener(self, callback):
         return self._runner.add_output_listener(callback)
@@ -1034,38 +1038,46 @@ class ProjectRunner:
             )
 
     def _sync_completion(self, result):
-        state = self._runner.state
-        phase = self.failure_phase
-        message = getattr(self._runner, "failure_message", None)
-        error = self._runner.exception
-        if message is None and error is not None:
-            message = str(error)
-        if state not in _FINAL_STATES:
-            return
-        if state == RunState.FAILED and phase is None:
-            phase = FailurePhase.EXECUTION
+        # Callback and wait() can reach this path concurrently. Only the
+        # first successful durable completion may publish and acknowledge it.
+        with self._completion_lock:
+            if self._completion_persisted:
+                return
+            state = self._runner.state
+            phase = self.failure_phase
+            message = getattr(self._runner, "failure_message", None)
+            error = self._runner.exception
+            if message is None and error is not None:
+                message = str(error)
+            if state not in _FINAL_STATES:
+                return
+            if state == RunState.FAILED and phase is None:
+                phase = FailurePhase.EXECUTION
 
-        artifacts_available = phase not in _NO_ARTIFACTS_FAILURES
-        self._record = self.manager.complete(
-            self._record,
-            state=state,
-            execution=self.execution,
-            return_code=getattr(self._runner, "return_code", None),
-            message=message,
-            failure_phase=phase,
-            artifacts_available=artifacts_available,
-            files=self.files,
-        )
-        # ACK is strictly after RunStore's crash-durable terminal transition.
-        # A lost ACK reply is harmless: backend receipts are idempotently deleted.
-        # Keep the persisted result even if the acknowledgement cannot be sent.
-        if self._record.state in _FINAL_STATES and self.backend_id is not None:
-            acknowledge = getattr(self.executor, "acknowledge", None)
-            if acknowledge is not None:
-                try:
-                    acknowledge(self._record)
-                except (OSError, RuntimeError):
-                    pass
+            artifacts_available = phase not in _NO_ARTIFACTS_FAILURES
+            self._record = self.manager.complete(
+                self._record,
+                state=state,
+                execution=self.execution,
+                return_code=getattr(self._runner, "return_code", None),
+                message=message,
+                failure_phase=phase,
+                artifacts_available=artifacts_available,
+                files=self.files,
+            )
+            # ACK is strictly after RunStore's crash-durable terminal transition.
+            # A lost ACK reply is harmless: backend receipts are idempotently deleted.
+            # Keep the persisted result even if the acknowledgement cannot be sent.
+            if self._record.state in _FINAL_STATES and self.backend_id is not None:
+                acknowledge = getattr(self.executor, "acknowledge", None)
+                if acknowledge is not None:
+                    try:
+                        acknowledge(self._record)
+                    except (OSError, RuntimeError):
+                        pass
+
+            if self._record.state in _FINAL_STATES:
+                self._completion_persisted = True
 
     def wait(self):
         try:
