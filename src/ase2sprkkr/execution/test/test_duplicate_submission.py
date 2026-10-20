@@ -221,3 +221,71 @@ def test_wildcard_declared_output_conflicts_with_concrete_output(tmp_path):
     manager.reserve(first)
     with pytest.raises(DuplicateSubmissionError):
         manager.reserve(second)
+
+
+def test_shared_absolute_output_conflicts_across_working_directories(tmp_path):
+    from ase2sprkkr.execution import FileEntry, FileManifest
+    manager = ExecutionManager(RunStore(tmp_path / "runs"))
+    shared = str(tmp_path / "shared.out")
+    first = manager.new_record(
+        task="DOS", directory=tmp_path / "one",
+        files=FileManifest(outputs=(FileEntry(local_path=shared),)),
+    )
+    second = manager.new_record(
+        task="BSF", directory=tmp_path / "two",
+        files=FileManifest(inputs=(FileEntry(local_path=shared),)),
+    )
+    manager.reserve(first)
+    with pytest.raises(DuplicateSubmissionError):
+        manager.reserve(second)
+
+
+def test_wildcard_to_wildcard_conflicts_even_if_patterns_differ(tmp_path):
+    from ase2sprkkr.execution import FileEntry, FileManifest
+    manager = ExecutionManager(RunStore(tmp_path / "runs"))
+    first = manager.new_record(
+        task="DOS", directory=tmp_path,
+        files=FileManifest(outputs=(
+            FileEntry(local_path=str(tmp_path / "spectrum-*.dat")),)),
+    )
+    second = manager.new_record(
+        task="BSF", directory=tmp_path,
+        files=FileManifest(outputs=(
+            FileEntry(local_path=str(tmp_path / "spectrum-?.dat")),)),
+    )
+    manager.reserve(first)
+    with pytest.raises(DuplicateSubmissionError):
+        manager.reserve(second)
+
+
+def test_disjoint_wildcard_prefixes_do_not_conflict(tmp_path):
+    from ase2sprkkr.execution import FileEntry, FileManifest
+    manager = ExecutionManager(RunStore(tmp_path / "runs"))
+    first = manager.new_record(
+        task="DOS", directory=tmp_path,
+        files=FileManifest(outputs=(
+            FileEntry(local_path=str(tmp_path / "bsf-*.dat")),)),
+    )
+    second = manager.new_record(
+        task="BSF", directory=tmp_path,
+        files=FileManifest(outputs=(
+            FileEntry(local_path=str(tmp_path / "dos-*.dat")),)),
+    )
+    manager.reserve(first)
+    assert manager.reserve(second).state == RunState.SUBMITTING
+
+
+def test_shared_input_is_not_a_conflict(tmp_path):
+    from ase2sprkkr.execution import FileEntry, FileManifest
+    manager = ExecutionManager(RunStore(tmp_path / "runs"))
+    shared = str(tmp_path / "shared.pot")
+    first = manager.new_record(
+        task="DOS", directory=tmp_path / "one",
+        files=FileManifest(inputs=(FileEntry(local_path=shared),)),
+    )
+    second = manager.new_record(
+        task="BSF", directory=tmp_path / "two",
+        files=FileManifest(inputs=(FileEntry(local_path=shared),)),
+    )
+    manager.reserve(first)
+    assert manager.reserve(second).state == RunState.SUBMITTING
