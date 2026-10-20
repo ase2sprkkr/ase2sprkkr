@@ -378,3 +378,41 @@ def test_ssh_get_file_preserves_subprocess_failure(tmp_path):
     assert b"download failed" in failure.value.stderr
     assert not destination.exists()
     assert not tuple(tmp_path.glob(".downloaded.*.tmp"))
+
+
+@pytest.mark.parametrize(
+    "method, command, stdout, expected",
+    [
+        ("file_digest", 'sha256sum -- "$1"',
+         b"1234abcd  folder name/result.out\n", "1234abcd"),
+        ("file_signature", 'stat -c "%s|%Y|%y" -- "$1"',
+         b"10|1729000000|2024-10-15 12:00:00.250000000 +0000\n",
+         (10, 1729000000250000000)),
+    ],
+)
+@pytest.mark.parametrize("returncode", (0, 3, 17))
+def test_ssh_file_probes_use_same_absent_and_error_contract(
+    method, command, stdout, expected, returncode,
+):
+    calls = []
+
+    class ProbedTransport(SshTransport):
+        async def run(self, argv, *, cwd=None, input=None, check=True):
+            calls.append((argv, check))
+            return subprocess.CompletedProcess(
+                argv, returncode, stdout=stdout, stderr=b"probe failure",
+            )
+
+    path = "folder name/result.out"
+    query = getattr(ProbedTransport("example-host"), method)
+    if returncode == 17:
+        with pytest.raises(subprocess.CalledProcessError) as error:
+            asyncio.run(query(path))
+        assert error.value.returncode == 17
+        assert error.value.output == stdout
+        assert error.value.stderr == b"probe failure"
+    else:
+        assert asyncio.run(query(path)) == (None if returncode == 3 else expected)
+    assert calls == [
+        (("sh", "-c", f'[ -f "$1" ] || exit 3; {command}', "sh", path), False),
+    ]
