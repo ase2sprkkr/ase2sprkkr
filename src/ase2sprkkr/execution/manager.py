@@ -171,6 +171,8 @@ def _manifest_accesses(record):
         )
 
     reads = {path(entry) for entry in files.inputs}
+    # A pre-existing cache can still be updated by the calculation. Treat
+    # every declared cache as both a reader and a potential writer.
     reads.update(path(cache.file) for cache in files.caches)
     writes = {path(entry) for entry in (files.stdout, files.stderr, *files.outputs)}
     writes.update(path(cache.file) for cache in files.caches)
@@ -839,6 +841,7 @@ class ExecutionManager:
     ):
         """Create a project run from raw execution plus generic processing."""
         endpoint = endpoint_for_executor(executor)
+        files = executor.reservation_manifest(spec, FileManifest.from_spec(spec))
         record = self.new_record(
             task=task,
             input_definition=input_definition,
@@ -849,7 +852,7 @@ class ExecutionManager:
                 executor.submission_directory(spec)
                 if endpoint.executor not in ("local", "psij") else None
             ),
-            files=FileManifest.from_spec(spec),
+            files=files,
             run_id=run_id,
         )
         self.register_executor(executor, endpoint)

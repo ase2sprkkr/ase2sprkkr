@@ -606,6 +606,10 @@ class Executor:
             f"{type(self).__name__} cannot retrieve persistent result files"
         )
 
+    def reservation_manifest(self, spec: ExecutionSpec, files):
+        """Provide backend file identities before a persistent reservation."""
+        return files
+
     def submission_directory(self, spec: ExecutionSpec) -> str:
         return os.path.abspath(os.fspath(spec.directory))
 

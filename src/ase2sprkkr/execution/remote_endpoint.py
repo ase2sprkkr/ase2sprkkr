@@ -484,6 +484,34 @@ class RemoteEndpointExecutor(Executor):
             return posixpath.join(await self._remote_home(), directory[2:])
         return directory
 
+    def reservation_manifest(self, spec, files):
+        """Resolve real remote identities without staging or uploading files."""
+        async def resolve():
+            context = self._context(self, spec.launch)
+
+            async def mapped(entry):
+                if entry is None:
+                    return None
+                return replace(entry, remote_path=await context.map_path(entry.local_path))
+
+            return replace(
+                files,
+                inputs=tuple([await mapped(entry) for entry in files.inputs]),
+                outputs=tuple([await mapped(entry) for entry in files.outputs]),
+                caches=tuple(replace(cache, file=await mapped(cache.file))
+                             for cache in files.caches),
+                stdout=await mapped(files.stdout),
+                stderr=await mapped(files.stderr),
+                mapping=FileMapping(
+                    local_root=os.fspath(context.local_root),
+                    remote_root=await context._resolved_remote_root(),
+                    input_sync=context.input_files.value,
+                    output_sync=context.output_files.value,
+                ),
+            )
+
+        return _run_sync(resolve())
+
     def submission_directory(self, spec):
         launch = spec.launch
         relative = _relative_local_path(
