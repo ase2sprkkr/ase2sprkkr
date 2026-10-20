@@ -82,17 +82,17 @@ def test_process_parser_can_read_from_an_existing_event_loop(tmp_path):
 
 
 def test_read_output_file_does_not_close_caller_streams():
-    output = io.BytesIO(b"output\\n")
-    error = io.BytesIO(b"warning\\n")
+    output = io.BytesIO(b"output\n")
+    error = io.BytesIO(b"warning\n")
 
     parsed = _OutputParser().read_from_file(output, error)
 
-    assert parsed == (b"output\\n", b"warning\\n", 0)
+    assert parsed == (b"output\n", b"warning\n", 0)
     assert not output.closed and not error.closed
     output.seek(0)
     error.seek(0)
-    assert output.read() == b"output\\n"
-    assert error.read() == b"warning\\n"
+    assert output.read() == b"output\n"
+    assert error.read() == b"warning\n"
 
 
 def test_reader_only_closes_streams_that_it_opens(tmp_path):
