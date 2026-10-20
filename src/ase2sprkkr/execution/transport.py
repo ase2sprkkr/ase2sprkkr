@@ -456,9 +456,17 @@ class SshTransport(Transport):
 
             prefix = _literal_prefix(pattern)
             search_root = posixpath.join(root, *prefix) if prefix else root
-            exists = await self.run(("test", "-d", search_root), check=False)
-            if exists.returncode:
+            exists = await self.run(
+                ("sh", "-c", '[ -d "$1" ] || exit 3', "sh", search_root),
+                check=False,
+            )
+            if exists.returncode == 3:
                 continue
+            if exists.returncode:
+                raise subprocess.CalledProcessError(
+                    exists.returncode, exists.args,
+                    output=exists.stdout, stderr=exists.stderr,
+                )
             result = await self.run(("find", search_root, "-type", "f", "-print0"))
             for item in result.stdout.decode("utf8").split("\0"):
                 if not item:
