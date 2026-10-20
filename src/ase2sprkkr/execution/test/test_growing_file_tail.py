@@ -252,3 +252,35 @@ def test_terminal_output_drain_is_bounded_when_producer_keeps_writing(tmp_path):
 
     asyncio.run(check())
 
+
+
+def test_read_error_does_not_wait_for_scheduler_job_to_end(tmp_path, monkeypatch):
+    from threading import Event
+
+    entered, release = Event(), Event()
+
+    def wait():
+        entered.set()
+        release.wait(10)
+        return "finished"
+
+    def unreadable(self, *args, **kwargs):
+        raise PermissionError("output inaccessible")
+
+    monkeypatch.setattr(GrowingFileTail, "read_available", unreadable)
+
+    async def check():
+        try:
+            with pytest.raises(PermissionError, match="inaccessible"):
+                await asyncio.wait_for(
+                    follow_job_files(
+                        {"out": tmp_path / "job.out"}, lambda *_: None,
+                        wait, poll_interval=0.01,
+                    ), 2,
+                )
+            assert await asyncio.to_thread(entered.wait, 1)
+            assert not release.is_set()
+        finally:
+            release.set()
+
+    asyncio.run(check())
