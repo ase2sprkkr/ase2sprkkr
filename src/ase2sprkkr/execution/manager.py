@@ -764,7 +764,8 @@ class ExecutionManager:
             if (not files.output_versions
                     or any(version.state() is not FileState.CURRENT
                            for version in files.all_versions)
-                    or not self.output_file_is_current(latest)):
+                    or not self._file_is_current(files, files.output_file,
+                                                 files.output_versions)):
                 raise ValueError("Postprocessing retry requires unchanged historical artifacts")
             return replace(
                 latest, state=RunState.POSTPROCESSING, finished_at=None,
@@ -774,7 +775,8 @@ class ExecutionManager:
         reopened = self.store.update(record, eligible)
         files = reopened.files
         outcome = ExecutionOutcome(
-            input_file=files.input_file if self.input_file_is_current(reopened) else None,
+            input_file=(files.input_file if self._file_is_current(
+                files, files.input_file, files.input_versions) else None),
             output_file=files.output_file,
             error_file=None if files.stderr is None else files.stderr.local_path,
             return_code=reopened.return_code,
