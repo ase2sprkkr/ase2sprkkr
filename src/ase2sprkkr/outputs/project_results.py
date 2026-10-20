@@ -146,6 +146,15 @@ def attach_project_run(
     )
 
 
+def retry_project_postprocessing(manager, run):
+    """Explicitly parse preserved result files again without executing the task."""
+    record = _record(manager, run)
+    # Reader construction is outside the transition: programming errors and
+    # missing definitions must leave the original failure record unchanged.
+    processor = _result_processor_for_record(manager, record)
+    return manager.retry_postprocessing(record, processor)
+
+
 def load_project_result(manager, run):
     """Reconstruct the historical TaskResult of one terminal project run."""
     record = _record(manager, run)

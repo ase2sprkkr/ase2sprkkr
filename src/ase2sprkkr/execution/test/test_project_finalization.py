@@ -252,3 +252,121 @@ def test_failed_download_reader_construction_does_not_reopen_run(tmp_path, monke
     assert current.state == RunState.FAILED
     assert current.failure_phase == FailurePhase.DOWNLOAD
     assert current.files == failed.files
+
+
+def test_postprocessing_retry_uses_saved_files_without_backend(tmp_path):
+    from ase2sprkkr.execution import FileEntry, FileManifest
+    from ase2sprkkr.outputs import retry_project_postprocessing
+    manager = ExecutionManager(RunStore(tmp_path / "runs"))
+    output = tmp_path / "run.out"
+    output.write_text("original result")
+    record = manager.new_record(
+        task="DOS", directory=tmp_path,
+        files=FileManifest(stdout=FileEntry(local_path=str(output))),
+    )
+    record = manager.transition(
+        record, state=RunState.POSTPROCESSING,
+        execution=record.execution.submitted("existing-backend"),
+    )
+    failed = manager.complete(
+        record, state=RunState.FAILED, return_code=0,
+        failure_phase=FailurePhase.POSTPROCESSING,
+        message="transient parse error", artifacts_available=True,
+    )
+    assert failed.files.captured_at is not None
+    calls = []
+
+    def parser(outcome):
+        calls.append(outcome)
+        return SimpleNamespace(value=output.read_text(), run_record=None)
+
+    result = manager.retry_postprocessing(failed.id, parser)
+    assert result.value == "original result"
+    assert len(calls) == 1
+    latest = manager.store.get(failed.id)
+    assert latest.state == RunState.FINISHED
+    assert latest.execution.backend_id == "existing-backend"
+    assert latest.files.input_versions == failed.files.input_versions
+    assert latest.files.output_versions == failed.files.output_versions
+    assert result.run_record.id == failed.id
+    with pytest.raises(ValueError, match="Only postprocessing failures"):
+        manager.retry_postprocessing(failed.id, parser)
+
+
+def test_postprocessing_retry_failure_is_retryable_and_does_not_resubmit(tmp_path):
+    from ase2sprkkr.execution import FileEntry, FileManifest
+    manager = ExecutionManager(RunStore(tmp_path / "runs"))
+    output = tmp_path / "run.out"
+    output.write_text("original")
+    record = manager.new_record(
+        task="DOS", directory=tmp_path,
+        files=FileManifest(stdout=FileEntry(local_path=str(output))),
+    )
+    record = manager.transition(
+        record, state=RunState.POSTPROCESSING,
+        execution=record.execution.submitted("existing-backend"),
+    )
+    failed = manager.complete(
+        record, state=RunState.FAILED, return_code=0,
+        failure_phase=FailurePhase.POSTPROCESSING, artifacts_available=True,
+    )
+    def broken(_outcome):
+        raise ValueError("parse failed again")
+    with pytest.raises(ValueError, match="parse failed again"):
+        manager.retry_postprocessing(failed.id, broken)
+    current = manager.store.get(failed.id)
+    assert current.state == RunState.FAILED
+    assert current.failure_phase == FailurePhase.POSTPROCESSING
+    assert current.execution.backend_id == failed.execution.backend_id
+    manager.retry_postprocessing(failed.id, lambda outcome: outcome)
+    assert manager.store.get(failed.id).state == RunState.FINISHED
+
+
+def test_postprocessing_retry_refuses_modified_or_uncaptured_artifacts(tmp_path):
+    from ase2sprkkr.execution import FileEntry, FileManifest
+    manager = ExecutionManager(RunStore(tmp_path / "runs"))
+    output = tmp_path / "run.out"
+    output.write_text("original")
+    record = manager.new_record(
+        task="DOS", directory=tmp_path,
+        files=FileManifest(stdout=FileEntry(local_path=str(output))),
+    )
+    record = manager.transition(
+        record, state=RunState.POSTPROCESSING,
+        execution=record.execution.submitted("existing-backend"),
+    )
+    failed = manager.complete(
+        record, state=RunState.FAILED, return_code=0,
+        failure_phase=FailurePhase.POSTPROCESSING, artifacts_available=True,
+    )
+    output.write_text("overwritten")
+    with pytest.raises(ValueError, match="unchanged historical artifacts"):
+        manager.retry_postprocessing(failed.id, lambda outcome: outcome)
+    assert manager.store.get(failed.id).state == RunState.FAILED
+
+
+def test_postprocessing_retry_reader_constructor_error_does_not_reopen(tmp_path, monkeypatch):
+    from ase2sprkkr.execution import FileEntry, FileManifest
+    from ase2sprkkr.outputs import retry_project_postprocessing
+    manager = ExecutionManager(RunStore(tmp_path / "runs"))
+    output = tmp_path / "run.out"
+    output.write_text("original")
+    record = manager.new_record(
+        task="DOS", directory=tmp_path,
+        files=FileManifest(stdout=FileEntry(local_path=str(output))),
+    )
+    record = manager.transition(
+        record, state=RunState.POSTPROCESSING,
+        execution=record.execution.submitted("existing-backend"),
+    )
+    failed = manager.complete(
+        record, state=RunState.FAILED, return_code=0,
+        failure_phase=FailurePhase.POSTPROCESSING, artifacts_available=True,
+    )
+    monkeypatch.setattr(
+        project_output, "_result_processor_for_record",
+        lambda *_args: (_ for _ in ()).throw(RuntimeError("broken reader")),
+    )
+    with pytest.raises(RuntimeError, match="broken reader"):
+        retry_project_postprocessing(manager, failed.id)
+    assert manager.store.get(failed.id).state == RunState.FAILED
