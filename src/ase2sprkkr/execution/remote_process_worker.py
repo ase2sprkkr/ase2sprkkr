@@ -15,7 +15,6 @@ from .remote_supervisor_stream import SupervisorStreams
 
 _SPEC_ENV = "ASE2SPRKKR_REMOTE_PROCESS_SPEC"
 _START_FD_ENV = "ASE2SPRKKR_REMOTE_PROCESS_START_FD"
-_LAUNCH_FAILURE_RETURN_CODE = 127
 
 
 def _write_outcome(receipt_id, state, return_code, failure_phase=None):
