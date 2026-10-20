@@ -246,22 +246,25 @@ class KkrOutputReader:
         )
 
     def complete_result(self, result, output, error, return_code):
-        """Finalize a result after the execution backend completes."""
-        if return_code != 0:
-            self.parser.result(
-                None if isinstance(output, BaseException) else output,
-                None if isinstance(error, BaseException) else error,
-                return_code,
-            )
+        """Finalize once, prioritizing process failures over parser failures."""
+        if return_code == 0:
+            if isinstance(output, BaseException):
+                raise output
+            if isinstance(error, BaseException):
+                raise error
+
+        # Nonzero process exit must be reported even if parsing its truncated
+        # streams failed. Never hand a parser exception to parser.result().
+        parsed_output = None if isinstance(output, BaseException) else output
+        parsed_error = None if isinstance(error, BaseException) else error
+        _output, parsed_error, parsed_code = self.parser.result(
+            parsed_output, parsed_error, return_code,
+        )
         if isinstance(output, BaseException):
             raise output
         if isinstance(error, BaseException):
             raise error
-
-        _output, error, return_code = self.parser.result(
-            output, error, return_code
-        )
-        result.complete(error, return_code)
+        result.complete(parsed_error, parsed_code)
         return result
 
     @maybeclassmethod
