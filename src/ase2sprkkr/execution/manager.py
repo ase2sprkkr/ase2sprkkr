@@ -177,21 +177,38 @@ def _manifest_accesses(record):
     return reads - {None}, writes - {None}
 
 
+def _path_overlap(a, b):
+    """Conservatively compare literal paths and glob declarations."""
+    a_magic, b_magic = has_file_magic(a), has_file_magic(b)
+    if not a_magic:
+        return fnmatch.fnmatchcase(a, b) if b_magic else a == b
+    if not b_magic:
+        return fnmatch.fnmatchcase(b, a)
+    if a == b:
+        return True
+
+    # Glob/glob intersection is not generally decidable by fnmatch.
+    # Only disjoint literal prefixes can prove that no collision is possible.
+    def prefix(pattern):
+        return pattern[:min((pattern.find(c) for c in "*?[" if c in pattern),
+                            default=len(pattern))]
+
+    pa, pb = prefix(a), prefix(b)
+    return pa.startswith(pb) or pb.startswith(pa)
+
+
 def _paths_overlap(first, second):
-    return any(
-        a == b or fnmatch.fnmatchcase(a, b) or fnmatch.fnmatchcase(b, a)
-        for a in first for b in second
-    )
+    return any(_path_overlap(a, b) for a in first for b in second)
 
 
 def submission_conflicts(left: RunRecord, right: RunRecord) -> bool:
     """Conservatively exclude overlapping declared read/write operations."""
     a, b = left.execution, right.execution
-    if a.endpoint != b.endpoint or a.directory.target != b.directory.target:
+    if a.endpoint != b.endpoint:
         return False
-    # SCF may overwrite canonical potential/density files outside the declared
-    # output set, so retain the broad protection until its manifest is complete.
-    if left.task == "SCF" or right.task == "SCF":
+    same_directory = a.directory.target == b.directory.target
+    # SCF can overwrite undeclared canonical files in its working directory.
+    if same_directory and (left.task == "SCF" or right.task == "SCF"):
         return True
     left_reads, left_writes = _manifest_accesses(left)
     right_reads, right_writes = _manifest_accesses(right)
@@ -201,7 +218,8 @@ def submission_conflicts(left: RunRecord, right: RunRecord) -> bool:
     # Without declared writes, preserve namespace-based protection for legacy
     # and generic executors that cannot describe their output footprint.
     if not left_writes or not right_writes:
-        return left.task == right.task and left.dataset == right.dataset
+        return (same_directory and left.task == right.task
+                and left.dataset == right.dataset)
     return False
 
 
