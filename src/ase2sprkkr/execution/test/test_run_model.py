@@ -325,9 +325,58 @@ def test_legacy_duplicate_statuses_are_aggregated_conservatively():
         stdout=FileEntry(path, availability_state="available"),
         outputs=(FileEntry(path, availability_state="pending"),),
     )
-    assert manifest.availability_state == "pending"
+    assert manifest.availability_state == "available"
     available = replace(
         manifest, outputs=(FileEntry(path, availability_state="skipped"),)
     )
     assert available.availability_state == "available"
     assert available.artifacts == (available.stdout,)
+
+
+def test_completed_transfer_is_not_reverted_by_other_declaration():
+    path = "/local/shared.dat"
+    files = FileManifest(
+        outputs=(FileEntry(path, "/remote/shared.dat", "pending"),),
+        caches=(CacheEntry(FileEntry(path, "/remote/shared.dat", "pending")),),
+    )
+    downloaded = files.with_file_availability(path, "available", kind="output")
+    for state in ("pending", "skipped"):
+        downloaded = downloaded.with_file_availability(path, state, kind="cache")
+        assert downloaded.availability_state == "available"
+        assert downloaded.outputs[0].availability_state == "available"
+        assert downloaded.caches[0].file.availability_state == "available"
+
+    failed = downloaded.with_file_availability(path, "failed", "transfer error", kind="cache")
+    assert failed.availability_state == "failed"
+    assert failed.availability_message == "transfer error"
+    assert failed.with_file_availability(path, "skipped").availability_state == "failed"
+
+    recovered = failed.with_file_availability(path, "available", kind="cache")
+    assert recovered.availability_state == "available"
+    assert recovered.availability_message is None
+
+
+def test_explicit_download_retry_can_move_failed_back_to_pending():
+    path = "/local/again.dat"
+    files = FileManifest(
+        outputs=(FileEntry(path, availability_state="failed",
+                           availability_message="network lost"),),
+    )
+    pending = files._map_artifacts(
+        lambda entry: replace(entry, availability_state="pending",
+                              availability_message=None)
+    )
+    assert pending.availability_state == "pending"
+    assert pending.with_file_availability(path, "available").availability_state == "available"
+
+
+def test_legacy_pending_alias_does_not_hide_successful_download():
+    path = "/local/stream.out"
+    files = FileManifest(
+        stdout=FileEntry(path, availability_state="available"),
+        stderr=FileEntry(path, availability_state="pending"),
+        outputs=(FileEntry(path, availability_state="skipped"),),
+    )
+    assert len(files.artifacts) == 1
+    assert files.availability_state == "available"
+    assert files.failed_artifacts == ()

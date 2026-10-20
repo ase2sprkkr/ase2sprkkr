@@ -192,9 +192,14 @@ class FileManifest:
             )
     @property
     def artifacts(self):
-        """One status per local artifact; unresolved or failed duplicates dominate."""
+        """One status per local file: failed transfers dominate, downloads remain available.
+
+        Duplicated stream and cache declarations can carry stale per-entry status
+        in persisted manifests. A pending/skipped alias must not hide a file
+        already downloaded through another declaration.
+        """
         entries = (self.stdout, self.stderr, *self.outputs, *(x.file for x in self.caches))
-        priority = {"skipped": 0, "available": 1, None: 2, "pending": 2, "failed": 3}
+        priority = {"skipped": 0, None: 1, "pending": 1, "available": 2, "failed": 3}
         unique = {}
         for entry in entries:
             if entry is None or entry.local_path is None:
@@ -268,13 +273,23 @@ class FileManifest:
         path = os.fspath(local_path)
         matches = any(x.local_path == path for x in self.artifacts)
         if matches:
-            return self._map_artifacts(
-                lambda item: replace(
-                    item,
-                    availability_state=state,
+            def update(item):
+                if item.local_path != path:
+                    return item
+                if (
+                    state in (None, "pending", "skipped")
+                    and item.availability_state in ("available", "failed")
+                ):
+                    # Duplicate declarations must not retract completed
+                    # transfers or hide failures. Explicit retries use
+                    # _map_artifacts() before starting the next attempt.
+                    return item
+                return replace(
+                    item, availability_state=state,
                     availability_message=message,
-                ) if item.local_path == path else item
-            )
+                )
+
+            return self._map_artifacts(update)
         file = FileEntry(
             local_path=path, remote_path=remote_path,
             availability_state=state, availability_message=message,
