@@ -146,22 +146,17 @@ async def _run(spec):
                 if failed is not None:
                     message = f"Failed to write process output: {failed}"
                     state, phase = RunState.FAILED, FailurePhase.EXECUTION
-                    os.close(watchdog_fd)
-                    watchdog_fd = None
-                    await waiting
-                    break
-                if waiting.done():
-                    # Descendants can hold the output pipes after the main
-                    # process exits. Shut down their group before draining.
-                    os.close(watchdog_fd)
-                    watchdog_fd = None
-                    break
-                if stop in done or (lost is not None and lost in done):
-                    state, phase = RunState.CANCELLED, None
-                    os.close(watchdog_fd)
-                    watchdog_fd = None
-                    await waiting
-                    break
+                elif not waiting.done():
+                    if stop in done or (lost is not None and lost in done):
+                        state, phase = RunState.CANCELLED, None
+                    else:
+                        continue
+
+                # Stop descendants holding output pipes, then drain remaining
+                # output after the main process has terminated.
+                os.close(watchdog_fd)
+                watchdog_fd = None
+                break
             return_code = await waiting
             # Inspect all pump outcomes without allowing their exceptions to
             # replace the diagnosed output-write failure and its context.
