@@ -6,7 +6,8 @@ import asyncio
 import fcntl
 import os
 import posixpath
-import posixpath
+from pathlib import Path
+from uuid import uuid4
 from dataclasses import replace
 from enum import Enum
 from threading import Event, Lock, Thread
@@ -102,7 +103,7 @@ class RemoteRunner:
         self._cache_patterns = tuple(cache_patterns or ())
         self._cache_before = dict(cache_before or {})
         self._pattern_matches = {}
-        self._downloaded = {}
+        self._downloaded = set()
         self.result = ExecutionOutcome(
             output_file=self._local_path(spec.output_file),
             input_file=self._local_path(spec.input_file),
@@ -379,7 +380,7 @@ class RemoteRunner:
         """
         sources = {}
         self._pattern_matches = {}
-        self._downloaded = {}
+        self._downloaded = set()
 
         def register(local, remote):
             target = os.path.normcase(os.path.realpath(os.path.abspath(os.fspath(local))))
@@ -432,7 +433,7 @@ class RemoteRunner:
             else:
                 available = await self._sync_one_output(local, remote, required)
                 if available:
-                    self._downloaded[key] = remote
+                    self._downloaded.add(key)
         except Exception as exc:
             self._set_file_availability(local, "failed", str(exc))
             raise
@@ -524,11 +525,22 @@ class RemoteRunner:
             return False
         local_digest = file_digest(local, missing_ok=True)
         if policy.should_transfer(remote_digest, local_digest):
-            await self.executor.transport.get_file(remote, local)
-            # The expected remote digest is already available. A successful
-            # transport call alone does not establish equal file contents.
-            if file_digest(local, missing_ok=True) != remote_digest:
-                raise OSError(f"Downloaded output differs from remote source: {remote}")
+            # Verify in a private staging file before replacing any existing
+            # local result. Transport.get_file() already guarantees its own
+            # atomic and source-stability semantics.
+            destination = Path(local)
+            staged = destination.with_name(
+                f".{destination.name}.{uuid4().hex}.verify"
+            )
+            try:
+                await self.executor.transport.get_file(remote, staged)
+                if file_digest(staged, missing_ok=True) != remote_digest:
+                    raise OSError(
+                        f"Downloaded output differs from remote source: {remote}"
+                    )
+                os.replace(staged, destination)
+            finally:
+                staged.unlink(missing_ok=True)
         return True
 
     async def _sync_cache_entry(self, local, remote, before, *, source_pattern=None):
@@ -555,7 +567,7 @@ class RemoteRunner:
             else:
                 await self.executor.transport.get_file(remote, local)
                 state = "available"
-                self._downloaded[key] = remote
+                self._downloaded.add(key)
         except Exception as exc:
             self._set_file_availability(local, "failed", str(exc), kind="cache")
             raise
