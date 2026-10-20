@@ -261,9 +261,6 @@ class Arithmetic:
             raise TypeError(
                 f"Cannot combine {type(self).__name__} with {type(other).__name__}"
             )
-        check = getattr(self, "_assert_arithmetic", None)
-        if check is not None:
-            check(other)
 
     def __add__(self, other):
         out = self.copy(copy_values=True)

@@ -4,6 +4,7 @@ from ..result_files_definitions import (
     ResultFileDefinition,
 )
 from typing import Optional
+from numbers import Number
 import numpy as np
 import matplotlib
 import copy
@@ -116,8 +117,8 @@ class DOS(Arithmetic):
         if isinstance(other, np.ndarray):
             return
         super()._check_arithmetic(other)
-
-    def _assert_arithmetic(self, other):
+        if isinstance(other, Number):
+            return
         if self.dos.shape != other.dos.shape:
             raise ValueError("DOS arrays have different shapes")
         if (self.energy.shape != other.energy.shape

@@ -5,6 +5,7 @@ from ..result_files_definitions import (
 )
 from typing import Optional
 import numbers
+from numbers import Number
 import numpy as np
 
 from ..result_files import Arithmetic, CommonResultFile
@@ -155,8 +156,11 @@ class ARPESResultFile(CommonResultFile, Arithmetic):
         np.divide(up - down, total, out=polarization, where=total != 0)
         polarization[total == 0] = 0
 
-    def _assert_arithmetic(self, other):
+    def _check_arithmetic(self, other):
         """Do not combine spectra with different sampled coordinates."""
+        super()._check_arithmetic(other)
+        if isinstance(other, Number):
+            return
         if self.MODE() != other.MODE():
             raise ValueError("ARPES modes are different")
         if self.RAW_DATA().shape != other.RAW_DATA().shape:

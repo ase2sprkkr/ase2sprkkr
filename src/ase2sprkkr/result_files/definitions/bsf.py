@@ -5,6 +5,7 @@ from ..result_files_definitions import (
     Separator,
 )
 from typing import Optional
+from numbers import Number
 import numpy as np
 
 from ..result_files import Arithmetic, CommonResultFile
@@ -62,8 +63,11 @@ class BSFResultFile(CommonResultFile, Arithmetic):
 
     _arithmetic_values = [("RAW_DATA", slice(None))]
 
-    def _assert_arithmetic(self, other):
+    def _check_arithmetic(self, other):
         """Only combine spectral functions defined on the same physical grid."""
+        super()._check_arithmetic(other)
+        if isinstance(other, Number):
+            return
         for name in ("MODE", "KEYWORD", "SHAPE", "NQ_EFF"):
             if not np.array_equal(self[name](), other[name]()):
                 raise ValueError(f"BSF {name} differs between operands")

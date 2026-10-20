@@ -143,3 +143,21 @@ def test_arpes_arithmetic_preserves_geometry_and_recomputes_polarization():
         file * shifted
     np.testing.assert_array_equal(file.RAW_DATA(), original)
 
+
+def test_dos_validation_has_single_override_for_scalar_array_and_grid():
+    import pytest
+
+    left = _dos()
+    assert left._check_arithmetic(2) is None
+    assert left._check_arithmetic(np.array([1.0, 1.0, 1.0])) is None
+    assert left._check_arithmetic(_dos()) is None
+    with pytest.raises(TypeError, match="Cannot combine"):
+        left._check_arithmetic("invalid")
+    with pytest.raises(ValueError, match="energy grids"):
+        left._check_arithmetic(DOS(left.energy + 1, left.dos.copy()))
+
+
+def test_result_arithmetic_does_not_use_legacy_assert_hook():
+    from ..result_files import Arithmetic
+
+    assert "_assert_arithmetic" not in Arithmetic.__dict__
