@@ -138,6 +138,37 @@ class FileManifest:
     output_versions: tuple[FileVersion, ...] = ()
     captured_at: Optional[str] = None
 
+    @classmethod
+    def from_spec(cls, spec):
+        """Build the local file manifest for an execution specification."""
+        import os
+
+        from .base import file_path
+
+        directory = os.path.abspath(os.fspath(spec.directory))
+
+        def paths(*values):
+            return tuple(dict.fromkeys(
+                path for value in values
+                if (path := file_path(value, directory)) is not None
+            ))
+
+        inputs = paths(getattr(spec, "input_file", None), *getattr(spec, "input_files", ()))
+        stdout = file_path(getattr(spec, "output_file", None), directory)
+        stderr = file_path(getattr(spec, "error_file", None), directory)
+        streams = {stdout, stderr}
+        outputs = (
+            path for path in paths(*getattr(spec, "output_files", ())) if path not in streams
+        )
+        caches = paths(*getattr(spec, "cache_files", ()))
+        return cls(
+            inputs=tuple(FileEntry(local_path=x) for x in inputs),
+            outputs=tuple(FileEntry(local_path=x) for x in outputs),
+            caches=tuple(CacheEntry(FileEntry(local_path=x)) for x in caches),
+            stdout=None if stdout is None else FileEntry(local_path=stdout),
+            stderr=None if stderr is None else FileEntry(local_path=stderr),
+        ).initialize_availability()
+
     def __post_init__(self):
         for name, cls in (("inputs", FileEntry), ("outputs", FileEntry), ("caches", CacheEntry)):
             items = getattr(self, name)

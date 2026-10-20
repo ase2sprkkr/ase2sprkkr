@@ -8,6 +8,7 @@ from ase2sprkkr.execution import (
     Executor,
     ExecutorPool,
     FileState,
+    FileManifest,
     RunState,
     RunStore,
 )
@@ -71,7 +72,7 @@ def _terminal_run(tmp_path, *, state=RunState.FINISHED, return_code=0, task="DOS
         task=task,
         directory=tmp_path,
         endpoint=endpoint,
-        files=manager._result_files_for_spec(spec),
+        files=FileManifest.from_spec(spec),
     )
     record = manager.store.save(record)
     record = manager.complete(
@@ -202,7 +203,7 @@ def test_finished_history_without_available_output_is_not_synthesized(tmp_path):
     record = manager.new_record(
         task="DOS",
         directory=tmp_path,
-        files=manager._result_files_for_spec(spec),
+        files=FileManifest.from_spec(spec),
     )
     record = manager.store.save(record)
     record = manager.complete(

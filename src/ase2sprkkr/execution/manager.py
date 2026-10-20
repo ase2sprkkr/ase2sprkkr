@@ -23,7 +23,6 @@ from ._durability import durable_mkdir, durable_write_json, sync_file
 from .base import (
     Executor,
     FailurePhase,
-    file_path,
     RunState,
     RunStatus,
     SubmissionNotStarted,
@@ -31,7 +30,7 @@ from .base import (
 from .endpoint import ExecutorEndpoint, endpoint_for_executor
 from .pool import default_executor_pool
 from .postprocessing import PostprocessingRunner
-from .run_model import Execution, WorkingDirectory, FileManifest, FileEntry, CacheEntry
+from .run_model import Execution, WorkingDirectory, FileManifest
 from .transport import expand_local_candidates, has_file_magic
 
 
@@ -359,25 +358,6 @@ class ExecutionManager:
 
     def executor_for(self, record):
         return self.executor_pool.for_endpoint(record.execution.endpoint)
-
-    @staticmethod
-    def _result_files_for_spec(spec):
-        directory = os.path.abspath(os.fspath(spec.directory))
-        def absolute(value):
-            return file_path(value, directory)
-        primary_input = absolute(getattr(spec, "input_file", None))
-        primary_output = absolute(getattr(spec, "output_file", None))
-        error = absolute(getattr(spec, "error_file", None))
-        inputs = _unique((primary_input, *(absolute(x) for x in getattr(spec, "input_files", ()))))
-        outputs = _unique((primary_output, *(absolute(x) for x in getattr(spec, "output_files", ()))))
-        caches = _unique(absolute(x) for x in getattr(spec, "cache_files", ()))
-        return FileManifest(
-            inputs=tuple(FileEntry(local_path=x) for x in inputs if x is not None),
-            outputs=tuple(FileEntry(local_path=x) for x in outputs if x is not None and x != primary_output),
-            caches=tuple(CacheEntry(FileEntry(local_path=x)) for x in caches if x is not None),
-            stdout=None if primary_output is None else FileEntry(local_path=primary_output),
-            stderr=None if error is None else FileEntry(local_path=error),
-        ).initialize_availability()
 
     @staticmethod
     def _concrete_result_files(manifests):
@@ -854,7 +834,7 @@ class ExecutionManager:
                 executor.submission_directory(spec)
                 if endpoint.executor not in ("local", "psij") else None
             ),
-            files=self._result_files_for_spec(spec),
+            files=FileManifest.from_spec(spec),
             run_id=run_id,
         )
         self.register_executor(executor, endpoint)

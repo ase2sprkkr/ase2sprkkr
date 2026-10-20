@@ -10,7 +10,7 @@ import time
 from datetime import datetime, timedelta
 from dataclasses import replace
 from pathlib import Path
-from threading import Event, Lock, Thread
+from threading import Event, Lock
 
 from .file_availability import discover_local_files, clear_declared_outputs
 from .growing_file_tail import follow_job_files
@@ -26,7 +26,8 @@ from .base import (
     RunState,
     RunStatus,
     SubmissionNotStarted,
-    dispatch_cancellation,
+    request_cancellation,
+    start_monitor,
 )
 
 
@@ -462,16 +463,9 @@ class PsijRunner:
         finally:
             finish_monitor(self)
 
-    def _start_monitor(self):
-        with self._lock:
-            if self._thread is not None:
-                return
-            self._thread = Thread(target=self._thread_main, daemon=True)
-            self._thread.start()
-
     def start(self):
         if self._attached:
-            return self._start_monitor()
+            return start_monitor(self)
         return self.submit()
 
     def submit(self):
@@ -489,7 +483,7 @@ class PsijRunner:
             # rejected the job. Leave project submission recoverable even when
             # the native ID has not reached this process.
             self.executor._job_executor.submit(self._job)
-            self._start_monitor()
+            start_monitor(self)
 
     def wait(self):
         if self._thread is None:
@@ -509,10 +503,7 @@ class PsijRunner:
     def cancel(self):
         if self._thread is None and not self._attached:
             raise RuntimeError("Run has not been submitted")
-        with self._lock:
-            if self._cancel_future is None:
-                self._cancel_future = dispatch_cancellation(self._job.cancel)
-            return self._cancel_future
+        return request_cancellation(self, self._job.cancel)
 
 
 class PsijExecutor(Executor):
