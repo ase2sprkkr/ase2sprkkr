@@ -5,6 +5,7 @@ import pytest
 
 from ase2sprkkr.execution import (
     DuplicateSubmissionError,
+    ExecutionSpec,
     Executor,
     RunState,
     RunStore,
@@ -64,7 +65,9 @@ class _Executor(Executor):
 def _run(manager, executor, directory, *, task="DOS", dataset="case"):
     return manager.create_run(
         executor,
-        spec=SimpleNamespace(directory=str(directory)),
+        spec=ExecutionSpec(
+            argv=(), input_file=None, output_file=None, directory=str(directory),
+        ),
         process_result=lambda outcome: outcome,
         task=task,
         dataset=dataset,
@@ -360,3 +363,41 @@ def test_remote_file_collision_uses_target_identity(tmp_path):
     manager.reserve(first)
     with pytest.raises(DuplicateSubmissionError):
         manager.reserve(second)
+
+
+
+def test_stdin_read_conflicts_with_output_writer(tmp_path):
+    from ase2sprkkr.execution import FileEntry, FileManifest
+
+    manager = ExecutionManager(RunStore(tmp_path / "runs"))
+    shared = tmp_path / "shared.in"
+    reader = manager.new_record(
+        task="DOS", directory=tmp_path, dataset="reader",
+        files=FileManifest.from_spec(ExecutionSpec(
+            argv=("cat",), input_file=None, output_file="reader.out",
+            directory=str(tmp_path), stdin=str(shared),
+        )),
+    )
+    writer = manager.new_record(
+        task="BSF", directory=tmp_path, dataset="writer",
+        files=FileManifest(outputs=(FileEntry(local_path=str(shared)),)),
+    )
+    assert reader.files.input_file is None
+    manager.reserve(reader)
+    with pytest.raises(DuplicateSubmissionError):
+        manager.reserve(writer)
+
+
+def test_two_stdin_readers_can_run_concurrently(tmp_path):
+    from ase2sprkkr.execution import FileManifest
+
+    manager = ExecutionManager(RunStore(tmp_path / "runs"))
+    for task in ("DOS", "BSF"):
+        record = manager.new_record(
+            task=task, directory=tmp_path, dataset=task,
+            files=FileManifest.from_spec(ExecutionSpec(
+                argv=("cat",), input_file=None, output_file=f"{task}.out",
+                directory=str(tmp_path), stdin="shared.in",
+            )),
+        )
+        assert manager.reserve(record).state == RunState.SUBMITTING

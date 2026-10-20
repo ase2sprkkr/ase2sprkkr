@@ -170,7 +170,7 @@ def _manifest_accesses(record):
             value if os.path.isabs(value) else os.path.join(directory.target, value)
         )
 
-    reads = {path(entry) for entry in files.inputs}
+    reads = {path(entry) for entry in files.input_entries}
     # A pre-existing cache can still be updated by the calculation. Treat
     # every declared cache as both a reader and a potential writer.
     reads.update(path(cache.file) for cache in files.caches)

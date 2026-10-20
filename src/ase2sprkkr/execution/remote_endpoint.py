@@ -153,6 +153,7 @@ class _RemoteRun(RemoteRunner):
         return replace(
             local,
             inputs=inputs, outputs=outputs, caches=tuple(caches),
+            stdin=None if local.stdin is None else await mapped(local.stdin),
             stdout=None if local.stdout is None else replace(
                 local.stdout, remote_path=sync.get("output_file"),
             ),
@@ -497,6 +498,7 @@ class RemoteEndpointExecutor(Executor):
             return replace(
                 files,
                 inputs=tuple([await mapped(entry) for entry in files.inputs]),
+                stdin=await mapped(files.stdin),
                 outputs=tuple([await mapped(entry) for entry in files.outputs]),
                 caches=tuple(replace(cache, file=await mapped(cache.file))
                              for cache in files.caches),
@@ -672,6 +674,7 @@ class RemoteEndpointExecutor(Executor):
             entry = next(
                 (item for item in (
                     *run.files.inputs,
+                    run.files.stdin,
                     *run.files.outputs,
                     *(cache.file for cache in run.files.caches),
                     run.files.stdout,

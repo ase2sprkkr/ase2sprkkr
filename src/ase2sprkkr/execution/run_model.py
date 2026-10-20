@@ -137,6 +137,8 @@ class FileManifest:
     input_versions: tuple[FileVersion, ...] = ()
     output_versions: tuple[FileVersion, ...] = ()
     captured_at: Optional[str] = None
+    # Append so older positional constructors and JSON records stay compatible.
+    stdin: Optional[FileEntry] = None
 
     @classmethod
     def from_spec(cls, spec):
@@ -153,18 +155,18 @@ class FileManifest:
                 if (path := file_path(value, directory)) is not None
             ))
 
-        inputs = paths(getattr(spec, "input_file", None), *getattr(spec, "input_files", ()))
-        stdout = file_path(getattr(spec, "output_file", None), directory)
-        stderr = file_path(getattr(spec, "error_file", None), directory)
+        inputs = paths(spec.input_file, *spec.input_files)
+        stdin = file_path(spec.stdin, directory)
+        stdout = file_path(spec.output_file, directory)
+        stderr = file_path(spec.error_file, directory)
         streams = {stdout, stderr}
-        outputs = (
-            path for path in paths(*getattr(spec, "output_files", ())) if path not in streams
-        )
-        caches = paths(*getattr(spec, "cache_files", ()))
+        outputs = (path for path in paths(*spec.output_files) if path not in streams)
+        caches = paths(*spec.cache_files)
         return cls(
             inputs=tuple(FileEntry(local_path=x) for x in inputs),
             outputs=tuple(FileEntry(local_path=x) for x in outputs),
             caches=tuple(CacheEntry(FileEntry(local_path=x)) for x in caches),
+            stdin=None if stdin is None else FileEntry(local_path=stdin),
             stdout=None if stdout is None else FileEntry(local_path=stdout),
             stderr=None if stderr is None else FileEntry(local_path=stderr),
         ).initialize_availability()
@@ -176,7 +178,7 @@ class FileManifest:
                 self, name,
                 tuple(item if isinstance(item, cls) else cls(**item) for item in items),
             )
-        for name in ("stdout", "stderr"):
+        for name in ("stdout", "stderr", "stdin"):
             item = getattr(self, name)
             if isinstance(item, dict):
                 object.__setattr__(self, name, FileEntry(**item))
@@ -291,8 +293,16 @@ class FileManifest:
         return self.stdout.local_path if self.stdout is not None else None
 
     @property
+    def input_entries(self):
+        """All declared read inputs; stdin is not the primary input file."""
+        return (*self.inputs, *((self.stdin,) if self.stdin is not None else ()))
+
+    @property
     def input_files(self):
-        return tuple(entry.local_path for entry in self.inputs if entry.local_path is not None)
+        return tuple(dict.fromkeys(
+            entry.local_path for entry in self.input_entries
+            if entry.local_path is not None
+        ))
 
     @property
     def output_files(self):

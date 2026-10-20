@@ -47,3 +47,17 @@ def test_different_local_roots_map_to_identical_remote_target(tmp_path):
     second = manifest(tmp_path / "second")
     assert first.stdout.local_path != second.stdout.local_path
     assert first.stdout.remote_path == second.stdout.remote_path == "/shared/work/result.out"
+
+
+
+def test_reservation_maps_stdin_for_target_side_conflicts(tmp_path):
+    executor = RemoteEndpointExecutor(_Transport())
+    spec = ExecutionSpec(
+        argv=("cat",), input_file=None, output_file="result.out",
+        directory=str(tmp_path / "work"), stdin="shared.in",
+        launch=LaunchSpec(local_root=str(tmp_path), remote_root="/remote"),
+    )
+    files = executor.reservation_manifest(spec, FileManifest.from_spec(spec))
+    assert files.input_file is None
+    assert files.stdin.local_path == str(tmp_path / "work" / "shared.in")
+    assert files.stdin.remote_path == "/remote/work/shared.in"
