@@ -507,15 +507,12 @@ class RemoteRunner:
             )
 
     def _remote_argv(self, argv, staged):
-        directory = os.path.abspath(self.spec.directory)
         out = []
         for arg in argv:
             value = os.fspath(arg)
-            try:
-                path = value if os.path.isabs(value) else os.path.join(directory, value)
-                replacement = staged.get(os.path.abspath(path))
-            except (TypeError, ValueError):
-                replacement = None
+            # Match the path identity used when staging; never flush command
+            # arguments or reinterpret non-path arguments as file handles.
+            replacement = staged.get(file_path(value, self.spec.directory))
             out.append(replacement or value)
         return out
 
