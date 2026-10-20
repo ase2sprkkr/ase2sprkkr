@@ -138,14 +138,11 @@ class LocalProjectRunner:
         return self._backend_id
 
     def _refresh(self):
-        if self._backend_id is None:
+        # A terminal result is immutable. After acknowledgment the receipt
+        # may disappear while the supervisor process is still shutting down.
+        if self._backend_id is None or self._state in _TERMINAL:
             return self._state
         status = local_status(self._backend_id, self._files)
-        # A terminal result is immutable. After acknowledgment the receipt
-        # may disappear while the supervisor process is still shutting down;
-        # querying its PID must not regress FINISHED to RUNNING.
-        if self._state in _TERMINAL:
-            return self._state
         self._state = status.state
         self._failure_phase = status.failure_phase
         self._failure_message = status.message

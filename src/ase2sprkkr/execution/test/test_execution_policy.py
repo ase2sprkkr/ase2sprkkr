@@ -225,6 +225,16 @@ def test_file_path_resolves_named_files_and_tolerates_unnamed(tmp_path):
     assert file_path(object(), tmp_path) is None
 
 
+def test_file_path_preserves_pathlike_directory(tmp_path):
+    from pathlib import Path
+
+    absolute = tmp_path / "different" / "result.dat"
+    assert file_path(absolute, tmp_path / "work") == str(absolute)
+    assert file_path(Path("subdir/result.dat"), tmp_path) == str(
+        tmp_path / "subdir" / "result.dat"
+    )
+
+
 def test_file_path_flush_is_explicit(tmp_path):
     class FileLike:
         name = "output.dat"

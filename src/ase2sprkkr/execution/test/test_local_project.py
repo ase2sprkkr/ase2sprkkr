@@ -328,3 +328,20 @@ def test_local_project_request_uses_common_command_fields(tmp_path):
     request = LocalExecutor().create_project_run(spec, run_id=RUN_ID)._request()
     for key, value in spec.command_request().items():
         assert request[key] == value
+
+
+def test_terminal_project_runner_does_not_query_backend(monkeypatch, tmp_path):
+    import pytest
+    from ase2sprkkr.execution.local_project import LocalProjectRunner
+    from ase2sprkkr.execution.base import RunState
+
+    spec = _spec(tmp_path)
+    runner = LocalProjectRunner(
+        LocalExecutor(), spec, backend_id="old-supervisor", state=RunState.FINISHED,
+    )
+    monkeypatch.setattr(
+        "ase2sprkkr.execution.local_project.local_status",
+        lambda *args: pytest.fail("Terminal runner must not query backend"),
+    )
+    assert runner.state is RunState.FINISHED
+    assert runner.state is RunState.FINISHED
