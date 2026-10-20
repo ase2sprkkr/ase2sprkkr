@@ -325,8 +325,9 @@ def test_cancel_requests_supervisor_without_inventing_terminal_state(
             assert path == "/tmp/test-supervisor.sock"
         def sendall(self, data):
             sent.append(data)
-        def recv(self, count):
-            return b'{"accepted":true}\n'
+        def makefile(self, mode):
+            assert mode == "rb"
+            return io.BytesIO(b'{"accepted":true}\n')
 
     monkeypatch.setattr(remote_service.socket, "socket", lambda *args: Connection())
     status = remote_service.cancel_remote(remote_id)
@@ -552,3 +553,177 @@ def test_failed_submission_ticket_cannot_leave_calculation_running(tmp_path, mon
     with pytest.raises(SubmissionNotStarted, match="ticket store unavailable"):
         remote_service.submit_remote(request)
     assert not marker.exists()
+
+
+
+@pytest.mark.parametrize(
+    "reply",
+    [
+        b'{"accepted":false}\n',
+        b'{"accepted":true,"accepted":false}\n',
+        b'{"accepted":1}\n',
+        b'["accepted", true]\n',
+        b'{"accepted":true',
+        b'not json\n',
+        b" " * 256 + b"\n",
+    ],
+)
+def test_cancel_rejects_unacknowledged_or_incomplete_supervisor_reply(
+    tmp_path, monkeypatch, reply,
+):
+    _, remote_id, _ = _process_handle(tmp_path)
+    monkeypatch.setenv("ASE2SPRKKR_REMOTE_STATE_DIR", str(tmp_path))
+
+    class Connection:
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *args):
+            pass
+
+        def settimeout(self, timeout):
+            pass
+
+        def connect(self, path):
+            pass
+
+        def sendall(self, message):
+            assert message == b'{"command":"cancel"}\n'
+
+        def makefile(self, mode):
+            assert mode == "rb"
+            return io.BytesIO(reply)
+
+    monkeypatch.setattr(remote_service.socket, "socket", lambda *args: Connection())
+    with pytest.raises(RuntimeError, match="Supervisor rejected cancellation"):
+        remote_service.cancel_remote(remote_id)
+
+
+def test_cancel_accepts_fragmented_supervisor_acknowledgement(tmp_path, monkeypatch):
+    """Unix-stream replies can arrive in pieces, even for a tiny JSON line."""
+    import socket
+    from threading import Thread
+
+    _, remote_id, _ = _process_handle(tmp_path)
+    monkeypatch.setenv("ASE2SPRKKR_REMOTE_STATE_DIR", str(tmp_path))
+    monkeypatch.setattr(remote_service, "_process_running", lambda handle: True)
+    client, server = socket.socketpair()
+    received = []
+
+    class Connection:
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *args):
+            client.close()
+
+        def settimeout(self, timeout):
+            client.settimeout(timeout)
+
+        def connect(self, path):
+            assert path == "/tmp/test-supervisor.sock"
+
+        def sendall(self, data):
+            client.sendall(data)
+
+        def makefile(self, mode):
+            return client.makefile(mode)
+
+    def respond():
+        with server:
+            received.append(server.recv(128))
+            server.sendall(b'{"accepted":')
+            server.sendall(b'true}\n')
+
+    thread = Thread(target=respond)
+    thread.start()
+    try:
+        monkeypatch.setattr(remote_service.socket, "socket", lambda *args: Connection())
+        status = remote_service.cancel_remote(remote_id)
+    finally:
+        thread.join(timeout=2)
+        client.close()
+
+    assert not thread.is_alive()
+    assert received == [b'{"command":"cancel"}\n']
+    assert status["state"] == RunState.RUNNING.value
+
+
+def test_cancel_accepts_spaced_json_acknowledgement(tmp_path, monkeypatch):
+    _, remote_id, _ = _process_handle(tmp_path)
+    monkeypatch.setattr(remote_service, "_process_running", lambda _handle: True)
+
+    class Connection:
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *_args):
+            pass
+
+        def settimeout(self, _timeout):
+            pass
+
+        def connect(self, _path):
+            pass
+
+        def sendall(self, _message):
+            pass
+
+        def makefile(self, mode):
+            assert mode == "rb"
+            return io.BytesIO(b'{ "accepted" : true }\n')
+
+    monkeypatch.setattr(remote_service.socket, "socket", lambda *args: Connection())
+    assert remote_service.cancel_remote(remote_id)["state"] == RunState.RUNNING.value
+
+
+def test_cancel_terminal_receipt_is_read_exactly_once(tmp_path, monkeypatch):
+    _, remote_id, _ = _process_handle(tmp_path)
+    reads = []
+
+    def terminal_outcome(receipt_id):
+        reads.append(receipt_id)
+        return RunState.FINISHED, 0, None, None
+
+    monkeypatch.setattr(remote_service, "_process_outcome", terminal_outcome)
+    monkeypatch.setattr(
+        remote_service.socket, "socket",
+        lambda *_args: pytest.fail("Finished supervisor must not be signalled"),
+    )
+    result = remote_service.cancel_remote(remote_id)
+    assert result["state"] == RunState.FINISHED.value
+    assert result["return_code"] == 0
+    assert reads == ["a" * 32]
+
+
+def test_cancel_rechecks_status_when_supervisor_exits_before_connect(
+    tmp_path, monkeypatch,
+):
+    _, remote_id, _ = _process_handle(tmp_path)
+    reads = []
+
+    def racing_outcome(_receipt_id):
+        reads.append(True)
+        return None if len(reads) == 1 else (RunState.FINISHED, 0, None, None)
+
+    monkeypatch.setattr(remote_service, "_process_outcome", racing_outcome)
+    monkeypatch.setattr(remote_service, "_process_running", lambda _handle: True)
+
+    class Connection:
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *_args):
+            pass
+
+        def settimeout(self, _timeout):
+            pass
+
+        def connect(self, _path):
+            raise ConnectionRefusedError("Supervisor already exited")
+
+    monkeypatch.setattr(remote_service.socket, "socket", lambda *_args: Connection())
+    result = remote_service.cancel_remote(remote_id)
+    assert result["state"] == RunState.FINISHED.value
+    assert result["return_code"] == 0
+    assert len(reads) == 2

@@ -411,21 +411,28 @@ def status_remote(remote_id):
 def cancel_remote(remote_id, timeout=1.0):
     handle = _decode_handle(remote_id)
     if handle["kind"] == "process":
-        outcome = _process_outcome(handle["receipt_id"])
-        if outcome is not None:
-            return status_remote(remote_id)
+        # Terminal receipts are immutable. Check once before signalling and
+        # avoid contacting a supervisor whose job has already finished.
+        status = status_remote(remote_id)
+        if status["state"] in {state.value for state in _FINAL_STATES}:
+            return status
         try:
             with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as conn:
                 conn.settimeout(timeout)
                 conn.connect(handle["socket_path"])
                 conn.sendall(b'{"command":"cancel"}\n')
-                reply = conn.recv(256)
-                if b'"accepted":true' not in reply:
+                with conn.makefile("rb") as stream:
+                    reply = stream.readline(256)
+                try:
+                    response = json.loads(reply) if reply.endswith(b"\n") else None
+                except ValueError as exc:
+                    raise RuntimeError("Invalid supervisor cancellation reply") from exc
+                if not isinstance(response, dict) or response.get("accepted") is not True:
                     raise RuntimeError("Supervisor rejected cancellation")
         except (FileNotFoundError, ConnectionRefusedError):
-            return status_remote(remote_id)
-        # The request is not a terminal fact. Only the supervisor waits for and
-        # publishes the final child outcome.
+            # Supervisor may exit between the status check and connect.
+            pass
+        # Accepting cancel is not a terminal fact: observe the backend again.
         return status_remote(remote_id)
 
     if handle["kind"] == "psij":
@@ -434,8 +441,7 @@ def cancel_remote(remote_id, timeout=1.0):
         )
         job = executor.attach_native_job(handle["native_id"])
         job.cancel()
-        state = status_remote(remote_id)
-        return state
+        return status_remote(remote_id)
     raise ValueError("Unsupported remote execution id")
 
 
