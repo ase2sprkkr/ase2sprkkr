@@ -72,8 +72,9 @@ class AsyncioFileReader:
     """
 
     def __init__(self, filename, buffersize=8192):
+        self._owns_file = isinstance(filename, (str, bytes, os.PathLike))
         self.file = None
-        self.file = open(os.fspath(filename), "rb") if isinstance(filename, (str, bytes, os.PathLike)) else filename
+        self.file = open(os.fspath(filename), "rb") if self._owns_file else filename
         self.buffersize = buffersize
 
     def __fspath__(self):
@@ -83,9 +84,9 @@ class AsyncioFileReader:
         return filename
 
     def close(self):
-        if self.file:
-            self.file.close()
-            self.file = None
+        file, self.file = self.file, None
+        if file is not None and self._owns_file:
+            file.close()
 
     def __del__(self):
         self.close()
