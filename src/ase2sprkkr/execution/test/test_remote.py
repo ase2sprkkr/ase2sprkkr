@@ -671,3 +671,101 @@ def test_file_sync_transfer_decision_is_direction_independent(
     policy, source, destination, expected,
 ):
     assert policy.should_transfer(source, destination) is expected
+
+
+def test_always_sync_skips_content_hashes(tmp_path, monkeypatch):
+    """ALWAYS transfers both directions without hashing either file first."""
+    from .. import remote as remote_module
+
+    class NoDigestTransport(LocalTransport):
+        async def file_digest(self, path):
+            raise AssertionError(f"ALWAYS must not hash remote files: {path}")
+
+    def no_local_digest(*args, **kwargs):
+        raise AssertionError("ALWAYS must not hash local files")
+
+    monkeypatch.setattr(remote_module, "file_digest", no_local_digest)
+    local_root = tmp_path / "local"
+    remote_root = tmp_path / "remote"
+    local_root.mkdir()
+    remote_root.mkdir()
+    source = local_root / "input.dat"
+    source.write_bytes(b"local source")
+    destination = local_root / "output.dat"
+    destination.write_bytes(b"old local output")
+
+    endpoint = _executor(NoDigestTransport())
+    spec = ExecutionSpec(
+        argv=("true",),
+        directory=str(local_root),
+        launch=_launch(
+            local_root, remote_root,
+            input_files=FileSyncPolicy.ALWAYS,
+            output_files=FileSyncPolicy.ALWAYS,
+        ),
+    )
+    runner = endpoint.create_run(spec)
+
+    async def transfer():
+        used = {}
+        remote_source = await runner._stage_file(source, used)
+        assert Path(remote_source).read_bytes() == b"local source"
+        assert used == {remote_source: str(source)}
+
+        remote_output = remote_root / "output.dat"
+        remote_output.write_bytes(b"new remote output")
+        assert await runner._sync_one_output(
+            str(destination), str(remote_output), required=True,
+        )
+
+    asyncio.run(transfer())
+    assert destination.read_bytes() == b"new remote output"
+
+
+def test_always_sync_keeps_missing_source_semantics(tmp_path, monkeypatch):
+    """Optional missing inputs stay optional; required outputs still fail."""
+    from .. import remote as remote_module
+
+    class NoDigestTransport(LocalTransport):
+        async def file_digest(self, path):
+            raise AssertionError("ALWAYS should check existence, not content")
+
+    def no_local_digest(*args, **kwargs):
+        raise AssertionError("ALWAYS should check existence, not content")
+
+    monkeypatch.setattr(remote_module, "file_digest", no_local_digest)
+    local_root = tmp_path / "local"
+    remote_root = tmp_path / "remote"
+    local_root.mkdir()
+    remote_root.mkdir()
+    endpoint = _executor(NoDigestTransport())
+    runner = endpoint.create_run(ExecutionSpec(
+        argv=("true",),
+        directory=str(local_root),
+        launch=_launch(
+            local_root, remote_root,
+            input_files=FileSyncPolicy.ALWAYS,
+            output_files=FileSyncPolicy.ALWAYS,
+        ),
+    ))
+
+    async def check():
+        missing = local_root / "missing.inp"
+        used = {}
+        remote = await runner._stage_file(missing, used, required=False)
+        assert used == {remote: str(missing)}
+        assert not Path(remote).exists()
+        with pytest.raises(FileNotFoundError, match="Local input file"):
+            await runner._stage_file(missing, {}, required=True)
+
+        with pytest.raises(FileNotFoundError, match="was not created"):
+            await runner._sync_one_output(
+                str(local_root / "missing.out"),
+                str(remote_root / "missing.out"), required=True,
+            )
+        assert not await runner._sync_one_output(
+            str(local_root / "missing.out"),
+            str(remote_root / "missing.out"), required=False,
+        )
+
+    asyncio.run(check())
