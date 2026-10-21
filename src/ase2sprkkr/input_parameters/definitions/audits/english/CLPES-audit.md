@@ -1,7 +1,6 @@
-# CLPES — SPR-KKR 9.7 / ASE2SPRKKR
+# CLPES — current definition audit
 
-New definition: TASK=CLPES, executable kkrspec, conservatively serial. Actual branch IBLOCH=3: spec_rslab.f:172–173,226,239–241,862; driver spec_clpes.f.
-
+`clpes.py` exposes the native KKRSPEC core-level photoemission branch with a conservative serial execution policy. Native restrictions below remain relevant; no numerical accuracy claim is made.
 ## Parameters and defaults
 SPEC_CL is the actual name of the section (spec_inputs.f:1877–1921). Implementation IT (explicitly 1), CL (explicitly 2P), IE_ICST (default 1). CL is always written: without the present CL reader leaves 1S, although SECTION_SET_STRING states fallback 2P. Optional CE is not exposed in this definition; IT determines potential type and native selection includes also same atomic count Z (spec_clpes.f:213–216), not isolated site selection.
 
@@ -17,6 +16,3 @@ EPHOT=1000 eV is explicitly writes instead of inherited 25 eV: more suitable for
 - MPI has not been certified, automatic use is disabled; this is not a claim that native MPI is missing.
 
 Category for future joint audit: works but has a large ALE. It's not a setholder off.
-
-## Verification
-8 new regression tests: writing/reading, selector and shell, rejection of unsupported polarization and geometry, core state bounds. Full input_parameters set: 116 passed. Numerical SPR-KKR calculation not started.

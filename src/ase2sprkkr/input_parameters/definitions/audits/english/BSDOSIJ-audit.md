@@ -1,7 +1,6 @@
-# BSDOSIJ audit and new definition
+# BSDOSIJ — current definition audit
 
-Compared to delivered SPR-KKR 9.7 and ASE2SPRKKR refactor, commit 267512c4b8ccbbfd37af7ede898febc066b7e3ee. BSDOSIJ does not have its own definition. Single patch 0020-bsdosij.patch adds module and tests; the previous patch does not contain.
-
+`bsdosij.py` defines experimental site-resolved back-scattering DOS. The native and input-parameter constraints below refer to SPR-KKR 9.7; numerical accuracy has not been established.
 ## Input and defaults
 
 TASK BSDOSIJ starts site-resolved back-scattering DOS in kkrgen; initvar.f:540–554 changes internal task to E-INTEGRAL. GEN:358–386 prepares off-diagonal TAUIJ and requires IBZINT=2, i.e. BZINT=POINTS. INIT_MOD_TAUIJ_STAR reads TASK.CLURAD or NSHLCLU, lists of chemical symbols SELECT/EXCLUDE and uses QREPONLY from INITVAR.
@@ -32,8 +31,5 @@ The definition rejects NONMAG, other MODE, other GRID, two energy routes, SPLITS
 
 These errors does not fix Python domain file. Support input is experimental; numerical results SPR-KKR 9.7 are not confirmed by this audit.
 
-## MPI and tests
-
+## MPI
 mpi=True corresponds to the implemented reduction BSDOS_IJ over MPI_SUM_C (bsdosij.f:112–126) and output at the process0. Numerical accuracy alone MPI has not been tested.
-
-13 new tests: serialization, reloaded, pickle, energy restriction and relativity, NONMAG/BZINT, selector combinations and inexpensive NE. Full input_parameter set: **121 passed**. Tests do not release SPR-KKR or verify its DOS outputs. Patch passed git diff --check and re-application control.

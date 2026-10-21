@@ -1,7 +1,6 @@
-# 36. CHILANDAU — SPR-KKR 9.7 / ASE2SPRKKR
+# CHILANDAU — current definition audit
 
-So far missing task for Landau's orbital magnetic susceptibility. Added definition for **serial periodic ASA FREL procedure**. Preliminaryly: the serial branch works with essential limitations; **MPI the branch is broken**. Numerical calculation not carried out. It's not a joint final audit.
-
+The integrated `chilandau.py` definition covers the serial periodic ASA/FREL Landau orbital susceptibility branch. The audited native MPI branch remains defective; no numerical solver validation is claimed.
 ## Definitions and validation
 
 Executive kkrchi; native INITVAR recognizes CHILANDAU, RSP calls SUSC_LANDAU. Added CONTROL, TAU, MODE, CPA, STRCONST, ENERGY, TASK and SITES; minimum optional SCF section allows to refuse FULLPOT, which RSP explicitly prohibits.
@@ -23,12 +22,3 @@ TASK contains CLURAD, NSHLCLU, SELECT, EXCLUDE, QREPONLY and PRINT. SELECT/EXCLU
 3. ** Continuous outputs.** Condition IECURR.LT.-NETAB(1) in SUSC_LANCALC is always false for positive energy indices. The output of the susceptiblite is printed at each energy, not at the end. V serial run is required to use the last block; earlier blocks are only partial integrals.
 4. **Reading TAU branch.** RDTAUFIL opens and reads the text file header, but the energy loop lacks the corresponding reading TAU and the calculation TAU is skipped at RDTAUFIL. This reuse procedure is not offered or certified by this definition.
 5. The calculation uses the final sum of the neighbours and the specific Cartesian component. Convergence, geometric range, multiplication at QREPONLY and interpretation for general anisotropics need to be verified. Lower dimensionality and non-standard rotational states are not covered by this audit.
-
-
-## Verification
-
-12 new tests: discovery/defaults/serial executable, round-trip, pickle, NSHLCLU=0 and selectors, NONMAG, non-audited mode rejection, FULLPOT, BZINT, GRID, SPLITSS, invalid radius and NE, reciprocal exclusiveity SELECT/EXCLUDE. Full set InputParameters: **120 passed**, two existing NumPy DeprecationWarning messages.
-
-Command: `PYTHONPATH=src ASE2SPRKKR_NO_USER_PROFILE=1 ../test-env/bin/python -m pytest src/ase2sprkkr/input_parameters/test -q`.
-
-The sourcee: initvar.f:453–454; rsp.f:134–147; susc_landau.f; susc_lancalc.f; susc_laname.f; susc_lanme.f; init_mod_tauij_star.f:150–180; mod_sites.f:73. ASE baseline 267512c4b8ccbbfd37af7ede898febc066b7e3ee. Single patch only for CHILANDAU.

@@ -1,21 +1,9 @@
-# COMPTON — audit SPR-KKR 9.7 / ASE2SPRKKR
+# COMPTON — current definition audit
 
-Order 30. SPR-KKR: PUB9.7_260420_18h13.tar.gz.
-ASE2SPRKKR: refactor, commit 267512c4b8ccbbfd37af7ede898febc066b7e3ee.
-Patch is independent against this commit, does not include previous tasks.
-
+`compton.py` implements the input contract of periodic FREL Compton calculations using two GRID=5 contours and SPLITSS. The native branch is active but has documented limitations; no numerical validation is claimed.
 ## State and scope
 
-COMPTON does not yet have a definition InputParameters. Added `definitions/compton.py`
-for periodic FREL calculation with two contours GRID=5 and SPLITSS, over kkrgen.
-Native implementation is active. Preliminary category: ** works but has significant caveats**;
-a specific branch EMD2D with a non-zero longitudinal shift contains a documented error.
-Numerical results were not verified during this audit.
-
-NONMAG is allowed, scalar-relativistic and nonrelativistic modes not.
-The basic outputs are DATASET_BND.mcp, DATASET_COR.mcp and DATASET_TOT.mcp,
-with the total and spin difference component (`compton.f:1315–1380`). MD2D creates
-projection, EMD2D momentum density cut. This is not a interchangeable election.
+The current definition supports periodic FREL Compton momentum densities through `kkrgen` on the documented split-contour path. Native alternatives are assessed separately below.
 
 ## Source connections and inputs
 
@@ -117,21 +105,12 @@ Energy loop uses MPI_DISTRIBUTE and reduces results MPI_SUM_R
 the point processes the rank 0; corresponds to the condition of the calculation of the core contribution (`compton.f:626`).
 Therefore, mpi=True is the source justified. No actual MPI run was performed.
 
-## Tests
-
-22 new tests: writing both SPLITSS, defaults, automatic file recognition,
 pickle, TAU paths and directional vectors, NONMAG, prohibited modes, shut down each
 SPLITSS, incorrect directions, valid transverse pair, shift/parita, EMD2D with zero; and
 non-zero shifts, numbers/pollutations, NE and audited contours/BZINT.
 
-Whole set InputParameters: **130 passed**, Python 3.12. Four warning:
 two expected alerts PNMAX=0 in the general test defaults and two existing ones
-NumPy 2.5 DepressionWarning. `git diff --check` and patch back check passed.
 Numerical SPR-KKR has not been started; tests do not verify physical values, TAU cache,
 convergence, MPI results or accuracy of alternatives ONLY_CORE/USE_ZJOVZZ.
 
-## Files
-
-- src/ase2sprkkr/input_parameters/definitions/compton.py
 - src/ase2sprkkr/input_parameters/test/test_compton.py
-- 0030-compton.patch

@@ -1,15 +1,9 @@
-# DMI — audit SPR-KKR 9.7 / ASE2SPRKKR
+# DMI — current shared JXC/DMI definition audit
 
-Order: 29. Source: PUB9.7_260420_18h13.tar.gz. ASE2SPRKKR branch refactor
-commit 267512c4b8ccbbfd37af7ede898febc066b7e3ee. A separate patch against this commit;
-does not contain changes from previous tasks.
+DMI is supported by the shared `jxc.py` definition, selecting the native magnetic E-INTEGRAL DMI workflow; there is no separate `dmi.py` in the integrated tree. Native physical restrictions below are based on SPR-KKR 9.7.
+## Current implementation
 
-## Stav
-
-ASE2SPRKKR does not yet have a definition DMI. Supplemented `definitions/dmi.py` for standard
-periodic calculation DMIVECTOR over kkrgen; automatic search for definitions reads it.
-Native implementation exists and is not disabled. Preliminary inclusion in the common
-audit: **works but has significant caveats**. This is not a confirmation of numerical correctness.
+The shared `jxc.py` schema exposes `JXC` and `DMI` selectors; a DMI-only run selects the corresponding native branch.
 
 ## Real involvement
 
@@ -83,21 +77,12 @@ Micromagnetic totals printed as meV*A/f.u. Indexing DMI_ITJT in writing i
 read is consistent; error from BSDOSIJ is not documented here. On-site members are in
 leave the output at a distance less than 1e-6 ALAT.
 
-## Tests and their limits
-
-Added 14 tests: writing defaults and missed keywords, automatic recognition
 DMI when reading the file, pickle, roundtrip selectors and NSHLCLU=0,
 mutual exclusiveity of selectors, non-supported modes, NONMAG, multiple contours,
 SPLITSS, other BZINT and not positive NE.
 
-Whole set `src/ase2sprkkr/input_parameters/test`: **122 passed**, two existing
 DepressionWarning setting numpy.shape at NumPy 2.5. Python 3.12.
-`git diff --check` passed, patch verified by feedback application.
 Numerical SPR-KKR or MPI calculation not started. Tests do not confirm physical
 hodnoty, konvergenci, transformace symetrie ani interpretaci Dz.
 
-## Files
-
-- Definition: src/ase2sprkkr/input_parameters/definitions/dmi.py
 - Tests: src/ase2sprkkr/input_parameters/test/test_dmi.py
-- Patch: 0029-dmi.patch

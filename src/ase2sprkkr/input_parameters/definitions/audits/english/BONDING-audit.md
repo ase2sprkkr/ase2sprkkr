@@ -1,12 +1,9 @@
-# BONDING audit and new experimental definitions
+# BONDING — current definition audit
 
-Source: supplied SPR-KKR 9.7, ASE2SPRKKR refactor after fetchi, commit 267512c4b8ccbbfd37af7ede898febc066b7e3ee. Task does not yet have a definition. Patch 0021-bonding.patch adds bonding.py and test_bonding.py separately against this base.
-
+The integrated `bonding.py` definition covers the experimental cluster BONDING task. Its native SPR-KKR 9.7 workflow has significant limitations; declaring its parameters does not establish functional numerical correctness.
 ## Entry
 
 INITVAR:505–512 sets TASK=BONDING, switches off reading/writing TAU directory and turns on core/hyperfine. GEN:1013–1025 allows CLUBONDING only for IBZINT=0. TAU.BZINT=CLUSTER sets this mode; INIT_MOD_KMESH:717 switches the normal calculation to REAL-SPACE. CLUBONDING does not read any TASK parameters.
-
-The definition exposes a conservative molecular variant with explicit TAU.MOL. TAU_REAL_SPACE for MOL works with IQ1=1 to IQ2=NQ; its reader also asks for NSHLCLU or CLURAD in this mode. The definition therefore lists NSHLCLU=0. Scratch output requires one cluster copy of each site (TAU_REAL_SPACE:663 and748); a regular periodic cluster does not have to meet this condition. The extension to it is not verified by this patch.
 
 Full relativity is a conservative limitation of the definition: CLUBONDING while reading has a branch IREL<=2 but subsequently uses transformation REL>CLM and double-spin indexing without condition. The functionality of the scalar workflow from this branch cannot be demonstrated. KMROT!=0 and NEPATH!=1 cause silent RETURN (53–54). One energy path is verified by a validator, KMROT depends on the potential.
 
@@ -37,8 +34,4 @@ EMAX is intentionally written; if omitted, EF would be taken over. The original 
 5. **Local matrix dimension:** N is assigned in the previous loop through types according to their IQAT. For subsequent fixed IQ=1, no calculation shall be made. Miscellaneous NKMQ may mean incorrect scope of operations.
 6. **MPI:** routines use fixed scratch units, local stored shell tables initialized only at IECURR=1 and output22 without reduction. The module therefore selects mpi=False; parallel workflow has not been documented.
 
-Support is only the definition of input. SPR-KKR 9.7 BONDING cannot be declared functionally task based on this audit.
-
-## Tests
-
-12 new cases: serialization and loading, pickle, explicit writing of required cluster options, rejection of other integration/MOL/relativity, multiple paths and NE<2. Full input_parameter set: **120 passed**. Numerical SPR-KKR has not been started. Patch passed git diff --check and re-application control.
+The integrated support defines the input contract. SPR-KKR 9.7 BONDING cannot be declared functionally task based on this audit.

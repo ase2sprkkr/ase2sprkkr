@@ -1,16 +1,12 @@
-# DOS — audit SPR-KKR 9.7 / ASE2SPRKKR
+# DOS — current definition audit
 
-Order 34. Source: PUB9.7_260420_18h13.tar.gz.
-ASE2SPRKKR refactor: 267512c4b8ccbbfd37af7ede898febc066b7e3ee.
-Single patch 0034-dos.patch against this commit.
-
+`dos.py` defines the standard DOS task, with ordinary native DOS processing. The audited main workflow is meaningful, subject to the limitations below; numerical convergence of particular systems is not certified.
 ## Condition and corrections of the definition
 
 DOS already supported. Standard workflow has **fully meaningful***; numerical accuracy
-the specific system does not confirm this audit. DOSREP and other additional outputs
-have their own limitations and are not exposed to this patch.
+the specific system does not confirm this audit. DOSREP and other additional outputs have separate limitations outside this main DOS path.
 
-The original definition had CONTROL, TAU, ENERGY, TASK and SITES but lacked MODE,
+The definition has CONTROL, TAU, ENERGY, TASK and SITES but lacked MODE,
 CPA and STRCONST. Common definitions of these sections can be supplemented; they can be properly entered NREL,
 SREL, SP-SREL and common settings CPA/structure constants. FREL remains
 native mode without keyword. Original written to the input energy defaults preserved.
@@ -74,7 +70,6 @@ GRID=0, NE=1 is a valid separate point and remains permitted.
 
 `kkrgen.f:1169–1196` reads in CONTROL only at FREL DOSREP=RLM/CLM/REL
 DOSCORSYS=LOC/GLO, WRKAPDOS and WRPOLAR. The original definition did not expose them;
-this patch does not add them because their correctness requires a separate audit.
 
 WRDOSREP stores an energetically differentiated field and writes it at IECURR=NETAB(1)
 (`wrdosrep.f:152–185`). Not MPI reduction and part of field DOS with before use
@@ -91,7 +86,6 @@ forced restriction: CHECK is compile-time false (`wrdosrep.f:32–35`).
 
 - MODE.FREL and supplemented by scalar/nonrelativistic inputs are supported by format;
 their specific result depends on the potential and is not numerically compared here.
-- FULLPOT can be determined by potential; the patch does not add the whole SCF configuration.
 - Common ENERGY provides additional contours and SPLITSS. This audit shall be verified by:
 Standard GRID=3 scan and required checks, not all combinations
 advanced contours, their number of points and numerical scales.
@@ -100,19 +94,10 @@ poles, k-strips density and convergence.
 - There are no heat fluctuations audited, NLCPA, impurity/embedded cluster,
 self-energy or other advanced branches. They're not marked off.
 
-## Tests
-
-12 new tests: original defaults, automatic loading DOS file, pickle,
 NREL/SREL/SP-SREL roundtrip, GRID=2/3 s NE=1, valid GRID=0/NE=1,
 Incorrect NE, alert ImE=0, negative ImE and relative interval to EF.
 
-Whole set InputParameters: **120 passed**, Python 3.12. Two existing
-NumPy 2.5 DepressionWarning. `git diff --check` and patch back check passed.
 Numerical SPR-KKR has not been started. Tests do not verify values DOS, convergence,
 MPI results or additional DOSREP/WRKAPDOS/WRPOLAR outputs.
 
-## Files
-
-- src/ase2sprkkr/input_parameters/definitions/dos.py
 - src/ase2sprkkr/input_parameters/test/test_dos.py
-- 0034-dos.patch

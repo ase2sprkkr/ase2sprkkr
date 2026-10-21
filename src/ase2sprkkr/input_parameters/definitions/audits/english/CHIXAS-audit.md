@@ -1,7 +1,6 @@
-# 40. CHIXAS — SPR-KKR 9.7 / ASE2SPRKKR
+# CHIXAS — current definition audit
 
-Missing definition for **field induced magnetic circular dichroism in XAS**. Added serial periodic ASA FREL procedure in krchi. Preliminaryly: ** works but has major caveats*** needs external physical data that cannot be determined from a mere input. The Numerical Solver hasn't been launched.
-
+The integrated `chixas.py` definition describes field-induced XAS dichroism in the serial ASA/FREL path. External physical susceptibility data remain mandatory, and no numerical SPR-KKR validation is claimed.
 ## Mapping and definitions
 
 INITVAR recognizes CHIXAS; RSP calls CHIXAS (susc_xas.f). This is not an alias of normal XAS: SUSC_XASCALC explicitly has a purpose FIELD-INDUCED MCXD. The absorption type is entered TASK.ITXRAY, not XAS TASK.IT. Core shell is entered CL.
@@ -40,13 +39,3 @@ TASK.OP is omitted from the input: CHIXAS then sets local CHIORBPOL=BROOKS. This
 Native CHIXAS is not a self-consistent derivation of susceptiblite from material: first it needs NEF, then it calculates GAMMA and then uses the entered CHI in induced spectroscopy. Connection with real external data and core waves has not been numerically verified.
 
 RDABXC/LASTITRXC, TTTFMT, surface/weak, cache and spin-resolved orbital procedures are not audited. At POINTS native in the local k-loop branch switches IBZINT from 2 to 6; this cannot be confused with the user normal TB workflow only by number. The definition sets mpi=False; the parallel string has not been certified; it is not a proven MPI error.
-
-## Tests
-
-13 new tests; whole set InputParameters **121 passed**, two existing NumPy DeprecationWarning messages. Discovery verified, ITXRAY/CL/defaults, round-trip/pickle, numbered NEF, one and two types, ABSUNIT, absence of external data, index of absorbing type, disapproval of lengths and blank numbering, negative DOS, NN susceptibility, numbers and energy grid, width and unaudited modes.
-
-The common test test_definitions.py was extended with explicit CHIXAS fixation when checking the round-trip of all definitions. The necessary physical data was not replaced by defaults due to this test. This adjustment contains patch together with new test_chixas.py.
-
-Command: `PYTHONPATH=src ASE2SPRKKR_NO_USER_PROFILE=1 ../test-env/bin/python -m pytest src/ase2sprkkr/input_parameters/test -q`.
-
-The sourcee: initvar.f (CHIXAS keyword); rsp.f:134–138,843–845; init_mod_energy.f:100–105; susc_xas.f:138–219,243–260,469–514; susc_xasinit.f:60–139; susc_xascalc.f:7–10; mod_files.f:259. ASE baseline 267512c4b8ccbbfd37af7ede898febc066b7e3ee. Single patch only for CHIXAS; no numerical test.
