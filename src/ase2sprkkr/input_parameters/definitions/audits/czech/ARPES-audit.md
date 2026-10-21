@@ -1,8 +1,8 @@
-# 43. ARPES — audit SPR-KKR 9.7 a ASE2SPRKKR
+# ARPES — audit současné implementace
 
-Již podporovaný task v kkrspec. Opravena stávající definice; předběžně **má plný smysl**, s důležitými omezeními geometrie a dalších taskových režimů. Audit se zaměřuje na moderní SPEC_INPUT reader, energetické jednotky, angular/k sítě a jejich defaults. Není kompletní numerickou certifikací one-step photoemission, všech povrchových bariér ani aliasů AIPES/SPLEED/BAND.
+**Stav:** Použitelný pro auditované geometrie; expert režimy a native konvence vyžadují kontrolu. Audit vychází ze současné implementace na větvi `tasks-workflow` a nativního zdroje SPR-KKR 9.7 (`PUB9.7_260420_18h13`). Hodnocení není numerickou certifikací.
 
-## Opravy
+## Rozhraní, validace a nativní omezení
 
 - ENERGY.EWORK_EV správně popsáno jako **výstupní práce v eV**, nikoli vnitřní potenciál. SPEC_INPUT jej čte a převádí /RY_EV; v příslušné větvi při zadání nastavuje EWORK.
 - NT, NP a NK1..NK4 jsou kladná celá čísla; NK1=1 zůstává přípustné. Reader má pro jedno k explicitní větev a dělení NT−1/NP−1 chrání podmínkou >1. Vyžadovat minimum 2 by neoprávněně vyřadilo platný native postup.
@@ -11,7 +11,7 @@ Již podporovaný task v kkrspec. Opravena stávající definice; předběžně 
 - Konečné nezáporné EWORK_EV a obě IMV_*_EV, kladné konečné EPHOT; konečné elektronové úhly a k-vektory. Nulové tlumení není svévolně zakázáno.
 - N_LAYDBL musí mít přesně dvě nezáporná celá čísla. N_LAYER a NLAT_G_VEC jsou kladná celá čísla. INPVER/STRVER omezeny na 0/1. Při INPVER=0 je nové řízení moderního readeru vynecháno, protože data pocházejí ze starého externího input.inp.
 
-## Defaults: vypsané versus nevypsané
+## Výchozí hodnoty a význam
 
 | Parametr | ASE default | Srovnání a zápis |
 |---|---|---|
@@ -41,10 +41,10 @@ Expert photon polarization a spin-amplitude defaults se při nezadání obecně 
 5. Validace neověřuje existenci a obsah externího input.inp/struc.inp při INPVER/STRVER=0, soulad povrchové struktury s potenciálem ani konvergenci layer doubling a reciprocal cutoffů.
 6. Executable kkrspec a existující paralelní nastavení ponecháno; numerický MPI/serial výpočet nebyl proveden. Zde provedený ARPES audit není potvrzením všech ostatních TASK voleb sdílejících tutéž definici.
 
-## Testy
+## Implementační kontrakt
+- Autoritou pro soubory je aktuální `TaskDefinition` a případné dynamické metody schématu. Výstupy a cache se nesměšují s povinnými vstupy.
+- Zdroj: `src/ase2sprkkr/input_parameters/definitions/arpes.py`.
 
-14 nových testů; celá sada InputParameters **122 passed**, dvě existující NumPy deprecation warnings. Ověřeny defaults, executable, round-trip/pickle, platný jednobodový k scan, chybějící NK1, neplatné počty/délky, záporná workfunction, NaN damping, nulové photon energy, neplatný INPVER a ignorované třetí/čtvrté směry. Existující angular scan testy zůstávají úspěšné.
+## Ověření
 
-Příkaz: `PYTHONPATH=src ASE2SPRKKR_NO_USER_PROFILE=1 ../test-env/bin/python -m pytest src/ase2sprkkr/input_parameters/test -q`.
-
-Zdroje: spec_inputs.f:1198–1330,1420–1509,1660–1783; spec_rmbarpot.f (SURF_BAR). ASE baseline 267512c4b8ccbbfd37af7ede898febc066b7e3ee. Samostatný patch pouze pro ARPES. Bez numerického SPR-KKR běhu.
+Testy definic a deklarací souborů jsou v `src/ase2sprkkr/input_parameters/test/`. Tento dokument netvrdí nové spuštění úplné sady ani numerický výpočet SPR-KKR.

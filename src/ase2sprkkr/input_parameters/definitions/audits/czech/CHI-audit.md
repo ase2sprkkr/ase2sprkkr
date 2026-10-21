@@ -1,6 +1,6 @@
-# 37. CHI — audit SPR-KKR 9.7 a ASE2SPRKKR
+# CHI — audit současné implementace
 
-Dosud chybějící task. Přidána definice pro sériový periodický ASA FREL výpočet magnetické susceptibility. **Předběžně: funguje, ale má velké ALE — iterace spinové magnetizace je v této verzi zdrojů vypnutá.** Numerická správnost nebyla ověřena. Toto je individuální audit, nikoli společný závěrečný audit.
+**Stav:** Statická susceptibilita v auditovaném ASA/FREL sériovém režimu; nativní NCHIITER je efektivně 1. Audit vychází ze současné implementace na větvi `tasks-workflow` a nativního zdroje SPR-KKR 9.7 (`PUB9.7_260420_18h13`). Hodnocení není numerickou certifikací.
 
 ## Mapování a rozsah
 
@@ -18,7 +18,7 @@ TASK nabízí CHIPRINT a NOSYMCHI. MODE.PRINT se čte znovu uvnitř SUSC a můž
 - Automatický DOS na EF se počítá s pevně daným Im(E)=0.001 Ry (susc.f:269), nezávisle na ENERGY.ImE. To je nativní volba, nikoli chybně předávaná hodnota ASE.
 - Pokročilé RDABXC/ITRCHI0 restarty, ruční NEF pro typy, SIGNAF a cluster/surface/slab postupy nejsou zpřístupněny. RDABXC/MIX/TOL/NCHIITER se čtou z MODE, ne z TASK — důležité pro případné budoucí rozšíření.
 
-## Defaults a zápis
+## Výchozí hodnoty a význam
 
 **Vypsané defaults:** GRID=5, NE=30, ImE=0.01, EMIN=−0.2, MODE.NCHIITER=1. Počet energií a k-bodů vyžaduje konvergenci. NCHIITER=1 se liší od počátečního native 100, ale odpovídá skutečnému vynucenému počtu průchodů a nepředstírá iteraci. Tento explicitní default je vhodnější než nativní počáteční hodnota.
 
@@ -26,10 +26,12 @@ TASK nabízí CHIPRINT a NOSYMCHI. MODE.PRINT se čte znovu uvnitř SUSC a můž
 
 MODE.PRINT a TASK.CHIPRINT nemají vnucené defaults; native používá vstupní IPRINT/CHIPRINT. MIX=0.5 a TOL=1e−5 jsou nativní počáteční hodnoty, ale jejich iterační účinek je potlačen výše uvedenou chybou.
 
-## Testy
+## Implementační kontrakt
+- Autoritou pro soubory je aktuální `TaskDefinition` a případné dynamické metody schématu. Výstupy a cache se nesměšují s povinnými vstupy.
+- `output_file_templates`: `( "{dataset}*_dens.agr", "{dataset}*_chifmag.agr", "{dataset}_*_GAMMA-OP.dat", "{dataset}_*_CHI-r.dat", "{dataset}_*_*_I-spin.dat", )`
+- `cache_file_templates`: `("{dataset}.tau", "TKTK_tables")`
+- Zdroj: `src/ase2sprkkr/input_parameters/definitions/chi.py`.
 
-**11 nových testů**, celá sada InputParameters **119 passed**, dvě existující NumPy deprecation warnings. Testy ověřují discovery, sériový executable/defaults, skutečný zápis NCHIITER=1, parse/write round-trip, pickle, obě print volby a NOSYMCHI, OP=BROOKS, přípustný NONMAG a odmítnutí FULLPOT/neauditovaných režimů, nesprávných sítí a počtů i neúčinné iterace.
+## Ověření
 
-Příkaz: `PYTHONPATH=src ASE2SPRKKR_NO_USER_PROFILE=1 ../test-env/bin/python -m pytest src/ase2sprkkr/input_parameters/test -q`.
-
-Zdroje: initvar.f:412–418; rsp.f:195–201,811–835; susc.f:139–207,240–304,334–343,690–781. ASE baseline 267512c4b8ccbbfd37af7ede898febc066b7e3ee. Samostatný patch pouze pro CHI. Testy nespouštějí SPR-KKR.
+Testy definic a deklarací souborů jsou v `src/ase2sprkkr/input_parameters/test/`. Tento dokument netvrdí nové spuštění úplné sady ani numerický výpočet SPR-KKR.

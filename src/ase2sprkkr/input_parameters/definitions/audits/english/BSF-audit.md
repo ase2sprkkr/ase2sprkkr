@@ -1,6 +1,6 @@
 # BSF — audit of the shared BSF/BSFEK/BSFKK definition
 
-Status: **meaningful with documented defaults and geometry constraints**. This audit describes the current `tasks` branch and the supplied native SPR-KKR 9.7 source (`PUB9.7_260420_18h13`). It covers the E-K and K-K modes selected through the shared BLOCHSF implementation; it is not a numerical certification of every KPATH/Bravais combination.
+Status: **meaningful with documented defaults and geometry constraints**. This audit describes the current `tasks-workflow` branch and the supplied native SPR-KKR 9.7 source (`PUB9.7_260420_18h13`). It covers the E-K and K-K modes selected through the shared BLOCHSF implementation; it is not a numerical certification of every KPATH/Bravais combination.
 
 ## Current ASE2SPRKKR contract
 

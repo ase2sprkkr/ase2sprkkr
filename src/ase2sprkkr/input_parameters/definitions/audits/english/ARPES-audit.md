@@ -1,8 +1,8 @@
-# 43. ARPES audit SPR-KKR 9.7 and ASE2SPRKKR
+# ARPES — current implementation audit
 
-Already supported task in kkrspec. Fixed existing definitions; preliminary **have fully meaningful***, with important geometry limitations and other draw modes. The audit focuses on modern SPEC_INPUT reader, energy units, angular/to network and their defaults. It is not a complete numerical certification of one-step photoemission, all surface barriers or aliases AIPES/SPLEED/BAND.
+**Status:** Meaningful for audited geometries; expert modes and native conventions require care. This audit describes the implementation on `tasks-workflow` against SPR-KKR 9.7 (`PUB9.7_260420_18h13`); it is not numerical certification.
 
-## Opravy
+## Interface, validation and native constraints
 
 - ENERGY.EWORK_EV correctly described as **output work in eV**, not internal potential. SPEC_INPUT reads and converts /RY_EV; sets EWORK in the appropriate branch when entering.
 - NT, NP and NK1..NK4 are positive integers; NK1=1 remains permissible. Reader has NT -1/NP -1 protects the condition >1 for one for the explicit branch. Required minimum 2 would unduly eliminate the valid native procedure.
@@ -11,7 +11,7 @@ Already supported task in kkrspec. Fixed existing definitions; preliminary **hav
 - Final non-negative EWORK_EV and both IMV_*_EV, positive final EPHOT; final electron angles and k-vectors. Zero control is not arbitrary.
 - N_LAYDBL must have exactly two non-negative integers. N_LAYER and NLAT_G_VEC are positive integers. INPVER/STRVER limited to 0/1. At INPVER=0, the new control of the modern reader is omitted because the data comes from an old external input.inp.
 
-## Defaults: written versus omitted
+## Defaults and interpretation
 
 | Parameter | ASE default |Comparison and writing|
 |---|---|---|
@@ -41,10 +41,11 @@ Expert photon polarization and spin-amplitude defaults are generally not recorde
 5. Validation does not verify existence and content of external input.inp/struc.inp at INPVER/STRVER=0, consistency of surface structure with potential and convergence of Layer Doubling and reciprocal Cutoff.
 6. Executive kkrspec and existing parallel settings left; numerical MPI/serial calculation not performed. An audit performed here ARPES is not a confirmation of all other TASK options sharing the same definition.
 
-## Tests
+## Current implementation contract
 
-14 new tests; whole set InputParameters **122 passed**, two existing NumPy DeprecationWarning messages. Verified defaults, executable, round-trip/pickle, valid single point scan, missing NK1, invalid count/length, negative workfunction, NNdamping, zero photon energy, invalid INPVER and ignored third/fourth directions. Existing angular scan tests remain successful.
+- File roles are defined by the current `TaskDefinition` plus any conditional schema methods; required inputs, reusable cache and produced outputs have distinct semantics.
+- Schema source: `src/ase2sprkkr/input_parameters/definitions/arpes.py`.
 
-Command: `PYTHONPATH=src ASE2SPRKKR_NO_USER_PROFILE=1 ../test-env/bin/python -m pytest src/ase2sprkkr/input_parameters/test -q`.
+## Verification
 
-The sourcee: spec_inputs.f:1198–1330,1420–1509,1660–1783; spec_rmbarpot.f (SURF_BAR). ASE baseline 267512c4b8ccbbfd37af7ede898febc066b7e3ee. Single patch only for ARPES. Without numerical SPR-KKR run.
+Definition and file-contract tests live in `src/ase2sprkkr/input_parameters/test/`. No new full-suite or numerical SPR-KKR execution is claimed here.

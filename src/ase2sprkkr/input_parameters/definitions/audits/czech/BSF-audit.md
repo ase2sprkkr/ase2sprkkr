@@ -1,6 +1,6 @@
 # BSF — audit společné definice BSF/BSFEK/BSFKK
 
-Stav: **smysluplná úloha s dokumentovanými omezeními defaultů a geometrie**. Tento audit popisuje aktuální stav větve `tasks` a dodaný nativní zdroj SPR-KKR 9.7 (`PUB9.7_260420_18h13`). Pokrývá režimy E-K a K-K realizované společným BLOCHSF kódem; nejde o numerickou certifikaci všech kombinací KPATH/Bravais.
+Stav: **smysluplná úloha s dokumentovanými omezeními defaultů a geometrie**. Tento audit popisuje aktuální stav větve `tasks-workflow` a dodaný nativní zdroj SPR-KKR 9.7 (`PUB9.7_260420_18h13`). Pokrývá režimy E-K a K-K realizované společným BLOCHSF kódem; nejde o numerickou certifikaci všech kombinací KPATH/Bravais.
 
 ## Aktuální kontrakt ASE2SPRKKR
 
