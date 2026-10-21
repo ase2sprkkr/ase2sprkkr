@@ -1,6 +1,6 @@
-# MECHECK — audit SPR-KKR 9.7 a nová definice ASE2SPRKKR
+# MECHECK — audit současného tasku
 
-Podklad: přiložené zdroje PUB9.7_260420_18h13; ASE2SPRKKR `refactor`, commit `267512c4b8ccbbfd37af7ede898febc066b7e3ee`. V této revizi chybí definice MECHECK. Patch přidává samostatný modul `definitions/mecheck.py` a `test/test_mecheck.py`; nezávisí na předchozích patchích WFPLOT ani MEPLOT.
+`mecheck.py` zpřístupňuje sériovou diagnostiku maticových elementů `ME_TEST_11` v `kkrgen`, kterou vybírá `initvar.f:162–167` a volá `gen.f:1458–1459`. Omezení zkompilované rutiny SPR-KKR 9.7 platí bez ohledu na to, zda Python definice parametry přijímá.
 
 ## Rozhraní
 
@@ -39,8 +39,10 @@ Pokud je absolutní hodnota BAND energie menší než 1e-6, zdroj ji nahradí v�
 
 ASE2SPRKKR zde explicitně zapisuje GRID=3, NE=1, ImE=0.01 a EMIN=-0.2 Ry. Jsou to záměrné volby jednoduché diagnostiky, nikoli tvrzení o nativních defaults. Pro BAND je rutina při výběru obou stavových energií ignoruje. Pro CORE skutečně definují finální energetickou cestu; pro spektrum je třeba zvýšit NE a nastavit vhodné meze. NE=1 je vhodné pro základní kontrolu, pro CORE sken by vyšší default byl praktičtější; změna je návrh uživatelského chování, nikoli oprava parseru. EMAX=None se nevypisuje a deleguje skutečnou Fermiho energii SPR-KKR. Pro konkrétní okno lze použít párové EMINEV/EMAXEV.
 
-## Ověření
+## Nativní souborový kontrakt
 
-18 nových testů: automatické nalezení tasku, omitted defaults, zápis/načtení komplexních dvojic a souboru, pickle/copy, dědičnost PRINT, CORE sken, neplatné shelly a cutoff, near-zero energie, ignorované NMEFORM/ENERGY, relativita a nepodporované korelace, oddělený TASK.NONMAG.
+Pevné `K_CALC_ME=2` znemožňuje vznik pojmenovaných diagnostických souborů `DATSET_check_*.dat`: `me_test_11.f:403–411` je otevírá jen při `K_CALC_ME>2`. Při CORE skenu s více než jednou energií finálního stavu a nenulovým počátečním maticovým elementem zapisuje `me_test_11.f:704–742` nula či více souborů `MPZAZB_{-,z,+}_K-I-J.dat`. Tyto názvy **neobsahují DATASET ani ADSI**. Současné `mecheck.py::output_files()` správně deklaruje wildcardy pouze pro `INITIALSTATE=CORE` a `ENERGY.NE[0]>1`; skutečný počet závisí na datech. Rutina může také zapisovat na nepojmenované Fortranové diagnostické jednotky, jejich běhové názvy však nejsou stabilní kanonické výstupy.
 
-Celá sada `src/ase2sprkkr/input_parameters/test`: **126 passed**. Varování při zpětném načtení BAND vstupu jsou očekávaná: explicitně zapsaná ENERGY se při výběru BAND energií nepoužívá. `git diff --check` a obrácená aplikovatelnost patchu prošly. Nebyl spuštěn SPR-KKR; ověřena je definice vstupu a její shoda s přečtenými zdroji, nikoli numerické výsledky. Výstupní numerické soubory zatím nemají specializovaný parser.
+## Rozsah ověření
+
+Serializace a validace vstupů mají cílené regresní testy; při této úpravě nebyly nově spuštěny testy ani numerický výpočet SPR-KKR.

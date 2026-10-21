@@ -1,14 +1,14 @@
-# 35. GILBERT audit SPR-KKR 9.7 and ASE2SPRKKR
+# GILBERT — current task audit
 
-Already supported task; corrected definition for standard periodic magnetic FREL calculation. Preliminary classification: ** works but has major caveats**. It's not a joint final audit.
+`gilbert.py` exposes periodic magnetic FREL Gilbert damping via `kkrchi`. Native `gil.f:89–93` requires `KMROT=0` and `IBZINT=2` or `6`; the current definition uses the standard `BZINT=POINTS` branch. The calculation has significant native caveats, and numerical results have not been independently validated.
 
 ## Corrections to the definition
 
-- SETFLUCT=MLIN has not been properly described: support is linear M(T)=1−DMAGDT*T and combination of spin fluctuations with vibrations. Completed DMAGDT, TDEBYE and INITSVEC.
-- M_T loads the temperature network and magnetization from FLUCTFIL; now a file is required and rejected by ignored TMPMIN/TMPMAX/NTMP.
-- Added standard MODE, CPA and STRCONST. The validation limits this audited procedure to magnetic FREL and BZINT=POINTS. This is the scope of the definition, not the claim that all other native branches explicitly end STOP.
+- SETFLUCT=MLIN supports linear M(T)=1−DMAGDT*T and combinations of spin fluctuations with lattice vibrations. The schema includes DMAGDT, TDEBYE and INITSVEC.
+- M_T reads the temperature grid and magnetization from FLUCTFIL; the schema requires this file and rejects unused TMPMIN/TMPMAX/NTMP.
+- The schema includes MODE, CPA and STRCONST. The validation limits this audited procedure to magnetic FREL and BZINT=POINTS. This is the scope of the definition, not the claim that all other native branches explicitly end STOP.
 - The number of points is positive integers. The final non-negative temperatures, their sequence, binding DMAGDT to MLIN and completeness of the temperature network for vibrations without SETFLUCT are checked.
-- GRID=3, NE=1 nahrazeno GRID=0, NE=1. The single point GRID=3 results in an initialisation of the integration weight; the GIL itself sets ERYD=EFERMI and does not use the energy mesh for damping. EMIN/EMAX removed from the definition. SPLITSS refused.
+- The schema sets GRID=0, NE=1. The single point GRID=3 results in an initialisation of the integration weight; the GIL itself sets ERYD=EFERMI and does not use the energy mesh for damping. EMIN and EMAX are not explicitly overridden in the current definition. SPLITSS refused.
 
 ## Defaults: written versus omitted
 
@@ -27,10 +27,12 @@ For MLIN explicit TMPMIN is required because native default initial value 9999 i
 
 ## Accessories
 
-SPR-KKR 9.7: initvar.f:376–382; kkrchi.f:1425–1427; rsp.f:913–925; gil.f:89–121,266–320; thermal_init.f:79–81,105–119,170–242,322–368,548–558; mod_thermal.f:16; thermal_rmsdisp.f; gilsum.f:180–204. ASE baseline 267512c4b8ccbbfd37af7ede898febc066b7e3ee, single patch only for GILBERT.
+SPR-KKR 9.7: initvar.f:376–382; kkrchi.f:1425–1427; rsp.f:913–925; gil.f:89–121,266–320; thermal_init.f:79–81,105–119,170–242,322–368,548–558; mod_thermal.f:16; thermal_rmsdisp.f; gilsum.f:180–204..
 
-## Tests
+## Native output contract
 
-14 new tests: discovery/defaults/pickle/executable, round-trip MLIN with DMAGDT and vibrations, set M_T and ignored parameters, completeness of the temperature network, positive numbers, rejection of unaudited modes, NONMAG, incorrect energy mesh and missing MLIN temperature. Full set InputParameters: **122 passed**, two pre-existing NumPy DeprecationWarning messages. This is not a numerical test SPR-KKR.
+Native `gilsum.f:297–313` writes **one of two** data files: `TRIM(DATSET)//'alfa_x.dat'` when `N_TEMP_LAT=1`, or `TRIM(DATSET)//'alfa_T.dat'` when `N_TEMP_LAT>1`. Only the multi-temperature branch reaches the `XMGRHEAD(DATSET,'alfa_T',...)` graph writer (`gilsum.f:314–350`). The missing underscore before `alfa` in `.dat` names is native and intentional. The current `gilbert.py` task manifest lists all three templates unconditionally, although the files are mode-dependent. Native `kkrmain.f:239–245` also appends any nonempty `ADSI` to `DATSET`, which the current manifest does not include. These are manifest-versus-native differences, not claims of failed damping calculation.
 
-Command: `PYTHONPATH=src ASE2SPRKKR_NO_USER_PROFILE=1 ../test-env/bin/python -m pytest src/ase2sprkkr/input_parameters/test -q`.
+## Verification scope
+
+Input serialization and validation have dedicated regression tests; no fresh test-suite run or numerical SPR-KKR calculation is claimed here.

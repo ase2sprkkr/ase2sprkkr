@@ -1,14 +1,14 @@
-# 35. GILBERT — audit SPR-KKR 9.7 a ASE2SPRKKR
+# GILBERT — audit současného tasku
 
-Již podporovaný task; opravená definice pro standardní periodický magnetický FREL výpočet. Předběžné zařazení: **funguje, ale má velké ALE**. Nejde o společný závěrečný audit.
+`gilbert.py` zpřístupňuje periodický magnetický FREL výpočet Gilbertova tlumení přes `kkrchi`. Nativní `gil.f:89–93` vyžaduje `KMROT=0` a `IBZINT=2` nebo `6`; současná definice používá standardní `BZINT=POINTS`. Výpočet má významná nativní omezení a numerické výsledky nebyly nezávisle validovány.
 
 ## Opravy definice
 
-- SETFLUCT=MLIN nebyl správně popsán: podporuje lineární M(T)=1−DMAGDT*T a kombinaci spinových fluktuací s vibracemi. Doplněny DMAGDT, TDEBYE a INITSVEC.
-- M_T načítá teplotní síť a magnetizaci z FLUCTFIL; nyní se vyžaduje soubor a odmítají ignorované TMPMIN/TMPMAX/NTMP.
-- Přidány standardní MODE, CPA a STRCONST. Validace omezuje tento auditovaný postup na magnetický FREL a BZINT=POINTS. To je rozsah definice, nikoli tvrzení, že všechny ostatní nativní větve explicitně končí STOP.
+- SETFLUCT=MLIN podporuje lineární M(T)=1−DMAGDT*T a kombinaci spinových fluktuací s vibracemi. Schéma obsahuje DMAGDT, TDEBYE a INITSVEC.
+- M_T načítá teplotní síť a magnetizaci z FLUCTFIL; schéma vyžaduje soubor a odmítá ignorované TMPMIN/TMPMAX/NTMP.
+- Schéma obsahuje MODE, CPA a STRCONST. Validace omezuje tento auditovaný postup na magnetický FREL a BZINT=POINTS. To je rozsah definice, nikoli tvrzení, že všechny ostatní nativní větve explicitně končí STOP.
 - Počty bodů jsou kladná celá čísla. Kontrolují se konečné nezáporné teploty, jejich pořadí, vazba DMAGDT na MLIN a úplnost teplotní sítě pro vibrace bez SETFLUCT.
-- GRID=3, NE=1 nahrazeno GRID=0, NE=1. Jednobodový GRID=3 vede při inicializaci k nedefinované integrační váze; samotný GIL nastavuje ERYD=EFERMI a energetickou síť pro damping nepoužívá. EMIN/EMAX z definice odstraněny. SPLITSS odmítnuto.
+- Schéma používá GRID=0, NE=1. Jednobodový GRID=3 vede při inicializaci k nedefinované integrační váze; samotný GIL nastavuje ERYD=EFERMI a energetickou síť pro damping nepoužívá. EMIN a EMAX nejsou v současné definici explicitně přepisovány. SPLITSS odmítnuto.
 
 ## Defaults: vypsané versus nevypsané
 
@@ -27,10 +27,12 @@ Pro MLIN je vyžadován explicitní TMPMIN, protože nativní výchozí počáte
 
 ## Opora ve zdrojích
 
-SPR-KKR 9.7: initvar.f:376–382; kkrchi.f:1425–1427; rsp.f:913–925; gil.f:89–121,266–320; thermal_init.f:79–81,105–119,170–242,322–368,548–558; mod_thermal.f:16; thermal_rmsdisp.f; gilsum.f:180–204. ASE baseline 267512c4b8ccbbfd37af7ede898febc066b7e3ee, samostatný patch pouze pro GILBERT.
+SPR-KKR 9.7: initvar.f:376–382; kkrchi.f:1425–1427; rsp.f:913–925; gil.f:89–121,266–320; thermal_init.f:79–81,105–119,170–242,322–368,548–558; mod_thermal.f:16; thermal_rmsdisp.f; gilsum.f:180–204..
 
-## Testy
+## Nativní souborový kontrakt
 
-14 nových testů: discovery/defaults/pickle/executable, round-trip MLIN s DMAGDT a vibracemi, soubor M_T a ignorované parametry, úplnost teplotní sítě, kladné počty, odmítnutí neauditovaných režimů, NONMAG, nesprávné energetické sítě a chybějící MLIN teploty. Celá sada InputParameters: **122 passed**, dvě předem existující NumPy deprecation warnings. Nejde o numerický test SPR-KKR.
+`gilsum.f:297–313` zapisuje **právě jednu ze dvou** datových variant: `TRIM(DATSET)//'alfa_x.dat'` pro `N_TEMP_LAT=1`, nebo `TRIM(DATSET)//'alfa_T.dat'` pro `N_TEMP_LAT>1`. Jen více-teplotní větev pokračuje ke grafu `XMGRHEAD(DATSET,'alfa_T',...)` (`gilsum.f:314–350`). Chybějící podtržítko před `alfa` u datových souborů je správně podle Fortranu. Současný manifest `gilbert.py` uvádí všechny tři šablony bez podmínky, přestože závisí na režimu. `kkrmain.f:239–245` navíc připojuje neprázdné `ADSI` k nativnímu `DATSET`, s čímž manifest nepočítá. Jde o odchylku deklarovaných souborů, nikoli důkaz vadného výpočtu tlumení.
 
-Příkaz: `PYTHONPATH=src ASE2SPRKKR_NO_USER_PROFILE=1 ../test-env/bin/python -m pytest src/ase2sprkkr/input_parameters/test -q`.
+## Rozsah ověření
+
+Serializace a validace vstupů mají cílené regresní testy; při této úpravě nebyly nově spuštěny testy ani numerický výpočet SPR-KKR.

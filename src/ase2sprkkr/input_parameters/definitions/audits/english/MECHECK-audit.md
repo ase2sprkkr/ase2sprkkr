@@ -1,6 +1,6 @@
-# MECHECK audit SPR-KKR 9.7 and new definition ASE2SPRKKR
+# MECHECK — current task audit
 
-Background: Ancillary sources PUB9.7_260420_18h13; ASE2SPRKKR `refactor`, commit `267512c4b8ccbbfd37af7ede898febc066b7e3ee`. V definition MECHECK is missing. Patch adds a separate module `definitions/mecheck.py` and `test/test_mecheck.py`; it does not depend on previous patches WFPLOT or MEPLOT.
+`mecheck.py` exposes the serial `kkrgen` matrix-element diagnostic `ME_TEST_11` selected by `initvar.f:162–167` and called from `gen.f:1458–1459`. Limitations of the compiled SPR-KKR 9.7 routine remain even when the Python input definition accepts the parameters.
 
 ## Interface
 
@@ -39,8 +39,10 @@ If the absolute value BAND of the energy is less than 1e-6, the source shall rep
 
 ASE2SPRKKR here explicitly writes GRID=3, NE=1, ImE=0.01 and EMIN=-0.2 Ry. These are deliberate choices of simple diagnostics, not claims of native defaults. For BAND the routine is ignored when selecting both state energy. For CORE actually define the final energy path; for spectrum it is necessary to increase NE and set appropriate limits. NE=1 is suitable for basic control, for CORE scan would be higher default is more practical; change is a design of user behaviour, not repair of parser. EMAX=None is omitted from the input and delegates actual Fermi energy SPR-KKR. Couple EMINEV/EMAXEV can be used for a specific window.
 
-## Verification
+## Native output contract
 
-18 new tests: automatic finding task, omitted defaults, writing/loading complex pairs and files, pickle/copys, inheritance PRINT, CORE scan, invalid shell and cutoff, near-zero energy, ignored NMEFORM/ENERGY, relativity and unsupported correlation, separated TASK.NONMAG.
+Compiled `K_CALC_ME=2` makes the named `DATSET_check_*.dat` diagnostic files unreachable: native `me_test_11.f:403–411` opens them only if `K_CALC_ME>2`. For a CORE energy scan with more than one final-state energy and a nonzero initial matrix element, `me_test_11.f:704–742` instead opens zero or more `MPZAZB_{-,z,+}_K-I-J.dat` files. These names **do not contain DATASET or ADSI**. Current `mecheck.py::output_files()` correctly declares wildcard families only for `INITIALSTATE=CORE` and `ENERGY.NE[0]>1`; the exact count is data-dependent. The routine may also write to unnamed Fortran diagnostic units, but their runtime names are not stable canonical output files.
 
-Whole set `src/ase2sprkkr/input_parameters/test`: **126 passed**. Reload warning BAND input is expected: explicitly written ENERGY is not used in the selection BAND energy. `git diff --check` and the reverse application of patch has passed. Not started SPR-KKR; the definition of input and its compliance with read sources, not numerical results, is verified. Output numeric files do not yet have specialized parser.
+## Verification scope
+
+Input serialization and validation have dedicated regression tests; no fresh test-suite run or numerical SPR-KKR calculation is claimed here.
