@@ -5,6 +5,7 @@ from ..result_files_definitions import (
     Separator,
 )
 from typing import Optional
+from numbers import Number
 import numpy as np
 
 from ..result_files import Arithmetic, CommonResultFile
@@ -62,19 +63,30 @@ class BSFResultFile(CommonResultFile, Arithmetic):
 
     _arithmetic_values = [("RAW_DATA", slice(None))]
 
-    def _assert_arithmetic(self, other):
-        """Check, that the file can be summed/subtracked from an other file"""
-        assert self.MODE() == other.MODE()
-        assert self.KEYWORD() == other.KEYWORD()
-        for i in ["SHAPE", "NQ_EFF"]:
-            assert self[i]() == other[i]()
-        if self.MODE() == "EK_REL":
-            assert self.NK() == other.NK() and self.NE() == other.NE()
-            assert np.allclose(self.K(), other.K())
+    def _check_arithmetic(self, other):
+        """Only combine spectral functions defined on the same physical grid."""
+        super()._check_arithmetic(other)
+        if isinstance(other, Number):
+            return
+        for name in ("MODE", "KEYWORD", "NQ_EFF"):
+            if not np.array_equal(self[name](), other[name]()):
+                raise ValueError(f"BSF {name} differs between operands")
+        if self.RAW_DATA().shape != other.RAW_DATA().shape:
+            raise ValueError("BSF data shapes are different")
+        if self.MODE() == "EK-REL":
+            for name in ("NK", "NE"):
+                if self[name]() != other[name]():
+                    raise ValueError(f"BSF {name} differs between operands")
+            for name in ("K", "E"):
+                if not np.array_equal(self[name](), other[name]()):
+                    raise ValueError(f"BSF {name} grids are different")
         else:
-            assert self.NK1() == other.NK1() and self.NK2() == other.NK2()
-            assert np.allclose(self.VECK1(), other.VECK1())
-            assert np.allclose(self.VECK2(), other.VECK2())
+            for name in ("NK1", "NK2"):
+                if self[name]() != other[name]():
+                    raise ValueError(f"BSF {name} differs between operands")
+            for name in ("VECK_START", "VECK1", "VECK2", "ERYD"):
+                if not np.array_equal(self[name](), other[name]()):
+                    raise ValueError(f"BSF {name} grids are different")
 
 
 class BSFDefinition(ResultFileDefinition):

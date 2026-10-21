@@ -4,6 +4,7 @@ from ..result_files_definitions import (
     ResultFileDefinition,
 )
 from typing import Optional
+from numbers import Number
 import numpy as np
 import matplotlib
 import copy
@@ -113,9 +114,18 @@ class DOS(Arithmetic):
         self.type = None
 
     def _check_arithmetic(self, other):
-        if self.energy is other.energy:
+        if isinstance(other, np.ndarray):
+            if self.dos.shape != other.shape:
+                raise ValueError("DOS arrays have different shapes")
             return
-        assert np.allclose(self.energy, other.energy)
+        super()._check_arithmetic(other)
+        if isinstance(other, Number):
+            return
+        if self.dos.shape != other.dos.shape:
+            raise ValueError("DOS arrays have different shapes")
+        if (self.energy.shape != other.energy.shape
+                or not np.allclose(self.energy, other.energy)):
+            raise ValueError("DOS energy grids are different")
 
     def __repr__(self):
         if self.type:
