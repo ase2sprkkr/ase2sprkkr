@@ -6,6 +6,14 @@ Definice `compton.py` podporuje periodický FREL výpočet Comptonových hybnost
 
 Současná definice pokrývá periodický FREL výpočet přes `kkrgen`; zvláštní nativní větve nejsou tímto kontraktem numericky ověřeny.
 
+## Výstupy a názvy souborů podle SPR-KKR
+
+Nativní `compton.f:1314–1354` zapisuje `DATSET_BND.mcp`, `DATSET_COR.mcp` a `DATSET_TOT.mcp`; při `PRINT>0` také `DATSET_data.mcp`. `MD2D` vybírá příponu `_mcp2d.dat` a `EMD2D` příponu `_emd2d.dat`, vždy pro `BND`, `COR`, `TOT` (`compton.f:1439–1458`). Jde o valenční, core a celkovou složku; `MD2D` je projekce, `EMD2D` dvourozměrný řez hybnostní hustotou.
+
+`kkrmain.f:239–245` nejprve nastaví `DATSET0=DATSET`, potom k `DATSET` připojí neprázdné `ADSI`. Výstupy COMPTON proto zahrnují ADSI. Dosavadní `compton.py::output_files()` používá pouze `CONTROL.DATASET()`: pro neprázdné ADSI deklaruje jiné cesty než Fortran. Jde o nesoulad manifestu, nikoli o chybu nativního výpočtu.
+
+`init_mod_compton_pmesh.f:183–185,269–279` nejprve škáluje `PNVEC` krokem `DPN` a při `EMD2D` znovu hodnotou `PNMAX`. Zdroj tím potvrzuje omezení nenulového podélného řezu uvedené níže.
+
 ## Zdrojové zapojení a vstupy
 
 - `initvar.f:480–489`: COMPTON přepne RDTAUDIR na true a běžnou energetickou

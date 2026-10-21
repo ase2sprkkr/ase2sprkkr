@@ -1,9 +1,14 @@
 # DMI — current shared JXC/DMI definition audit
 
 DMI is supported by the shared `jxc.py` definition, selecting the native magnetic E-INTEGRAL DMI workflow; there is no separate `dmi.py` in the integrated tree. Native physical restrictions below are based on SPR-KKR 9.7.
+
 ## Current implementation
 
 The shared `jxc.py` schema exposes `JXC` and `DMI` selectors; a DMI-only run selects the corresponding native branch.
+
+## Native output naming
+
+Native `initvar.f:536–545` activates `CALC_DMI` and the internal `TASK=E-INTEGRAL`. `dmivector.f:416–418,605–606` uses `TRIM(DATSET)//'_DMIVEC_Dij.dat'` and the matching `DMIVEC_Dij_[xyz]` plot families. In `kkrmain.f:239–245`, any nonempty `ADSI` is appended to `DATSET`, so native output names include ADSI. Current `jxc.py::output_files()` uses `CONTROL.DATASET()` alone, yielding wrong declared paths for nonempty ADSI. This does not change the validity of DMI task selection.
 
 ## Real involvement
 
@@ -76,13 +81,3 @@ Output: DATASET_DMIVEC_Dij.dat and graphs of individual folders; pair folders in
 Micromagnetic totals printed as meV*A/f.u. Indexing DMI_ITJT in writing i
 read is consistent; error from BSDOSIJ is not documented here. On-site members are in
 leave the output at a distance less than 1e-6 ALAT.
-
-DMI when reading the file, pickle, roundtrip selectors and NSHLCLU=0,
-mutual exclusiveity of selectors, non-supported modes, NONMAG, multiple contours,
-SPLITSS, other BZINT and not positive NE.
-
-DepressionWarning setting numpy.shape at NumPy 2.5. Python 3.12.
-Numerical SPR-KKR or MPI calculation not started. Tests do not confirm physical
-hodnoty, konvergenci, transformace symetrie ani interpretaci Dz.
-
-- Tests: src/ase2sprkkr/input_parameters/test/test_dmi.py

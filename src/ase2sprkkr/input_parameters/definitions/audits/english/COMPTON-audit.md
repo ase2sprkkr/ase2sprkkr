@@ -1,9 +1,18 @@
 # COMPTON — current definition audit
 
 `compton.py` implements the input contract of periodic FREL Compton calculations using two GRID=5 contours and SPLITSS. The native branch is active but has documented limitations; no numerical validation is claimed.
+
 ## State and scope
 
 The current definition supports periodic FREL Compton momentum densities through `kkrgen` on the documented split-contour path. Native alternatives are assessed separately below.
+
+## Outputs and filenames verified from SPR-KKR
+
+Native `compton.f:1314–1354` writes `DATSET_BND.mcp`, `DATSET_COR.mcp`, and `DATSET_TOT.mcp`, plus `DATSET_data.mcp` for `PRINT>0`. `MD2D` selects `_mcp2d.dat`, whereas `EMD2D` selects `_emd2d.dat`; both write the `BND`, `COR`, and `TOT` components (`compton.f:1439–1458`). These represent band, core, and total contributions. `MD2D` is an integrated projection; `EMD2D` a 2D momentum-density cut.
+
+`kkrmain.f:239–245` first sets `DATSET0=DATSET`, then appends nonempty `ADSI` to `DATSET`. COMPTON results consequently include ADSI in their names. Current `compton.py::output_files()` uses `CONTROL.DATASET()` alone, and thus declares the wrong paths for nonempty ADSI. This is a manifest discrepancy, not a native calculation defect.
+
+Native `init_mod_compton_pmesh.f:183–185,269–279` scales `PNVEC` first by `DPN`, then again by `PNMAX` for `EMD2D`. This confirms the documented limitation of nonzero longitudinal cuts.
 
 ## Source connections and inputs
 
@@ -104,13 +113,3 @@ Energy loop uses MPI_DISTRIBUTE and reduces results MPI_SUM_R
 (`:1273–1296`). `mpi_distribute.f` divides energy backwards, so last
 the point processes the rank 0; corresponds to the condition of the calculation of the core contribution (`compton.f:626`).
 Therefore, mpi=True is the source justified. No actual MPI run was performed.
-
-pickle, TAU paths and directional vectors, NONMAG, prohibited modes, shut down each
-SPLITSS, incorrect directions, valid transverse pair, shift/parita, EMD2D with zero; and
-non-zero shifts, numbers/pollutations, NE and audited contours/BZINT.
-
-two expected alerts PNMAX=0 in the general test defaults and two existing ones
-Numerical SPR-KKR has not been started; tests do not verify physical values, TAU cache,
-convergence, MPI results or accuracy of alternatives ONLY_CORE/USE_ZJOVZZ.
-
-- src/ase2sprkkr/input_parameters/test/test_compton.py
