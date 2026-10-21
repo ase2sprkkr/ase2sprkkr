@@ -1,6 +1,6 @@
-# JORB — audit a nová definice
+# JORB — audit současného tasku
 
-Základ: dodané SPR-KKR 9.7 a aktuálně fetchovaný ASE2SPRKKR refactor, commit 267512c4b8ccbbfd37af7ede898febc066b7e3ee. JORB zde nemá vlastní definici. Samostatný patch 0018-jorb.patch přidává jorb.py a test_jorb.py proti tomuto základu; nezahrnuje dřívější tasky.
+`jorb.py` definuje sériový task `kkrgen` pro relativistickou paramagnetickou orbitální proudovou hustotu. Audit pokrývá nativní zdrojovou větev; numerická správnost nebyla ověřena.
 
 ## Význam a vstup
 
@@ -8,7 +8,7 @@ JORB aktivuje CALC_JORB. initvar.f:539–550 přepne interní TASK na E-INTEGRAL
 
 V každé energii volá GEN ORBCURDNS s WETAB(IE,IEPATH) (gen.f:1098–1099); po integraci následuje finální ORBCURDNS s EFCORRECT=true (1586–1588). Rutina popisuje relativistickou paramagnetickou proudovou hustotu valenčních elektronů v atomic units, ve full-potential formalismu. Výsledkem nejsou Stonerův parametr ani magnetický form factor.
 
-ORBCURDNS nemá vlastní TASK čtečku. Nová definice proto nepřidává neexistující volby pro síť nebo komponenty. Obecné QREPONLY čte společná větev E-INTEGRAL, ale není doloženo jako samostatná parametrizace JORB výstupu; nevystavuji jej zde jako JORB volbu.
+ORBCURDNS nemá vlastní TASK čtečku. Definice proto nepřidává neexistující volby pro síť nebo komponenty. Obecné QREPONLY čte společná větev E-INTEGRAL, ale není doloženo jako samostatná parametrizace JORB výstupu; nevystavuji jej zde jako JORB volbu.
 
 ## Defaulty a jejich zápis
 
@@ -36,18 +36,14 @@ Jiný GRID vyvolá upozornění na potřebný obsazený integrační interval, n
 6. **Finální korekce není vstupní konstanta JORB.** WE při EFCORRECT=true je SHFTEF; při běžné smyčce WEINP. RENORMALIZE případně násobí uložené JORB_LMSCT hodnotou SCLNOS. GEN inicializuje SHFTEF=0 a RENORMALIZE=false, případně je upraví dalšími větvemi (např. Lloyd). Definice nevystavuje SHFTEF/SCLNOS jako nedoložené TASK volby.
 7. **Výstupní NE není počet řádků hustoty.** WRHEAD dostane NETAB(1), ale data jsou zapsána po typech, LM a radiálních bodech, se třemi kartézskými komponentami. Parser nemůže považovat hlavičkové NE za počet datových řádků.
 
-Hlavní soubory mají názvy DATASET0_JORB.dat, DATASET0_JORB_UP.dat a DATASET0_JORB_DN.dat. Celkový výstup je součet dvou spinových složek. Pro každý typ je uveden IRTOP, NLAMAX-1 a NLMAMAX, následované LM bloky radiálních hodnot. Nejde o jednotlivé atomové proudy bez harmonického rozvoje.
+Hlavní soubory jsou `{dataset}_JORB.dat`, `{dataset}_JORB_UP.dat` a `{dataset}_JORB_DN.dat` (nativní `DATSET0`). Celkový výstup je součet dvou spinových složek. Pro každý typ je uveden IRTOP, NLAMAX-1 a NLMAMAX, následované LM bloky radiálních hodnot. Nejde o jednotlivé atomové proudy bez harmonického rozvoje.
 
-DMFT/LDA+U nejsou v definici bez přímého zdrojového zákazu odmítnuty; ORBCURDNS rozlišuje odlišné left/right solutions. Konzistence těchto kombinací nebyla numericky ověřena. Patch neopravuje Fortran ani nepřidává specializovaný parser.
+DMFT/LDA+U nejsou v definici bez přímého zdrojového zákazu odmítnuty; ORBCURDNS rozlišuje odlišné left/right solutions. Konzistence těchto kombinací nebyla numericky ověřena. Definice vstupu nemění nativní Fortran ani nedokládá specializovaný parser proudové hustoty.
 
-## Testy
+## Nativní souborový kontrakt
 
-9 nových případů: registrace, sériová deklarace, defaulty, vynechané EMAX, souborový roundtrip a pickle; tři způsoby zadání split kontury; upozornění pro jiný GRID; tři nekompatibilní relativistické režimy; nulový počet energií.
+`orbcurdns.f:346–352` vytváří `{dataset}_JORB.dat`, `{dataset}_JORB_UP.dat` a `{dataset}_JORB_DN.dat` přes nativní `DATSET0`, tedy bez ADSI připojeného v `kkrmain.f:239–245`. Diagnostické zápisy na unit `1000+LMR` nemají pojmenovaný `OPEN` (`orbcurdns.f:374–386`) a nejsou kanonickými výsledky. `gen.f:1357–1367` ukončí nepodporovaný MPI běh před finálním `ORBCURDNS`.
 
-Celá sada input_parameters: **117 passed**, Python 3.12, 5,30 s.
+## Rozsah ověření
 
-```bash
-PYTHONPATH=src ASE2SPRKKR_NO_USER_PROFILE=1 /workspace/scratch/e79ca15d9801/test-env/bin/python -m pytest src/ase2sprkkr/input_parameters/test -q
-```
-
-Prošly git diff --check a kontrola reverzní aplikace patche. Numerický SPR-KKR běh nebyl spuštěn.
+Regresní testy definice existují; během této revize nebyl spuštěn nový pytest ani numerický SPR-KKR.

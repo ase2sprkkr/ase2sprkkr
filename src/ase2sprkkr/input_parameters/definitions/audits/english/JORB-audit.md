@@ -1,6 +1,6 @@
-# JORB audit and new definition
+# JORB — current task audit
 
-Basic: supplied SPR-KKR 9.7 and currently fetched ASE2SPRKKR refactor, commit 267512c4b8ccbbfd37af7ede898febc066b7e3ee. JORB does not have its own definition. Single patch 0018-jorb.patch adds jorb.py and test_jorb.py against this base; does not include earlier tasks.
+`jorb.py` defines a serial `kkrgen` task for relativistic paramagnetic orbital-current density. The audit covers the native source path; numerical correctness remains unverified.
 
 ## Meaning and Input
 
@@ -8,7 +8,7 @@ JORB activates CALC_JORB. initvar.f:539–550 switches internal TASK to E-INTEGR
 
 V every energy calls GEN ORBCURDNS s WETAB(IE,IEPATH) (gen.f:1098–1099); integration followed by final ORBCURDNS s EFCORRECT=true (1586–1588). The routine describes the relativistic paramagnetic current density of valence electrons in Atomic units, in full-potential formalism. The result is neither the Stoner parameter nor the magnetic form factor.
 
-ORBCURDNS does not have its own TASK reader. The new definition therefore does not add non-existent options for network or components. General QREPONLY reads the common branch E-INTEGRAL but is not documented as a separate parameterization JORB output; I do not display it here as JORB option.
+ORBCURDNS does not have its own TASK reader. The definition therefore does not add non-existent options for network or components. General QREPONLY reads the common branch E-INTEGRAL but is not documented as a separate parameterization JORB output; I do not display it here as JORB option.
 
 ## Defaults and their writing
 
@@ -36,18 +36,14 @@ Another GRID will trigger an alert to the necessary occupied integration interva
 6. **Final correction is not input constant JORB.** WE at EFCORRECT=true is SHFTEF; at normal loop WEINP. RENORMALIZE if applicable, multiplys the stored JORB_LMSCT value SCLNOS. GEN initializes SHFTEF=0 and RENORMALIZE=false or adjusts them to other branches (e.g. Lloyd). The definition does not exhibit SHFTEF/SCLNOS as undocumented TASK options.
 7. **Exit NE is not the number of density rows.** WRHEAD gets NETAB(1), but the data are written by types, LM and radial points, with three cartesian components. Parser cannot consider header NE as a number of data rows.
 
-Main files have names DATASET0_JORB.dat, DATASET0_JORB_UP.dat and DATASET0_JORB_DN.dat. The total output is the sum of two spin components. For each type there are IRTOP, NLAMAX-1 and NLMAMAX, followed by LM blocks of radial values. These are not individual atomic currents without harmonious development.
+Main files are `{dataset}_JORB.dat`, `{dataset}_JORB_UP.dat` and `{dataset}_JORB_DN.dat` (native `DATSET0`). The total output is the sum of two spin components. For each type there are IRTOP, NLAMAX-1 and NLMAMAX, followed by LM blocks of radial values. These are not individual atomic currents without harmonious development.
 
-DMFT/LDA+U are not rejected in the definition without a direct source ban; ORBCURDNS distinguishes different left/right solutions. The consistency of these combinations has not been numerically verified. Patch does not fix Fortran does not even add specialized parser.
+DMFT/LDA+U are not rejected in the definition without a direct source ban; ORBCURDNS distinguishes different left/right solutions. The consistency of these combinations has not been numerically verified. The input definition does not modify the native Fortran or establish a specialized current-density parser.
 
-## Tests
+## Native file contract
 
-9 new cases: registration, serial declaration, defaults, omitted EMAX, file roundtrip and pickle; three ways of entering split contours; alerts for another GRID; three incompatible relativistic modes; zero number of energy.
+`orbcurdns.f:346–352` creates `{dataset}_JORB.dat`, `{dataset}_JORB_UP.dat`, and `{dataset}_JORB_DN.dat` through native `DATSET0`, without appended ADSI (`kkrmain.f:239–245`). Diagnostic writes to unit `1000+LMR` have no named `OPEN` (`orbcurdns.f:374–386`), unlike the canonical result files. `gen.f:1357–1367` stops unsupported MPI before the final `ORBCURDNS` call.
 
-Full input_parameter set: **117 passed**, Python 3.12, 5,30 s.
+## Verification scope
 
-```bash
-PYTHONPATH=src ASE2SPRKKR_NO_USER_PROFILE=1 /workspace/scratch/e79ca15d9801/test-env/bin/python -m pytest src/ase2sprkkr/input_parameters/test -q
-```
-
-Passed git diff --check and checked the patch reverse application. Numerical SPR-KKR run not started.
+Focused definition tests exist; this revision does not claim a new pytest or numerical SPR-KKR run.
