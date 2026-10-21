@@ -1,6 +1,6 @@
-# 46. BAND in KKRSPEC excl. separate definitions and audits
+# BAND in KKRSPEC excl. separate definitions and audits
 
-BAND already exists as TASK option in ARPES, now has a separate definition InputParameters.create("BAND"). Executable kkrspec. Preliminary **works but has major caveats***: complex Bloch roots and their filter cannot be confused with normal BSF or EKREL output. The Numerical Solver hasn't been launched.
+BAND has a dedicated `band.py` definition on `tasks-workflow`, exposed as InputParameters.create("BAND"). Executable kkrspec. Preliminary **works but has major caveats***: complex Bloch roots and their filter cannot be confused with normal BSF or EKREL output. The Numerical Solver hasn't been launched.
 
 ## Meaning native calculation
 
@@ -40,11 +40,3 @@ SPEC_PH is left as part of shared native spectroscopic preparation. It cannot be
 4. Native BAND in SPEC_VBRUN enforces ATA=1; disorder/CPA result therefore requires own interpretation and is not generally certified by this definition.
 5. mpi=False is a conservative setting. Native has its own parallel collection of band data over rank files; this string has not been numerically tested. There is no evidence of error of all MPI calculations.
 6. Surface structure, workflow, FULLPOT, many-body and thermal branches are not completely certified by this input-only audit.
-
-## Tests
-
-10 new tests; whole set InputParameters **118 passed**, two existing NumPy DeprecationWarning messages. Discovery verification, band defaults, zero control, filter, capacity and unwritten transmission option, round-trip/pickle, executive, path moment and transmission flag; invalid cutoffs, numbers, ignored vectors, negative control and SPLITSS.
-
-Command: `PYTHONPATH=src ASE2SPRKKR_NO_USER_PROFILE=1 ../test-env/bin/python -m pytest src/ase2sprkkr/input_parameters/test -q`.
-
-The sourcee: spec_rslab.f:160–225; spec_inputs.f:1397–1418,1420–1463,2223–2237; spec_band.f:66–100; spec_vbrun.f:203,224–230,566,597,786–810; mod_spec_commons.f:232–242. ASE baseline 267512c4b8ccbbfd37af7ede898febc066b7e3ee. Single patch only for BAND; without dependence on previous patches.

@@ -1,6 +1,6 @@
-# CLXPS audit SPR-KKR 9.7 and definition ASE2SPRKKR
+# CLXPS — current definition audit
 
-Audit against supplied sources SPR-KKR 9.7 and ASE2SPRKKR refactor, commit 267512c4b8ccbbfd37af7ede898febc066b7e3ee. CLXPS does not have its own definition on this basis. Patch adds clxps.py and test_clxps.py; it is independent of previous patches.
+CLXPS has its own `clxps.py` definition on `tasks-workflow`; native restrictions refer to the supplied SPR-KKR 9.7 source.
 
 ## Rozsah
 
@@ -33,15 +33,3 @@ TASK.ImE corresponds to effective native default, not intermediate 0. Explicit a
 6. **Final energy below EF stops calculation.** This condition cannot be verified only from input without core energy potential; remains control SPR-KKR.
 
 MPI is conservatively disabled for this postprocessing and its outputs in the definition. This is not a claim that the source explicitly prohibits a parallel energy loop; parallel CLXPS has not been verified.
-
-## Verification
-
-13 new test cases: registration and serialization, omission native defaults, geometry 0 and roundtrip, incomplete and interrupted geometry, ANGRES without geometry, shell and energy capacity, zero ImE alerts, three incompatible relativistic modes, both correlations and rejection GRV.
-
-Full input_parameter set: **121 passed**. Started by Python 3.12 command:
-
-```bash
-PYTHONPATH=src ASE2SPRKKR_NO_USER_PROFILE=1 /workspace/scratch/e79ca15d9801/test-env/bin/python -m pytest src/ase2sprkkr/input_parameters/test -q
-```
-
-Passed git diff --check and checked the patch reverse application. Numerical calculation SPR-KKR has not been started.

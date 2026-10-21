@@ -1,6 +1,6 @@
-# CLXPS — audit SPR-KKR 9.7 a definice ASE2SPRKKR
+# CLXPS — audit současné definice
 
-Audit proti dodaným zdrojům SPR-KKR 9.7 a ASE2SPRKKR refactor, commit 267512c4b8ccbbfd37af7ede898febc066b7e3ee. CLXPS na tomto základu nemá vlastní definici. Patch přidává clxps.py a test_clxps.py; je samostatný, nezávislý na předchozích patchích.
+CLXPS má na `tasks-workflow` vlastní definici `clxps.py`; nativní omezení vycházejí z dodaných zdrojů SPR-KKR 9.7.
 
 ## Rozsah
 
@@ -33,15 +33,3 @@ TASK.ImE odpovídá efektivnímu nativnímu defaultu, nikoliv mezihodnotě 0. Ex
 6. **Konečná energie pod EF zastaví výpočet.** Tuto podmínku nelze ověřit jen ze vstupu bez core energií potenciálu; zůstává kontrolou SPR-KKR.
 
 MPI je v definici konzervativně vypnuto pro tento postprocessing a jeho výstupy. To není tvrzení, že zdroj explicitně zakazuje paralelní energetickou smyčku; paralelní CLXPS nebyl ověřen.
-
-## Ověření
-
-13 nových testovacích případů: registrace a serializace, vynechání nativních defaultů, geometrie 0 a roundtrip, nekompletní a přerušené geometrie, ANGRES bez geometrie, shell a energetická kapacita, upozornění na nulové ImE, tři nekompatibilní relativistické režimy, obě korelace a odmítnutí GRV.
-
-Celá sada input_parameters: **121 passed**. Spuštěno Pythonem 3.12 příkazem:
-
-```bash
-PYTHONPATH=src ASE2SPRKKR_NO_USER_PROFILE=1 /workspace/scratch/e79ca15d9801/test-env/bin/python -m pytest src/ase2sprkkr/input_parameters/test -q
-```
-
-Prošel git diff --check a kontrola reverzní aplikace patche. Numerický výpočet SPR-KKR nebyl spuštěn.

@@ -1,6 +1,6 @@
-# 46. BAND v KKRSPEC — samostatná definice a audit
+# BAND v KKRSPEC — samostatná definice a audit
 
-BAND již existuje jako TASK volba v ARPES, nyní má samostatnou definici InputParameters.create("BAND"). Executable kkrspec. Předběžně **funguje, ale má velké ALE**: komplexní Blochovy kořeny a jejich filtr nelze zaměnit za běžný BSF nebo EKREL výstup. Numerický solver nebyl spuštěn.
+BAND má na `tasks-workflow` samostatnou definici `band.py` dostupnou jako InputParameters.create("BAND"). Executable kkrspec. Předběžně **funguje, ale má velké ALE**: komplexní Blochovy kořeny a jejich filtr nelze zaměnit za běžný BSF nebo EKREL výstup. Numerický solver nebyl spuštěn.
 
 ## Význam native výpočtu
 
@@ -40,11 +40,3 @@ SPEC_PH je ponecháno jako součást sdílené nativní spektroskopické přípr
 4. Native BAND v SPEC_VBRUN vynucuje ATA=1; disorder/CPA výsledek proto vyžaduje vlastní interpretaci a není touto definicí obecně certifikován.
 5. mpi=False je konzervativní nastavení. Native má vlastní paralelní sběr band dat přes rankové soubory; tento řetězec nebyl numericky testován. Není zde prokázána chyba všech MPI výpočtů.
 6. Povrchová struktura, workfunction, FULLPOT, many-body a thermal větve nejsou tímto input-only auditem kompletně certifikovány.
-
-## Testy
-
-10 nových testů; celá sada InputParameters **118 passed**, dvě existující NumPy deprecation warnings. Ověřeny discovery, band defaults, nulové tlumení, vypsaný filtr, kapacita a nevypsaná transmission volba, round-trip/pickle, executable, momentum cesta a transmission flag; odmítnuty neplatné cutoffy, počty, ignored vectors, záporné tlumení a SPLITSS.
-
-Příkaz: `PYTHONPATH=src ASE2SPRKKR_NO_USER_PROFILE=1 ../test-env/bin/python -m pytest src/ase2sprkkr/input_parameters/test -q`.
-
-Zdroje: spec_rslab.f:160–225; spec_inputs.f:1397–1418,1420–1463,2223–2237; spec_band.f:66–100; spec_vbrun.f:203,224–230,566,597,786–810; mod_spec_commons.f:232–242. ASE baseline 267512c4b8ccbbfd37af7ede898febc066b7e3ee. Samostatný patch pouze pro BAND; bez závislosti na předchozích patchích.

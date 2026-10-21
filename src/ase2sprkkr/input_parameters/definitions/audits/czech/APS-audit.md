@@ -1,6 +1,6 @@
-# APS — audit a nová definice
+# APS — audit současné definice
 
-Zdroje: dodané SPR-KKR 9.7 a aktuálně fetchovaný ASE2SPRKKR refactor, commit 267512c4b8ccbbfd37af7ede898febc066b7e3ee. APS zde nemá vlastní definici. Samostatný patch 0014-aps.patch přidává aps.py a test_aps.py proti tomuto základu; předchozí tasky nezahrnuje.
+APS má na `tasks-workflow` vlastní definici `aps.py`; závěry o fyzice a parametrech jsou vztažené k dodanému zdroji SPR-KKR 9.7.
 
 ## Vstup a defaulty
 
@@ -33,15 +33,3 @@ GAMMA je zdrojem vypisováno jako eV a převáděno dělením RY_EV. Jeho skute�
 6. **MPI větev APS nedokončí.** APS není v seznamu tasků pokračujících po MPI energetické smyčce v gen.f:1355–1368. Definice má mpi=False.
 
 Definice validuje fyzikální shell l<n a kladný jedničkový IT. Horní mez IT závisí na potenciálu. GAMMA musí být konečné; hodnota <=0 vyvolá upozornění, že broadening vypne. Bez GAMMA nejsou zaváděna omezení odvozená od broadeningu.
-
-## Testy a meze ověření
-
-8 nových případů: discovery a defaulty, vynechané TASK hodnoty, souborový roundtrip a pickle, explicitní shell/typ/přepínače/broadening a jejich roundtrip, chybný shell, obě nepodporované korelace, upozornění na přepnutí režimu a vypnutý broadening, nedostatečná energetická kapacita.
-
-Celá sada input_parameters: **116 passed**, Python 3.12, 5,36 s.
-
-```bash
-PYTHONPATH=src ASE2SPRKKR_NO_USER_PROFILE=1 /workspace/scratch/e79ca15d9801/test-env/bin/python -m pytest src/ase2sprkkr/input_parameters/test -q
-```
-
-Prošly git diff --check a kontrola reverzní aplikace patche. Numerický APS běh ani kontrola konkrétního DOS souboru nebyly provedeny. Patch neobsahuje specializovaný parser APS výstupů.

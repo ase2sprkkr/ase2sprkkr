@@ -1,6 +1,6 @@
-# APS audit and new definition
+# APS — current definition audit
 
-Sources: supplied SPR-KKR 9.7 and currently fetched ASE2SPRKKR refactor, commit 267512c4b8ccbbfd37af7ede898febc066b7e3ee. APS does not have its own definition. Single patch 0014-aps.patch adds aps.py and test_aps.py against this base; previous tasks does not include.
+APS has its own `aps.py` definition on `tasks-workflow`; the physical and parameter findings concern the supplied SPR-KKR 9.7 source.
 
 ## Input and defaults
 
@@ -33,15 +33,3 @@ GAMMA is written as eV and transferred by division RY_EV. Its actual use is not 
 6. **MPI branch APS does not complete.**APS is not included in the list tasks continuing after MPI energy loop in gen.f:1355–1368. The definition has mpi=False.
 
 Definition validates physical shell l<n and positive 1 IT. The upper limit IT depends on the potential. GAMMA shall be final; hodnota <=0 shall indicate that Broadening is switched off. No GAMMA restrictions derived from Broadening are introduced.
-
-## Tests and verification limits
-
-8 new cases: Discovery and defaults, omitted TASK values, file roundtrip and pickle, explicit shell/type/switches/breading and their roundtrip, incorrect shell, both unsupported correlations, mode switching alerts and off breaking, insufficient energy capacity.
-
-Full input_parameter set: **116 passed**, Python 3.12, 5,36 s.
-
-```bash
-PYTHONPATH=src ASE2SPRKKR_NO_USER_PROFILE=1 /workspace/scratch/e79ca15d9801/test-env/bin/python -m pytest src/ase2sprkkr/input_parameters/test -q
-```
-
-Passed git diff --check and checked the patch reverse application. Numerical APS run or check a specific DOS file have not been performed. Patch does not contain specialized parser APS outputs.
