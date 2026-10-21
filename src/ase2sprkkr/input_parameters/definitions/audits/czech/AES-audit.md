@@ -1,6 +1,7 @@
-# AES — audit a nová definice
+# AES — audit současné definice
 
-Základ: aktuálně fetchovaný ASE2SPRKKR refactor 267512c4b8ccbbfd37af7ede898febc066b7e3ee a dodané zdroje SPR-KKR 9.7. V ASE2SPRKKR zde AES nemá vlastní definici. Samostatný patch 0016-aes.patch obsahuje aes.py a test_aes.py, nezahrnuje předchozí tasky.
+AES má na `tasks-workflow` vlastní definici `aes.py`. Nativní kontrakt je plně relativistická Augerova spektroskopie vyžadující připravený TAU vstup. Závěry vycházejí z dodaných zdrojů SPR-KKR 9.7 (`PUB9.7_260420_18h13`), nikoli z numerické validace.
+
 
 ## Workflow a vstup
 
@@ -37,16 +38,4 @@ NEME je hrubá síť matrix elements, skutečně použitý počet je min(TASK.NE
 7. **Výstup není jednoduchá tabulka NE řádků.** Hlavička je vytvořena s NE počátečních energií, ale pro každý core stav se zapisuje 2*NE-1 konečných energií. Každý bod má dva řádky a intenzity jsou komplexní hodnoty. Specializovaný parser musí tuto strukturu respektovat.
 8. **Výstupní energie zůstávají v Ry.** aes.f:657–659 vypisuje real(ETABFIN) a relativní rozdíl bez RY_EV; nelze sem přenést interpretaci eV ze spektrálního výstupu NRAES. Konečné energie se sestavují z 2*EF-ECOR s broadeningem převzatým z první počáteční energie (řádky 483–487).
 
-Numerická správnost AES, chování cache a konkrétní TAU soubor nebyly ověřeny běžícím SPR-KKR. Patch nezavádí parser výstupu ani neopravuje Fortran.
-
-## Testy
-
-13 nových případů: registrace a defaulty, vynechané hodnoty a EMAX, souborový roundtrip a pickle; explicitní parametry a roundtrip; tři nebezpečné hodnoty NEME; tři neslučitelné relativistické režimy; obě korelace; neplatný shell a limit n; nedostatečná kapacita; f slupka překračující STRME.
-
-Celá sada input_parameters: **121 passed**, Python 3.12.
-
-```bash
-PYTHONPATH=src ASE2SPRKKR_NO_USER_PROFILE=1 /workspace/scratch/e79ca15d9801/test-env/bin/python -m pytest src/ase2sprkkr/input_parameters/test -q
-```
-
-Prošly git diff --check a kontrola reverzní aplikace patche. Numerický SPR-KKR běh nebyl spuštěn.
+Numerická správnost AES, chování cache a konkrétní TAU soubor nebyly ověřeny běžícím SPR-KKR. Definice nemění nativní implementaci Fortranu.

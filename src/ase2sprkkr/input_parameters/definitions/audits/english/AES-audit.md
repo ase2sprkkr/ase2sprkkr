@@ -1,6 +1,7 @@
-# AES audit and new definition
+# AES — current definition audit
 
-Base: currently fetched ASE2SPRKKR refactor 267512c4b8ccbbfd37af7ede898febc066b7e3ee and supplied sources SPR-KKR 9.7. V ASE2SPRKKR here AES does not have its own definition. The separate patch 0016-aes.patch contains aes.py and test_aes.py, does not include previous tasks.
+AES has a dedicated `aes.py` definition on `tasks-workflow`. The native contract is fully relativistic Auger spectroscopy requiring a prepared TAU input. Findings refer to the supplied SPR-KKR 9.7 source (`PUB9.7_260420_18h13`), not numerical validation.
+
 
 ## Workflow and input
 
@@ -37,16 +38,4 @@ NEME is the gross net matrix elements, the actual number used is min(TASK.NEME, 
 7. **The output is not a simple table NE rows.** The header is created with NE initial energy but for each core state with writes 2*NE-1 final energy. Each point has two lines and the intensity are complex values. The specialized parser must respect this structure.
 8. **The output energy remains in Ry.** aes.f:657–659 writes real(ETABFIN) and the relative difference without RY_EV; the interpretation of eV from spectral output NRAES cannot be transferred here. The final energy shall be calculated from 2*EF-ECOR with the Broadening taken from the first initial energy (lines 483–487).
 
-Numerical accuracy AES, cache behaviour and specific TAU file have not been verified running SPR-KKR. Patch does not perform parser output or does not fix Fortran.
-
-## Tests
-
-13 new cases: registration and defaults, omitted values and EMAX, file roundtrip and pickle; explicit parameters and roundtrip; three hazardous values NEME; three incompatible relativistic regimes; both correlations; invalid shell and limit n; insufficient capacity; f shell exceeding STRME.
-
-Full input_parameter set: **121 passed**, Python 3.12.
-
-```bash
-PYTHONPATH=src ASE2SPRKKR_NO_USER_PROFILE=1 /workspace/scratch/e79ca15d9801/test-env/bin/python -m pytest src/ase2sprkkr/input_parameters/test -q
-```
-
-Passed git diff --check and checked the patch reverse application. Numerical SPR-KKR run not started.
+Numerical accuracy AES, cache behaviour and specific TAU file have not been verified running SPR-KKR. This definition does not modify the native Fortran implementation.

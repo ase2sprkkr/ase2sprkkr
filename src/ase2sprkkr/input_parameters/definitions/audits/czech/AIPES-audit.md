@@ -1,6 +1,6 @@
-# 45. AIPES — samostatná definice a audit
+# AIPES — samostatná definice a audit
 
-ASE již nabízí AIPES jako TASK uvnitř definice ARPES. Přidána samostatná definice pro InputParameters.create("AIPES") s executable kkrspec. Předběžně: **funguje, ale má velké ALE** — nativní AIPES má konkrétní lokální/nekoherentní aproximační význam, který nelze zaměnit za numerické zintegrování všech ARPES úhlů. Numerický solver nebyl spuštěn.
+AIPES má na `tasks-workflow` vlastní definici `aipes.py` a používá `kkrspec`. Posouzení nativní fyziky: **funguje, ale má velké ALE** — nativní AIPES má konkrétní lokální/nekoherentní aproximační význam, který nelze zaměnit za numerické zintegrování všech ARPES úhlů. Numerický solver nebyl spuštěn.
 
 ## Skutečná native větev
 
@@ -24,7 +24,7 @@ Vypsané NE=300, EWORK_EV=4.2 eV, IMV_INI_EV=0.05 eV, IMV_FIN_EV=2 eV, EPHOT=25 
 
 Electron THETA/PHI=0..0 a NT/NP=1 odpovídají photoemission defaultu. SPOL=2 zůstává explicitním photoemission defaultem, oproti SPLEED native SPOL=1. Expert polarization konvence nebyly kompletně auditovány; nepředstíráme ekvivalenci vynechání klíče a vypsání stejné numerické hodnoty.
 
-CRYS_VECS=False se **nevypisuje** a ponechává použití primitivních krystalových vektorů. Native přítomnost CRYS_VECS nastaví USE_CRY_PRIM_VECS=false. Původní název CRYS_VEC se nečte, proto samostatná definice nabízí opravený název a popis; původní ARPES soubor tento samostatný patch nemění.
+CRYS_VECS=False se **nevypisuje** a ponechává použití primitivních krystalových vektorů. Native přítomnost CRYS_VECS nastaví USE_CRY_PRIM_VECS=false. Původní název CRYS_VEC se nečte, proto samostatná definice nabízí opravený název a popis; pro kontrakt AIPES se používá samostatná definice `aipes.py`.
 
 ## Další ALE
 
@@ -33,11 +33,3 @@ CRYS_VECS=False se **nevypisuje** a ponechává použití primitivních krystalo
 - STRVER/INPVER a generovaná povrchová geometrie musí odpovídat potenciálu. Full-potential, mnohočásticové a všechny spin-density-matrix větve nebyly v celém řetězci certifikovány.
 - mpi=False nové definice je konzervativní volba, nikoli důkaz rozbité native MPI implementace.
 - Native překlepy dvojího LANZ1 assignmentu a absolutního IMV_INI do VIH platí i zde. Vypsaný N_LAYDBL nastaví obě směrové hodnoty a používané IMV_INI_EV zapisuje správně VIL.
-
-## Testy
-
-11 nových testů; celá sada InputParameters **119 passed**, dvě existující NumPy deprecation warnings. Ověřeny discovery, samostatný TASK, energetické defaults, photon sekce, SPOL, round-trip/pickle, executable, workfunction/photon energy a správný CRYS_VECS. Odmítnuty neauditované scans, neplatné počty, záporná workfunction, NaN tlumení, nulová photon energy, SPLITSS a nulový NE.
-
-Příkaz: `PYTHONPATH=src ASE2SPRKKR_NO_USER_PROFILE=1 ../test-env/bin/python -m pytest src/ase2sprkkr/input_parameters/test -q`.
-
-Zdroje: spec_rslab.f:160–235; spec_tau_prepare.f:104–112; spec_mecalc.f:657–666; spec_sumup_int.f:75–81,181–218; spec_inputs.f:1198–1241,1358–1389,1764–1783. ASE baseline 267512c4b8ccbbfd37af7ede898febc066b7e3ee. Samostatný patch pouze pro AIPES; nevyžaduje předchozí ARPES/SPLEED patche.

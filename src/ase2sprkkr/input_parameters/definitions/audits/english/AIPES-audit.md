@@ -1,6 +1,6 @@
-# 45. AIPES separate definitions and audits
+# AIPES separate definitions and audits
 
-ASE already offers AIPES as TASK within the definition ARPES. Added separate definition for InputParameters.create("AIPES") with executable kkrspec. Preliminaryly: **works but has major caveats** © native AIPES has a specific local/uncoherent approximation meaning that cannot be confused with the numerical integration of all ARPES angles. The Numerical Solver hasn't been launched.
+AIPES has a dedicated definition `aipes.py` on `tasks-workflow` and uses the `kkrspec` executable. Native-physics assessment: **works but has major caveats** © native AIPES has a specific local/uncoherent approximation meaning that cannot be confused with the numerical integration of all ARPES angles. The Numerical Solver hasn't been launched.
 
 ## Actual native branch
 
@@ -24,7 +24,7 @@ Listed NE=300, EWORK_EV=4.2 eV, IMV_INI_EV=0.05 eV, IMV_FIN_EV=2 eV, EPHOT=25 eV
 
 Electron THETA/PHI=0..0 and NT/NP=1 correspond to photoemission default. SPOL=2 remains explicit photoemission default, versus SPLEED native SPOL=1. Expert polarization conventions have not been fully audited; we do not fake equivalence of missing keys and writing out the same numerical value.
 
-CRYS_VECS=False is ** not written** and leaves the use of primitive crystal vectors. Native presence CRYS_VECS sets USE_CRY_PRIM_VECS=false. The original name CRYS_VEC is not read, therefore the separate definition offers a corrected name and description; the original ARPES file does not change this separate patch.
+CRYS_VECS=False is ** not written** and leaves the use of primitive crystal vectors. Native presence CRYS_VECS sets USE_CRY_PRIM_VECS=false. The original name CRYS_VEC is not read, therefore the separate definition offers a corrected name and description; the actual `aipes.py` definition must be used for its task-specific contract.
 
 ## Next ALE
 
@@ -33,11 +33,3 @@ CRYS_VECS=False is ** not written** and leaves the use of primitive crystal vect
 - STRVER/INPVER and the surface geometry generated shall correspond to the potential. Full-potential, multiparticle and all spin-density-matrix branches have not been certified throughout the chain.
 - mpi=False new definition is conservative choice, not evidence broken native MPI implementation.
 - Native double typo LANZ1 assignment and absolute IMV_INI to VIH applies here. Listed N_LAYDBL sets both directional values and used IMV_INI_EV writes correctly VIL.
-
-## Tests
-
-11 new tests; whole set InputParameters **119 passed**, two existing NumPy DeprecationWarning messages. Discovery verified, separate TASK, energy defaults, photon section, SPOL, round-trip/pickle, executive, workfunction/photon energy and correct CRYS_VECS. Unaudited scans refused, invalid numbers, negative workfunction, NN control, zero photon energy, SPLITSS and zero NE.
-
-Command: `PYTHONPATH=src ASE2SPRKKR_NO_USER_PROFILE=1 ../test-env/bin/python -m pytest src/ase2sprkkr/input_parameters/test -q`.
-
-The sourcee: spec_rslab.f:160–235; spec_tau_prepare.f:104–112; spec_mecalc.f:657–666; spec_sumup_int.f:75–81,181–218; spec_inputs.f:1198–1241,1358–1389,1764–1783. ASE baseline 267512c4b8ccbbfd37af7ede898febc066b7e3ee. Single patch only for AIPES; does not require previous ARPES/SPLEED patche.
