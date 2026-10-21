@@ -39,20 +39,33 @@ def file_path(value, directory=None, *, flush=False, required=False):
     return os.path.abspath(path)
 
 
-def close_output_files(*files):
-    """Close each distinct output handle once, including merged stdout/stderr.
-
-    Path declarations and absent streams do not own a closeable handle.
-    Propagate the first close error, as each runner did before.
-    """
+def _close_distinct(resources, *, suppress_errors=False):
+    """Close each distinct resource once; keep closing after an error."""
     seen = set()
-    for file in files:
-        if file is None or id(file) in seen:
+    first_error = None
+    for resource in resources:
+        if resource is None or id(resource) in seen:
             continue
-        seen.add(id(file))
-        close = getattr(file, "close", None)
-        if close is not None:
+        seen.add(id(resource))
+        close = getattr(resource, "close", None)
+        if close is None or getattr(resource, "closed", False):
+            continue
+        try:
             close()
+        except BaseException as exc:
+            if first_error is None:
+                first_error = exc
+    if first_error is not None and not suppress_errors:
+        raise first_error
+
+
+def close_output_files(*files):
+    """Close distinct output handles, including merged stdout/stderr.
+
+    Paths and absent streams need no closing. An error must not leave another
+    open output handle behind; propagate the first error after cleanup.
+    """
+    _close_distinct(files)
 
 
 def dispatch_cancellation(action):
@@ -260,24 +273,7 @@ class ExecutionResources:
             resources = self._resources
             self._resources = ()
 
-        first_error = None
-        seen = set()
-        for resource in resources:
-            if resource is None or id(resource) in seen:
-                continue
-            seen.add(id(resource))
-            close = getattr(resource, "close", None)
-            if close is None or getattr(resource, "closed", False):
-                continue
-            try:
-                close()
-            except BaseException as exc:
-                if first_error is None:
-                    first_error = exc
-
-        if first_error is not None and not suppress_errors:
-            raise first_error
-
+        _close_distinct(resources, suppress_errors=suppress_errors)
 
 class ResourceOwnedRunner:
     """Runner proxy owning resources and the public submit/cancel boundary."""

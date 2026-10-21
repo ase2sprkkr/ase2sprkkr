@@ -591,26 +591,25 @@ def test_psij_status_and_attach_check_complete_endpoint(monkeypatch, tmp_path):
             ),
         ),
     )
-    expected = psij_backend.RunStatus(RunState.RUNNING, backend_id="456")
-    monkeypatch.setattr(executor, "status_native", lambda native_id: expected)
-    assert executor.status(matching) == (expected,)
-    attached = executor.attach(matching, start=False)
-    assert attached.backend_id == "456"
-
-
-def test_psij_record_status_uses_native_status(monkeypatch, tmp_path):
-    executor = _executor(monkeypatch, _Backend())
-    expected = psij_backend.RunStatus(
-        RunState.FINISHED, backend_id="456", return_code=0,
-    )
     seen = []
+    state = psij_backend.RunStatus(RunState.RUNNING, backend_id="456")
+
     def status_native(native_id):
         seen.append(native_id)
-        return expected
+        return state
 
     monkeypatch.setattr(executor, "status_native", status_native)
-    assert executor.status(_psij_run(tmp_path, "456")) == (expected,)
+    assert executor.status(matching) == (state,)
+    attached = executor.attach(matching, start=False)
+    assert attached.backend_id == "456"
     assert seen == ["456"]
+
+    # A completed native result must also propagate its return code.
+    state = psij_backend.RunStatus(
+        RunState.FINISHED, backend_id="456", return_code=0,
+    )
+    assert executor.status(matching) == (state,)
+    assert seen == ["456", "456"]
 
 
 def test_psij_uncertain_submit_without_native_id_stays_recoverable(monkeypatch, tmp_path):

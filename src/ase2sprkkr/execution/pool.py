@@ -4,6 +4,8 @@ from __future__ import annotations
 
 from threading import RLock
 
+from .base import _close_distinct
+
 
 class ExecutorPool:
     """Process-local cache of reusable execution backends."""
@@ -55,18 +57,7 @@ class ExecutorPool:
         with self._lock:
             executors = tuple(self._executors.values())
             self._executors.clear()
-        first_error = None
-        for executor in executors:
-            close = getattr(executor, "close", None)
-            if close is None:
-                continue
-            try:
-                close()
-            except BaseException as exc:
-                if first_error is None:
-                    first_error = exc
-        if first_error is not None:
-            raise first_error
+        _close_distinct(executors)
 
 
 _DEFAULT_EXECUTOR_POOL = ExecutorPool()

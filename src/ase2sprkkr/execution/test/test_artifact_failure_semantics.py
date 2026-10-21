@@ -1,5 +1,7 @@
 """Execution outcome and file availability are independent persisted facts."""
 
+import pytest
+
 from ase2sprkkr.execution import (
     ArtifactAvailabilityState, FailurePhase, FileEntry,
     FileManifest, RunState, RunStore,
@@ -21,44 +23,53 @@ def _record(tmp_path):
     return manager, record
 
 
-def test_successful_backend_with_failed_transfer_is_failed_run(tmp_path):
+@pytest.mark.parametrize(
+    "requested_state, return_code, phase, backend_error, transfer_error, "
+    "artifacts_available, expected_state, expected_phase",
+    [
+        pytest.param(
+            RunState.FINISHED, 0, None, None, "SFTP connection lost",
+            True, RunState.FAILED, FailurePhase.DOWNLOAD,
+            id="successful-backend-failed-transfer",
+        ),
+        pytest.param(
+            RunState.FAILED, 17, FailurePhase.EXECUTION,
+            "SPR-KKR returned 17", "diagnostic files unavailable",
+            False, RunState.FAILED, FailurePhase.EXECUTION,
+            id="execution-failure-overrides-transfer-error",
+        ),
+        pytest.param(
+            RunState.CANCELLED, None, None, None, "download interrupted",
+            False, RunState.CANCELLED, None,
+            id="cancellation-preserves-outcome",
+        ),
+    ],
+)
+def test_backend_outcome_and_transfer_availability_are_independent(
+    tmp_path, requested_state, return_code, phase, backend_error,
+    transfer_error, artifacts_available, expected_state, expected_phase,
+):
     manager, record = _record(tmp_path)
-    failed = record.files.with_file_availability(str(tmp_path / "run.out"), "failed", "SFTP connection lost")
-    result = manager.complete(
-        record,
-        state=RunState.FINISHED,
-        return_code=0,
-        artifacts_available=True,
-        files=failed,
+    failed_files = record.files.with_file_availability(
+        str(tmp_path / "run.out"), "failed", transfer_error,
     )
-    saved = manager.store.get(record.id)
-    assert result == saved
-    assert saved.state is RunState.FAILED
-    assert saved.failure_phase is FailurePhase.DOWNLOAD
-    assert saved.return_code == 0
-    assert saved.message == "SFTP connection lost"
-    assert saved.files.availability_state == ArtifactAvailabilityState.FAILED.value
-    assert saved.files.captured_at is None
-
-
-def test_execution_failure_keeps_phase_and_message_when_transfer_fails(tmp_path):
-    manager, record = _record(tmp_path)
-    files = record.files.with_file_availability(str(tmp_path / "run.out"), "failed", "diagnostic files unavailable")
     saved = manager.complete(
-        record,
-        state=RunState.FAILED,
-        failure_phase=FailurePhase.EXECUTION,
-        message="SPR-KKR returned 17",
-        return_code=17,
-        artifacts_available=False,
-        files=files,
+        record, state=requested_state, return_code=return_code,
+        failure_phase=phase, message=backend_error,
+        artifacts_available=artifacts_available, files=failed_files,
     )
-    assert saved.state is RunState.FAILED
-    assert saved.failure_phase is FailurePhase.EXECUTION
-    assert saved.message == "SPR-KKR returned 17"
-    assert saved.return_code == 17
+
+    assert manager.store.get(record.id) == saved
+    assert saved.state is expected_state
+    assert saved.failure_phase is expected_phase
+    assert saved.return_code == return_code
+    assert saved.message == (
+        transfer_error if expected_phase is FailurePhase.DOWNLOAD
+        else backend_error
+    )
     assert saved.files.availability_state == ArtifactAvailabilityState.FAILED
-    assert saved.files.availability_message == "diagnostic files unavailable"
+    assert saved.files.availability_message == transfer_error
+    assert saved.files.captured_at is None
 
 
 def test_successful_run_captures_available_files(tmp_path):
@@ -76,63 +87,19 @@ def test_successful_run_captures_available_files(tmp_path):
     assert len(saved.files.output_versions) == 1
 
 
-def test_cancellation_preserves_outcome_when_diagnostic_files_fail(tmp_path):
-    manager, record = _record(tmp_path)
-    files = record.files.with_file_availability(str(tmp_path / "run.out"), "failed", "download interrupted")
-    saved = manager.complete(
-        record, state=RunState.CANCELLED, files=files,
-        artifacts_available=False,
-    )
-    assert saved.state is RunState.CANCELLED
-    assert saved.failure_phase is None
-    assert saved.files.availability_state == ArtifactAvailabilityState.FAILED
-
-
-def test_explicit_resume_download_preserves_original_backend_and_artifacts(tmp_path):
-    from ase2sprkkr.execution import Execution, ExecutorEndpoint, WorkingDirectory
-    manager = ExecutionManager(RunStore(tmp_path / "runs"))
-    output = tmp_path / "run.out"
-    output.write_bytes(b"partial")
-    record = manager.new_record(
-        task="DOS", directory=tmp_path,
-        files=FileManifest(stdout=FileEntry(
-            local_path=str(output), availability_state="failed",
-            availability_message="SSH interrupted",
-        )),
-    )
-    record = manager.transition(
-        record, state=RunState.DOWNLOADING,
-        execution=record.execution.submitted("durable-backend"),
-    )
-    failed = manager.complete(
-        record, state=RunState.FAILED, return_code=0,
-        failure_phase=FailurePhase.DOWNLOAD, message="SSH interrupted",
-        artifacts_available=False,
-    )
-    reopened = manager.resume_download(record.id)
-
-    assert reopened.state == RunState.DOWNLOADING
-    assert reopened.execution == failed.execution
-    assert reopened.files.stdout.availability_state == "pending"
-    assert reopened.files.stdout.availability_message is None
-    assert reopened.finished_at is None
-    assert reopened.failure_phase is None
-    assert output.read_bytes() == b"partial"
-    assert manager.store.get(record.id) == reopened
-
-
 def test_resume_download_rejects_execution_failure_and_nonzero_code(tmp_path):
     manager, record = _record(tmp_path)
     bad = manager.complete(
         record, state=RunState.FAILED, return_code=17,
         failure_phase=FailurePhase.EXECUTION, artifacts_available=False,
     )
-    import pytest
     with pytest.raises(ValueError, match="Only failed downloads"):
         manager.resume_download(bad.id)
 
 
-def test_retry_failed_download_can_publish_clean_snapshot(tmp_path):
+def test_retry_failed_download_preserves_backend_then_captures_clean_snapshot(
+    tmp_path,
+):
     manager, initial = _record(tmp_path)
     output = tmp_path / "run.out"
     output.write_bytes(b"partial")
@@ -141,23 +108,34 @@ def test_retry_failed_download_can_publish_clean_snapshot(tmp_path):
         execution=initial.execution.submitted("existing-backend"),
     )
     failed_files = initial.files.with_file_availability(
-        str(output), "failed", "interrupted transfer"
+        str(output), "failed", "interrupted transfer",
     )
-    manager.complete(
+    failed = manager.complete(
         initial, state=RunState.FAILED, return_code=0,
         failure_phase=FailurePhase.DOWNLOAD,
+        message="interrupted transfer",
         files=failed_files, artifacts_available=False,
     )
 
     resumed = manager.resume_download(initial.id)
+
+    assert resumed.state is RunState.DOWNLOADING
+    assert resumed.execution == failed.execution
+    assert resumed.execution.backend_id == "existing-backend"
     assert resumed.files.stdout.availability_state == "pending"
+    assert resumed.files.stdout.availability_message is None
+    assert resumed.finished_at is None
+    assert resumed.failure_phase is None
+    assert output.read_bytes() == b"partial"
+    assert manager.store.get(initial.id) == resumed
+
     output.write_bytes(b"complete")
     available = resumed.files.with_file_availability(str(output), "available")
     complete = manager.complete(
         resumed, state=RunState.FINISHED, return_code=0,
         files=available, artifacts_available=True,
     )
-    assert complete.state == RunState.FINISHED
+    assert complete.state is RunState.FINISHED
     assert complete.files.failed_artifacts == ()
     assert complete.files.captured_at is not None
     assert len(complete.files.output_versions) == 1

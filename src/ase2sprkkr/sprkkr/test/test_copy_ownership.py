@@ -5,16 +5,22 @@ from ..sprkkr_atoms import SPRKKRAtoms
 
 
 class TestSPRKKRAtomsCopyOwnership:
-    def test_copy_sites_uses_target_atoms(self):
+    def test_copy_sites_and_copy_preserve_sharing_without_reusing_source_types(self):
         atoms = SPRKKRAtoms("Fe2", positions=[[0, 0, 0], [1, 0, 0]], symmetry=False)
         atoms.sites[1].site_type = atoms.sites[0].site_type
+        original_type = atoms.sites[0].site_type
         target = SPRKKRAtoms("Fe2", positions=atoms.positions, symmetry=False)
 
         copied_sites = Site.copy_sites(atoms.sites, target)
-
         assert copied_sites[0].site_type is copied_sites[1].site_type
         assert copied_sites[0].site_type.atoms is target
-        assert copied_sites[0].site_type is not atoms.sites[0].site_type
+        assert copied_sites[0].site_type is not original_type
+
+        copied = atoms.copy()
+        assert copied.sites[0].site_type is copied.sites[1].site_type
+        assert copied.sites[0].site_type is not original_type
+        assert copied.sites[0].site_type.atoms is copied
+
 
     def test_copy_owns_independent_site_state(self):
         atoms = SPRKKRAtoms("Fe", symmetry=False)
@@ -57,13 +63,3 @@ class TestSPRKKRAtomsCopyOwnership:
         assert atomic_type.moments.smt == 3.0
         assert atomic_type.magnetisation[0] == 1.0
         assert site.magnetisation[0] == 4.0
-
-    def test_copy_preserves_symmetry_sharing_only_inside_copy(self):
-        atoms = SPRKKRAtoms("Fe2", positions=[[0, 0, 0], [1, 0, 0]], symmetry=False)
-        atoms.sites[1].site_type = atoms.sites[0].site_type
-
-        copied = atoms.copy()
-
-        assert copied.sites[0].site_type is copied.sites[1].site_type
-        assert copied.sites[0].site_type is not atoms.sites[0].site_type
-        assert copied.sites[0].site_type.atoms is copied

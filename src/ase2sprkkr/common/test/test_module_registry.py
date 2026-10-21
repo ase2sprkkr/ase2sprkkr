@@ -150,49 +150,7 @@ def test_concurrent_first_lookup_materializes_factory_once(tmp_path, monkeypatch
     assert sys.modules["_ase2sprkkr_registry_concurrent.alpha"].calls == 1
 
 
-def test_missing_module_has_specific_lookup_error(tmp_path, monkeypatch):
-    package = _package(
-        tmp_path,
-        monkeypatch,
-        "_ase2sprkkr_registry_missing",
-        {"alpha": "value = object()\n"},
-    )
-    registry = ModuleRegistry(package, "value")
-
-    with pytest.raises(RegistryEntryNotFound):
-        registry["missing"]
-
-
-def test_malformed_module_is_not_reported_as_missing(tmp_path, monkeypatch):
-    package = _package(
-        tmp_path,
-        monkeypatch,
-        "_ase2sprkkr_registry_missing_export",
-        {"alpha": "other = object()\n"},
-    )
-    registry = ModuleRegistry(package, "value")
-
-    assert "alpha" in registry
-    with pytest.raises(RegistryDefinitionError, match="required export"):
-        registry["alpha"]
-
-
-def test_registry_does_not_hide_import_errors(tmp_path, monkeypatch):
-    package = _package(
-        tmp_path,
-        monkeypatch,
-        "_ase2sprkkr_registry_broken",
-        {"broken": "import _ase2sprkkr_missing_dependency\n"},
-    )
-    registry = ModuleRegistry(package, "value")
-
-    with pytest.raises(ModuleNotFoundError) as exc:
-        registry["broken"]
-
-    assert exc.value.name == "_ase2sprkkr_missing_dependency"
-
-
-def test_registry_does_not_hide_value_errors(tmp_path, monkeypatch):
+def test_registry_lookup_errors_keep_their_categories(tmp_path, monkeypatch):
     class BrokenRegistry(ModuleRegistry):
         def prepare_value(self, name, module, value):
             raise KeyError("programming error")
@@ -200,16 +158,31 @@ def test_registry_does_not_hide_value_errors(tmp_path, monkeypatch):
     package = _package(
         tmp_path,
         monkeypatch,
-        "_ase2sprkkr_registry_programming_error",
-        {"alpha": "value = object()\n"},
+        "_ase2sprkkr_registry_lookup_errors",
+        {
+            "alpha": "value = object()\n",
+            "missing_export": "other = object()\n",
+            "import_failure": "import _ase2sprkkr_missing_dependency\n",
+        },
     )
-    registry = BrokenRegistry(package, "value")
+    registry = ModuleRegistry(package, "value")
+
+    with pytest.raises(RegistryEntryNotFound):
+        registry["missing"]
+
+    assert "missing_export" in registry
+    with pytest.raises(RegistryDefinitionError, match="required export"):
+        registry["missing_export"]
+
+    with pytest.raises(ModuleNotFoundError) as exc:
+        registry["import_failure"]
+    assert exc.value.name == "_ase2sprkkr_missing_dependency"
 
     with pytest.raises(KeyError, match="programming error"):
-        registry["alpha"]
+        BrokenRegistry(package, "value")["alpha"]
 
 
-def test_duplicate_normalized_module_names_fail_explicitly(tmp_path, monkeypatch):
+def test_registry_name_and_alias_validation(tmp_path, monkeypatch):
     class CollidingRegistry(ModuleRegistry):
         @staticmethod
         def normalize_name(name):
@@ -218,78 +191,33 @@ def test_duplicate_normalized_module_names_fail_explicitly(tmp_path, monkeypatch
     package = _package(
         tmp_path,
         monkeypatch,
-        "_ase2sprkkr_registry_duplicates",
-        {"alpha": "value = 1\n", "beta": "value = 2\n"},
-    )
-    registry = CollidingRegistry(package, "value")
-
-    with pytest.raises(RegistryDefinitionError, match="Duplicate module registry key"):
-        registry.names()
-
-
-def test_duplicate_normalized_aliases_fail_explicitly(tmp_path, monkeypatch):
-    package = _package(
-        tmp_path,
-        monkeypatch,
-        "_ase2sprkkr_registry_duplicate_aliases",
+        "_ase2sprkkr_registry_alias_contracts",
         {"alpha": "value = object()\n", "beta": "value = object()\n"},
     )
+
+    with pytest.raises(RegistryDefinitionError, match="Duplicate module registry key"):
+        CollidingRegistry(package, "value").names()
 
     with pytest.raises(RegistryDefinitionError, match="Duplicate normalized registry alias"):
         ModuleRegistry(
-            package,
-            "value",
+            package, "value",
             aliases={"first": "alpha", "FIRST": "beta"},
         )
 
-
-def test_alias_may_not_shadow_a_module(tmp_path, monkeypatch):
-    package = _package(
-        tmp_path,
-        monkeypatch,
-        "_ase2sprkkr_registry_alias_shadow",
-        {"alpha": "value = object()\n", "beta": "value = object()\n"},
-    )
-    registry = ModuleRegistry(
-        package,
-        "value",
-        aliases={"ALPHA": "BETA"},
-    )
-
     with pytest.raises(RegistryDefinitionError, match="shadows a module"):
-        registry.names()
-
-
-def test_alias_must_target_canonical_module_directly(tmp_path, monkeypatch):
-    package = _package(
-        tmp_path,
-        monkeypatch,
-        "_ase2sprkkr_registry_alias_chain",
-        {"alpha": "value = object()\n"},
-    )
-    registry = ModuleRegistry(
-        package,
-        "value",
-        aliases={"FIRST": "SECOND", "SECOND": "ALPHA"},
-    )
+        ModuleRegistry(
+            package, "value", aliases={"ALPHA": "BETA"},
+        ).names()
 
     with pytest.raises(RegistryDefinitionError, match="not a canonical module"):
-        registry.names()
+        ModuleRegistry(
+            package, "value",
+            aliases={"FIRST": "SECOND", "SECOND": "ALPHA"},
+        ).names()
 
-
-def test_aliases_are_immutable(tmp_path, monkeypatch):
-    package = _package(
-        tmp_path,
-        monkeypatch,
-        "_ase2sprkkr_registry_immutable_aliases",
-        {"alpha": "value = object()\n"},
-    )
     registry = ModuleRegistry(
-        package,
-        "value",
-        aliases={"FIRST": "ALPHA"},
+        package, "value", aliases={"FIRST": "ALPHA"},
     )
-
     with pytest.raises(TypeError):
         registry.aliases["FIRST"] = "OTHER"
 

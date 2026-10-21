@@ -102,56 +102,56 @@ async def _unavailable_output(required):
     raise OSError("remote output could not be downloaded")
 
 
-def test_successful_backend_with_failed_download_fails_run(tmp_path):
-    runner, executor, destination, output = _run(tmp_path, RunState.FINISHED)
+@pytest.mark.parametrize(
+    "backend_state, expected_state, expected_phase",
+    [
+        pytest.param(
+            RunState.FINISHED, RunState.FAILED, "download",
+            id="finished-backend-download-failed",
+        ),
+        pytest.param(
+            RunState.FAILED, RunState.FAILED, "execution",
+            id="execution-failed-diagnostics-unavailable",
+        ),
+        pytest.param(
+            RunState.CANCELLED, RunState.CANCELLED, None,
+            id="cancelled-diagnostics-unavailable",
+        ),
+    ],
+)
+def test_diagnostic_download_failure_preserves_backend_outcome(
+    tmp_path, backend_state, expected_state, expected_phase,
+):
+    runner, executor, destination, output = _run(tmp_path, backend_state)
     runner._sync_output_files = _unavailable_output
 
-    with pytest.raises(OSError, match="could not be downloaded"):
-        asyncio.run(runner._monitor())
+    if backend_state is RunState.FAILED:
+        async def failed_status(*_args):
+            return {
+                "state": "failed",
+                "return_code": 17,
+                "failure_phase": "execution",
+                "error": "SPR-KKR exited with status 17",
+            }
 
-    assert runner.state == RunState.FAILED
-    assert runner.failure_phase.value == "download"
-    assert runner.return_code == 0
+        executor._status = failed_status
+
+    if backend_state is RunState.FINISHED:
+        with pytest.raises(OSError, match="could not be downloaded"):
+            asyncio.run(runner._monitor())
+        assert runner.return_code == 0
+    else:
+        result = asyncio.run(runner._monitor())
+        if backend_state is RunState.FAILED:
+            assert result.return_code == 17
+            assert runner.failure_message == "SPR-KKR exited with status 17"
+
+    assert runner.state is expected_state
+    assert (None if runner.failure_phase is None else runner.failure_phase.value) == expected_phase
     assert runner.files.availability_state == "failed"
     assert "could not be downloaded" in runner.files.availability_message
     assert destination.read_bytes() == b"streamed\n"
     assert output.closed is True
-
-
-def test_failed_backend_keeps_execution_failure_when_diagnostics_cannot_download(tmp_path):
-    runner, executor, destination, output = _run(tmp_path, RunState.FAILED)
-    runner._sync_output_files = _unavailable_output
-
-    async def failed_status(*_args):
-        return {
-            "state": "failed",
-            "return_code": 17,
-            "failure_phase": "execution",
-            "error": "SPR-KKR exited with status 17",
-        }
-
-    executor._status = failed_status
-    result = asyncio.run(runner._monitor())
-
-    assert runner.state == RunState.FAILED
-    assert runner.failure_phase.value == "execution"
-    assert runner.failure_message == "SPR-KKR exited with status 17"
-    assert result.return_code == 17
-    assert runner.files.availability_state == "failed"
-    assert "could not be downloaded" in runner.files.availability_message
-    assert destination.read_bytes() == b"streamed\n"
-    assert output.closed is True
-
-
-def test_cancelled_backend_survives_diagnostic_download_failure(tmp_path):
-    runner, _, destination, _ = _run(tmp_path, RunState.CANCELLED)
-    runner._sync_output_files = _unavailable_output
-    asyncio.run(runner._monitor())
-    assert runner.state == RunState.CANCELLED
-    assert runner.failure_phase is None
-    assert runner.files.availability_state == "failed"
-    assert destination.read_bytes() == b"streamed\n"
-
 
 
 def test_remote_stderr_incomplete_after_success_is_download_failure(tmp_path):

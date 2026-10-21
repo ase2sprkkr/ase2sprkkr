@@ -125,7 +125,17 @@ def test_submit_persists_submitting_before_backend_call(tmp_path):
     assert stored.dataset == "case"
 
 
-def test_success_runs_postprocessing_before_finished(tmp_path):
+@pytest.mark.parametrize(
+    "return_code, expected_state, expected_phase",
+    [
+        pytest.param(0, RunState.FINISHED, None, id="postprocess-success"),
+        pytest.param(7, RunState.FAILED, FailurePhase.EXECUTION,
+                     id="skip-processing-on-failure"),
+    ],
+)
+def test_completion_postprocesses_only_successful_execution(
+    tmp_path, return_code, expected_state, expected_phase,
+):
     manager = _manager(tmp_path)
     executor = _Executor()
     processed = []
@@ -136,39 +146,19 @@ def test_success_runs_postprocessing_before_finished(tmp_path):
         task="DOS",
     )
     run.submit()
-    executor.runners[0].finish(0)
+    executor.runners[0].finish(return_code)
 
     result = run.wait()
 
-    assert result.return_code == 0
-    assert processed == [result]
+    assert result.return_code == return_code
+    assert processed == ([result] if return_code == 0 else [])
     stored = manager.store.get(run.id)
-    assert stored.state == RunState.FINISHED
-    assert stored.failure_phase is None
-    assert stored.finished_at is not None
-
-
-def test_execution_failure_skips_result_processor(tmp_path):
-    manager = _manager(tmp_path)
-    executor = _Executor()
-    processed = []
-    run = manager.create_run(
-        executor,
-        _spec(tmp_path),
-        process_result=lambda outcome: processed.append(outcome) or outcome,
-        task="DOS",
-    )
-    run.submit()
-    executor.runners[0].finish(7)
-
-    result = run.wait()
-
-    assert result.return_code == 7
-    assert processed == []
-    stored = manager.store.get(run.id)
-    assert stored.state == RunState.FAILED
-    assert stored.failure_phase == FailurePhase.EXECUTION
-    assert stored.return_code == 7
+    assert stored.state == expected_state
+    assert stored.failure_phase == expected_phase
+    if return_code == 0:
+        assert stored.finished_at is not None
+    else:
+        assert stored.return_code == return_code
 
 
 def test_refresh_batches_status_queries(tmp_path):

@@ -13,7 +13,7 @@ from ase2sprkkr.execution import (
     RunStore,
 )
 from ase2sprkkr.execution.endpoint import endpoint_for_executor
-from ase2sprkkr.execution.manager import ExecutionManager
+from ase2sprkkr.execution.manager import ExecutionManager, HistoricalFileMismatchError
 from ase2sprkkr.outputs import project_results
 from ase2sprkkr.outputs.project_results import (
     ProjectResultUnavailableError,
@@ -134,48 +134,47 @@ def test_load_project_result_restores_exact_missing_historical_output(
     )
 
 
-def test_restored_changed_content_is_rejected_as_overwritten(tmp_path, monkeypatch):
-    manager, executor, record = _terminal_run(tmp_path)
-    (tmp_path / "run.out").unlink()
-    executor.restored_output = "changed output with different contents"
-
-    class Reader:
-        input_parameters = object()
-
-        def read_from_file(self, *args, **kwargs):
-            raise AssertionError("overwritten historical output must not be parsed")
-
-    monkeypatch.setattr(
-        project_results,
-        "_reader_for_record",
-        lambda manager, record: Reader(),
-    )
-
-    with pytest.raises(ProjectResultUnavailableError, match="overwritten") as error:
-        load_project_result(manager, record.id)
-
-    stored = manager.store.get(record.id)
-    assert error.value.record.files.availability_state == ArtifactAvailabilityState.FAILED
-    assert stored.state == RunState.FINISHED
-    assert stored.files.state == FileState.MISSING
-    assert not (tmp_path / "run.out").exists()
-    assert not list(tmp_path.glob(".run.out.*.tmp"))
-    assert stored.files.availability_state == ArtifactAvailabilityState.FAILED
-
-
-def test_shared_historical_hash_verification_does_not_depend_on_executor(tmp_path):
-    from ase2sprkkr.execution.manager import HistoricalFileMismatchError
-
+@pytest.mark.parametrize(
+    "entrypoint, expected_error",
+    [
+        pytest.param("load", ProjectResultUnavailableError, id="load-project-result"),
+        pytest.param("retrieve", HistoricalFileMismatchError, id="retrieve-files"),
+    ],
+)
+def test_restored_changed_content_is_rejected_as_overwritten(
+    tmp_path, monkeypatch, entrypoint, expected_error,
+):
     manager, executor, record = _terminal_run(tmp_path)
     path = tmp_path / "run.out"
     path.unlink()
-    executor.restored_output = "contents from another run"
-    with pytest.raises(HistoricalFileMismatchError, match="overwritten"):
-        manager.retrieve_result_files(record.id)
+    executor.restored_output = "changed output with different contents"
 
+    if entrypoint == "load":
+        class Reader:
+            input_parameters = object()
+
+            def read_from_file(self, *args, **kwargs):
+                raise AssertionError("overwritten historical output must not be parsed")
+
+        monkeypatch.setattr(
+            project_results, "_reader_for_record",
+            lambda manager, record: Reader(),
+        )
+
+    with pytest.raises(expected_error, match="overwritten") as error:
+        if entrypoint == "load":
+            load_project_result(manager, record.id)
+        else:
+            manager.retrieve_result_files(record.id)
+
+    stored = manager.store.get(record.id)
+    assert stored.state == RunState.FINISHED
     assert not path.exists()
     assert not list(tmp_path.glob(".run.out.*.tmp"))
-    assert manager.store.get(record.id).state == RunState.FINISHED
+    if entrypoint == "load":
+        assert error.value.record.files.availability_state == ArtifactAvailabilityState.FAILED
+        assert stored.files.state == FileState.MISSING
+        assert stored.files.availability_state == ArtifactAvailabilityState.FAILED
 
 
 def test_retrieval_programming_error_is_not_persisted_as_artifact_failure(tmp_path):

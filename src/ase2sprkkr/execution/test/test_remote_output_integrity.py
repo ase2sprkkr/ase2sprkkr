@@ -57,13 +57,14 @@ def test_equal_size_corruption_fails_even_if_length_matches(tmp_path, monkeypatc
     assert (local_out if channel == "stdout" else local_err).exists()
 
 
-def test_missing_authoritative_stream_is_not_success(tmp_path, monkeypatch):
-    runner, _, _, _, remote_err = _make_runner(tmp_path, monkeypatch)
-    remote_err.unlink()
-    with pytest.raises(FileNotFoundError, match="Remote stderr output is missing"):
+@pytest.mark.parametrize("channel", ("stdout", "stderr"))
+def test_missing_authoritative_stream_is_not_success(tmp_path, monkeypatch, channel):
+    runner, _, _, remote_out, remote_err = _make_runner(tmp_path, monkeypatch)
+    (remote_out if channel == "stdout" else remote_err).unlink()
+    with pytest.raises(FileNotFoundError, match=f"Remote {channel} output is missing"):
         asyncio.run(runner._monitor())
     assert runner.state == RunState.FAILED
-    assert runner.files.stderr.availability_state == "failed"
+    assert getattr(runner.files, channel).availability_state == "failed"
 
 
 def test_successful_integrity_check_preserves_timestamps(tmp_path, monkeypatch):

@@ -92,14 +92,32 @@ def test_confirmed_absent_stale_submission_releases_namespace(tmp_path):
     assert executor.recovery_calls[0][2] is not None
 
 
-def test_recovered_submission_keeps_duplicate_protection(tmp_path):
-    executor = _RecoveringExecutor(
-        RunStatus(state=RunState.QUEUED, backend_id="existing-job")
-    )
+@pytest.mark.parametrize(
+    "recovered, grace, expected_state, expected_backend, recovery_calls",
+    [
+        pytest.param(
+            RunStatus(state=RunState.QUEUED, backend_id="existing-job"),
+            0, RunState.QUEUED, "existing-job", 1,
+            id="recovered-backend-blocks-duplicate",
+        ),
+        pytest.param(
+            NotImplemented, 0, RunState.SUBMITTING, None, 1,
+            id="unsupported-recovery-keeps-namespace",
+        ),
+        pytest.param(
+            None, 3600, RunState.SUBMITTING, None, 0,
+            id="fresh-submitting-is-not-recovered",
+        ),
+    ],
+)
+def test_unresolved_or_recovered_submission_keeps_duplicate_protection(
+    tmp_path, recovered, grace, expected_state, expected_backend, recovery_calls,
+):
+    executor = _RecoveringExecutor(recovered)
     manager = ExecutionManager(
         RunStore(tmp_path / "runs"),
         executor_pool=ExecutorPool(),
-        submitting_grace=0,
+        submitting_grace=grace,
     )
     uncertain = _run(manager, executor, tmp_path)
     manager.reserve(uncertain.record)
@@ -108,40 +126,7 @@ def test_recovered_submission_keeps_duplicate_protection(tmp_path):
     with pytest.raises(DuplicateSubmissionError):
         replacement.submit()
 
-    recovered = manager.store.get(uncertain.id)
-    assert recovered.state == RunState.QUEUED
-    assert recovered.execution.backend_id == "existing-job"
-
-
-def test_unsupported_recovery_never_releases_submission(tmp_path):
-    executor = _RecoveringExecutor(NotImplemented)
-    manager = ExecutionManager(
-        RunStore(tmp_path / "runs"),
-        executor_pool=ExecutorPool(),
-        submitting_grace=0,
-    )
-    uncertain = _run(manager, executor, tmp_path)
-    manager.reserve(uncertain.record)
-    replacement = _run(manager, executor, tmp_path)
-
-    with pytest.raises(DuplicateSubmissionError):
-        replacement.submit()
-
-    assert manager.store.get(uncertain.id).state == RunState.SUBMITTING
-
-
-def test_fresh_submitting_record_is_not_recovered(tmp_path):
-    executor = _RecoveringExecutor(None)
-    manager = ExecutionManager(
-        RunStore(tmp_path / "runs"),
-        executor_pool=ExecutorPool(),
-        submitting_grace=3600,
-    )
-    uncertain = _run(manager, executor, tmp_path)
-    manager.reserve(uncertain.record)
-    replacement = _run(manager, executor, tmp_path)
-
-    with pytest.raises(DuplicateSubmissionError):
-        replacement.submit()
-
-    assert executor.recovery_calls == []
+    stored = manager.store.get(uncertain.id)
+    assert stored.state == expected_state
+    assert stored.execution.backend_id == expected_backend
+    assert len(executor.recovery_calls) == recovery_calls

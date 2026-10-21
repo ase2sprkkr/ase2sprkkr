@@ -106,13 +106,6 @@ def _local_run(code):
     return runner
 
 
-def test_local_executor_returns_unstarted_runner():
-    runner = _local_run("pass")
-    assert isinstance(runner, LocalRunner)
-    assert runner.state == RunState.NEW
-    assert runner.backend_id is None
-
-
 def test_local_runner_streams_output_to_parser_and_listeners():
     runner = _local_run(
         "import sys; print('hello', flush=True); "
@@ -134,6 +127,10 @@ def test_local_runner_streams_output_to_parser_and_listeners():
 
 def test_local_runner_submit_then_wait():
     runner = _local_run("print('ok')")
+    assert isinstance(runner, LocalRunner)
+    assert runner.state == RunState.NEW
+    assert runner.backend_id is None
+
     runner.submit()
     result = runner.wait()
     from pathlib import Path

@@ -100,3 +100,19 @@ def test_executor_pool_close_accepts_backends_without_close():
     pool.close()
 
     assert pool.get("no-close", object) is not executor
+
+
+def test_executor_pool_closes_shared_backend_only_once():
+    """A backend may be cached under several keys but is one owned object."""
+    pool = ExecutorPool()
+    calls = []
+
+    class Shared:
+        def close(self):
+            calls.append("closed")
+
+    shared = Shared()
+    assert pool.get("a", lambda: shared) is shared
+    assert pool.get("b", lambda: shared) is shared
+    pool.close()
+    assert calls == ["closed"]

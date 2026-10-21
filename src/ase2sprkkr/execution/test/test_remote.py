@@ -383,87 +383,64 @@ def test_remote_executor_does_not_reuse_stale_output(tmp_path):
     assert not artifact.exists()
 
 
-def test_remote_cache_is_uploaded_and_changed_cache_is_downloaded(tmp_path):
+def test_remote_cache_creation_content_and_mtime_changes_in_one_run(tmp_path):
+    """Four independent cache outcomes should need only one remote calculation."""
     transport = _SpyTransport()
-    cache = tmp_path / "local" / "calculation" / "cache.dat"
-    cache.parent.mkdir(parents=True)
-    cache.write_text("old")
+    workdir = tmp_path / "local" / "calculation"
+    workdir.mkdir(parents=True)
+
+    changed = workdir / "changed-cache.dat"
+    created = workdir / "created-cache.dat"
+    unchanged = workdir / "unchanged-cache.dat"
+    touched = workdir / "mtime-cache.dat"
+    changed.write_text("old")
+    unchanged.write_text("same")
+    touched.write_text("same")
 
     executor, spec, _, remote_root = _text_run(
-        tmp_path,
-        transport,
-        declared_cache_files=(cache,),
+        tmp_path, transport,
+        declared_cache_files=(changed, created, unchanged, touched),
         code=(
-            "import pathlib; p=pathlib.Path('cache.dat'); "
-            "assert p.read_text() == 'old'; p.write_text('new'); print('done')"
+            "import os; from pathlib import Path; "
+            "changed=Path('changed-cache.dat'); "
+            "assert changed.read_text()=='old'; changed.write_text('new'); "
+            "Path('created-cache.dat').write_text('generated'); "
+            "assert Path('unchanged-cache.dat').read_text()=='same'; "
+            "touched=Path('mtime-cache.dat'); "
+            "assert touched.read_text()=='same'; "
+            "info=touched.stat(); "
+            "os.utime(touched, ns=(info.st_atime_ns, info.st_mtime_ns+1000000000)); "
+            "print('done')"
         ),
     )
     result = _processed_run(executor, spec).run()
+    remote_directory = remote_root / "calculation"
 
-    remote_cache = remote_root / "calculation" / "cache.dat"
     assert result.return_code == 0
-    assert cache.read_text() == "new"
-    assert any(dst == remote_cache for _, dst in transport.put_files)
-    assert (remote_cache, cache) in transport.get_files
+    assert changed.read_text() == "new"
+    assert created.read_text() == "generated"
+    assert unchanged.read_text() == "same"
+    assert touched.read_text() == "same"
 
-
-def test_remote_cache_created_by_run_is_downloaded(tmp_path):
-    transport = _SpyTransport()
-    cache = tmp_path / "local" / "calculation" / "cache.dat"
-
-    executor, spec, _, remote_root = _text_run(
-        tmp_path,
-        transport,
-        declared_cache_files=(cache,),
-        code="import pathlib; pathlib.Path('cache.dat').write_text('generated'); print('done')",
+    # Existing cache entries are staged once; a newly created one is not.
+    for path in (changed, unchanged, touched):
+        remote_path = remote_directory / path.name
+        assert sum(dst == remote_path for _, dst in transport.put_files) == 1
+    assert all(
+        dst != remote_directory / created.name for _, dst in transport.put_files
     )
-    result = _processed_run(executor, spec).run()
 
-    remote_cache = remote_root / "calculation" / "cache.dat"
-    assert result.return_code == 0
-    assert cache.read_text() == "generated"
-    assert all(dst != remote_cache for _, dst in transport.put_files)
-    assert (remote_cache, cache) in transport.get_files
-
-
-def test_remote_unchanged_cache_is_not_downloaded(tmp_path):
-    transport = _SpyTransport()
-    cache = tmp_path / "local" / "calculation" / "cache.dat"
-    cache.parent.mkdir(parents=True)
-    cache.write_text("same")
-
-    executor, spec, _, remote_root = _text_run(
-        tmp_path,
-        transport,
-        declared_cache_files=(cache,),
-        code="import pathlib; assert pathlib.Path('cache.dat').read_text() == 'same'; print('done')",
+    # Content or mtime changes, and newly created caches, are downloaded.
+    for path in (changed, created, touched):
+        remote_path = remote_directory / path.name
+        assert sum(
+            (src, dst) == (remote_path, path)
+            for src, dst in transport.get_files
+        ) == 1
+    assert all(
+        src != remote_directory / unchanged.name
+        for src, _ in transport.get_files
     )
-    _processed_run(executor, spec).run()
-
-    remote_cache = remote_root / "calculation" / "cache.dat"
-    assert (remote_cache, cache) not in transport.get_files
-
-
-def test_remote_cache_change_detection_uses_mtime(tmp_path):
-    transport = _SpyTransport()
-    cache = tmp_path / "local" / "calculation" / "cache.dat"
-    cache.parent.mkdir(parents=True)
-    cache.write_text("same")
-
-    executor, spec, _, remote_root = _text_run(
-        tmp_path,
-        transport,
-        declared_cache_files=(cache,),
-        code=(
-            "import os, pathlib; p=pathlib.Path('cache.dat'); s=p.stat(); "
-            "os.utime(p, ns=(s.st_atime_ns, s.st_mtime_ns + 1000000000)); print('done')"
-        ),
-    )
-    _processed_run(executor, spec).run()
-
-    remote_cache = remote_root / "calculation" / "cache.dat"
-    assert cache.read_text() == "same"
-    assert (remote_cache, cache) in transport.get_files
 
 
 def test_remote_cache_input_never_skips_upload(tmp_path):

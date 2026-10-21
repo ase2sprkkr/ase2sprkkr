@@ -31,7 +31,8 @@ def test_only_current_run_record_schema_is_supported(tmp_path, schema_version):
         store.get("foreign")
 
 
-def test_current_schema_round_trips_without_legacy_fields(tmp_path):
+@pytest.mark.parametrize("backend_id", (None, "backend-42"))
+def test_current_schema_round_trips_with_one_execution_identity(tmp_path, backend_id):
     store = RunStore(tmp_path / "runs")
     created_at = "2026-10-17T12:34:56+00:00"
     record = RunRecord(
@@ -40,7 +41,9 @@ def test_current_schema_round_trips_without_legacy_fields(tmp_path):
         created_at=created_at,
         updated_at=created_at,
         task="DOS",
-        execution=Execution(ExecutorEndpoint(), WorkingDirectory(str(tmp_path))),
+        execution=Execution(
+            ExecutorEndpoint(), WorkingDirectory(str(tmp_path)), backend_id,
+        ),
         files=FileManifest(),
     )
 
@@ -49,23 +52,12 @@ def test_current_schema_round_trips_without_legacy_fields(tmp_path):
 
     assert loaded == record
     assert loaded.schema_version == 3
-    assert not hasattr(loaded, "backend_state")
-    assert not hasattr(loaded, "requested_task")
-
-
-def test_run_record_has_only_one_execution_identity(tmp_path):
-    record = RunRecord(
-        id="native", task="DOS", state=RunState.RUNNING,
-        created_at="2026-10-17T12:34:56+00:00",
-        updated_at="2026-10-17T12:34:56+00:00",
-        execution=Execution(
-            ExecutorEndpoint(), WorkingDirectory(str(tmp_path)), "backend-42"
-        ),
-        files=FileManifest(),
-    )
-    assert record.execution.backend_id == "backend-42"
-    for obsolete in ("reference", "submission", "endpoint", "directory", "result_files"):
-        assert not hasattr(record, obsolete)
+    assert loaded.execution.backend_id == backend_id
+    for obsolete in (
+        "backend_state", "requested_task", "reference", "submission",
+        "endpoint", "directory", "result_files",
+    ):
+        assert not hasattr(loaded, obsolete)
 
 
 def test_persisted_execution_identity_cannot_be_replaced(tmp_path):

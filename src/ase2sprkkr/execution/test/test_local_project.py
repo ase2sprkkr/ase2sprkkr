@@ -346,3 +346,26 @@ def test_project_request_ignores_unnamed_optional_declarations(tmp_path):
     assert request["output_files"] == [str(tmp_path / "a.dat")]
     assert request["input_files"] == [str(tmp_path / "b.inp")]
     assert request["cache_files"] == [str(tmp_path / "restart.pot")]
+
+def test_local_project_invalid_output_is_known_non_submission(tmp_path):
+    """Output/cache collisions fail preflight without destroying existing files."""
+    from ase2sprkkr.execution.base import SubmissionNotStarted
+
+    existing = tmp_path / "out.txt"
+    extra = tmp_path / "other.out"
+    existing.write_text("restart cache")
+    extra.write_text("old output")
+    spec = replace(
+        _spec(tmp_path),
+        cache_files=(str(existing),),
+        output_files=(str(extra),),
+    )
+    runner = LocalExecutor().create_project_run(spec, run_id=RUN_ID)
+    with pytest.raises(SubmissionNotStarted, match="overlaps protected"):
+        runner.submit()
+    assert runner.state is RunState.FAILED
+    assert runner.failure_phase is FailurePhase.SUBMISSION
+    assert runner.backend_id is None
+    assert existing.read_text() == "restart cache"
+    assert extra.read_text() == "old output"
+    assert _recover_submission(RUN_ID) is None

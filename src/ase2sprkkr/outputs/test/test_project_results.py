@@ -86,63 +86,40 @@ def _input_file(tmp_path, task):
     return path
 
 
-def test_project_attach_uses_persisted_task(tmp_path):
+@pytest.mark.parametrize(
+    ("task", "schema", "reader_type", "with_input"),
+    (
+        ("BSFEK", "BSF", BsfOutputReader, False),
+        ("DOS", "DOS", DosOutputReader, False),
+        ("BSFEK", "BSF", BsfOutputReader, True),
+        ("DOS", "DOS", DosOutputReader, True),
+    ),
+    ids=("bsf-no-input", "dos-no-input", "bsf-input", "dos-input"),
+)
+def test_project_attach_uses_persisted_task_and_schema(
+    tmp_path, task, schema, reader_type, with_input,
+):
+    input_file = _input_file(tmp_path, task) if with_input else None
     record = _record(
         tmp_path,
-        "BSFEK",
-        input_definition="bsf",
-    )
-
-    reader = _reader_for_record(_Manager(record), record)
-
-    assert isinstance(reader, BsfOutputReader)
-    assert reader.task_name == "BSFEK"
-
-
-def test_project_attach_uses_registered_reader(tmp_path):
-    record = _record(tmp_path, "DOS", input_definition="dos")
-
-    reader = _reader_for_record(_Manager(record), record)
-
-    assert isinstance(reader, DosOutputReader)
-    assert reader.input_parameters is None
-    assert reader.task_name == "DOS"
-
-
-def test_project_attach_reconstructs_exact_input_definition(tmp_path):
-    input_file = _input_file(tmp_path, "BSFEK")
-    record = _record(
-        tmp_path,
-        "BSFEK",
-        input_definition="bsf",
+        task,
+        input_definition=schema.lower(),
         input_file=input_file,
     )
 
     reader = _reader_for_record(_Manager(record), record)
+
+    assert isinstance(reader, reader_type)
+    assert reader.task_name == task
     parameters = reader.input_parameters
+    if not with_input:
+        assert parameters is None
+        return
 
-    assert isinstance(reader, BsfOutputReader)
-    assert parameters._definition is InputParameters.input_parameters_registry["BSF"]
-    assert parameters.definition_name == "BSF"
-    assert parameters.requested_task_name == "BSFEK"
-    assert parameters.task_name == "BSFEK"
-
-
-def test_project_attach_reconstructs_standard_input_definition(tmp_path):
-    input_file = _input_file(tmp_path, "DOS")
-    record = _record(
-        tmp_path,
-        "DOS",
-        input_definition="dos",
-        input_file=input_file,
-    )
-
-    reader = _reader_for_record(_Manager(record), record)
-    parameters = reader.input_parameters
-
-    assert isinstance(reader, DosOutputReader)
-    assert parameters._definition is InputParameters.input_parameters_registry["DOS"]
-    assert parameters.task_name == "DOS"
+    assert parameters._definition is InputParameters.input_parameters_registry[schema]
+    assert parameters.definition_name == schema
+    assert parameters.requested_task_name == task
+    assert parameters.task_name == task
 
 
 def test_project_attach_does_not_parse_stale_input(tmp_path):

@@ -83,26 +83,19 @@ def test_run_is_durable_in_project_namespace_before_backend_submit(tmp_path):
     assert not hasattr(projects.project(project.id), "persistent_refs")
 
 
-def test_missing_project_cannot_create_tracked_run(tmp_path):
+@pytest.mark.parametrize("explicit", (False, True), ids=("missing", "invalid"))
+def test_project_must_exist_before_backend_is_created(tmp_path, explicit):
     projects = ProjectRepository(tmp_path / "projects")
     manager = ExecutionManager(project_repository=projects)
     executor = _Executor()
-    with pytest.raises(ValueError, match="existing project"):
+    options = {"project": "missing"} if explicit else {}
+    errors = (KeyError, ValueError) if explicit else ValueError
+    message = None if explicit else "existing project"
+
+    with pytest.raises(errors, match=message):
         manager.create_run(
             executor, SimpleNamespace(directory=str(tmp_path)),
             process_result=lambda outcome: outcome, task="DOS",
-        )
-    assert not hasattr(executor, "runner")
-
-
-def test_invalid_project_is_rejected_before_backend_is_created(tmp_path):
-    projects = ProjectRepository(tmp_path / "projects")
-    manager = ExecutionManager(project_repository=projects)
-    executor = _Executor()
-    with pytest.raises((KeyError, ValueError)):
-        manager.create_run(
-            executor, SimpleNamespace(directory=str(tmp_path)),
-            process_result=lambda outcome: outcome, task="DOS",
-            project="missing",
+            **options,
         )
     assert not hasattr(executor, "runner")

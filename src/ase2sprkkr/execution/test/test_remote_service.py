@@ -724,3 +724,100 @@ def test_supervisor_stdin_close_failure_preserves_terminal_receipt(
         assert return_code == 0
         assert receipt["failure_phase"] == FailurePhase.EXECUTION.value
         assert "stdin close failed" in receipt["error"]
+
+
+@pytest.mark.parametrize("failure_point", ("socket_directory", "first_pipe", "second_pipe"))
+def test_remote_submit_ipc_setup_failure_closes_every_fd(
+    tmp_path, monkeypatch, failure_point,
+):
+    """No supervisor can have started; all owned prelaunch IPC must be released."""
+    import os
+    from ase2sprkkr.execution.base import SubmissionNotStarted
+
+    directory = tmp_path / "socket-directory"
+    created = []
+    real_pipe = os.pipe
+    attempts = []
+
+    def directory_factory(*, prefix):
+        assert prefix.startswith("ase2sprkkr-follow-")
+        if failure_point == "socket_directory":
+            raise OSError("cannot allocate socket directory")
+        directory.mkdir()
+        return str(directory)
+
+    def pipe():
+        attempts.append(True)
+        if failure_point == "first_pipe" or (
+            failure_point == "second_pipe" and len(attempts) == 2
+        ):
+            raise OSError("cannot allocate pipe")
+        pair = real_pipe()
+        created.extend(pair)
+        return pair
+
+    monkeypatch.setattr(remote_service.tempfile, "mkdtemp", directory_factory)
+    monkeypatch.setattr(remote_service.os, "pipe", pipe)
+    monkeypatch.setattr(
+        remote_service.subprocess, "Popen",
+        lambda *args, **kwargs: pytest.fail("supervisor must not start"),
+    )
+
+    with pytest.raises(SubmissionNotStarted, match="cannot allocate"):
+        remote_service._local_submit({
+            "argv": ("never-executed",),
+            "directory": str(tmp_path),
+            "detached": True,
+        })
+
+    assert not directory.exists()
+    assert len(created) == {
+        "socket_directory": 0, "first_pipe": 0, "second_pipe": 2,
+    }[failure_point]
+    for fd in created:
+        with pytest.raises(OSError):
+            os.fstat(fd)
+
+
+def test_remote_submit_json_setup_failure_cleans_pipes_and_directory(
+    tmp_path, monkeypatch,
+):
+    """Even a non-I/O failure before Popen cannot strand raw pipe ends."""
+    import os
+
+    directory = tmp_path / "socket-directory"
+    real_pipe = os.pipe
+    created = []
+
+    def directory_factory(*, prefix):
+        directory.mkdir()
+        return str(directory)
+
+    def pipe():
+        pair = real_pipe()
+        created.extend(pair)
+        return pair
+
+    def broken_json(*args, **kwargs):
+        raise TypeError("invalid worker specification")
+
+    monkeypatch.setattr(remote_service.tempfile, "mkdtemp", directory_factory)
+    monkeypatch.setattr(remote_service.os, "pipe", pipe)
+    monkeypatch.setattr(remote_service.json, "dumps", broken_json)
+    monkeypatch.setattr(
+        remote_service.subprocess, "Popen",
+        lambda *args, **kwargs: pytest.fail("supervisor must not start"),
+    )
+
+    with pytest.raises(TypeError, match="invalid worker specification"):
+        remote_service._local_submit({
+            "argv": ("never-executed",),
+            "directory": str(tmp_path),
+            "detached": True,
+        })
+
+    assert not directory.exists()
+    assert len(created) == 4
+    for fd in created:
+        with pytest.raises(OSError):
+            os.fstat(fd)

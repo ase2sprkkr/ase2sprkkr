@@ -16,37 +16,28 @@ def _example_potential():
     return Path(__file__).parent.parent / "examples" / "FePt.new.pot"
 
 
-def test_potential_from_file_attaches_itself_to_loaded_atoms():
-    potential = Potential.from_file(_example_potential())
-    atoms = potential.atoms
-
-    assert atoms is not None
-    assert atoms.has_potential()
-    assert atoms.potential is potential
-
-
-def test_multiple_potentials_can_share_supplied_atoms():
+def test_potential_attachment_sharing_and_reassignment():
     attached = Potential.from_file(_example_potential())
     atoms = attached.atoms
 
-    second = Potential.from_file(_example_potential(), atoms=atoms)
+    assert atoms is not None
+    assert atoms.has_potential()
+    assert atoms.potential is attached
 
+    # A second potential may use these atoms without replacing their owner.
+    second = Potential.from_file(_example_potential(), atoms=atoms)
     assert second.atoms is atoms
     assert attached.atoms is atoms
     assert atoms.potential is attached
 
-
-def test_reassigning_potential_atoms_does_not_change_attached_potential():
-    attached = Potential.from_file(_example_potential())
-    old_atoms = attached.atoms
-    new_atoms = old_atoms.copy()
-
-    standalone = Potential(atoms=old_atoms, set_from_atoms=False)
+    # Reassigning a separate potential must not detach the first one.
+    new_atoms = atoms.copy()
+    standalone = Potential(atoms=atoms, set_from_atoms=False)
     standalone.atoms = new_atoms
 
     assert standalone.atoms is new_atoms
-    assert attached.atoms is old_atoms
-    assert old_atoms.potential is attached
+    assert attached.atoms is atoms
+    assert atoms.potential is attached
     assert not new_atoms.has_potential()
 
 

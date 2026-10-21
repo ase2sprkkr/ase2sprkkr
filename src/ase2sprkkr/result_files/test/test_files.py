@@ -251,9 +251,35 @@ class TestOutput:
         )
 
 
-def test_first_try_cannot_bypass_try_only(tmp_path):
-    """A parser hint is not permission to read a forbidden result type."""
-    path = tmp_path / "result.dat"
+@pytest.mark.parametrize(
+    ("filename", "readers", "failing", "options", "expected", "attempted_names"),
+    (
+        pytest.param(
+            "result.dat", ("dos", "bsf"), (),
+            dict(first_try="dos", try_only="bsf", unknown=False, potential="given.pot"),
+            "bsf", ("bsf",), id="hint-cannot-bypass-allowed-types",
+        ),
+        pytest.param(
+            "test.out", ("dos", "bsf", "spc"), ("bsf",),
+            dict(first_try=("bsf", "dos", "bsf"), try_only=("dos", "bsf"), unknown=False),
+            "dos", ("bsf", "dos"), id="priority-and-no-retry",
+        ),
+        pytest.param(
+            "test.out", ("dos", "bsf", "spc"), ("bsf",),
+            dict(first_try="spc", try_only=("dos", "bsf"), unknown=False),
+            "dos", ("dos",), id="hint-outside-allowed-types",
+        ),
+        pytest.param(
+            "result.bsf", ("dos", "bsf"), (),
+            dict(unknown=False),
+            "bsf", ("bsf",), id="filename-extension-preferred",
+        ),
+    ),
+)
+def test_result_file_parser_selection(
+    tmp_path, filename, readers, failing, options, expected, attempted_names,
+):
+    path = tmp_path / filename
     path.write_bytes(b"fake result")
     attempted = []
 
@@ -261,72 +287,16 @@ def test_first_try_cannot_bypass_try_only(tmp_path):
         def __init__(self, name):
             self.name = name
 
-        def read_from_file(self, filename, potential=None):
-            attempted.append((self.name, filename, potential))
-            return self.name
-
-    class TestResult(ResultFile):
-        definitions = {"dos": Reader("dos"), "bsf": Reader("bsf")}
-
-    assert TestResult.from_file(
-        str(path), first_try="dos", try_only="bsf",
-        unknown=False, potential="given.pot",
-    ) == "bsf"
-    assert attempted == [("bsf", str(path), "given.pot")]
-
-
-def test_first_try_orders_allowed_parsers_without_retrying(tmp_path):
-    path = tmp_path / "test.out"
-    path.write_bytes(b"fake result")
-    attempted = []
-
-    class Reader:
-        def __init__(self, name, *, fails=False):
-            self.name = name
-            self.fails = fails
-
-        def read_from_file(self, filename, potential=None):
-            attempted.append(self.name)
-            if self.fails:
+        def read_from_file(self, source, potential=None):
+            attempted.append((self.name, source, potential))
+            if self.name in failing:
                 raise ValueError(f"{self.name} parse failed")
             return self.name
 
     class TestResult(ResultFile):
-        definitions = {
-            "dos": Reader("dos"),
-            "bsf": Reader("bsf", fails=True),
-            "spc": Reader("spc"),
-        }
+        definitions = {name: Reader(name) for name in readers}
 
-    assert TestResult.from_file(
-        str(path), first_try=("bsf", "dos", "bsf"),
-        try_only=("dos", "bsf"), unknown=False,
-    ) == "dos"
-    assert attempted == ["bsf", "dos"]
-
-    attempted.clear()
-    assert TestResult.from_file(
-        str(path), first_try="spc", try_only=("dos", "bsf"),
-        unknown=False,
-    ) == "dos"
-    assert attempted == ["dos"]
-
-
-def test_filename_extension_is_still_preferred_without_explicit_types(tmp_path):
-    path = tmp_path / "result.bsf"
-    path.write_bytes(b"fake result")
-    attempted = []
-
-    class Reader:
-        def __init__(self, name):
-            self.name = name
-
-        def read_from_file(self, filename, potential=None):
-            attempted.append(self.name)
-            return self.name
-
-    class TestResult(ResultFile):
-        definitions = {"dos": Reader("dos"), "bsf": Reader("bsf")}
-
-    assert TestResult.from_file(str(path), unknown=False) == "bsf"
-    assert attempted == ["bsf"]
+    assert TestResult.from_file(str(path), **options) == expected
+    assert attempted == [
+        (name, str(path), options.get("potential")) for name in attempted_names
+    ]

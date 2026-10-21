@@ -10,40 +10,40 @@ def _converged_potential():
     return Potential.from_file(path)
 
 
-def test_restart_scf_is_only_a_serialization_override():
+def test_restart_and_normal_save_preserve_status_and_electronic_data():
     potential = _converged_potential()
     assert potential.SCF_INFO.SCFSTATUS() == "CONVERGED"
 
-    potential_count = len(potential.POTENTIAL)
-    charge_count = len(potential.CHARGE)
-    moments_count = len(potential.MOMENTS)
+    counts = {
+        name: len(getattr(potential, name))
+        for name in ("POTENTIAL", "CHARGE", "MOMENTS")
+    }
 
-    output = io.StringIO()
-    potential.save_to_file(output, restart_scf=True)
+    def serialize(*, restart_scf):
+        output = io.StringIO()
+        potential.save_to_file(output, restart_scf=restart_scf)
+        output.seek(0)
+        saved = Potential.from_file(output)
+        for name, expected in counts.items():
+            assert len(getattr(potential, name)) == expected
+            assert len(getattr(saved, name)) == expected
+        return saved.SCF_INFO.SCFSTATUS()
 
+    # restart_scf affects only the written file, not the converged input.
+    assert serialize(restart_scf=True) == "START"
     assert potential.SCF_INFO.SCFSTATUS() == "CONVERGED"
-    assert len(potential.POTENTIAL) == potential_count
-    assert len(potential.CHARGE) == charge_count
-    assert len(potential.MOMENTS) == moments_count
 
-    output.seek(0)
-    saved = Potential.from_file(output)
-    assert saved.SCF_INFO.SCFSTATUS() == "START"
-    assert len(saved.POTENTIAL) == potential_count
-    assert len(saved.CHARGE) == charge_count
-    assert len(saved.MOMENTS) == moments_count
-
-
-def test_normal_save_preserves_start_status():
-    potential = _converged_potential()
+    # A normal write respects an explicit START state.
     potential.SCF_INFO.SCFSTATUS = "START"
-
-    output = io.StringIO()
-    potential.save_to_file(output)
-
+    assert serialize(restart_scf=False) == "START"
     assert potential.SCF_INFO.SCFSTATUS() == "START"
-    output.seek(0)
-    assert Potential.from_file(output).SCF_INFO.SCFSTATUS() == "START"
+
+    # The same contract holds for a non-converged 2D intermediate state.
+    potential.SCF_INFO.SCFSTATUS = "ITR-L-BULK"
+    assert serialize(restart_scf=True) == "START"
+    assert potential.SCF_INFO.SCFSTATUS() == "ITR-L-BULK"
+    assert serialize(restart_scf=False) == "ITR-L-BULK"
+    assert potential.SCF_INFO.SCFSTATUS() == "ITR-L-BULK"
 
 
 def test_set_from_atoms_does_not_infer_scf_status():
@@ -61,7 +61,7 @@ def test_set_from_atoms_does_not_infer_scf_status():
     assert atoms.potential is attached
 
 
-def test_temporary_option_value_restores_existing_result():
+def test_temporary_override_and_restart_restore_existing_result():
     potential = _converged_potential()
     status = potential.SCF_INFO.SCFSTATUS
     status.result = "ITR"
@@ -72,14 +72,6 @@ def test_temporary_option_value_restores_existing_result():
 
     assert status() == "ITR"
     assert status.result == "ITR"
-    status.clear_result()
-    assert status() == "CONVERGED"
-
-
-def test_restart_scf_restores_existing_result_override():
-    potential = _converged_potential()
-    status = potential.SCF_INFO.SCFSTATUS
-    status.result = "ITR"
 
     output = io.StringIO()
     potential.save_to_file(output, restart_scf=True)
@@ -89,20 +81,5 @@ def test_restart_scf_restores_existing_result_override():
     output.seek(0)
     assert Potential.from_file(output).SCF_INFO.SCFSTATUS() == "START"
 
-
-def test_restart_override_does_not_change_intermediate_2d_status():
-    potential = _converged_potential()
-    potential.SCF_INFO.SCFSTATUS = "ITR-L-BULK"
-
-    output = io.StringIO()
-    potential.save_to_file(output, restart_scf=True)
-
-    assert potential.SCF_INFO.SCFSTATUS() == "ITR-L-BULK"
-    output.seek(0)
-    assert Potential.from_file(output).SCF_INFO.SCFSTATUS() == "START"
-
-    normal = io.StringIO()
-    potential.save_to_file(normal)
-    assert potential.SCF_INFO.SCFSTATUS() == "ITR-L-BULK"
-    normal.seek(0)
-    assert Potential.from_file(normal).SCF_INFO.SCFSTATUS() == "ITR-L-BULK"
+    status.clear_result()
+    assert status() == "CONVERGED"

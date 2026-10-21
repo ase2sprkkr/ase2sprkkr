@@ -208,35 +208,38 @@ def _local_submit(request):
             if path is not None:
                 Path(path).parent.mkdir(parents=True, exist_ok=True)
         _clean_request_outputs(original_spec, directory, output_path, error_path)
-    except OSError as exc:
+    except (OSError, ValueError) as exc:
+        # Pre-launch validation and filesystem failures are known non-submissions.
         raise SubmissionNotStarted(str(exc)) from exc
 
     run_id = str(request.get("id") or uuid4().hex)
     receipt_id = uuid4().hex
-    socket_dir = tempfile.mkdtemp(prefix="ase2sprkkr-follow-")
-    socket_path = os.path.join(socket_dir, "socket")
-
-    worker_spec = {
-        "argv": list(spec.argv),
-        "directory": os.fspath(directory),
-        "stdin": _absolute(directory, spec.stdin),
-        "output_file": output_path,
-        "error_file": error_path,
-        "receipt_id": receipt_id,
-        "socket_dir": socket_dir,
-        "detached": bool(request.get("detached", True)),
-    }
-    env = os.environ.copy()
-    env["ASE2SPRKKR_RUN_ID"] = run_id
-    
-    start_fd, release_fd = os.pipe()
-    socket_read_fd, socket_write_fd = os.pipe()
-    worker_spec["socket_fd"] = socket_write_fd
-    env[_SPEC_ENV] = json.dumps(worker_spec, separators=(",", ":"))
-    env[_START_FD_ENV] = str(start_fd)
+    socket_dir = None
     process = None
     published = False
+    start_fd = release_fd = socket_read_fd = socket_write_fd = None
     try:
+        # IPC creation belongs inside the launch cleanup boundary.
+        socket_dir = tempfile.mkdtemp(prefix="ase2sprkkr-follow-")
+        socket_path = os.path.join(socket_dir, "socket")
+        worker_spec = {
+            "argv": list(spec.argv),
+            "directory": os.fspath(directory),
+            "stdin": _absolute(directory, spec.stdin),
+            "output_file": output_path,
+            "error_file": error_path,
+            "receipt_id": receipt_id,
+            "socket_dir": socket_dir,
+            "detached": bool(request.get("detached", True)),
+        }
+        env = os.environ.copy()
+        env["ASE2SPRKKR_RUN_ID"] = run_id
+
+        start_fd, release_fd = os.pipe()
+        socket_read_fd, socket_write_fd = os.pipe()
+        worker_spec["socket_fd"] = socket_write_fd
+        env[_SPEC_ENV] = json.dumps(worker_spec, separators=(",", ":"))
+        env[_START_FD_ENV] = str(start_fd)
         try:
             process = subprocess.Popen(
                 [sys.executable, "-m", "ase2sprkkr.execution.remote_process_worker"],
@@ -250,8 +253,13 @@ def _local_submit(request):
                 pass_fds=(start_fd, socket_write_fd),
             )
         finally:
-            os.close(start_fd)
-            os.close(socket_write_fd)
+            # Close write ends before awaiting the supervisor handshake.
+            if start_fd is not None:
+                fd, start_fd = start_fd, None
+                os.close(fd)
+            if socket_write_fd is not None:
+                fd, socket_write_fd = socket_write_fd, None
+                os.close(fd)
 
         info = _process_info(process.pid)
         if info is None:
@@ -283,15 +291,15 @@ def _local_submit(request):
                 os.killpg(process.pid, signal.SIGKILL)
             except ProcessLookupError:
                 pass
-        if not published:
+        if not published and socket_dir is not None:
             shutil.rmtree(socket_dir, ignore_errors=True)
         if isinstance(exc, OSError) and not published:
             raise SubmissionNotStarted(str(exc)) from exc
         raise
     finally:
-        os.close(release_fd)
-        if socket_read_fd is not None:
-            os.close(socket_read_fd)
+        for fd in (start_fd, release_fd, socket_read_fd, socket_write_fd):
+            if fd is not None:
+                os.close(fd)
 
     reply = {
         "remote_id": remote_id,

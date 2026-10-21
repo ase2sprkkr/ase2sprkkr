@@ -25,8 +25,19 @@ def _artists(figure):
     ]
 
 
-def test_real_single_angle_spectrum_is_not_blank():
-    spc = ResultFile.from_file(str(_EXAMPLE), unknown=False)
+@pytest.fixture(scope="module")
+def single_angle_spc():
+    return ResultFile.from_file(str(_EXAMPLE), unknown=False)
+
+
+@pytest.fixture(scope="module")
+def multi_azimuth_spc(tmp_path_factory):
+    directory = tmp_path_factory.mktemp("arpes-np3")
+    return ResultFile.from_file(str(_multi_azimuth_file(directory)), unknown=False)
+
+
+def test_real_single_angle_spectrum_is_not_blank(single_angle_spc):
+    spc = single_angle_spc
     assert spc.NP() == spc.NT() == 1
     try:
         spc.plot(show=False)
@@ -69,14 +80,17 @@ def _multi_azimuth_file(tmp_path):
     return output
 
 
-def test_real_parser_multi_azimuth_slider_draws_all_four_panels(tmp_path):
-    spc = ResultFile.from_file(str(_multi_azimuth_file(tmp_path)), unknown=False)
+def test_real_parser_multi_azimuth_slider_draws_all_four_panels(multi_azimuth_spc):
+    spc = multi_azimuth_spc
     assert spc.NP() == 3
     assert spc.TOTAL().shape == (spc.NE(), 3, 1)
     try:
         spc.plot(show=False, live=True)
         fig = plt.gcf()
-        assert len(_artists(fig)) == 4
+        axes = _artists(fig)
+        assert len(axes) == 4
+        energy_label = r"$E-E_{\rm F}$ (eV)"
+        assert all(axis.get_xlabel() == energy_label for axis in axes)
         controls = fig._ase2sprkkr_controls
         assert controls._slider_values["slice"] == (0, 1, 2)
         lines = [ax.lines[0] for ax in _artists(fig)]
@@ -84,12 +98,13 @@ def test_real_parser_multi_azimuth_slider_draws_all_four_panels(tmp_path):
         controls.widgets["slice"].set_val(2)
         after = np.asarray(lines[0].get_ydata())
         np.testing.assert_allclose(after, 3 * before)
+        assert all(axis.get_xlabel() == energy_label for axis in axes)
     finally:
         plt.close("all")
 
 
-def test_multi_azimuth_static_slice_count(tmp_path):
-    spc = ResultFile.from_file(str(_multi_azimuth_file(tmp_path)), unknown=False)
+def test_multi_azimuth_static_slice_count(multi_azimuth_spc):
+    spc = multi_azimuth_spc
     try:
         spc.plot(show=False, live=False, azimuths=2)
         fig = plt.gcf()
@@ -152,41 +167,16 @@ def test_controls_switch_np_nt_on_real_parser_grid(tmp_path):
         plt.close("all")
 
 
-def test_live_azimuth_selection_keeps_requested_indices(tmp_path):
+def test_live_azimuth_selection_keeps_requested_indices(multi_azimuth_spc):
     """An explicit NP selection stays the slider domain in live mode."""
-    spc = ResultFile.from_file(str(_multi_azimuth_file(tmp_path)), unknown=False)
+    spc = multi_azimuth_spc
     try:
-        spc.plot(show=False, live=True, azimuths=2)
+        spc.plot(show=False, live=True, azimuths=2, phi_range=(15., 45.))
         controls = plt.gcf()._ase2sprkkr_controls
         assert controls._slider_values["slice"] == (0, 2)
-        controls.widgets["slice"].set_val(1)
-        assert controls.state["slice"] == 2
-    finally:
-        plt.close("all")
-
-
-def test_single_angle_energy_axis_stays_correct_after_slider(tmp_path):
-    spc = ResultFile.from_file(str(_multi_azimuth_file(tmp_path)), unknown=False)
-    try:
-        spc.plot(show=False, live=True)
-        fig = plt.gcf()
-        axes = _artists(fig)
-        energy_label = r"$E-E_{\rm F}$ (eV)"
-        assert all(axis.get_xlabel() == energy_label for axis in axes)
-        fig._ase2sprkkr_controls.widgets["slice"].set_val(2)
-        assert all(axis.get_xlabel() == energy_label for axis in axes)
-    finally:
-        plt.close("all")
-
-
-def test_azimuth_physical_angle_is_slider_label(tmp_path):
-    spc = ResultFile.from_file(str(_multi_azimuth_file(tmp_path)), unknown=False)
-    try:
-        spc.plot(show=False, live=True, phi_range=(15., 45.))
-        controls = plt.gcf()._ase2sprkkr_controls
         widget = controls.widgets["slice"]
         assert widget.valtext.get_text() == "15°"
-        widget.set_val(2)
+        widget.set_val(1)
         assert controls.state["slice"] == 2
         assert widget.valtext.get_text() == "45°"
     finally:

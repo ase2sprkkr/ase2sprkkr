@@ -65,21 +65,13 @@ def test_manifest_versions_and_availability_roundtrip():
         FileEntry("/local/test", availability_state="inconsistent")
 
 
-def test_execution_backend_id_is_write_once():
-    execution = Execution(ExecutorEndpoint(), WorkingDirectory("/tmp"))
-    submitted = execution.submitted("job-12")
-    assert execution.backend_id is None
-    assert submitted.backend_id == "job-12"
-    assert submitted.submitted("job-12") == submitted
-    with pytest.raises(ValueError, match="Cannot replace"):
-        submitted.submitted("job-13")
-
 def test_each_artifact_tracks_its_own_transfer_outcome():
     manifest = FileManifest(
         outputs=(
             FileEntry("/local/one", "/remote/one", "pending"),
             FileEntry("/local/two", "/remote/two", "pending"),
-        )
+        ),
+        caches=(CacheEntry(FileEntry("/local/cache", "/remote/cache", "pending")),),
     )
     manifest = manifest.with_file_availability("/local/one", "available")
     manifest = manifest.with_file_availability(
@@ -89,6 +81,11 @@ def test_each_artifact_tracks_its_own_transfer_outcome():
     assert manifest.outputs[1].availability_state == "failed"
     assert manifest.failed_artifacts == (manifest.outputs[1],)
     assert manifest.availability_state == "failed"
+    manifest = manifest.with_file_availability("/local/cache", "skipped", kind="cache")
+    assert [entry.availability_state for entry in manifest.artifacts] == [
+        "available", "failed", "skipped",
+    ]
+    assert manifest.availability_message == "connection lost"
     assert FileManifest(**asdict(manifest)) == manifest
 
 
@@ -106,28 +103,6 @@ def test_individual_wildcard_matches_are_recorded_separately():
     assert manifest.outputs[1].availability_state == "available"
     assert manifest.outputs[2].availability_state == "failed"
     assert FileManifest(**asdict(manifest)) == manifest
-
-def test_partial_download_preserves_completed_files_and_cache_status():
-    manifest = FileManifest(
-        outputs=(
-            FileEntry("/local/one", "/remote/one", "pending"),
-            FileEntry("/local/two", "/remote/two", "pending"),
-        ),
-        caches=(CacheEntry(FileEntry("/local/cache", "/remote/cache", "pending")),),
-    )
-    manifest = manifest.with_file_availability("/local/one", "available")
-    manifest = manifest.with_file_availability(
-        "/local/two", "failed", "lost connection",
-    )
-    manifest = manifest.with_file_availability(
-        "/local/cache", "skipped", kind="cache",
-    )
-    assert [x.availability_state for x in manifest.artifacts] == [
-        "available", "failed", "skipped",
-    ]
-    assert manifest.failed_artifacts[0].local_path == "/local/two"
-    assert manifest.availability_message == "lost connection"
-
 
 def test_merged_stdout_stderr_has_only_one_file_status():
     manifest = FileManifest(
@@ -237,9 +212,11 @@ def test_manifest_availability_validation_is_shared_with_file_entry(existing, st
 
 def test_submitted_uses_execution_backend_id_validation():
     execution = Execution(ExecutorEndpoint(), WorkingDirectory("/tmp"))
+    assert execution.backend_id is None
     with pytest.raises(ValueError, match="backend_id cannot be empty"):
         execution.submitted("")
     bound = execution.submitted(42)
+    assert execution.backend_id is None
     assert bound.backend_id == "42"
     assert bound.submitted(42) == bound
     with pytest.raises(ValueError, match="backend_id cannot be empty"):

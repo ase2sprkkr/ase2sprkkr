@@ -58,7 +58,7 @@ def test_close_output_files_skips_missing_and_path_declarations():
     assert (first.close_calls, second.close_calls) == (1, 1)
 
 
-def test_close_error_does_not_change_previous_failure_behavior():
+def test_close_error_still_closes_remaining_handles():
     class Faulty:
         def close(self):
             raise OSError("cannot close output")
@@ -66,7 +66,7 @@ def test_close_error_does_not_change_previous_failure_behavior():
     other = _TrackedOutput()
     with pytest.raises(OSError, match="cannot close output"):
         close_output_files(Faulty(), other)
-    assert other.close_calls == 0
+    assert other.close_calls == 1
 
 
 def test_remote_monitor_closes_merged_output_once_after_follow_failure(tmp_path):

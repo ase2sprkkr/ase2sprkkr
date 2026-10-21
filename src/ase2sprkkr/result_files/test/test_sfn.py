@@ -57,8 +57,14 @@ def synthetic_potential():
     return Potential.from_atoms(bulk("Fe", "bcc", a=2.0))
 
 
-def test_sfn_grammar_and_generated_mesh_view():
-    output = definition.read_from_string(SFN, potential=synthetic_potential())
+@pytest.fixture(scope="module")
+def parsed_sfn():
+    """Read-only SFN model shared by grammar and plotting checks."""
+    return definition.read_from_string(SFN, potential=synthetic_potential())
+
+
+def test_sfn_grammar_and_generated_mesh_view(parsed_sfn):
+    output = parsed_sfn
 
     assert output.nm == 2
     assert len(output.RADIAL_MESHES) == 2
@@ -178,11 +184,11 @@ def test_output_file_read_from_file_accepts_potential():
     assert output.alat == pytest.approx(2.0)
 
 
-def test_sfn_shape_reconstruction_and_plot_dispatch(tmp_path):
+def test_sfn_shape_reconstruction_and_plot_dispatch(tmp_path, parsed_sfn):
     import inspect
     import matplotlib.pyplot as plt
 
-    output = definition.read_from_string(SFN, potential=synthetic_potential())
+    output = parsed_sfn
     mesh = output.meshes[0]
 
     linear, grid = mesh.to_2d_grid(n=21)
