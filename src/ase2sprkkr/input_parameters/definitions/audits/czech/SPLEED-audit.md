@@ -1,6 +1,6 @@
-# 44. SPLEED — samostatná definice a audit
+# SPLEED — audit aktuální implementace
 
-ASE již nabízí SPLEED jako TASK volbu v definici ARPES, ale chybí samostatné InputParameters.create("SPLEED"). Doplněna samostatná definice sdílející spektroskopické sekce; executable kkrspec. Předběžně **funguje, ale má velké ALE**: tento auditovaný postup je pevný úhel dopadu a energetický scan, ne všechny native polarizační a geometrické větve. Numerický výpočet nebyl spuštěn.
+**Stav:** Samostatný veřejný task KKRSPEC s experimentálními nativními omezeními. Auditovaná implementace je na `tasks-workflow`, nativní referencí je SPR-KKR 9.7 (`PUB9.7_260420_18h13`). Nejde o numerickou certifikaci.
 
 ## Rozdílná energetická sémantika
 
@@ -33,16 +33,15 @@ Výstupní práce 4.2 může být horší než hodnota z konkrétního potenciá
 
 ## Další chyby a omezení
 
-- Převzatá ARPES volba CRYS_VEC má nesprávný nativní název. SPEC_RSLAB čte CRYS_VECS a při jeho přítomnosti nastaví USE_CRY_PRIM_VECS=false. Samostatná definice obsahuje správný klíč a popis vypnutí primitive vectors. Toto je další nález relevantní i pro původní ARPES definici; tento samostatný patch ji nemění.
 - Fixed-angle rozsah vědomě nepovoluje angular scans, momentum scans ani POL0/POL0L. Native některé z těchto postupů má, ale polarizace závisí na přítomnosti klíčů: nelze současně používat POL_E a nonzero POL0/POL0L. Slepé sdílení všech ARPES defaults by mohlo skončit STOP.
 - Pro INPVER=0 jde o externí starý input.inp; validace moderních energetických klíčů se v této větvi neprovádí. Existence a obsah externích souborů se neověřují.
 - IQ_AT_SURF, MILLER_HKL a povrchová struktura musí odpovídat potenciálu. Definice nepředstírá kontrolu tohoto souladu z pouhých input options. Full-potential a další speciální větve nebyly v celém řetězci auditovány.
 - mpi=False je konzervativní volba nové definice; nebyla prokázána chyba celé MPI větve ani provedeno numerické srovnání.
 
-## Testy
+## Aktuální souborový kontrakt
 
-11 nových testů; celá sada InputParameters **119 passed**, dvě existující NumPy deprecation warnings. Ověřeny discovery, samostatný task a defaults, absence photon sekce, incident EV hranice, round-trip/pickle, serial executable, odmítnutí neplatných hranic/absolutní varianty/jednobodové energie, workfunction, angular a momentum skenů a konfliktní polarization alternative. Samostatný round-trip test ověřuje správný klíč CRYS_VECS.
+Vstupy, volitelná cache a výstupy jsou určovány aktuální definicí tasku, nikoli starým odděleným patchem. Zdroj: `src/ase2sprkkr/input_parameters/definitions/spleed.py` a související task registry.
 
-Příkaz: `PYTHONPATH=src ASE2SPRKKR_NO_USER_PROFILE=1 ../test-env/bin/python -m pytest src/ase2sprkkr/input_parameters/test -q`.
+## Ověření
 
-Zdroje: spec_rslab.f:160–225; spec_inputs.f:1198–1241,1301–1328,1358–1389,1549–1648,1764–1783. ASE baseline 267512c4b8ccbbfd37af7ede898febc066b7e3ee. Samostatný patch pouze pro SPLEED; původní ARPES audit patch není předpokladem. Bez numerického solveru.
+Testy definic jsou v `src/ase2sprkkr/input_parameters/test/`. Nový kompletní pytest ani numerický SPR-KKR běh se zde netvrdí.

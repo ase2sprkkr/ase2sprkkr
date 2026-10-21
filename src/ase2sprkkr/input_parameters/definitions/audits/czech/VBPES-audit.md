@@ -1,6 +1,6 @@
-# VBPES — audit SPR-KKR 9.7 a nová definice
+# VBPES — audit aktuální implementace
 
-Základ ASE2SPRKKR: aktuálně fetchovaná větev refactor, commit 267512c4b8ccbbfd37af7ede898febc066b7e3ee. Porovnáno s dodanými zdroji SPR-KKR 9.7. VBPES na tomto základu nemá vlastní definici. Existující ARPES je implementace kkrspec, zatímco tento task používá kkrgen. Samostatný patch 0013-vbpes.patch přidává vbpes.py a test_vbpes.py, nezahrnuje předchozí tasky.
+**Stav:** Valenční fotoemise přes kkrgen, nikoli KKRSPEC; final-state TAU závisí na USETAUNN/USETFIN. Auditovaná implementace je na `tasks-workflow`, nativní referencí je SPR-KKR 9.7 (`PUB9.7_260420_18h13`). Nejde o numerickou certifikaci.
 
 ## Vstup
 
@@ -45,14 +45,10 @@ EWORK je v této rutině pouze použito k výpočtu vypsaného EVAC a nepředáv
 
 Korelace nejsou v definici bez podkladu zakázány: VBPES obsahuje explicitní DMFT větev, která pro konečný stav nastaví ORBPOLFIN=NONE. FULLPOT, korelace a numerická správnost spekter nebyly ověřeny během skutečného běhu SPR-KKR.
 
-## Testy
+## Aktuální souborový kontrakt
 
-12 nových případů: discovery, energetické defaulty a vynechané odvozené hodnoty, souborový roundtrip a pickle, úhlová i vektorová custom geometrie, tři nulové vektory, neúplná geometrie, precedence USETFIN, tři nekompatibilní relativistické režimy a odmítnutí GRV.
+Vstupy, volitelná cache a výstupy jsou určovány aktuální definicí tasku, nikoli starým odděleným patchem. Zdroj: `src/ase2sprkkr/input_parameters/definitions/vbpes.py` a související task registry.
 
-Celá sada input_parameters: **120 passed** (Python 3.12, 5,05 s), bez warnings.
+## Ověření
 
-```bash
-PYTHONPATH=src ASE2SPRKKR_NO_USER_PROFILE=1 /workspace/scratch/e79ca15d9801/test-env/bin/python -m pytest src/ase2sprkkr/input_parameters/test -q
-```
-
-Prošly git diff --check a kontrola reverzní aplikace patche. Numerický SPR-KKR běh a specializovaný parser výstupu nejsou součástí tohoto patche.
+Testy definic jsou v `src/ase2sprkkr/input_parameters/test/`. Nový kompletní pytest ani numerický SPR-KKR běh se zde netvrdí.

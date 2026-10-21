@@ -1,6 +1,6 @@
-# 44. SPLEED separate definitions and audits
+# SPLEED — current implementation audit
 
-ASE already offers SPLEED as TASK option in definition ARPES but missing a separate InputParameters.create("SPLEED"). Separate definitions sharing spectroscopic sections are added; executive kkrspec. Preliminary **works but has major caveats***: this audited procedure is a fixed impact angle and energy scan, not all native polarization and geometrical branches. Numerical calculation has not been initiated.
+**Status:** Separate public KKRSPEC task with native experimental limitations. This describes the integrated `tasks-workflow` implementation against SPR-KKR 9.7 (`PUB9.7_260420_18h13`), not a numerical certification.
 
 ## Different energy semantics
 
@@ -33,16 +33,15 @@ Output work 4.2 can be worse than the value of a specific potential; because wit
 
 ## Other errors and restrictions
 
-- Taken ARPES option CRYS_VEC has the wrong native name. SPEC_RSLAB reads CRYS_VECS and sets USE_CRY_PRIM_VECS=false at its presence. The separate definition contains the correct key and description of shutting down primitive vectors. This is also relevant for the original ARPES definition; this separate patch does not change it.
 - The fixed-angle range does not consciously permit angular scans, a moment scans or POL0/POL0L. Native some of the following procedures have, but polarization depends on the presence of keys: cannot be used simultaneously POL_E and nonzero POL0/POL0L. Blind sharing of all ARPES defaults could end up STOP.
 - For INPVER=0 it is an external old input.inp; validation of modern energy keys is not performed in this branch. Existence and content of external files shall not be verified.
 - IQ_AT_SURF, MILLER_HKL and the surface structure shall correspond to potential. The definition does not pretend to control this compliance from just input options. Full-potential and other special branches were not audited throughout the chain.
 - mpi=False is a conservative choice of new definition; no error of whole MPI has been demonstrated nor has a numerical comparison been made.
 
-## Tests
+## Current file contract
 
-11 new tests; whole set InputParameters **119 passed**, two existing NumPy DeprecationWarning messages. Discovery verified, independent task and defaults, absence of photon section, incident EV border, round-trip/pickle, serial executive, rejection of invalid borders/absolute variants/single point energy, workfunction, angular and moment scans and conflict polarization alternative. A separate round-trip test checks the correct key CRYS_VECS.
+Required inputs, optional cache and produced outputs follow the integrated task declaration, not a standalone patch. Source: `src/ase2sprkkr/input_parameters/definitions/spleed.py` and the task registry.
 
-Command: `PYTHONPATH=src ASE2SPRKKR_NO_USER_PROFILE=1 ../test-env/bin/python -m pytest src/ase2sprkkr/input_parameters/test -q`.
+## Verification
 
-The sourcee: spec_rslab.f:160–225; spec_inputs.f:1198–1241,1301–1328,1358–1389,1549–1648,1764–1783. ASE baseline 267512c4b8ccbbfd37af7ede898febc066b7e3ee. Single patch only for SPLEED; original ARPES patch audit is not a prerequisite. No numerical solver.
+Definition tests live in `src/ase2sprkkr/input_parameters/test/`. No new full pytest or native numerical run is claimed.

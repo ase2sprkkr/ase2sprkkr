@@ -1,6 +1,6 @@
-# VBPES audit SPR-KKR 9.7 and new definition
+# VBPES — current implementation audit
 
-Base ASE2SPRKKR: currently fetched branch refactor, commit 267512c4b8ccbbfd37af7ede898febc066b7e3ee. Compared to supplied sources SPR-KKR 9.7. VBPES does not have its own definition on this basis. Existing ARPES is implementation kkrspec while this task uses kkrgen. Single patch 0013-vbpes.patch adds vbpes.py and test_vbpes.py, does not include previous tasks.
+**Status:** Valence photoemission via kkrgen, not KKRSPEC; final-state TAU depends on USETAUNN/USETFIN. This describes the integrated `tasks-workflow` implementation against SPR-KKR 9.7 (`PUB9.7_260420_18h13`), not a numerical certification.
 
 ## Entry
 
@@ -45,14 +45,10 @@ EWORK is only used in this routine to calculate the written EVAC and is not tran
 
 The correlations are not prohibited in the definition without background: VBPES contains explicit DMFT a branch that sets ORBPOLFIN=NONE for the final state. FULLPOT, correlation and numerical accuracy of the spectra have not been verified during actual run SPR-KKR.
 
-## Tests
+## Current file contract
 
-12 new cases: discovery, energy defaults and omitted derived values, file roundtrip and pickle, angular and vector custom geometry, three zero vectors, incomplete geometry, precedent USETFIN, three incompatible relativistic modes and rejection GRV.
+Required inputs, optional cache and produced outputs follow the integrated task declaration, not a standalone patch. Source: `src/ase2sprkkr/input_parameters/definitions/vbpes.py` and the task registry.
 
-Full input_parameter set: **120 passed** (Python 3.12, 5,05 s), without warnings.
+## Verification
 
-```bash
-PYTHONPATH=src ASE2SPRKKR_NO_USER_PROFILE=1 /workspace/scratch/e79ca15d9801/test-env/bin/python -m pytest src/ase2sprkkr/input_parameters/test -q
-```
-
-Passed git diff --check and checked the patch reverse application. Numerical SPR-KKR run and specialized parser output are not included in this patch.
+Definition tests live in `src/ase2sprkkr/input_parameters/test/`. No new full pytest or native numerical run is claimed.
