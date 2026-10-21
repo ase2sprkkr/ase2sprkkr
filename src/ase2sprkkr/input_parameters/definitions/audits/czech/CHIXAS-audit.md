@@ -1,6 +1,6 @@
-# 40. CHIXAS — SPR-KKR 9.7 / ASE2SPRKKR
+# CHIXAS — audit současné definice
 
-Chybějící definice pro **polem indukovaný magnetický cirkulární dichroismus v XAS**. Přidán serial periodic ASA FREL postup v kkrchi. Předběžně: **funguje, ale má velké ALE** — potřebuje externí fyzikální data, která nelze určit z pouhého vstupu. Numerický solver nebyl spuštěn.
+Definice `chixas.py` popisuje dichroismus XAS indukovaný polem v sériovém ASA/FREL režimu. Externí fyzikální data susceptibility jsou povinná; numerická správnost nebyla ověřena.
 
 ## Mapování a definice
 
@@ -40,13 +40,3 @@ TASK.OP se nevypisuje: CHIXAS pak nastavuje lokální CHIORBPOL=BROOKS. Tato pro
 Native CHIXAS není samokonzistentní odvození susceptibilit z materiálu: nejdřív potřebuje NEF, z nich počítá GAMMA a pak používá zadané CHI při indukované spektroskopii. Propojení se skutečnými externími daty a core wavefunctions nebylo numericky ověřeno.
 
 RDABXC/LASTITRXC, TTTFMT, surface/slab, cache a spin-resolved orbital postupy nejsou auditovány. Při POINTS native v lokální k-loop větvi přepíná IBZINT z 2 na 6; nelze to zaměňovat s uživatelským běžným TB workflow jen podle čísla. Definice nastavuje mpi=False; paralelní řetězec nebyl certifikován, nejde o prokázanou MPI chybu.
-
-## Testy
-
-13 nových testů; celá sada InputParameters **121 passed**, dvě existující NumPy deprecation warnings. Ověřeny discovery, ITXRAY/CL/defaults, round-trip/pickle, číslované NEF, jeden a dva typy, ABSUNIT, absence externích dat, index absorbujícího typu, nesouhlas délek a nevyplněné číslování, záporné DOS, NaN susceptibility, počty a energetický grid, šířka a neauditované režimy.
-
-Společný test test_definitions.py byl rozšířen o explicitní CHIXAS fixture při kontrole round-trip všech definic. Nutná fyzikální data nebyla kvůli tomuto testu nahrazena defaults. Tuto úpravu obsahuje patch spolu s novým test_chixas.py.
-
-Příkaz: `PYTHONPATH=src ASE2SPRKKR_NO_USER_PROFILE=1 ../test-env/bin/python -m pytest src/ase2sprkkr/input_parameters/test -q`.
-
-Zdroje: initvar.f (CHIXAS keyword); rsp.f:134–138,843–845; init_mod_energy.f:100–105; susc_xas.f:138–219,243–260,469–514; susc_xasinit.f:60–139; susc_xascalc.f:7–10; mod_files.f:259. ASE baseline 267512c4b8ccbbfd37af7ede898febc066b7e3ee. Samostatný patch pouze pro CHIXAS; bez numerického testu.

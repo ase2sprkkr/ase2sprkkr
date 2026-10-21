@@ -1,6 +1,6 @@
-# BONDING — audit a nová experimentální definice
+# BONDING — audit současné definice
 
-Zdroj: dodané SPR-KKR 9.7, ASE2SPRKKR refactor po fetchi, commit 267512c4b8ccbbfd37af7ede898febc066b7e3ee. Task dosud nemá definici. Patch 0021-bonding.patch přidává bonding.py a test_bonding.py samostatně proti tomuto základu.
+BONDING má integrovanou definici `bonding.py` pro experimentální clusterový výpočet. Nativní workflow SPR-KKR 9.7 má významná omezení; existence vstupního kontraktu neprokazuje numerickou funkčnost.
 
 ## Vstup
 
@@ -38,7 +38,3 @@ EMAX se záměrně vypisuje; při vynechání by se převzalo EF. Původní audi
 6. **MPI:** rutiny používají pevné scratch jednotky, lokální uložené shell tabulky inicializované pouze při IECURR=1 a výstup22 bez redukce. Modul proto volí mpi=False; paralelní workflow nebylo doloženo.
 
 Podpora je výhradně definice vstupu. SPR-KKR 9.7 BONDING nelze na základě tohoto auditu prohlásit za funkční numerický task.
-
-## Testy
-
-12 nových případů: serializace a načtení, pickle, explicitní zápis nutných clusterových voleb, odmítnutí jiné integrace/MOL/relativity, více cest a NE<2. Celá sada input_parameters: **120 passed**. Numerický SPR-KKR nebyl spuštěn. Patch prošel git diff --check a kontrolou zpětného aplikování.

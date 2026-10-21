@@ -1,15 +1,10 @@
-# DMI — audit SPR-KKR 9.7 / ASE2SPRKKR
+# DMI — audit současné definice
 
-Pořadí: 29. Zdroj: PUB9.7_260420_18h13.tar.gz. ASE2SPRKKR větev refactor,
-commit 267512c4b8ccbbfd37af7ede898febc066b7e3ee. Samostatný patch proti tomuto commitu;
-neobsahuje změny z předchozích tasků.
+DMI je selektor sdílené definice `jxc.py` pro magnetický nativní E-INTEGRAL. V integrované implementaci neexistuje samostatný `dmi.py`; omezení níže vycházejí ze SPR-KKR 9.7.
 
-## Stav
+## Implementace
 
-ASE2SPRKKR dosud nemá definici DMI. Doplněn `definitions/dmi.py` pro standardní
-periodický výpočet DMIVECTOR přes kkrgen; automatické vyhledávání definic jej načte.
-Nativní implementace existuje a není vypnutá. Předběžné zařazení do společného
-auditu: **funguje, ale má významné ALE**. Nejde o potvrzení numerické správnosti.
+Sdílené schéma `jxc.py` poskytuje selektory `JXC` a `DMI`. Volba DMI aktivuje odpovídající nativní větev.
 
 ## Skutečné zapojení
 
@@ -82,22 +77,3 @@ Výstup: DATASET_DMIVEC_Dij.dat a grafy jednotlivých složek; párové složky 
 mikromagnetické součty tisknuté jako meV*A/f.u. Indexování DMI_ITJT v zápisu i
 čtení je konzistentní; není zde doložena chyba z BSDOSIJ. On-site členy se ve
 výstupu vynechávají při vzdálenosti menší než 1e-6 ALAT.
-
-## Testy a jejich meze
-
-Přidáno 14 testů: zápis defaults a vynechaných keywordů, automatické rozpoznání
-DMI při načtení souboru, pickle, roundtrip selectorů a NSHLCLU=0,
-vzájemná výlučnost selectorů, nepodporované režimy, NONMAG, více kontur,
-SPLITSS, jiné BZINT a nekladné NE.
-
-Celá sada `src/ase2sprkkr/input_parameters/test`: **122 passed**, dvě existující
-DeprecationWarning o nastavení numpy.shape při NumPy 2.5. Python 3.12.
-`git diff --check` prošel, patch ověřen zpětnou aplikací.
-Numerický SPR-KKR ani MPI výpočet nebyl spuštěn. Testy nepotvrzují fyzikální
-hodnoty, konvergenci, transformace symetrie ani interpretaci Dz.
-
-## Soubory
-
-- Definice: src/ase2sprkkr/input_parameters/definitions/dmi.py
-- Testy: src/ase2sprkkr/input_parameters/test/test_dmi.py
-- Patch: 0029-dmi.patch

@@ -1,21 +1,10 @@
-# COMPTON — audit SPR-KKR 9.7 / ASE2SPRKKR
+# COMPTON — audit současné definice
 
-Pořadí 30. SPR-KKR: PUB9.7_260420_18h13.tar.gz.
-ASE2SPRKKR: refactor, commit 267512c4b8ccbbfd37af7ede898febc066b7e3ee.
-Patch je samostatný proti tomuto commitu, nezahrnuje předchozí tasky.
+Definice `compton.py` podporuje periodický FREL výpočet Comptonových hybnostních hustot pomocí dvou kontur GRID=5 a SPLITSS. Aktivní nativní větev má dokumentovaná omezení.
 
 ## Stav a rozsah
 
-COMPTON dosud nemá definici InputParameters. Přidána `definitions/compton.py`
-pro periodický FREL výpočet s dvojicí kontur GRID=5 a SPLITSS, přes kkrgen.
-Nativní implementace je aktivní. Předběžná kategorie: **funguje, ale má významné ALE**;
-konkrétní větev EMD2D s nenulovým podélným posunem obsahuje doloženou chybu.
-Numerické výsledky nebyly ověřeny během tohoto auditu.
-
-NONMAG je povoleno, skalárně relativistické a nerelativistické režimy nikoli.
-Základní výstupy jsou DATASET_BND.mcp, DATASET_COR.mcp a DATASET_TOT.mcp,
-s celkovou a spinovou rozdílovou složkou (`compton.f:1315–1380`). MD2D vytváří
-projekci, EMD2D řez hybnostní hustotou. Nejde o zaměnitelné volby.
+Současná definice pokrývá periodický FREL výpočet přes `kkrgen`; zvláštní nativní větve nejsou tímto kontraktem numericky ověřeny.
 
 ## Zdrojové zapojení a vstupy
 
@@ -116,22 +105,3 @@ Energetická smyčka používá MPI_DISTRIBUTE a výsledky redukuje MPI_SUM_R
 (`:1273–1296`). `mpi_distribute.f` rozděluje energie pozpátku, takže poslední
 bod zpracuje rank 0; odpovídá podmínce výpočtu core contribution (`compton.f:626`).
 Proto je mpi=True zdrojově opodstatněné. Nebyl proveden skutečný MPI běh.
-
-## Testy
-
-22 nových testů: zápis obou SPLITSS, defaults, automatické rozpoznání souboru,
-pickle, TAU cesty a směrové vektory, NONMAG, zakázané režimy, vypnutí každého
-SPLITSS, chybné směry, validní příčný pár, shift/parita, EMD2D s nulovým a
-nenulovým posunem, počty/interpolace, NE a auditované kontury/BZINT.
-
-Celá sada InputParameters: **130 passed**, Python 3.12. Čtyři warnings:
-dvě očekávaná upozornění PNMAX=0 při obecném testu defaults a dvě stávající
-NumPy 2.5 DeprecationWarning. `git diff --check` a zpětná kontrola patche prošly.
-Numerický SPR-KKR nebyl spuštěn; testy neověřují fyzikální hodnoty, TAU cache,
-konvergenci, MPI výsledky ani správnost alternativ ONLY_CORE/USE_ZJOVZZ.
-
-## Soubory
-
-- src/ase2sprkkr/input_parameters/definitions/compton.py
-- src/ase2sprkkr/input_parameters/test/test_compton.py
-- 0030-compton.patch

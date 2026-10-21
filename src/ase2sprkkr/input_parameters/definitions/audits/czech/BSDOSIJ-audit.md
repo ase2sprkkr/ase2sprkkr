@@ -1,6 +1,6 @@
-# BSDOSIJ — audit a nová definice
+# BSDOSIJ — audit současné definice
 
-Porovnáno s dodaným SPR-KKR 9.7 a ASE2SPRKKR refactor, commit 267512c4b8ccbbfd37af7ede898febc066b7e3ee. BSDOSIJ zde vlastní definici nemá. Samostatný patch 0020-bsdosij.patch přidává modul a testy; předchozí patche neobsahuje.
+Definice `bsdosij.py` zpřístupňuje experimentální místně rozlišenou zpětně rozptylovou DOS. Omezení níže vycházejí z nativního SPR-KKR 9.7, nikoli z numerického ověření.
 
 ## Vstup a defaulty
 
@@ -35,5 +35,3 @@ Tyto chyby neopravuje definiční soubor Pythonu. Podpora vstupu je experimentá
 ## MPI a testy
 
 mpi=True odpovídá implementované redukci BSDOS_IJ přes MPI_SUM_C (bsdosij.f:112–126) a výstupu na procesu0. Samotná numerická správnost MPI nebyla testována.
-
-13 nových testů: serializace, opětovné načtení, pickle, omezení energetické cesty a relativity, NONMAG/BZINT, kombinace selektorů a nekladné NE. Celá sada input_parameters: **121 passed**. Testy nepouštějí SPR-KKR ani neověřují jeho DOS výstupy. Patch prošel git diff --check a kontrolou zpětného aplikování.

@@ -1,6 +1,6 @@
-# 36. CHILANDAU — SPR-KKR 9.7 / ASE2SPRKKR
+# CHILANDAU — audit současné definice
 
-Dosud chybějící task pro Landauovu orbitální magnetickou susceptibilitu. Přidána definice pro **sériový periodický ASA FREL postup**. Předběžně: sériová větev funguje se zásadními omezeními; **MPI větev je rozbitá**. Numerický výpočet nebyl proveden. Nejde o společný závěrečný audit.
+Definice `chilandau.py` podporuje sériovou periodickou větev orbitální Landauovy susceptibility v ASA/FREL. Nativní MPI větev má zjištěnou závadu; numerické ověření neproběhlo.
 
 ## Definice a validace
 
@@ -24,11 +24,4 @@ TASK obsahuje CLURAD, NSHLCLU, SELECT, EXCLUDE, QREPONLY a PRINT. SELECT/EXCLUDE
 4. **Čtecí TAU větev.** RDTAUFIL otevře a přečte hlavičku textového souboru, ale v energetické smyčce chybí odpovídající čtení TAU a výpočet TAU je při RDTAUFIL přeskočen. Tento reuse postup není touto definicí nabízen ani certifikován.
 5. Výpočet používá konečný součet sousedů a konkrétní kartézské složky. Konvergenci, geometrický rozsah, násobnosti při QREPONLY a interpretaci pro obecnou anisotropii je potřeba ověřit. Nižší dimensionalita a nestandardní rotační stavy nejsou tímto auditem pokryty.
 
-
 ## Ověření
-
-12 nových testů: discovery/defaults/serial executable, round-trip, pickle, NSHLCLU=0 a selektory, NONMAG, odmítnutí neauditovaného režimu, FULLPOT, BZINT, GRID, SPLITSS, neplatného radiusu a NE, vzájemná výlučnost SELECT/EXCLUDE. Celá sada InputParameters: **120 passed**, dvě existující NumPy deprecation warnings.
-
-Příkaz: `PYTHONPATH=src ASE2SPRKKR_NO_USER_PROFILE=1 ../test-env/bin/python -m pytest src/ase2sprkkr/input_parameters/test -q`.
-
-Zdroje: initvar.f:453–454; rsp.f:134–147; susc_landau.f; susc_lancalc.f; susc_laname.f; susc_lanme.f; init_mod_tauij_star.f:150–180; mod_sites.f:73. ASE baseline 267512c4b8ccbbfd37af7ede898febc066b7e3ee. Samostatný patch pouze pro CHILANDAU.

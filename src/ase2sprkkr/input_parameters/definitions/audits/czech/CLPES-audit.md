@@ -1,6 +1,6 @@
-# CLPES — SPR-KKR 9.7 / ASE2SPRKKR
+# CLPES — audit současné definice
 
-Nová definice: TASK=CLPES, executable kkrspec, konzervativně serial. Skutečná větev IBLOCH=3: spec_rslab.f:172–173,226,239–241,862; driver spec_clpes.f.
+Definice `clpes.py` zpřístupňuje nativní core-level fotoemisi přes KKRSPEC s konzervativním sériovým během. Platí omezení nativního solveru uvedená níže.
 
 ## Parametry a defaults
 SPEC_CL je skutečný název sekce (spec_inputs.f:1877–1921). Implementováno IT (explicitně 1), CL (explicitně 2P), IE_ICST (default 1). CL je vždy zapsáno: bez přítomného CL reader ponechá 1S, přestože SECTION_SET_STRING uvádí fallback 2P. Volitelné CE není v této definici exponováno; IT určuje potenciálový typ a native výběr zahrnuje také stejný atomový počet Z (spec_clpes.f:213–216), nejde o izolovaný site selector.
@@ -19,4 +19,3 @@ EPHOT=1000 eV se explicitně zapisuje místo zděděných 25 eV: vhodnější pr
 Kategorie pro budoucí společný audit: funguje, ale má velká ALE. Nejde o vypnutý placeholder.
 
 ## Ověření
-8 nových regresních testů: zápis/čtení, selector a shell, odmítnutí nepodporované polarizace a geometrie, core state bounds. Celá input_parameters sada: 116 passed. Numerický SPR-KKR výpočet nebyl spuštěn.

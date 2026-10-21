@@ -1,8 +1,6 @@
-# DOS — audit SPR-KKR 9.7 / ASE2SPRKKR
+# DOS — audit současné definice
 
-Pořadí 34. Zdroj: PUB9.7_260420_18h13.tar.gz.
-ASE2SPRKKR refactor: 267512c4b8ccbbfd37af7ede898febc066b7e3ee.
-Samostatný patch 0034-dos.patch proti tomuto commitu.
+Definice `dos.py` poskytuje standardní výpočet DOS. Auditované hlavní workflow má fyzikální smysl s uvedenými omezeními; konvergence konkrétního systému zde nebyla ověřena.
 
 ## Stav a opravy definice
 
@@ -74,7 +72,6 @@ GRID=0, NE=1 je platný samostatný bod a zůstává povolený.
 
 `kkrgen.f:1169–1196` čte v CONTROL pouze při FREL DOSREP=RLM/CLM/REL,
 DOSCORSYS=LOC/GLO, WRKAPDOS a WRPOLAR. Původní definice je nevystavovala;
-tento patch je nepřidává, protože jejich správnost vyžaduje samostatný audit.
 
 WRDOSREP ukládá energicky rozlišené pole a vypisuje je při IECURR=NETAB(1)
 (`wrdosrep.f:152–185`). Nemá MPI redukci a část pole DOS se před použitím
@@ -91,7 +88,6 @@ vynucené omezení: CHECK je compile-time false (`wrdosrep.f:32–35`).
 
 - MODE.FREL a doplněné skalární/nerelativistické vstupy jsou podporované formátem;
   jejich konkrétní výsledek závisí na potentialu a není zde numericky porovnán.
-- FULLPOT může být určeno potentialem; patch nepřidává celou SCF konfiguraci.
 - Společné ENERGY poskytuje další kontury a SPLITSS. Tento audit ověřuje
   standardní GRID=3 scan a uvedené nutné kontroly, ne všechny kombinace
   pokročilých kontur, jejich počty bodů a numerické váhy.
@@ -99,20 +95,3 @@ vynucené omezení: CHECK je compile-time false (`wrdosrep.f:32–35`).
   pólů, hustoty k-mřížky a konvergence.
 - Nejsou zde auditovány tepelné fluktuace, NLCPA, impurity/embedded cluster,
   self-energy ani jiné pokročilé větve. Nejsou označeny za vypnuté.
-
-## Testy
-
-12 nových testů: původní defaults, automatické načtení DOS souboru, pickle,
-NREL/SREL/SP-SREL roundtrip, GRID=2/3 s NE=1, platný GRID=0/NE=1,
-nekladné NE, upozornění ImE=0, záporné ImE a relativní interval vůči EF.
-
-Celá sada InputParameters: **120 passed**, Python 3.12. Dvě stávající
-NumPy 2.5 DeprecationWarning. `git diff --check` a zpětná kontrola patche prošly.
-Numerický SPR-KKR nebyl spuštěn. Testy neověřují hodnoty DOS, konvergenci,
-MPI výsledky ani doplňkové DOSREP/WRKAPDOS/WRPOLAR výstupy.
-
-## Soubory
-
-- src/ase2sprkkr/input_parameters/definitions/dos.py
-- src/ase2sprkkr/input_parameters/test/test_dos.py
-- 0034-dos.patch
