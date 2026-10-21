@@ -13,20 +13,26 @@ def _calculator_without_potential():
     return calculator
 
 
-@pytest.mark.parametrize(
-    "empty_spheres",
-    [True, {"min_radius": 0.5}, (0.5, 1.0)],
-)
-def test_explicit_empty_sphere_search_errors_propagate(monkeypatch, empty_spheres):
+def test_explicit_empty_sphere_search_errors_propagate(monkeypatch):
+    # All failures occur before any input files are written. Reusing the
+    # calculator also verifies preparation remains usable after each error.
     calculator = _calculator_without_potential()
+    search = Mock(side_effect=RuntimeError("empty-sphere search failed"))
+    monkeypatch.setattr(calculation_module, "add_empty_spheres", search)
 
-    def fail(*args, **kwargs):
-        raise RuntimeError("empty-sphere search failed")
+    for index, (empty_spheres, expected_options) in enumerate(
+        (
+            (True, {}),
+            ({"min_radius": 0.5}, {"min_radius": 0.5}),
+            ((0.5, 1.0), {"min_radius": 0.5, "max_radius": 1.0}),
+        ),
+        start=1,
+    ):
+        with pytest.raises(RuntimeError, match="empty-sphere search failed"):
+            calculator.save_input(potential=False, empty_spheres=empty_spheres)
 
-    monkeypatch.setattr(calculation_module, "add_empty_spheres", fail)
-
-    with pytest.raises(RuntimeError, match="empty-sphere search failed"):
-        calculator.save_input(potential=False, empty_spheres=empty_spheres)
+        assert search.call_count == index
+        assert search.call_args.kwargs == expected_options
 
 
 def test_empty_spheres_false_skips_search(monkeypatch, tmp_path):

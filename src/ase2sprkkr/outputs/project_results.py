@@ -146,6 +146,22 @@ def attach_project_run(
     )
 
 
+def retry_project_postprocessing(manager, run):
+    """Explicitly parse preserved result files again without executing the task."""
+    record = _record(manager, run)
+    # Reader construction is outside the transition: programming errors and
+    # missing definitions must leave the original failure record unchanged.
+    processor = _result_processor_for_record(manager, record)
+    result = manager.retry_postprocessing(record, processor)
+    # TaskResult provenance belongs to the outputs layer, not ExecutionManager.
+    # Generic processors may return immutable or scalar values.  Only task
+    # results carry the optional project provenance attribute.
+    from .task_result import TaskResult
+    if isinstance(result, TaskResult):
+        result.run_record = manager.store.get(record.id)
+    return result
+
+
 def load_project_result(manager, run):
     """Reconstruct the historical TaskResult of one terminal project run."""
     record = _record(manager, run)

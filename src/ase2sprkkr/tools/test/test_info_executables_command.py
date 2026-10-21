@@ -1,8 +1,10 @@
 import argparse
+from functools import cache
 
 from ase2sprkkr.tools.commands import info as info_command
 
 
+@cache
 def _parser():
     parser = argparse.ArgumentParser()
     info_command.parser(parser)

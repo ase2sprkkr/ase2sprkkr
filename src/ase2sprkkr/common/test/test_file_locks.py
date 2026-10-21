@@ -1,28 +1,26 @@
 from ase2sprkkr.common.file_locks import FileLock
 
 
-def test_nonblocking_file_lock_detects_owner(tmp_path):
+def test_nonblocking_file_lock_ownership_and_context_release(tmp_path):
     path = tmp_path / "resource.lock"
     first = FileLock(path)
-    second = FileLock(path)
+    contender = FileLock(path)
 
-    assert first.acquire()
+    # A second owner must not acquire the locked file.
+    with first as acquired:
+        assert acquired.acquired
+        assert not contender.acquire(blocking=False)
+
+    # Context exit releases the lock; the contender can then acquire it.
+    assert not first.acquired
+    assert contender.acquire(blocking=False)
+    contender.release()
+
+    # Explicit release must also make the same resource reacquirable.
+    assert first.acquire(blocking=False)
     try:
-        assert not second.acquire(blocking=False)
+        assert not contender.acquire(blocking=False)
     finally:
         first.release()
-
-    assert second.acquire(blocking=False)
-    second.release()
-
-
-def test_file_lock_context_manager_releases_lock(tmp_path):
-    path = tmp_path / "resource.lock"
-
-    with FileLock(path) as lock:
-        assert lock.acquired
-
-    assert not lock.acquired
-    probe = FileLock(path)
-    assert probe.acquire(blocking=False)
-    probe.release()
+    assert contender.acquire(blocking=False)
+    contender.release()

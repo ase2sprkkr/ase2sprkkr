@@ -1,3 +1,4 @@
+from functools import cache
 from types import SimpleNamespace
 
 import pytest
@@ -76,13 +77,21 @@ def _record(
     )
 
 
-def _input_file(tmp_path, task):
+@cache
+def _input_text(task):
+    # These tests exercise historical input *reading*, not re-generation of
+    # identical task defaults. Cache only serialized text, never a mutable
+    # InputParameters object or the path to a test-specific file.
     parameters = InputParameters.create(task)
     parameters.CONTROL.POTFIL = "Fe.pot"
     if task == "BSFEK":
         parameters.TASK.KPATH = 3
+    return parameters.to_string(validate=True)
+
+
+def _input_file(tmp_path, task):
     path = tmp_path / "run.inp"
-    path.write_text(parameters.to_string(validate=True))
+    path.write_text(_input_text(task))
     return path
 
 

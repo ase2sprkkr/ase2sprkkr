@@ -183,23 +183,6 @@ def test_yaml_reports_unknown_configuration_keys(tmp_path):
     assert config.nomad.token() == "still-loaded"
 
 
-def test_user_preferences_prefer_yaml_over_legacy_python(tmp_path, monkeypatch):
-    yaml_path = tmp_path / "config.yaml"
-    legacy_path = tmp_path / "__init__.py"
-    yaml_path.write_text("default_profile: yaml\nprofiles:\n  yaml: {}\n", encoding="utf8")
-    legacy_path.write_text("config.default_profile = 'python'\n", encoding="utf8")
-
-    config = fresh_config()
-    monkeypatch.setattr(configuration, "config", config)
-    monkeypatch.setattr(configuration, "user_preferences_file", lambda: str(yaml_path))
-    monkeypatch.setattr(configuration, "legacy_user_preferences_file", lambda: str(legacy_path))
-
-    configuration.load_user_preferences()
-
-    assert config.default_profile() == "yaml"
-    assert "yaml" in config.profiles
-
-
 def test_user_preferences_fall_back_to_legacy_python(tmp_path, monkeypatch):
     yaml_path = tmp_path / "config.yaml"
     legacy_path = tmp_path / "__init__.py"

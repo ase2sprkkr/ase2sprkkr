@@ -14,6 +14,12 @@ from ..calculator import SPRKKR
 from ..profile import SPRKKRProfile
 
 
+@pytest.fixture(scope="module")
+def fe_bulk():
+    # Construct the same lattice once; each calculator receives its own copy.
+    return bulk("Fe")
+
+
 class _UnstartedRunner:
     def __init__(self, spec):
         self.spec = spec
@@ -64,9 +70,9 @@ def test_calculator_exposes_preparation_as_public_boundary():
     assert "return_run" not in inspect.signature(SPRKKR.calculate).parameters
 
 
-def test_unstarted_run_owns_temporary_calculation_directory():
+def test_unstarted_run_owns_temporary_calculation_directory(fe_bulk):
     calculator = SPRKKR(
-        atoms=bulk("Fe"),
+        atoms=fe_bulk.copy(),
         profile=SPRKKRProfile(mpi=False),
         empty_spheres=False,
     )
@@ -86,9 +92,9 @@ def test_unstarted_run_owns_temporary_calculation_directory():
     assert not os.path.exists(directory)
 
 
-def test_temporary_input_and_potential_are_path_backed_until_runner_close(tmp_path):
+def test_temporary_input_and_potential_are_path_backed_until_runner_close(tmp_path, fe_bulk):
     calculator = SPRKKR(
-        atoms=bulk("Fe"),
+        atoms=fe_bulk.copy(),
         directory=tmp_path,
         profile=SPRKKRProfile(mpi=False),
         empty_spheres=False,
@@ -117,9 +123,9 @@ def test_temporary_input_and_potential_are_path_backed_until_runner_close(tmp_pa
     assert not Path(potential_names[0]).exists()
 
 
-def test_preparation_snapshots_input_parameters(tmp_path):
+def test_preparation_snapshots_input_parameters(tmp_path, fe_bulk):
     calculator = SPRKKR(
-        atoms=bulk("Fe"),
+        atoms=fe_bulk.copy(),
         directory=tmp_path,
         profile=SPRKKRProfile(mpi=False),
         empty_spheres=False,
@@ -144,11 +150,11 @@ def test_preparation_snapshots_input_parameters(tmp_path):
         prepared.close()
 
 
-def test_task_survives_preparation_snapshot(tmp_path):
+def test_task_survives_preparation_snapshot(tmp_path, fe_bulk):
     parameters = InputParameters.create("ARPES")
     parameters.TASK.TASK = "SPLEED"
     calculator = SPRKKR(
-        atoms=bulk("Fe"),
+        atoms=fe_bulk.copy(),
         directory=tmp_path,
         profile=SPRKKRProfile(mpi=False),
         empty_spheres=False,
@@ -169,9 +175,9 @@ def test_task_survives_preparation_snapshot(tmp_path):
         prepared.close()
 
 
-def test_preparation_requires_task_definition(monkeypatch, tmp_path):
+def test_preparation_requires_task_definition(monkeypatch, tmp_path, fe_bulk):
     calculator = SPRKKR(
-        atoms=bulk("Fe"),
+        atoms=fe_bulk.copy(),
         directory=tmp_path,
         profile=SPRKKRProfile(mpi=False),
         empty_spheres=False,
@@ -186,9 +192,9 @@ def test_preparation_requires_task_definition(monkeypatch, tmp_path):
         calculator.prepare(output_file=False, allow_temporary_files=True)
 
 
-def test_prepared_calculation_constructs_its_runner(tmp_path):
+def test_prepared_calculation_constructs_its_runner(tmp_path, fe_bulk):
     calculator = SPRKKR(
-        atoms=bulk("Fe"),
+        atoms=fe_bulk.copy(),
         directory=tmp_path,
         profile=SPRKKRProfile(mpi=False),
         empty_spheres=False,
@@ -211,10 +217,10 @@ def test_prepared_calculation_constructs_its_runner(tmp_path):
 
 
 def test_failed_potential_serialization_preserves_primary_error_and_cleans_files(
-    monkeypatch, tmp_path
+    monkeypatch, tmp_path, fe_bulk
 ):
     calculator = SPRKKR(
-        atoms=bulk("Fe"),
+        atoms=fe_bulk.copy(),
         directory=tmp_path,
         profile=SPRKKRProfile(mpi=False),
         empty_spheres=False,
@@ -241,10 +247,10 @@ def test_failed_potential_serialization_preserves_primary_error_and_cleans_files
 
 
 def test_reader_file_not_found_is_not_relabelled_as_missing_executable(
-    monkeypatch, tmp_path
+    monkeypatch, tmp_path, fe_bulk
 ):
     calculator = SPRKKR(
-        atoms=bulk("Fe"),
+        atoms=fe_bulk.copy(),
         directory=tmp_path,
         profile=SPRKKRProfile(mpi=False),
         empty_spheres=False,

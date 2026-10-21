@@ -10,26 +10,22 @@ from ...outputs.task_result import KkrOutputReader
 from ...sprkkr.executables import executables
 
 
-def test_builtin_tasks_use_registered_executables_and_resolvable_output_readers():
+def test_builtin_tasks_resolve_readers_and_cover_specialized_readers():
+    claimed_readers = set()
+    # Enumerating this lazy registry loads every task definition. Check both
+    # sides of the reader mapping in the same traversal.
     for task in InputParameters.task_registry.values():
         assert task.executable in executables
         assert issubclass(reader_registry.class_for_task(task), KkrOutputReader)
-
-
-def test_every_specialized_reader_is_owned_by_at_least_one_task():
-    claimed_readers = {
-        (
+        claimed_readers.add(
             task.output_reader_name
             if task.output_reader_name is not None
             else executables[task.executable].default_output_reader
         )
-        for task in InputParameters.task_registry.values()
-    }
 
     specialized_readers = set(reader_registry.names(include_aliases=False)) - {
         "DEFAULT"
     }
-
     assert specialized_readers <= claimed_readers
 
 

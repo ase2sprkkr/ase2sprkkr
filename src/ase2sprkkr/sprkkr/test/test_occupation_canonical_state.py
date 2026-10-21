@@ -22,7 +22,7 @@ def _assert_canonical_occupation(atoms, index=0):
     assert reconstructed.occupation.primary_atomic_number == atoms.numbers[index]
 
 
-def test_delitem_keeps_canonical_ase_state_in_sync():
+def test_delitem_and_clean_keep_canonical_ase_state_in_sync():
     atoms, site = _single_site()
     site.occupation.set({"Na": 0.6, "Fe": 0.4})
 
@@ -31,10 +31,11 @@ def test_delitem_keeps_canonical_ase_state_in_sync():
     _assert_canonical_occupation(atoms)
     assert site.occupation.to_dict(True) == {"Na": 0.6, "X": 0.4}
 
-
-def test_clean_keeps_canonical_ase_state_in_sync():
-    atoms, site = _single_site()
+    # Start the independent zero-occupancy scenario with an explicit reset;
+    # the canonical ASE metadata must track it before and after cleaning.
     site.occupation.set({"Na": 1.0, "Fe": 0.0})
+    _assert_canonical_occupation(atoms)
+    assert site.occupation.to_dict(True) == {"Na": 1.0, "Fe": 0.0}
 
     site.occupation.clean()
 

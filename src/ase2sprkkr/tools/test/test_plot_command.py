@@ -1,4 +1,5 @@
 import argparse
+from functools import cache
 
 import pytest
 
@@ -7,9 +8,15 @@ from ...result_files.definitions.sfn import SFNResultFile
 from ...result_files import ResultFile
 
 
-def parse_args(*arguments):
+@cache
+def _parser():
     parser = argparse.ArgumentParser()
     plot.parser(parser)
+    return parser
+
+
+def parse_args(*arguments):
+    parser = _parser()
     return parser, parser.parse_args(arguments)
 
 
@@ -38,23 +45,9 @@ def test_sfn_mode_flag_is_rejected_for_non_sfn(monkeypatch):
     )
     _, args = parse_args("file.dos", "--shape")
 
-    with pytest.raises(ValueError, match="only valid for SFN files"):
-        plot.run(args, {"debug": True})
-
-
-def test_sfn_mode_flag_raises_for_non_sfn(monkeypatch):
-    class OtherOutput:
-        pass
-
-    monkeypatch.setattr(
-        ResultFile,
-        "from_file",
-        staticmethod(lambda *args, **kwargs: OtherOutput()),
-    )
-    _, args = parse_args("file.dos", "--shape")
-
-    with pytest.raises(ValueError, match="only valid for SFN files"):
-        plot.run(args, {"debug": False})
+    for debug in (True, False):
+        with pytest.raises(ValueError, match="only valid for SFN files"):
+            plot.run(args, {"debug": debug})
 
 
 def test_sfn_mode_cannot_be_set_through_generic_option():

@@ -30,7 +30,8 @@ jobs:
          echo "text.usetex : False" >> ~/.config/matplotlib/matplotlibrc
     - run: ./install_dependencies.sh
     - name: Test installed wheel
-      run: DO_NOT_RUN_SPRKKR=1 "$GITHUB_WORKSPACE/run_tests"
+      # Profile slow cases without an extra test run or separate CI job.
+      run: DO_NOT_RUN_SPRKKR=1 "$GITHUB_WORKSPACE/run_tests" --durations=20
 
   execution-integration:
     runs-on: ubuntu-latest

@@ -234,3 +234,35 @@ def test_supervisor_pumps_both_binary_channels_to_separate_files(tmp_path, monke
     assert (tmp_path / "stdout").read_bytes() == b"A" * 65536 + bytes([0, 255])
     assert (tmp_path / "stderr").read_bytes() == b"B" * 65536 + bytes([1, 254])
     assert reported[0][0][1].value == "finished"
+
+def test_unexpected_child_spawn_failure_is_classified_as_launch(tmp_path, monkeypatch):
+    """Non-OSError failures before child creation still belong to LAUNCH."""
+    from ..base import FailurePhase, RunState
+
+    reported = []
+
+    async def broken_spawn(*_args, **_kwargs):
+        raise RuntimeError("failed to prepare child subprocess")
+
+    monkeypatch.setattr(remote_process_worker.asyncio, "create_subprocess_exec", broken_spawn)
+    monkeypatch.setattr(
+        remote_process_worker, "publish_outcome",
+        lambda *args, **kwargs: reported.append((args, kwargs)),
+    )
+
+    async def check():
+        rd, wr = os.pipe()
+        result = await asyncio.wait_for(
+            remote_process_worker._run(_spec(tmp_path, wr, detached=True)), 5,
+        )
+        with os.fdopen(rd, "rb") as pipe:
+            assert pipe.readline()
+        return result
+
+    assert asyncio.run(check()) == 127
+    assert len(reported) == 1
+    args, kwargs = reported[0]
+    assert args[1] == RunState.FAILED
+    assert args[2] == 127
+    assert args[3] == FailurePhase.LAUNCH
+    assert kwargs["error"] == "failed to prepare child subprocess"

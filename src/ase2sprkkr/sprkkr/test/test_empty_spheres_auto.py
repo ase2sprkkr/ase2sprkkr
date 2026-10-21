@@ -4,6 +4,7 @@ from unittest.mock import patch
 import pytest
 from ase.build import bulk
 
+from .. import calculation as calculation_module
 from ..calculation import _resolve_empty_spheres
 from ..calculator import SPRKKR
 
@@ -18,15 +19,30 @@ from ..calculator import SPRKKR
     ],
 )
 def test_auto_empty_spheres_only_for_effective_scf(
-    tmp_path, input_parameters, task, should_add
+    tmp_path, monkeypatch, input_parameters, task, should_add
 ):
     atoms = bulk("Fe")
     calculator = SPRKKR(atoms=atoms, directory=tmp_path, empty_spheres="auto")
 
-    with patch("ase2sprkkr.sprkkr.calculation.add_empty_spheres") as add_empty_spheres:
-        calculator.save_input(input_parameters=input_parameters, task=task)
+    class PolicyChecked(Exception):
+        """Abort after checking the real policy, before file serialization."""
 
+    selected_tasks = []
+
+    def check_policy(**kwargs):
+        selected_tasks.append(kwargs["input_parameters"].task_name)
+        _resolve_empty_spheres(**kwargs)
+        raise PolicyChecked
+
+    monkeypatch.setattr(calculation_module, "_resolve_empty_spheres", check_policy)
+    with patch("ase2sprkkr.sprkkr.calculation.add_empty_spheres") as add_empty_spheres:
+        with pytest.raises(PolicyChecked):
+            calculator.save_input(input_parameters=input_parameters, task=task)
+
+    assert selected_tasks == [task or input_parameters]
     assert bool(add_empty_spheres.call_count) is should_add
+    assert not list(tmp_path.glob("*.inp"))
+    assert not list(tmp_path.glob("*.pot"))
 
 
 def test_auto_empty_spheres_uses_effective_task_identity():

@@ -6,6 +6,7 @@ from .project_results import (
     UnrecoverableProjectResultError,
     attach_project_run,
     load_project_result,
+    retry_project_postprocessing,
 )
 from .task_result import TaskResult
 
@@ -16,4 +17,5 @@ __all__ = [
     "attach_project_run",
     "capture_result_file_versions",
     "load_project_result",
+    "retry_project_postprocessing",
 ]

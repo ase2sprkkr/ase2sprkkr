@@ -32,7 +32,9 @@ def test_reader_registry_loads_expected_reader_class():
     assert reader.__module__ == "ase2sprkkr.outputs.readers.scf"
 
 
-def test_reader_registry_is_lazy_for_discovered_modules(tmp_path, monkeypatch):
+def test_reader_registry_detection_stays_lazy_until_class_lookup(
+    tmp_path, monkeypatch,
+):
     package = _reader_package(
         tmp_path,
         monkeypatch,
@@ -47,36 +49,19 @@ def test_reader_registry_is_lazy_for_discovered_modules(tmp_path, monkeypatch):
     )
     registry = OutputReaderRegistry(package)
     module_name = f"{package.__name__}.alpha"
+    output = tmp_path / "explicit.out"
+    output.write_bytes(b" header\n TASK = ALPHA\n")
 
     assert "ALPHA" in registry
     assert module_name not in sys.modules
 
-    reader = registry["ALPHA"]
-
-    assert module_name in sys.modules
-    assert reader.__name__ == "AlphaOutputReader"
-
-
-def test_explicit_output_task_detection_stays_lazy(tmp_path, monkeypatch):
-    package = _reader_package(
-        tmp_path,
-        monkeypatch,
-        "_ase2sprkkr_reader_registry_detect_explicit",
-        {
-            "alpha": (
-                "from ase2sprkkr.outputs.task_result import KkrOutputReader\n"
-                "class AlphaOutputReader(KkrOutputReader):\n"
-                "    pass\n"
-            )
-        },
-    )
-    registry = OutputReaderRegistry(package)
-    module_name = f"{package.__name__}.alpha"
-    output = tmp_path / "explicit.out"
-    output.write_bytes(b" header\n TASK = ALPHA\n")
-
+    # Reading the explicit task selector must not import the reader module.
     assert registry.detect(output) == "ALPHA"
     assert module_name not in sys.modules
+
+    reader = registry["ALPHA"]
+    assert module_name in sys.modules
+    assert reader.__name__ == "AlphaOutputReader"
 
 
 def test_legacy_output_detection_is_owned_by_reader(tmp_path, monkeypatch):

@@ -516,8 +516,11 @@ class ExecutionManager:
         failure_phase=_UNCHANGED,
         files=_UNCHANGED,
         expected_updated_at=_UNCHANGED,
+        expected_record=None,
     ):
         def merge(latest):
+            if expected_record is not None and latest != expected_record:
+                raise RuntimeError("Run changed during postprocessing retry")
             if (expected_updated_at is not _UNCHANGED
                     and latest.updated_at != expected_updated_at):
                 # An independent refresh has superseded this observation.
@@ -677,6 +680,7 @@ class ExecutionManager:
         failure_phase=None,
         artifacts_available=False,
         files=None,
+        expected_record=None,
     ):
         state = RunState(state)
         phase = _failure_phase(failure_phase)
@@ -713,6 +717,7 @@ class ExecutionManager:
             message=message,
             failure_phase=phase,
             files=result_files,
+            expected_record=expected_record,
         )
 
     def resume_download(self, run):
@@ -746,6 +751,71 @@ class ExecutionManager:
             )
 
         return self.store.update(record, reopen)
+
+    def retry_postprocessing(self, run, process_result):
+        """Retry parsing captured artifacts, never submitting/attaching a backend.
+
+        The durable FAILED -> POSTPROCESSING transition is atomic, so competing
+        callers cannot both claim the same retry.
+        """
+        from .base import ExecutionOutcome
+
+        record = self.store.get(run) if isinstance(run, str) else self.store.get(run.id)
+
+        def eligible(latest):
+            files = latest.files
+            if (latest.state != RunState.FAILED
+                    or latest.failure_phase != FailurePhase.POSTPROCESSING
+                    or latest.return_code != 0
+                    or latest.execution.backend_id is None):
+                raise ValueError("Only postprocessing failures of successful backend runs can be retried")
+            if files is None or files.captured_at is None or files.output_file is None:
+                raise ValueError("Postprocessing retry requires captured output artifacts")
+            if files.failed_artifacts:
+                raise ValueError("Postprocessing retry requires locally available artifacts")
+            # Captured output is authoritative; input may no longer be present.
+            if (not files.output_versions
+                    or any(version.state() is not FileState.CURRENT
+                           for version in files.output_versions)
+                    or not self._file_is_current(files, files.output_file,
+                                                 files.output_versions)):
+                raise ValueError("Postprocessing retry requires unchanged historical artifacts")
+            return replace(
+                latest, state=RunState.POSTPROCESSING, finished_at=None,
+                failure_phase=None, message=None, updated_at=_now(),
+            )
+
+        reopened = self.store.update(record, eligible)
+        files = reopened.files
+        outcome = ExecutionOutcome(
+            input_file=(files.input_file if self._file_is_current(
+                files, files.input_file, files.input_versions) else None),
+            output_file=files.output_file,
+            error_file=None if files.stderr is None else files.stderr.local_path,
+            return_code=reopened.return_code,
+        )
+        try:
+            result = process_result(outcome)
+            # A concurrent external rewrite must not turn into a successful
+            # historical result, even if it happened while parsing.
+            if any(version.state() is not FileState.CURRENT
+                   for version in files.output_versions):
+                raise RuntimeError("Historical artifacts changed during postprocessing retry")
+        except BaseException as exc:
+            self.complete(
+                reopened, state=RunState.FAILED,
+                return_code=reopened.return_code,
+                message=str(exc), failure_phase=FailurePhase.POSTPROCESSING,
+                artifacts_available=False,
+                expected_record=reopened,
+            )
+            raise
+        self.complete(
+            reopened, state=RunState.FINISHED,
+            return_code=reopened.return_code, files=files,
+            artifacts_available=False, expected_record=reopened,
+        )
+        return result
 
     def retrieve_result_files(self, run):
         record = self.store.get(run) if isinstance(run, str) else self.store.get(run.id)

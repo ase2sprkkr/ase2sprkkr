@@ -194,16 +194,15 @@ def test_input_parameters_registry_snapshots_result_defaults():
     assert parameters.ENERGY.EMIN.is_set()
 
 
-def test_jxc_without_result_keeps_normal_emin_default():
+def test_jxc_instance_default_can_be_cleared_to_schema_default():
     parameters = InputParameters.create("JXC")
 
+    # Check the pristine JXC defaults before overriding them, avoiding a
+    # second full InputParameters construction for the baseline assertions.
     assert not hasattr(parameters, "from_result")
     assert parameters.ENERGY.EMIN() == -0.2
     assert not parameters.ENERGY.EMIN.is_set()
 
-
-def test_instance_default_can_be_cleared():
-    parameters = InputParameters.create("JXC")
     parameters.ENERGY.EMIN.set_default(-0.35)
 
     assert parameters.ENERGY.EMIN() == -0.35

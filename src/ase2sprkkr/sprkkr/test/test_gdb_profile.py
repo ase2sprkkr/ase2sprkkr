@@ -1,22 +1,21 @@
+from types import SimpleNamespace
+
 from ase2sprkkr.execution import LaunchSpec, MpiSpec
 from ase2sprkkr.sprkkr.profile import SPRKKRProfile
 
 
 def _create_spec(tmp_path, *, mpi, mpi_supported=True, gdb=True):
     profile = SPRKKRProfile(mpi=mpi, mpi_warning=False)
-    input_file = (tmp_path / "run.inp").open("w+")
-
-    try:
-        return profile.create_execution(
-            "kkrscf",
-            input_file,
-            None,
-            str(tmp_path),
-            mpi_supported=mpi_supported,
-            gdb=gdb,
-        )
-    finally:
-        input_file.close()
+    # Command construction only needs the input pathname, not an open file.
+    input_file = SimpleNamespace(name=str(tmp_path / "run.inp"))
+    return profile.create_execution(
+        "kkrscf",
+        input_file,
+        None,
+        str(tmp_path),
+        mpi_supported=mpi_supported,
+        gdb=gdb,
+    )
 
 
 def test_serial_gdb_execution(tmp_path):

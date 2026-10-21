@@ -2,6 +2,7 @@ import copy
 import pickle
 
 import numpy as np
+import pytest
 from ase import Atoms
 from ase.build import bulk
 
@@ -11,6 +12,13 @@ from ..sprkkr_atoms import SPRKKRAtoms
 class CustomAtoms(Atoms):
     def custom_method(self):
         return "custom"
+
+
+@pytest.fixture(scope="module")
+def licl_supercell():
+    # The bulk crystal is expensive to construct; site symmetry and
+    # occupation tests each work with their own pristine ASE copy.
+    return bulk("LiCl", "rocksalt", a=5.64) * (2, 1, 1)
 
 
 def promoted_custom_atoms():
@@ -124,8 +132,10 @@ class TestSPRKKRAtoms:
         atoms.sites[1].site_type = atoms.sites[0].site_type
         atoms.compute_sites_symmetry()
 
-    def test_symmetry(self):
-        atoms = bulk("LiCl", "rocksalt", a=5.64) * (2, 1, 1)
+    def test_symmetry(self, licl_supercell):
+        atoms = licl_supercell.copy()
+        # The second promotion scenario must start from pristine ASE atoms.
+        unpromoted = atoms.copy()
         SPRKKRAtoms.promote_ase_atoms(atoms)
         assert atoms.sites[1].site_type == atoms.sites[3].site_type
         assert atoms.sites[1] is not atoms.sites[3]
@@ -160,7 +170,7 @@ class TestSPRKKRAtoms:
         assert atoms.sites[1].site_type != atoms.sites[3].site_type
         assert atoms.sites[1] is not atoms.sites[3]
 
-        atoms = bulk("LiCl", "rocksalt", a=5.64) * (2, 1, 1)
+        atoms = unpromoted
         SPRKKRAtoms.promote_ase_atoms(atoms, symmetry=False)
         assert atoms.sites[1].site_type != atoms.sites[3].site_type
 
@@ -170,8 +180,9 @@ class TestSPRKKRAtoms:
         SPRKKRAtoms.promote_ase_atoms(atoms, symmetry=True)
         assert atoms.sites[1].site_type == atoms.sites[3].site_type
 
-    def test_occupancy(self):
-        atoms = bulk("LiCl", "rocksalt", a=5.64) * (2, 1, 1)
+    def test_occupancy(self, licl_supercell):
+        atoms = licl_supercell.copy()
+        unpromoted = atoms.copy()
         atoms.info["occupancy"] = {
             0: {"Li": 1},
             1: {"Cl": 1},
@@ -182,7 +193,7 @@ class TestSPRKKRAtoms:
         SPRKKRAtoms.promote_ase_atoms(atoms)
         assert atoms.sites[1].site_type == atoms.sites[3].site_type
 
-        atoms = bulk("LiCl", "rocksalt", a=5.64) * (2, 1, 1)
+        atoms = unpromoted
         atoms.info["occupancy"] = {
             0: {"Li": 1},
             1: {"Cl": 0.5, "I": 0.5},

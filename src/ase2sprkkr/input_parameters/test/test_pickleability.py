@@ -40,8 +40,9 @@ TYPE_HOOK_ATTRIBUTES = (
 )
 
 
-def _iter_definition_nodes(root):
-    seen = set()
+def _iter_definition_nodes(root, seen=None):
+    if seen is None:
+        seen = set()
     stack = [root]
 
     while stack:
@@ -61,8 +62,8 @@ def _iter_definition_nodes(root):
                 stack.append(child)
 
 
-def _iter_callback_hooks(root):
-    for node in _iter_definition_nodes(root):
+def _iter_callback_hooks(root, seen=None):
+    for node in _iter_definition_nodes(root, seen):
         node_name = getattr(node, "name", node.__class__.__name__)
         for attr in DEFINITION_HOOK_ATTRIBUTES:
             hook = getattr(node, attr, None)
@@ -113,18 +114,30 @@ class TestDefinitionCallbacks:
             _schema_for("JXC"),
         ]
 
-        hooks = []
+        # Shared definition nodes and callback functions occur in several
+        # roots. Traversing or pickling the same object again adds no coverage.
+        visited_nodes = set()
+        checked_hooks = {}
+        found_hook = False
         for root in roots:
-            hooks.extend(_iter_callback_hooks(root))
+            for path, hook in _iter_callback_hooks(root, visited_nodes):
+                found_hook = True
+                # Keep strong references to already checked hooks: a transient
+                # descriptor/bound method must not be skipped if Python reuses
+                # an id from an earlier callable.
+                if checked_hooks.get(id(hook)) is hook:
+                    continue
+                _assert_importable_hook(path, hook)
+                checked_hooks[id(hook)] = hook
 
-        assert hooks, "Expected to find callback hooks in the definition trees"
-        for path, hook in hooks:
-            _assert_importable_hook(path, hook)
+        assert found_hook, "Expected to find callback hooks in the definition trees"
 
 
 class TestInputParametersPickle:
     def test_root_validators_survive_copy(self):
-        definition = InputParameters.create("SCF")._definition.copy(
+        # Only the schema is under test; constructing the complete
+        # InputParameters instance would initialize all its runtime options.
+        definition = _schema_for("SCF").copy(
             validators=(_copy_validator,)
         )
         copied = definition.copy()
@@ -198,7 +211,9 @@ class TestInputParametersPickle:
         with pytest.raises(DataValidityError):
             parameters.CONTROL.SECOND.set([1, 2])
 
-    def test_scf_input_parameters_pickle(self):
+    def test_scf_input_parameters_definition_pickle(self):
+        # The runtime InputParameters pickle round-trip is covered in
+        # test_task_registry.test_input_parameters_registry_snapshots_result_defaults.
         pickle.dumps(_schema_for("SCF"))
 
     def test_uninitialized_container_dunder_lookup_does_not_recurse(self):

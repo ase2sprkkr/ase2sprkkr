@@ -1,12 +1,14 @@
 """Tests for selection of the empty-spheres backend."""
 
+import warnings
+
 import pytest
 
 from .. import empty_spheres as module
 from ..xband import spheres
 
 
-def test_requested_unavailable_es_finder_falls_back(monkeypatch):
+def test_unavailable_es_finder_warns_only_for_explicit_selection(monkeypatch):
     expected = object()
     monkeypatch.setattr(module.es_finder, "is_enabled", False)
     monkeypatch.setattr(spheres, "empty_spheres", lambda atoms, **kwargs: expected)
@@ -15,6 +17,12 @@ def test_requested_unavailable_es_finder_falls_back(monkeypatch):
         result = module.empty_spheres(object(), method="es_finder")
 
     assert result is expected
+
+    with warnings.catch_warnings(record=True) as caught:
+        warnings.simplefilter("always")
+        automatic = module.empty_spheres(object(), method="auto")
+    assert automatic is expected
+    assert caught == []
 
 
 def test_available_es_finder_is_selected(monkeypatch):
@@ -25,9 +33,3 @@ def test_available_es_finder_is_selected(monkeypatch):
     assert module.empty_spheres(object(), method="es_finder") is expected
 
 
-def test_auto_silently_uses_inhouse_when_es_finder_is_unavailable(monkeypatch):
-    expected = object()
-    monkeypatch.setattr(module.es_finder, "is_enabled", False)
-    monkeypatch.setattr(spheres, "empty_spheres", lambda atoms, **kwargs: expected)
-
-    assert module.empty_spheres(object(), method="auto") is expected

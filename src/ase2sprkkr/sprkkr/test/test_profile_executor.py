@@ -175,8 +175,15 @@ def test_profile_executor_is_selected_before_mpi_resolution(monkeypatch, tmp_pat
     )
 
     profile = SPRKKRProfile(executor="ssh", host="cluster", mpi=8)
-    input_file = (tmp_path / "test.inp").open("w+")
-    output_file = (tmp_path / "test.out").open("wb")
+    # Neither stream is read or written: the mocked executor only inspects
+    # the execution specification. Avoid filesystem I/O for this ordering test.
+    closed = []
+    input_file = SimpleNamespace(
+        name=str(tmp_path / "test.inp"), close=lambda: closed.append("input"),
+    )
+    output_file = SimpleNamespace(
+        name=str(tmp_path / "test.out"), close=lambda: closed.append("output"),
+    )
     prepared = SimpleNamespace(
         input_parameters=parameters,
         input_file=input_file,
@@ -190,6 +197,7 @@ def test_profile_executor_is_selected_before_mpi_resolution(monkeypatch, tmp_pat
         prepared,
         result_context=SimpleNamespace(directory=str(tmp_path)),
         profile=profile,
+        error_file=True,  # Stderr policy is tested separately; avoid opening it.
     )
     try:
         assert result.result is None  # Postprocessing starts only after submit
@@ -198,3 +206,7 @@ def test_profile_executor_is_selected_before_mpi_resolution(monkeypatch, tmp_pat
         assert calls[2][0] == "create_run"
     finally:
         result.close()
+
+    assert closed == ["input", "output"]
+    assert not (tmp_path / "test.inp").exists()
+    assert not (tmp_path / "test.out").exists()

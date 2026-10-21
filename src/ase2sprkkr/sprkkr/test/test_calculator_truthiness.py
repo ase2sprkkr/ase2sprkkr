@@ -220,21 +220,15 @@ def test_sites_section_updates_explicit_empty_atoms():
     assert len(atoms) == 0
 
 
-@pytest.mark.parametrize(
-    ("kwargs", "expected"),
-    [
-        ({}, True),
-        ({"atoms": Atoms()}, False),
-        ({"potential": False}, False),
-    ],
-)
 def test_result_potential_is_adopted_only_when_physical_state_was_omitted(
-    monkeypatch, kwargs, expected
+    monkeypatch,
 ):
     calculator = SPRKKR()
     result = _Result()
     adopted = []
 
+    # The mocked runner and result update leave the calculator unchanged.
+    # Exercise all three argument policies without reinitializing SPRKKR.
     monkeypatch.setattr(calculator, "create_run", lambda **kwargs: _Runner(result))
     monkeypatch.setattr(
         calculator,
@@ -242,5 +236,11 @@ def test_result_potential_is_adopted_only_when_physical_state_was_omitted(
         lambda value, *, adopt_potential: adopted.append((value, adopt_potential)),
     )
 
-    assert calculator.calculate(**kwargs) is result
-    assert adopted == [(result, expected)]
+    for kwargs, expected in (
+        ({}, True),
+        ({"atoms": Atoms()}, False),
+        ({"potential": False}, False),
+    ):
+        adopted.clear()
+        assert calculator.calculate(**kwargs) is result
+        assert adopted == [(result, expected)], kwargs

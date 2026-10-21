@@ -11,7 +11,8 @@ def assert_equivalent(mapping, dataset):
 
 
 def test_spglib_dataset():
-    atoms = bulk("NaCl", "rocksalt", a=5.64)
+    nacl = bulk("NaCl", "rocksalt", a=5.64)
+    atoms = nacl
     dataset = spglib_dataset(atoms)
     assert_equivalent([0, 1], dataset)
     assert_equivalent([0, 0], spglib_dataset(atoms, atomic_numbers=[4, 4]))
@@ -23,11 +24,11 @@ def test_spglib_dataset():
     assert_equivalent([0, 0], spglib_dataset(atoms))
     assert_equivalent([0, 1], spglib_dataset(atoms, atomic_numbers=[4, 7]))
 
-    atoms = bulk("NaCl", "rocksalt", a=5.64)
+    # Earlier symmetry queries did not mutate the original ASE structure.
+    atoms = nacl
     SPRKKRAtoms.promote_ase_atoms(atoms)
     atoms.sites
     assert_equivalent([0, 1], spglib_dataset(atoms))
     atoms.sites[1].occupation = {"Na": 1.0}
-    assert_equivalent([0, 1], spglib_dataset(atoms, consider_old=True))
     assert_equivalent([0, 1], spglib_dataset(atoms, consider_old=True))
     assert_equivalent([0, 0], spglib_dataset(atoms, consider_old=False))

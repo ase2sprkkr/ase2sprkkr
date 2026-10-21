@@ -95,7 +95,6 @@ def _load_legacy_user_preferences(file):
 
     loader = importlib.machinery.SourceFileLoader("ase2sprkkr.personal", file)
     mod = types.ModuleType(loader.name)
-    mod.config = config
     loader.exec_module(mod)
 
 

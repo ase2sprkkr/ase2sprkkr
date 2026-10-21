@@ -133,7 +133,9 @@ async def _run(spec):
                                          else FailurePhase.EXECUTION)
     except Exception as exc:
         message = _exception_message(exc)
-        state, phase = RunState.FAILED, FailurePhase.EXECUTION
+        state, phase = RunState.FAILED, (
+            FailurePhase.LAUNCH if process is None else FailurePhase.EXECUTION
+        )
         if process is not None and process.returncode is None:
             await stop_local_process(process, process_group=True, timeout=1.0)
         return_code = process.returncode if process is not None else 127

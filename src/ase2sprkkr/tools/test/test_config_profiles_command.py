@@ -1,4 +1,5 @@
 import argparse
+from functools import cache
 from types import SimpleNamespace
 
 import pytest
@@ -7,10 +8,15 @@ from ase2sprkkr.configuration import definition
 from ase2sprkkr.tools.commands import config as config_command
 
 
-def _args(*argv):
+@cache
+def _parser():
     parser = argparse.ArgumentParser()
     config_command.parser(parser)
-    return parser.parse_args(argv)
+    return parser
+
+
+def _args(*argv):
+    return _parser().parse_args(argv)
 
 
 def _run_with_config(monkeypatch, config, *argv):

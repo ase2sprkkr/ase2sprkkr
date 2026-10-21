@@ -1,7 +1,11 @@
 import os
 from pathlib import Path
 
+import pytest
 from ase.build import bulk
+
+from ...input_parameters.input_parameters import InputParameters
+from ...potentials.potentials import Potential
 
 from ...execution.base import RunState
 from ..calculator import SPRKKR
@@ -37,7 +41,20 @@ def _calculator(tmp_path):
     )
 
 
-def test_default_error_file_is_output_file_plus_err(tmp_path):
+@pytest.fixture
+def lightweight_input_writes(monkeypatch):
+    """Keep real run preparation/file ownership, skip unrelated serialization.
+
+    No process is started, and these tests only examine stderr paths.
+    """
+    def write_marker(self, file, *args, **kwargs):
+        file.write("# stderr-routing test only\n")
+
+    monkeypatch.setattr(Potential, "save_to_file", write_marker)
+    monkeypatch.setattr(InputParameters, "save_to_file", write_marker)
+
+
+def test_default_error_file_is_output_file_plus_err(tmp_path, lightweight_input_writes):
     runner = _calculator(tmp_path).create_run(executor=_Executor())
     try:
         output_name = runner.spec.output_file.name
@@ -48,7 +65,7 @@ def test_default_error_file_is_output_file_plus_err(tmp_path):
         runner.close()
 
 
-def test_error_file_true_explicitly_merges_with_output(tmp_path):
+def test_error_file_true_explicitly_merges_with_output(tmp_path, lightweight_input_writes):
     runner = _calculator(tmp_path).create_run(
         executor=_Executor(),
         error_file=True,
@@ -62,7 +79,7 @@ def test_error_file_true_explicitly_merges_with_output(tmp_path):
         runner.close()
 
 
-def test_explicit_error_file_path_is_resolved_in_calculation_directory(tmp_path):
+def test_explicit_error_file_path_is_resolved_in_calculation_directory(tmp_path, lightweight_input_writes):
     runner = _calculator(tmp_path).create_run(
         executor=_Executor(),
         error_file="logs/stderr.txt",
@@ -77,7 +94,7 @@ def test_explicit_error_file_path_is_resolved_in_calculation_directory(tmp_path)
         runner.close()
 
 
-def test_error_file_false_requests_managed_temporary_file(tmp_path):
+def test_error_file_false_requests_managed_temporary_file(tmp_path, lightweight_input_writes):
     runner = _calculator(tmp_path).create_run(
         executor=_Executor(),
         error_file=False,

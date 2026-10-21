@@ -1,12 +1,23 @@
 from ase.build import bulk
 import numpy as np
+import pytest
 
 from ..build import aperiodic_times, stack, rotate, _minimal_surface_layers
 
 
+@pytest.fixture(scope="module")
+def licl_rocksalt():
+    return bulk("LiCl", "rocksalt", a=5.64)
+
+
+@pytest.fixture(scope="module")
+def cu_sc():
+    return bulk("Cu", "sc", a=2.0)
+
+
 class TestBuild:
-    def test(self):
-        atoms = bulk("LiCl", "rocksalt", a=5.64)
+    def test(self, licl_rocksalt):
+        atoms = licl_rocksalt.copy()
         assert len(aperiodic_times(atoms, (2.1, 1, 1))) == 6
         assert len(aperiodic_times(atoms, (1, 2.1, 1))) == 5
         assert len(aperiodic_times(atoms, (1, 2.9, 1), direction=-1)) == 5
@@ -33,8 +44,8 @@ class TestBuild:
         cell[1] = atoms.cell[1] * 3.9
         np.testing.assert_allclose(at.cell, cell)
 
-    def test_stack(self):
-        atoms = bulk("LiCl", "rocksalt", a=5.64)
+    def test_stack(self, licl_rocksalt):
+        atoms = licl_rocksalt.copy()
 
         np.testing.assert_allclose(stack([atoms, atoms, atoms], axis=2).positions, (atoms * (1, 1, 3)).positions)
 
@@ -45,16 +56,16 @@ class TestBuild:
         assert str(stacked.symbols) == "LiClKN"
         np.testing.assert_allclose(stacked.positions, np.concatenate([atoms.positions, a2.positions + atoms.cell[2]]))
 
-    def test_stack_scalar_at_uses_stacking_cell_vector_length(self):
-        atoms = bulk("Cu", "sc", a=2.0)
+    def test_stack_scalar_at_uses_stacking_cell_vector_length(self, cu_sc):
+        atoms = cu_sc.copy()
 
         stacked = stack([atoms, atoms], axis=2, at=[None, 3.0, 6.0])
 
         np.testing.assert_allclose(stacked.positions[:, 2], [0.0, 3.0])
         np.testing.assert_allclose(stacked.cell[2], [0.0, 0.0, 6.0])
 
-    def test_stack_accepts_iterator(self):
-        atoms = bulk("Cu", "sc", a=2.0)
+    def test_stack_accepts_iterator(self, cu_sc):
+        atoms = cu_sc.copy()
 
         stacked = stack((atoms.copy() for _ in range(3)), axis=2)
         expected = atoms * (1, 1, 3)
@@ -62,16 +73,16 @@ class TestBuild:
         np.testing.assert_allclose(stacked.positions, expected.positions)
         np.testing.assert_allclose(stacked.cell, expected.cell)
 
-    def test_stack_periodic_argument_wins_on_stacking_axis(self):
-        atoms = bulk("Cu", "sc", a=2.0)
+    def test_stack_periodic_argument_wins_on_stacking_axis(self, cu_sc):
+        atoms = cu_sc.copy()
         atoms.pbc[2] = False
 
         stacked = stack([atoms, atoms], axis=2, periodic=True)
 
         assert stacked.pbc[2]
 
-    def test_stack_empty_atoms(self):
-        atoms = bulk("Cu", "sc", a=2.0)
+    def test_stack_empty_atoms(self, cu_sc):
+        atoms = cu_sc.copy()
         empty = atoms * (1, 1, 0)
         expected = atoms * (1, 1, 2)
 
