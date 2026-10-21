@@ -31,6 +31,10 @@ def _two_shared_sites():
 class TestSymmetryCheckOccupation:
     def test_setter_rejects_shared_then_works_after_break_symmetry(self):
         _, site0, site1 = _two_shared_sites()
+        assert site0.occupation.primary_symbol == "Na"
+        assert site0.occupation["Na"] == pytest.approx(1.0)
+        assert len(site0.occupation) == 1
+        assert len(list(site0.occupation)) == 1
         with pytest.raises(RuntimeError, match="break_symmetry"):
             site0.occupation = {"Fe": 1.0}
         site0.break_symmetry()
@@ -101,13 +105,6 @@ class TestSymmetryCheckOccupation:
         assert site0.occupation.primary_symbol == "Fe"
         assert site1.occupation.primary_symbol == "Na"
 
-    def test_reads_dont_raise(self):
-        _, site0, _ = _two_shared_sites()
-        _ = site0.occupation.primary_symbol
-        _ = site0.occupation["Na"]
-        _ = len(site0.occupation)
-        _ = list(site0.occupation)
-
 
 class TestSymmetryCheckPotential:
     @staticmethod
@@ -139,6 +136,8 @@ class TestSymmetryCheckPotential:
         site0.break_symmetry()
         site0.potential = self._pot(mesh, 1.0)
         site1.site_type = site0.site_type
+        assert site0.potential is not None
+        assert site0.potential.mesh is not None
         original_bt = site0.potential.bt.copy()
         with pytest.raises(RuntimeError, match="break_symmetry"):
             site0.potential.bt = original_bt * 2
@@ -147,20 +146,13 @@ class TestSymmetryCheckPotential:
         np.testing.assert_allclose(site0.potential.bt, original_bt * 2)
         np.testing.assert_allclose(site1.potential.bt, original_bt)
 
-    def test_reads_dont_raise(self):
-        _, site0, site1 = _two_shared_sites()
-        mesh = ExponentialMesh(1.0, 0.005, None, None, 200, None)
-        site0.break_symmetry()
-        site0.potential = self._pot(mesh)
-        site1.site_type = site0.site_type
-        _ = site0.potential
-        _ = site0.potential.mesh
-
 
 class TestSymmetryCheckMesh:
     def test_setter_rejects_shared_then_works_after_break_symmetry(self):
         _, site0, site1 = _two_shared_sites()
         original_mesh = site0.site_type.mesh
+        assert site0.mesh.r1 == original_mesh.r1
+        assert site0.mesh.dx == original_mesh.dx
         new_mesh = ExponentialMesh(0.5, 0.005, None, None, 200, None)
         with pytest.raises(RuntimeError, match="break_symmetry"):
             site0.mesh = new_mesh
@@ -179,11 +171,6 @@ class TestSymmetryCheckMesh:
         assert site0.mesh.r1 == pytest.approx(original_r1 * 2)
         assert site1.site_type.mesh.r1 == pytest.approx(original_r1)
 
-    def test_reads_dont_raise(self):
-        _, site0, _ = _two_shared_sites()
-        _ = site0.mesh.r1
-        _ = site0.mesh.dx
-
 
 class TestSymmetryCheckMoments:
     @staticmethod
@@ -196,6 +183,7 @@ class TestSymmetryCheckMoments:
 
     def test_setter_rejects_shared_then_works_after_break_symmetry(self):
         _, site0, site1 = self._setup_with_moments()
+        assert site0.moments.smt == pytest.approx(3.0)
         with pytest.raises(RuntimeError, match="break_symmetry"):
             site0.moments = Moments(9.0, 9.0, 9.0, 9.0, 9.0)
         site0.break_symmetry()
@@ -212,10 +200,6 @@ class TestSymmetryCheckMoments:
         assert site0.moments.smt == pytest.approx(99.0)
         assert site1.moments.smt == pytest.approx(3.0)
 
-    def test_reads_dont_raise(self):
-        _, site0, _ = self._setup_with_moments()
-        _ = site0.moments.smt
-
 
 class TestSymmetryCheckReferenceSystem:
     def test_setter_rejects_shared_then_works_after_break_symmetry(self):
@@ -223,6 +207,7 @@ class TestSymmetryCheckReferenceSystem:
 
         _, site0, site1 = _two_shared_sites()
         original_vref = site0.site_type.reference_system.vref
+        assert site0.reference_system.vref == pytest.approx(original_vref)
         with pytest.raises(RuntimeError, match="break_symmetry"):
             site0.reference_system = ReferenceSystem(original_vref + 1.0, 0.0)
         site0.break_symmetry()
@@ -240,6 +225,3 @@ class TestSymmetryCheckReferenceSystem:
         assert site0.reference_system.vref == pytest.approx(original_vref + 5.0)
         assert site1.site_type.reference_system.vref == pytest.approx(original_vref)
 
-    def test_reads_dont_raise(self):
-        _, site0, _ = _two_shared_sites()
-        _ = site0.reference_system.vref

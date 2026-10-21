@@ -307,14 +307,14 @@ class ProjectRepository:
             projects = self._read_projects()
             if any(item.parent_id == canonical for item in projects):
                 raise ProjectDeleteError("Projects with child projects cannot be deleted")
-            from .manager import RunStore, _FINAL_STATES
+            from .manager import RunStore
             run_store = RunStore(self.directory.parent / "projects_runs")
             with run_store.submission_lock():
                 histories = tuple(
                     record for record in run_store.runs()
                     if record.project_id == canonical
                 )
-                if any(record.state not in _FINAL_STATES for record in histories):
+                if any(not record.state.is_terminal for record in histories):
                     raise ProjectDeleteError("Cannot delete a project with active runs")
                 try:
                     self._json_path(canonical).unlink()

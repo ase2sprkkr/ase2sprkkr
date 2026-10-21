@@ -84,7 +84,10 @@ class TestOutput:
                 if isinstance(output, JXCResultFile):
                     continue
                 with tempfile.NamedTemporaryFile() as target:
-                    kwargs = {"filename": target}
+                    # Smoke-test plotting at screen resolution. Using the
+                    # production default (600–800 DPI) rasterizes large BSF,
+                    # SPC and RAT figures at tens of millions of pixels.
+                    kwargs = {"filename": target, "dpi": 72}
                     if "exclude_vc" in getattr(output, "plot_parameters", {}):
                         kwargs["exclude_vc"] = False
                     output.plot(**kwargs)
@@ -195,7 +198,7 @@ class TestOutput:
 
         with tempfile.NamedTemporaryFile() as target:
             assert "axis" in output.plot_parameters
-            output.plot(filename=target, exclude_vc=False, axis="y")
+            output.plot(filename=target, exclude_vc=False, axis="y", dpi=72)
 
     def test_write_uppasd_file_dispatches_to_current_binding_writer(self):
         class DummyJxc(JXCResultFile):

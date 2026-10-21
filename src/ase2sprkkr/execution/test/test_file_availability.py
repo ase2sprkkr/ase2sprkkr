@@ -178,3 +178,35 @@ def test_protected_output_rejects_hardlink_alias(tmp_path):
     with pytest.raises(ValueError, match="overlaps protected"):
         validate_output_collisions((alias,), protected=(source,))
     assert source.read_bytes() == b"density"
+
+
+def test_collision_expands_protected_wildcard_once_for_multiple_outputs(
+    tmp_path, monkeypatch,
+):
+    import os
+    import pytest
+    from .. import file_availability
+
+    protected_file = tmp_path / "restart-1.pot"
+    protected_file.write_bytes(b"restart")
+    harmless_output = tmp_path / "output-1.dat"
+    harmless_output.write_bytes(b"old result")
+    alias_output = tmp_path / "output-2.dat"
+    os.link(protected_file, alias_output)
+
+    pattern = tmp_path / "restart-*.pot"
+    real_expand = file_availability.expand_local_candidates
+    expanded = []
+
+    def observe_expand(path):
+        expanded.append(os.fspath(path))
+        return real_expand(path)
+
+    monkeypatch.setattr(file_availability, "expand_local_candidates", observe_expand)
+    with pytest.raises(ValueError, match="overlaps protected"):
+        file_availability.validate_output_collisions(
+            (harmless_output, alias_output), protected=(pattern,),
+        )
+
+    assert expanded == [os.path.abspath(pattern)]
+    assert protected_file.read_bytes() == b"restart"

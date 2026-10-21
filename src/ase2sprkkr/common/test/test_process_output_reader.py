@@ -42,7 +42,7 @@ def test_run_coro_sync_outside_event_loop():
     assert run_coro_sync(operation()) == 42
 
 
-def test_run_coro_sync_inside_event_loop():
+def test_run_coro_sync_inside_event_loop_returns_and_propagates_worker_errors():
     async def check():
         event_loop_thread = threading.get_ident()
 
@@ -51,18 +51,14 @@ def test_run_coro_sync_inside_event_loop():
 
         assert run_coro_sync(operation()) != event_loop_thread
 
-    asyncio.run(check())
+        # Reuse the same running event loop for independent error types.
+        for error in (ValueError("failed"), KeyboardInterrupt("interrupted")):
+            async def fail(error=error):
+                raise error
 
-
-@pytest.mark.parametrize("error", (ValueError("failed"), KeyboardInterrupt("interrupted")))
-def test_run_coro_sync_propagates_worker_errors(error):
-    async def check():
-        async def operation():
-            raise error
-
-        with pytest.raises(type(error)) as raised:
-            run_coro_sync(operation())
-        assert raised.value is error
+            with pytest.raises(type(error)) as raised:
+                run_coro_sync(fail())
+            assert raised.value is error
 
     asyncio.run(check())
 

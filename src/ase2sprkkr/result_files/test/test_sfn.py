@@ -172,6 +172,9 @@ def test_sfn_is_registered(tmp_path):
 
     assert isinstance(output, SFNResultFile)
     assert output.NM() == 2
+    assert repr(output) == "SFNResultFile(nm=2, alat=unknown)"
+    with pytest.raises(ValueError, match="potential is required"):
+        output.plot_cell(mesh=0, show=False)
 
 
 def test_output_file_read_from_file_accepts_potential():
@@ -305,12 +308,6 @@ def test_sfn_potential_cell_and_periodic_plots(tmp_path, monkeypatch):
     )
     figure = output.plot_periodic(mesh=0, show=False)
     plt.close(figure)
-
-    without_potential = ResultFile.from_file(path, try_only="sfn")
-    assert repr(without_potential) == "SFNResultFile(nm=2, alat=unknown)"
-    with pytest.raises(ValueError, match="potential is required"):
-        without_potential.plot_cell(mesh=0, show=False)
-
 
 def test_sfn_isosurface_in_the_cell(monkeypatch):
     import matplotlib.pyplot as plt

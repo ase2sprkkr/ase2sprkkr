@@ -44,32 +44,39 @@ def discover_local_files(files, *, include_streams=True):
 
 
 
+def _expanded_protected_paths(protected):
+    """Expand protected path declarations once, retaining their source names."""
+    for value in protected:
+        if value is None:
+            continue
+        declaration = os.path.abspath(os.fspath(value))
+        for candidate in expand_local_candidates(declaration):
+            yield declaration, os.path.abspath(candidate)
+
+
 def validate_output_collisions(streams, *, protected=()):
     """Reject explicit output paths overlapping declared inputs or restart caches.
 
     Broad output patterns retain their existing behavior: matching protected
     files are skipped by clear_declared_outputs rather than removed.
     """
-    protected_paths = tuple(
-        os.path.abspath(os.fspath(p)) for p in protected if p is not None
-    )
+    protected_paths = tuple(_expanded_protected_paths(protected))
     for stream in streams:
         if stream is None:
             continue
         target = os.path.abspath(os.fspath(stream))
         if has_file_magic(target):
             continue
-        for declaration in protected_paths:
-            for candidate in expand_local_candidates(declaration):
-                same_path = os.path.realpath(target) == os.path.realpath(candidate)
-                same_inode = (
-                    os.path.exists(target) and os.path.exists(candidate)
-                    and os.path.samefile(target, candidate)
+        for declaration, candidate in protected_paths:
+            same_path = os.path.realpath(target) == os.path.realpath(candidate)
+            same_inode = (
+                os.path.exists(target) and os.path.exists(candidate)
+                and os.path.samefile(target, candidate)
+            )
+            if same_path or same_inode:
+                raise ValueError(
+                    f"Output {target} overlaps protected input/cache {declaration}"
                 )
-                if same_path or same_inode:
-                    raise ValueError(
-                        f"Output {target} overlaps protected input/cache {declaration}"
-                    )
 
 
 def clear_declared_outputs(paths, *, protected=()):
@@ -78,12 +85,7 @@ def clear_declared_outputs(paths, *, protected=()):
     Called on the execution host before starting a new calculation, never on
     reattach. A wildcard removes only its concrete files.
     """
-    protected_paths = (os.path.abspath(os.fspath(p)) for p in protected if p is not None)
-    protected = {
-        os.path.abspath(candidate)
-        for declaration in protected_paths
-        for candidate in expand_local_candidates(declaration)
-    }
+    protected = {candidate for _, candidate in _expanded_protected_paths(protected)}
     for declared in dict.fromkeys(os.fspath(p) for p in paths if p is not None):
         for candidate in expand_local_candidates(declared):
             path = os.path.abspath(candidate)

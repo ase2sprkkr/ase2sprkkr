@@ -204,3 +204,32 @@ def test_remote_status_and_recovery_share_backend_facts_mapping(
     assert recovered.files.stdout.remote_path == "/other/work/run.out"
     assert recovered.files.stderr.local_path == "/local/case/run.err"
     assert recovered.files.stderr.remote_path == "/other/work/run.err"
+
+
+@pytest.mark.parametrize(
+    "facts, expected_phase",
+    [
+        ({"return_code": 7, "failure_phase": "execution", "error": "failed"},
+         FailurePhase.EXECUTION),
+        ({"return_code": 0, "failure_phase": None, "error": None}, None),
+        ({}, None),
+    ],
+)
+def test_remote_runner_backend_facts_are_consistent(
+    tmp_path, facts, expected_phase,
+):
+    """Backend metadata is applied to both the runner and its result."""
+    from ase2sprkkr.execution.base import ExecutionSpec
+    from ase2sprkkr.execution.remote import RemoteRunner
+
+    runner = RemoteRunner(
+        None, ExecutionSpec(
+            argv=(), input_file=None, output_file=None,
+            directory=str(tmp_path),
+        ),
+    )
+    runner._apply_backend_facts(facts)
+
+    assert runner.return_code == runner.result.return_code == facts.get("return_code")
+    assert runner.failure_phase == expected_phase
+    assert runner.failure_message == facts.get("error")

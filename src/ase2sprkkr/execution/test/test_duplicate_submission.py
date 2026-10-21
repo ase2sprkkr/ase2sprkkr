@@ -6,6 +6,8 @@ import pytest
 from ase2sprkkr.execution import (
     DuplicateSubmissionError,
     Executor,
+    FileEntry,
+    FileManifest,
     RunState,
     RunStore,
 )
@@ -154,138 +156,111 @@ def test_submitting_record_contains_submission_key_before_backend_submit(tmp_pat
     assert seen[0].execution.directory.local == str(tmp_path.resolve())
 
 
-def test_different_tasks_conflict_on_shared_declared_output(tmp_path):
-    from ase2sprkkr.execution import FileEntry, FileManifest
+@pytest.mark.parametrize("overlap", (True, False), ids=("same-file", "separate-files"))
+def test_declared_exact_outputs_conflict_only_if_they_share_a_target(
+    tmp_path, overlap,
+):
     manager = ExecutionManager(RunStore(tmp_path / "runs"))
-    target = str(tmp_path / "same.out")
+    first_path = str(tmp_path / "one.out")
+    second_path = first_path if overlap else str(tmp_path / "two.out")
     first = manager.new_record(
         task="DOS", directory=tmp_path, dataset="one",
-        files=FileManifest(stdout=FileEntry(local_path=target)),
+        files=FileManifest(stdout=FileEntry(local_path=first_path)),
     )
     second = manager.new_record(
-        task="BSF", directory=tmp_path, dataset="two",
-        files=FileManifest(outputs=(FileEntry(local_path=target),)),
-    )
-    manager.reserve(first)
-    with pytest.raises(DuplicateSubmissionError):
-        manager.reserve(second)
-
-
-def test_declared_input_read_conflicts_with_other_task_output(tmp_path):
-    from ase2sprkkr.execution import FileEntry, FileManifest
-    manager = ExecutionManager(RunStore(tmp_path / "runs"))
-    input_path = tmp_path / "shared.pot"
-    input_path.write_text("density")
-    writer = manager.new_record(
-        task="DOS", directory=tmp_path, dataset="one",
-        files=FileManifest(outputs=(FileEntry(local_path=str(input_path)),)),
-    )
-    reader = manager.new_record(
-        task="BSF", directory=tmp_path, dataset="two",
-        files=FileManifest(
-            inputs=(FileEntry(local_path=str(input_path)),),
-            stdout=FileEntry(local_path=str(tmp_path / "other.out")),
+        task="BSF" if overlap else "DOS", directory=tmp_path,
+        dataset="two" if overlap else "one",
+        files=(
+            FileManifest(outputs=(FileEntry(local_path=second_path),))
+            if overlap else
+            FileManifest(stdout=FileEntry(local_path=second_path))
         ),
     )
-    manager.reserve(writer)
-    with pytest.raises(DuplicateSubmissionError):
-        manager.reserve(reader)
+
+    manager.reserve(first)
+    if overlap:
+        with pytest.raises(DuplicateSubmissionError):
+            manager.reserve(second)
+    else:
+        assert manager.reserve(second).state == RunState.SUBMITTING
 
 
-def test_nonoverlapping_declared_outputs_can_run_in_same_directory(tmp_path):
-    from ase2sprkkr.execution import FileEntry, FileManifest
+@pytest.mark.parametrize(
+    "first_access, same_directory, conflict",
+    [
+        pytest.param("output", True, True, id="writer-reader-same-directory"),
+        pytest.param("output", False, True, id="writer-reader-different-directories"),
+        pytest.param("input", False, False, id="two-readers-different-directories"),
+    ],
+)
+def test_declared_read_write_conflicts_respect_access_and_absolute_paths(
+    tmp_path, first_access, same_directory, conflict,
+):
     manager = ExecutionManager(RunStore(tmp_path / "runs"))
+    shared = tmp_path / ("shared.pot" if same_directory or first_access == "input" else "shared.out")
+    if same_directory:
+        shared.write_text("density")
+    first_directory = tmp_path if same_directory else tmp_path / "one"
+    second_directory = tmp_path if same_directory else tmp_path / "two"
+
+    entry = FileEntry(local_path=str(shared))
+    first_files = (
+        FileManifest(outputs=(entry,))
+        if first_access == "output" else FileManifest(inputs=(entry,))
+    )
+    second_files = FileManifest(
+        inputs=(FileEntry(local_path=str(shared)),),
+        stdout=FileEntry(local_path=str(tmp_path / "other.out")) if same_directory else None,
+    )
     first = manager.new_record(
-        task="DOS", directory=tmp_path, dataset="one",
-        files=FileManifest(stdout=FileEntry(local_path=str(tmp_path / "one.out"))),
+        task="DOS", directory=first_directory, dataset="one", files=first_files,
     )
     second = manager.new_record(
-        task="DOS", directory=tmp_path, dataset="one",
-        files=FileManifest(stdout=FileEntry(local_path=str(tmp_path / "two.out"))),
+        task="BSF", directory=second_directory, dataset="two", files=second_files,
     )
+
     manager.reserve(first)
-    assert manager.reserve(second).state == RunState.SUBMITTING
+    if conflict:
+        with pytest.raises(DuplicateSubmissionError):
+            manager.reserve(second)
+    else:
+        assert manager.reserve(second).state == RunState.SUBMITTING
 
 
-def test_wildcard_declared_output_conflicts_with_concrete_output(tmp_path):
-    from ase2sprkkr.execution import FileEntry, FileManifest
-    manager = ExecutionManager(RunStore(tmp_path / "runs"))
-    first = manager.new_record(
-        task="DOS", directory=tmp_path,
-        files=FileManifest(outputs=(FileEntry(local_path=str(tmp_path / "result-*.dat")),)),
-    )
-    second = manager.new_record(
-        task="BSF", directory=tmp_path,
-        files=FileManifest(stdout=FileEntry(local_path=str(tmp_path / "result-1.dat"))),
-    )
-    manager.reserve(first)
-    with pytest.raises(DuplicateSubmissionError):
-        manager.reserve(second)
-
-
-def test_shared_absolute_output_conflicts_across_working_directories(tmp_path):
-    from ase2sprkkr.execution import FileEntry, FileManifest
-    manager = ExecutionManager(RunStore(tmp_path / "runs"))
-    shared = str(tmp_path / "shared.out")
-    first = manager.new_record(
-        task="DOS", directory=tmp_path / "one",
-        files=FileManifest(outputs=(FileEntry(local_path=shared),)),
-    )
-    second = manager.new_record(
-        task="BSF", directory=tmp_path / "two",
-        files=FileManifest(inputs=(FileEntry(local_path=shared),)),
-    )
-    manager.reserve(first)
-    with pytest.raises(DuplicateSubmissionError):
-        manager.reserve(second)
-
-
-def test_wildcard_to_wildcard_conflicts_even_if_patterns_differ(tmp_path):
-    from ase2sprkkr.execution import FileEntry, FileManifest
-    manager = ExecutionManager(RunStore(tmp_path / "runs"))
-    first = manager.new_record(
-        task="DOS", directory=tmp_path,
-        files=FileManifest(outputs=(
-            FileEntry(local_path=str(tmp_path / "spectrum-*.dat")),)),
-    )
-    second = manager.new_record(
-        task="BSF", directory=tmp_path,
-        files=FileManifest(outputs=(
-            FileEntry(local_path=str(tmp_path / "spectrum-?.dat")),)),
-    )
-    manager.reserve(first)
-    with pytest.raises(DuplicateSubmissionError):
-        manager.reserve(second)
-
-
-def test_disjoint_wildcard_prefixes_do_not_conflict(tmp_path):
-    from ase2sprkkr.execution import FileEntry, FileManifest
+@pytest.mark.parametrize(
+    "first_pattern, second_pattern, second_is_stdout, conflict",
+    [
+        pytest.param("result-*.dat", "result-1.dat", True, True,
+                     id="wildcard-versus-exact-stdout"),
+        pytest.param("spectrum-*.dat", "spectrum-?.dat", False, True,
+                     id="overlapping-wildcard-patterns"),
+        pytest.param("bsf-*.dat", "dos-*.dat", False, False,
+                     id="disjoint-wildcard-patterns"),
+    ],
+)
+def test_wildcard_output_collisions_follow_pattern_overlap(
+    tmp_path, first_pattern, second_pattern, second_is_stdout, conflict,
+):
     manager = ExecutionManager(RunStore(tmp_path / "runs"))
     first = manager.new_record(
         task="DOS", directory=tmp_path,
         files=FileManifest(outputs=(
-            FileEntry(local_path=str(tmp_path / "bsf-*.dat")),)),
+            FileEntry(local_path=str(tmp_path / first_pattern)),)),
     )
+    second_entry = FileEntry(local_path=str(tmp_path / second_pattern))
     second = manager.new_record(
         task="BSF", directory=tmp_path,
-        files=FileManifest(outputs=(
-            FileEntry(local_path=str(tmp_path / "dos-*.dat")),)),
+        files=(
+            FileManifest(stdout=second_entry)
+            if second_is_stdout else FileManifest(outputs=(second_entry,))
+        ),
     )
+
     manager.reserve(first)
-    assert manager.reserve(second).state == RunState.SUBMITTING
+    if conflict:
+        with pytest.raises(DuplicateSubmissionError):
+            manager.reserve(second)
+    else:
+        assert manager.reserve(second).state == RunState.SUBMITTING
 
 
-def test_shared_input_is_not_a_conflict(tmp_path):
-    from ase2sprkkr.execution import FileEntry, FileManifest
-    manager = ExecutionManager(RunStore(tmp_path / "runs"))
-    shared = str(tmp_path / "shared.pot")
-    first = manager.new_record(
-        task="DOS", directory=tmp_path / "one",
-        files=FileManifest(inputs=(FileEntry(local_path=shared),)),
-    )
-    second = manager.new_record(
-        task="BSF", directory=tmp_path / "two",
-        files=FileManifest(inputs=(FileEntry(local_path=shared),)),
-    )
-    manager.reserve(first)
-    assert manager.reserve(second).state == RunState.SUBMITTING

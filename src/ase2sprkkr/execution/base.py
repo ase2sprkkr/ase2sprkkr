@@ -230,6 +230,11 @@ class RunState(str, Enum):
     CANCELLED = "cancelled"
     UNKNOWN = "unknown"
 
+    @property
+    def is_terminal(self):
+        """Whether this run is finished, failed or cancelled (not UNKNOWN)."""
+        return self in (RunState.FINISHED, RunState.FAILED, RunState.CANCELLED)
+
 
 class FailurePhase(str, Enum):
     """Phase in which a run entered :attr:`RunState.FAILED`."""

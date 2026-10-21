@@ -84,10 +84,20 @@ async def pump_stream(source, sink, *, eof=None):
             eof()
 
 
-async def stop_local_process(process, *, process_group=False, timeout=0.1):
-    """Terminate a local process, escalating to kill after ``timeout``."""
-    if process is None or process.returncode is not None:
+async def stop_local_process(
+    process, *, process_group=False, timeout=0.1, waiting=None,
+):
+    """Send SIGTERM, then SIGKILL on timeout, without cancelling process.wait().
+
+    For a process group, signal even if its leader has already exited:
+    descendants may still be alive and need the full SIGTERM grace period.
+    ``waiting`` reuses an existing wait task.
+    """
+    if process is None or (process.returncode is not None and not process_group):
         return
+
+    if waiting is None:
+        waiting = asyncio.create_task(process.wait())
 
     try:
         if process_group:
@@ -95,15 +105,25 @@ async def stop_local_process(process, *, process_group=False, timeout=0.1):
         else:
             process.terminate()
     except ProcessLookupError:
-        await process.wait()
+        await waiting
         return
 
+    deadline = asyncio.get_running_loop().time() + timeout
     try:
-        await asyncio.wait_for(process.wait(), timeout)
-        return
+        await asyncio.wait_for(asyncio.shield(waiting), timeout)
     except asyncio.TimeoutError:
-        if process.returncode is not None:
+        if process.returncode is not None and not process_group:
             return
+    else:
+        if not process_group:
+            return
+        # The group can outlive its leader. Preserve the SIGTERM grace
+        # period if any descendant still belongs to the group.
+        try:
+            os.killpg(process.pid, 0)
+        except ProcessLookupError:
+            return
+        await asyncio.sleep(max(0, deadline - asyncio.get_running_loop().time()))
 
     try:
         if process_group:
@@ -112,4 +132,4 @@ async def stop_local_process(process, *, process_group=False, timeout=0.1):
             process.kill()
     except ProcessLookupError:
         pass
-    await process.wait()
+    await waiting

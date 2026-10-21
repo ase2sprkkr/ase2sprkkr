@@ -5,6 +5,7 @@ from pathlib import Path
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
+from matplotlib.colors import CenteredNorm
 import numpy as np
 import pytest
 
@@ -140,6 +141,13 @@ def test_controls_switch_np_nt_on_real_parser_grid(tmp_path):
         fig = plt.gcf()
         controls = fig._ase2sprkkr_controls
         assert len(_artists(fig)) == 4
+        # The signed polarization panel uses the same rendering path as
+        # ordinary 2D spectra; verify its normalization on this figure
+        # rather than loading and plotting another large SPC fixture.
+        polarization = _artists(fig)[3].collections[0]
+        assert isinstance(polarization.norm, CenteredNorm)
+        assert polarization.norm.vcenter == 0
+        assert polarization.norm.halfrange == 1
         np.testing.assert_allclose(
             np.asarray(_artists(fig)[0].collections[0].get_array()),
             spc.TOTAL()[:, 0, :]
@@ -182,17 +190,3 @@ def test_live_azimuth_selection_keeps_requested_indices(multi_azimuth_spc):
     finally:
         plt.close("all")
 
-
-def test_signed_spin_polarization_uses_centered_linear_scale():
-    from matplotlib.colors import CenteredNorm
-    source = Path(__file__).resolve().parents[1] / "examples" / "WSe2_ARPES.spc"
-    spc = ResultFile.from_file(str(source), unknown=False)
-    try:
-        spc.plot(show=False, live=False)
-        fig = plt.gcf()
-        polarization = _artists(fig)[3].collections[0]
-        assert isinstance(polarization.norm, CenteredNorm)
-        assert polarization.norm.vcenter == 0
-        assert polarization.norm.halfrange == 1
-    finally:
-        plt.close("all")

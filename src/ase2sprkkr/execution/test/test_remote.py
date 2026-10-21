@@ -277,22 +277,29 @@ def test_remote_input_file_policies(
     assert sum(dst == remote_artifact for _, dst in transport.put_files) == uploads
 
 
-def test_remote_input_policy_never_only_disables_transfer(tmp_path):
+@pytest.mark.parametrize("direction", ("input", "output"))
+def test_remote_never_policy_ignores_missing_declared_file(tmp_path, direction):
     transport = _SpyTransport()
     missing = tmp_path / "local" / "calculation" / "missing.dat"
-    executor, spec, _, remote_root = _text_run(
-        tmp_path,
-        transport,
-        declared_input_files=(missing,),
-        input_files="never",
-        code="print('done')",
+    kwargs = (
+        {"declared_input_files": (missing,), "input_files": "never"}
+        if direction == "input" else
+        {"declared_output_files": (missing,), "output_files": "never"}
     )
-    _expose_shared_input(remote_root, "input.txt", b"hello")
+    executor, spec, _, remote_root = _text_run(
+        tmp_path, transport, code="print('done')", **kwargs,
+    )
+    if direction == "input":
+        _expose_shared_input(remote_root, "input.txt", b"hello")
 
     result = _processed_run(executor, spec).run()
 
     assert result.return_code == 0
-    assert all(src != missing for src, _ in transport.put_files)
+    assert not missing.exists()
+    if direction == "input":
+        assert all(src != missing for src, _ in transport.put_files)
+    else:
+        assert all(dst != missing for _, dst in transport.get_files)
 
 
 def test_remote_input_policy_always_requires_local_file(tmp_path):
@@ -343,21 +350,6 @@ def test_remote_output_file_policies(
     assert transport.get_files == (
         [(remote_artifact, artifact)] if downloads else []
     )
-
-
-def test_remote_output_policy_never_only_disables_transfer(tmp_path):
-    missing = tmp_path / "local" / "calculation" / "missing-output.dat"
-    executor, spec, _, _ = _text_run(
-        tmp_path,
-        declared_output_files=(missing,),
-        output_files="never",
-        code="print('done')",
-    )
-
-    result = _processed_run(executor, spec).run()
-
-    assert result.return_code == 0
-    assert not missing.exists()
 
 
 def test_remote_executor_does_not_reuse_stale_output(tmp_path):
@@ -443,46 +435,34 @@ def test_remote_cache_creation_content_and_mtime_changes_in_one_run(tmp_path):
     )
 
 
-def test_remote_cache_input_never_skips_upload(tmp_path):
+@pytest.mark.parametrize("direction", ("input", "output"))
+def test_remote_cache_never_policy_skips_only_requested_direction(tmp_path, direction):
     transport = _SpyTransport()
     cache = tmp_path / "local" / "calculation" / "cache.dat"
     cache.parent.mkdir(parents=True)
     cache.write_text("local")
 
+    kwargs = {"input_files": "never"} if direction == "input" else {"output_files": "never"}
     executor, spec, _, remote_root = _text_run(
-        tmp_path,
-        transport,
-        declared_cache_files=(cache,),
-        input_files="never",
-        code="import pathlib; pathlib.Path('cache.dat').write_text('remote'); print('done')",
+        tmp_path, transport, declared_cache_files=(cache,),
+        code="from pathlib import Path; Path('cache.dat').write_text('remote'); print('done')",
+        **kwargs,
     )
-    _expose_shared_input(remote_root, "input.txt", b"hello")
-    remote_cache = _expose_shared_input(remote_root, "cache.dat", "local")
-    _processed_run(executor, spec).run()
-
-    assert all(dst != remote_cache for _, dst in transport.put_files)
-    assert cache.read_text() == "remote"
-    assert (remote_cache, cache) in transport.get_files
-
-
-def test_remote_cache_output_never_skips_download(tmp_path):
-    transport = _SpyTransport()
-    cache = tmp_path / "local" / "calculation" / "cache.dat"
-    cache.parent.mkdir(parents=True)
-    cache.write_text("local")
-
-    executor, spec, _, remote_root = _text_run(
-        tmp_path,
-        transport,
-        declared_cache_files=(cache,),
-        output_files="never",
-        code="import pathlib; pathlib.Path('cache.dat').write_text('remote'); print('done')",
-    )
-    _processed_run(executor, spec).run()
-
+    if direction == "input":
+        _expose_shared_input(remote_root, "input.txt", b"hello")
+        _expose_shared_input(remote_root, "cache.dat", "local")
     remote_cache = remote_root / "calculation" / "cache.dat"
-    assert cache.read_text() == "local"
-    assert all(src != remote_cache for src, _ in transport.get_files)
+
+    result = _processed_run(executor, spec).run()
+
+    assert result.return_code == 0
+    if direction == "input":
+        assert all(dst != remote_cache for _, dst in transport.put_files)
+        assert cache.read_text() == "remote"
+        assert (remote_cache, cache) in transport.get_files
+    else:
+        assert cache.read_text() == "local"
+        assert all(src != remote_cache for src, _ in transport.get_files)
 
 
 def test_remote_sync_policy_rejects_unknown_value(tmp_path):
@@ -494,44 +474,28 @@ def test_remote_sync_policy_rejects_unknown_value(tmp_path):
         )
 
 
-def test_remote_directory_mapping_defaults_to_home():
+@pytest.mark.parametrize(
+    "root_mode, remote_root, expected",
+    [
+        ("default", None, (Path.home() / "calculations" / "Fe").as_posix()),
+        ("remote-only", "/scratch/tester", "/scratch/tester/calculations/Fe"),
+        ("both", "/scratch/tester/projects", "/scratch/tester/projects/project/Fe"),
+    ],
+)
+def test_remote_directory_mapping(tmp_path, root_mode, remote_root, expected):
     endpoint = _executor()
-    context = endpoint._context(endpoint, LaunchSpec())
-    local = Path.home() / "calculations" / "Fe"
+    if root_mode == "both":
+        local_root = tmp_path / "local"
+        local = local_root / "project" / "Fe"
+        launch = LaunchSpec(local_root=local_root, remote_root=remote_root)
+    else:
+        local = Path.home() / "calculations" / "Fe"
+        launch = LaunchSpec() if remote_root is None else LaunchSpec(remote_root=remote_root)
+    context = endpoint._context(endpoint, launch)
 
     mapped = asyncio.run(context.map_directory(local))
 
-    assert mapped == (Path.home() / "calculations" / "Fe").as_posix()
-
-
-def test_remote_directory_mapping_can_replace_remote_root(tmp_path):
-    endpoint = _executor()
-    context = endpoint._context(
-        endpoint,
-        LaunchSpec(remote_root="/scratch/tester"),
-    )
-    local = Path.home() / "calculations" / "Fe"
-
-    mapped = asyncio.run(context.map_directory(local))
-
-    assert mapped == "/scratch/tester/calculations/Fe"
-
-
-def test_remote_directory_mapping_can_replace_both_roots(tmp_path):
-    local_root = tmp_path / "local"
-    local = local_root / "project" / "Fe"
-    endpoint = _executor()
-    context = endpoint._context(
-        endpoint,
-        LaunchSpec(
-            local_root=local_root,
-            remote_root="/scratch/tester/projects",
-        ),
-    )
-
-    mapped = asyncio.run(context.map_directory(local))
-
-    assert mapped == "/scratch/tester/projects/project/Fe"
+    assert mapped == expected
 
 
 def test_remote_directory_mapping_rejects_path_outside_local_root(tmp_path):

@@ -1,5 +1,7 @@
 """Global run history and cross-project namespace regression tests."""
 
+from dataclasses import replace
+
 import pytest
 
 from ..base import RunState
@@ -77,3 +79,27 @@ def test_for_project_without_explicit_store_uses_shared_project_store(tmp_path):
     assert unbound.store is None
     assert bound.project_id == project.id
     assert bound.store.directory == tmp_path / "projects_runs"
+
+
+
+def test_unknown_run_prevents_project_deletion_until_terminal(tmp_path):
+    """UNKNOWN is recoverable, so deleting its project must not erase history."""
+    projects = ProjectRepository(tmp_path / "projects")
+    root = projects.create("Root")
+    project = projects.create("Child", parent_id=root.id)
+    manager = ExecutionManager(project_repository=projects, project=project)
+    record = replace(
+        manager.new_record(task="DOS", directory=tmp_path / "work"),
+        state=RunState.UNKNOWN,
+    )
+    manager.store.save(record)
+
+    with pytest.raises(ProjectDeleteError, match="active"):
+        projects.delete(project.id, expected_generation=project.generation)
+    assert manager.store.get(record.id).state == RunState.UNKNOWN
+
+    manager.store.update(
+        record, lambda latest: replace(latest, state=RunState.FINISHED),
+    )
+    projects.delete(project.id, expected_generation=project.generation)
+    assert manager.store.runs() == ()

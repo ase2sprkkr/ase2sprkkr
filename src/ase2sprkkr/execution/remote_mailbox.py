@@ -10,7 +10,6 @@ from ._durability import durable_mkdir, durable_write_json, fsync_directory
 from .base import FailurePhase, RunState
 
 _RECEIPT = re.compile(r"[0-9a-f]{32}\Z")
-_TERMINAL = {RunState.FINISHED, RunState.FAILED, RunState.CANCELLED}
 
 
 def _state_root():
@@ -30,7 +29,7 @@ def _path(receipt_id):
 def publish_outcome(receipt_id, state, return_code, failure_phase=None, *, error=None):
     """Publish once: cancellation must not overwrite natural completion."""
     state = RunState(state)
-    if state not in _TERMINAL:
+    if not state.is_terminal:
         raise ValueError("Backend receipt requires a terminal state")
     path = _path(receipt_id)
     durable_mkdir(path.parent, parents=True, exist_ok=True, mode=0o700)
@@ -67,8 +66,11 @@ def read_outcome(receipt_id):
         result = json.loads(_path(receipt_id).read_text(encoding="utf-8"))
     except FileNotFoundError:
         return None
-    if not isinstance(result, dict) or result.get("state") not in {s.value for s in _TERMINAL}:
-        raise ValueError("Invalid terminal receipt")
+    try:
+        if not RunState(result["state"]).is_terminal:
+            raise ValueError("Receipt is not terminal")
+    except (KeyError, TypeError, ValueError) as exc:
+        raise ValueError("Invalid terminal receipt") from exc
     return result
 
 

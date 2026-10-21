@@ -243,22 +243,17 @@ def test_repeated_values_use_invalid_value_policy():
     assert parameters.ROWS[0].VALUE.is_dangerous()
 
 
-def test_dotted_unknown_member_is_not_added():
+def test_invalid_dotted_paths_are_atomic_and_simple_custom_paths_remain_supported():
     section = cd.InputSectionDefinition("CONTROL", [V("KNOWN", 1)])
     section.custom_class = CustomOption.factory(V, int)
     parameters = cd.InputParametersDefinition([section]).create_object()
 
+    # An unknown dotted member must not be installed inside a section.
     with pytest.raises(KeyError, match="dotted path"):
         parameters.CONTROL.set({"EXTRA.CHILD": 1}, unknown="add")
-
     assert "EXTRA" not in parameters.CONTROL
 
-
-def test_unknown_add_accepts_only_non_dotted_names():
-    parameters = cd.InputParametersDefinition(
-        [cd.InputSectionDefinition("CONTROL", [V("KNOWN", 1)])]
-    ).create_object()
-
+    # The same rule holds for unknown root paths.
     with pytest.raises(KeyError, match="EXTRA.VALUE"):
         parameters.get_member("EXTRA.VALUE")
     assert list(parameters.get_members("EXTRA.VALUE")) == []
@@ -266,6 +261,15 @@ def test_unknown_add_accepts_only_non_dotted_names():
         parameters.set("EXTRA.VALUE", 2, unknown="add")
     assert "EXTRA" not in parameters
 
+    # A path beyond an existing option must not resolve or create a child.
+    with pytest.raises(KeyError, match="CONTROL.KNOWN.CHILD"):
+        parameters.get_member("CONTROL.KNOWN.CHILD")
+    assert list(parameters.get_members("CONTROL.KNOWN.CHILD")) == []
+    with pytest.raises(KeyError, match="CONTROL.KNOWN.CHILD"):
+        parameters.set("CONTROL.KNOWN.CHILD", 2, unknown="add")
+    assert parameters.CONTROL.KNOWN() == 1
+
+    # A non-dotted custom member remains supported after the rejected attempts.
     parameters.set({"EXTRA": {"VALUE": 2}}, unknown="add")
     assert parameters.EXTRA.VALUE() == 2
 
@@ -288,18 +292,6 @@ def test_failed_read_rolls_back_clear_and_parsed_values_together():
     assert parameters.CONTROL.VALUE() == 1
     assert not hasattr(parameters, "_parsed_values")
     assert not hasattr(parameters.CONTROL, "_parsed_values")
-
-
-def test_exact_resolution_stops_at_option():
-    parameters = cd.InputParametersDefinition(
-        [cd.InputSectionDefinition("CONTROL", [V("KNOWN", 1)])]
-    ).create_object()
-
-    with pytest.raises(KeyError, match="CONTROL.KNOWN.CHILD"):
-        parameters.get_member("CONTROL.KNOWN.CHILD")
-    assert list(parameters.get_members("CONTROL.KNOWN.CHILD")) == []
-    with pytest.raises(KeyError, match="CONTROL.KNOWN.CHILD"):
-        parameters.set("CONTROL.KNOWN.CHILD", 2, unknown="add")
 
 
 def test_unknown_add_does_not_replace_existing_member():
@@ -413,18 +405,11 @@ def test_clear_is_validated_and_rolled_back():
         required.CONTROL.clear()
     assert required.CONTROL.REQUIRED() == 1
 
-
-def test_setting_none_uses_required_clear_semantics():
-    definition = cd.InputParametersDefinition.definition_from_dict(
-        {"CONTROL": [V("REQUIRED", int, None, is_required=True)]}
-    )
-    parameters = definition.create_object()
-    parameters.CONTROL.REQUIRED.set(2)
-
+    # Verify set(None) on a different nonempty value, as in the old test.
+    required.CONTROL.REQUIRED.set(2)
     with pytest.raises(DataValidityError, match="must have a value"):
-        parameters.CONTROL.REQUIRED.set(None)
-
-    assert parameters.CONTROL.REQUIRED() == 2
+        required.CONTROL.REQUIRED.set(None)
+    assert required.CONTROL.REQUIRED() == 2
 
 
 def test_container_clear_skips_generated_setters():
@@ -475,6 +460,7 @@ def test_repeated_clear_is_validated_and_rolled_back():
         validators=reject_empty,
     )
     parameters = definition.create_object()
+    assert parameters.ROWS.as_dict(False) is None
     parameters.ROWS.set([{"VALUE": 2}])
 
     with pytest.raises(DataValidityError, match="empty rows rejected"):
@@ -482,20 +468,6 @@ def test_repeated_clear_is_validated_and_rolled_back():
 
     assert len(parameters.ROWS) == 1
     assert parameters.ROWS[0].VALUE() == 2
-
-
-def test_empty_repeated_section_as_dict():
-    definition = cd.InputParametersDefinition(
-        [
-            cd.InputSectionDefinition(
-                "ROWS",
-                [V("VALUE", 1)],
-                is_repeated=True,
-            )
-        ]
-    )
-
-    assert definition.create_object().ROWS.as_dict(False) is None
 
 
 def test_option_validation_uses_its_container_values():

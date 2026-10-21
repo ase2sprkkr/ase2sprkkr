@@ -10,9 +10,9 @@ class TestBuild:
         assert len(aperiodic_times(atoms, (2.1, 1, 1))) == 6
         assert len(aperiodic_times(atoms, (1, 2.1, 1))) == 5
         assert len(aperiodic_times(atoms, (1, 2.9, 1), direction=-1)) == 5
-        assert len(aperiodic_times(atoms, (1, 3.1, 1))) == 7
-        assert len(aperiodic_times(atoms, (1, 3.1, 2.1))) == 18
         at = aperiodic_times(atoms, (1, 3.1, 1))
+        assert len(at) == 7
+        assert len(aperiodic_times(atoms, (1, 3.1, 2.1))) == 18
         np.testing.assert_allclose(at.positions[::2], np.arange(4)[:, None] * atoms.cell[1] + atoms.positions[0])
         np.testing.assert_allclose(at.positions[1::2], np.arange(3)[:, None] * atoms.cell[1] + atoms.positions[1])
         assert str(at.symbols) == "LiClLiClLiClLi"

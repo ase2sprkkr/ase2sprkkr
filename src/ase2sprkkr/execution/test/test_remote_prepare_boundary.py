@@ -1,5 +1,7 @@
 """Crash boundary: remote staging metadata must be persisted before submit."""
 
+import pytest
+
 from ase2sprkkr.execution.remote_endpoint import _RemoteRun
 from ase2sprkkr.execution import (
     ExecutionSpec, FileEntry, FileManifest, FileMapping,
@@ -153,3 +155,24 @@ def test_remote_file_preparation_deduplicates_paths_before_mapping(tmp_path):
         str(remote / "work" / "checkpoint-*.dat"),
     )
     assert used == {str(remote / "work" / "restart.dat"): str(directory / "restart.dat")}
+
+
+@pytest.mark.parametrize("method", ("submit", "start"))
+def test_postprocessing_rejected_submit_preserves_error_and_does_not_monitor(method):
+    from ase2sprkkr.execution.base import SubmissionNotStarted
+    from ase2sprkkr.execution.postprocessing import PostprocessingRunner
+
+    failure = SubmissionNotStarted("preflight refused")
+
+    class RejectedRunner:
+        state = RunState.NEW
+
+        def submit(self):
+            raise failure
+
+    runner = PostprocessingRunner(RejectedRunner(), lambda result: result)
+    with pytest.raises(SubmissionNotStarted, match="preflight refused") as caught:
+        getattr(runner, method)()
+    assert caught.value is failure
+    assert runner._started is False
+    assert runner._thread is None

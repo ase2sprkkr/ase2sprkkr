@@ -221,3 +221,27 @@ def test_attach_closes_stdout_if_opening_stderr_fails(tmp_path, monkeypatch):
         asyncio.run(context.attach(run, start=False))
     assert len(opened) == 1
     assert opened[0].closed
+
+
+def test_unmap_rejects_symlink_parent_outside_local_root(tmp_path):
+    root = tmp_path / "local"
+    outside = tmp_path / "outside"
+    root.mkdir()
+    outside.mkdir()
+    (root / "redirect").symlink_to(outside, target_is_directory=True)
+    endpoint = RemoteEndpointExecutor(_Transport())
+    context = endpoint._context(endpoint, LaunchSpec(local_root=root, remote_root="/remote"))
+    with pytest.raises(ValueError, match="outside mapped root"):
+        asyncio.run(context.unmap_path("/remote/redirect/output.dat"))
+
+
+def test_unmap_preserves_internal_symlink_spelling(tmp_path):
+    root = tmp_path / "local"
+    actual = root / "actual"
+    actual.mkdir(parents=True)
+    (root / "alias").symlink_to(actual, target_is_directory=True)
+    endpoint = RemoteEndpointExecutor(_Transport())
+    context = endpoint._context(endpoint, LaunchSpec(local_root=root, remote_root="/remote"))
+    assert asyncio.run(context.unmap_path("/remote/alias/output.dat")) == (
+        root / "alias" / "output.dat"
+    )

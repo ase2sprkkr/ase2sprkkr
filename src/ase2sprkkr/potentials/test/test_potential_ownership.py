@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import io
 from pathlib import Path
+from unittest.mock import Mock
 
 import pytest
 from ase import Atoms
@@ -89,24 +90,31 @@ def test_save_to_file_synchronizes_atoms_once(monkeypatch):
     assert calls == [None]
 
 
-def test_file_unchanged_check_is_opt_in(monkeypatch):
-    path = _example_potential()
-
+def test_file_unchanged_check_is_opt_in(monkeypatch, tmp_path):
+    # No real potential parsing is needed to test the provenance policy.
+    path = tmp_path / "not-parsed.pot"
+    parsed = object()
+    reader = Mock(return_value=parsed)
+    monkeypatch.setattr(Potential.potential_definition, "read_from_file", reader)
     monkeypatch.setattr(
         potentials_module,
         "file_fingerprint",
         lambda _path: pytest.fail("fingerprinting must be disabled by default"),
     )
 
-    Potential.from_file(path)
+    assert Potential.from_file(path) is parsed
+    reader.assert_called_once_with(path, atoms=None, allow_dangerous=False)
 
 
-def test_file_unchanged_check_rejects_rewrite(monkeypatch):
-    path = _example_potential()
+def test_file_unchanged_check_rejects_rewrite(monkeypatch, tmp_path):
+    # Fingerprint mismatch is checked around the parser, not by the parser.
+    path = tmp_path / "not-parsed.pot"
+    path.write_bytes(b"fake potential")
     original = file_fingerprint(path)
     changed = original._replace(size=original.size + 1)
     fingerprints = iter((original, changed))
-
+    reader = Mock(return_value=object())
+    monkeypatch.setattr(Potential.potential_definition, "read_from_file", reader)
     monkeypatch.setattr(
         potentials_module,
         "file_fingerprint",
@@ -115,3 +123,4 @@ def test_file_unchanged_check_rejects_rewrite(monkeypatch):
 
     with pytest.raises(PotentialFileChanged, match="changed while it was being read"):
         Potential.from_file(path, check_file_unchanged=True)
+    reader.assert_called_once_with(path, atoms=None, allow_dangerous=False)

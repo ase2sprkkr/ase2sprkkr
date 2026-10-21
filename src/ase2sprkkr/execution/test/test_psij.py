@@ -414,56 +414,38 @@ def test_psij_missing_optional_output_is_skipped(monkeypatch, tmp_path):
     assert runner.files.outputs[0].availability_state == "skipped"
 
 
-def test_psij_mpi_process_count_becomes_resource_spec(monkeypatch, tmp_path):
-    backend = _Backend()
-    executor = _executor(monkeypatch, backend)
-    input_file = open(tmp_path / "run.inp", "wb+")
-    output_file = open(tmp_path / "run.out", "wb")
-    spec = ExecutionSpec(
-        argv=("program",),
-        mpi_argv=("programMPI", str(tmp_path / "run.inp")),
-        launch=LaunchSpec.from_mpi(16),
-        input_file=input_file,
-        output_file=output_file,
-        directory=str(tmp_path),
-        stdin=input_file,
-    )
+@pytest.mark.parametrize(
+    "mpi, process_count",
+    [(16, 16), ("auto", None)],
+)
+def test_psij_mpi_job_uses_mpi_executable_and_requested_resources(
+    monkeypatch, tmp_path, mpi, process_count,
+):
+    executor = _executor(monkeypatch, _Backend())
+    input_path = tmp_path / "run.inp"
+    with input_path.open("w+b") as input_file, (tmp_path / "run.out").open("wb") as output_file:
+        spec = ExecutionSpec(
+            argv=("program",),
+            mpi_argv=("programMPI", str(input_path)),
+            launch=LaunchSpec.from_mpi(mpi),
+            input_file=input_file,
+            output_file=output_file,
+            directory=str(tmp_path),
+            stdin=input_file,
+        )
 
-    runner = executor.create_run(spec)
-    job_spec = runner._job.spec
+        runner = executor.create_run(spec)
+        job_spec = runner._job.spec
 
-    assert job_spec.executable == "programMPI"
-    assert job_spec.arguments == [str(tmp_path / "run.inp")]
-    assert job_spec.resources.process_count == 16
-    assert job_spec.launcher == "srun"
-    assert job_spec.stdin_path == str(tmp_path / "run.inp")
-    input_file.close()
-    output_file.close()
+        assert job_spec.executable == "programMPI"
+        assert job_spec.arguments == [str(input_path)]
+        assert job_spec.launcher == "srun"
+        assert job_spec.stdin_path == str(input_path)
+        if process_count is None:
+            assert job_spec.resources is None
+        else:
+            assert job_spec.resources.process_count == process_count
 
-
-def test_psij_auto_uses_mpi_without_fixed_process_count(monkeypatch, tmp_path):
-    backend = _Backend()
-    executor = _executor(monkeypatch, backend)
-    input_file = open(tmp_path / "run.inp", "wb+")
-    output_file = open(tmp_path / "run.out", "wb")
-    spec = ExecutionSpec(
-        argv=("program",),
-        mpi_argv=("programMPI", str(tmp_path / "run.inp")),
-        launch=LaunchSpec.from_mpi("auto"),
-        input_file=input_file,
-        output_file=output_file,
-        directory=str(tmp_path),
-        stdin=input_file,
-    )
-
-    runner = executor.create_run(spec)
-    job_spec = runner._job.spec
-
-    assert job_spec.executable == "programMPI"
-    assert job_spec.resources is None
-    assert job_spec.launcher == "srun"
-    input_file.close()
-    output_file.close()
 
 def test_psij_status_is_nonblocking_and_explicit_wait_synchronizes(monkeypatch):
     executor = _executor(monkeypatch, _Backend())

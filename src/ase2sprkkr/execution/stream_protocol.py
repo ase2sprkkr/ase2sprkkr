@@ -13,6 +13,8 @@ import asyncio
 import json
 import struct
 
+from .base import RunState
+
 
 STREAM_MAGIC = b"A2SSTRM1"
 _HEADER = struct.Struct("!cQ")
@@ -62,7 +64,17 @@ async def read_stream_frames(source):
         if code == b"T":
             if size > 4096:
                 raise StreamProtocolError("Terminal frame is too large")
-            yield "terminal", json.loads(await _read_exactly(source, size))
+            try:
+                outcome = json.loads(await _read_exactly(source, size))
+            except (ValueError, UnicodeError) as exc:
+                raise StreamProtocolError("Invalid terminal frame JSON") from exc
+            if not isinstance(outcome, dict):
+                raise StreamProtocolError("Invalid terminal frame outcome")
+            try:
+                RunState(outcome.get("state"))
+            except (TypeError, ValueError) as exc:
+                raise StreamProtocolError("Invalid terminal frame outcome") from exc
+            yield "terminal", outcome
             return
         if size > 65536:
             raise StreamProtocolError("Stream frame is too large")

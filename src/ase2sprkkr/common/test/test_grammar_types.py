@@ -38,11 +38,21 @@ class TestGrammar:
     def _test_types(self):
         Error = object()
         ParseError = object()
+        grammar_type = None
+        cached_grammar = None
 
         def test(val, res):
-            grammar = type.grammar()
+            nonlocal grammar_type, cached_grammar
+            # Creating a pyparsing grammar is much more expensive than
+            # checking one more input value. Each type instance is used
+            # for a series of cases without modifying its definition.
+            if grammar_type is not type:
+                cached_grammar = type.grammar()
+                grammar_type = type
+            grammar = cached_grammar
+            input_text = str(val)
             try:
-                out = grammar.parse_string(str(val), True)
+                out = grammar.parse_string(input_text, True)
                 assert len(out) == 1
                 out = out[0]
                 _assert_equal(
@@ -63,7 +73,9 @@ class TestGrammar:
                     assert type.validate(val)
                 return
             assert type.validate(out)
-            out = grammar.parse_string(val, True)
+            # Parsing the same input twice checks repeatability of the
+            # same grammar instance; this is not a serialization round trip.
+            out = grammar.parse_string(input_text, True)
             assert len(out) == 1
             out = out[0]
             _assert_equal(

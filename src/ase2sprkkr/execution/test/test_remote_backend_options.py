@@ -64,7 +64,6 @@ def test_remote_request_carries_target_executor_options(tmp_path):
         "remote_root": str(tmp_path / "remote"),
         "input_sync": "changed",
         "output_sync": "changed",
-        "temporary_directory": False,
     }
     remote_input = tmp_path / "remote" / "calculation" / "run.inp"
     remote_potential = tmp_path / "remote" / "calculation" / "start.pot"

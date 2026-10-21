@@ -1,3 +1,5 @@
+from unittest.mock import patch
+
 from ase.cell import Cell
 from ase.spacegroup import crystal
 
@@ -100,6 +102,14 @@ number of atom types NT
 
     assert sanitize(actual) == sanitize(expected)
 
+    # File writing must not repeat the costly lattice and symmetry generation.
     output = tmp_path / "system.sys"
-    write_sysfile(atoms, str(output))
-    assert output.exists()
+    expected_file_content = actual.replace("<unknown>", str(output), 1)
+    with patch(
+        "ase2sprkkr.sprkkr.sysfile.sysfile_content",
+        return_value=expected_file_content,
+    ) as generate:
+        write_sysfile(atoms, str(output))
+
+    generate.assert_called_once_with(atoms, str(output))
+    assert output.read_text() == expected_file_content

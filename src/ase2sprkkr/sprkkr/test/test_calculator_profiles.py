@@ -94,18 +94,18 @@ def test_calculator_init_overrides_copy_explicit_profile(monkeypatch):
     assert profile == SPRKKRProfile("/old", ".old", 2)
 
 
-def test_calculate_overrides_copy_explicit_profile(monkeypatch):
+def test_calculate_temporary_override_preserves_calculator_profile(monkeypatch):
     fresh_profile_config(monkeypatch)
     calculator = SPRKKR(profile=SPRKKRProfile("/calculator", ".calc", 1))
     profile = SPRKKRProfile("/cluster", ".x", 4)
-    captured = {}
+    captured = []
 
     class Runner:
         def run(self):
             return SimpleNamespace(task_name="DOS")
 
     def create_run(self, **kwargs):
-        captured.update(kwargs)
+        captured.append(kwargs["profile"])
         return Runner()
 
     monkeypatch.setattr(SPRKKR, "create_run", create_run)
@@ -117,30 +117,14 @@ def test_calculate_overrides_copy_explicit_profile(monkeypatch):
         executable_suffix=False,
     )
 
-    assert captured["profile"] == SPRKKRProfile("/override", False, 2)
-    assert captured["profile"] is not profile
+    assert captured[-1] == SPRKKRProfile("/override", False, 2)
+    assert captured[-1] is not profile
     assert profile == SPRKKRProfile("/cluster", ".x", 4)
 
-
-def test_calculate_reuses_profile_when_no_override_is_given(monkeypatch):
-    fresh_profile_config(monkeypatch)
-    profile = SPRKKRProfile("/cluster", ".x", 4)
-    calculator = SPRKKR(profile=profile)
-    captured = {}
-
-    class Runner:
-        def run(self):
-            return SimpleNamespace(task_name="DOS")
-
-    def create_run(self, **kwargs):
-        captured.update(kwargs)
-        return Runner()
-
-    monkeypatch.setattr(SPRKKR, "create_run", create_run)
-
+    # The one-off override must not affect the next calculation.
     calculator.calculate()
-
-    assert captured["profile"] is calculator.profile
+    assert captured[-1] is calculator.profile
+    assert calculator.profile == SPRKKRProfile("/calculator", ".calc", 1)
 
 
 def test_ssh_profile_uses_direct_remote_execution_by_default():

@@ -62,6 +62,8 @@ def test_project_launch_reconnect_and_shared_ticket(tmp_path):
     assert _decode_handle(handle)["kind"] == "process"
     assert _recover_submission(RUN_ID) == {"remote_id": handle}
     assert runner.wait().return_code == 0
+    assert runner.state == RunState.FINISHED
+    assert not _process_running({**_decode_handle(handle), "start_time": "0"})
     assert (tmp_path / "out.txt").read_text() == "output\n"
     assert executor.status(_record(tmp_path, handle))[0].state == RunState.FINISHED
     assert executor.recover_submission(RUN_ID, _record(tmp_path, None)).backend_id == handle
@@ -77,6 +79,9 @@ def test_project_launch_reconnect_and_shared_ticket(tmp_path):
     )
     assert attached.wait().return_code == 0
     assert seen == [("output\n", "out")]
+    executor.acknowledge(_record(tmp_path, handle))
+    assert runner.state == RunState.FINISHED
+    assert runner.return_code == 0
 
 
 def test_project_file_objects_are_not_serialized(tmp_path):
@@ -99,14 +104,6 @@ def test_process_failure_preserves_execution_phase(tmp_path):
     assert runner.wait().return_code == 7
     assert runner.state == RunState.FAILED
     assert runner.failure_phase == FailurePhase.EXECUTION
-
-
-def test_reused_pid_is_not_a_running_process(tmp_path):
-    runner = LocalExecutor().create_project_run(_spec(tmp_path), run_id=RUN_ID)
-    runner.submit()
-    runner.wait()
-    handle = _decode_handle(runner.backend_id)
-    assert not _process_running({**handle, "start_time": "0"})
 
 
 def test_cancel_is_supervisor_owned_and_nonblocking(tmp_path):
@@ -211,16 +208,6 @@ def test_local_prelaunch_error_is_known_submission_failure(tmp_path, monkeypatch
     assert not _recover_submission(RUN_ID)
 
 
-def test_terminal_runner_state_survives_outcome_acknowledgement(tmp_path):
-    runner = LocalExecutor().create_project_run(_spec(tmp_path), run_id=RUN_ID)
-    runner.submit()
-    assert runner.wait().return_code == 0
-    assert runner.state == RunState.FINISHED
-    LocalExecutor().acknowledge(_record(tmp_path, runner.backend_id))
-    assert runner.state == RunState.FINISHED
-    assert runner.return_code == 0
-
-
 def test_cancelled_run_preserves_partial_stream_availability(tmp_path):
     out = tmp_path / "out.txt"
     out.write_bytes(b"partial output\n")
@@ -259,16 +246,16 @@ def test_project_request_flushes_each_declared_file_once(tmp_path):
     cache = NamedFile("restart.pot")
     spec = replace(
         _spec(tmp_path),
-        output_files=(output,),
-        input_files=(inp,),
-        cache_files=(cache,),
+        output_files=(None, output, "a.dat", object()),
+        input_files=(None, inp, "b.inp", 1),
+        cache_files=(None, cache, "restart.pot", object()),
     )
     runner = LocalExecutor().create_project_run(spec, run_id=RUN_ID)
     request = runner._request()
 
-    assert request["output_files"] == [output.name]
-    assert request["input_files"] == [inp.name]
-    assert request["cache_files"] == [cache.name]
+    assert request["output_files"] == [output.name, str(tmp_path / "a.dat")]
+    assert request["input_files"] == [inp.name, str(tmp_path / "b.inp")]
+    assert request["cache_files"] == [cache.name, str(tmp_path / "restart.pot")]
     assert (output.flush_count, inp.flush_count, cache.flush_count) == (1, 1, 1)
 
 
@@ -332,20 +319,6 @@ def test_terminal_project_runner_does_not_query_backend(monkeypatch, tmp_path):
     )
     assert runner.state is RunState.FINISHED
 
-
-def test_project_request_ignores_unnamed_optional_declarations(tmp_path):
-    from dataclasses import replace
-
-    spec = replace(
-        _spec(tmp_path),
-        output_files=(None, "a.dat", object()),
-        input_files=(None, "b.inp", 1),
-        cache_files=(None, "restart.pot", object()),
-    )
-    request = LocalExecutor().create_project_run(spec, run_id=RUN_ID)._request()
-    assert request["output_files"] == [str(tmp_path / "a.dat")]
-    assert request["input_files"] == [str(tmp_path / "b.inp")]
-    assert request["cache_files"] == [str(tmp_path / "restart.pot")]
 
 def test_local_project_invalid_output_is_known_non_submission(tmp_path):
     """Output/cache collisions fail preflight without destroying existing files."""

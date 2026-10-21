@@ -5,8 +5,7 @@ from __future__ import annotations
 import asyncio
 from threading import Event, Lock, Thread
 
-from .base import (FailurePhase, RunState, SubmissionNotStarted,
-                   finish_monitor, wait_for_monitor)
+from .base import (FailurePhase, RunState, finish_monitor, wait_for_monitor)
 
 
 class PostprocessingRunner:
@@ -177,10 +176,7 @@ class PostprocessingRunner:
         with self._lock:
             if self._started or self._runner.state != RunState.NEW:
                 raise RuntimeError(f"Run is already {self.state.value}")
-            try:
-                self._runner.submit()
-            except SubmissionNotStarted:
-                raise
+            self._runner.submit()
             self._start_completion()
 
     def start(self):
@@ -189,10 +185,7 @@ class PostprocessingRunner:
             if self._started:
                 return
             if self._runner.state == RunState.NEW:
-                try:
-                    self._runner.submit()
-                except SubmissionNotStarted:
-                    raise
+                self._runner.submit()
             else:
                 start = getattr(self._runner, "start", None)
                 if start is not None:

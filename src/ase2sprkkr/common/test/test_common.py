@@ -184,18 +184,21 @@ class TestCommon:
         assert ff(a=3, c=7) == (7, (3, 5))
 
     def test_asyncio_file_reader(self):
+        async def check(reader):
+            assert await reader.readline() == b"First line\n"
+            assert await reader.readline() == b"Second line\n"
+            assert await reader.readuntil(b"is") == b"Hi, this"
+            assert await reader.readuntil(b"is") == b" is"
+            assert await reader.readuntil(b"!!!") == b" a very long file!! really!!!"
+            assert await reader.readuntil(b"123456") == b" 12345123456"
+            with pytest.raises(asyncio.IncompleteReadError):
+                await reader.readuntil(b"123456")
+
         with tempfile.TemporaryFile(mode="w+b") as tfile:
             tfile.write(b"First line\nSecond line\nHi, this is a very long file!! really!!! 12345123456789")
             tfile.seek(0)
             reader = AsyncioFileReader(tfile, buffersize=5)
-            assert asyncio.run(reader.readline()) == b"First line\n"
-            assert asyncio.run(reader.readline()) == b"Second line\n"
-            assert asyncio.run(reader.readuntil(b"is")) == b"Hi, this"
-            assert asyncio.run(reader.readuntil(b"is")) == b" is"
-            assert asyncio.run(reader.readuntil(b"!!!")) == b" a very long file!! really!!!"
-            assert asyncio.run(reader.readuntil(b"123456")) == b" 12345123456"
-            with pytest.raises(asyncio.IncompleteReadError):
-                asyncio.run(reader.readuntil(b"123456"))
+            asyncio.run(check(reader))
 
     def test_cached_property(self):
         from ..decorators import cached_property

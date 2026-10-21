@@ -211,11 +211,7 @@ class _RemoteRun(RemoteRunner):
                 raise RuntimeError(f"Run is already {self._state.value}")
             remote_id, manifest, status, request = _run_sync(self._submit_async())
             self._state = RunState(status["state"])
-            self._return_code = status.get("return_code")
-            self.result.return_code = self._return_code
-            phase = status.get("failure_phase")
-            self._failure_phase = None if phase is None else FailurePhase(phase)
-            self._failure_message = status.get("error")
+            self._apply_backend_facts(status)
             self._backend_id = str(remote_id)
             self._remote_directory = request["directory"]
             self._files = manifest
@@ -276,7 +272,9 @@ class _RemoteRunContext:
         relative = posixpath.relpath(path, remote_root)
         if relative == ".":
             return self.local_root
-        return self.local_root.joinpath(*PurePosixPath(relative).parts)
+        local = self.local_root.joinpath(*PurePosixPath(relative).parts)
+        _relative_local_path(local, self.local_root)
+        return local
 
     async def map_directory(self, directory):
         return await self.map_path(directory)
@@ -358,7 +356,6 @@ class _RemoteRunContext:
                     output_sync=self.output_files.value,
                 ),
             )
-            phase = status.get("failure_phase")
             runner = _RemoteRun(
                 self,
                 spec,
@@ -375,10 +372,7 @@ class _RemoteRunContext:
                 cache_patterns=tuple(cache_patterns),
                 cache_before=cache_before,
             )
-            runner._return_code = status.get("return_code")
-            runner.result.return_code = runner._return_code
-            runner._failure_phase = None if phase is None else FailurePhase(phase)
-            runner._failure_message = status.get("error")
+            runner._apply_backend_facts(status)
             if start:
                 runner.start()
             streams.pop_all()  # Runner owns the streams after successful attach.
@@ -628,6 +622,7 @@ class RemoteEndpointExecutor(Executor):
                     os.fspath(await context.unmap_path(matched))
                     if glob.has_magic(remote) else local
                 )
+                _relative_local_path(destination, context.local_root)
                 target = destinations.get(destination, destination)
                 if not os.path.isfile(target):
                     await self.transport.get_file(matched, target)

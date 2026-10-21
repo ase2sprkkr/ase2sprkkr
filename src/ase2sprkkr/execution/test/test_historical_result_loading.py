@@ -100,31 +100,29 @@ def _patch_reader(monkeypatch, parsed):
     )
 
 
-def test_history_listing_does_not_fetch_missing_result_files(tmp_path):
-    manager, executor, record = _terminal_run(tmp_path)
-    (tmp_path / "run.out").unlink()
-
-    records = manager.store.runs()
-
-    assert records[0].id == record.id
-    assert executor.fetch_calls == []
-
-
-def test_load_project_result_restores_exact_missing_historical_output(
-    tmp_path, monkeypatch
+def test_history_listing_is_lazy_but_loading_restores_missing_output(
+    tmp_path, monkeypatch,
 ):
     manager, executor, record = _terminal_run(tmp_path)
-    (tmp_path / "run.out").unlink()
+    output_path = tmp_path / "run.out"
+    output_path.unlink()
+
+    # Merely enumerating stored history must not retrieve artifacts.
+    records = manager.store.runs()
+    assert records[0].id == record.id
+    assert executor.fetch_calls == []
+    assert not output_path.exists()
+
+    # Loading that very same record must retrieve and parse the exact output.
     parsed = []
     _patch_reader(monkeypatch, parsed)
-
     result = load_project_result(manager, record.id)
 
     assert executor.fetch_calls == [
-        (record.id, (str(tmp_path / "run.out"),))
+        (record.id, (str(output_path),))
     ]
-    assert (tmp_path / "run.out").read_text() == "original output"
-    assert parsed[0][0] == str(tmp_path / "run.out")
+    assert output_path.read_text() == "original output"
+    assert parsed[0][0] == str(output_path)
     assert result.return_code == 0
     assert result.run_record.state == RunState.FINISHED
     assert result.run_record.files.state == FileState.CURRENT

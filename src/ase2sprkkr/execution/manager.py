@@ -40,7 +40,6 @@ class HistoricalFileMismatchError(OSError):
 
 
 _RUN_RECORD_SCHEMA_VERSION = 3
-_FINAL_STATES = {RunState.FINISHED, RunState.FAILED, RunState.CANCELLED}
 _STATE_RANK = {
     RunState.NEW: 0,
     RunState.SUBMITTING: 1,
@@ -336,9 +335,9 @@ class RunStore:
             records = []
             for day in self._day_directories(newest=newest):
                 for record in self._records_in_directory(day, newest=newest):
-                    if active is True and record.state in _FINAL_STATES:
+                    if active is True and record.state.is_terminal:
                         continue
-                    if active is False and record.state not in _FINAL_STATES:
+                    if active is False and not record.state.is_terminal:
                         continue
                     records.append(record)
                     if limit is not None and len(records) >= limit:
@@ -478,7 +477,7 @@ class ExecutionManager:
         if requested is None:
             return latest.state
         requested = RunState(requested)
-        if latest.state in _FINAL_STATES:
+        if latest.state.is_terminal:
             return latest.state
         if requested == RunState.UNKNOWN:
             # Uncertainty cannot retract confirmed execution completion.
@@ -523,7 +522,7 @@ class ExecutionManager:
                     and latest.updated_at != expected_updated_at):
                 # An independent refresh has superseded this observation.
                 return latest
-            final_locked = latest.state in _FINAL_STATES
+            final_locked = latest.state.is_terminal
             now = _now()
             merged_state = self._merged_state(latest, state)
             if (state is not None and RunState(state) == RunState.UNKNOWN
@@ -532,7 +531,7 @@ class ExecutionManager:
                 # and artifact metadata, not merely its proposed state.
                 return latest
             changes = {"state": merged_state, "updated_at": now}
-            if latest.state not in _FINAL_STATES and merged_state in _FINAL_STATES:
+            if not latest.state.is_terminal and merged_state.is_terminal:
                 changes["finished_at"] = now
             merged_result_files = self._merged_result_files(latest, files)
             if merged_result_files is not latest.files:
@@ -750,7 +749,7 @@ class ExecutionManager:
 
     def retrieve_result_files(self, run):
         record = self.store.get(run) if isinstance(run, str) else self.store.get(run.id)
-        if record.state not in _FINAL_STATES:
+        if not record.state.is_terminal:
             raise RuntimeError(f"Run {record.id} is not finished")
 
         missing = self._missing_result_files(record.files)
@@ -980,7 +979,7 @@ class ProjectRunner:
         if state == RunState.UNKNOWN and self._record.state != RunState.NEW:
             # The completed observer cannot overwrite a newer refresh.
             return self._record.state
-        return self._record.state if self._record.state in _FINAL_STATES else state
+        return self._record.state if self._record.state.is_terminal else state
 
     def add_output_listener(self, callback):
         return self._runner.add_output_listener(callback)
@@ -1088,7 +1087,7 @@ class ProjectRunner:
                 )
                 self._completion_persisted = True
                 return
-            if state not in _FINAL_STATES:
+            if not state.is_terminal:
                 return
             if state == RunState.FAILED and phase is None:
                 phase = FailurePhase.EXECUTION
@@ -1107,7 +1106,7 @@ class ProjectRunner:
             # ACK is strictly after RunStore's crash-durable terminal transition.
             # A lost ACK reply is harmless: backend receipts are idempotently deleted.
             # Keep the persisted result even if the acknowledgement cannot be sent.
-            if self._record.state in _FINAL_STATES and self.backend_id is not None:
+            if self._record.state.is_terminal and self.backend_id is not None:
                 acknowledge = getattr(self.executor, "acknowledge", None)
                 if acknowledge is not None:
                     try:
@@ -1115,7 +1114,7 @@ class ProjectRunner:
                     except (OSError, RuntimeError):
                         pass
 
-            if self._record.state in _FINAL_STATES:
+            if self._record.state.is_terminal:
                 self._completion_persisted = True
 
     def wait(self):

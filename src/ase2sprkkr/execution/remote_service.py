@@ -31,8 +31,6 @@ from .remote_mailbox import publish_outcome, read_outcome, acknowledge_outcome, 
 from ._durability import durable_mkdir, durable_write_json, fsync_directory
 
 
-_FINAL_STATES = {RunState.FINISHED, RunState.FAILED, RunState.CANCELLED}
-
 
 def _status_reply(state, return_code=None, *, failure_phase=None, error=None):
     """Encode backend status facts for the common remote-service wire contract."""
@@ -497,7 +495,7 @@ async def _follow_scheduler_async(remote_id, streams, paths, offsets, poll_inter
 
     async def terminal(_native_status):
         status = await asyncio.to_thread(status_remote, remote_id)
-        if status["state"] in {s.value for s in _FINAL_STATES}:
+        if RunState(status["state"]).is_terminal:
             return status
         native = job.status
         state = _psij_state(native)
@@ -568,7 +566,7 @@ def follow_remote(
         # A completed supervisor has removed its transient socket. Replay
         # declared spools once, without the historical polling lifecycle.
         status = status_remote(remote_id)
-        if status["state"] not in {s.value for s in _FINAL_STATES}:
+        if not RunState(status["state"]).is_terminal:
             raise
         if not any(path is not None for path in paths.values()):
             raise ValueError("Output was live-only and cannot be reattached")

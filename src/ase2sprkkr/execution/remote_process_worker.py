@@ -10,7 +10,7 @@ import sys
 
 from .remote_mailbox import publish_outcome
 from .base import FailurePhase, RunState
-from .local_process import pump_stream
+from .local_process import pump_stream, stop_local_process
 from .remote_supervisor_stream import SupervisorStreams
 
 _SPEC_ENV = "ASE2SPRKKR_REMOTE_PROCESS_SPEC"
@@ -36,21 +36,6 @@ def _wait_for_parent_release():
             raise RuntimeError("Remote supervisor launch was not released by parent")
     finally:
         os.close(fd)
-
-
-async def _stop_process(process, waiting):
-    try:
-        os.killpg(process.pid, signal.SIGTERM)
-    except ProcessLookupError:
-        pass
-    try:
-        await asyncio.wait_for(asyncio.shield(waiting), 1.0)
-    except asyncio.TimeoutError:
-        try:
-            os.killpg(process.pid, signal.SIGKILL)
-        except ProcessLookupError:
-            pass
-        await waiting
 
 
 async def _run(spec):
@@ -116,13 +101,13 @@ async def _run(spec):
                 if failed is not None:
                     message = f"Failed to write process output: {failed}"
                     state, phase = RunState.FAILED, FailurePhase.EXECUTION
-                    await _stop_process(process, waiting)
+                    await stop_local_process(process, process_group=True, timeout=1.0, waiting=waiting)
                     break
                 if waiting.done():
                     break
                 if stop in done or (lost is not None and lost in done):
                     state, phase = RunState.CANCELLED, None
-                    await _stop_process(process, waiting)
+                    await stop_local_process(process, process_group=True, timeout=1.0, waiting=waiting)
                     break
             return_code = await waiting
             # Inspect all pump outcomes without allowing their exceptions to
@@ -150,7 +135,7 @@ async def _run(spec):
         message = _exception_message(exc)
         state, phase = RunState.FAILED, FailurePhase.EXECUTION
         if process is not None and process.returncode is None:
-            await _stop_process(process, asyncio.create_task(process.wait()))
+            await stop_local_process(process, process_group=True, timeout=1.0)
         return_code = process.returncode if process is not None else 127
     finally:
         for f in opened:

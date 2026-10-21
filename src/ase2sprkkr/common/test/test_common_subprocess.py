@@ -45,7 +45,14 @@ assert mp.get_start_method() == before
     assert result.returncode == 0, result.stderr
 
 
-def test_executor_uses_spawn():
+def test_spawned_worker_uses_spawn_and_ignores_sigchld(monkeypatch):
+    def fail_if_called_in_parent(_num):
+        raise AssertionError("SIGCHLD must not be changed in the parent process")
+
+    monkeypatch.setattr(subprocess_module, "ignore_signal", fail_if_called_in_parent)
+
+    # These independent checks run in the same worker. Spawning a new
+    # process for the signal checks would only repeat expensive setup.
     method = subprocess_module.in_subprocess(
         "get_start_method",
         "multiprocessing",
@@ -53,13 +60,6 @@ def test_executor_uses_spawn():
         {},
     )
     assert method == "spawn"
-
-
-def test_sigchld_is_ignored_only_in_worker(monkeypatch):
-    def fail_if_called_in_parent(_num):
-        raise AssertionError("SIGCHLD must not be changed in the parent process")
-
-    monkeypatch.setattr(subprocess_module, "ignore_signal", fail_if_called_in_parent)
 
     handler = subprocess_module.in_subprocess(
         "getsignal",

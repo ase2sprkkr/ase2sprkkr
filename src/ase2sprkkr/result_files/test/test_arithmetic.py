@@ -1,8 +1,19 @@
 """Regression for Python 3 arithmetic of structured result data."""
 
 import numpy as np
+import pytest
+from pathlib import Path
 
+from .. import ResultFile
 from ..definitions.dos import DOS
+
+
+EXAMPLES = Path(__file__).resolve().parents[1] / "examples"
+
+
+@pytest.fixture(scope="module")
+def bsf_result():
+    return ResultFile.from_file(str(EXAMPLES / "SnTe_BLOCHSF.bsf"), unknown=False)
 
 
 def _dos():
@@ -78,13 +89,8 @@ def test_dos_scalar_add_and_subtract():
     np.testing.assert_allclose(dos.dos, [2.0, 4.0, 6.0])
 
 
-def test_bsf_arithmetic_preserves_source_and_checks_energy_grid():
-    from pathlib import Path
-    import pytest
-    from .. import ResultFile
-
-    examples = Path(__file__).resolve().parents[1] / "examples"
-    file = ResultFile.from_file(str(examples / "SnTe_BLOCHSF.bsf"), unknown=False)
+def test_bsf_arithmetic_preserves_source_and_checks_energy_grid(bsf_result):
+    file = bsf_result
     original = file.RAW_DATA().copy()
 
     scaled = 2 * file
@@ -102,14 +108,9 @@ def test_bsf_arithmetic_preserves_source_and_checks_energy_grid():
     np.testing.assert_array_equal(file.RAW_DATA(), original)
 
 
-def test_bsf_rejects_different_spin_channels():
-    from pathlib import Path
-    import pytest
-    from .. import ResultFile
-
-    examples = Path(__file__).resolve().parents[1] / "examples"
-    normal = ResultFile.from_file(str(examples / "SnTe_BLOCHSF.bsf"), unknown=False)
-    spol = ResultFile.from_file(str(examples / "SnTe_BLOCHSF_spol.bsf"), unknown=False)
+def test_bsf_rejects_different_spin_channels(bsf_result):
+    normal = bsf_result
+    spol = ResultFile.from_file(str(EXAMPLES / "SnTe_BLOCHSF_spol.bsf"), unknown=False)
     with pytest.raises(ValueError, match="BSF KEYWORD"):
         normal + spol
 
@@ -172,12 +173,8 @@ def test_dos_rejects_array_broadcasting():
     np.testing.assert_array_equal(dos.dos, [2.0, 4.0, 6.0])
 
 
-def test_bsf_grid_check_does_not_expect_nonexistent_shape_field():
-    from pathlib import Path
-    from .. import ResultFile
-
-    examples = Path(__file__).resolve().parents[1] / "examples"
-    bsf = ResultFile.from_file(str(examples / "SnTe_BLOCHSF.bsf"), unknown=False)
+def test_bsf_grid_check_does_not_expect_nonexistent_shape_field(bsf_result):
+    bsf = bsf_result
     assert bsf._check_arithmetic(bsf.copy(copy_values=True)) is None
 
 def test_dos_numpy_array_arithmetic_uses_elementwise_values():

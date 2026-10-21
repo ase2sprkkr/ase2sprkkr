@@ -11,8 +11,19 @@ def _converged_potential():
     return Potential.from_file(path)
 
 
-def test_save_input_restart_scf_preserves_canonical_potential(tmp_path):
+def test_restart_scf_accepts_only_scf_and_preserves_canonical_potential(tmp_path):
     potential = _converged_potential()
+    assert potential.SCF_INFO.SCFSTATUS() == "CONVERGED"
+
+    # An invalid restart must not alter the potential before a valid one.
+    with pytest.raises(ValueError, match="only valid for an SCF"):
+        SPRKKR().save_input(
+            potential=potential,
+            input_parameters="DOS",
+            directory=tmp_path,
+            restart_scf=True,
+            empty_spheres=False,
+        )
     assert potential.SCF_INFO.SCFSTATUS() == "CONVERGED"
 
     _, _, potential_file, _ = SPRKKR().save_input(
@@ -29,16 +40,3 @@ def test_save_input_restart_scf_preserves_canonical_potential(tmp_path):
     assert len(saved.POTENTIAL) == len(potential.POTENTIAL)
     assert len(saved.CHARGE) == len(potential.CHARGE)
     assert len(saved.MOMENTS) == len(potential.MOMENTS)
-
-
-def test_restart_scf_is_rejected_for_non_scf_task(tmp_path):
-    potential = _converged_potential()
-
-    with pytest.raises(ValueError, match="only valid for an SCF"):
-        SPRKKR().save_input(
-            potential=potential,
-            input_parameters="DOS",
-            directory=tmp_path,
-            restart_scf=True,
-            empty_spheres=False,
-        )

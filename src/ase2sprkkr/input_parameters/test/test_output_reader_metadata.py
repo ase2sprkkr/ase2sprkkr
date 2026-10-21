@@ -10,13 +10,9 @@ from ...outputs.task_result import KkrOutputReader
 from ...sprkkr.executables import executables
 
 
-def test_all_builtin_tasks_use_known_executables():
+def test_builtin_tasks_use_registered_executables_and_resolvable_output_readers():
     for task in InputParameters.task_registry.values():
         assert task.executable in executables
-
-
-def test_all_registered_tasks_have_resolvable_output_reader_metadata():
-    for task in InputParameters.task_registry.values():
         assert issubclass(reader_registry.class_for_task(task), KkrOutputReader)
 
 
@@ -37,7 +33,7 @@ def test_every_specialized_reader_is_owned_by_at_least_one_task():
     assert specialized_readers <= claimed_readers
 
 
-def test_specialized_builtin_readers_are_declared_at_the_right_level():
+def test_builtin_reader_mappings_are_declared_at_the_right_level():
     expected = {
         "SCF": "SCF",
         "DOS": "DOS",
@@ -48,15 +44,15 @@ def test_specialized_builtin_readers_are_declared_at_the_right_level():
         "AIPES": "SPEC",
         "BAND": "SPEC",
         "SPLEED": "SPEC",
+        "PHAGEN": "DEFAULT",
+        "TORQUE": "DEFAULT",
+        "XAS": "DEFAULT",
+        "GILBERT": "DEFAULT",
     }
 
+    assert reader_registry["DEFAULT"] is DefaultOutputReader
     for task_name, reader_name in expected.items():
         assert reader_registry.class_for_task_name(task_name) is reader_registry[reader_name]
-
-
-def test_generic_builtin_tasks_use_executable_default_reader():
-    for task_name in ("PHAGEN", "TORQUE", "XAS", "GILBERT"):
-        assert reader_registry.class_for_task_name(task_name) is DefaultOutputReader
 
 
 def test_explicit_output_reader_name_is_strict_even_for_custom_executable():
@@ -93,16 +89,28 @@ def test_unknown_executable_without_explicit_reader_is_not_guessed():
         reader_registry.class_for_task(task)
 
 
-def test_task_output_reader_is_thin_registry_facade(tmp_path):
-    parameters = InputParameters.create("SCF")
-    task = parameters.task_definition_required()
-
-    reader = task.output_reader(parameters, directory=tmp_path)
+@pytest.mark.parametrize("parameters_kind", ("matching", "detached", "missing"))
+def test_task_output_reader_accepts_matching_detached_or_missing_parameters(
+    tmp_path, parameters_kind,
+):
+    task = InputParameters.task_registry["SCF"]
+    if parameters_kind == "matching":
+        parameters = InputParameters.create("SCF")
+        assert parameters.task_definition_required() is task
+        reader = task.output_reader(parameters, directory=tmp_path)
+        assert reader.directory == tmp_path
+    elif parameters_kind == "detached":
+        schema = InputParametersDefinition.definition_from_dict({"TEST": []})
+        parameters = schema.create_object()
+        assert parameters.task_definition is None
+        reader = task.output_reader(parameters)
+    else:
+        parameters = None
+        reader = task.output_reader()
 
     assert type(reader) is reader_registry["SCF"]
     assert reader.input_parameters is parameters
     assert reader.task_name == "SCF"
-    assert reader.directory == tmp_path
 
 
 def test_task_output_reader_rejects_parameters_for_another_task():
@@ -111,29 +119,6 @@ def test_task_output_reader_rejects_parameters_for_another_task():
 
     with pytest.raises(ValueError, match="represent task 'DOS'.*'SCF'"):
         scf.output_reader(parameters)
-
-
-def test_explicit_task_allows_detached_input_parameters():
-    schema = InputParametersDefinition.definition_from_dict({"TEST": []})
-    parameters = schema.create_object()
-    task = InputParameters.task_registry["SCF"]
-
-    assert parameters.task_definition is None
-    reader = task.output_reader(parameters)
-
-    assert type(reader) is reader_registry["SCF"]
-    assert reader.input_parameters is parameters
-    assert reader.task_name == "SCF"
-
-
-def test_task_output_reader_can_be_constructed_without_parameters():
-    task = InputParameters.task_registry["SCF"]
-
-    reader = task.output_reader()
-
-    assert type(reader) is reader_registry["SCF"]
-    assert reader.input_parameters is None
-    assert reader.task_name == "SCF"
 
 
 def test_input_parameters_reader_helpers_remain_thin_task_facades(monkeypatch):
@@ -187,8 +172,3 @@ def test_input_parameters_reader_helpers_remain_thin_task_facades(monkeypatch):
 
 def test_input_parameters_potential_convenience_is_preserved():
     assert isinstance(InputParameters.potential, property)
-
-
-def test_bsf_task_names_resolve_explicit_shared_reader():
-    assert reader_registry.class_for_task_name("BSFEK") is reader_registry["BSF"]
-    assert reader_registry.class_for_task_name("BSFKK") is reader_registry["BSF"]

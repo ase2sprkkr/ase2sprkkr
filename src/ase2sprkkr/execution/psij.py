@@ -245,7 +245,7 @@ def _slurm_status_native(native_id):
                 return_code = _slurm_exit_code(fields[2].strip())
                 break
 
-    if state not in (RunState.FINISHED, RunState.FAILED, RunState.CANCELLED):
+    if not state.is_terminal:
         return_code = None
     elif state == RunState.FINISHED and return_code is None:
         return_code = 0

@@ -1,6 +1,7 @@
 import io
 
 import numpy as np
+import pytest
 
 from ..input_parameters import InputParameters
 
@@ -61,7 +62,7 @@ SITES NL={3}
     assert parsed.SCF.NITER() == 80
 
 
-def test_jxc_and_dmi_have_distinct_defaults_on_shared_schema():
+def test_jxc_and_dmi_default_flags_and_secondary_switch():
     jxc = InputParameters.create("JXC")
     dmi = InputParameters.create("DMI")
     assert jxc.definition_name == dmi.definition_name == "JXC"
@@ -75,10 +76,7 @@ def test_jxc_and_dmi_have_distinct_defaults_on_shared_schema():
     assert jxc.TASK.TASK() == "JXC"
     assert dmi.TASK.TASK() == "DMI"
 
-
-def test_adding_secondary_native_switch_keeps_primary_task_enabled():
-    jxc = InputParameters.create("JXC")
-    dmi = InputParameters.create("DMI")
+    # Enabling the secondary native calculation must retain the primary one.
     jxc.TASK.DMI = True
     dmi.TASK.JXC = True
     assert jxc.TASK.JXC() and jxc.TASK.DMI()
@@ -88,32 +86,32 @@ def test_adding_secondary_native_switch_keeps_primary_task_enabled():
     assert dmi.requested_task_name == "DMI"
 
 
-def test_native_dmi_only_and_combined_flags_roundtrip():
-    for requested in ("DMI", "JXC"):
-        params = InputParameters.create(requested)
-        params.CONTROL.POTFIL = "Fe.pot"
-        if requested == "JXC":
-            params.TASK.DMI = True
-        restored = _roundtrip(params)
-        assert restored.definition_name == "JXC"
-        assert restored.TASK.DMI()
-        assert restored.TASK.JXC() == (requested == "JXC")
-        assert restored.task_name == requested
-        assert restored.task_definition is InputParameters.task_registry[requested]
-        assert restored.TASK.TASK() == requested
-
-
-def test_combined_native_flags_have_jxc_identity_regardless_of_origin():
-    for requested in ("DMI", "JXC"):
-        params = InputParameters.create(requested)
-        params.CONTROL.POTFIL = "Fe.pot"
+@pytest.mark.parametrize(
+    ("requested", "include_secondary_jxc", "expected_task"),
+    (
+        pytest.param("DMI", False, "DMI", id="dmi-only"),
+        pytest.param("DMI", True, "JXC", id="dmi-with-jxc"),
+        pytest.param("JXC", False, "JXC", id="jxc-with-dmi"),
+    ),
+)
+def test_native_jxc_dmi_flags_roundtrip(
+    requested, include_secondary_jxc, expected_task,
+):
+    params = InputParameters.create(requested)
+    params.CONTROL.POTFIL = "Fe.pot"
+    if requested == "JXC":
         params.TASK.DMI = True
+    elif include_secondary_jxc:
         params.TASK.JXC = True
-        restored = _roundtrip(params)
-        assert restored.task_name == "JXC"
-        assert restored.TASK.TASK() == "JXC"
-        assert restored.task_definition is InputParameters.task_registry["JXC"]
-        assert restored.TASK.JXC() and restored.TASK.DMI()
+
+    restored = _roundtrip(params)
+
+    assert restored.definition_name == "JXC"
+    assert restored.TASK.DMI()
+    assert restored.TASK.JXC() == (expected_task == "JXC")
+    assert restored.task_name == expected_task
+    assert restored.task_definition is InputParameters.task_registry[expected_task]
+    assert restored.TASK.TASK() == expected_task
 
 
 def test_changing_between_jxc_and_dmi_switches_defaults():

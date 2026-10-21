@@ -129,8 +129,18 @@ def test_remote_executor_attach_reconnects_running_run_and_restores_stage_out(tm
 
     assert original.wait().return_code == 0
 
+    # A second client arriving only after completion must replay the same
+    # finished run without starting another calculation or duplicating bytes.
+    finished_attached = _processed(_executor().attach(run, start=False))
+    finished_result = finished_attached.wait()
+    assert finished_attached.state == RunState.FINISHED
+    assert finished_attached.backend_id == run.execution.backend_id
+    assert finished_result.return_code == 0
+    assert finished_result.output == b"done\n"
+    assert (workdir / "run.out").read_bytes() == b"done\n"
 
-def test_remote_executor_attach_replays_finished_run(tmp_path):
+
+def test_remote_executor_first_attach_after_completion_replays_finished_run(tmp_path):
     local_root = tmp_path / "local"
     remote_root = tmp_path / "remote"
     workdir = local_root / "calculation"

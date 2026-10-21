@@ -2,7 +2,7 @@ import asyncio
 import sys
 import pytest
 
-from ..base import ExecutionSpec
+from ..base import ExecutionSpec, RunState
 from ..remote_endpoint import RemoteEndpointExecutor
 from ..stream_protocol import (
     STREAM_MAGIC,
@@ -166,4 +166,50 @@ def test_framed_command_delivers_terminal_result_in_band():
         assert await command.wait() == 0
         assert command.terminal["return_code"] == 4
         assert command.terminal["failure_phase"] == "execution"
+    asyncio.run(check())
+
+
+@pytest.mark.parametrize("payload", (b"null", b"[]", b"42", b'{"missing":"state"}',
+                                     b'{"state":"invalid"}', b"{invalid"))
+def test_remote_terminal_frame_rejects_invalid_outcomes(payload):
+    from ..stream_protocol import _HEADER, read_stream_frames
+
+    async def check():
+        reader = _reader_with(
+            STREAM_MAGIC + _HEADER.pack(b"T", len(payload)) + payload,
+        )
+        with pytest.raises(StreamProtocolError, match="terminal frame"):
+            await read_stream_frames(reader).__anext__()
+
+    asyncio.run(check())
+
+
+def test_malformed_terminal_frame_terminates_helper_and_preserves_protocol_error():
+    from ..stream_protocol import _HEADER
+
+    async def check():
+        payload = b"null"
+        process = _FinishedCommand(
+            STREAM_MAGIC + _HEADER.pack(b"T", len(payload)) + payload,
+        )
+        command = FramedRunningCommand(process)
+        with pytest.raises(StreamProtocolError, match="Invalid terminal frame outcome"):
+            await command.wait()
+        assert process.terminated
+        assert command.terminal is None
+
+    asyncio.run(check())
+
+
+@pytest.mark.parametrize("state", tuple(RunState))
+def test_terminal_frame_accepts_every_run_state(state):
+    from ..stream_protocol import _HEADER, read_stream_frames
+
+    async def check():
+        payload = ('{"state":"' + state.value + '"}').encode()
+        reader = _reader_with(STREAM_MAGIC + _HEADER.pack(b"T", len(payload)) + payload)
+        assert await read_stream_frames(reader).__anext__() == (
+            "terminal", {"state": state.value},
+        )
+
     asyncio.run(check())

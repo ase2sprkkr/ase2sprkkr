@@ -2,6 +2,8 @@ import configparser
 from types import SimpleNamespace
 import warnings
 
+import pytest
+
 from ase2sprkkr.configuration import definition
 from ase2sprkkr.configuration_migration import migrate_legacy_configuration
 from ase2sprkkr.configuration_yaml import load_yaml_document
@@ -109,3 +111,44 @@ def test_migration_does_not_overwrite_existing_local_profile(tmp_path, monkeypat
     assert migrated.profiles["local-2"].mpi() == 8
     assert migrated.profiles["local-2"].executable_dir() == "/opt/legacy"
     assert migrated.default_profile() == "local-2"
+
+
+@pytest.mark.parametrize(
+    ("mpi_assignment", "warning_assignment", "expected_stored"),
+    (
+        (
+            "config.running.mpi = 'auto'\n",
+            "config.running.mpi_warning = True\n",
+            {"executable_dir": "/opt/sprkkr"},
+        ),
+        (
+            "",
+            "config.running.mpi_warning = False\n",
+            {"mpi_warning": False, "executable_dir": "/opt/sprkkr"},
+        ),
+    ),
+    ids=("implicit-defaults", "explicit-warning"),
+)
+def test_migration_preserves_mpi_policy_explicitness(
+    tmp_path, monkeypatch, mpi_assignment, warning_assignment, expected_stored,
+):
+    monkeypatch.setattr(
+        ProfilesConfigurationContainer,
+        "_ase_config",
+        staticmethod(lambda: None),
+    )
+    source = tmp_path / "__init__.py"
+    destination = tmp_path / "config.yaml"
+    _write_legacy(
+        source,
+        "config.executables.dir = '/opt/sprkkr'\n"
+        + mpi_assignment
+        + warning_assignment,
+    )
+
+    migrated = migrate_legacy_configuration(source, destination, definition)
+
+    profile = migrated.profiles["local"]
+    assert profile.mpi() == "auto"
+    assert profile.mpi_warning() is ("mpi_warning" not in expected_stored)
+    assert load_yaml_document(destination)["profiles"]["local"] == expected_stored

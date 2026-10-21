@@ -31,10 +31,13 @@ def ase_config(command="kkrscf", **values):
     return SimpleNamespace(parser=parser)
 
 
-def test_named_profile_is_persistent_configuration():
+def test_named_profile_creation_and_updates_are_persistent():
     config = fresh_config()
-
     profile = config.profiles.add("local")
+
+    explicit = config.as_dict(only_changed="explicit", generated=False)
+    assert explicit["profiles"] == {"local": {}}
+
     profile.mpi.set(4)
     profile.executable_dir.set("/opt/sprkkr/bin")
 
@@ -43,32 +46,17 @@ def test_named_profile_is_persistent_configuration():
     assert profile.mpi() == 4
     assert config.as_dict()["profiles"]["local"]["mpi"] == 4
 
-
-def test_empty_named_profile_is_preserved_in_explicit_configuration():
+def test_profile_mpi_policy_defaults_and_explicit_override():
     config = fresh_config()
-    config.profiles.add("local")
-
-    explicit = config.as_dict(only_changed="explicit", generated=False)
-
-    assert explicit["profiles"] == {"local": {}}
-
-
-def test_profile_mpi_policy_has_implicit_defaults():
-    config = fresh_config()
-    profile = config.profiles.add("local")
+    profile = config.profiles.add("cluster")
 
     assert profile.mpi() == "auto"
     assert profile.mpi_warning() is True
 
     explicit = config.as_dict(only_changed="explicit", generated=False) or {}
-    stored = (explicit.get("profiles") or {}).get("local", {})
+    stored = (explicit.get("profiles") or {}).get("cluster", {})
     assert "mpi" not in stored
     assert "mpi_warning" not in stored
-
-
-def test_profile_can_override_mpi_warning_without_persisting_mpi_default():
-    config = fresh_config()
-    profile = config.profiles.add("cluster")
 
     profile.mpi_warning.set(False)
 
@@ -78,8 +66,7 @@ def test_profile_can_override_mpi_warning_without_persisting_mpi_default():
         "cluster"
     ] == {"mpi_warning": False}
 
-
-def test_legacy_profile_exists_only_for_explicit_legacy_configuration():
+def test_legacy_profile_is_created_backed_and_removed_on_clear():
     config = fresh_config()
 
     assert config.running.mpi() == "auto"
@@ -94,12 +81,6 @@ def test_legacy_profile_exists_only_for_explicit_legacy_configuration():
     assert config.profiles["legacy"].mpi_warning() is True
     assert "legacy" in list(config.profiles)
 
-
-def test_legacy_options_are_backed_by_internal_profile():
-    config = fresh_config()
-
-    with pytest.warns(FutureWarning):
-        config.running.mpi.set(8)
     config.running.mpi_warning.set(False)
     config.executables.dir.set("/opt/sprkkr")
 
@@ -118,7 +99,6 @@ def test_legacy_options_are_backed_by_internal_profile():
     config.executables.dir.set(None)
     assert "legacy" not in config.profiles
     assert "legacy" not in list(config.profiles)
-
 
 def test_suffix_environment_default_does_not_create_legacy(monkeypatch):
     monkeypatch.setenv("SPRKKR_EXECUTABLE_SUFFIX", "_mpi")
@@ -343,7 +323,7 @@ def test_unknown_explicit_default_profile_is_reported():
         config.profiles.resolve()
 
 
-def test_remove_named_profile_preserves_other_profiles_and_legacy():
+def test_remove_named_profile_guards_and_preserves_unrelated_profiles():
     config = fresh_config()
     config.profiles.set(
         {"cluster": {"mpi": 8}, "local": {"mpi": 4}},
@@ -353,28 +333,21 @@ def test_remove_named_profile_preserves_other_profiles_and_legacy():
     with pytest.warns(FutureWarning):
         config.running.mpi.set(2)
 
-    config.profiles.remove("cluster")
-
-    assert "cluster" not in config.profiles
-    assert config.profiles["local"] is local
-    assert local.mpi() == 4
-    assert config.profiles["legacy"].mpi() == 2
-
-
-def test_remove_named_profile_rejects_reserved_and_default_profiles():
-    config = fresh_config()
-    config.profiles.set({"cluster": {"mpi": 8}}, unknown="fail")
-
     with pytest.raises(ValueError, match="reserved profile name"):
         config.profiles.remove("legacy")
 
     config.default_profile.set("cluster")
     with pytest.raises(ValueError, match="default execution profile"):
         config.profiles.remove("cluster")
+    assert config.profiles["cluster"].mpi() == 8
 
-
-def test_remove_missing_named_profile_raises_key_error():
-    config = fresh_config()
+    config.default_profile.set("local")
+    config.profiles.remove("cluster")
+    assert "cluster" not in config.profiles
+    assert config.profiles["local"] is local
+    assert local.mpi() == 4
+    assert config.profiles["legacy"].mpi() == 2
 
     with pytest.raises(KeyError):
         config.profiles.remove("missing")
+
