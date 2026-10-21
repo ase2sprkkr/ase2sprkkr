@@ -1,6 +1,6 @@
-# FSCAT audit and new definition InputParameters
+# FSCAT — audit of the current implementation
 
-Background: attached SPR-KKR 9.7 (PUB9.7_260420_18h13) and current ASE2SPRKKR `refactor`, verified fetch, commit `267512c4b8ccbbfd37af7ede898febc066b7e3ee`. FSCAT does not have a definition here. Patch is separate: adds `definitions/fscat.py` and `test/test_fscat.py`, does not require previous tasks.
+The integrated `fscat.py` input definition exposes the native FSCAT calculation through `kkrgen`. Source-level indexing limitations below remain relevant; the definition does not repair native Fortran.
 
 ## Real interface
 
@@ -26,7 +26,7 @@ GRID=1 and NE=300 are written to the input: they are practical options ASE2SPRKK
 
 `init_mod_energy.f:315–320` overwrites ImE and turns off SPLITSS. FSCAT uses only the first ETAB path. The transcription and the other way of the definition are highlighted. Unlike PSHIFT, it does not convert the energy itself before SSITE to its fair part: it transmits the whole ETAB (`fscat.f:162–166`). Reset ImE can therefore not be issued as a guarantee that any other contour will have all the energy real. Default GRID=1 gives a direct real path.
 
-The output energy axis is **E-EF in eV** (`fscat.f:163`), unlike the absolute axisPSHIFT. Graphs are created using XMGRHEAD s GEO1/GEO2/GEO3; specialized output parser is not part of the patch.
+The output energy axis is **E-EF in eV** (`fscat.f:163`), unlike the absolute axisPSHIFT. Graphs are created using XMGRHEAD s GEO1/GEO2/GEO3; a specialized output parser is not established by this audit.
 
 ## Restrictions and validation
 
@@ -45,8 +45,10 @@ FSCAT overwrites NLT and NLQ to global NL and NKMQ to NKM (`fscat.f:79–85`). T
 
 The definition does not issue a syntax valid input for a numerically reliable calculation. Especially the first two problems require correction SPR-KKR; they are not solved by adding task-specific parameters ASE2SPRKKR.
 
-## Verification
+## Output contract checked against native SPR-KKR
 
-13 new test cases: automatic finding task, omitted defaults, file/text round trip, pickle/copy, relative energy limits, forbidden correlation, unverified relativistic modes, transcription ImE/SPLITSS, ignored second path, s-only cutoff and transcription of non-uniform cutoff, inexplicable number of energy.
+`fscat.f:87–99,237–245` uses three hard-coded geometries (`GEO1`–`GEO3`) and `XMGRHEAD(DATSET,...)` to produce plot files. The current Python manifest declares `{dataset}_GEO?_*.agr`; the glob is intended to match the three native families. Because `kkrmain.f:239–245` appends nonempty `ADSI` to `DATSET`, the actual native prefix includes ADSI. The manifest uses `CONTROL.DATASET()` alone, so it may not match the output for nonempty ADSI. No new claim is made about numerical correctness.
 
-Whole set `src/ase2sprkkr/input_parameters/test`: **121 passed** to given default revision plus this separate patch, without previous patches. `git diff --check` and reversed application of patch have passed. Numerical run SPR-KKR not performed; tests verify input definition.
+## Verification scope
+
+The input definition and its focused tests are present in `src/ase2sprkkr/input_parameters/`. This audit does not claim a new test-suite run or numerical SPR-KKR validation.

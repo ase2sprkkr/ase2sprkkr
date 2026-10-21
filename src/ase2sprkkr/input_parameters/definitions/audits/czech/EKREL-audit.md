@@ -1,6 +1,6 @@
-# EKREL — audit a nová definice InputParameters
+# EKREL — audit současné implementace
 
-Podklad: přiložené SPR-KKR 9.7 (PUB9.7_260420_18h13) a aktuální ASE2SPRKKR refactor, commit `267512c4b8ccbbfd37af7ede898febc066b7e3ee`, ověřený fetch. EKREL nemá definici. Patch samostatně přidává `definitions/ekrel.py` a `test/test_ekrel.py`.
+Integrovaná definice `ekrel.py` zpřístupňuje nativní režimy E(k) a Fermiho povrch v `kkrgen`. Níže uvedená omezení numeriky a geometrie vycházejí ze SPR-KKR 9.7 (`PUB9.7_260420_18h13`), nikoli pouze z existence Python validátoru.
 
 ## Parametry TASK a defaults
 
@@ -50,8 +50,10 @@ Nevypisované TASK defaults odpovídají nativní rutině. Pozitivní EMIN=0.01 
 
 Přechod přes E=0 zdroj zkouší řešit snížením NEK o 1 (`ekrel.f:181–187`). Skutečný počet energií tedy nemusí odpovídat vypsanému NE. Definice toto chování neopravuje.
 
-## Testy
+## Výstupní kontrakt ověřený ve SPR-KKR
 
-9 nových případů: discovery a MPI metadata, omitted TASK defaults, textový/souborový round trip, pickle, manuální očíslovaná cesta, chybějící nebo nulový segment, počty NE/NK/NKDIR, neplatné energetické okno, F-SURF a ESLICE.
+Pro běžné E(k) `kkrmain.f:1202–1208` otevře `TRIM(DATSET)//'.bnd'` voláním `WRHEAD(...,'DISPERSION',...)`; do této jednotky zapisuje `ekrel.f`. Při `F-SURF` navíc `ekrel.f:697–703,785–790` zapisuje `TRIM(SYSTEM)//'.bxsf'`. Název BXSF se tedy odvozuje od `SYSTEM`, nikoli `DATASET`. Nativní `kkrmain.f:239–245` k `DATSET` připojuje neprázdné `ADSI`, proto je případné ADSI v názvu `.bnd`, ale nikoli automaticky v názvu BXSF. Současný Python manifest deklaruje pouze `{dataset}.bnd`: podmíněný BXSF chybí a při neprázdném ADSI název `.bnd` nesouhlasí s Fortranem. To jsou nedostatky manifestu, nikoli důkaz chybného nativního výpočtu.
 
-Celá sada `src/ase2sprkkr/input_parameters/test`: **117 passed** na výchozí revizi plus tento samostatný patch (bez předchozích patchů). `git diff --check` a obrácená aplikovatelnost patchu prošly. SPR-KKR nebyl spuštěn; testy ověřují definici vstupu, nikoli numerické pásy nebo Fermiho povrch. Specializovaný output parser není součástí patchu.
+## Rozsah ověření
+
+Definice vstupu a cílené testy existují v `src/ase2sprkkr/input_parameters/`. Tento audit netvrdí nové spuštění testovací sady ani numerickou validaci SPR-KKR.

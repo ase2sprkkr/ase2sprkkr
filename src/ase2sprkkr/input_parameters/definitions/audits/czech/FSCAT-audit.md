@@ -1,6 +1,6 @@
-# FSCAT — audit a nová definice InputParameters
+# FSCAT — audit současné implementace
 
-Podklad: přiložené SPR-KKR 9.7 (PUB9.7_260420_18h13) a aktuální ASE2SPRKKR `refactor`, ověřený fetch, commit `267512c4b8ccbbfd37af7ede898febc066b7e3ee`. FSCAT zde nemá definici. Patch je samostatný: přidává `definitions/fscat.py` a `test/test_fscat.py`, nevyžaduje předchozí tasky.
+Integrovaná definice `fscat.py` zpřístupňuje nativní FSCAT v `kkrgen`. Níže uvedené chyby indexování ve Fortranu tím nejsou odstraněny.
 
 ## Skutečné rozhraní
 
@@ -26,7 +26,7 @@ GRID=1 a NE=300 se vypisují: jsou to praktické volby ASE2SPRKKR, nikoli tvrzen
 
 `init_mod_energy.f:315–320` přepisuje ImE a vypíná SPLITSS. FSCAT používá pouze první ETAB cestu. Na přepis a druhou cestu definice upozorňuje. Na rozdíl od PSHIFT nepřevádí samotnou energii před SSITE na její reálnou část: předává celé ETAB (`fscat.f:162–166`). Reset ImE proto nelze vydávat za záruku, že libovolný jiný contour bude mít všechny energie reálné. Default GRID=1 dává přímou reálnou cestu.
 
-Výstupní energetická osa je **E-EF v eV** (`fscat.f:163`), na rozdíl od absolutní osy PSHIFT. Grafy se vytvářejí pomocí XMGRHEAD s GEO1/GEO2/GEO3; specializovaný output parser součástí patchu není.
+Výstupní energetická osa je **E-EF v eV** (`fscat.f:163`), na rozdíl od absolutní osy PSHIFT. Grafy se vytvářejí pomocí XMGRHEAD s GEO1/GEO2/GEO3; tento audit neověřuje specializovaný parser výstupů.
 
 ## Omezení a validace
 
@@ -45,8 +45,10 @@ FSCAT přepisuje NLT i NLQ na globální NL a NKMQ na NKM (`fscat.f:79–85`). E
 
 Definice nevydává syntakticky platný input za numericky spolehlivý výpočet. Zvláště první dva problémy vyžadují opravu SPR-KKR; nejsou řešitelné doplněním task-specific parametrů ASE2SPRKKR.
 
-## Ověření
+## Výstupní kontrakt ověřený ve SPR-KKR
 
-13 nových testovacích případů: automatické nalezení tasku, omitted defaults, souborový/textový round trip, pickle/copy, relativní energetické meze, zakázané korelace, neověřené relativistické režimy, přepis ImE/SPLITSS, ignorovaná druhá cesta, s-only cutoff a přepis neuniformních cutoffů, nekladný počet energií.
+`fscat.f:87–99,237–245` používá tři pevné geometrie `GEO1`–`GEO3` a volá `XMGRHEAD(DATSET,...)` pro grafové soubory. Python manifest deklaruje `{dataset}_GEO?_*.agr`; glob pokrývá tři nativní rodiny. Protože `kkrmain.f:239–245` k `DATSET` připojuje neprázdné `ADSI`, skutečný prefix výstupů obsahuje ADSI. Manifest vychází pouze z `CONTROL.DATASET()`, takže při neprázdném ADSI nemusí souhlasit. Numerická správnost tím není prokázána.
 
-Celá sada `src/ase2sprkkr/input_parameters/test`: **121 passed** na uvedené výchozí revizi plus tento samostatný patch, bez předchozích patchů. `git diff --check` a obrácená aplikovatelnost patchu prošly. Numerický běh SPR-KKR nebyl proveden; testy ověřují input definici.
+## Rozsah ověření
+
+Definice vstupu a cílené testy existují v `src/ase2sprkkr/input_parameters/`. Tento audit netvrdí nové spuštění testovací sady ani numerickou validaci SPR-KKR.

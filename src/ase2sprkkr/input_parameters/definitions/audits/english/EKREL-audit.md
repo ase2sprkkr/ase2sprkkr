@@ -1,6 +1,6 @@
-# EKREL audit and new definition InputParameters
+# EKREL — audit of the current implementation
 
-Background: attached SPR-KKR 9.7 (PUB9.7_260420_18h13) and current ASE2SPRKKR refactor, commit `267512c4b8ccbbfd37af7ede898febc066b7e3ee`, verified fetch. EKREL does not have a definition. Patch adds `definitions/ekrel.py` and `test/test_ekrel.py` separately.
+The integrated `ekrel.py` input definition exposes the native `kkrgen` E(k) and Fermi-surface modes. The numerical and geometry restrictions below are derived from SPR-KKR 9.7 (`PUB9.7_260420_18h13`), not from the presence of a Python validator.
 
 ## Parameters TASK and defaults
 
@@ -50,8 +50,10 @@ Not recorded TASK defaults correspond to native routine. Positive EMIN=0.01 Ry i
 
 The transition over E=0 source tries to solve by reducing NEK by 1 (`ekrel.f:181–187`). The actual amount of energy does not therefore have to correspond to the declared NE. Definition of this behaviour does not fix.
 
-## Tests
+## Output contract checked against native SPR-KKR
 
-9 new cases: discovery and MPI metadata, omitted TASK defaults, text/file round trip, pickle, manual numbered path, missing or zero segment, numbers NE/NK/NKDIR, invalid energy window, F-SURF and ESLICE.
+For ordinary E(k), `kkrmain.f:1202–1208` opens `TRIM(DATSET)//'.bnd'` using `WRHEAD(...,'DISPERSION',...)`; this is the data written by `ekrel.f` on unit 10. With `F-SURF` enabled, `ekrel.f:697–703,785–790` **also** writes `TRIM(SYSTEM)//'.bxsf'`. Its basename is derived from `SYSTEM`, not from `DATASET`. Native `kkrmain.f:239–245` appends nonempty `ADSI` to `DATSET`, so the `.bnd` name contains ADSI when set, unlike the BXSF filename. The current Python task manifest declares only `{dataset}.bnd`; thus the optional BXSF is absent and the `.bnd` declaration disagrees with native naming for nonempty ADSI. These are manifest issues, not a finding that the native computation fails.
 
-Whole set `src/ase2sprkkr/input_parameters/test`: **117 passed** to default revision plus this separate patch (without previous patches). `git diff --check` and the inverted application of patch has passed. SPR-KKR has not been started; tests verify the definition of input, not numerical belts or Fermi surface. Specialized output parser is not part of patch.
+## Verification scope
+
+The input definition and its focused tests are present in `src/ase2sprkkr/input_parameters/`. This audit does not claim a new test-suite run or numerical SPR-KKR validation.
