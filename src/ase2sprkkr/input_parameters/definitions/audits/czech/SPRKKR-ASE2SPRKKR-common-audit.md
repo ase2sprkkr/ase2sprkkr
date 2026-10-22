@@ -1,6 +1,6 @@
 # Společný audit SPR-KKR 9.7 a ASE2SPRKKR
 
-Stav k 4. říjnu 2026. Podklad: dodané zdroje **PUB9.7_260420_18h13** a dosavadní dílčí audity definic InputParameters. Audit sjednocuje závěry podle skutečné dosažitelnosti výpočtu a významu výstupu. Nejde o numerickou certifikaci SPR-KKR.
+**Rozsah a datum:** Audit nativních zdrojů SPR-KKR 9.7 k 4. říjnu 2026, založený na dodané revizi **PUB9.7_260420_18h13**. Níže uvedené klasifikace hodnotí nativní výpočetní cesty a fyzikální význam výstupů. Nehodnotí aktuální Python `TaskDefinition`, validaci vstupů ani manifesty vstupních/cache/výsledných souborů na větvi `tasks-workflow`. Pro tyto průběžně měněné kontrakty je nutné použít dílčí audity jednotlivých tasků a jejich definice. Nejde o numerickou certifikaci SPR-KKR.
 
 ## Rozsah a význam kategorií
 
