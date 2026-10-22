@@ -153,6 +153,11 @@ class RunRecord:
                 f"expected {_RUN_RECORD_SCHEMA_VERSION}"
             )
 
+    @property
+    def job_files(self):
+        """File operations bound to this run's authoritative manifest."""
+        return JobFiles(self)
+
 
 def _manifest_accesses(record):
     """Resolve declared read/write paths on the execution host."""
@@ -952,6 +957,10 @@ class ProjectRunner:
     @property
     def id(self):
         return self._record.id
+
+    @property
+    def job_files(self):
+        return self._record.job_files
 
     @property
     def record(self):
