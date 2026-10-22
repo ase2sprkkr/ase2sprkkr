@@ -10,7 +10,6 @@ import warnings
 from contextlib import contextmanager
 from dataclasses import asdict, dataclass, replace
 from datetime import datetime, timezone
-from enum import Enum
 from pathlib import Path
 from threading import Lock, RLock
 from typing import Any, Optional
