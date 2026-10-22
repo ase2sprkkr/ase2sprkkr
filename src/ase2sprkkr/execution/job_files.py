@@ -71,10 +71,22 @@ class JobFiles:
             versions.append(FileVersion.capture(path, require_digest=True))
         return tuple(sorted(versions, key=lambda value: os.fspath(value.path)))
 
-    @classmethod
-    def _sync_result_files(cls, manifests):
-        for path in cls._concrete_result_files(manifests):
+    def sync_inputs(self):
+        """Flush existing declared inputs before reserving the run."""
+        if self.manifest is None:
+            return
+        for path in self._concrete_result_files(self.manifest.input_files):
             sync_file(path)
+
+    def capture(self, manifest=None):
+        """Capture the run's file versions without persisting a second state."""
+        return self._capture_result_files(
+            self.manifest if manifest is None else manifest
+        )
+
+    def missing_files(self):
+        """Identify declared files that are no longer locally available."""
+        return self._missing_result_files(self.manifest)
 
     @classmethod
     def _file_is_current(cls, result_files, path, versions):
