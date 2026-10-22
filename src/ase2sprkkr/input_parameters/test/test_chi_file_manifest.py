@@ -11,9 +11,9 @@ def test_chi_standard_outputs(tmp_path):
         for path in parameters.output_files(tmp_path)
     }
     assert {
-        "manifest_test*_dens.agr",
-        "manifest_test*_chifmag.agr",
-        "manifest_test_*_GAMMA-OP.dat",
-        "manifest_test_*_CHI-r.dat",
-        "manifest_test_*_*_I-spin.dat",
+        "manifest_test_CHI*_dens.agr",
+        "manifest_test_CHI*_chifmag.agr",
+        "manifest_test_CHI_*_GAMMA-OP.dat",
+        "manifest_test_CHI_*_CHI-r.dat",
+        "manifest_test_CHI_*_*_I-spin.dat",
     } <= names

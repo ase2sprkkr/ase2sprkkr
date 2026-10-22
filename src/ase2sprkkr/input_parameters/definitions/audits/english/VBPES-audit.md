@@ -8,7 +8,7 @@ initvar.f:220–255 recognises VBXPS, VBPES and VBUPS as angularly integrated VB
 
 TASK supportje EPHOT, DEFEP0, ME, MODE, EWORK, GEOMETRY, QVEC, QVECPH, TETPH, PHIPH, NSPIN, ImEFIN, USETAUNN and USETFIN. Section ENERGY additional support is ERANGE which sets EMIN=EF-ERANGE/RY_EV. EPHOT, DEFEP0, EWORK and ERANGE are in eV; ImEFIN and ENERGY.ImE in Ry. TETPH and PHIPH are entered in degrees.
 
-The routine reads directly the initial TAU directory and the number of energy from its metadata (vbpes.f:282–291). The availability and compliance of files cannot be verified only by serialization of the input. USETAUNN uses or calculates TAU end states; USETFIN beats and shuts it down. The calculation of the final states is shifted by EPHOT.
+When initial-state TAU is available, VBPES reads its energy count from its metadata (vbpes.f:282–291). If unavailable, native `kkrmain.f:932–960` contains a recomputation path, whose success depends on task configuration. The availability and compliance of files cannot be verified only by serialization of the input. USETAUNN uses or calculates TAU end states; USETFIN beats and shuts it down. The calculation of the final states is shifted by EPHOT.
 
 ## Defaults: omitted against explicit
 
@@ -47,7 +47,7 @@ The correlations are not prohibited in the definition without background: VBPES 
 
 ## Current file contract
 
-Required inputs, optional cache and produced outputs follow the integrated task declaration, not a standalone patch. Source: `src/ase2sprkkr/input_parameters/definitions/vbpes.py` and the task registry.
+Native `DATSET` includes nonempty `ADSI` (`kkrmain.f:239–266`), while `DATSET0` retains original DATASET. ASE2SPRKKR exposes separate `{dataset}` and `{adsi}` file-template fields, omitting the separator for empty ADSI. Initial-state `{dataset}_{adsi}.tau.dir` is optional reusable cache; `TAUDIR`/`TAUPATH` provide overrides. The native results `arpes.dat`, `arpes_spol.dat` and `spin.matrix.xps` have fixed names; optional final-state TAU/DOS files use native DATSET. Source: `definitions/vbpes.py`.
 
 ## Verification
 

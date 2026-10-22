@@ -1,6 +1,6 @@
-# PHAGEN — audit existující definice
+# PHAGEN — audit SPR-KKR 9.7 a ASE2SPRKKR
 
-Dodaný SPR-KKR 9.7 versus fetchovaný ASE2SPRKKR refactor, commit 267512c4b8ccbbfd37af7ede898febc066b7e3ee. PHAGEN již podporován je. Samostatný patch 0027-phagen.patch upravuje phagen.py a přidává test_phagen.py proti tomuto základu.
+PHAGEN je aktuálně podporován definicí `definitions/phagen.py`. Nativní SPR-KKR 9.7 zde exportuje data pro externí PHAGEN/MsSpec; samotný phase-shift výpočet neprovádí.
 
 ## Co task dělá
 
@@ -10,7 +10,7 @@ Jde o export vstupu pro externí PHAGEN/MsSpec. Neprovádí vlastní phase-shift
 
 POTWRPHAGEN uloží původní VT a VMTZ, připojí k POTFIL příponu .only_coulomb, nastaví EXPORT_HARTREE_POTENTIAL=true, VXC=NONE, NSCFITER=1 a MIX=1 a provede SCF_DRIVE. Až pak exportuje radiální mesh, r*V_Coulomb, r^2*rho a r*V_total. Není to čisté přepsání formátu bez výpočtu. Celkový potenciál je z původního vstupu, Coulombův potenciál a hustota z následného kroku; interpretace musí toto rozlišení respektovat.
 
-## Opravy definice
+## Současná definice a validace
 
 - Nahrazen placeholder popis skutečným účelem a omezeními.
 - Doplněna společná MODE sekce: umožní zadat relativitu a validovat explicitní DMFT/LDA+U.
@@ -45,11 +45,11 @@ SCF.NITER a MIX nepředstavují počet iterací a mixing PHAGEN exportního krok
 3. **Chybné indexování radiální sítě:** writer zjistí IM=IMT(IT), ale v samotném WRITE používá R(IR,IT), nikoli R(IR,IM) (potwrphagen.f:158–160). Při odlišném mesh indexu se může exportovat nesprávná radiální osa a její násobky. Pro NT=1 a IMT(1)=1 je tento konkrétní problém skrytý.
 4. **Hustota a potenciály nejsou všechny z téhož stavu:** původní VTOTAL se kopíruje před Hartree SCF krokem, RHOCHR se vypisuje až po něm. Nejde o jednu univerzální self-consistent sadu sloupců.
 5. **MPI větev je nebezpečná:** SCF_DRIVE a některé bariéry jsou uvnitř MPI_ID=0, takže jiné procesy se tohoto volání neúčastní. DEALLOCATE(VTOTAL) je naopak mimo tuto větev, ač alokace proběhla jen na procesu0. Existující mpi=False je správně; pouhé bariéry v rutině nejsou důkaz podpory MPI.
-6. **Omezení relativity je zakomentované:** safeguard IREL!=0 byl vypnut. Patch nevymýšlí zákaz všech relativistických režimů; jejich správnost pro následný externí PHAGEN není numericky potvrzena.
+6. **Omezení relativity je zakomentované:** safeguard IREL!=0 byl vypnut. Definice nezavádí zákaz všech relativistických režimů; jejich správnost pro následný externí PHAGEN není numericky potvrzena.
 7. **Výstupy jsou odvozené od POTFIL:** hlavní dump POTFIL_ex_sprkkr a Coulombový běh s POTFIL.only_coulomb. CONTROL.DATASET samo není izolací těchto názvů. Writer mění globální POTFIL a VXC; následně PHAGEN celý běh ukončuje, takže se původní SCF stav neobnovuje pro další výpočet.
 
 Task není vypnutý placeholder. V podporovaném jednoduchém ASA/VWN/NT1/mesh1 případě má věcný exportní účel, ale tyto podmínky a omezení musejí být uvedeny v závěrečném rozdělení tasků. Výstup neprošel běhovým porovnáním.
 
-## Testy
+## Rozsah ověření
 
-13 nových případů: serializace/načtení/pickle, původní energetické defaulty, správný executable/MPI, nepřítomnost nefunkčního CALCTYPE, odmítnutí FULLPOT/jiného VXC/DMFT/LDA+U/split contouru/nekladného NE a absence vymyšleného plošného zákazu NREL/SREL. Celá sada input_parameters: **121 passed**. Numerický SPR-KKR ani externí PHAGEN/MsSpec nebyly spuštěny. Patch prošel git diff --check a kontrolou zpětného aplikování.
+Aktuální Python testy kontrolují definici tasku, serializaci a vybrané validační podmínky. Historické počty testů z oddělených patchů nejsou výsledkem současné větve. Numerický referenční běh SPR-KKR nebyl součástí tohoto zdrojového auditu.

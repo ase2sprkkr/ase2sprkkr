@@ -48,7 +48,7 @@ The FREL tensor output is in meV (DIMAG(J_IJINT)/pi*RY_EV*1000); SP-SREL uses sc
 
 ## Current output contract
 
-The shared `jxc.py` manifest selects the scalar `{dataset}_J_ij.dat` and `{dataset}_Jij_*.agr` for SP-SREL JXC, or the `{dataset}_XCPLTEN_Jij.dat`, `{dataset}_XCPLTEN_Dij.dat` and matching graph families for FREL JXC. When `TASK.DMI` is also enabled, it adds `DMIVEC_Dij` files. Native `initvar.f:535–545` selects the shared E-INTEGRAL computation and `gen.f:951–996` dispatches the modes; `dmivector.f:416–418` confirms the `TRIM(DATSET)` prefix for DMI. As `kkrmain.f:239–245` appends nonempty `ADSI` to native `DATSET`, the current manifest, which uses `CONTROL.DATASET()` alone, can misname the outputs with nonempty ADSI. This is a filename-manifest discrepancy, not proof that JXC numerics fail.
+The shared `jxc.py` manifest uses `{dataset}_{adsi}` for native DATSET output families: scalar SP-SREL Jij, FREL XCPLTEN and optional DMIVEC. Native `kkrmain.f:239–245` appends ADSI to DATASET when nonempty, while the Python formatter removes the separator for empty ADSI. This corrects declared filenames without changing native physics.
 
 ## Verification scope
 

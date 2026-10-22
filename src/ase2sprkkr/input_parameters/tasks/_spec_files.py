@@ -1,7 +1,14 @@
-"""Shared declarative native KKRSPEC file specifications.
+"""Shared native KKRSPEC file specifications.
 
-Each callback returns a filename or None when the file is not used.
+Callbacks return fully resolved filenames or None when unused.
 """
+
+
+from ..task_definition import format_file_template
+
+
+def _spc_file(parameters, name):
+    return format_file_template(parameters, "{dataset}_" + name)
 
 
 def input_inp(parameters):
@@ -30,21 +37,21 @@ def spleed_spc(parameters):
     file contains only a header; its two-column diagram is in SPEC.out.
     Modern SPEC_INPUT uses NREL=1, and TYP=1/2 write seven data columns.
     """
-    return "{dataset}_data.spc" if parameters.TASK.TASK() == "SPLEED" else None
+    return _spc_file(parameters, "data.spc") if parameters.TASK.TASK() == "SPLEED" else None
 
 
 def data_spc(parameters):
     if parameters.TASK.TASK() == "SPLEED":
         return spleed_spc(parameters)
-    return "{dataset}_data.spc" if _single_polarization(parameters) else None
+    return _spc_file(parameters, "data.spc") if _single_polarization(parameters) else None
 
 
 def data_pol1_spc(parameters):
-    return None if _single_polarization(parameters) else "{dataset}_data_pol1.spc"
+    return None if _single_polarization(parameters) else _spc_file(parameters, "data_pol1.spc")
 
 
 def data_pol2_spc(parameters):
-    return None if _single_polarization(parameters) else "{dataset}_data_pol2.spc"
+    return None if _single_polarization(parameters) else _spc_file(parameters, "data_pol2.spc")
 
 
 SPEC_INPUT_FILES = (input_inp, struc_inp)

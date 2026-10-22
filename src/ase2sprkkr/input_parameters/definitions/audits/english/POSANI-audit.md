@@ -1,20 +1,10 @@
 # POSANI — audit SPR-KKR 9.7 / ASE2SPRKKR
 
-Order 31. SPR-KKR: PUB9.7_260420_18h13.tar.gz.
-ASE2SPRKKR refactor: 267512c4b8ccbbfd37af7ede898febc066b7e3ee.
-Single patch 0031-posani.patch against this commit; does not require prior
-COMPTON patch and does not add another task.
+**Sources:** native SPR-KKR 9.7 (`PUB9.7_260420_18h13`) and the current `ase2sprkkr/input_parameters/definitions/posani.py`. Native computation and the Python file contract are assessed separately; no numerical validation is claimed.
 
-## Stav
+## Status
 
-The definition POSANI has been missing so far. Added definitions for standard periodic
-FREL calculation of momentum density of positrons, over kkrgen, with one
-Energy contour GRID=5 and electron potential.
-
-Preliminary classification: **works but has significant caveats** for limited workflow
-with NQ=NT; **broken** for general systems NQ≠NT at work with positron TAUQQ
-(see below). Native task exists and is not disabled. Physical values were not
-verified numerically during.
+ASE2SPRKKR exposes the periodic FREL positron-annihilation momentum-density workflow in `kkrgen`, with one `GRID=5` energy contour and an electron potential. The native path has substantial limitations for `NQ=NT` and a demonstrated positron-`TAUQQ` indexing problem for general `NQ≠NT`.
 
 ## Real workflow and inputs
 
@@ -23,14 +13,14 @@ The priority is POSANI > POSANIPREP > POSANITAU > POSITRON. They're different st
 
 1. Electron potential and electron TAU supporting documents shall correspond to the system,
 the energy and the wave function convention used.
-2. POSANIPREP prepares DATASET_pos_dat.pan with positron status. This task
+2. POSANIPREP prepares DATSET_pos_dat.pan with positron status. This task
 and POSANITAU will be assessed separately; this definition does not trigger them.
 3. POSANI reads **electronic potential**, TAU directory and this prepared file.
 `gen.f:431–449` for POSANI does not call POSANIPOT. POSVC is therefore not the input of this
 step; it belongs to the preparation of positronal potential.
 
 `compton.f:424–426` calls POSANIREAD. Positron file name is fixed
-DATASET_pos_dat.pan (`posaniread.f:38`), not path derived from TAUDIR.
+DATSET_pos_dat.pan (`posaniread.f:38`), not path derived from TAUDIR.
 The change DATASET thus changes the expected name of the positron file; TAUPATH does not redirect it.
 The definition deliberately does not invent a non-existent keyword for its any way.
 
@@ -53,8 +43,7 @@ Therefore, only TASK POSANI **does not mean automatic take-over** COMPTON
 GRID=5/5, NE=30/50 and SPLITSS=true.
 
 The definition sets CONTROL.RDTAU=true and always writes keyword; INITVAR then turns off
-normal energy loop (`initvar.f:687`). Step Using Existing Electron
-TAU podklady. Without RDTAU this definition shall not pass at validation.
+normal energy loop (`initvar.f:687`). A compatible electron TAU may be reused; the native `kkrmain.f:932–960` can recompute unavailable TAU, without guaranteeing success for every configuration. ASE2SPRKKR declares it as optional cache and requires `RDTAU=true` in this supported workflow.
 
 COMPTON subsequently rereads SPLITSS from TASK (`compton.f:210`). Definitions
 POSANI exhibits ENERGY.SPLITSS and TASK.SPLITSS=false and rejects them,
@@ -139,25 +128,14 @@ The last energy gets the rank 0 in MPI_DISTRIBUTE corresponding to the core calc
 contribution to the rate 0. For each active contura, it shall be NE>=NPROCS.
 mpi=True has a source justification, the actual MPI run has not started.
 
-Outputs are DATASET_BND.mpa, DATASET_COR.mpa, DATASET_TOT.mpa;
+Outputs are DATSET_BND.mpa, DATSET_COR.mpa, DATSET_TOT.mpa;
 2D outputs use extension _pan2D. The files distinguish the sum and the spin difference.
 The interpretation of approximations and numerical standardisation shall verify the subsequent calculation.
 
-## Tests
+## ASE2SPRKKR file contract
 
-24 new tests: defaults, writing RDTAU and absence SPLITSS, automatic loading
-POSANI, pickle, TAU paths, vectors, NONMAG, modes, both SPLITSS, wrong directions,
-valid transverse pair, shifted grids, EMD2D, parameter ranges, NE, contour/BZINT,
-RDTAU and not supported SQQ_RESOLVED s 2D.
+Native `DATSET` consists of `DATASET_ADSI` (without the underscore for blank ADSI); `DATSET0` retains `DATASET`. File templates expose independent `{dataset}` and `{adsi}` placeholders. With default `ADSI=POSANI`, the required input is `{dataset}_{adsi}_pos_dat.pan`, produced by POSANIPREP. The electron TAU directory `{dataset}_{adsi}.tau.dir` is optional reusable cache, overridable via `TAUDIR`/`TAUPATH`. Other output files depend on `MD2D`/`EMD2D` and native `DATSET`.
 
-Whole set InputParameters: **132 passed**, Python 3.12. Four warning:
-two expected alerts PNMAX=0 in the general test defaults and two existing ones
-NumPy 2.5 DeprecationWarning. Diff check and patch back app went through.
-Numerical SPR-KKR has not been started. Tests do not verify the preparation of the positron file,
-Match cache/potential, NQ/NT, physical value or numerical MPI result.
+## Verification scope
 
-## Files
-
-- src/ase2sprkkr/input_parameters/definitions/posani.py
-- src/ase2sprkkr/input_parameters/test/test_posani.py
-- 0031-posani.patch
+Python tests cover parameters, serialization, conditional results and basic manifest naming. They do not establish electron-cache compatibility, prepared positron-file correctness, physical results or numerical MPI agreement. No native numerical SPR-KKR run was made for this audit.

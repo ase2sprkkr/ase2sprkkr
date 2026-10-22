@@ -10,7 +10,7 @@ The current definition supports periodic FREL Compton momentum densities through
 
 Native `compton.f:1314–1354` writes `DATSET_BND.mcp`, `DATSET_COR.mcp`, and `DATSET_TOT.mcp`, plus `DATSET_data.mcp` for `PRINT>0`. `MD2D` selects `_mcp2d.dat`, whereas `EMD2D` selects `_emd2d.dat`; both write the `BND`, `COR`, and `TOT` components (`compton.f:1439–1458`). These represent band, core, and total contributions. `MD2D` is an integrated projection; `EMD2D` a 2D momentum-density cut.
 
-`kkrmain.f:239–245` first sets `DATSET0=DATSET`, then appends nonempty `ADSI` to `DATSET`. COMPTON results consequently include ADSI in their names. Current `compton.py::output_files()` uses `CONTROL.DATASET()` alone, and thus declares the wrong paths for nonempty ADSI. This is a manifest discrepancy, not a native calculation defect.
+`kkrmain.f:239–245` first sets `DATSET0=DATSET`, then appends nonempty `ADSI` to `DATSET`. COMPTON results consequently include ADSI in their names. Current `compton.py::output_files()` uses `{dataset}_{adsi}` to match native DATSET; the separator is omitted for empty ADSI.
 
 Native `init_mod_compton_pmesh.f:183–185,269–279` scales `PNVEC` first by `DPN`, then again by `PNMAX` for `EMD2D`. This confirms the documented limitation of nonzero longitudinal cuts.
 
@@ -51,7 +51,7 @@ The energy grids are forbidden. The numbers NE shall be positive.
 | USE_PEQUIV |0, writes|0; outside 0..2 returns to 0|default same invalid values rejected|
 |directional vectors|singles, omitted from the input|Normal z, transverse axis x/y|the same|
 | MD2D, EMD2D, shift flags, INSIDE_SPHERE, SQQ_RESOLVED |false not to be published|false in the absence of keywords|the same|
-| TAUDIR, TAUPATH |singles, omitted from the input|DATASET.tau.dir, current directory|the same|
+| TAUDIR, TAUPATH |singles, omitted from the input|DATSET.tau.dir (including ADSI when present), current directory|the same|
 
 PNMAX=0 is not reasonable default for the whole profile but can serve for a single point.
 Native default is therefore left with notice; the user is to specify the range.

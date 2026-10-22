@@ -4,8 +4,8 @@ import numpy as np
 from ...common.grammar_types import Integer, Keyword, SetOf
 from ...common.warnings import DataValidityError, DataValidityWarning
 from ..input_parameters_definitions import InputValueDefinition as V
-from ..task_definition import TaskDefinition
-from ._file_manifests import RequiredTauInputParametersDefinition, resolve_file
+from ..task_definition import TaskDefinition, format_file_template
+from ._file_manifests import TauCacheInputParametersDefinition, resolve_file
 from .sections import CONTROL, ENERGY, MODE, SITES, STRCONST, TASK, TAU
 
 
@@ -25,7 +25,7 @@ def _final_state_photon_label(parameters):
     return int(photon_energy)
 
 
-class VbpesInputParametersDefinition(RequiredTauInputParametersDefinition):
+class VbpesInputParametersDefinition(TauCacheInputParametersDefinition):
     """VBPES definition with optional reusable final-state TAU data."""
 
     def _uses_final_state_tau(self, parameters):
@@ -35,14 +35,14 @@ class VbpesInputParametersDefinition(RequiredTauInputParametersDefinition):
         files = list(super().cache_files(parameters, directory))
         if self._uses_final_state_tau(parameters):
             label = _final_state_photon_label(parameters)
-            files.append(resolve_file(directory, f"{parameters.CONTROL.DATASET()}.tau.dir.F_{label}"))
+            files.append(resolve_file(directory, f"{format_file_template(parameters, '{dataset}_{adsi}')}.tau.dir.F_{label}"))
         return tuple(files)
 
     def output_files(self, parameters, directory):
         files = list(super().output_files(parameters, directory))
         if self._uses_final_state_tau(parameters):
             label = _final_state_photon_label(parameters)
-            files.append(resolve_file(directory, f"{parameters.CONTROL.DATASET()}.dos.F_{label}"))
+            files.append(resolve_file(directory, f"{format_file_template(parameters, '{dataset}_{adsi}')}.dos.F_{label}"))
         return tuple(files)
 
 
@@ -102,7 +102,7 @@ def input_parameters_definition():
         ]), SITES],
         validators=_validate_vbpes,
         info="Angle-integrated valence-band photoemission (KKRGEN).",
-        description="Requires the initial-state TAU directory. Full relativity is required. "
+        description="May reuse the initial-state TAU directory or recompute it. Full relativity is required. "
                     "This is a separate implementation from KKRSPEC ARPES. GRV stops as unimplemented. "
                     "Numerical output and FULLPOT have not been verified."
     )

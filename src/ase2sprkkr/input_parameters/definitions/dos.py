@@ -53,6 +53,6 @@ def input_parameters_definition():
         executable="kkrgen",
         mpi=True,
         output_reader="DOS",
-        output_file_templates=("{dataset}.dos",),
+        output_file_templates=("{dataset}_{adsi}.dos",),
     )
     return schema

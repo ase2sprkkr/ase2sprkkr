@@ -1,6 +1,6 @@
-# 38. OPTABS — audit SPR-KKR 9.7 / ASE2SPRKKR
+# OPTABS — SPR-KKR 9.7 and ASE2SPRKKR audit
 
-So far missing task: absorption part of optical conductivity. Added definitions for standard periodic ASA FREL procedure in krchi. Native TASK is renamed to OPTICS-ABS after reading the key OPTABS; this key, not OPTICS-ABS, belongs to the input. Preliminary: ** works but has major caveats**. The Numerical Solver hasn't been launched.
+OPTABS is **prepared in `tasks-workflow`**, not present in `develop`. Its native SPR-KKR 9.7 optical-absorption path is subject to the documented limits.
 
 ## Definitions
 
@@ -34,10 +34,6 @@ TASK offers NEB, NOMEGA, OMEGA1/2, TEMPEL, NKT and Euler FRAMETET/FRAMEPHI/FRAME
 
 TEMPEL=300 and NKT=6 are explicit deviations, not hidden defaults. They are more suitable for a normal start than native 1e6/99; the experimental temperature must be set by the user. Meaning of the Reader verified in scan_input.f: default different from the Sentinel 9999 overwrites the value of the missing key. Native initial DATA value of Euler angles agrees with their unwritten status.
 
-## Verification
+## Verification scope
 
-13 new tests; whole set InputParameters **121 passed**, two already existing NumPy DeprecationWarning messages. Tests verify discovery/defaults, correct input key, round-trip and pickle, serial executive, change NEB with sufficient capacity, rotation, NONMAG, incorrect temperature, upper limit of frequency range, incorrect shift and capacity, numbers, FULLPOT, relativistic mode, initialization grid and ImE. It's not a numerical optical conductivity test.
-
-Command: `PYTHONPATH=src ASE2SPRKKR_NO_USER_PROFILE=1 ../test-env/bin/python -m pytest src/ase2sprkkr/input_parameters/test -q`.
-
-The sourcee SPR-KKR 9.7: initvar.f:340–350; rsp.f:134–138,895–899; opt_abs.f:271–315,338–448,674–684,939–961; init_mrot_frame.f:28–42; scan_input.f:290–356. ASE baseline 267512c4b8ccbbfd37af7ede898febc066b7e3ee. Single patch only for OPTABS.
+The prepared Python definition has test coverage for serialization and selected validation rules. Counts from old standalone patch runs are not the test results of the current `tasks-workflow` branch. No numerical native SPR-KKR reference calculation is claimed here.

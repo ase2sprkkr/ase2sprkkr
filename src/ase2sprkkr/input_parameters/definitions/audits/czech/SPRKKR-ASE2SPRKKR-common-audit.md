@@ -1,6 +1,8 @@
 # Společný audit SPR-KKR 9.7 a ASE2SPRKKR
 
-Stav k 4. říjnu 2026. Podklad: dodané zdroje **PUB9.7_260420_18h13** a dosavadní dílčí audity definic InputParameters. Audit sjednocuje závěry podle skutečné dosažitelnosti výpočtu a významu výstupu. Nejde o numerickou certifikaci SPR-KKR.
+**Rozsah větví:** `develop` je aktuálně zveřejněný stav ASE2SPRKKR. `workflow` a `tasks-workflow` obsahují připravené, dosud nezveřejněné funkce. Níže popsané souborové kontrakty odpovídají `tasks-workflow` s navrhovanými změnami PR #201, nikoliv funkcím již dostupným v `develop`. Závěry o nativním SPR-KKR 9.7 na těchto větvích nezávisí.
+
+**Rozsah a datum:** Audit nativních zdrojů SPR-KKR 9.7 k 4. říjnu 2026, založený na dodané revizi **PUB9.7_260420_18h13**. Níže uvedené klasifikace hodnotí nativní výpočetní cesty a fyzikální význam výstupů. Klasifikace fyzikálních tasků se nevztahují na správnost Python API; část 4 odděleně shrnuje aktuální implementační kontrakt ASE2SPRKKR a dílčí audity popisují jednotlivé tasky. Nejde o numerickou certifikaci SPR-KKR.
 
 ## Rozsah a význam kategorií
 
@@ -149,6 +151,12 @@ Sekce 3 ponechává samostatně tasky s přímo doloženým rozbitím běžného
 **Oprava závěru dřívějšího auditu selektorů:** audit PLOT-selectors předběžně označil PLOTRHO za plně smysluplné. To přehlédlo již dříve zjištěnou chybějící alokaci RHORSQ. Opětovná kontrola zdroje ji potvrzuje; samostatné PLOTRHO zde správně patří mezi rozbité. Jeho čtyři testy definic ani úspěšná serializace nejsou testem tohoto native writeru.
 
 ## 4. Co bylo změněno v ASE2SPRKKR a co zůstává
+
+### Souborový kontrakt: nativní názvy a záměrné volby ASE2SPRKKR
+
+Nativní `kkrmain.f:239–266` uchovává `DATSET0=DATASET` a při neprázdném `ADSI` vytváří `DATSET=DATASET_ADSI`. Výchozí `DOSFIL`, `TAUFIL` a `TAUDIR` používají `DATSET`; jednotlivé nativní writery však někdy používají `DATSET0`, například PLOTPRS a JALF/JORB. ASE2SPRKKR proto používá samostatné `{dataset}` a `{adsi}`, které skládá pouze v šablonách skutečně používajících nativní `DATSET`; při prázdném `ADSI` se podtržítko vynechá.
+
+Nativní `kkrmain.f:932–960` umí při nedostupnosti požadovaného TAU přejít na výpočet a zápis. Nezaručuje to úspěšný výpočet každé úlohy ani kompatibilitu existující cache. ASE2SPRKKR u AES, COMPTON, POSANI a VBPES deklaruje TAU jako volitelnou znovupoužitelnou cache, společná sekce `TAU` má `TAUDIR` a `TAUPATH` pro explicitní cesty. APS/NRAES mají úmyslně výchozí `CONTROL.ADSI=DOS`, aby četly soubor výchozího DOS výpočtu; POSANIPREP používá `CONTROL.ADSI=POSANI` kvůli následujícímu POSANI. Nativní selektory `TASK` zůstávají odlišné. To jsou rozhodnutí integrační vrstvy ASE2SPRKKR, nikoli změny Fortranu.
 
 ### Definice a nativní opravy jsou různé vrstvy
 

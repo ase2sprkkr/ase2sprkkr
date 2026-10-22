@@ -116,9 +116,9 @@ def input_parameters_definition():
         info="GILBERT - The Gilbert damping parameter calculation"
     )
     schema._task_definition = TaskDefinition("GILBERT", executable="kkrchi", output_file_templates=(
-            "{dataset}alfa_x.dat",
-            "{dataset}alfa_T.dat",
-            "{dataset}_alfa_T.agr",
+            "{dataset}_{adsi}alfa_x.dat",
+            "{dataset}_{adsi}alfa_T.dat",
+            "{dataset}_{adsi}_alfa_T.agr",
         ))
     return schema
 

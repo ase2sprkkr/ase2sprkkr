@@ -34,8 +34,7 @@ def input_parameters_definition():
         "tdobs",
         [
             CONTROL("TDOBS"),
-            TAU.copy(add=[V("TAUDIR", str, is_required=False, info="Stored tau file; native default DATASET.tau.dir."),
-                          V("TAUPATH", str, is_required=False, info="Directory containing TAUDIR; native default current directory.")]),
+            TAU,
             energy,
             MODE,
             CPA,
@@ -48,7 +47,7 @@ def input_parameters_definition():
              "SPR-KKR 9.7 has no separate TDOBS postprocessing branch. A missing tau file triggers its normal "
              "recomputation fallback. Serial only: native GEN MPI guard does not permit TDOBS."
     )
-    schema._task_definition = TaskDefinition("TDOBS", executable="kkrgen", mpi=False, output_file_templates=("{dataset}.dos",))
+    schema._task_definition = TaskDefinition("TDOBS", executable="kkrgen", mpi=False, output_file_templates=("{dataset}_{adsi}.dos",))
     return schema
 
 

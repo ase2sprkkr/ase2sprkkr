@@ -4,14 +4,14 @@ from ...common.warnings import DataValidityError
 from ..input_parameters_definitions import InputValueDefinition as V
 from ..task_definition import TaskDefinition
 from ._file_manifests import (
-    RequiredTauInputParametersDefinition,
+    TauCacheInputParametersDefinition,
     core_level_output_name,
     resolve_file,
 )
 from .sections import CONTROL, ENERGY, MODE, SITES, STRCONST, TASK, TAU
 
 
-class AESInputParametersDefinition(RequiredTauInputParametersDefinition):
+class AESInputParametersDefinition(TauCacheInputParametersDefinition):
     """AES definition with the native atom/core-shell spectrum filename."""
 
     def output_files(self, parameters, directory):
@@ -57,7 +57,7 @@ def input_parameters_definition():
         ]), SITES],
         validators=_validate_aes,
         info="Fully relativistic Auger electron spectroscopy (ASA, NQ=1).",
-        description="Requires an initial-state TAU directory on a uniform increasing mesh with at least three energies. "
+        description="Reuses an initial-state TAU directory if available; the native reader can recompute it on a uniform increasing mesh with at least three energies. "
                     "The source stops for NQ>1. ENERGY.NE must allocate enough capacity for the TAU file. "
                     "FULLPOT, DMFT and LDA+U are unsupported. Numerical output is unverified."
     )

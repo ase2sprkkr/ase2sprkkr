@@ -8,7 +8,7 @@ initvar.f:220–255 rozpoznává VBXPS, VBPES a VBUPS jako úhlově integrovaný
 
 TASK podporuje EPHOT, DEFEP0, ME, MODE, EWORK, GEOMETRY, QVEC, QVECPH, TETPH, PHIPH, NSPIN, ImEFIN, USETAUNN a USETFIN. Sekce ENERGY navíc podporuje ERANGE, který nastavuje EMIN=EF-ERANGE/RY_EV. EPHOT, DEFEP0, EWORK a ERANGE jsou v eV; ImEFIN a ENERGY.ImE v Ry. TETPH a PHIPH se zadávají ve stupních.
 
-Rutina přímo čte počáteční TAU directory a počet energií z jeho metadat (vbpes.f:282–291). Dostupnost a shodu souborů nelze ověřit pouze serializací vstupu. USETAUNN používá nebo dopočítá TAU konečných stavů; USETFIN jej přebije a vypne. Výpočet konečných stavů je posunut o EPHOT.
+VBPES při existujícím počátečním TAU čte počet energií z jeho metadat (vbpes.f:282–291); při chybějícím TAU obsahuje `kkrmain.f:932–960` nativní přepočítávací větev, jejíž úspěch závisí na nastavení úlohy. Dostupnost a shodu souborů nelze ověřit pouze serializací vstupu. USETAUNN používá nebo dopočítá TAU konečných stavů; USETFIN jej přebije a vypne. Výpočet konečných stavů je posunut o EPHOT.
 
 ## Defaulty: vynechané proti explicitním
 
@@ -47,7 +47,7 @@ Korelace nejsou v definici bez podkladu zakázány: VBPES obsahuje explicitní D
 
 ## Aktuální souborový kontrakt
 
-Vstupy, volitelná cache a výstupy jsou určovány aktuální definicí tasku, nikoli starým odděleným patchem. Zdroj: `src/ase2sprkkr/input_parameters/definitions/vbpes.py` a související task registry.
+Nativní `DATSET` zahrnuje případné neprázdné `ADSI` (zdroj `kkrmain.f:239–266`), `DATSET0` zůstává původním DATASET. ASE2SPRKKR používá samostatné `{dataset}` a `{adsi}`, které při prázdném ADSI netvoří podtržítko. Počáteční `{dataset}_{adsi}.tau.dir` je volitelná cache; vlastní jméno lze nastavit pomocí `TAUDIR`/`TAUPATH`. Výstupy `arpes.dat`, `arpes_spol.dat` a `spin.matrix.xps` jsou nativně pevná jména, zatímco volitelné TAU a DOS soubory konečných stavů používají nativní DATSET. Zdroj: `definitions/vbpes.py`.
 
 ## Ověření
 

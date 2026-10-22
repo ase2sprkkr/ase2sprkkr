@@ -10,7 +10,7 @@ Současná definice pokrývá periodický FREL výpočet přes `kkrgen`; zvláš
 
 Nativní `compton.f:1314–1354` zapisuje `DATSET_BND.mcp`, `DATSET_COR.mcp` a `DATSET_TOT.mcp`; při `PRINT>0` také `DATSET_data.mcp`. `MD2D` vybírá příponu `_mcp2d.dat` a `EMD2D` příponu `_emd2d.dat`, vždy pro `BND`, `COR`, `TOT` (`compton.f:1439–1458`). Jde o valenční, core a celkovou složku; `MD2D` je projekce, `EMD2D` dvourozměrný řez hybnostní hustotou.
 
-`kkrmain.f:239–245` nejprve nastaví `DATSET0=DATSET`, potom k `DATSET` připojí neprázdné `ADSI`. Výstupy COMPTON proto zahrnují ADSI. Dosavadní `compton.py::output_files()` používá pouze `CONTROL.DATASET()`: pro neprázdné ADSI deklaruje jiné cesty než Fortran. Jde o nesoulad manifestu, nikoli o chybu nativního výpočtu.
+`kkrmain.f:239–245` nejprve nastaví `DATSET0=DATSET`, potom k `DATSET` připojí neprázdné `ADSI`. Výstupy COMPTON proto zahrnují ADSI. Současný `compton.py::output_files()` používá stejný prefix `{dataset}_{adsi}`; při prázdném ADSI formatter vynechá podtržítko. Manifest proto odpovídá nativnímu pojmenování, nejde o změnu Fortranu.
 
 `init_mod_compton_pmesh.f:183–185,269–279` nejprve škáluje `PNVEC` krokem `DPN` a při `EMD2D` znovu hodnotou `PNMAX`. Zdroj tím potvrzuje omezení nenulového podélného řezu uvedené níže.
 
@@ -19,12 +19,11 @@ Nativní `compton.f:1314–1354` zapisuje `DATSET_BND.mcp`, `DATSET_COR.mcp` a `
 - `initvar.f:480–489`: COMPTON přepne RDTAUDIR na true a běžnou energetickou
   smyčku na false. `gen.f:1572–1577` volá COMPTON.
 - `compton.f:167–170`: vyžaduje IREL=3 a kompatibilní konstantu NSYMMAX.
-- `kkrgen.f:264–274`: implicitní TAUDIR je DATASET.tau.dir; lze zadat TAUDIR
+- `kkrmain.f:264–274`: implicitní TAUDIR je DATSET.tau.dir; lze zadat TAUDIR
   a TAUPATH v sekci TAU. Oba parametry jsou doplněny do definice.
 - `init_mod_energy.f:284–302`: kontroluje počet energií a kompatibilitu TAU
   adresáře; některé nesoulady zapínají přepočet, jiný počet energií skončí STOP.
-  **Definice nezajišťuje vytvoření nebo obsah cache.** Výpočet potřebuje vhodné
-  TAU podklady z předchozího kroku. Python testy jejich kompatibilitu neověřují.
+  **Definice nezaručuje vytvoření ani obsah cache.** Chybějící TAU může podle `kkrmain.f:932–960` vyvolat přepočet; jeho úspěšnost ani fyzikální shodu existující cache Python testy neověřují.
 - `compton.f:203–228`: USE_ZJOVZZ, SPLITSS, MEMODE a NPMAX.
 - `init_mod_compton_pmesh.f`: PNVEC, PPVEC1, PPVEC2, PNMAX, PPMAX,
   NPN, NPP, MD2D, EMD2D, SHFT, SHFT_PP, SHFT_PN, INSIDE_SPHERE, USE_PEQUIV.
@@ -51,7 +50,7 @@ energetické mřížky jsou zakázané. Počty NE musí být kladné.
 | USE_PEQUIV | 0, zapisuje se | 0; mimo 0..2 vrátí na 0 | default stejný, neplatné hodnoty odmítnuty |
 | směrové vektory | nezadané, nevypisují se | normála z, příčné osy x/y | stejné |
 | MD2D, EMD2D, shift flags, INSIDE_SPHERE, SQQ_RESOLVED | false, nevypisují se | false při absenci keywordů | stejné |
-| TAUDIR, TAUPATH | nezadané, nevypisují se | DATASET.tau.dir, aktuální adresář | stejné |
+| TAUDIR, TAUPATH | nezadané, nevypisují se | DATSET.tau.dir (DATASET_ADSI při neprázdném ADSI), aktuální adresář | stejné |
 
 PNMAX=0 není rozumný default pro celý profil, ale může sloužit pro jediný bod.
 Nativní default proto ponechán s upozorněním; uživatel má výslovně zadat rozsah.

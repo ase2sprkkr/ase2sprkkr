@@ -52,5 +52,5 @@ def input_parameters_definition():
                     "FULLPOT, DMFT and LDA+U are unsupported. The exchange-output eV label "
                     "does not match its unconverted Ry values in the 9.7 source."
     )
-    schema._task_definition = TaskDefinition("SOCPAR", executable="kkrgen", mpi=False, output_file_templates=("{dataset}_soc_*.agr", "{dataset}_exc_*.agr"))
+    schema._task_definition = TaskDefinition("SOCPAR", executable="kkrgen", mpi=False, output_file_templates=("{dataset}_{adsi}_soc_*.agr", "{dataset}_{adsi}_exc_*.agr"))
     return schema

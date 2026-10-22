@@ -8,7 +8,7 @@ Sdílené schéma `jxc.py` poskytuje selektory `JXC` a `DMI`. Volba DMI aktivuje
 
 ## Výstupní názvy podle SPR-KKR
 
-Nativní `initvar.f:536–545` aktivuje `CALC_DMI` a interní `TASK=E-INTEGRAL`. `dmivector.f:416–418,605–606` používá `TRIM(DATSET)//'_DMIVEC_Dij.dat'` a odpovídající grafy `DMIVEC_Dij_[xyz]`. V `kkrmain.f:239–245` se k `DATSET` připojuje případné `ADSI`, takže nativní jména souborů ADSI obsahují. Současná implementace `jxc.py::output_files()` vytváří jména pouze z `CONTROL.DATASET()`; s neprázdným ADSI je proto manifest nesprávný. To nemění správnost výběru nativní větve DMI.
+Nativní `initvar.f:536–545` aktivuje `CALC_DMI` a interní `TASK=E-INTEGRAL`. `dmivector.f:416–418,605–606` používá `TRIM(DATSET)//'_DMIVEC_Dij.dat'` a odpovídající grafy `DMIVEC_Dij_[xyz]`. V `kkrmain.f:239–245` se k `DATSET` připojuje případné `ADSI`, takže nativní jména souborů ADSI obsahují. Současná implementace `jxc.py::output_files()` používá `{dataset}_{adsi}` a odpovídá nativnímu `DATSET` včetně případného ADSI; při prázdném ADSI se podtržítko vynechá. Nejde o změnu nativní větve DMI.
 
 ## Skutečné zapojení
 
@@ -77,7 +77,7 @@ Defaults, které se nevypisují, nemaskují jiný nativní výběr.
    transformací může být zahrnuta ve vstupních TAUIJ. Audit tedy zaznamenává
    neověřenou oblast, nikoli jistou chybu analogickou dříve auditovanému JXC.
 
-Výstup: DATASET_DMIVEC_Dij.dat a grafy jednotlivých složek; párové složky v meV,
+Výstup: DATSET_DMIVEC_Dij.dat a grafy jednotlivých složek; párové složky v meV,
 mikromagnetické součty tisknuté jako meV*A/f.u. Indexování DMI_ITJT v zápisu i
 čtení je konzistentní; není zde doložena chyba z BSDOSIJ. On-site členy se ve
 výstupu vynechávají při vzdálenosti menší než 1e-6 ALAT.

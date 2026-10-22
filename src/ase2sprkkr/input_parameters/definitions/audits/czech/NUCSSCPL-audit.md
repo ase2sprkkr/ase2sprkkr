@@ -1,6 +1,6 @@
-# NUCSSCPL — audit a experimentální definice
+# NUCSSCPL — audit SPR-KKR 9.7 a ASE2SPRKKR
 
-Porovnání dodaných zdrojů SPR-KKR 9.7 s fetchovanou větví ASE2SPRKKR refactor, commit 267512c4b8ccbbfd37af7ede898febc066b7e3ee. NUCSSCPL vlastní definici nemá. Samostatný patch 0022-nucsscpl.patch přidává nucsscpl.py a test_nucsscpl.py proti tomuto základu.
+NUCSSCPL má v ASE2SPRKKR aktuální definici `definitions/nucsscpl.py`. Nativní SPR-KKR 9.7 však obsahuje doložené chyby výpočetního toku; správně vytvořený vstup tedy nezaručuje platný výstup.
 
 ## Účel a vstup
 
@@ -44,8 +44,6 @@ Explicitní rozdíly NONMAG, GRID, NE a CLURAD připravují požadovaný vstup; 
 
 Hlavní soubor se jmenuje DATASET_A_ij.dat; další výstupy jsou pevné RK.dat a tab_aij.dat a grafy Aij/Rij. Není implementován Python parser výsledků. Kvůli výše uvedeným chybám podpora vstupu neopravňuje k tvrzení, že nativní numerický task funguje.
 
-## Testy
+## Rozsah ověření
 
-14 nových testovacích případů: serializace, načtení a pickle; explicitní NONMAG a vynechané FINNUC/EMAX; odmítnutí magnetického systému, jiné relativity, FINNUC, jiné kontury a split cesty, jiné BZINT; seznamy selektorů a shell count; nekladné NE. Celá sada input_parameters: **122 passed**. Numerický SPR-KKR nebyl spuštěn. Patch prošel git diff --check a kontrolou zpětného aplikování.
-
-Při kontrole společné čtečky byl opraven také předchozí audit BONDING: vynechané EMAX se tam přebírá z EF, nikoli ze sentinelu. Jeho explicitní EMAX=1 Ry zůstává zvoleným scanem.
+Aktuální Python testy kontrolují definici tasku, serializaci a vybrané validační podmínky. Historické počty testů z oddělených patchů nejsou výsledkem současné větve. Numerický referenční běh SPR-KKR nebyl součástí tohoto zdrojového auditu.

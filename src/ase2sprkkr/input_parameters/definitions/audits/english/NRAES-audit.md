@@ -1,10 +1,10 @@
-# NRAES audit SPR-KKR 9.7 and new definition
+# NRAES — SPR-KKR 9.7 and ASE2SPRKKR audit
 
-Compared to supplied sources SPR-KKR 9.7 and currently fetched ASE2SPRKKR refactor, commit 267512c4b8ccbbfd37af7ede898febc066b7e3ee. NRAES does not have its own definition. Single patch 0015-nraes.patch adds nraes.py and test_nraes.py against this base, without previous patches.
+NRAES is **prepared in `tasks-workflow`** and is not yet present in `develop`. Its native requirement for legacy spin-resolved DOS is independent of Python availability.
 
 ## Entry
 
-Nonrelativistic Auger electron spectroscopy in kkrgen. initvar.f:290–296 sets INITELOOP=false, RUNELOOP=false, RDDOS=true and USELPLS1=true. DOS is read from DATASET.dos, open to unit 10. The reader requires an old format spin-resolved DOS; there is no automatic conversion DOS from potential.
+Nonrelativistic Auger electron spectroscopy in kkrgen. initvar.f:290–296 sets INITELOOP=false, RUNELOOP=false, RDDOS=true and USELPLS1=true. DOS is read from DATSET.dos (including ADSI when nonempty), open to unit 10. The reader requires an old format spin-resolved DOS; there is no automatic conversion DOS from potential.
 
 TASK reads only IT, CL, CALCLS and OUTGNU. GAMMA from a similar routine NRAPS does not belong here. The definition allows n=1..5 and s/p/d/f at physical l<n. The upper limit IT, the number of types and cutoff must correspond to the potential and DOS; the definition itself does not have their metadata.
 
@@ -21,7 +21,7 @@ TASK reads only IT, CL, CALCLS and OUTGNU. GAMMA from a similar routine NRAPS do
 
 Deleted TASK defaults correspond to SPR-KKR. Explicit SREL expresses native switching the normal relativistic mode to IREL=1; NREL is also allowed. The definition warns at FREL/SP-SREL because the source overwrites them. FULLPOT zakazuje check_input.f:60–62. DMFT/LDA+U prohibits GEN and rejects definitions.
 
-GRID=1, NE=300 and ImE=0 are explicit initialization options, not native draw defaults. NE determines NEMAX and thus field capacity; actual energy and count NE are read from the file. Better than solid NE=300 would be derived from the header of a specific DOS. This patch metadata does not automatically read the file. ENERGY bounds should not be presented as control of spectral range NRAES when the table overwrites the table.
+GRID=1, NE=300 and ImE=0 are explicit initialization options, not native draw defaults. NE determines NEMAX and thus field capacity; actual energy and count NE are read from the file. Better than solid NE=300 would be derived from the header of a specific DOS. The prepared definition metadata does not automatically read the file. ENERGY bounds should not be presented as control of spectral range NRAES when the table overwrites the table.
 
 ## Errors and important assumptions of the resource
 
@@ -35,14 +35,6 @@ GRID=1, NE=300 and ImE=0 are explicit initialization options, not native draw de
 
 CALCLS turns on another (l,s)-distinguished output. OUTGNU turns on additional gnuplot data. Specialized parser NRAES has not been created and numerical correctness has not been verified by running SPR-KKR.
 
-## Tests
+## Verification scope
 
-8 new cases: registration and defaults, omitted values, file roundtrip and pickle; explicit IT/CL/switches and roundtrip; invalid shell l>=n; both prohibited correlations; mode switching; minimum capacity; name table limit shells.
-
-Full set of input_parameters in NRAES worktree: **116 passed**, Python 3.12, 5,12 s. Separate set of corrected APS: **9 passed**. This is not a cumulative testing of all earlier patches.
-
-```bash
-PYTHONPATH=src ASE2SPRKKR_NO_USER_PROFILE=1 /workspace/scratch/e79ca15d9801/test-env/bin/python -m pytest src/ase2sprkkr/input_parameters/test -q
-```
-
-Passed git diff --check and reverse application control NRAES patche. Numerical SPR-KKR run or specific DOS file have not been tested.
+The prepared Python definition has test coverage for serialization and selected validation rules. Counts from old standalone patch runs are not the test results of the current `tasks-workflow` branch. No numerical native SPR-KKR reference calculation is claimed here.

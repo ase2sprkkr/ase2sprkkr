@@ -1,6 +1,6 @@
-# FMAG audit SPR-KKR 9.7 and new definition
+# FMAG — SPR-KKR 9.7 and ASE2SPRKKR audit
 
-Base: supplied sources SPR-KKR 9.7 and currently fetched ASE2SPRKKR refactor, commit 267512c4b8ccbbfd37af7ede898febc066b7e3ee. FMAG does not have its own definition. Single patch 0017-fmag.patch adds fmag.py and test_fmag.py, without earlier patches.
+FMAG is **prepared in `tasks-workflow`**, not present in the published `develop` branch. The native SPR-KKR 9.7 behavior is analyzed independently of this Python definition.
 
 ## What actually starts the input FMAG
 
@@ -35,16 +35,8 @@ The definition has kkrgen and mpi=True. DENSITY contains MPI barrier and MPI_SUM
 7. **Relativist reader is unconditional.** DENSITY calls WAVFUN_READ_REL, but also contains its own branches IREL<=1 and a warning of dimensions (density.f:107,121–156). Therefore, I am not introducing an unwarranted total ban on modes other than full relativity. Their numerical accuracy is not verified.
 8. **The output is normalized curves.** FAVR is the sum of spin and orbital contributions before separate normalization. After normalization generally does not apply FAVR=FSPN+FORB. Parser or further processing shall not add up these normalized curves without the original moments.
 
-The combination FMAG with DMFT/LDA+U is not rejected in this patch without direct native ban; their physical consistency with input potential and the kernel calculation has not been numerically verified. Patch does not create specialized parser XMGR files and does not fix Fortran.
+The combination FMAG with DMFT/LDA+U is not rejected in the prepared definition without direct native ban; their physical consistency with input potential and the kernel calculation has not been numerically verified. Patch does not create specialized parser XMGR files and does not fix Fortran.
 
-## Verification
+## Verification scope
 
-8 new cases: registration/defaults/MPI declaration, omitted EMAX, file roundtrip and pickle; three ways of entering unsupported second contour; alerts for another GRID; both nonmagnetic modes; rejection of zero number of energy.
-
-Full input_parameter set: **116 passed**, Python 3.12, 5,09 s.
-
-```bash
-PYTHONPATH=src ASE2SPRKKR_NO_USER_PROFILE=1 /workspace/scratch/e79ca15d9801/test-env/bin/python -m pytest src/ase2sprkkr/input_parameters/test -q
-```
-
-Passed git diff --check and checked the patch reverse application. Numerical SPR-KKR run not started.
+The prepared Python definition has test coverage for serialization and selected validation rules. Counts from old standalone patch runs are not the test results of the current `tasks-workflow` branch. No numerical native SPR-KKR reference calculation is claimed here.

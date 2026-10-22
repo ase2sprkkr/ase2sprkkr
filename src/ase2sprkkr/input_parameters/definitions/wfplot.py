@@ -8,7 +8,7 @@ only ETAB(1, 1), not a spectrum over the supplied energy mesh.
 from ...common.grammar_types import Integer, Keyword, SetOf
 from ...common.warnings import DataValidityError, DataValidityWarning
 from ..input_parameters_definitions import InputParametersDefinition as InputParameters, InputValueDefinition as V
-from ..task_definition import TaskDefinition
+from ..task_definition import TaskDefinition, format_file_template
 from ._file_manifests import orbital_label, resolve_file
 from .sections import CONTROL, ENERGY, MODE, SITES, STRCONST, TASK, TAU
 
@@ -18,7 +18,7 @@ class WfplotInputParametersDefinition(InputParameters):
 
     def output_files(self, parameters, directory):
         files = list(super().output_files(parameters, directory))
-        dataset = parameters.CONTROL.DATASET()
+        dataset = format_file_template(parameters, '{dataset}_{adsi}')
         task = parameters.TASK
 
         if task.STATE() == "CORE":

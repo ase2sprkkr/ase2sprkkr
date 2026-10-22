@@ -1,12 +1,10 @@
-# POSANIPREP — audit SPR-KKR 9.7 / ASE2SPRKKR
+# POSANIPREP — SPR-KKR 9.7 and ASE2SPRKKR audit
 
-Order 32. Source: PUB9.7_260420_18h13.tar.gz.
-ASE2SPRKKR refactor: 267512c4b8ccbbfd37af7ede898febc066b7e3ee.
-Single patch 0032-posaniprep.patch against this commit.
+POSANIPREP is **prepared in `tasks-workflow`**, not present in `develop`. It prepares data for POSANI; native SPR-KKR 9.7 has demonstrated limitations for systems with `NQ` differing from `NT`.
 
 ## State and scope
 
-POSANIPREP does not yet have a definition. Additional definitions for the preparation of positron
+POSANIPREP has an input definition prepared in `tasks-workflow` for the 3D ASA/FREL preparation step (GRID=0, NE=1).
 documents POSANI over kkrgen, for standard 3D ASA/FREL system, one energy
 GRID=0, NE=1 and electron input potential.
 
@@ -97,27 +95,12 @@ The consistency with the electron calculation remains a condition of use.
 ## MPI
 
 The definition has mpi=False. POSANIPREPARE does not have export protection by MPI_ID; and
-opens/writes common DATASET_pos_dat.pan. Keyword POSANIPREP may not change
+opens/writes common DATSET_pos_dat.pan. Keyword POSANIPREP may not change
 Internal TASK of NONE, so normal final MPI control GEN does not need this procedure
 ani zastavit. Without separate numerical verification of lifecycle and collective
 calculations cannot be considered as safe for parallel preparation. It's not a claim that
 native code contains explicit prohibition MPI.
 
-## Tests
+## Verification scope
 
-13 new tests: defaults, file recognition task, pickle, absolute energy,
-BM/DR/IPM roundtrip, NREL/SREL/SP-SREL, FULLPOT, other GRID/NE, relative energy,
-CLUSTER and allowed NONMAG. They also check energy warnings and restrictions
-3D/KMROT/NQ=NT in the validation text.
-
-Whole set InputParameters: **121 passed**, Python 3.12. Four warning:
-two expected alerts POSANIPREP in the general test defaults and two existing ones
-NumPy 2.5 DepressionWarning. `git diff --check` and patch back check passed.
-Numerical SPR-KKR has not been started. The tests do not confirm appropriate energy, convergence,
-positronic potential, exported content or accuracy MPI.
-
-## Files
-
-- src/ase2sprkkr/input_parameters/definitions/posaniprep.py
-- src/ase2sprkkr/input_parameters/test/test_posaniprep.py
-- 0032-posaniprep.patch
+The prepared Python definition has test coverage for serialization and selected validation rules. Counts from old standalone patch runs are not the test results of the current `tasks-workflow` branch. No numerical native SPR-KKR reference calculation is claimed here.

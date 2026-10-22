@@ -1,6 +1,6 @@
-# PLOTPRS — audit a nová definice InputParameters
+# PLOTPRS — audit SPR-KKR 9.7 a ASE2SPRKKR
 
-Podklad: přiložené SPR-KKR 9.7 (PUB9.7_260420_18h13) a aktuální ASE2SPRKKR `refactor`, commit `267512c4b8ccbbfd37af7ede898febc066b7e3ee`, ověřený fetch. PLOTPRS zde nemá definici. Samostatný patch přidává `definitions/plotprs.py` a `test/test_plotprs.py`; nevyžaduje předchozí tasky.
+PLOTPRS má aktuální definici `definitions/plotprs.py` a další samostatně registrované selektivní varianty. Nativní referencí je SPR-KKR 9.7; Python rozhraní samo neopravuje chyby některých nativních selektivních writerů.
 
 ## Rozhraní a rozsah
 
@@ -41,7 +41,7 @@ GEN zakazuje DMFT a LDAU i pro PLOTPRS (`gen.f:211–222`); definice je odmítá
 
 TASK.HFF může později v INITVAR nastavit IHYPER, ale pro PLOTPRS neběží obvyklý energy loop ani výpočet hyperfine výsledků. Definice upozorňuje na neúčinný požadavek; netvrdí, že se flag vůbec nenačte.
 
-SPR-KKR rozpoznává také PLOTPOT, PLOTRHO a PLOTSFN (`initvar.f:192–196`). Tyto selektivní varianty **nejsou registrovány tímto patchem**: task je PLOTPRS se všemi skupinami. Je to výslovná hranice podpory, nikoli zamlčená ekvivalence všech variant. Samostatný PLOTRHO je navíc ve zdroji chybný, viz níže. PLOTPRS nelze kombinací falešných flags přimět k vypnutí skupin: jeho keyword je všechny zapíná.
+SPR-KKR rozpoznává také PLOTPOT, PLOTRHO a PLOTSFN (`initvar.f:192–196`). ASE2SPRKKR registruje jejich samostatné definice a selektivní manifesty. PLOTRHO však ve Fortranu používá nealokované `RHORSQ` (podrobnosti níže); existující Python definice tuto nativní chybu neopravuje. Samotný PLOTPRS zapíná všechny skupiny grafů.
 
 ## Nalezené chyby a rizika SPR-KKR
 
@@ -52,10 +52,8 @@ SPR-KKR rozpoznává také PLOTPOT, PLOTRHO a PLOTSFN (`initvar.f:192–196`). T
 
 RHORSQ je lokální allocatable; chybějící explicitní DEALLOCATE na konci není samo o sobě důkaz úniku paměti, protože Fortran lokální allocatables při návratu uvolňuje. Audit proto tento detail neoznačuje za další chybu.
 
-Výstup používá DATSET0, odvozené od CONTROL.DATASET v hlavním programu (`kkrgen.f:239`). Soubory vznikají přes XMGRHEAD jako V, VNS, RHO, RNS a SFN_M podle skupiny. Patch neobsahuje specializovaný output parser grafů.
+Výstup používá DATSET0, odvozené od CONTROL.DATASET v hlavním programu (`kkrgen.f:239`). Soubory vznikají přes XMGRHEAD jako V, VNS, RHO, RNS a SFN_M podle skupiny. Definice neobsahuje specializovaný output parser grafů.
 
-## Testy
+## Rozsah ověření
 
-12 nových případů: automatické nalezení tasku, základní textový/souborový round trip, pickle/copy, omitted EMAX/NL, nenulový počet energií pro inicializaci, všechny čtyři relativistické režimy bez vymyšleného zákazu, DMFT/LDAU, upozornění na HFF a počet energií, vlastní SFNFIL.
-
-Celá sada `src/ase2sprkkr/input_parameters/test`: **120 passed** na výchozí revizi plus tento samostatný patch (bez předchozích patchů). `git diff --check` a obrácená aplikovatelnost patchu prošly. SPR-KKR nebyl spuštěn; testy ověřují definici inputu, nikoli numerické grafy a chování jejich importu.
+Aktuální Python testy kontrolují definici tasku, serializaci a vybrané validační podmínky. Historické počty testů z oddělených patchů nejsou výsledkem současné větve. Numerický referenční běh SPR-KKR nebyl součástí tohoto zdrojového auditu.

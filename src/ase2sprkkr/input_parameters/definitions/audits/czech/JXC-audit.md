@@ -48,7 +48,7 @@ Tenzorový výstup FREL je v meV (DIMAG(J_IJINT)/pi*RY_EV*1000); SP-SREL použí
 
 ## Současný souborový kontrakt
 
-Sdílený manifest `jxc.py` deklaruje pro SP-SREL JXC `{dataset}_J_ij.dat` a `{dataset}_Jij_*.agr`, pro FREL JXC `{dataset}_XCPLTEN_Jij.dat`, `{dataset}_XCPLTEN_Dij.dat` a odpovídající grafy. Při zapnutém `TASK.DMI` přidává soubory `DMIVEC_Dij`. Nativní `initvar.f:535–545` vybírá společný `E-INTEGRAL`, `gen.f:951–996` rozhoduje o výpočetní větvi a `dmivector.f:416–418` potvrzuje prefix `TRIM(DATSET)` pro DMI. Protože `kkrmain.f:239–245` k nativnímu `DATSET` připojuje neprázdné `ADSI`, může současný manifest, který používá pouze `CONTROL.DATASET()`, deklarovat nesprávné názvy. Jde o nesoulad manifestu, ne důkaz chybné numeriky JXC.
+Sdílený manifest `jxc.py` pro SP-SREL deklaruje `{dataset}_{adsi}_J_ij.dat` a `{dataset}_{adsi}_Jij_*.agr`, pro FREL `{dataset}_{adsi}_XCPLTEN_Jij.dat`, `{dataset}_{adsi}_XCPLTEN_Dij.dat` a odpovídající grafy. Při `TASK.DMI=true` přidává `{dataset}_{adsi}_DMIVEC_Dij.dat` a jeho grafy. Nativní `kkrmain.f:239–245` vytváří `DATSET=DATASET_ADSI` při neprázdném ADSI (`DATSET0` je původní DATASET); `dmivector.f:416–418` používá právě `TRIM(DATSET)`. Formatter ASE2SPRKKR dosazuje `{dataset}` a `{adsi}` samostatně, bez koncového podtržítka při prázdném ADSI. Numerická správnost JXC/DMI tím není certifikována.
 
 ## Rozsah ověření
 

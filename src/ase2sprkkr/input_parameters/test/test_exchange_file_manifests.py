@@ -32,10 +32,10 @@ def test_jalf_and_jorb_native_names(tmp_path):
 def test_jxc_frel_outputs(tmp_path):
     _, names = _names("JXC", tmp_path)
     assert {
-        f"{DATASET}_XCPLTEN_Jij.dat",
-        f"{DATASET}_XCPLTEN_Jij_*.agr",
-        f"{DATASET}_XCPLTEN_Dij.dat",
-        f"{DATASET}_XCPLTEN_Dij_[xyz]_*.agr",
+        f"{DATASET}_JXC_XCPLTEN_Jij.dat",
+        f"{DATASET}_JXC_XCPLTEN_Jij_*.agr",
+        f"{DATASET}_JXC_XCPLTEN_Dij.dat",
+        f"{DATASET}_JXC_XCPLTEN_Dij_[xyz]_*.agr",
     } <= names
 
 
@@ -46,13 +46,13 @@ def test_jxc_sp_srel_outputs(tmp_path):
         os.path.basename(os.fspath(path))
         for path in parameters.output_files(tmp_path)
     }
-    assert {f"{DATASET}_J_ij.dat", f"{DATASET}_Jij_*.agr"} <= names
-    assert f"{DATASET}_XCPLTEN_Jij.dat" not in names
+    assert {f"{DATASET}_JXC_J_ij.dat", f"{DATASET}_JXC_Jij_*.agr"} <= names
+    assert f"{DATASET}_JXC_XCPLTEN_Jij.dat" not in names
 
 
 def test_dmi_outputs(tmp_path):
     _, names = _names("DMI", tmp_path)
     assert {
-        f"{DATASET}_DMIVEC_Dij.dat",
-        f"{DATASET}_DMIVEC_Dij_[xyz]_*.agr",
+        f"{DATASET}_JXC_DMIVEC_Dij.dat",
+        f"{DATASET}_JXC_DMIVEC_Dij_[xyz]_*.agr",
     } <= names
