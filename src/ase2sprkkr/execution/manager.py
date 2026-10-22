@@ -354,25 +354,15 @@ class RunStore:
             return tuple(records)
 
 
-class ExecutionManager:
-    """Persist public run lifecycle without task-specific knowledge."""
+class JobFiles:
+    """File handling for a single persisted job, without parallel file state."""
 
-    def __init__(self, store=None, *, executor_pool=None, submitting_grace=60.0):
-        if submitting_grace < 0:
-            raise ValueError("submitting_grace must be non-negative")
-        self.store = store
-        self.executor_pool = (
-            executor_pool if executor_pool is not None else default_executor_pool()
-        )
-        self.submitting_grace = float(submitting_grace)
+    def __init__(self, record):
+        self.record = record
 
-    def register_executor(self, executor: Executor, endpoint=None):
-        endpoint = endpoint or endpoint_for_executor(executor)
-        self.executor_pool.get(endpoint, lambda: executor)
-        return endpoint
-
-    def executor_for(self, record):
-        return self.executor_pool.for_endpoint(record.execution.endpoint)
+    @property
+    def manifest(self):
+        return self.record.files
 
     @staticmethod
     def _concrete_result_files(manifests):
@@ -433,37 +423,135 @@ class ExecutionManager:
                 missing.append(manifest)
         return _unique(missing)
 
-    def _capture_result_files(self, result_files):
+    @classmethod
+    def _capture_result_files(cls, result_files):
         if result_files is None or result_files.captured_at is not None:
             return result_files
         from .file_availability import discover_local_files
         captured = replace(
             result_files,
-            input_versions=self._result_files_snapshot(result_files.input_files),
-            output_versions=self._result_files_snapshot(
+            input_versions=cls._result_files_snapshot(result_files.input_files),
+            output_versions=cls._result_files_snapshot(
                 result_files.output_files, sync=True
             ),
             captured_at=_now(),
         )
         return discover_local_files(captured)
 
-    def input_file_is_current(self, run):
-        record = self.store.get(run) if isinstance(run, str) else self.store.get(run.id)
-        result_files = record.files
+    def input_file_is_current(self):
+        result_files = self.manifest
         return self._file_is_current(
             result_files,
             None if result_files is None else result_files.input_file,
             () if result_files is None else result_files.input_versions,
         )
 
-    def output_file_is_current(self, run):
-        record = self.store.get(run) if isinstance(run, str) else self.store.get(run.id)
-        result_files = record.files
+    def output_file_is_current(self):
+        result_files = self.manifest
         return self._file_is_current(
             result_files,
             None if result_files is None else result_files.output_file,
             () if result_files is None else result_files.output_versions,
         )
+
+    @staticmethod
+    def update_artifact_availability(store, record, path, state, message=None):
+        state = ArtifactAvailabilityState(state)
+
+        def update(latest):
+            return replace(latest, updated_at=_now(), files=latest.files.with_file_availability(
+                path, state.value, message,
+            ))
+
+        return store.update(record, update)
+
+    def retrieve_result_files(self, store, executor=None):
+        record = store.get(self.record.id)
+        if record.state not in _FINAL_STATES:
+            raise RuntimeError(f"Run {record.id} is not finished")
+
+        missing = self._missing_result_files(record.files)
+        if not missing or record.execution.backend_id is None:
+            return record
+
+        if executor is None or not executor.supports_result_file_retrieval:
+            return record
+
+        versions = {
+            os.path.abspath(os.fspath(version.path)): version
+            for version in (() if record.files is None else record.files.all_versions)
+        }
+        for path in missing:
+            path = os.path.abspath(os.fspath(path))
+            version = versions.get(path)
+            staged = (
+                Path(path).with_name(f".{Path(path).name}.{uuid4().hex}.tmp")
+                if version is not None and version.digest is not None else None
+            )
+            try:
+                if staged is None:
+                    executor.fetch_result_files(record, (path,))
+                else:
+                    executor.fetch_result_files(
+                        record, (path,), destinations={path: os.fspath(staged)},
+                    )
+                    if not staged.is_file():
+                        raise FileNotFoundError(
+                            f"Historical artifact was not retrieved: {path}"
+                        )
+                    if file_digest(staged) != version.digest:
+                        raise HistoricalFileMismatchError(
+                            f"Historical result files have been overwritten: {path}"
+                        )
+                    os.replace(staged, path)
+            except OSError as exc:
+                self.update_artifact_availability(store, 
+                    record, path, ArtifactAvailabilityState.FAILED, str(exc),
+                )
+                raise
+            finally:
+                if staged is not None:
+                    staged.unlink(missing_ok=True)
+            refreshed = store.get(record.id)
+            if path in self._missing_result_files(refreshed.files):
+                record = self.update_artifact_availability(store, 
+                    refreshed, path, ArtifactAvailabilityState.FAILED,
+                    "Historical artifact is still missing",
+                )
+            else:
+                record = self.update_artifact_availability(store, 
+                    refreshed, path, ArtifactAvailabilityState.AVAILABLE,
+                )
+        return record
+
+
+class ExecutionManager:
+    """Persist public run lifecycle without task-specific knowledge."""
+
+    def __init__(self, store=None, *, executor_pool=None, submitting_grace=60.0):
+        if submitting_grace < 0:
+            raise ValueError("submitting_grace must be non-negative")
+        self.store = store
+        self.executor_pool = (
+            executor_pool if executor_pool is not None else default_executor_pool()
+        )
+        self.submitting_grace = float(submitting_grace)
+
+    def register_executor(self, executor: Executor, endpoint=None):
+        endpoint = endpoint or endpoint_for_executor(executor)
+        self.executor_pool.get(endpoint, lambda: executor)
+        return endpoint
+
+    def executor_for(self, record):
+        return self.executor_pool.for_endpoint(record.execution.endpoint)
+
+    def input_file_is_current(self, run):
+        record = self.store.get(run) if isinstance(run, str) else self.store.get(run.id)
+        return JobFiles(record).input_file_is_current()
+
+    def output_file_is_current(self, run):
+        record = self.store.get(run) if isinstance(run, str) else self.store.get(run.id)
+        return JobFiles(record).output_file_is_current()
 
     def new_record(
         self, *, task, directory, dataset=None, endpoint=None,
@@ -549,19 +637,9 @@ class ExecutionManager:
         return self.store.update(record, merge)
 
     def update_artifact_availability(self, record, path, state, message=None):
-        """Persist availability of one artifact without changing the run outcome."""
-        state = ArtifactAvailabilityState(state)
-
-        def update(latest):
-            return replace(
-                latest,
-                updated_at=_now(),
-                files=latest.files.with_file_availability(
-                    path, state.value, message
-                ),
-            )
-
-        return self.store.update(record, update)
+        return JobFiles(record).update_artifact_availability(
+            self.store, record, path, state, message,
+        )
 
     def _is_stale_submitting(self, record, *, now=None):
         if record.state != RunState.SUBMITTING or record.execution.backend_id is not None:
@@ -614,7 +692,7 @@ class ExecutionManager:
                 )
                 if not conflicts:
                     if record.files is not None:
-                        self._sync_result_files(record.files.input_files)
+                        JobFiles(record)._sync_result_files(record.files.input_files)
                     return self.transition(
                         record,
                         state=RunState.SUBMITTING,
@@ -685,7 +763,7 @@ class ExecutionManager:
 
         if artifacts_available and result_files is not None:
             try:
-                result_files = self._capture_result_files(result_files)
+                result_files = JobFiles(record)._capture_result_files(result_files)
             except OSError as exc:
                 state = RunState.FAILED
                 phase = FailurePhase.ARTIFACTS
@@ -743,61 +821,10 @@ class ExecutionManager:
         record = self.store.get(run) if isinstance(run, str) else self.store.get(run.id)
         if record.state not in _FINAL_STATES:
             raise RuntimeError(f"Run {record.id} is not finished")
-
-        missing = self._missing_result_files(record.files)
-        if not missing or record.execution.backend_id is None:
-            return record
-
-        executor = self.executor_for(record)
-        if not executor.supports_result_file_retrieval:
-            return record
-
-        versions = {
-            os.path.abspath(os.fspath(version.path)): version
-            for version in (() if record.files is None else record.files.all_versions)
-        }
-        for path in missing:
-            path = os.path.abspath(os.fspath(path))
-            version = versions.get(path)
-            staged = (
-                Path(path).with_name(f".{Path(path).name}.{uuid4().hex}.tmp")
-                if version is not None and version.digest is not None else None
-            )
-            try:
-                if staged is None:
-                    executor.fetch_result_files(record, (path,))
-                else:
-                    executor.fetch_result_files(
-                        record, (path,), destinations={path: os.fspath(staged)},
-                    )
-                    if not staged.is_file():
-                        raise FileNotFoundError(
-                            f"Historical artifact was not retrieved: {path}"
-                        )
-                    if file_digest(staged) != version.digest:
-                        raise HistoricalFileMismatchError(
-                            f"Historical result files have been overwritten: {path}"
-                        )
-                    os.replace(staged, path)
-            except OSError as exc:
-                self.update_artifact_availability(
-                    record, path, ArtifactAvailabilityState.FAILED, str(exc),
-                )
-                raise
-            finally:
-                if staged is not None:
-                    staged.unlink(missing_ok=True)
-            refreshed = self.store.get(record.id)
-            if path in self._missing_result_files(refreshed.files):
-                record = self.update_artifact_availability(
-                    refreshed, path, ArtifactAvailabilityState.FAILED,
-                    "Historical artifact is still missing",
-                )
-            else:
-                record = self.update_artifact_availability(
-                    refreshed, path, ArtifactAvailabilityState.AVAILABLE,
-                )
-        return record
+        missing = JobFiles(record)._missing_result_files(record.files)
+        executor = (self.executor_for(record)
+                    if missing and record.execution.backend_id is not None else None)
+        return JobFiles(record).retrieve_result_files(self.store, executor)
 
     @staticmethod
     def _acknowledge_submission(executor, record):
