@@ -139,8 +139,7 @@ class JobFiles:
             () if result_files is None else result_files.output_versions,
         )
 
-    @staticmethod
-    def update_artifact_availability(store, record, path, state, message=None):
+    def update_artifact_availability(self, store, path, state, message=None):
         state = ArtifactAvailabilityState(state)
 
         def update(latest):
@@ -148,7 +147,7 @@ class JobFiles:
                 path, state.value, message,
             ))
 
-        return store.update(record, update)
+        return store.update(self.record, update)
 
     def retrieve_result_files(self, store, executor=None):
         record = self.record
