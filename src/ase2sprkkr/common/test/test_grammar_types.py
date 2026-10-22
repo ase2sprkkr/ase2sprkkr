@@ -3,6 +3,7 @@ import warnings
 
 import numpy as np
 import pyparsing
+import pytest
 import unyt
 
 from .. import grammar_types as gt
@@ -543,3 +544,53 @@ def test_mixed_other_types_and_potential_line_strings_are_unchanged():
     _assert_equal(gt.mixed.convert([2.0, 3.0]), np.array([2.0, 3.0]))
     assert gt.mixed.grammar().parse_string("Fe", parse_all=True)[0] == "Fe"
     assert gt.pot_mixed.grammar().parse_string("Fe Co", parse_all=True)[0] == "Fe Co"
+
+
+def _parse_numpy_array(grammar_type, text):
+    with generate_grammar():
+        return grammar_type.grammar().parse_string(text, parse_all=True)[0]
+
+
+def test_numpy_array_trivial_parsing_preserves_values_and_shape():
+    text = "1.0 2.0 3.0\n4.0 5.0 6.0\n"
+    expected = _parse_numpy_array(gt.NumpyArray(float), text)
+    actual = _parse_numpy_array(gt.NumpyArray(float, trivial_parsing=True), text)
+    np.testing.assert_array_equal(actual, expected)
+    assert actual.shape == (2, 3)
+
+    single_row = _parse_numpy_array(
+        gt.NumpyArray(float, trivial_parsing=True), "1.0 2.0 3.0\n"
+    )
+    assert single_row.shape == (3,)
+    single_row = _parse_numpy_array(
+        gt.NumpyArray(trivial_parsing=float), "1.0 2.0 3.0\n"
+    )
+
+
+
+def test_numpy_array_trivial_parsing_respects_configured_shape():
+    actual = _parse_numpy_array(
+        gt.NumpyArray(float, shape=(-1, 2), trivial_parsing=True),
+        "1 2\n3 4\n",
+    )
+    np.testing.assert_array_equal(actual, [[1.0, 2.0], [3.0, 4.0]])
+
+
+def test_numpy_array_trivial_parsing_rejects_malformed_data():
+    with pytest.raises(ValueError):
+        _parse_numpy_array(
+            gt.NumpyArray(float, trivial_parsing=True), "1 2\n3\n"
+        )
+    with pytest.raises(ValueError):
+        _parse_numpy_array(
+            gt.NumpyArray(float, trivial_parsing=True), "1 2\n3 x\n"
+        )
+
+
+def test_numpy_array_trivial_parsing_requires_supported_configuration():
+    with pytest.raises(ValueError, match="explicit.*dtype"):
+        gt.NumpyArray(trivial_parsing=True)
+    with pytest.raises(ValueError, match="whitespace-delimited"):
+        gt.NumpyArray(float, delimiter=10, trivial_parsing=True)
+    with pytest.raises(ValueError, match="exactly one numeric dtype"):
+        gt.NumpyArray(dtypes=[float, int], trivial_parsing=True)

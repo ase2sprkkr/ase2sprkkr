@@ -314,7 +314,15 @@ def create_definition():
                     np.meshgrid(c.K1(), c.K2()) if c.MODE() == "CONST-E" else np.meshgrid(c.K(), c.E())
                 ),
             ),
-            V("RAW_DATA", NumpyArray(written_shape=(-1, 1), shape=(-1,)), name_in_grammar=False),
+            V(
+                "RAW_DATA",
+                NumpyArray(
+                    written_shape=(-1, 1),
+                    shape=(-1,),
+                    trivial_parsing=float,
+                ),
+                name_in_grammar=False,
+            ),
             *switch(
                 "KEYWORD",
                 {

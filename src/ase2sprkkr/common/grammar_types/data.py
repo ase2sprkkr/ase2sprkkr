@@ -8,6 +8,7 @@ from numbers import Integral
 import numpy as np
 import copy
 import os
+import warnings
 from typing import Union
 from functools import partial
 
@@ -251,6 +252,7 @@ class NumpyArray(RawData):
         items_per_line=None,
         item_format="% .18e",
         dtypes=None,
+        trivial_parsing=False,
         no_newline_at_end=True,
         **kwargs,
     ):
@@ -280,6 +282,10 @@ class NumpyArray(RawData):
 
         item_format
           Output format of the array (just for writing).
+
+        trivial_parsing
+          Use numpy.fromstring for simple whitespace-delimited numeric data.
+          Requires one explicit integer or floating-point dtype.
 
         dtype
           Type of the resulting data. Pass ``'line'`` to get array of whole lines
@@ -316,6 +322,38 @@ class NumpyArray(RawData):
             if dtype is not None:
                 raise ValueError("Use either dtype or dtypes, but not both")
         self.dtypes = dtypes
+        self.trivial_parsing = trivial_parsing
+        if trivial_parsing:
+            if trivial_parsing is not True:
+                if len(self.dtypes) != 1 or self.dtypes[0] is not None:
+                    raise ValueError(
+                        "Specify either the dtype in dtypes or trivial_parsing, not both"
+                    )
+                self.dtypes = [trivial_parsing]
+            if len(self.dtypes) != 1:
+                raise ValueError(
+                    "trivial_parsing requires exactly one numeric dtype"
+                )
+            try:
+                dtype_kind = (
+                    np.dtype(self.dtypes[0]).kind
+                    if self.dtypes[0] is not None
+                    else None
+                )
+            except (TypeError, ValueError):
+                dtype_kind = None
+            if dtype_kind not in ("i", "u", "f"):
+                raise ValueError(
+                    "trivial_parsing requires an explicit integer or floating-point dtype"
+                )
+            if self.delimiter is not None and (
+                not isinstance(self.delimiter, str)
+                or len(self.delimiter) != 1
+                or not self.delimiter.isspace()
+            ):
+                raise ValueError(
+                    "trivial_parsing supports whitespace-delimited data only"
+                )
         lines = kwargs.pop("lines", None)
         if items_per_line is not None:
             if not isinstance(items_per_line, int) or items_per_line <= 0:
@@ -428,21 +466,61 @@ class NumpyArray(RawData):
                             v = v.replace("\n", "")
                     else:
                         v = v.replace("\n", " ")
-                last_error = None
-                for dt in self.dtypes:
+                if self.trivial_parsing:
+                    dtype = self.dtypes[0]
+                    inferred_shape = None
+                    if (
+                        self.items_per_line is None
+                        and self.shape is None
+                        and self._shape_dependency is None
+                    ):
+                        # genfromtxt returns a 2-D array for multiple rows, but
+                        # fromstring always returns a flat array. Preserve that
+                        # public behavior while rejecting ragged numeric rows.
+                        rows = [line for line in v.splitlines() if line.strip()]
+                        if rows:
+                            columns = len(rows[0].split())
+                            if any(len(line.split()) != columns for line in rows[1:]):
+                                raise ValueError(
+                                    "Inconsistent number of values per line in numeric array"
+                                )
+                            inferred_shape = (len(rows), columns)
                     try:
-                        v = np.genfromtxt(
-                              io.StringIO(v),
-                              delimiter=self.delimiter,
-                              dtype=dt,
-                        )
-                        break
-                    except Exception as exc:
-                        last_error = exc
+                        with warnings.catch_warnings():
+                            # NumPy versions before 2.0 warn rather than fail
+                            # when fromstring stops at non-numeric input.
+                            warnings.simplefilter("error", DeprecationWarning)
+                            v = np.fromstring(
+                                v, dtype=dtype, sep=self.delimiter or " "
+                            )
+                    except DeprecationWarning as exc:
+                        raise ValueError(
+                            "Could not parse all numeric array data"
+                        ) from exc
+                    if inferred_shape is not None:
+                        expected_size = math.prod(inferred_shape)
+                        if v.size != expected_size:
+                            raise ValueError(
+                                f"Parsed {v.size} values, expected {expected_size}"
+                            )
+                        if inferred_shape[0] > 1:
+                            v.shape = inferred_shape
                 else:
-                    if not last_error:
-                        raise ValueError("No dtype specified")
-                    raise last_error
+                    last_error = None
+                    for dt in self.dtypes:
+                        try:
+                            v = np.genfromtxt(
+                                  io.StringIO(v),
+                                  delimiter=self.delimiter,
+                                  dtype=dt,
+                            )
+                            break
+                        except Exception as exc:
+                            last_error = exc
+                    else:
+                        if not last_error:
+                            raise ValueError("No dtype specified")
+                        raise last_error
             shape = (
                 self._parsed_shape
                 if self._shape_dependency is not None

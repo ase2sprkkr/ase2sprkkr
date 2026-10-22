@@ -306,7 +306,7 @@ def create_definition():
             V("NT", int),
             V("NP", int),
             V("COMMENT", Prefixed("#"), name_in_grammar=False),
-            V("RAW_DATA", NumpyArray(), name_in_grammar=False),
+            V("RAW_DATA", NumpyArray(float, trivial_parsing=True), name_in_grammar=False),
             GV("MODE", mode),
             *switch(
                 "MODE",
