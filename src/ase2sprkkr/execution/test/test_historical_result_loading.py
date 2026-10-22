@@ -280,3 +280,11 @@ def test_job_files_restore_historical_output_directly(tmp_path):
     assert output.read_text() == "original output"
     assert restored.files.availability_state == ArtifactAvailabilityState.AVAILABLE
     assert executor.fetch_calls == [(record.id, (str(output),))]
+
+
+def test_job_files_has_stable_module_and_public_export():
+    from ase2sprkkr.execution import JobFiles
+    from ase2sprkkr.execution.job_files import JobFiles as ModuleJobFiles
+
+    assert JobFiles is ModuleJobFiles
+    assert JobFiles.__module__ == "ase2sprkkr.execution.job_files"
