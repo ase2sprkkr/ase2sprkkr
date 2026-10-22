@@ -41,14 +41,14 @@ class TestDefinitions:
         parsed = InputParameters.definition("SCF").read_from_string(ip.to_string())
         assert parsed.CONTROL.ADSI() == "CUSTOM"
 
-    def test_task_file_templates_and_schema_overrides(self, tmp_path):
+    def test_task_files_and_schema_overrides(self, tmp_path):
         parameters = InputParameters.create("BSFEK")
         parameters.CONTROL.DATASET = "Fe"
         task = TaskDefinition(
             "BSF",
             name="CUSTOM",
-            input_file_templates=("{dataset}.aux",),
-            cache_file_templates=("{dataset}.cache",),
+            input_files=("{dataset}.aux",),
+            cache_files=("{dataset}.cache",),
         )
         registry = InputParameters.input_parameters_registry
 
@@ -262,6 +262,10 @@ class TestDefinitions:
                 elif name == "BSFKK":
                     self.set_bsfkk_grid(ip)
                     out = ip.to_string(validate=True)
+                elif name == "CHIXAS":
+                    # CHIXAS intentionally requires physical type-dependent
+                    # NEF/CHISPN/CHIVV arrays, which no generic default supplies.
+                    out = ip.to_string(validate=False)
                 else:
                     raise
             else:

@@ -6,6 +6,7 @@ from ase2sprkkr.execution import (
     LocalTransport,
     MpiSpec,
     RemoteExecutor,
+    FileManifest,
 )
 
 
@@ -44,7 +45,7 @@ def test_remote_request_carries_target_executor_options(tmp_path):
     context = runner.executor
 
     remote_directory = asyncio.run(context.map_directory(directory))
-    request = asyncio.run(runner._prepare_request("test-run", remote_directory))
+    request = asyncio.run(runner._prepare_request("test-run", remote_directory, FileManifest.from_spec(spec)))
 
     assert request["executor"] == "psij"
     assert request["executor_options"] == {"backend": "slurm", "url": None}
@@ -104,15 +105,18 @@ def test_remote_sync_declarations_have_one_wire_authority(tmp_path):
     cache = directory / "restart.dat"
     cache.write_text("restart")
     executor = RemoteExecutor(LocalTransport())
-    run = executor.create_run(ExecutionSpec(
+    spec = ExecutionSpec(
         argv=("program",), directory=str(directory), input_file=None,
         output_file=str(output),
         output_files=(auxiliary,),
         cache_files=(cache,),
         launch=LaunchSpec(local_root=root, remote_root=tmp_path / "remote"),
-    ))
+    )
+    run = executor.create_run(spec)
     remote_dir = tmp_path / "remote" / "work"
-    request = asyncio.run(run._prepare_request("test-run", str(remote_dir)))
+    request = asyncio.run(
+        run._prepare_request("test-run", str(remote_dir), FileManifest.from_spec(spec))
+    )
     assert "output_files" not in request
     assert "cache_files" not in request
     restored = _request_spec(request)

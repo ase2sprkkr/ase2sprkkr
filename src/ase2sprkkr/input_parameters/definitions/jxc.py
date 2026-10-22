@@ -7,7 +7,8 @@ from ..input_parameters_definitions import (
     InputValueDefinition as V,
 )
 from ...common.generated_configuration_definitions import GeneratedValueDefinition
-from ...common.grammar_types import flag
+from ...common.grammar_types import flag, Integer, SetOf
+from ...common.warnings import DataValidityError
 
 
 class JxcInputParametersDefinition(InputParametersDefinition):
@@ -25,10 +26,17 @@ class JxcInputParametersDefinition(InputParametersDefinition):
         dataset = parameters.CONTROL.DATASET()
         if parameters.TASK.JXC():
             if parameters.MODE.MODE() == "SP-SREL":
-                files.append(resolve_file(directory, f"{dataset}*Jij*"))
+                files.extend((
+                    resolve_file(directory, f"{dataset}_J_ij.dat"),
+                    resolve_file(directory, f"{dataset}_Jij_*.agr"),
+                ))
             else:
-                files.append(resolve_file(directory, f"{dataset}_XCPLTEN_Jij.dat"))
-            files.append(resolve_file(directory, f"{dataset}*.agr"))
+                files.extend((
+                    resolve_file(directory, f"{dataset}_XCPLTEN_Jij.dat"),
+                    resolve_file(directory, f"{dataset}_XCPLTEN_Jij_*.agr"),
+                    resolve_file(directory, f"{dataset}_XCPLTEN_Dij.dat"),
+                    resolve_file(directory, f"{dataset}_XCPLTEN_Dij_[xyz]_*.agr"),
+                ))
         if parameters.TASK.DMI():
             files.append(resolve_file(directory, f"{dataset}_DMIVEC_Dij.dat"))
             files.append(resolve_file(directory, f"{dataset}_DMIVEC_Dij_[xyz]_*.agr"))
@@ -78,16 +86,46 @@ def _jxc_nonmag_warning_condition(value):
     )
 
 
+def _validate_jxc(parameters, _values, why):
+    if why == "set":
+        return None
+
+    issues = []
+    jxc = parameters.TASK.JXC()
+    dmi = parameters.TASK.DMI()
+    mode = parameters.MODE.MODE()
+
+    if not jxc and not dmi:
+        issues.append(DataValidityError("At least one of TASK.JXC or TASK.DMI must be enabled."))
+    if parameters.CONTROL.NONMAG():
+        issues.append(DataValidityError("JXC/DMI requires a magnetic calculation."))
+    if dmi and mode is not None:
+        issues.append(DataValidityError("DMI requires magnetic FREL."))
+    elif jxc and mode in ("NREL", "SREL"):
+        issues.append(DataValidityError("JXC requires magnetic FREL or SP-SREL."))
+    if parameters.ENERGY.GRID().tolist() != ["5"] or len(parameters.ENERGY.NE()) != 1 or parameters.ENERGY.SPLITSS():
+        issues.append(DataValidityError("JXC/DMI requires one GRID=5 integration contour."))
+    if parameters.TAU.BZINT() != "POINTS":
+        issues.append(DataValidityError("The standard periodic JXC/DMI workflow requires BZINT=POINTS."))
+    if parameters.TASK.SELECT() is not None and parameters.TASK.EXCLUDE() is not None:
+        issues.append(DataValidityError("SELECT and EXCLUDE are mutually exclusive."))
+    return issues or None
+
+
 def input_parameters_definition():
     mmode = MODE["MODE"].copy(warning_condition=_jxc_mode_warning_condition)
+    energy = ENERGY(defaults={"NE": [30], "ImE": 0.01})
+    energy.copy_member("NE", type=SetOf(Integer(min=1), min_length=1, max_length=2))
+    tau = TAU.copy()
+    tau.copy_member("BZINT", default_value="POINTS")
     schema = JxcInputParametersDefinition(
         "jxc",
         [
             CONTROL("JXC"),
-            TAU,
+            tau,
             MODE.copy(add=[mmode]),
             STRCONST,
-            ENERGY(),
+            energy,
             Section(
                 "TASK",
                 [
@@ -97,6 +135,13 @@ def input_parameters_definition():
                       info="Calculate Dzyaloshinskii-Moriya interaction vectors."),
                     GeneratedValueDefinition("TASK", _selected_task_name),
                     V("HFF", False, info="Enable the hyperfine-field calculation."),
+                    V("NSHLCLU", Integer(min=0), is_optional=True,
+                      info="Shell count; overrides CLURAD."),
+                    V("SELECT", SetOf(str, min_length=1, max_length=100),
+                      is_optional=True, info="Included element symbols."),
+                    V("EXCLUDE", SetOf(str, min_length=1, max_length=100),
+                      is_optional=True, info="Excluded element symbols."),
+                    V("QREPONLY", False, info="Treat only representative central sites."),
                     V(
                         "CLURAD",
                         2.2,
@@ -108,7 +153,10 @@ def input_parameters_definition():
             ),
             SITES,
         ],
-        info="JXC",
+        info="JXC / DMI",
+        validators=_validate_jxc,
+        description="Periodic magnetic E-INTEGRAL JXC and DMI task with FREL "
+                    "tensor couplings and DMIVECTOR, or SP-SREL scalar Jij.",
     )
     schema["CONTROL"]["NONMAG"].warning_condition = _jxc_nonmag_warning_condition
     return schema

@@ -12,7 +12,7 @@ from ..sprkkr.executables import executables as default_executables
 from . import readers
 
 
-_TASK_PATTERN = re.compile(rb"(?m)^\s*TASK\s*=\s*([A-Z]+)\s*$")
+_TASK_PATTERN = re.compile(rb"(?m)^\s*TASK\s*=\s*([A-Z][A-Z0-9_]*)\s*$")
 
 
 class OutputReaderRegistry(ModuleRegistry):

@@ -167,3 +167,11 @@ def test_reader_dependency_errors_remain_visible(tmp_path, monkeypatch):
         registry.class_for_task_name("BROKEN")
 
     assert exc_info.value.name == missing_dependency
+
+
+@pytest.mark.parametrize("task", ("PLOT2DPOT", "PLOT2DRHO", "PLOTSFN", "SCF"))
+def test_explicit_output_detection_accepts_native_numeric_selectors(tmp_path, task):
+    """TASK identifiers may contain digits; output detection must retain them."""
+    output = tmp_path / "native.out"
+    output.write_bytes(f" header\n TASK = {task}\n".encode("ascii"))
+    assert reader_registry.detect(output) == task

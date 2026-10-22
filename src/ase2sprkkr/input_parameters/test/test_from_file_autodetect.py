@@ -39,9 +39,8 @@ def test_preparse_ipd_is_cached_and_contains_only_repeated_task():
 def test_mapping_is_declarative_and_independent_of_adsi():
     mapping = _task_selector_map()
     assert mapping["JXC"] == mapping["DMI"]
-    assert mapping["ARPES"] == mapping["SPLEED"]
-    assert mapping["ARPES"] == mapping["AIPES"]
-    assert mapping["ARPES"] == mapping["BAND"]
+    for task in ("ARPES", "SPLEED", "AIPES", "BAND"):
+        assert mapping[task] == (InputParameters.definition(task),)
     assert mapping["BSF"] == (InputParameters.definition("BSF"),)
     for definition in InputParameters.definitions.values():
         assert definition.accepted_task_selectors()
@@ -56,8 +55,12 @@ def test_class_vs_instance_from_file():
     assert conventional.definition_name == "JXC"
     assert explicit.definition_name == "JXC"
     assert selected.TASK.DMI()
-    assert conventional.TASK.DMI()
-    assert conventional.TASK.TASK() == "JXC"
+
+
+def test_missing_task_selects_scf_and_not_adsi():
+    path = _EXAMPLES / "scf.in"
+    text = path.read_text()
+    assert InputParameters.from_file(io.StringIO(text)).definition_name == "SCF"
 
 
 def test_explicit_ipd_never_autodetects(monkeypatch):
@@ -72,11 +75,24 @@ def test_explicit_ipd_never_autodetects(monkeypatch):
     assert parse.call_args.args[0].read() == "TASK ARPES"
 
 
-def test_limit_from_path_and_binary_and_text_stream(tmp_path):
-    data = b"x" * (MAX_INPUT_FILE_SIZE + 1)
+@pytest.fixture
+def small_input_limit(monkeypatch):
+    # Preserve the configured production cap but use a tiny boundary for
+    # byte-counting cases that never need a megabyte of payload.
+    from .. import input_parameters_definitions as definitions
+
+    assert definitions.MAX_INPUT_FILE_SIZE == MAX_INPUT_FILE_SIZE
+    assert MAX_INPUT_FILE_SIZE == 1024 * 1024
+    limit = 64
+    monkeypatch.setattr(definitions, "MAX_INPUT_FILE_SIZE", limit)
+    return limit
+
+
+def test_limit_from_path_and_binary_and_text_stream(tmp_path, small_input_limit):
+    data = b"x" * (small_input_limit + 1)
     path = tmp_path / "oversize.inp"
     path.write_bytes(data)
-    for source in (path, io.BytesIO(data), io.StringIO("x" * (MAX_INPUT_FILE_SIZE + 1))):
+    for source in (path, io.BytesIO(data), io.StringIO("x" * (small_input_limit + 1))):
         with pytest.raises(ValueError, match="exceeds"):
             InputParametersDefinition.from_file(source)
     assert _read_input_text(io.BytesIO(b"abc")) == "abc"
@@ -242,12 +258,13 @@ def test_binary_and_text_streams_are_read_only_once():
     assert stream.calls == 1
 
 
-def test_size_limit_exact_boundary_and_multibyte_utf8():
-    assert len(_read_input_text(io.BytesIO(b"x" * MAX_INPUT_FILE_SIZE))) == MAX_INPUT_FILE_SIZE
+def test_size_limit_exact_boundary_and_multibyte_utf8(small_input_limit):
+    limit = small_input_limit
+    assert len(_read_input_text(io.BytesIO(b"x" * limit))) == limit
     with pytest.raises(ValueError, match="exceeds"):
-        _read_input_text(io.StringIO("č" * (MAX_INPUT_FILE_SIZE // 2 + 1)))
+        _read_input_text(io.StringIO("č" * (limit // 2 + 1)))
     with pytest.raises(ValueError, match="exceeds"):
-        _read_input_text(io.BytesIO("č".encode("utf-8") * (MAX_INPUT_FILE_SIZE // 2 + 1)))
+        _read_input_text(io.BytesIO("č".encode("utf-8") * (limit // 2 + 1)))
 
 
 def test_preparse_uses_strict_grammar_when_full_parse_is_dangerous(monkeypatch):

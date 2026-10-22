@@ -6,7 +6,7 @@ import pytest
 
 from ..input_parameters import InputParameters
 from ..input_parameters_definitions import InputParametersDefinition
-from ..task_definition import TaskDefinition
+from ..task_definition import TaskDefinition, TaskFile
 from ...outputs.readers.default import DefaultOutputReader
 from ...sprkkr.configuration import ConfigurationFile
 
@@ -91,6 +91,7 @@ def test_change_task_retain_values_preserves_explicit_shared_task_value():
     assert parameters.TASK.TASK.is_set()
     assert parameters.TASK.TASK() == "SPLEED"
     assert parameters.task_definition.name == "SPLEED"
+    assert parameters._definition is _schema_for(parameters.task_definition)
 
 
 def test_change_task_retain_values_preserves_explicit_old_default():
@@ -104,6 +105,7 @@ def test_change_task_retain_values_preserves_explicit_old_default():
     assert parameters.task_name == "ARPES"
     assert parameters.TASK.TASK.is_set()
     assert parameters.TASK.TASK() == "ARPES"
+    assert parameters._definition is _schema_for(parameters.task_definition)
 
 
 def test_direct_schema_objects_are_detached():
@@ -199,18 +201,19 @@ def test_task_definition_rejects_invalid_scalar_metadata(kwargs, error, message)
 
 @pytest.mark.parametrize(
     "field",
-    ["input_file_templates", "output_file_templates", "cache_file_templates"],
+    ["input_files", "output_files", "cache_files"],
 )
 def test_task_definition_materializes_pathlike_templates_as_strings(field):
     task = TaskDefinition("SCF", **{field: (Path("{dataset}.dat"),)})
 
-    assert getattr(task, field) == ("{dataset}.dat",)
+    assert getattr(task, field) == (TaskFile("{dataset}.dat"),)
+    assert all(isinstance(f, TaskFile) for f in getattr(task, field))
     hash(task)
 
 
 @pytest.mark.parametrize(
     "field",
-    ["input_file_templates", "output_file_templates", "cache_file_templates"],
+    ["input_files", "output_files", "cache_files"],
 )
 def test_task_definition_rejects_non_pathlike_template_elements(field):
     with pytest.raises(TypeError, match=rf"{field}\[0\]"):
@@ -219,7 +222,7 @@ def test_task_definition_rejects_non_pathlike_template_elements(field):
 
 @pytest.mark.parametrize(
     "field",
-    ["input_file_templates", "output_file_templates", "cache_file_templates"],
+    ["input_files", "output_files", "cache_files"],
 )
 def test_task_definition_rejects_single_template_instead_of_iterable(field):
     with pytest.raises(TypeError, match="iterable of path-like strings"):
@@ -232,14 +235,14 @@ def test_task_definition_is_an_immutable_value_object():
         name="scf",
         executable="kkrscf",
         output_reader="scf",
-        output_file_templates=("{dataset}.out",),
+        output_files=("{dataset}.out",),
     )
     second = TaskDefinition(
         "SCF",
         name="SCF",
         executable="kkrscf",
         output_reader_name="SCF",
-        output_file_templates=("{dataset}.out",),
+        output_files=("{dataset}.out",),
     )
 
     assert first == second
@@ -256,9 +259,6 @@ def test_builtin_task_definitions_are_metadata_objects():
     for name in (
         "output_reader_class",
         "prepare_from_result",
-        "input_files",
-        "output_files",
-        "cache_files",
         "execution_task_name",
     ):
         assert not hasattr(TaskDefinition, name)
@@ -289,3 +289,98 @@ def test_bsf_tasks_declare_shared_output_reader_identifier():
 
     assert bsfek.output_reader_name == "BSF"
     assert bsfkk.output_reader_name == "BSF"
+
+
+def test_optional_file_template_retains_metadata(tmp_path):
+    task = TaskDefinition(
+        "SCF",
+        input_files=(TaskFile("aux.dat", optional=True),),
+        output_files=(TaskFile("{dataset}_optional-*.dat", optional=True),),
+    )
+    parameters = InputParameters.create("SCF")
+    parameters.CONTROL.DATASET = "Fe"
+    registry = InputParameters.input_parameters_registry
+    for kind in ("input", "output"):
+        resolved = registry._resolve_file_templates(
+            parameters, str(tmp_path), getattr(task, f"{kind}_files")
+        )
+        assert len(resolved) == 1
+        assert resolved[0].optional is True
+    assert task.input_files[0].optional is True
+
+
+def test_optional_file_metadata_affects_task_identity():
+    required = TaskDefinition("SCF", output_files=(TaskFile("x", optional=False),))
+    optional = TaskDefinition("SCF", output_files=(TaskFile("x", optional=True),))
+    assert required != optional
+    assert hash(required) != hash(optional)
+    assert optional.output_files[0] != "x"
+    assert required.output_files[0].pathname == "x"
+    with pytest.raises(AttributeError):
+        optional.output_files[0].optional = False
+
+
+def _pickleable_optional_file_callback(parameters):
+    return "{dataset}.extra" if parameters is not None else None
+
+
+@pytest.mark.parametrize("kind", ("input", "output", "cache"))
+def test_task_files_normalized_once_and_are_canonical_dataclass_fields(kind):
+    from dataclasses import fields
+    file = TaskFile("{dataset}.dos", type="DOS", info="DOS", optional=True)
+    task = TaskDefinition("SCF", **{f"{kind}_files": ("input.dat", file)})
+    declarations = getattr(task, f"{kind}_files")
+    assert declarations == (TaskFile("input.dat"), file)
+    assert declarations[1] is file
+    assert f"{kind}_files" in {f.name for f in fields(task)}
+    assert not hasattr(task, f"{kind}_file_templates")
+
+    replaced_task = replace(task, executable="custom-executable")
+    assert getattr(replaced_task, f"{kind}_files") == declarations
+
+
+def test_task_files_callback_keeps_identity_after_pickle():
+    import pickle
+    task = TaskDefinition("SCF", input_files=(_pickleable_optional_file_callback,))
+    assert task.input_files[0].pathname is _pickleable_optional_file_callback
+    restored = pickle.loads(pickle.dumps(task))
+    assert restored == task
+    assert restored.input_files[0].pathname is _pickleable_optional_file_callback
+
+
+def test_task_execution_rejects_cross_schema_selector_without_retargeting():
+    parameters = InputParameters.create("SPLEED")
+    parameters.TASK.TASK = "ARPES"
+    assert parameters.task_name == "ARPES"
+    with pytest.raises(RuntimeError, match="change_task"):
+        parameters.task_definition_required()
+
+    parameters.change_task("ARPES")
+    assert parameters._definition is _schema_for(parameters.task_definition)
+    assert parameters.task_definition_required().name == "ARPES"
+
+def test_optional_file_declaration_pickle_roundtrip():
+    import pickle
+
+    task = TaskDefinition("SCF", output_files=(TaskFile("extra.dat", optional=True),))
+    restored = pickle.loads(pickle.dumps(task))
+    assert restored == task
+    assert restored.output_files[0].optional is True
+
+
+def test_unset_required_file_template_is_not_silently_dropped(tmp_path):
+    from types import SimpleNamespace
+
+    registry = InputParameters.input_parameters_registry
+    parameters = SimpleNamespace(CONTROL=SimpleNamespace(DATASET=lambda: None))
+    with pytest.raises(ValueError, match="Required TaskFile template.*dataset"):
+        registry._resolve_file_templates(
+            parameters, str(tmp_path), (TaskFile("{dataset}.dos"),)
+        )
+
+    # Missing optional declarations and callbacks explicitly returning None
+    # are not files in this configuration.
+    assert registry._resolve_file_templates(
+        parameters, str(tmp_path),
+        (TaskFile("{dataset}.dos", optional=True), TaskFile(lambda _: None)),
+    ) == ()

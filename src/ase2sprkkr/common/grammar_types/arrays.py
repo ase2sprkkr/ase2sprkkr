@@ -11,7 +11,7 @@ from ..alternative_types import numpy_types
 from ..grammar import generate_grammar, delimitedList, line_end, White, Forward
 from .grammar_type import GrammarType, compare_numpy_values, type_from_type, type_from_default_value, TypedGrammarType
 from ..decorators import add_to_signature, cached_property
-from .basic import Integer, Real, Unsigned, real
+from .basic import Integer, Real, Unsigned, QString, real
 
 
 _named_sequence_types = {}
@@ -290,9 +290,10 @@ class SetOf(Array):
     delimiter_str = ","
 
     @add_to_signature(Array.__init__)
-    def __init__(self, type, *args, **kwargs):
+    def __init__(self, type, *args, require_brackets=False, **kwargs):
         if 'prefix' in kwargs or 'postfix' in kwargs:
             raise ValueError("For a custom prefix/postfix use Array, not SetOf")
+        self.require_brackets = require_brackets
         super().__init__(type, *args, **kwargs)
 
     def _suppress(x):
@@ -312,12 +313,25 @@ class SetOf(Array):
         }
 
     def _do_build_grammar(self):
-        g = super()._do_build_grammar()
+        if self.require_brackets and isinstance(self.type, QString):
+            # QString's generic word grammar accepts '[' and '('; inside a
+            # bracketed set these characters are structural delimiters.
+            # Keep the restriction local to this SetOf rather than changing
+            # scalar QString parsing throughout the application.
+            item = pp.Word(pp.printables, exclude_chars='",;{}[]()') | pp.QuotedString('"')
+            g = delimitedList(item, self.delimiter)
+            self._set_convert_action(g)
+        else:
+            g = super()._do_build_grammar()
         out = []
         for i in ( '{', '[', '(' ):
             out.append(self._prefixes[i] + g + self._postfixes[i])
-        out.append(g)
-        out = pp.MatchFirst(out).set_name( f"[{{([]]?{g}[}}])]?" )
+        if not self.require_brackets:
+            out.append(g)
+        out = pp.MatchFirst(out).set_name(
+            f"bracketed {g}" if self.require_brackets
+            else f"[{{([]]?{g}[}}])]?"
+        )
         return out
         #out | self.type.grammar(param_name).copy().add_parse_action(lambda x: np.atleast_1d(x.asList()))
 

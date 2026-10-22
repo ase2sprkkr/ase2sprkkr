@@ -233,8 +233,8 @@ def test_manifest_from_spec_normalizes_stream_overlaps(tmp_path):
         input_file="input.inp",
         input_files=("input.inp", "other.inp", "other.inp", None, object(), 1),
         output_file="stdout.out", error_file="stderr.err",
-        output_files=("stdout.out", "stderr.err", "result.dat", "result.dat", None, object()),
-        cache_files=("restart.pot", "restart.pot", None, object()),
+        output_files=("stdout.out", "stderr.err", "result.dat", None, object()),
+        cache_files=("restart.pot", None, object()),
     )
     files = FileManifest.from_spec(spec)
     assert files.input_files == (str(tmp_path / "input.inp"), str(tmp_path / "other.inp"))
@@ -324,3 +324,133 @@ def test_launch_sync_policies_are_validated_and_serialized(name, policy):
 def test_launch_rejects_unknown_sync_policies(name):
     with pytest.raises(ValueError, match="synchronization policy"):
         LaunchSpec(**{name: "unsupported"})
+
+
+@pytest.mark.parametrize(
+    ("input_files", "output_files", "cache_files"),
+    (
+        ((), (), ("same.cache", "./same.cache")),
+        (("same.pot",), (), ("same.pot",)),
+        ((), ("same.dat",), ("same.dat",)),
+        (("same.dat",), ("same.dat",), ()),
+    ),
+)
+def test_manifest_rejects_duplicate_non_stream_file_roles(
+    tmp_path, input_files, output_files, cache_files,
+):
+    from types import SimpleNamespace
+
+    spec = SimpleNamespace(
+        directory=str(tmp_path),
+        input_file=None,
+        input_files=input_files,
+        output_file="standard.out",
+        error_file="standard.err",
+        output_files=output_files,
+        cache_files=cache_files,
+    )
+    with pytest.raises(ValueError, match="Duplicate file declaration"):
+        FileManifest.from_spec(spec)
+
+
+def test_manifest_rejects_cache_aliasing_stdout(tmp_path):
+    from types import SimpleNamespace
+
+    spec = SimpleNamespace(
+        directory=str(tmp_path), input_file=None, input_files=(),
+        output_file="standard.out", error_file=None,
+        output_files=(), cache_files=("standard.out",),
+    )
+    with pytest.raises(ValueError, match="Duplicate file declaration"):
+        FileManifest.from_spec(spec)
+
+
+def test_manifest_preserves_cache_optionality_and_roundtrips(tmp_path):
+    from types import SimpleNamespace
+    from ase2sprkkr.input_parameters.task_definition import TaskFile
+
+    spec = SimpleNamespace(
+        directory=str(tmp_path), input_file=None, input_files=(),
+        output_file=None, error_file=None, stdin=None, output_files=(),
+        cache_files=(
+            TaskFile(tmp_path / "optional-cache.pot", optional=True),
+            TaskFile(tmp_path / "required-cache.pot"),
+        ),
+    )
+    manifest = FileManifest.from_spec(spec)
+    assert tuple(cache.file.optional for cache in manifest.caches) == (True, False)
+    assert FileManifest(**asdict(manifest)) == manifest
+
+
+@pytest.mark.parametrize("colliding_role", ["stdout", "output", "cache"])
+def test_manifest_rejects_named_stdin_write_collisions(tmp_path, colliding_role):
+    from types import SimpleNamespace
+
+    spec = SimpleNamespace(
+        directory=str(tmp_path), input_file=None, input_files=(),
+        stdin="shared.dat",
+        output_file="shared.dat" if colliding_role == "stdout" else "other.out",
+        error_file=None,
+        output_files=("shared.dat",) if colliding_role == "output" else (),
+        cache_files=("shared.dat",) if colliding_role == "cache" else (),
+    )
+    with pytest.raises(ValueError, match="Duplicate file declaration"):
+        FileManifest.from_spec(spec)
+
+
+@pytest.mark.parametrize("primary_is_taskfile", [True, False])
+def test_primary_input_rejects_optional_taskfile_declaration(
+    tmp_path, primary_is_taskfile,
+):
+    from types import SimpleNamespace
+    from ase2sprkkr.input_parameters.task_definition import TaskFile
+
+    primary = tmp_path / "main.inp"
+    spec = SimpleNamespace(
+        directory=str(tmp_path),
+        input_file=TaskFile(primary, optional=True) if primary_is_taskfile else primary,
+        input_files=() if primary_is_taskfile else (TaskFile(primary, optional=True),),
+        stdin=None, output_file=None, error_file=None,
+        output_files=(), cache_files=(),
+    )
+    with pytest.raises(ValueError, match="cannot be declared optional|Conflicting optionality"):
+        FileManifest.from_spec(spec)
+
+
+@pytest.mark.parametrize("optional_first", [True, False])
+def test_duplicate_input_declarations_with_conflicting_optionality_fail(
+    tmp_path, optional_first,
+):
+    from types import SimpleNamespace
+    from ase2sprkkr.input_parameters.task_definition import TaskFile
+
+    optional = TaskFile(tmp_path / "auxiliary.dat", optional=True)
+    required = tmp_path / "./auxiliary.dat"
+    spec = SimpleNamespace(
+        directory=str(tmp_path), input_file=None,
+        input_files=(optional, required) if optional_first else (required, optional),
+        stdin=None, output_file=None, error_file=None,
+        output_files=(), cache_files=(),
+    )
+    with pytest.raises(ValueError, match="Conflicting optionality"):
+        FileManifest.from_spec(spec)
+
+
+def test_consistent_input_optionality_survives_duplicate_references(tmp_path):
+    from types import SimpleNamespace
+    from ase2sprkkr.input_parameters.task_definition import TaskFile
+
+    primary = tmp_path / "main.inp"
+    auxiliary = tmp_path / "auxiliary.dat"
+    spec = SimpleNamespace(
+        directory=str(tmp_path), input_file=primary,
+        input_files=(primary, TaskFile(auxiliary, optional=True),
+                     TaskFile(auxiliary, optional=True)),
+        stdin=None, output_file=None, error_file=None,
+        output_files=(), cache_files=(),
+    )
+    manifest = FileManifest.from_spec(spec)
+    assert [(item.local_path, item.optional) for item in manifest.inputs] == [
+        (str(primary), False), (str(auxiliary), True),
+    ]
+    assert FileManifest(**asdict(manifest)) == manifest

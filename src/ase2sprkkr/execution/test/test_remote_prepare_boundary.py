@@ -81,8 +81,8 @@ def test_remote_manifest_uses_same_declarations_as_local(tmp_path):
         argv=("ignored",), directory=str(directory),
         input_file="main.inp", input_files=("main.inp", "main.inp", "extra.inp", "extra.inp"),
         output_file="main.out", error_file="main.err",
-        output_files=("main.out", "main.err", "one.dat", "one.dat", "two.dat"),
-        cache_files=("restart.pot", "restart.pot"),
+        output_files=("main.out", "main.err", "one.dat", "two.dat"),
+        cache_files=("restart.pot",),
         launch=LaunchSpec(local_root=str(tmp_path), remote_root=str(remote)),
     )
     local = FileManifest.from_spec(spec)
@@ -91,7 +91,7 @@ def test_remote_manifest_uses_same_declarations_as_local(tmp_path):
     manifest = asyncio.run(runner._submitted_manifest({
         "client_sync": {"output_file": str(remote / "local" / "main.out"),
                         "error_file": str(remote / "local" / "main.err")},
-    }))
+    }, local))
     assert tuple(e.local_path for e in manifest.inputs) == (
         str(directory / "main.inp"), str(directory / "extra.inp"),
     )
@@ -112,8 +112,8 @@ def test_remote_manifest_uses_same_declarations_as_local(tmp_path):
     assert len(manifest.caches) == 1
 
 
-def test_remote_file_preparation_deduplicates_paths_before_mapping(tmp_path):
-    """Exact and wildcard declarations share the same normalization rules."""
+def test_remote_file_preparation_uses_validated_manifest(tmp_path):
+    """The validated manifest owns exact paths and wildcard declarations."""
     import asyncio
 
     directory = tmp_path / "work"
@@ -124,21 +124,20 @@ def test_remote_file_preparation_deduplicates_paths_before_mapping(tmp_path):
         argv=("ignored",), directory=str(directory),
         input_file=None, output_file="stdout.out",
         output_files=(
-            None, "stdout.out", "one.dat", "./one.dat",
-            "cut-*.dat", "./cut-*.dat",
+            None, "stdout.out", "one.dat", "cut-*.dat",
         ),
         cache_files=(
-            None, "restart.dat", "./restart.dat",
-            "checkpoint-*.dat", "./checkpoint-*.dat",
+            None, "restart.dat", "checkpoint-*.dat",
         ),
         launch=LaunchSpec(local_root=str(tmp_path), remote_root=str(remote)),
     )
     runner = executor.create_run(spec)
+    manifest = FileManifest.from_spec(spec)
 
     async def prepare():
         used = {}
-        await runner._prepare_cache_files(used)
-        await runner._prepare_output_files()
+        await runner._prepare_cache_files(used, manifest)
+        await runner._prepare_output_files(manifest)
         return used
 
     used = asyncio.run(prepare())
@@ -154,7 +153,8 @@ def test_remote_file_preparation_deduplicates_paths_before_mapping(tmp_path):
     assert runner._cache_patterns == (
         str(remote / "work" / "checkpoint-*.dat"),
     )
-    assert used == {str(remote / "work" / "restart.dat"): str(directory / "restart.dat")}
+    # An absent cache is a possible future output, not a staged input.
+    assert used == {}
 
 
 @pytest.mark.parametrize("method", ("submit", "start"))
@@ -176,3 +176,52 @@ def test_postprocessing_rejected_submit_preserves_error_and_does_not_monitor(met
     assert caught.value is failure
     assert runner._started is False
     assert runner._thread is None
+
+
+@pytest.mark.parametrize("conflict", ["mixed_input_optionality", "duplicate_output", "duplicate_cache"])
+def test_invalid_manifest_rejected_before_remote_side_effects(tmp_path, conflict):
+    """Preflight must not create target directories or upload any inputs."""
+    from ase2sprkkr.execution.base import SubmissionNotStarted
+    from ase2sprkkr.input_parameters.task_definition import TaskFile
+
+    class NoSideEffectTransport(LocalTransport):
+        async def run(self, *args, **kwargs):
+            raise AssertionError("Remote command executed before manifest validation")
+
+        async def put_file(self, *args, **kwargs):
+            raise AssertionError("Input uploaded before manifest validation")
+
+        async def file_digest(self, *args, **kwargs):
+            raise AssertionError("Transport probed before manifest validation")
+
+    local = tmp_path / "local"
+    local.mkdir()
+    input_path = local / "main.inp"
+    input_path.write_text("TASK SCF")
+    shared = local / "shared.dat"
+    input_files = (input_path,)
+    output_files = ()
+    cache_files = ()
+    if conflict == "mixed_input_optionality":
+        input_files += (TaskFile(input_path, optional=True),)
+    elif conflict == "duplicate_output":
+        output_files = (shared, shared)
+    else:
+        cache_files = (shared, shared)
+
+    spec = ExecutionSpec(
+        argv=("ignored",),
+        directory=str(local),
+        input_file=input_path,
+        input_files=input_files,
+        output_file=str(local / "stdout.out"),
+        output_files=output_files,
+        cache_files=cache_files,
+        launch=LaunchSpec(
+            local_root=str(tmp_path),
+            remote_root=str(tmp_path / "remote"),
+        ),
+    )
+    runner = RemoteEndpointExecutor(NoSideEffectTransport()).create_run(spec)
+    with pytest.raises(SubmissionNotStarted, match="Conflicting optionality|Duplicate file declaration"):
+        runner.prepare_submission()

@@ -2,7 +2,6 @@
 
 import os
 from io import StringIO
-from functools import cache
 
 import pyparsing as pp
 from ..common.grammar_types import Keyword

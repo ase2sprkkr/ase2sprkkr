@@ -112,6 +112,12 @@ class InputParameters(ConfigurationFile):
             raise RuntimeError(
                 "These input parameters are not associated with an SPR-KKR task definition"
             )
+        expected = self.input_parameters_registry.definition_for_task(task)
+        if expected is not self._definition:
+            raise RuntimeError(
+                f"Task {task.name} uses a different input schema; "
+                "use change_task() to switch schemas explicitly."
+            )
         return task
 
     @property
@@ -272,7 +278,6 @@ class InputParameters(ConfigurationFile):
 
     @cached_class_property
     def definitions(cls):
-        """Legacy definition mapping; lookup does not load unrelated schemas."""
         return _LazyInputParametersDefinitions(cls.input_parameters_registry)
 
     @classmethod
@@ -285,8 +290,8 @@ class InputParameters(ConfigurationFile):
     def create_input_parameters(cls, arg):
         if isinstance(arg, str):
             name = cls.is_task_name(arg)
-            if name:
-                return cls.create(name)
+            if name or arg.upper() in cls.input_parameters_registry:
+                return cls.create(name or arg)
             return cls.from_file(arg)
         if isinstance(arg, io.IOBase):
             return cls.from_file(arg)
@@ -294,8 +299,9 @@ class InputParameters(ConfigurationFile):
 
     @classmethod
     def create(cls, name):
-        task = cls.task_registry[name]
-        return cls.input_parameters_registry.create_for_task(task)
+        """Create parameters for a registered task, not for a bare shared schema."""
+        name = cls.task_registry.normalize_name(name)
+        return cls.input_parameters_registry.create_for_task(cls.task_registry[name])
 
     @classmethod
     def default_parameters(cls):
@@ -335,3 +341,20 @@ class InputParameters(ConfigurationFile):
                 retain_invalid="none",
                 report_invalid="ignore",
             )
+
+            # Explicit TASK.TASK may select a different canonical schema.
+            # Preserve requested provenance while keeping the effective task
+            # and its input definition consistent.
+            effective = self.task_definition
+            if effective is not None:
+                canonical = self.input_parameters_registry.definition_for_task(effective)
+                if canonical is not self._definition:
+                    values = self.to_dict(only_changed="explicit")
+                    self._definition = canonical
+                    self._init_members_from_the_definition()
+                    self.set(
+                        values,
+                        unknown="ignore",
+                        retain_invalid="none",
+                        report_invalid="ignore",
+                    )

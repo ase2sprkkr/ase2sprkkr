@@ -1,12 +1,16 @@
+import asyncio
+
 import numpy as np
 
-from ase2sprkkr.outputs.readers.spec import SpecResult
+from ase2sprkkr.outputs.readers.default import DefaultOutputParser
+from ase2sprkkr.outputs.readers.spec import SpecResult, SpecOutputParser, SpecOutputReader
 
 
 def test_spec_result_properties():
     class InMemorySpecResult(SpecResult):
         def __init__(self, content):
             self._file_content = content
+            self._task_name = "band"
             self.output_file = None
 
     content = """
@@ -51,10 +55,245 @@ stookes-vector    of the photonfield  0.10000E+01  100.000%    0.000%    0.000%
         result.basis_vectors["reciprocal"],
         [[1.35711, 0.78353], [0.0, 1.56706]],
     )
-    np.testing.assert_allclose(
-        result.spectral_data,
-        [
-            [1.8937e00, -9.6825e-02, 6.1567e-08, -3.9380e-04, 3.0771e-08, 3.0795e-08],
-            [1.9000e00, -9.6825e-02, 5.7837e-08, -4.2368e-04, 2.8906e-08, 2.8931e-08],
-        ],
+    np.testing.assert_allclose(result.spectral_data, [
+        [1.8937, -9.6825e-02, 6.1567e-08, -3.9380e-04, 3.0771e-08, 3.0795e-08],
+        [1.9000, -9.6825e-02, 5.7837e-08, -4.2368e-04, 2.8906e-08, 2.8931e-08],
+    ])
+
+
+def test_arpes_result_uses_native_spec_file_manifest(tmp_path):
+    from ase2sprkkr.input_parameters.input_parameters import InputParameters
+    from ase2sprkkr.outputs.readers.arpes import ArpesResult
+
+    for task in ("ARPES", "CLPES"):
+        # POL_P selects photon polarization, not the number of output files.
+        # The latter is controlled by SPEC_PH.NPOL.
+        for polarization in ("P", "S"):
+            expected = "sample_data.spc"
+            parameters = InputParameters.create(task)
+            parameters.CONTROL.DATASET = "sample"
+            parameters.SPEC_PH.POL_P = polarization
+            result = ArpesResult(parameters, None, tmp_path)
+
+            assert result.spc_filename == str(tmp_path / expected)
+            assert result.output_values["SPC"].file_type == "spc"
+            assert result.path_to("SPC") == str(tmp_path / expected)
+
+            # CLPES only supports NPOL=1/2; dichroic outputs belong to
+            # photoemission tasks that allow NPOL=0/3.
+            if task == "ARPES":
+                parameters.SPEC_PH.NPOL = 3
+                dichroic = ArpesResult(parameters, None, tmp_path)
+                assert dichroic.spc_filenames == (
+                    str(tmp_path / "sample_data_pol1.spc"),
+                    str(tmp_path / "sample_data_pol2.spc"),
+                )
+
+def test_spec_reader_requires_a_native_structured_band_file(tmp_path):
+    import pytest
+    import pyparsing as pp
+    from ase2sprkkr.outputs.readers.spec import SpecResult
+
+    (tmp_path / "Fe_data.spc").write_text(
+        "# Legacy three-column diagnostic: not a native BAND SPC file\\n"
+        "NT 1\\nNP 1\\n1.0D+00 2.0D+00 3.0D+00\\n"
     )
+    result = SpecResult(None, None, tmp_path, output_file="Fe_SPEC.out", task_name="BAND")
+    with pytest.raises((pp.ParseBaseException, ValueError)):
+        _ = result.spectral_data
+
+
+def test_arpes_registers_both_polarizations_from_native_files(tmp_path):
+    from ase2sprkkr.outputs.readers.arpes import ArpesResult
+
+    for suffix in ("_data_pol1.spc", "_data_pol2.spc"):
+        (tmp_path / ("Fe" + suffix)).write_text("# SPC\n")
+    result = ArpesResult(None, None, tmp_path, output_file="Fe_SPEC.out", task_name="ARPES")
+    assert result.spc_filename == str(tmp_path / "Fe_data_pol1.spc")
+    assert "SPC_2" in result.output_values
+    assert result.path_to("SPC_2") == str(tmp_path / "Fe_data_pol2.spc")
+
+def test_spectra_unpolarized_is_a_tuple_and_spc_is_deprecated(tmp_path, monkeypatch):
+    import pytest
+    from ase2sprkkr.outputs.readers.arpes import ArpesResult
+
+    (tmp_path / "Fe_data.spc").write_text("# example\\n")
+    result = ArpesResult(None, None, tmp_path, output_file="Fe_SPEC.out", task_name="ARPES")
+    spectrum = object()
+    monkeypatch.setattr(result, "parse_result_file", lambda file, potential=None: spectrum)
+    assert result.spectra == (spectrum,)
+    assert result.spectra is result.spectra
+    assert "SPC" in result.output_values
+    with pytest.warns(DeprecationWarning, match="result.spectra"):
+        assert result.spc is spectrum
+
+
+def test_spectra_includes_both_polarizations_in_result_values(tmp_path, monkeypatch):
+    from ase2sprkkr.outputs.readers.arpes import ArpesResult
+    from ase2sprkkr.outputs.readers.spec import SpecResult
+
+    for suffix in ("_data_pol1.spc", "_data_pol2.spc"):
+        (tmp_path / ("Fe" + suffix)).write_text("# example\\n")
+    for result_class in (ArpesResult, SpecResult):
+        result = result_class(None, None, tmp_path, output_file="Fe_SPEC.out", task_name="ARPES")
+        monkeypatch.setattr(result, "parse_result_file", lambda file, potential=None: file.path())
+        assert result.spectra == (
+            str(tmp_path / "Fe_data_pol1.spc"),
+            str(tmp_path / "Fe_data_pol2.spc"),
+        )
+        assert tuple(k for k in result.output_values if k.startswith("SPC")) == ("SPC", "SPC_2")
+        assert result.output_values["SPC_2"].path() == str(tmp_path / "Fe_data_pol2.spc")
+
+
+def test_spec_parser_uses_stream_text_without_reopening_output(tmp_path, monkeypatch):
+    """SPEC output read by DefaultOutputParser is already in output_lines."""
+    result = SpecResult(None, None, tmp_path, task_name="BAND")
+    parser = SpecOutputReader(None, None, tmp_path).parser
+    assert isinstance(parser, SpecOutputParser)
+    assert SpecOutputParser.read_output is not DefaultOutputParser.read_output
+
+    async def skip_common_header(stream, _result):
+        # The real common parser consumes the FILES/header section.
+        assert await stream.readline() == b"# ibar: 2\n"
+
+    monkeypatch.setattr(parser, "read_commons", skip_common_header)
+
+    async def parse():
+        stream = asyncio.StreamReader()
+        stream.feed_data(
+            b"# ibar: 2\n"
+            b"lattice constant: 4.5\n"
+            b"real basis 1: 1.0 0.0\n"
+            b"stookes-vector of the photonfield\n"
+            b"1.0 2.0 3.0 4.0 5.0 6.0\n"
+        )
+        stream.feed_eof()
+        await parser.read_output(stream, result)
+
+    asyncio.run(parse())
+
+    assert result.output_file is None
+    assert result.potential_barrier == {"ibar": 2}
+    assert result.lattice_constants == {"a": 4.5}
+    np.testing.assert_allclose(result.basis_vectors["real"][0], [1, 0])
+    np.testing.assert_allclose(result.spectral_data, [[1, 2, 3, 4, 5, 6]])
+    assert result._get_file_content() is result._file_content
+    assert not hasattr(result, "output_content")
+
+
+def test_spec_result_falls_back_to_file_without_parser_output(tmp_path):
+    output = tmp_path / "from-file.out"
+    output.write_text("# ibar: 3\n")
+    result = SpecResult(None, None, tmp_path, output_file=output, task_name="BAND")
+
+    assert result.potential_barrier == {"ibar": 3}
+
+
+def test_spec_parser_prefers_stream_snapshot_over_existing_file(tmp_path, monkeypatch):
+    output = tmp_path / "Fe_SPEC.out"
+    output.write_text("# ibar: 99\n")
+    result = SpecResult(None, None, tmp_path, output_file=output, task_name="BAND")
+    parser = SpecOutputReader(None, None, tmp_path).parser
+
+    async def skip_common_header(_stream, _result):
+        pass
+
+    monkeypatch.setattr(parser, "read_commons", skip_common_header)
+
+    async def parse():
+        stream = asyncio.StreamReader()
+        stream.feed_data(b"# ibar: 4\n")
+        stream.feed_eof()
+        await parser.read_output(stream, result)
+
+    asyncio.run(parse())
+
+    assert result.potential_barrier == {"ibar": 4}
+    assert result._get_file_content() == "# ibar: 4\n"
+    assert result.output_lines == ["# ibar: 4"]
+
+
+
+def test_spec_saved_stream_keeps_paired_input_fallback(tmp_path):
+    """The captured stream must retain the source pathname for FILES fallback."""
+    from ase2sprkkr.common.process_output_reader import AsyncioFileReader
+
+    output = tmp_path / "sample.out"
+    (tmp_path / "sample.inp").write_text("placeholder")
+    output.write_bytes(
+        b"SPRKKR VERSION 9.7 build\n"
+        b"FILES:\n"
+        b"\n"
+        b"\n"
+        b"# ibar: 2\n"
+    )
+    result = SpecResult(None, None, tmp_path, output_file=output, task_name="BAND")
+    parser = SpecOutputParser()
+    with AsyncioFileReader(output) as stream:
+        asyncio.run(parser.read_output(stream, result))
+    assert result.path_to("input") == str(tmp_path / "sample.inp")
+    assert result.potential_barrier == {"ibar": 2}
+
+
+def test_spec_snapshot_preserves_whitespace_and_utf8(tmp_path, monkeypatch):
+    """The captured text is exact even if the common reader strips line ends."""
+    result = SpecResult(None, None, tmp_path, task_name="BAND")
+    parser = SpecOutputParser()
+
+    async def consume_first(stream, _result):
+        assert await stream.readline() == "# header: ž\n".encode("utf-8")
+
+    monkeypatch.setattr(parser, "read_commons", consume_first)
+
+    async def parse():
+        stream = asyncio.StreamReader()
+        stream.feed_data("# header: ž\n  padded  \n".encode("utf-8"))
+        stream.feed_eof()
+        await parser.read_output(stream, result)
+
+    asyncio.run(parse())
+    assert result._get_file_content() == "# header: ž\n  padded  \n"
+    assert result.output_lines == ["  padded"]
+
+
+def test_spec_streamed_spleed_intensity_without_disk_or_with_stale_disk(
+    tmp_path, monkeypatch
+):
+    import pytest
+
+    def diagram(rows):
+        return "i(e)-diagram\n" + "".join(
+            f"{energy:12.5E}  {intensity:12.5E}\n".replace("E", "D")
+            for energy, intensity in rows
+        )
+
+    streamed_rows = [(1.0, 2.0), (3.0, 4.0)]
+    stream_text = diagram(streamed_rows)
+
+    async def skip_common_header(_stream, _result):
+        pass
+
+    for has_disk_output in (False, True):
+        output_path = tmp_path / "Fe_SPEC.out"
+        if has_disk_output:
+            output_path.write_text(diagram([(99.0, 100.0)]))
+        result = SpecResult(
+            None, None, tmp_path,
+            output_file=output_path if has_disk_output else None,
+            task_name="SPLEED",
+        )
+        parser = SpecOutputParser()
+        monkeypatch.setattr(parser, "read_commons", skip_common_header)
+
+        async def parse():
+            stream = asyncio.StreamReader()
+            stream.feed_data(stream_text.encode("ascii"))
+            stream.feed_eof()
+            await parser.read_output(stream, result)
+
+        asyncio.run(parse())
+        assert result._get_file_content() == stream_text
+        spectrum = result.spleed_intensity
+        assert spectrum is not None
+        np.testing.assert_allclose(spectrum.RAW_DATA(), streamed_rows)
+        np.testing.assert_allclose(result.spectral_data, streamed_rows)

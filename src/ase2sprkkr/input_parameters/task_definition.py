@@ -2,9 +2,10 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 import os
-from typing import Iterable, Optional, Tuple, Union
+import string
+from typing import Callable, Iterable, Optional, Tuple, Union
 
 from ..common.doc import process_input_parameters_definition
 from ..common.module_registry import (
@@ -14,7 +15,8 @@ from ..common.module_registry import (
 )
 
 
-_FileTemplate = Union[str, os.PathLike[str]]
+_FilePath = Union[str, os.PathLike[str]]
+_FileTemplate = Union[_FilePath, Callable[[object], Optional[_FilePath]]]
 
 
 def _normalize_identifier(value: str, field: str) -> str:
@@ -34,35 +36,104 @@ def _validate_executable(value: str) -> str:
     return value
 
 
-def _normalize_file_templates(
-    templates: Iterable[_FileTemplate], field: str
-) -> Tuple[str, ...]:
-    if isinstance(templates, (str, bytes, os.PathLike)):
-        raise TypeError(
-            f"{field} must be an iterable of path-like strings, not a single path"
-        )
+@dataclass(frozen=True, eq=False)
+class TaskFile(os.PathLike):
+    """One task file declaration, or its resolved path with retained metadata.
+
+    A pathname may be a template or callback; a callback returning None means
+    the file is not declared for that parameter set.  An optional declared
+    file may be absent even after successful execution.
+    """
+
+    pathname: _FileTemplate
+    type: Optional[str] = None
+    info: Optional[str] = None
+    optional: bool = False
+
+    def __post_init__(self):
+        path = self.pathname
+        if not callable(path):
+            path = os.fspath(path)
+            if not isinstance(path, str):
+                raise TypeError("TaskFile pathname must be a string")
+            if not path:
+                raise ValueError("TaskFile pathname must not be empty")
+            object.__setattr__(self, "pathname", path)
+        if self.type is not None:
+            object.__setattr__(self, "type", _normalize_identifier(self.type, "type"))
+        if self.info is not None and not isinstance(self.info, str):
+            raise TypeError("TaskFile info must be a string or None")
+        if type(self.optional) is not bool:
+            raise TypeError("TaskFile optional must be a bool")
+
+    def __fspath__(self):
+        if callable(self.pathname):
+            raise TypeError("Resolve the TaskFile callback before using its path")
+        return self.pathname
+
+    def __str__(self):
+        return str(self.pathname)
+
+    def __eq__(self, other):
+        if isinstance(other, TaskFile):
+            return (self.pathname, self.type, self.info, self.optional) == (
+                other.pathname, other.type, other.info, other.optional
+            )
+        if isinstance(other, str):
+            return (not self.optional and self.type is None and self.info is None
+                    and self.pathname == other)
+        return NotImplemented
+
+    def __hash__(self):
+        if not self.optional and self.type is None and self.info is None:
+            return hash(self.pathname)
+        return hash((self.pathname, self.type, self.info, self.optional))
+
+    @property
+    def effective_info(self):
+        """Use the explicitly supplied info, or fall back to the result format."""
+        from ..result_files.definition_registry import result_file_definition_registry
+        return result_file_definition_registry.info_for_task_file(self)
+
+
+class _MissingTaskFileValue(ValueError):
+    """Optional filename template field is unset."""
+
+
+class _TaskFileFormatter(string.Formatter):
+    def __init__(self, parameters):
+        self.parameters = parameters
+
+    def get_field(self, field_name, args, kwargs):
+        if field_name == "dataset":
+            value = self.parameters.CONTROL.DATASET()
+        else:
+            value = self.parameters
+            for key in field_name.split("."):
+                value = value[key]
+            if callable(value):
+                value = value()
+        if value is None:
+            raise _MissingTaskFileValue(field_name)
+        if value == "":
+            raise ValueError(f"TaskFile template field {field_name!r} must not be empty")
+        return value, field_name
+
+
+def _normalize_task_files(files: Iterable[_FileTemplate], field: str) -> Tuple[TaskFile, ...]:
+    if isinstance(files, (str, bytes, os.PathLike)) or callable(files):
+        raise TypeError(f"{field} must be an iterable of path-like strings or TaskFile declarations")
     try:
-        iterator = iter(templates)
+        iterator = iter(files)
     except TypeError:
-        raise TypeError(
-            f"{field} must be an iterable of path-like strings"
-        ) from None
+        raise TypeError(f"{field} must be an iterable of path-like strings or TaskFile declarations") from None
 
     normalized = []
     for index, item in enumerate(iterator):
         try:
-            path = os.fspath(item)
-        except TypeError:
-            raise TypeError(
-                f"{field}[{index}] must be a string or os.PathLike, "
-                f"got {type(item).__name__}"
-            ) from None
-        if not isinstance(path, str):
-            raise TypeError(
-                f"{field}[{index}] must resolve to a string, "
-                f"got {type(path).__name__}"
-            )
-        normalized.append(path)
+            normalized.append(item if isinstance(item, TaskFile) else TaskFile(item))
+        except (TypeError, ValueError) as exc:
+            raise type(exc)(f"{field}[{index}]: {exc}") from None
     return tuple(normalized)
 
 
@@ -79,9 +150,9 @@ class TaskDefinition:
     executable: str
     mpi: bool
     output_reader_name: Optional[str]
-    input_file_templates: Tuple[str, ...]
-    output_file_templates: Tuple[str, ...]
-    cache_file_templates: Tuple[str, ...]
+    input_files: Tuple[TaskFile, ...]
+    output_files: Tuple[TaskFile, ...]
+    cache_files: Tuple[TaskFile, ...]
 
     def __init__(
         self,
@@ -92,9 +163,9 @@ class TaskDefinition:
         mpi: bool = True,
         output_reader_name: Optional[str] = None,
         output_reader: Optional[str] = None,
-        input_file_templates: Iterable[_FileTemplate] = (),
-        output_file_templates: Iterable[_FileTemplate] = (),
-        cache_file_templates: Iterable[_FileTemplate] = (),
+        input_files: Iterable[_FileTemplate] = (),
+        output_files: Iterable[_FileTemplate] = (),
+        cache_files: Iterable[_FileTemplate] = (),
     ) -> None:
         schema_name = _normalize_identifier(
             input_parameters_definition_name, "input_parameters_definition_name"
@@ -123,21 +194,15 @@ class TaskDefinition:
         object.__setattr__(self, "executable", executable)
         object.__setattr__(self, "mpi", mpi)
         object.__setattr__(self, "output_reader_name", output_reader_name)
-        object.__setattr__(
-            self,
-            "input_file_templates",
-            _normalize_file_templates(input_file_templates, "input_file_templates"),
-        )
-        object.__setattr__(
-            self,
-            "output_file_templates",
-            _normalize_file_templates(output_file_templates, "output_file_templates"),
-        )
-        object.__setattr__(
-            self,
-            "cache_file_templates",
-            _normalize_file_templates(cache_file_templates, "cache_file_templates"),
-        )
+        for kind, values in (
+            ("input", input_files),
+            ("output", output_files),
+            ("cache", cache_files),
+        ):
+            object.__setattr__(
+                self, f"{kind}_files",
+                _normalize_task_files(values, f"{kind}_files"),
+            )
 
     def output_reader(
         self,
@@ -239,13 +304,6 @@ class InputParametersRegistry(ModuleRegistry):
         if not isinstance(task, TaskDefinition):
             raise TypeError("task must be a TaskDefinition")
         definition = self[task.input_parameters_definition_name]
-        canonical = definition._task_definition
-        if canonical is not None and canonical != task:
-            raise RegistryDefinitionError(
-                f"Task {task.name} references input schema "
-                f"{task.input_parameters_definition_name}, which is bound to "
-                f"different canonical task metadata {canonical!r}"
-            )
         return definition
 
     def create_for_task(
@@ -306,6 +364,9 @@ class InputParametersRegistry(ModuleRegistry):
             inputfile=file,
         )
 
+        if task.executable == "kkrspec" and not out.TASK.TASK.is_set():
+            raise TaskMismatchError(task.name, None)
+
         task_name = out.task_name
         if task_name != task.name:
             raise TaskMismatchError(task.name, task_name)
@@ -322,21 +383,49 @@ class InputParametersRegistry(ModuleRegistry):
 
     @staticmethod
     def _resolve_file_templates(parameters, directory, templates):
-        dataset = parameters.CONTROL.DATASET()
-        return tuple(
-            path if os.path.isabs(path) else os.path.join(directory, path)
-            for path in (
-                os.fspath(template).format(dataset=dataset)
-                for template in templates
-            )
-        )
+        """Resolve templates to concrete TaskFile values without losing metadata."""
+        formatter = _TaskFileFormatter(parameters)
+        files = []
+        for value in templates:
+            declaration = value if isinstance(value, TaskFile) else TaskFile(value)
+            pathname = declaration.pathname
+            if callable(pathname):
+                pathname = pathname(parameters)
+            if pathname is None:
+                continue
+            if isinstance(pathname, TaskFile):
+                declaration = pathname
+                pathname = declaration.pathname
+            path = os.fspath(pathname)
+            if not isinstance(path, str):
+                raise TypeError("File callback must return a string/path or None")
+            if not path:
+                raise ValueError("TaskFile pathname must not be empty")
+            try:
+                path = formatter.format(path)
+            except _MissingTaskFileValue as exc:
+                if declaration.optional:
+                    continue
+                raise ValueError(
+                    f"Required TaskFile template {path!r} has unset field {exc}"
+                ) from exc
+            resolved = path if os.path.isabs(path) else os.path.join(directory, path)
+            files.append(replace(declaration, pathname=resolved))
+        return tuple(files)
 
     def files_for_task(self, task, parameters, directory, kind):
         """Combine declarative task templates with schema-specific file rules."""
         definition = self.definition_for_task(task)
-        templates = getattr(task, f"{kind}_file_templates")
-        declared = self._resolve_file_templates(parameters, directory, templates)
+        declared = self._resolve_file_templates(
+            parameters, directory, getattr(task, f"{kind}_files")
+        )
         schema_files = getattr(definition, f"{kind}_files")(parameters, directory)
+        # Keep schema extension hooks; shared resolution lives in this registry.
+        # A TaskFile retains metadata, while plain paths remain valid shorthands.
+        schema_files = tuple(
+            value if isinstance(value, TaskFile) else TaskFile(value)
+            for value in schema_files
+        )
         return (*declared, *schema_files)
 
 

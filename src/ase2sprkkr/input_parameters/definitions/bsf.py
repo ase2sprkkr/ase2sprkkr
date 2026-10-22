@@ -1,11 +1,12 @@
 """BSF input-parameters definition."""
 
+import numpy as np
 from functools import cache
 from typing import Any, List, Optional
 
 from ...common.generated_configuration_definitions import Length
-from ...common.grammar_types import Keyword, SetOf
-from ...common.warnings import DataValidityError
+from ...common.grammar_types import Keyword, SetOf, Integer
+from ...common.warnings import DataValidityError, DataValidityWarning
 from ..input_parameters import InputSection
 from ...physics.lattice_data import bravais_number
 from ..input_parameters_definitions import InputParametersDefinition, InputValueDefinition as V
@@ -64,6 +65,10 @@ def _ka_numbered(option):
     return bsf_mode(_root(option)) == EK
 
 
+def _grid_default(option):
+    return [3] if bsf_mode(_root(option)) == EK else [0]
+
+
 def _ne_default(option):
     return [200] if _requested_mode(_root(option)) == EK else [1]
 
@@ -89,6 +94,14 @@ def _validate_bsf(
 ) -> Optional[List[DataValidityError]]:
     issues = []
     mode = bsf_mode(parameters)
+    hint = _requested_mode(parameters)
+    if hint and hint != mode:
+        issues.append(
+            DataValidityWarning(
+                f"ENERGY.NE selects BSF-{mode}, but BSF-{hint} was requested"
+            )
+        )
+
 
     task = parameters["TASK"]
     incompatible = KK_TASK_ITEMS if mode == EK else EK_TASK_ITEMS
@@ -121,6 +134,13 @@ def _validate_bsf(
                     f"TASK.{', TASK.'.join(missing)} are required in BSFKK mode"
                 )
             )
+    if why != "set" and mode == KK and not missing:
+        origin = task["KA"]()
+        origin = np.zeros(3) if origin is None else np.asarray(origin).reshape(-1, 3)[0]
+        first = np.asarray(task["K1"]()) - origin
+        second = np.asarray(task["K2"]()) - origin
+        if not np.all(np.isfinite(first)) or not np.all(np.isfinite(second)) or np.linalg.norm(np.cross(first, second)) == 0:
+            issues.append(DataValidityError("K1 and K2 are endpoints relative to KA and must span a finite nondegenerate plane."))
     return issues or None
 
 
@@ -269,7 +289,7 @@ def _task_definition():
     out = TASK(
         "BSF",
         add=[
-            V("NK", 300, condition=_ek_item, info="total number of k-points"),
+            V("NK", Integer(min=2), 300, condition=_ek_item, info="total number of k-points"),
             V(
                 "KPATH",
                 Keyword(kpaths),
@@ -316,14 +336,14 @@ def _task_definition():
             ),
             V(
                 "NK1",
-                int,
+                Integer(min=2),
                 condition=_kk_item,
                 info="number of k-points along k1",
                 is_optional=True,
             ),
             V(
                 "NK2",
-                int,
+                Integer(min=2),
                 condition=_kk_item,
                 info="number of k-points along k2",
                 is_optional=True,
@@ -333,14 +353,14 @@ def _task_definition():
                 SetOf(float, length=3),
                 condition=_kk_item,
                 is_optional=True,
-                info="first k-vector to span a two-dimensional region in k-space",
+                info="First endpoint of the K-K region; native subtracts KA, then orthogonalizes the second direction.",
             ),
             V(
                 "K2",
                 SetOf(float, length=3),
                 condition=_kk_item,
                 is_optional=True,
-                info="second k-vector to span a two-dimensional region in k-space",
+                info="Second endpoint of the K-K region; native subtracts KA and orthogonalizes relative to K1-KA.",
             ),
         ],
     )
@@ -353,8 +373,9 @@ def _energy_definition():
     energy = ENERGY(
         emin=(-0.2, "The energy at which the BSF mesh starts", None),
         emax=(-1.0, "The energy at which the BSF mesh ends", None),
-        defaults={"GRID": 3, "NE": _ne_default, "ImE": 0.001},
+        defaults={"GRID": _grid_default, "NE": _ne_default, "ImE": 0.001},
     )
+    energy.copy_member("NE", type=SetOf(Integer(min=1), min_length=1, max_length=2))
     energy["EMIN"]._energy_default_value = _emin_default
     energy["EMAX"]._energy_default_value = _emax_default
     energy["EMAXEV"]._energy_default_value = _emaxev_default

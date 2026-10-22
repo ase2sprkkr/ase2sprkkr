@@ -141,14 +141,15 @@ def test_explicit_manager_persists_task_and_dataset(tmp_path, monkeypatch):
 
 def test_persistence_uses_task_selected_by_shared_schema_values(tmp_path, monkeypatch):
     parameters = _parameters(monkeypatch, "ARPES")
-    parameters.TASK.TASK = "SPLEED"
+    # ARPES and SPLEED now have distinct parameter schemas: change_task()
+    # must perform the switch rather than changing TASK.TASK directly.
+    parameters.change_task("SPLEED")
 
     record = _project_record(parameters, tmp_path)
 
-    assert parameters.requested_task_name == "ARPES"
     assert parameters.task_name == "SPLEED"
     assert record.task == "SPLEED"
-    assert record.input_definition == "ARPES"
+    assert record.input_definition == parameters.definition_name.upper()
     assert not hasattr(record, "requested_task")
 
 

@@ -24,7 +24,7 @@ from .base import (
 from ..common.async_utils import run_coro_sync as _run_sync
 from ..common.file_versions import file_digest
 from .transport import expand_local_files, has_file_magic
-from .run_model import FileSyncPolicy
+from .run_model import FileManifest, FileSyncPolicy
 
 
 class RemoteRunner:
@@ -242,13 +242,16 @@ class RemoteRunner:
 
         local_digest = file_digest(source, missing_ok=True)
         remote_digest = await self.executor.transport.file_digest(target)
-        if required and local_digest is None:
-            if policy == FileSyncPolicy.ALWAYS:
-                raise FileNotFoundError(f"Local input file does not exist: {source}")
-            if remote_digest is None:
-                raise FileNotFoundError(
-                    f"Input file exists neither locally nor remotely: {source}"
-                )
+        if local_digest is None:
+            if not required and remote_digest is None:
+                return None
+            if required:
+                if policy == FileSyncPolicy.ALWAYS:
+                    raise FileNotFoundError(f"Local input file does not exist: {source}")
+                if remote_digest is None:
+                    raise FileNotFoundError(
+                        f"Input file exists neither locally nor remotely: {source}"
+                    )
 
         if policy.should_transfer(local_digest, remote_digest):
             if uploads is None:
@@ -278,24 +281,16 @@ class RemoteRunner:
                 await self.executor._resolved_remote_root(),
             )
 
-    def _unique_declared_paths(self, values, *, excluded=()):
-        """Yield normalized file declarations once, preserving their order."""
-        seen = set(excluded)
-        for value in values:
-            local = self._local_path(value)
-            if local is not None and local not in seen:
-                seen.add(local)
-                yield local, has_file_magic(local)
-
-    async def _prepare_cache_files(self, used):
+    async def _prepare_cache_files(self, used, manifest):
         targets = {}
         patterns = []
         pattern_before = {}
         output_policy = self.executor.output_files
         remote_root = await self.executor._resolved_remote_root()
 
-        for local, pattern in self._unique_declared_paths(self.spec.cache_files):
-            if pattern:
+        for cache in manifest.caches:
+            local = cache.file.local_path
+            if has_file_magic(local):
                 remote_pattern = await self.executor.map_path(local)
                 patterns.append(remote_pattern)
                 # Cache patterns use the same transfer logic as inputs,
@@ -313,6 +308,10 @@ class RemoteRunner:
             # Cache inputs obey precisely the same staging policy as ordinary
             # inputs, except that a missing local cache is allowed.
             remote = await self._stage_file(local, used, required=False)
+            if remote is None:
+                # A missing cache need not be uploaded, but remains declared:
+                # the calculation may create it and it must be collected.
+                remote = await self.executor.map_path(local)
 
             before = None
             if output_policy != FileSyncPolicy.NEVER:
@@ -323,20 +322,14 @@ class RemoteRunner:
         self._cache_patterns = tuple(patterns)
         self._cache_before = pattern_before
 
-    async def _prepare_output_files(self):
-        primary = {
-            path
-            for path in (self.result.output_file, self.result.error_file)
-            if path is not None
-        }
+    async def _prepare_output_files(self, manifest):
         targets = {}
         patterns = []
 
-        for local, pattern in self._unique_declared_paths(
-            self.spec.output_files, excluded=primary,
-        ):
+        for entry in manifest.outputs:
+            local = entry.local_path
             remote = await self.executor.map_path(local)
-            if pattern:
+            if has_file_magic(local):
                 patterns.append(remote)
             else:
                 targets[local] = remote
@@ -362,10 +355,11 @@ class RemoteRunner:
         )
 
     async def _sync_patterns(self, patterns, *, kind, required=False,
-                             excluded_remote=(), excluded_local=()):
+                             excluded_remote=(), excluded_local=(), seen_remote=None):
         """Expand declarations once; the entry handlers own transfer policy."""
         remote_root = await self.executor._resolved_remote_root()
-        selected = set(excluded_remote)
+        selected = seen_remote if seen_remote is not None else set()
+        selected.update(excluded_remote)
         excluded_local = set(excluded_local)
         for pattern in patterns:
             local_pattern = os.fspath(await self.executor.unmap_path(pattern))
@@ -416,21 +410,31 @@ class RemoteRunner:
                     )
             return
 
+        # The persisted manifest is the sole authority for which declared
+        # outputs may be absent. This also works on historical attach, whose
+        # reconstructed ExecutionSpec has no output declarations.
+        optional = {entry.remote_path: entry.optional for entry in self._files.outputs}
         for local, remote in self._output_targets.items():
-            await self._sync_output_entry(local, remote, required)
+            await self._sync_output_entry(
+                local, remote, required and not optional.get(remote, False),
+            )
 
         if self._output_patterns:
             primary = {
                 path for path in (self.result.output_file, self.result.error_file)
                 if path is not None
             }
-            await self._sync_patterns(
-                self._output_patterns,
-                kind="output",
-                required=required,
-                excluded_remote=self._output_targets.values(),
-                excluded_local=primary,
-            )
+            # All output patterns share one transfer set, even when their
+            # required/optional policies differ. Exact outputs seed it.
+            seen_remote = set(self._output_targets.values())
+            for pattern in self._output_patterns:
+                await self._sync_patterns(
+                    (pattern,),
+                    kind="output",
+                    required=required and not optional.get(pattern, False),
+                    excluded_local=primary,
+                    seen_remote=seen_remote,
+                )
 
     async def _sync_one_output(self, local, remote, required):
         policy = self.executor.output_files
@@ -495,20 +499,27 @@ class RemoteRunner:
             out.append(replacement or value)
         return out
 
-    async def _prepare_request(self, run_id, remote_directory):
+    async def _prepare_request(self, run_id, remote_directory, manifest):
         used = {}
-        for value in self.spec.input_files:
-            source = self._local_path(value)
-            if source is not None and has_file_magic(source):
-                await self._stage_input_pattern(value, used)
-            else:
-                await self._stage_file(value, used)
+        # The declared manifest merges aliases with required-wins semantics.
+        # Stage the primary input and stdin first: an optional auxiliary alias
+        # must never weaken a mandatory stream.
+        input_requirements = {
+            entry.local_path: not entry.optional for entry in manifest.inputs
+        }
         input_target = await self._stage_file(self.spec.input_file, used)
         stdin_target = await self._stage_file(self.spec.stdin, used)
+        for value in self.spec.input_files:
+            source = self._local_path(value)
+            required = input_requirements.get(source, True)
+            if source is not None and has_file_magic(source):
+                await self._stage_input_pattern(value, used, required=required)
+            else:
+                await self._stage_file(value, used, required=required)
 
-        await self._prepare_cache_files(used)
+        await self._prepare_cache_files(used, manifest)
         staged = {source: target for target, source in used.items()}
-        await self._prepare_output_files()
+        await self._prepare_output_files(manifest)
 
         output_target = (
             await self.executor.map_path(self.result.output_file)

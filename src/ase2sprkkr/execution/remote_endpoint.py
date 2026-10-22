@@ -128,8 +128,7 @@ class _RemoteRun(RemoteRunner):
                 raise
         return result
 
-    async def _submitted_manifest(self, request):
-        local = FileManifest.from_spec(self.spec)
+    async def _submitted_manifest(self, request, local):
 
         async def mapped(entry):
             return replace(entry, remote_path=await self.executor.map_path(entry.local_path))
@@ -165,13 +164,17 @@ class _RemoteRun(RemoteRunner):
 
     async def _prepare_async(self):
         try:
+            # Reject invalid file declarations *before* creating target folders
+            # or uploading anything. The same validated manifest then owns
+            # staging requirements and the persisted submission snapshot.
+            local = FileManifest.from_spec(self.spec)
             run_id = self._run_id or uuid4().hex
             remote_directory = await self.executor.map_directory(self.spec.directory)
             await self.executor.transport.run(("mkdir", "-p", "--", remote_directory))
-            request = await self._prepare_request(run_id, remote_directory)
+            request = await self._prepare_request(run_id, remote_directory, local)
             if self._run_id is None:
                 request["id"] = None
-            manifest = await self._submitted_manifest(request)
+            manifest = await self._submitted_manifest(request, local)
             return request, manifest
         except Exception as exc:
             # No calculation has been launched yet. Persisted preflight and

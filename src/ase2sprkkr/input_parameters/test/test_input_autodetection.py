@@ -62,6 +62,26 @@ SITES NL={3}
     assert parsed.SCF.NITER() == 80
 
 
+def test_from_file_jxc_example_with_preceding_dmi_flag():
+    from pathlib import Path
+
+    path = Path(__file__).parent.parent / "examples" / "jxc.in"
+    parsed = InputParameters.from_file(path)
+    assert parsed.definition_name == "JXC"
+    assert parsed.TASK.TASK() == "JXC"
+    assert parsed.TASK.DMI()
+
+
+
+def test_jxc_combined_selectors_separated_by_other_task_options():
+    # The unordered TASK section must recognize both native keywords, even
+    # when a non-selector parameter appears between them.
+    from ..input_parameters_definitions import _task_preparse_definition
+
+    preview = _task_preparse_definition()
+    parsed = preview.read_from_string("TASK DMI CLURAD=4.0 JXC")
+    assert list(parsed.TASK.TASK()) == ["DMI", "JXC"]
+
 def test_jxc_and_dmi_default_flags_and_secondary_switch():
     jxc = InputParameters.create("JXC")
     dmi = InputParameters.create("DMI")
@@ -124,3 +144,15 @@ def test_changing_between_jxc_and_dmi_switches_defaults():
     assert params.requested_task_name == "JXC"
     assert params.task_name == "JXC"
     assert params.TASK.JXC() and not params.TASK.DMI()
+
+
+def test_preparse_accepts_unknown_bracketed_string_set(tmp_path):
+    from ..input_parameters import InputParameters
+
+    params = InputParameters.create("JXC")
+    params.CONTROL.POTFIL = "Fe.pot"
+    params.TASK.SELECT = ["Fe", "Co"]
+    path = tmp_path / "selected.in"
+    params.save_to_file(path, atoms=False)
+    parsed = InputParameters.from_file(path)
+    assert parsed.TASK.SELECT().tolist() == ["Fe", "Co"]

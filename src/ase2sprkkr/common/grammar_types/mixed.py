@@ -3,6 +3,7 @@ Variant type that can accepts either number or two-item array)"""
 
 import pyparsing as pp
 import copy
+import unyt
 
 from .grammar_type import GrammarType, compare_numpy_values, recognized_set_types, type_from_type, type_from_value
 from ..decorators import cached_property, add_to_signature
@@ -28,11 +29,15 @@ class BaseMixed(GrammarType):
         return pp.Or((i.grammar(param_name) for i in self.types))
 
     def get_type(self, value):
-        """Return the type of the value.
-        Actualy, this implementation is a simple implementation that suits for the common
-        Mixed types, so if you make a custom Mixed type, redefine it.
-        """
-        return self.string_type if isinstance(value, str) else type_from_value(value)
+        """Select the grammar type corresponding to a Python value."""
+        if isinstance(value, str):
+            return self.string_type
+        if (isinstance(value, recognized_set_types) and not isinstance(value, unyt.unyt_quantity)
+                and len(value) and isinstance(value[0], str)):
+            for candidate in self.types:
+                if isinstance(candidate, SetOf) and isinstance(candidate.type, self.string_type.__class__):
+                    return candidate
+        return type_from_value(value)
 
     def _validate(self, value, why="set"):
         if value is None:
@@ -51,6 +56,11 @@ class BaseMixed(GrammarType):
 
     def grammar_name(self):
         return "<mixed>"
+
+    def _string(self, value):
+        if isinstance(value, bool):
+            return Bool._string(self, value)
+        return self.get_type(value).string(value)
 
     def convert(self, value):
         if value is None:
@@ -77,42 +87,33 @@ class Range(BaseMixed):
         return self.types[1 if isinstance(value, recognized_set_types) else 0]
 
 
-def VariantGenerator(name, bool_type=Boolean.I, string_type=QString.I, add_types=None, doc=None):
+class Mixed(BaseMixed):
+    """Unknown input value; nonempty string sets require explicit brackets."""
 
-    base_types = [Energy.I, Real.I, Integer.I, set_of_integers, set_of_reals, bool_type, string_type]
-    if add_types:
-        base_types += add_types
-
-    def _string(self, val):
-        if isinstance(val, bool):
-            return Bool._string(self, val)
-        else:
-            return super()._string(val)
-
-    return type(
-        name,
-        (BaseMixed,),
-        {
-            "string_type": string_type,
-            "types": base_types,
-            "_string": _string,
-            "__doc__": doc,
-        },
+    string_type = QString.I
+    types = (
+        Energy.I, Real.I, Integer.I, set_of_integers, set_of_reals,
+        Flag.I, QString.I, SetOf(QString.I, min_length=1, require_brackets=True),
     )
+    missing_value = lambda self: (True, True, False)
 
 
-Mixed = VariantGenerator(
-    "Mixed", Flag.I, QString.I, doc=""" A variant value to be used in input files (in unknown - custom - options) """
-)
-Mixed.missing_value = lambda self: (True, True, False)
+class PotMixed(BaseMixed):
+    """Potential-file unknown value: preserve its line-oriented string grammar."""
 
-PotMixed = VariantGenerator(
-    "PotMixed",
-    Bool.I,
-    LineString.I,
-    doc=""" A variant value to be used in potential files (in unknown - custom - options) """,
-)
-Variant = VariantGenerator("PotMixed", Boolean.I, QString.I, doc=""" Variant type for configuration """)
+    string_type = LineString.I
+    types = (Energy.I, Real.I, Integer.I, set_of_integers,
+             set_of_reals, Bool.I, LineString.I)
+
+
+class Variant(BaseMixed):
+    """Variant type for configuration values."""
+
+    string_type = QString.I
+    types = (
+        Energy.I, Real.I, Integer.I, set_of_integers, set_of_reals,
+        Boolean.I, QString.I, SetOf(QString.I, min_length=1, require_brackets=True),
+    )
 
 
 class CustomMixed(BaseMixed):

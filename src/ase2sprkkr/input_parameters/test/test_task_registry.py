@@ -1,17 +1,16 @@
 import importlib
 import io
 import os
-import pickle
 import subprocess
 import sys
-from collections.abc import Mapping
+import pickle
 from types import SimpleNamespace
 
 import numpy as np
 import pytest
 
 from ...common.module_registry import RegistryDefinitionError, RegistryEntryNotFound
-from ..input_parameters import InputParameters, _LazyInputParametersDefinitions
+from ..input_parameters import InputParameters
 from ..task_definition import InputParametersRegistry, TaskDefinition, TaskRegistry
 
 
@@ -35,20 +34,13 @@ def test_standard_task_comes_from_input_parameters_definition():
     assert "SCF" not in InputParameters.task_registry.extra_tasks.names()
 
 
-def test_spec_tasks_share_schema_and_requested_task_is_default():
+def test_spec_tasks_have_specialized_schemas_and_requested_task_is_default():
     schema = InputParameters.input_parameters_registry["ARPES"]
-    task_registry = InputParameters.task_registry
-    registry = InputParameters.input_parameters_registry
-    arpes_task = task_registry["ARPES"]
-    spleed_task = task_registry["SPLEED"]
-    assert registry.definition_for_task(arpes_task) is schema
-    assert registry.definition_for_task(spleed_task) is schema
-    assert arpes_task.input_parameters_definition_name == schema.name.upper()
-    assert spleed_task.input_parameters_definition_name == schema.name.upper()
     spleed = InputParameters.create("SPLEED")
 
     assert schema._task_definition is None
-    assert spleed._definition is schema
+    assert spleed._definition is InputParameters.input_parameters_registry["SPLEED"]
+    assert spleed._definition is not schema
     assert spleed.requested_task_name == "SPLEED"
     assert spleed.TASK.TASK() == "SPLEED"
     assert not spleed.TASK.TASK.is_set()
@@ -93,7 +85,7 @@ def test_input_and_task_registry_namespaces_are_distinct():
     task_names = set(InputParameters.task_registry.names())
 
     assert {"ARPES", "BSF"} <= input_names
-    assert "SPLEED" not in input_names
+    assert {"SPLEED", "AIPES", "BAND"} <= input_names
     assert "BSFEK" not in input_names
     assert "BSF" not in task_names
     assert {"ARPES", "SPLEED", "BSFEK", "BSFKK"} <= task_names
@@ -194,15 +186,16 @@ def test_input_parameters_registry_snapshots_result_defaults():
     assert parameters.ENERGY.EMIN.is_set()
 
 
-def test_jxc_instance_default_can_be_cleared_to_schema_default():
+def test_jxc_without_result_keeps_normal_emin_default():
     parameters = InputParameters.create("JXC")
 
-    # Check the pristine JXC defaults before overriding them, avoiding a
-    # second full InputParameters construction for the baseline assertions.
     assert not hasattr(parameters, "from_result")
     assert parameters.ENERGY.EMIN() == -0.2
     assert not parameters.ENERGY.EMIN.is_set()
 
+
+def test_instance_default_can_be_cleared():
+    parameters = InputParameters.create("JXC")
     parameters.ENERGY.EMIN.set_default(-0.35)
 
     assert parameters.ENERGY.EMIN() == -0.35
@@ -227,18 +220,16 @@ def test_instance_default_copy_respects_copy_values():
     np.testing.assert_equal(deep.ENERGY.GRID(), parameters.ENERGY.GRID())
 
 
-def test_task_cannot_reuse_schema_bound_to_different_canonical_task():
+def test_explicit_task_can_reuse_schema_with_noncanonical_name():
     task = TaskDefinition("SCF", name="SPECIAL")
+    registry = InputParameters.input_parameters_registry
+    assert registry.definition_for_task(task) is registry["SCF"]
 
-    with pytest.raises(RegistryDefinitionError, match="different canonical task metadata"):
-        InputParameters.input_parameters_registry.definition_for_task(task)
 
-
-def test_canonical_task_metadata_must_match_as_a_value():
+def test_explicit_task_can_override_canonical_executable():
     task = TaskDefinition("SCF", name="SCF", executable="different-executable")
-
-    with pytest.raises(RegistryDefinitionError, match="different canonical task metadata"):
-        InputParameters.input_parameters_registry.definition_for_task(task)
+    registry = InputParameters.input_parameters_registry
+    assert registry.definition_for_task(task) is registry["SCF"]
 
 
 def test_extra_task_resolves_schema_from_own_input_registry(tmp_path, monkeypatch):
@@ -400,72 +391,60 @@ def test_create_from_dmi_result_keeps_dmi_defaults():
     assert params.ENERGY.EMIN() == -0.35
 
 
-def test_compatibility_definition_mapping_loads_only_requested_schema(
-    tmp_path, monkeypatch
-):
-    package = _package(
-        tmp_path,
-        monkeypatch,
-        "_lazy_user_definition_entries",
-        {
-            "valid": (
-                "from ase2sprkkr.input_parameters.input_parameters_definitions "
-                "import InputParametersDefinition\n"
-                "def input_parameters_definition():\n"
-                "    return InputParametersDefinition('valid', [])\n"
-            ),
-            "marpes": "input_parameters = object()\n",
-        },
+def _optional_task_file(parameters):
+    return "{dataset}.optional" if parameters.CONTROL.PRINT() else None
+
+
+def test_file_template_callbacks_skip_none_and_support_pickle(tmp_path):
+    parameters = InputParameters.create("ARPES")
+    parameters.CONTROL.DATASET = "Fe"
+    parameters.CONTROL.PRINT = 0
+    task = TaskDefinition(
+        "ARPES", name="FILE_CALLBACK_TEST",
+        input_files=("{dataset}.required", _optional_task_file),
     )
-    mapping = _LazyInputParametersDefinitions(InputParametersRegistry(package))
-
-    assert isinstance(mapping, Mapping)
-    assert set(mapping) == {"VALID", "MARPES"}
-    assert "MARPES" in mapping  # Discovery is not module materialization.
-    assert mapping["VALID"].name == "valid"
-
-    with pytest.raises(
-        RegistryDefinitionError,
-        match="does not define required export 'input_parameters_definition'",
-    ):
-        mapping["MARPES"]
-
-
-def test_legacy_user_hook_can_read_arpes_without_loading_broken_user_schema(
-    tmp_path,
-):
-    # Reproduce an import-time preference using InputParameters.definitions.
-    # The separate user-installed MARPES module is intentionally malformed.
-    config_dir = tmp_path / "ase2sprkkr"
-    custom_schemas = config_dir / "input_parameters"
-    custom_schemas.mkdir(parents=True)
-    (custom_schemas / "marpes.py").write_text(
-        "input_parameters = object()\n"
+    registry = InputParameters.input_parameters_registry
+    assert registry.files_for_task(task, parameters, str(tmp_path), "input") == (
+        str(tmp_path / "Fe.required"),
     )
-    (config_dir / "__init__.py").write_text(
-        "from ase2sprkkr.input_parameters.input_parameters import InputParameters\n"
-        "InputParameters.definitions['ARPES'].mpi = False\n"
-        "assert InputParameters.definitions['ARPES'].name == 'arpes'\n"
-        "assert InputParameters.definitions['ARPES'].mpi is False\n"
+    parameters.CONTROL.PRINT = 1
+    assert registry.files_for_task(task, parameters, str(tmp_path), "input") == (
+        str(tmp_path / "Fe.required"), str(tmp_path / "Fe.optional"),
     )
-    env = os.environ.copy()
-    env["XDG_CONFIG_HOME"] = str(tmp_path)
-    env.pop("ASE2SPRKKR_NO_USER_PROFILE", None)
+    restored = pickle.loads(pickle.dumps(task))
+    assert restored == task
+    assert restored.input_files[1].pathname is _optional_task_file
 
-    # Do not execute in XDG_CONFIG_HOME: its ase2sprkkr directory would
-    # shadow the installed package on sys.path in a fresh Python process.
-    working_dir = tmp_path / "work"
-    working_dir.mkdir()
-    completed = subprocess.run(
-        [sys.executable, "-c", "import ase2sprkkr"],
-        env=env,
-        cwd=working_dir,
-        capture_output=True,
-        text=True,
-        timeout=45,
-        check=False,
+
+
+
+def test_definitions_mapping_does_not_load_unrelated_definitions(monkeypatch):
+    from ase2sprkkr.input_parameters.input_parameters import (
+        _LazyInputParametersDefinitions,
     )
-    assert completed.returncode == 0, completed.stderr
+
+    class Registry:
+        def __init__(self):
+            self.loaded = []
+
+        def names(self):
+            return ("SCF", "BROKEN")
+
+        def __getitem__(self, name):
+            self.loaded.append(name)
+            if name == "BROKEN":
+                raise ImportError("broken user-provided definition")
+            return "scf-schema"
+
+    registry = Registry()
+    mapping = _LazyInputParametersDefinitions(registry)
+    assert list(mapping) == ["SCF", "BROKEN"]
+    assert len(mapping) == 2
+    assert registry.loaded == []
+    assert mapping["SCF"] == "scf-schema"
+    assert registry.loaded == ["SCF"]
+    with pytest.raises(ImportError, match="broken user-provided"):
+        mapping["BROKEN"]
 
 
 def test_task_enumeration_ignores_broken_schema_and_extra_task(
@@ -507,12 +486,42 @@ def test_task_enumeration_ignores_broken_schema_and_extra_task(
     with pytest.warns(RegistryLoadWarning) as record:
         assert set(registry.names()) == {"GOOD", "EXTRA"}
     assert len(record) == 2
+    assert {task.name for task in registry.values()} == {"GOOD", "EXTRA"}
     assert {registry[name].name for name in ("GOOD", "EXTRA")} == {"GOOD", "EXTRA"}
     with pytest.raises(RegistryDefinitionError, match="required export"):
         registry.input_parameters_registry["MARPES"]
     with pytest.raises(RegistryDefinitionError, match="must be TaskDefinition"):
         registry.extra_tasks["INVALID"]
 
+
+def test_task_enumeration_detects_valid_name_collision(tmp_path, monkeypatch):
+    definitions = _package(
+        tmp_path, monkeypatch, "_duplicate_task_schema", {
+            "same": (
+                "from ase2sprkkr.input_parameters.input_parameters_definitions "
+                "import InputParametersDefinition\n"
+                "from ase2sprkkr.input_parameters.task_definition import TaskDefinition\n"
+                "def input_parameters_definition():\n"
+                "    definition = InputParametersDefinition('same', [])\n"
+                "    definition._task_definition = TaskDefinition('SAME')\n"
+                "    return definition\n"
+            ),
+        },
+    )
+    tasks = _package(
+        tmp_path, monkeypatch, "_duplicate_task_extras", {
+            "same": (
+                "from ase2sprkkr.input_parameters.task_definition import TaskDefinition\n"
+                "def task_definition():\n"
+                "    return TaskDefinition('SAME', name='SAME')\n"
+            ),
+        },
+    )
+    registry = TaskRegistry(InputParametersRegistry(definitions), tasks)
+    with pytest.raises(RegistryDefinitionError, match="defined both"):
+        registry.names()
+    with pytest.raises(RegistryDefinitionError, match="defined both"):
+        registry["SAME"]
 
 def test_cli_and_input_autodetection_with_broken_user_schema(tmp_path):
     config_dir = tmp_path / "ase2sprkkr"

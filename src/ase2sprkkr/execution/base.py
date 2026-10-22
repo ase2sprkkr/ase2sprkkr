@@ -39,6 +39,29 @@ def file_path(value, directory=None, *, flush=False, required=False):
     return os.path.abspath(path)
 
 
+def declared_file_paths(values, directory, *, excluded=(), flush=False):
+    """Combine identical input declarations; reject contradictory optionality.
+
+    The execution layer accepts ordinary filenames, file objects and TaskFile
+    metadata without depending on the task-schema implementation.
+    """
+    merged = {}
+    excluded = set(excluded)
+    for value in values:
+        path = file_path(value, directory, flush=flush)
+        if path is None or path in excluded:
+            continue
+        required = not getattr(value, "optional", False)
+        previous = merged.get(path)
+        if previous is not None and previous != required:
+            raise ValueError(
+                f"Conflicting optionality for file {path}: "
+                "the same input cannot be both required and optional"
+            )
+        merged[path] = required
+    return tuple(merged.items())
+
+
 def _close_distinct(resources, *, suppress_errors=False):
     """Close each distinct resource once; keep closing after an error."""
     seen = set()
@@ -537,6 +560,9 @@ class LaunchSpec:
 
 
 def _pathlike(value):
+    from ..input_parameters.task_definition import TaskFile
+    if isinstance(value, TaskFile):
+        return value
     if isinstance(value, os.PathLike):
         return os.fspath(value)
     return value

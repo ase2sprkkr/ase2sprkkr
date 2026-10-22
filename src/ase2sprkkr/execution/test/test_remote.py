@@ -166,7 +166,10 @@ def test_remote_input_file_and_stdin_staged_only_once(tmp_path):
 
     async def prepare():
         directory = await runner.executor.map_directory(spec.directory)
-        return await runner._prepare_request("one-run", directory)
+        from ..run_model import FileManifest
+        return await runner._prepare_request(
+            "one-run", directory, FileManifest.from_spec(spec),
+        )
 
     try:
         request = asyncio.run(prepare())
