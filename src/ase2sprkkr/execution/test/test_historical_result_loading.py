@@ -288,3 +288,16 @@ def test_job_files_has_stable_module_and_public_export():
 
     assert JobFiles is ModuleJobFiles
     assert JobFiles.__module__ == "ase2sprkkr.execution.job_files"
+
+
+def test_job_files_sync_inputs_and_capture(tmp_path):
+    manager, _, record = _terminal_run(tmp_path)
+    files = record.job_files
+
+    files.sync_inputs()
+    captured = files.capture()
+
+    assert captured.captured_at == record.files.captured_at
+    assert captured.input_versions == record.files.input_versions
+    assert captured.output_versions == record.files.output_versions
+    assert files.missing_files() == ()
