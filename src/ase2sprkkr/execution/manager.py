@@ -511,8 +511,7 @@ class ExecutionManager:
                     and submission_conflicts(record, active)
                 )
                 if not conflicts:
-                    if record.files is not None:
-                        JobFiles(record)._sync_result_files(record.files.input_files)
+                    record.job_files.sync_inputs()
                     return self.transition(
                         record,
                         state=RunState.SUBMITTING,
@@ -583,7 +582,7 @@ class ExecutionManager:
 
         if artifacts_available and result_files is not None:
             try:
-                result_files = JobFiles(record)._capture_result_files(result_files)
+                result_files = record.job_files.capture(result_files)
             except OSError as exc:
                 state = RunState.FAILED
                 phase = FailurePhase.ARTIFACTS
@@ -641,7 +640,7 @@ class ExecutionManager:
         record = self.store.get(run) if isinstance(run, str) else self.store.get(run.id)
         if record.state not in _FINAL_STATES:
             raise RuntimeError(f"Run {record.id} is not finished")
-        missing = JobFiles(record)._missing_result_files(record.files)
+        missing = record.job_files.missing_files()
         executor = (self.executor_for(record)
                     if missing and record.execution.backend_id is not None else None)
         return JobFiles(record).retrieve_result_files(self.store, executor)
