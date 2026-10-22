@@ -1,6 +1,6 @@
 # Consolidated audit of SPR-KKR 9.7 and ASE2SPRKKR
 
-Status as of 4 October 2026. Sources: the supplied **PUB9.7_260420_18h13** code and the preceding individual audits of InputParameters definitions. This report consolidates the findings according to the actual reachability of each calculation and the meaning of its output. It is not a numerical certification of SPR-KKR.
+**Scope and date:** Native SPR-KKR 9.7 source audit, completed on 4 October 2026 against the supplied **PUB9.7_260420_18h13** revision. The classifications below concern the native computation paths and physical meaning of their outputs; they are not an audit of the current Python `TaskDefinition`, input validation, or input/cache/result-file manifests on `tasks-workflow`. For those evolving contracts consult the individual task audits and the definitions themselves. This is not a numerical certification of SPR-KKR.
 
 ## Scope and meaning of the categories
 
@@ -34,7 +34,7 @@ The classification applies to the supplied SPR-KKR revision. For a task with dis
 | **TUTORIAL: YLM, JLX, JLX-ASYMPT** |Mathematical examples of harmonics, Bessel functions and asymptotics.|L/M and limits are validated; even mathematical branches undergo common initialization and need usable input environment.|
 | **TUTORIAL: DOS-FEG, DOS-SS, DOS-CLU, DOS-BULK, GEN** |Samples DOS / normal GEN workflow in the corresponding model.|FEG and SS are single-site STANDARD. CLU requires actual cluster geometry and CLURAD/NSHL; the name of tutorial alone does not create it. BULK requires periodic integration.|
 
-For BSF needs to be corrected or intentionally confirmed default window before use without its own parameters. U POSANITAU includes an unprotected zero partial contribution among specific defective cases; does not mean the fact that each non-zero total annihilation integration is broken.
+For BSF, the default energy window needs to be corrected or explicitly confirmed before running without user-specified energy parameters. U POSANITAU includes an unprotected zero partial contribution among specific defective cases; does not mean the fact that each non-zero total annihilation integration is broken.
 
 ## 2. Tasks with caveats — classification by practical usability
 
