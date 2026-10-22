@@ -458,7 +458,7 @@ class ExecutionManager:
 
     def update_artifact_availability(self, record, path, state, message=None):
         return JobFiles(record).update_artifact_availability(
-            self.store, record, path, state, message,
+            self.store, path, state, message,
         )
 
     def _is_stale_submitting(self, record, *, now=None):
