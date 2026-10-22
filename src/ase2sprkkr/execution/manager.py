@@ -471,7 +471,7 @@ class JobFiles:
         return store.update(record, update)
 
     def retrieve_result_files(self, store, executor=None):
-        record = store.get(self.record.id)
+        record = self.record
         if record.state not in _FINAL_STATES:
             raise RuntimeError(f"Run {record.id} is not finished")
 
@@ -510,8 +510,8 @@ class JobFiles:
                         )
                     os.replace(staged, path)
             except OSError as exc:
-                self.update_artifact_availability(store, 
-                    record, path, ArtifactAvailabilityState.FAILED, str(exc),
+                self.update_artifact_availability(
+                    store,                     record, path, ArtifactAvailabilityState.FAILED, str(exc),
                 )
                 raise
             finally:
@@ -519,13 +519,13 @@ class JobFiles:
                     staged.unlink(missing_ok=True)
             refreshed = store.get(record.id)
             if path in self._missing_result_files(refreshed.files):
-                record = self.update_artifact_availability(store, 
-                    refreshed, path, ArtifactAvailabilityState.FAILED,
+                record = self.update_artifact_availability(
+                    store,                     refreshed, path, ArtifactAvailabilityState.FAILED,
                     "Historical artifact is still missing",
                 )
             else:
-                record = self.update_artifact_availability(store, 
-                    refreshed, path, ArtifactAvailabilityState.AVAILABLE,
+                record = self.update_artifact_availability(
+                    store,                     refreshed, path, ArtifactAvailabilityState.AVAILABLE,
                 )
         return record
 
