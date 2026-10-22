@@ -257,3 +257,26 @@ def test_history_load_uses_retrieval_record_without_extra_store_lookup(
     # Read initial record, perform retrieval, verify output, verify input.
     # The removed check_result_files() used to load the same record again.
     assert retrieved == [record.id] * 4
+
+
+def test_run_record_owns_file_operations(tmp_path):
+    manager, _, record = _terminal_run(tmp_path)
+    job_files = record.job_files
+
+    assert job_files.manifest is record.files
+    assert job_files.input_file_is_current()
+    assert job_files.output_file_is_current()
+    assert manager.input_file_is_current(record.id)
+    assert manager.output_file_is_current(record.id)
+
+
+def test_job_files_restore_historical_output_directly(tmp_path):
+    manager, executor, record = _terminal_run(tmp_path)
+    output = tmp_path / "run.out"
+    output.unlink()
+
+    restored = record.job_files.retrieve_result_files(manager.store, executor)
+
+    assert output.read_text() == "original output"
+    assert restored.files.availability_state == ArtifactAvailabilityState.AVAILABLE
+    assert executor.fetch_calls == [(record.id, (str(output),))]
