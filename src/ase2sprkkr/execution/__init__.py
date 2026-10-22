@@ -29,6 +29,7 @@ from .manager import (
     RunRecord,
     RunStore,
 )
+from .job_files import JobFiles, HistoricalFileMismatchError
 from .pool import ExecutorPool, default_executor_pool
 from .postprocessing import PostprocessingRunner
 from .projects import (
@@ -55,6 +56,8 @@ __all__ = [
     "CacheEntry",
     "FileMapping",
     "FileManifest",
+    "JobFiles",
+    "HistoricalFileMismatchError",
     "ExecutionOutcome",
     "ExecutionResources",
     "ExecutionSpec",
