@@ -1,6 +1,6 @@
-# PLOTPRS audit and new definition InputParameters
+# PLOTPRS — SPR-KKR 9.7 and ASE2SPRKKR audit
 
-Background: attached SPR-KKR 9.7 (PUB9.7_260420_18h13) and current ASE2SPRKKR `refactor`, commit `267512c4b8ccbbfd37af7ede898febc066b7e3ee`, verified fetch. PLOTPRS does not have a definition here. Single patch adds `definitions/plotprs.py` and `test/test_plotprs.py`; does not require previous tasks.
+PLOTPRS and its selective plotting variants are **prepared in `tasks-workflow`**, not available in `develop`. The native SPR-KKR 9.7 plot routines have separately documented limitations.
 
 ## Interface and range
 
@@ -54,8 +54,6 @@ RHORSQ is local allocatable; missing explicit DEALLOCATE at the end is not in it
 
 The output uses DATSET0, derived from CONTROL.DATASET in the main programme (`kkrgen.f:239`). Files are created over XMGRHEAD as V, VNS, RHO, RNS and SFN_M by group. Patch does not contain specialized output parser graphs.
 
-## Tests
+## Verification scope
 
-12 new cases: automatic finding task, basic text/file round trip, pickle/copy, omitted EMAX/NL, non-zero number of initialization energies, all four relativistic modes without imaginary ban, DMFT/LDAU, alert HFF and number of energy, own SFNFIL.
-
-Whole set `src/ase2sprkkr/input_parameters/test`: **120 passed** to default revision plus this separate patch (without previous patches). `git diff --check` and the inverted application of patch has passed. SPR-KKR has not been started; the tests verify the definition of input, not numerical graphs and the behaviour of their import.
+The prepared Python definition has test coverage for serialization and selected validation rules. Counts from old standalone patch runs are not the test results of the current `tasks-workflow` branch. No numerical native SPR-KKR reference calculation is claimed here.

@@ -18,10 +18,10 @@ TAU adresář používaný BLOCHSF je **volitelná znovupoužitelná cache**, ni
 
 Persistentní výsledné artefakty jsou:
 
-- `{dataset}_BLOCHSF.bsf`
-- `{dataset}_BLOCHSF_spol.bsf`
+- `{dataset}_{adsi}.bsf`
+- `{dataset}_{adsi}_spol.bsf`
 
-Stejná jména platí pro `BSF`, `BSFEK` i `BSFKK`, protože všechny tři volí `ADSI=BLOCHSF`.
+`{dataset}_{adsi}` je nativní `DATSET=DATASET_ADSI`. Všechny aliasy mají výchozí `ADSI=BLOCHSF`, a tedy standardně vytvářejí `{dataset}_BLOCHSF.bsf` a `{dataset}_BLOCHSF_spol.bsf`. Při explicitně změněném ADSI manifest následuje nové nativní jméno.
 
 Do result manifestu nepatří dočasné scratch soubory.
 

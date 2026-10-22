@@ -8,7 +8,7 @@ The shared `jxc.py` schema exposes `JXC` and `DMI` selectors; a DMI-only run sel
 
 ## Native output naming
 
-Native `initvar.f:536–545` activates `CALC_DMI` and the internal `TASK=E-INTEGRAL`. `dmivector.f:416–418,605–606` uses `TRIM(DATSET)//'_DMIVEC_Dij.dat'` and the matching `DMIVEC_Dij_[xyz]` plot families. In `kkrmain.f:239–245`, any nonempty `ADSI` is appended to `DATSET`, so native output names include ADSI. Current `jxc.py::output_files()` uses `CONTROL.DATASET()` alone, yielding wrong declared paths for nonempty ADSI. This does not change the validity of DMI task selection.
+Native `initvar.f:536–545` activates `CALC_DMI` and the internal `TASK=E-INTEGRAL`. `dmivector.f:416–418,605–606` uses `TRIM(DATSET)//'_DMIVEC_Dij.dat'` and the matching `DMIVEC_Dij_[xyz]` plot families. In `kkrmain.f:239–245`, any nonempty `ADSI` is appended to `DATSET`, so native output names include ADSI. Current `jxc.py::output_files()` uses `{dataset}_{adsi}` to match native DATSET; the separator is omitted for empty ADSI.
 
 ## Real involvement
 

@@ -18,10 +18,10 @@ The TAU directory used by BLOCHSF is an **optional reusable cache**, not a requi
 
 Persistent result artifacts are:
 
-- `{dataset}_BLOCHSF.bsf`
-- `{dataset}_BLOCHSF_spol.bsf`
+- `{dataset}_{adsi}.bsf`
+- `{dataset}_{adsi}_spol.bsf`
 
-The same filenames apply to `BSF`, `BSFEK`, and `BSFKK`, because all three select `ADSI=BLOCHSF`.
+`{dataset}_{adsi}` is native `DATSET=DATASET_ADSI`. All aliases default to `ADSI=BLOCHSF`, yielding the usual `{dataset}_BLOCHSF.bsf` and `{dataset}_BLOCHSF_spol.bsf`. With an explicit ADSI override, the manifest follows the native filename.
 
 Transient scratch files are not part of the task result manifest.
 

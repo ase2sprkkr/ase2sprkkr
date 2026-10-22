@@ -55,6 +55,20 @@ class DeclaredFile(str):
         return hash((str(self), True)) if self.optional else hash(str(self))
 
 
+
+def format_file_template(parameters, template):
+    """Format file placeholders using CONTROL.DATASET and CONTROL.ADSI.
+
+    ``{dataset}`` is native DATSET0 and ``{adsi}`` is the literal ADSI.
+    A literal ``_{adsi}`` becomes empty when ADSI is empty, as in native
+    SPR-KKR's DATSET construction (no trailing underscore).
+    """
+    dataset = parameters.CONTROL.DATASET().rstrip()
+    adsi = (parameters.CONTROL.ADSI() or "").rstrip()
+    if not adsi:
+        template = template.replace("_{adsi}", "")
+    return template.format(dataset=dataset, adsi=adsi)
+
 _FilePath = Union[str, os.PathLike[str]]
 _FileTemplate = Union[_FilePath, Callable[[object], Optional[_FilePath]]]
 
@@ -370,17 +384,18 @@ class InputParametersRegistry(ModuleRegistry):
 
     @staticmethod
     def _resolve_file_templates(parameters, directory, templates):
-        """Resolve static paths or parameter callbacks; None omits a file."""
-        dataset = parameters.CONTROL.DATASET()
+        """Expand declarative placeholders; callbacks return concrete paths."""
         files = []
         for template in templates:
-            value = template(parameters) if callable(template) else template
+            callback = callable(template)
+            value = template(parameters) if callback else template
             if value is None:
                 continue
             path = os.fspath(value)
             if not isinstance(path, str):
                 raise TypeError("File callback must return a path or None")
-            path = path.format(dataset=dataset)
+            if not callback:
+                path = format_file_template(parameters, path)
             resolved = path if os.path.isabs(path) else os.path.join(directory, path)
             optional = getattr(value, "optional", getattr(template, "optional", False))
             files.append(DeclaredFile(resolved, optional=optional))

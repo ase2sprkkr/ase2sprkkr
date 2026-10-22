@@ -3,6 +3,7 @@
 import os
 
 from ..input_parameters_definitions import InputParametersDefinition
+from ..task_definition import format_file_template
 
 
 _XRAY_SHELLS = "KLMNO"
@@ -42,31 +43,24 @@ def xray_shell_label(core_level):
 
 def core_level_output_name(parameters, extension, *, type_separator, shell_separator):
     """Return a constrained native filename pattern for one selected core shell."""
-    dataset = parameters.CONTROL.DATASET()
+    dataset = format_file_template(parameters, '{dataset}_{adsi}')
     shell = xray_shell_label(parameters.TASK.CL())
     return f"{dataset}{type_separator}*{shell_separator}{shell}.{extension}"
 
 
 def tau_file(parameters, directory):
     """Return the effective native TAU-directory file path."""
-    filename = _optional_value(parameters.TAU, "TAUDIR")
+    filename = parameters.TAU.TAUDIR()
     if not filename:
-        filename = f"{parameters.CONTROL.DATASET()}.tau.dir"
+        filename = f"{format_file_template(parameters, '{dataset}_{adsi}')}.tau.dir"
 
     filename = os.fspath(filename)
-    if os.path.isabs(filename):
-        return filename
-
-    taupath = _optional_value(parameters.TAU, "TAUPATH")
-    base = resolve_file(directory, taupath) if taupath else directory
-    return os.path.join(base, filename)
-
-
-class RequiredTauInputParametersDefinition(InputParametersDefinition):
-    """Task definition requiring an existing TAU-directory file."""
-
-    def input_files(self, parameters, directory):
-        return (tau_file(parameters, directory), *super().input_files(parameters, directory))
+    taupath = parameters.TAU.TAUPATH()
+    if taupath and taupath != ".":
+        # Native kkrmain.f concatenates TAUPATH + separator + TAUDIR,
+        # even if TAUDIR starts with a path separator.
+        return os.path.join(resolve_file(directory, taupath), filename.lstrip(os.sep))
+    return resolve_file(directory, filename)
 
 
 class TauCacheInputParametersDefinition(InputParametersDefinition):
@@ -115,6 +109,6 @@ class NrSpectroscopyInputParametersDefinition(InputParametersDefinition):
         if self.broadened_dos:
             gamma = _optional_value(parameters.TASK, "GAMMA")
             if gamma is not None and gamma > 0:
-                files.append(resolve_file(directory, f"{parameters.CONTROL.DATASET()}.dos.brd"))
+                files.append(resolve_file(directory, f"{format_file_template(parameters, '{dataset}_{adsi}')}.dos.brd"))
 
         return tuple(files)

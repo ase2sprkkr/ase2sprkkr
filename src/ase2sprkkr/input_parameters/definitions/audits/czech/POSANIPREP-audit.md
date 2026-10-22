@@ -1,12 +1,10 @@
-# POSANIPREP — audit SPR-KKR 9.7 / ASE2SPRKKR
+# POSANIPREP — audit SPR-KKR 9.7 a ASE2SPRKKR
 
-Pořadí 32. Zdroj: PUB9.7_260420_18h13.tar.gz.
-ASE2SPRKKR refactor: 267512c4b8ccbbfd37af7ede898febc066b7e3ee.
-Samostatný patch 0032-posaniprep.patch proti tomuto commitu.
+POSANIPREP má aktuální definici `definitions/posaniprep.py` pro přípravu vstupu do POSANI. Nativní SPR-KKR 9.7 má významná omezení pro systémy s `NQ≠NT`; jde o vlastnost výpočetního kódu, nikoli o chybějící Python definici.
 
 ## Stav a rozsah
 
-POSANIPREP dosud nemá definici. Doplněna definice pro přípravu pozitronových
+ASE2SPRKKR má definici pro přípravu pozitronových
 podkladů POSANI přes kkrgen, pro standardní 3D ASA/FREL systém, jednu energii
 GRID=0, NE=1 a elektronový vstupní potential.
 
@@ -28,7 +26,7 @@ s ETAB(1,1). Pro GRID=0, NE=1 nastaví EPATH energii přímo na EMIN
 (`epath.f:81–95`). **Uživatel musí vybrat energii pozitronového stavu**, typicky
 u dna pásu; -0.2 Ry není nalezený výsledek. Definice při validaci upozorňuje.
 
-Výstup DATASET_pos_dat.pan obsahuje vybrané pozitronové vlnové funkce a
+Výstup DATSET_pos_dat.pan obsahuje vybrané pozitronové vlnové funkce a
 scattering data. Následující POSANI používá elektronový potential a tento
 soubor; POSANIPREP naproti tomu interně převádí elektronový potential na
 pozitronový (`posanipot.f:124–125` a navazující korekce).
@@ -97,27 +95,12 @@ prohlášena za nativně zakázanou; jde o omezení auditované definice.
 ## MPI
 
 Definice má mpi=False. POSANIPREPARE nemá ochranu exportu podle MPI_ID a
-otevírá/zapisuje společný DATASET_pos_dat.pan. Keyword POSANIPREP nemusí změnit
+otevírá/zapisuje společný DATSET_pos_dat.pan. Keyword POSANIPREP nemusí změnit
 interní TASK z NONE, takže běžná závěrečná MPI kontrola GEN nemusí tento postup
 ani zastavit. Bez samostatného numerického ověření lifecycle a kolektivních
 výpočtů nelze paralelní přípravu považovat za bezpečnou. Nejde o tvrzení, že
 nativní kód obsahuje explicitní zákaz MPI.
 
-## Testy
+## Rozsah ověření
 
-13 nových testů: defaults, souborové rozpoznání tasku, pickle, absolutní energie,
-BM/DR/IPM roundtrip, NREL/SREL/SP-SREL, FULLPOT, jiný GRID/NE, relativní energie,
-CLUSTER a povolené NONMAG. Kontrolují také upozornění na energii a omezení
-3D/KMROT/NQ=NT v textu validátoru.
-
-Celá sada InputParameters: **121 passed**, Python 3.12. Čtyři warnings:
-dvě očekávaná upozornění POSANIPREP v obecném testu defaults a dvě stávající
-NumPy 2.5 DeprecationWarning. `git diff --check` a zpětná kontrola patche prošly.
-Numerický SPR-KKR nebyl spuštěn. Testy nepotvrzují vhodnou energii, konvergenci,
-pozitronový potential, exportovaný obsah ani správnost MPI.
-
-## Soubory
-
-- src/ase2sprkkr/input_parameters/definitions/posaniprep.py
-- src/ase2sprkkr/input_parameters/test/test_posaniprep.py
-- 0032-posaniprep.patch
+Aktuální Python testy kontrolují definici tasku, serializaci a vybrané validační podmínky. Historické počty testů z oddělených patchů nejsou výsledkem současné větve. Numerický referenční běh SPR-KKR nebyl součástí tohoto zdrojového auditu.

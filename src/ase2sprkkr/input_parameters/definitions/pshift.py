@@ -2,7 +2,7 @@
 from ...common.grammar_types import Integer, SetOf
 from ...common.warnings import DataValidityError, DataValidityWarning
 from ..input_parameters_definitions import InputParametersDefinition as InputParameters
-from ..task_definition import TaskDefinition
+from ..task_definition import TaskDefinition, format_file_template
 from ._file_manifests import resolve_file
 from .sections import CONTROL, ENERGY, MODE, SITES, STRCONST, TASK, TAU
 
@@ -12,7 +12,7 @@ class PshiftInputParametersDefinition(InputParameters):
 
     def output_files(self, parameters, directory):
         files = list(super().output_files(parameters, directory))
-        dataset = parameters.CONTROL.DATASET()
+        dataset = format_file_template(parameters, '{dataset}_{adsi}')
         files.append(resolve_file(directory, f"{dataset}_pshift_*.agr"))
         if parameters.MODE.MODE() is None:
             files.append(resolve_file(directory, f"{dataset}_logdrv_*.agr"))

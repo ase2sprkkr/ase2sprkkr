@@ -13,14 +13,14 @@ def _names(task, tmp_path):
 
 
 def test_fscat_output_family(tmp_path):
-    assert "manifest_test_GEO?_*.agr" in _names("FSCAT", tmp_path)
+    assert "manifest_test_FSCAT_GEO?_*.agr" in _names("FSCAT", tmp_path)
 
 
 def test_nucsscpl_outputs(tmp_path):
     assert {
-        "manifest_test_A_ij.dat",
+        "manifest_test_NUCSSCPL_A_ij.dat",
         "RK.dat",
         "tab_aij.dat",
-        "manifest_test_Aij_*.agr",
-        "manifest_test_Rij_*.agr",
+        "manifest_test_NUCSSCPL_Aij_*.agr",
+        "manifest_test_NUCSSCPL_Rij_*.agr",
     } <= _names("NUCSSCPL", tmp_path)

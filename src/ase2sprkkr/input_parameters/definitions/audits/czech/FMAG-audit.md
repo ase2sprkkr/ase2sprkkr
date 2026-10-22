@@ -1,6 +1,6 @@
-# FMAG — audit SPR-KKR 9.7 a nová definice
+# FMAG — audit SPR-KKR 9.7 a ASE2SPRKKR
 
-Základ: dodané zdroje SPR-KKR 9.7 a aktuálně fetchovaný ASE2SPRKKR refactor, commit 267512c4b8ccbbfd37af7ede898febc066b7e3ee. FMAG zde nemá vlastní definici. Samostatný patch 0017-fmag.patch přidává fmag.py a test_fmag.py, bez dřívějších patchů.
+FMAG má v ASE2SPRKKR aktuální definici `definitions/fmag.py`; nativní výpočetní cesta je auditována proti SPR-KKR 9.7 (`PUB9.7_260420_18h13`). Python validace a manifesty nejsou opravou nativního Fortranu.
 
 ## Co skutečně spouští vstup FMAG
 
@@ -35,16 +35,8 @@ Definice má kkrgen a mpi=True. DENSITY obsahuje MPI barrier a MPI_SUM_R pro hus
 7. **Relativistický reader je bezpodmínečný.** DENSITY volá WAVFUN_READ_REL, ale obsahuje také vlastní větve IREL<=1 i varování o rozměrech (density.f:107,121–156). Nezavádím proto nezdůvodněný úplný zákaz neplně relativistických režimů. Jejich numerická správnost není ověřena.
 8. **Výstup jsou normalizované křivky.** FAVR je součet spinového a orbitálního příspěvku před samostatnou normalizací. Po normalizaci obecně neplatí FAVR=FSPN+FORB. Parser či další zpracování nesmí tyto normalizované křivky bez původních momentů zpětně sčítat.
 
-Kombinace FMAG s DMFT/LDA+U nejsou v tomto patchi bez přímého nativního zákazu odmítnuty; jejich fyzikální konzistence se vstupním potenciálem a kernel výpočtu nebyla numericky ověřena. Patch nevytváří specializovaný parser XMGR souborů a neopravuje Fortran.
+Kombinace FMAG s DMFT/LDA+U nejsou v aktuální definici bez přímého nativního zákazu odmítnuty; jejich fyzikální konzistence se vstupním potenciálem a kernel výpočtu nebyla numericky ověřena. Definice nevytváří specializovaný parser XMGR souborů a neopravuje Fortran.
 
-## Ověření
+## Rozsah ověření
 
-8 nových případů: registrace/defaulty/MPI deklarace, vynechané EMAX, souborový roundtrip a pickle; tři způsoby zadání nepodporované druhé kontury; upozornění pro jiný GRID; oba nemagnetické režimy; odmítnutí nulového počtu energií.
-
-Celá sada input_parameters: **116 passed**, Python 3.12, 5,09 s.
-
-```bash
-PYTHONPATH=src ASE2SPRKKR_NO_USER_PROFILE=1 /workspace/scratch/e79ca15d9801/test-env/bin/python -m pytest src/ase2sprkkr/input_parameters/test -q
-```
-
-Prošly git diff --check a kontrola reverzní aplikace patche. Numerický SPR-KKR běh nebyl spuštěn.
+Aktuální Python testy kontrolují definici tasku, serializaci a vybrané validační podmínky. Historické počty testů z oddělených patchů nejsou výsledkem současné větve. Numerický referenční běh SPR-KKR nebyl součástí tohoto zdrojového auditu.

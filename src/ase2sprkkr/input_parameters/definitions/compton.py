@@ -3,17 +3,17 @@ import numpy as np
 from ...common.grammar_types import Integer, SetOf
 from ...common.warnings import DataValidityError, DataValidityWarning
 from .sections import TASK, CONTROL, TAU, ENERGY, SITES, STRCONST, MODE, CPA
-from ._file_manifests import RequiredTauInputParametersDefinition, resolve_file
+from ._file_manifests import TauCacheInputParametersDefinition, resolve_file
 from ..input_parameters_definitions import InputValueDefinition as V
-from ..task_definition import TaskDefinition
+from ..task_definition import TaskDefinition, format_file_template
 
 
-class ComptonInputParametersDefinition(RequiredTauInputParametersDefinition):
+class ComptonInputParametersDefinition(TauCacheInputParametersDefinition):
     """COMPTON definition with native 1D/2D momentum-density outputs."""
 
     def output_files(self, parameters, directory):
         files = list(super().output_files(parameters, directory))
-        dataset = parameters.CONTROL.DATASET()
+        dataset = format_file_template(parameters, '{dataset}_{adsi}')
         task = parameters.TASK
         if task.MD2D() or task.EMD2D():
             suffix = "emd2d.dat" if task.EMD2D() else "mcp2d.dat"
@@ -81,8 +81,7 @@ def input_parameters_definition():
     energy = ENERGY(defaults={"GRID": [5, 5], "NE": [30, 50], "ImE": 0.01})
     energy.copy_member("NE", type=SetOf(Integer(min=1), min_length=1, max_length=2))
     energy.copy_member("SPLITSS", default_value=True, is_always_added=True)
-    tau = TAU.copy(add=[V("TAUDIR", str, is_optional=True, info="Existing DATASET.tau.dir directory by default."),
-                        V("TAUPATH", str, is_optional=True, info="Parent of TAUDIR; native default is current directory.")])
+    tau = TAU.copy()
     tau.copy_member("BZINT", default_value="POINTS")
     members = [
         V("SPLITSS", True, is_always_added=True, info="Required here as well as in ENERGY: COMPTON rereads this flag."),
@@ -102,7 +101,7 @@ def input_parameters_definition():
                            energy, TASK("COMPTON").copy(members), SITES],
         validators=_validate_compton,
         info="Compton momentum density and profiles",
-        description="Periodic FREL split-contour workflow using an existing compatible TAU directory. "
+        description="Periodic FREL split-contour workflow reusing TAU when available, otherwise using the native recomputation path. "
                            "ONLY_CORE and USE_ZJOVZZ workflows are not audited. NONMAG is allowed. "
                            "Native code forces the ZJ wavefunction convention even for FULLPOT."
     )

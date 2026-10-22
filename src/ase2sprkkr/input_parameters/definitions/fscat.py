@@ -48,5 +48,5 @@ def input_parameters_definition():
                     "are unsupported. SPR-KKR 9.7 has an erroneous spherical-harmonic index "
                     "and computes phase before guarding zero amplitude; numerical results are unverified."
     )
-    schema._task_definition = TaskDefinition("FSCAT", executable="kkrgen", mpi=False, output_file_templates=("{dataset}_GEO?_*.agr",))
+    schema._task_definition = TaskDefinition("FSCAT", executable="kkrgen", mpi=False, output_file_templates=("{dataset}_{adsi}_GEO?_*.agr",))
     return schema

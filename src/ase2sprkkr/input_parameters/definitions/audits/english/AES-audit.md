@@ -1,11 +1,11 @@
 # AES — current definition audit
 
-AES has a dedicated `aes.py` definition on `tasks-workflow`. The native contract is fully relativistic Auger spectroscopy requiring a prepared TAU input. Findings refer to the supplied SPR-KKR 9.7 source (`PUB9.7_260420_18h13`), not numerical validation.
+AES has a dedicated `aes.py` definition on `tasks-workflow`. The native contract is fully relativistic Auger spectroscopy reusing TAU if available, with native recomputation possible when it is absent. Findings refer to the supplied SPR-KKR 9.7 source (`PUB9.7_260420_18h13`), not numerical validation.
 
 
 ## Workflow and input
 
-Fully relativistic Auger electron spectroscopy in kkrgen. initvar.f:299–308 sets INITELOOP=true, RUNELOOP=false, RDTAUDIR=true, WRTAUDIR=false and USELPLS1=true. Routine AES reads initial TAU directory. This is not a postprocessing DOS file as NRAES.
+Fully relativistic Auger electron spectroscopy in kkrgen. initvar.f:299–308 sets INITELOOP=true, RUNELOOP=false, RDTAUDIR=true, WRTAUDIR=false and USELPLS1=true. AES reads initial TAU when present; `kkrmain.f:932–960` can trigger recomputation when absent. ASE2SPRKKR declares optional cache. This is not a postprocessing DOS file as NRAES.
 
 TASK reads IT, CL, NEME, PRINTME and PRINTAME (aes.f:128–144). Options CALCLS, OUTGNU or GAMMA from nonrelativistic branches do not belong here. The source only works with NQ=1 (aes.f:230). The definition documents this restriction; the general validator InputParameters does not have potential metadata and therefore cannot verify the number of places. NQ=1 does not mean necessarily NT=1 for alloy. Explicit IT is to be an index of the type existing in potential.
 

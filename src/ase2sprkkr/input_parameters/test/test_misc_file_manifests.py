@@ -21,7 +21,7 @@ def test_optabs_output_families(tmp_path):
 
 def test_bsdosij_output_families(tmp_path):
     assert {
-        "manifest_test_XCPLTEN_Jij.dat",
-        "manifest_test_XCPLTEN_Jij_*.agr",
-        "manifest_test_XCPLTEN_Dij_[xyz]_*.agr",
+        "manifest_test_BSDOSIJ_XCPLTEN_Jij.dat",
+        "manifest_test_BSDOSIJ_XCPLTEN_Jij_*.agr",
+        "manifest_test_BSDOSIJ_XCPLTEN_Dij_[xyz]_*.agr",
     } <= _names("BSDOSIJ", tmp_path)

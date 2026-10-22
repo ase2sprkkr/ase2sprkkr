@@ -59,7 +59,7 @@ class TestDefinitions:
             task, parameters, str(tmp_path), "cache"
         ) == (
             str(tmp_path / "Fe.cache"),
-            str(tmp_path / "Fe.tau.dir"),
+            str(tmp_path / "Fe_BLOCHSF.tau.dir"),
         )
 
     def test_task_definitions_do_not_own_registries_and_are_pickleable(self):

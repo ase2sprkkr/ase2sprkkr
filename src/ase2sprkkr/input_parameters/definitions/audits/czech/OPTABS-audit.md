@@ -1,6 +1,6 @@
-# 38. OPTABS — audit SPR-KKR 9.7 / ASE2SPRKKR
+# OPTABS — audit SPR-KKR 9.7 a ASE2SPRKKR
 
-Dosud chybějící task: absorpční část optické vodivosti. Přidána definice pro standardní periodický ASA FREL postup v kkrchi. Nativní TASK se po přečtení klíče OPTABS přejmenuje na OPTICS-ABS; právě tento klíč, nikoli OPTICS-ABS, patří do vstupu. Předběžně: **funguje, ale má velké ALE**. Numerický solver nebyl spuštěn.
+OPTABS má aktuální definici `definitions/optabs.py` pro absorpční část optické vodivosti. Nativní SPR-KKR 9.7 obsahuje zdokumentovaná omezení; vystavení tasku v Pythonu není numerickou certifikací.
 
 ## Definice
 
@@ -34,10 +34,6 @@ TASK nabízí NEB, NOMEGA, OMEGA1/2, TEMPEL, NKT a Eulerovy FRAMETET/FRAMEPHI/FR
 
 TEMPEL=300 a NKT=6 jsou explicitní odchylky, nikoli skryté defaults. Jsou vhodnější pro běžný start než native 1e6/99; experimentální teplotu si uživatel musí nastavit. Význam readeru ověřen v scan_input.f: default odlišný od sentinel 9999 přepisuje hodnotu při chybějícím klíči. Nativní počáteční DATA hodnoty Eulerových úhlů souhlasí s jejich nevypsaným stavem.
 
-## Ověření
+## Rozsah ověření
 
-13 nových testů; celá sada InputParameters **121 passed**, dvě již existující NumPy deprecation warnings. Testy ověřují discovery/defaults, správný vstupní klíč, round-trip a pickle, serial executable, změnu NEB s dostatečnou kapacitou, rotaci, NONMAG, chybnou teplotu, horní mez frekvenčního rozsahu, nesprávný posun a kapacitu, počty, FULLPOT, relativistický režim, inicializační grid a ImE. Nejde o numerický test optické vodivosti.
-
-Příkaz: `PYTHONPATH=src ASE2SPRKKR_NO_USER_PROFILE=1 ../test-env/bin/python -m pytest src/ase2sprkkr/input_parameters/test -q`.
-
-Zdroje SPR-KKR 9.7: initvar.f:340–350; rsp.f:134–138,895–899; opt_abs.f:271–315,338–448,674–684,939–961; init_mrot_frame.f:28–42; scan_input.f:290–356. ASE baseline 267512c4b8ccbbfd37af7ede898febc066b7e3ee. Samostatný patch pouze pro OPTABS.
+Aktuální Python testy kontrolují definici tasku, serializaci a vybrané validační podmínky. Historické počty testů z oddělených patchů nejsou výsledkem současné větve. Numerický referenční běh SPR-KKR nebyl součástí tohoto zdrojového auditu.

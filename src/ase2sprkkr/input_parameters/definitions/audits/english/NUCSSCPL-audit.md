@@ -1,6 +1,6 @@
-# NUCSSCPL audit and experimental definitions
+# NUCSSCPL — SPR-KKR 9.7 and ASE2SPRKKR audit
 
-Comparison of supplied sources SPR-KKR 9.7 with fetched branches ASE2SPRKKR refactor, commit 267512c4b8ccbbfd37af7ede898febc066b7e3ee. NUCSSCPL does not have its own definition. The separate patch 0022-nucsscpl.patch adds nucsscpl.py and test_nucsscpl.py against this base.
+NUCSSCPL has an input definition **prepared in `tasks-workflow`**, absent from `develop`. The native SPR-KKR 9.7 implementation has demonstrated defects; adding an input definition does not fix its calculation.
 
 ## Purpose and entry
 
@@ -44,8 +44,6 @@ Explicit differences NONMAG, GRID, NE and CLURAD prepare the required input; omi
 
 The main file is named DATASET_A_ij.dat; other outputs are fixed RK.dat and tab_aij.dat and Aij/Rij graphs. Python parser results are not implemented. Due to the above errors support input does not justify the claim that native numerical task works.
 
-## Tests
+## Verification scope
 
-14 new test cases: serialization, loading and pickle; explicit NONMAG and omitted FINNUC/EMAX; rejection of magnetic system, other relativity, FINNUC, other contours and split paths, other BZINT; lists of selectors and shell count; non-replaceable NE. Full input_parameter set: **122 passed**. Numerical SPR-KKR has not been started. Patch passed git diff --check and re-application control.
-
-When checking the common reader, the previous audit was also corrected BONDING: omitted EMAX is taken there from EF, not from the sentinel. Its explicit EMAX=1 Ry remains the selected scan.
+The prepared Python definition has test coverage for serialization and selected validation rules. Counts from old standalone patch runs are not the test results of the current `tasks-workflow` branch. No numerical native SPR-KKR reference calculation is claimed here.

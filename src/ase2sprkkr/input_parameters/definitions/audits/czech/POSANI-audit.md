@@ -1,20 +1,10 @@
 # POSANI — audit SPR-KKR 9.7 / ASE2SPRKKR
 
-Pořadí 31. SPR-KKR: PUB9.7_260420_18h13.tar.gz.
-ASE2SPRKKR refactor: 267512c4b8ccbbfd37af7ede898febc066b7e3ee.
-Samostatný patch 0031-posani.patch proti tomuto commitu; nevyžaduje předchozí
-COMPTON patch a nepřidává další task.
+**Zdroje:** nativní SPR-KKR 9.7 (`PUB9.7_260420_18h13`) a aktuální definice `ase2sprkkr/input_parameters/definitions/posani.py`. Nativní výpočetní tok a Python souborový kontrakt jsou posuzovány odděleně; fyzikální výsledky nebyly numericky certifikovány.
 
 ## Stav
 
-Dosud chyběla definice POSANI. Přidána definice pro standardní periodický
-FREL výpočet hybnostní hustoty anihilace pozitronů, přes kkrgen, s jednou
-energetickou konturou GRID=5 a elektronovým potentialem.
-
-Předběžné zařazení: **funguje, ale má významné ALE** pro omezený workflow
-s NQ=NT; **rozbité** pro obecné systémy NQ≠NT v práci s pozitronovou TAUQQ
-(viz níže). Nativní task existuje a není vypnutý. Fyzikální hodnoty nebyly
-ověřeny numerickým během.
+ASE2SPRKKR deklaruje standardní periodický FREL výpočet pozitronové anihilační hybnostní hustoty přes `kkrgen`, s jednou energetickou konturou `GRID=5` a elektronovým potenciálem. Nativní cesta je použitelná s významnými omezeními pro `NQ=NT`; pro obecné `NQ≠NT` obsahuje doložený problém indexování pozitronové `TAUQQ`.
 
 ## Skutečný workflow a vstupy
 
@@ -23,14 +13,14 @@ Priorita je POSANI > POSANIPREP > POSANITAU > POSITRON. Jsou to odlišné kroky:
 
 1. Elektronový potential a elektronové TAU podklady musí odpovídat systému,
    energiím a použité konvenci vlnových funkcí.
-2. POSANIPREP připraví DATASET_pos_dat.pan s pozitronovým stavem. Tento task
+2. POSANIPREP připraví DATSET_pos_dat.pan s pozitronovým stavem. Tento task
    a POSANITAU budou posouzeny samostatně; tato definice je nespouští.
 3. POSANI čte **elektronový potential**, TAU adresář a tento připravený soubor.
    `gen.f:431–449` pro POSANI nevolá POSANIPOT. POSVC proto není vstupem tohoto
    kroku; patří do přípravy pozitronového potentialu.
 
 `compton.f:424–426` volá POSANIREAD. Název pozitronového souboru je pevně
-DATASET_pos_dat.pan (`posaniread.f:38`), nikoli cesta odvozená z TAUDIR.
+DATSET_pos_dat.pan (`posaniread.f:38`), nikoli cesta odvozená z TAUDIR.
 Změna DATASET tedy mění očekávané jméno pozitronového souboru; TAUPATH jej nepřesměruje.
 Definice záměrně nevymýšlí neexistující keyword pro jeho libovolnou cestu.
 
@@ -53,8 +43,7 @@ Proto samotné TASK POSANI **neznamená automatické převzetí** COMPTON
 GRID=5/5, NE=30/50 a SPLITSS=true.
 
 Definice nastaví CONTROL.RDTAU=true a vždy zapíše keyword; INITVAR pak vypne
-běžnou energetickou smyčku (`initvar.f:687`). Krok používá existující elektronové
-TAU podklady. Bez RDTAU tato definice při validaci neprojde.
+běžnou energetickou smyčku (`initvar.f:687`). Krok využívá kompatibilní elektronové TAU podklady. Nativní `kkrmain.f:932–960` při jejich nedostupnosti umožňuje přepočet, ale úspěch konkrétní větve není zaručen. ASE2SPRKKR deklaruje TAU jako volitelnou cache a vyžaduje `RDTAU=true` v podporovaném workflow.
 
 COMPTON následně znovu čte SPLITSS z TASK (`compton.f:210`). Definice pro
 POSANI vystavuje ENERGY.SPLITSS i TASK.SPLITSS=false a jejich zapnutí odmítne,
@@ -139,25 +128,14 @@ Poslední energii dostane rank 0 v MPI_DISTRIBUTE, což odpovídá výpočtu cor
 příspěvku na ranku 0. Na každé aktivní kontuře musí být NE>=NPROCS.
 mpi=True má zdrojové opodstatnění, skutečný MPI běh nebyl spuštěn.
 
-Výstupy jsou DATASET_BND.mpa, DATASET_COR.mpa, DATASET_TOT.mpa;
+Výstupy jsou DATSET_BND.mpa, DATSET_COR.mpa, DATSET_TOT.mpa;
 2D výstupy používají příponu _pan2D. Soubory rozlišují sumu a spinový rozdíl.
 Interpretaci aproximací a numerickou normalizaci musí ověřit následný výpočet.
 
-## Testy
+## Souborový kontrakt ASE2SPRKKR
 
-24 nových testů: defaults, zápis RDTAU a absence SPLITSS, automatické načtení
-POSANI, pickle, TAU cesty, vektory, NONMAG, režimy, oba SPLITSS, chybné směry,
-platný příčný pár, posunuté mřížky, EMD2D, rozsahy parametrů, NE, kontura/BZINT,
-RDTAU a nepodporované SQQ_RESOLVED s 2D.
+Nativní `DATSET` vzniká jako `DATASET_ADSI` (při prázdném ADSI bez podtržítka), `DATSET0` je původní `DATASET`. Šablony používají samostatné `{dataset}` a `{adsi}`; při výchozím `ADSI=POSANI` je povinným vstupem `{dataset}_{adsi}_pos_dat.pan`, připravený taskem POSANIPREP. Elektronový TAU adresář `{dataset}_{adsi}.tau.dir` je volitelná cache s explicitním přesměrováním `TAUDIR` a `TAUPATH`. Zbylé výsledné soubory se určují podle `MD2D`/`EMD2D` a používají nativní `DATSET`.
 
-Celá sada InputParameters: **132 passed**, Python 3.12. Čtyři warnings:
-dvě očekávaná upozornění PNMAX=0 v obecném testu defaults a dvě stávající
-NumPy 2.5 DeprecationWarning. Kontrola diff a zpětné aplikace patche prošla.
-Numerický SPR-KKR nebyl spuštěn. Testy neověřují přípravu pozitronového souboru,
-shodu cache/potentialu, NQ/NT, fyzikální hodnoty ani numerický MPI výsledek.
+## Rozsah ověření
 
-## Soubory
-
-- src/ase2sprkkr/input_parameters/definitions/posani.py
-- src/ase2sprkkr/input_parameters/test/test_posani.py
-- 0031-posani.patch
+Python testy pokrývají parametry, serializaci, podmíněné výstupy a základní souborové názvy. Neprokazují kompatibilitu elektronové cache, správnost připraveného pozitronového souboru, fyzikální hodnoty ani MPI numeriku. Nativní SPR-KKR nebyl v tomto auditu numericky spuštěn.

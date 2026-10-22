@@ -1,6 +1,8 @@
 # Consolidated audit of SPR-KKR 9.7 and ASE2SPRKKR
 
-Status as of 4 October 2026. Sources: the supplied **PUB9.7_260420_18h13** code and the preceding individual audits of InputParameters definitions. This report consolidates the findings according to the actual reachability of each calculation and the meaning of its output. It is not a numerical certification of SPR-KKR.
+**Branch scope:** `develop` is the currently published ASE2SPRKKR state. `workflow` and `tasks-workflow` contain prepared, not yet published functionality. The file contracts discussed here describe `tasks-workflow` with proposed PR #201 changes, not features already present in `develop`. Native SPR-KKR 9.7 conclusions do not depend on ASE2SPRKKR branches.
+
+**Scope and date:** Native SPR-KKR 9.7 source audit, completed on 4 October 2026 against the supplied **PUB9.7_260420_18h13** revision. The classifications below concern the native computation paths and physical meaning of their outputs; the physical task classifications do not certify the Python API. Section 4 separately records the current ASE2SPRKKR integration contract; individual task audits cover each task's details. This is not a numerical certification of SPR-KKR.
 
 ## Scope and meaning of the categories
 
@@ -34,7 +36,7 @@ The classification applies to the supplied SPR-KKR revision. For a task with dis
 | **TUTORIAL: YLM, JLX, JLX-ASYMPT** |Mathematical examples of harmonics, Bessel functions and asymptotics.|L/M and limits are validated; even mathematical branches undergo common initialization and need usable input environment.|
 | **TUTORIAL: DOS-FEG, DOS-SS, DOS-CLU, DOS-BULK, GEN** |Samples DOS / normal GEN workflow in the corresponding model.|FEG and SS are single-site STANDARD. CLU requires actual cluster geometry and CLURAD/NSHL; the name of tutorial alone does not create it. BULK requires periodic integration.|
 
-For BSF needs to be corrected or intentionally confirmed default window before use without its own parameters. U POSANITAU includes an unprotected zero partial contribution among specific defective cases; does not mean the fact that each non-zero total annihilation integration is broken.
+For BSF, the default energy window needs to be corrected or explicitly confirmed before running without user-specified energy parameters. U POSANITAU includes an unprotected zero partial contribution among specific defective cases; does not mean the fact that each non-zero total annihilation integration is broken.
 
 ## 2. Tasks with caveats — classification by practical usability
 
@@ -149,6 +151,12 @@ Section 3 leaves separately tasks with directly documented breakage of the norma
 **Correcting the conclusion of the previous selection audit:** audit PLOT-selectors provisionally designated PLOTRHO as fully meaningful. This has overlooked the previously detected missing allocation RHORSQ. The recontrol of the source confirms it; the separate PLOTRHO is correctly broken here. Its four definitions tests and no successful serialization are not a test of this native writer.
 
 ## 4. What changed in ASE2SPRKKR and what remains unresolved
+
+### File contracts: native names and intentional ASE2SPRKKR choices
+
+Native `kkrmain.f:239–266` retains `DATSET0=DATASET` and constructs `DATSET=DATASET_ADSI` for nonempty `ADSI`. Default `DOSFIL`, `TAUFIL` and `TAUDIR` use `DATSET`, but some native writers explicitly use `DATSET0`, including PLOTPRS and JALF/JORB. ASE2SPRKKR therefore exposes independent `{dataset}` and `{adsi}` fields; only templates backed by a native `DATSET` writer combine them, with no extra underscore for empty `ADSI`.
+
+Native `kkrmain.f:932–960` can recompute and write TAU when a requested cache is unavailable, but this does not guarantee successful task computation or consistency of existing cache data. ASE2SPRKKR declares TAU as optional reusable cache for AES, COMPTON, POSANI and VBPES, and offers explicit `TAUDIR` and `TAUPATH` fields in the shared TAU section. APS/NRAES intentionally default to `CONTROL.ADSI=DOS` to read the default DOS producer's file; POSANIPREP uses `CONTROL.ADSI=POSANI` to share its prepared file with POSANI. Native `TASK` selectors remain distinct. These are ASE2SPRKKR integration choices, not Fortran changes.
 
 ### Input definitions and native-code fixes are separate layers
 

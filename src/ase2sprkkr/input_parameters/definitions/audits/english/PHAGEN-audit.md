@@ -1,6 +1,6 @@
-# PHAGEN audit of existing definition
+# PHAGEN — SPR-KKR 9.7 and ASE2SPRKKR audit
 
-Supplied SPR-KKR 9.7 versus fetched ASE2SPRKKR refactor, commit 267512c4b8ccbbfd37af7ede898febc066b7e3ee. PHAGEN is already supported. The separate patch 0027-phagen.patch adjusts phagen.py and adds test_phagen.py against this base.
+PHAGEN **already exists in `develop`**. The audited input improvements are **prepared in `workflow` / `tasks-workflow`**. Native SPR-KKR 9.7 exports data for external PHAGEN/MsSpec; it does not calculate phase shifts itself.
 
 ## What task does
 
@@ -50,6 +50,6 @@ SCF.NITER and MIX do not represent the number of iterations and mixing PHAGEN ex
 
 Task isn't off placeholder. V supported by simple ASA/VWN/NT1/mesh1 case has a substantive export purpose but these conditions and restrictions must be given in the final distribution tasks. The output didn't pass the running comparison.
 
-## Tests
+## Verification scope
 
-13 new cases: serialization/load/pickle, original energy defaults, correct executive/MPI, absence of non-functional CALCTYPE, refusal FULLPOT/other VXC/DMFT/LDA+U/split contour/incorrect NE and absence of imaginary flat ban NREL/SREL. Full input_parameter set: **121 passed**. Numerical SPR-KKR or external PHAGEN/MsSpec not started. Patch passed git diff --check and re-application control.
+The prepared Python definition has test coverage for serialization and selected validation rules. Counts from old standalone patch runs are not the test results of the current `tasks-workflow` branch. No numerical native SPR-KKR reference calculation is claimed here.

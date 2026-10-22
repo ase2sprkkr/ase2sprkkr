@@ -5,7 +5,7 @@ from ...common.warnings import DataValidityError
 from ._file_manifests import resolve_file, xray_shell_label
 from .sections import CONTROL, TAU, MODE, CPA, STRCONST, ENERGY, TASK, SITES
 from ..input_parameters_definitions import InputParametersDefinition as InputParameters, InputValueDefinition as V, InputSectionDefinition as Section
-from ..task_definition import TaskDefinition
+from ..task_definition import TaskDefinition, format_file_template
 
 
 class ChixasInputParametersDefinition(InputParameters):
@@ -13,7 +13,7 @@ class ChixasInputParametersDefinition(InputParameters):
 
     def output_files(self, parameters, directory):
         files = list(super().output_files(parameters, directory))
-        dataset = parameters.CONTROL.DATASET()
+        dataset = format_file_template(parameters, '{dataset}_{adsi}')
         shell = xray_shell_label(parameters.TASK.CL())
         prefix = f"{dataset}_*"
         spectrum = f"{prefix}_{shell}"

@@ -1,11 +1,11 @@
 # AES — audit současné definice
 
-AES má na `tasks-workflow` vlastní definici `aes.py`. Nativní kontrakt je plně relativistická Augerova spektroskopie vyžadující připravený TAU vstup. Závěry vycházejí z dodaných zdrojů SPR-KKR 9.7 (`PUB9.7_260420_18h13`), nikoli z numerické validace.
+AES má na `tasks-workflow` vlastní definici `aes.py`. Nativní úloha je plně relativistická Augerova spektroskopie: přednostně čte existující TAU, ale `kkrmain.f:932–960` při jeho nedostupnosti může spustit přepočet. ASE2SPRKKR jej proto deklaruje jako volitelnou cache, nikoli povinný vstup. Závěry vycházejí z dodaných zdrojů SPR-KKR 9.7 (`PUB9.7_260420_18h13`), nikoli z numerické validace.
 
 
 ## Workflow a vstup
 
-Plně relativistická Augerova elektronová spektroskopie v kkrgen. initvar.f:299–308 nastaví INITELOOP=true, RUNELOOP=false, RDTAUDIR=true, WRTAUDIR=false a USELPLS1=true. Rutina AES čte počáteční TAU directory. Toto není postprocessing DOS souboru jako NRAES.
+Plně relativistická Augerova elektronová spektroskopie v kkrgen. initvar.f:299–308 nastaví INITELOOP=true, RUNELOOP=false, RDTAUDIR=true, WRTAUDIR=false a USELPLS1=true. Při dostupné cache rutina AES čte počáteční TAU adresář; nativní fallback může data nejprve dopočítat. Není to postprocessing DOS souboru jako NRAES. Výchozí název TAU v ASE2SPRKKR je `{dataset}_{adsi}.tau.dir` a explicitní `TAUDIR`/`TAUPATH` jej mohou změnit.
 
 TASK čte IT, CL, NEME, PRINTME a PRINTAME (aes.f:128–144). Volby CALCLS, OUTGNU či GAMMA z nerelativistických větví sem nepatří. Zdroj pracuje pouze s NQ=1 (aes.f:230). Definice toto omezení dokumentuje; obecný validátor InputParameters nemá metadata potenciálu, a proto nemůže počet míst ověřit. NQ=1 neznamená nutně NT=1 u slitiny. Explicitní IT má být index typu existujícího v potenciálu.
 

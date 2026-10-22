@@ -148,7 +148,7 @@ def CONTROL(ADSI):
                 "case",
                 is_required=True,
                 result_is_visible=True,
-                info="The custom field for the description of the problem - the output files will been called 'DATASET.<ext>'.",
+                info="Base dataset identifier (native DATSET0); native DATSET appends _ADSI when ADSI is nonempty.",
             ),
             V(
                 "SFNFIL",
@@ -342,6 +342,8 @@ regular mesh.
             expert=False,
             info="Cluster type calculation but for a molecular system. The system is specified as for CLUSTER.",
         ),
+        V("TAUDIR", str, is_optional=True, info="Native TAU-directory filename; default is DATSET.tau.dir, including ADSI."),
+        V("TAUPATH", str, is_optional=True, info="Native directory prefix for a relative TAUDIR name."),
         V("KKRMODE", Keyword("STANDARD", "TB", "IMPURITY", aliases={"TB-KKR": "TB"}), is_optional=True),
     ],
 )

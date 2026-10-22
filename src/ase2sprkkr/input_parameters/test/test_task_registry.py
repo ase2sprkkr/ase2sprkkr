@@ -391,7 +391,7 @@ def test_create_from_dmi_result_keeps_dmi_defaults():
 
 
 def _optional_task_file(parameters):
-    return "{dataset}.optional" if parameters.CONTROL.PRINT() else None
+    return f"{parameters.CONTROL.DATASET()}.optional" if parameters.CONTROL.PRINT() else None
 
 
 def test_file_template_callbacks_skip_none_and_support_pickle(tmp_path):

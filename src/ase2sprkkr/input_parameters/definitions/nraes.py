@@ -28,7 +28,7 @@ def input_parameters_definition():
     mode.copy_member("MODE", default_value="SREL")
     schema = NrSpectroscopyInputParametersDefinition(
         "nraes",
-        [CONTROL("NRAES"), TAU, mode, STRCONST,
+        [CONTROL("DOS"), TAU, mode, STRCONST,
         ENERGY(emin=None, defaults={"GRID": 1, "NE": 300, "ImE": 0.0}),
         TASK("NRAES", [
             V("IT", Integer(min=1), 1, is_always_added=False),
@@ -43,5 +43,5 @@ def input_parameters_definition():
                     "ENERGY.NE supplies allocation capacity; actual energies come from DOS. "
                     "FULLPOT, DMFT and LDA+U are unsupported. Numerical output is unverified."
     )
-    schema._task_definition = TaskDefinition("NRAES", executable="kkrgen", mpi=False, input_file_templates=("{dataset}.dos",))
+    schema._task_definition = TaskDefinition("NRAES", executable="kkrgen", mpi=False, input_file_templates=("{dataset}_{adsi}.dos",))
     return schema
