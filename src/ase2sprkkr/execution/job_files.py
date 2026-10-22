@@ -84,6 +84,23 @@ class JobFiles:
             self.manifest if manifest is None else manifest
         )
 
+    def retry_failed_downloads(self):
+        """Return a manifest with only failed transfers reopened as pending."""
+        return self.manifest._map_artifacts(
+            lambda item: replace(
+                item, availability_state="pending", availability_message=None,
+            ) if item.availability_state == "failed" else item
+        )
+
+    @staticmethod
+    def fail_pending(manifest, message):
+        """Mark pending or not-yet-resolved files failed on capture errors."""
+        return manifest._map_artifacts(
+            lambda item: replace(
+                item, availability_state="failed", availability_message=message,
+            ) if item.availability_state in (None, "pending") else item
+        )
+
     def missing_files(self):
         """Identify declared files that are no longer locally available."""
         return self._missing_result_files(self.manifest)
