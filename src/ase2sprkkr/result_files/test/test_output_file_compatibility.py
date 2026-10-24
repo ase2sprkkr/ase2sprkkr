@@ -22,12 +22,11 @@ def test_internal_output_file_alias_is_result_file():
 
     assert OutputFile is ResultFile
 
-
-def test_old_output_files_package_is_removed():
-    with pytest.raises(ModuleNotFoundError) as error:
-        importlib.import_module("ase2sprkkr.output_files")
-    assert error.value.name == "ase2sprkkr.output_files"
-
+def test_old_output_files_package_is_deprecated():
+    with pytest.warns(DeprecationWarning):
+        importlib.reload(
+            importlib.import_module("ase2sprkkr.output_files")
+        )
 
 def test_canonical_result_file_api_does_not_use_legacy_names():
     package_root = Path(__file__).resolve().parents[2]

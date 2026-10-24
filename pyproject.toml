@@ -141,6 +141,9 @@ wheel.exclude = [
 markers = [
 	"slow: long-running test (typically over about 1 second)",
 ]
+filterwarnings = [
+    "ignore:ase2sprkkr.output_files is deprecated:DeprecationWarning",
+]
 
 [tool.ruff]
 line-length=120
