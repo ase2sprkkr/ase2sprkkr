@@ -160,11 +160,11 @@ class TestCommon:
 
         assert ff(2, c=1) == (1, (2,))
 
-        @add_to_signature(lambda x: x)
+        @add_to_signature(lambda x,y='y': x)
         def ff(*args, c, **kwargs):
-            return c, kwargs
+            return c, args, kwargs
 
-        assert ff(x=2, c=1) == (1, {"x": 2})
+        assert ff(x=2, c=1) == (1, (2, 'y'), {})
 
         @add_to_signature(lambda: None)
         def ff(a, *args, c, **kwargs):

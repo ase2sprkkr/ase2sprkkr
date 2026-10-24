@@ -1,6 +1,7 @@
 """Various decorators, mainly for class methods"""
 
 import functools
+import itertools
 import inspect
 import heapq
 import warnings
@@ -106,7 +107,7 @@ class class_property:
         return self.fget(cls)
 
 
-def add_to_signature(func, prepend=False, excluding=None, kwargs=False):
+def add_to_signature(func, prepend=False, old_as_keyword=False, excluding=None, kwargs=False, apply_defaults=False):
     """
     Add the arguments in the ``func`` function to the list of arguments
     of the resulting function (as keyword_only arguments)
@@ -133,101 +134,135 @@ def add_to_signature(func, prepend=False, excluding=None, kwargs=False):
       If True, the new positional arguments will be the first.
       If False, they will be after the parents positional arguments.
 
-      The same-named arguments can be given as keyword-only - then
-      they just alter the properties of the "old" arguments, retaining their position.
-      If they are given as regular ones, they takes their new position, too.
+      If prepend=True, the order of the same-named parameters is used from the new function.
+      Otherwise, it the different order of parameters does not overwrite the order in the
+      "parent function"
+
+    old_as_keyword
+      If True, the original POSITIONAL_OR_KEYOWRD will be changed to keyword
 
     excluding
       Do not add arguments of this name(s)
 
     kwargs
       The resulting function will have kwargs argument
+
+    apply_defaults
+      If true, the defaults values from the "parent signature" are applied before
+      the function is called. Otherwise, they could not applied (for the sake of
+      the simplicity of call-wrapper) and it is presumed,
+      that the default will be aplied by calling the func.
     """
     if not excluding:
         excluding = []
     elif isinstance(excluding, str):
         excluding = [excluding]
 
-    signature = inspect.signature(func)
-    pars = list(signature.parameters.values())
     P = inspect.Parameter
-
-    arg_ar = _arg_kw = None
-    for i in pars:
-        if i.kind == P.VAR_KEYWORD:
-            _arg_kw = i.name
-        elif i.kind == P.VAR_POSITIONAL:
-            arg_ar = i.name
 
     def modify(mod_func):
         new_sig = inspect.signature(mod_func)
         new_pars = new_sig.parameters.values()
+        new_pars = {str(i.name): i for i in new_pars if (i.kind != P.VAR_KEYWORD or kwargs)}
 
-        arg_kw = _arg_kw
-        if kwargs:
-            for i in new_pars:
-                if i.kind == P.VAR_KEYWORD:
-                    arg_kw = i.name
-                    break
+        signature = inspect.signature(func)
+        pars = signature.parameters.values()
 
-        new_pars = {i.name: i for i in new_pars if (i.kind != P.VAR_KEYWORD or kwargs) and i.kind != P.VAR_POSITIONAL}
+        if old_as_keyword:
+            pars = [
+                i.replace(kind=P.KEYWORD_ONLY)
+                if i.kind == P.POSITIONAL_OR_KEYWORD else i
+                for i in pars
+                if i.name not in excluding
+            ]
+            pars = { i.name:i for i in pars }
+        else:
+            pars = {
+                i.name: i for i in pars if i.name not in excluding
+            }
 
-        used = set()
-
-        def use(i):
-            nonlocal used
-            used.add(i.name)
-            return i
 
         if prepend:
-            old_names = set((i.name for i in pars if i.name not in excluding))
-            old_pars = [use(i) for i in new_pars.values() if i.kind != P.KEYWORD_ONLY or i.name not in old_names]
-
-            def add_pars():
-                for i in pars:
-                    if i.name in excluding:
-                        continue
-                    if i.name not in new_pars:
-                        yield i
-                    else:
-                        n = new_pars[i.name]
-                        if n.kind != P.KEYWORD_ONLY:
-                            continue
-                        yield i.replace(default=n.default, annotation=n.annotation)
-
-            add_pars = [i for i in add_pars()]
+            old_pars = new_pars
+            add_pars = [ i for name,i in pars.items() if name not in new_pars ]
         else:
-            old_pars = [use(new_pars[i.name]) if i.name in new_pars else i for i in pars if i.name not in excluding]
-            add_pars = [i for i in new_pars.values() if i.name not in used]
+            old_pars = { name : (new_pars[name] if name in new_pars else i) for name, i in pars.items() }
+            add_pars = [ i for i in new_pars.values() if i.name not in old_pars ]
 
-        for i in add_pars:
-            if i.kind != P.KEYWORD_ONLY:
+        result = [*old_pars.values(), *add_pars]
+        result.sort(key = lambda p: p.kind.value)
+        result = new_sig.replace(parameters=result)
+        mod_func.__signature__ = result
+
+        same = P.KEYWORD_ONLY if apply_defaults else True
+        for a,b in itertools.zip_longest(result.parameters.values(), new_sig.parameters.values()):
+            if a.kind in (P.KEYWORD_ONLY, P.VAR_KEYWORD):
+                if b is not None and b.kind not in (P.KEYWORD_ONLY, P.VAR_KEYWORD):
+                    same = b.kind
                 break
-        else:
-            result = list(heapq.merge(old_pars, add_pars, key=lambda x: x.kind))
-            result = new_sig.replace(parameters=result)
-            mod_func.__signature__ = result
+            if b is None:
+                same = a.kind
+                break
+            if a.kind == P.VAR_POSITIONAL:
+                if b.kind != P.VAR_POSITIONAL:
+                    same = min(a.kind, b.kind)
+                break
+            if a.name != b.name or a.kind == P.POSITIONAL_OR_KEYWORD and b.kind != P.POSITIONAL_OR_KEYWORD:
+                same = min(a.kind, b.kind)
+                break
+
+        if same is True:
             return mod_func
 
-        result = heapq.merge(old_pars, add_pars, key=lambda x: x.kind)
-        result = list(result)
-        result = new_sig.replace(parameters=result)
+        if same > P.POSITIONAL_OR_KEYWORD:
+            if apply_defaults:
+                def wrapper(*args, **kwargs):
+                    ba = result.bind(*args, **kwargs)
+                    ba.apply_defaults()
+                    return mod_func(*ba.args, **ba.kwargs)
+            else:
+                def wrapper(*args, **kwargs):
+                    ba = result.bind(*args, **kwargs)
+                    return mod_func(*ba.args, **ba.kwargs)
+            return functools.wraps(mod_func)(wrapper)
+
+        if same == P.POSITIONAL_OR_KEYWORD and not any(i.kind in (P.POSITIONAL_ONLY, P.VAR_POSITIONAL) for i in new_pars.values()):
+            if apply_defaults:
+                def wrapper(*args, **kwargs):
+                    ba = result.bind(*args, **kwargs)
+                    ba.apply_defaults()
+                    return mod_func(**ba.arguments)
+            else:
+                def wrapper(*args, **kwargs):
+                    ba = result.bind(*args, **kwargs)
+                    return mod_func(**ba.arguments)
+            return functools.wraps(mod_func)(wrapper)
 
         @functools.wraps(mod_func)
         def wrapper(*args, **kwargs):
+            x=new_pars
+            y=pars
+            z=old_pars
+            gg=add_pars
+
+
             ba = result.bind(*args, **kwargs)
             ba.apply_defaults()
-            nargs = []
-            nkwargs = {}
-            for k, v in ba.arguments.items():
-                if k == arg_kw:
-                    nkwargs.update(v)
-                elif k == arg_ar:
-                    nargs.extend(v)
-                elif k in new_pars and new_pars[k].kind != P.KEYWORD_ONLY:
-                    nargs.append(v)
+            args = ba.arguments
+            nargs, nkwargs = [], {}
+
+            for k, p in new_sig.parameters.items():
+                if p.kind in (P.POSITIONAL_ONLY, P.POSITIONAL_OR_KEYWORD):
+                    nargs.append(args.pop(k))
+                elif p.kind == P.VAR_POSITIONAL:
+                    np = result.parameters
+                    nargs.extend((args.pop(n) for n in list(args.keys()) if np[n].kind in (P.POSITIONAL_ONLY, P.POSITIONAL_OR_KEYWORD) ))
+                    nargs.extend(args.pop(k, []))
+                elif p.kind == P.VAR_KEYWORD:
+                    nkwargs.update(args.pop(k, {}))
                 else:
-                    nkwargs[k] = v
+                    nkwargs[k] = args.pop(k)
+            nkwargs.update(ba.arguments)
             return mod_func(*nargs, **nkwargs)
 
         wrapper.__signature__ = result
