@@ -504,7 +504,7 @@ class NumpyArray(RawData):
                                 f"Parsed {v.size} values, expected {expected_size}"
                             )
                         if inferred_shape[0] > 1:
-                            v.shape = inferred_shape
+                            v = v.reshape(inferred_shape)
                 else:
                     last_error = None
                     for dt in self.dtypes:
@@ -527,7 +527,7 @@ class NumpyArray(RawData):
                 else self.shape
             )
             if shape:
-                v.shape = tuple(shape)
+                v = v.reshape(tuple(shape))
             return v
 
         grammar.add_parse_action(parse)
