@@ -14,6 +14,7 @@ from ..sprkkr.configuration import (
 from ..common.configuration_containers import BaseConfigurationContainer
 from ..common.repeated_configuration_containers import RepeatedConfigurationContainer
 from ..common.decorators import cached_class_property
+from ..common.module_registry import RegistryEntryNotFound
 from ..potentials.potentials import Potential
 
 class _LazyInputParametersDefinitions(Mapping):
@@ -113,7 +114,8 @@ class InputParameters(ConfigurationFile):
                 "These input parameters are not associated with an SPR-KKR task definition"
             )
         expected = self.input_parameters_registry.definition_for_task(task)
-        if expected is not self._definition:
+        if (expected is not self._definition
+                and expected.name.upper() != self._definition.name.upper()):
             raise RuntimeError(
                 f"Task {task.name} uses a different input schema; "
                 "use change_task() to switch schemas explicitly."
@@ -299,9 +301,17 @@ class InputParameters(ConfigurationFile):
 
     @classmethod
     def create(cls, name):
-        """Create parameters for a registered task, not for a bare shared schema."""
+        """Create a task's parameters, or a named preset of a canonical schema."""
         name = cls.task_registry.normalize_name(name)
-        return cls.input_parameters_registry.create_for_task(cls.task_registry[name])
+        try:
+            task = cls.task_registry[name]
+        except RegistryEntryNotFound:
+            definition = cls.input_parameters_registry[name]
+            if cls.input_parameters_registry.normalize_name(definition.name) == name:
+                # A canonical shared schema (e.g. BSF) is not a task.
+                raise RegistryEntryNotFound(name) from None
+            return definition.create_object()
+        return cls.input_parameters_registry.create_for_task(task)
 
     @classmethod
     def default_parameters(cls):

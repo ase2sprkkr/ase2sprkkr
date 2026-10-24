@@ -523,6 +523,51 @@ def test_task_enumeration_detects_valid_name_collision(tmp_path, monkeypatch):
     with pytest.raises(RegistryDefinitionError, match="defined both"):
         registry["SAME"]
 
+
+def test_user_preset_ipd_reuses_canonical_task_without_autodetection_ambiguity(tmp_path):
+    """An IPD copy has its own registry key, but does not declare a new task."""
+    config_dir = tmp_path / "ase2sprkkr" / "input_parameters"
+    config_dir.mkdir(parents=True)
+    (config_dir / "myarpes.py").write_text(
+        "from ase2sprkkr.input_parameters.input_parameters import InputParameters\n"
+        "def input_parameters_definition():\n"
+        "    definition = InputParameters.definition('ARPES').copy()\n"
+        "    definition['TAU']['NKTAB'].default_value = 555\n"
+        "    return definition\n"
+    )
+    (config_dir / "myscf.py").write_text(
+        "from ase2sprkkr.input_parameters.input_parameters import InputParameters\n"
+        "def input_parameters_definition():\n"
+        "    return InputParameters.definition('SCF').copy()\n"
+    )
+    env = os.environ.copy()
+    env["XDG_CONFIG_HOME"] = str(tmp_path)
+    env.pop("ASE2SPRKKR_NO_USER_PROFILE", None)
+    arpes_example = os.path.join(os.path.dirname(__file__), "..", "examples", "arpes.in")
+    source = (
+        "from ase2sprkkr.input_parameters.input_parameters import InputParameters as IP\n"
+        "arpes = IP.create('MYARPES')\n"
+        "assert arpes._definition is IP.definition('MYARPES')\n"
+        "assert arpes.task_name == 'ARPES'\n"
+        "assert arpes.TAU.NKTAB() == 555\n"
+        "assert arpes.task_definition_required() is IP.task_registry['ARPES']\n"
+        "scf = IP.create('MYSCF')\n"
+        "assert scf.task_definition_required() is IP.task_registry['SCF']\n"
+        "assert 'MYARPES' not in IP.task_registry.names()\n"
+        "assert 'MYSCF' not in IP.task_registry.names()\n"
+        f"file = {arpes_example!r}\n"
+        "assert IP.from_file(file)._definition is IP.definition('ARPES')\n"
+        "parsed = IP.input_parameters_registry.read_for_task(\n"
+        "    IP.task_registry['ARPES'], file, input_definition='MYARPES')\n"
+        "assert parsed._definition is IP.definition('MYARPES')\n"
+        "assert parsed.task_name == 'ARPES'\n"
+    )
+    completed = subprocess.run(
+        [sys.executable, "-c", source],
+        env=env, capture_output=True, text=True, timeout=45, check=False,
+    )
+    assert completed.returncode == 0, completed.stderr + completed.stdout
+
 def test_cli_and_input_autodetection_with_broken_user_schema(tmp_path):
     config_dir = tmp_path / "ase2sprkkr"
     custom = config_dir / "input_parameters"

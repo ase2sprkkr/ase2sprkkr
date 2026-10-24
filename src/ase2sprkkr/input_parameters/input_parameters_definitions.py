@@ -65,7 +65,7 @@ def _snapshot_stream(text, filename):
 def _task_selector_map():
     """A single map for the singleton input-definition registry."""
     selectors = {}
-    for definition in InputParameters.input_parameters_registry.iter_valid_values():
+    for definition in InputParameters.input_parameters_registry.iter_canonical_values():
         for token in definition.accepted_task_selectors():
             if not token:
                 raise ValueError(f"Empty TASK selector in IPD {definition.name}")

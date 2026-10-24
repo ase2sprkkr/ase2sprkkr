@@ -273,12 +273,9 @@ class InputParametersRegistry(ModuleRegistry):
                 f"{module.__name__}.input_parameters_definition must produce "
                 f"InputParametersDefinition, got {type(value).__name__}"
             )
-        if str(value.name).upper() != name:
-            raise RegistryDefinitionError(
-                f"Input-parameter definition in {module.__name__} is named "
-                f"{value.name}, but the module defines {name}"
-            )
-
+        # A differently named registry entry is a preset of its original IPD,
+        # not another canonical schema or task.
+        canonical = str(value.name).upper() == name
         task = value._task_definition
         if task is not None:
             if not isinstance(task, TaskDefinition):
@@ -286,11 +283,11 @@ class InputParametersRegistry(ModuleRegistry):
                     f"{module.__name__}._task_definition must be TaskDefinition, "
                     f"got {type(task).__name__}"
                 )
-            if task.name != name:
+            if canonical and task.name != name:
                 raise RegistryDefinitionError(
                     f"Canonical task {task.name} does not match input schema {name}"
                 )
-            if task.input_parameters_definition_name != name:
+            if canonical and task.input_parameters_definition_name != name:
                 raise RegistryDefinitionError(
                     f"Canonical task {task.name} references input schema "
                     f"{task.input_parameters_definition_name} instead of {name}"
@@ -298,6 +295,13 @@ class InputParametersRegistry(ModuleRegistry):
 
         process_input_parameters_definition(module, value)
         return value
+
+    def iter_canonical_values(self):
+        """Yield canonical IPDs, excluding named copies used as presets."""
+        for name in self.names(include_aliases=False):
+            for definition in self.iter_valid_values(names=(name,)):
+                if self.normalize_name(definition.name) == name:
+                    yield definition
 
     def definition_for_task(self, task):
         """Return the schema identified by declarative task metadata."""
@@ -484,6 +488,8 @@ class TaskRegistry:
             definition = self.input_parameters_registry[name]
         except RegistryEntryNotFound:
             return None
+        if self.input_parameters_registry.normalize_name(definition.name) != name:
+            return None
         return definition._task_definition
 
     def _extra_task(self, name):
@@ -516,7 +522,7 @@ class TaskRegistry:
     def names(self):
         """Enumerate valid tasks; broken unrelated definitions are skipped."""
         names = {task.name for task in self.extra_tasks.iter_valid_values()}
-        for schema in self.input_parameters_registry.iter_valid_values():
+        for schema in self.input_parameters_registry.iter_canonical_values():
             task = schema._task_definition
             if task is None:
                 continue
