@@ -63,7 +63,7 @@ class RawData(GrammarType):
     @add_to_signature(GrammarType.__init__)
     def __init__(
         self,
-        *args,
+        *,
         lines=None,
         indented=False,
         line_length=None,
@@ -129,7 +129,7 @@ class RawData(GrammarType):
         if lines is not None and not isinstance(lines, Integral):
             self._line_dependency = DependentValue.create(lines)
         self.forward = None
-        super().__init__(*args, **kwargs)
+        super().__init__(**kwargs)
 
     def _n_lines_grammar(self, lines):
         """return a grammar for n lines of text"""
@@ -239,17 +239,17 @@ class NumpyArray(RawData):
 
     array_access = True
 
-    @add_to_signature(GrammarType.__init__)
+    @add_to_signature(RawData.__init__, prepend=True, old_as_keyword=True)
     def __init__(
         self,
-        *args,
+        dtype=None,
+        *,
         delimiter=None,
         written_delimiter=None,
         shape=None,
         written_shape=None,
         items_per_line=None,
         item_format="% .18e",
-        dtype=None,
         dtypes=None,
         no_newline_at_end=True,
         **kwargs,
@@ -327,7 +327,7 @@ class NumpyArray(RawData):
                     )
                 elif shape is not None and -1 not in shape:
                     lines = _shape_lines(shape, items_per_line=items_per_line)
-        super().__init__(*args, lines=lines, **kwargs)
+        super().__init__(lines=lines, **kwargs)
 
     def _validate(self, value, why="set"):
         return isinstance(value, np.ndarray)
