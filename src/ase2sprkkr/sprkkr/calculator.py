@@ -12,8 +12,8 @@ import os
 import subprocess
 from pathlib import Path
 from typing import Any, Dict, Optional, Union
-
 from ase.calculators.calculator import BaseCalculator, all_changes
+import numpy as np
 
 from ..common.file_utils import Directory
 from ..common.misc import config_property, first_non_none
@@ -521,6 +521,34 @@ class SPRKKR(BaseCalculator):
         if callback:
             callback(result)
         return result
+
+    def get_property(self, name, atoms=None, allow_calculation=True):
+        if name not in self.implemented_properties:
+            raise PropertyNotImplementedError(
+                f"{name} property not implemented"
+            )
+
+        if not allow_calculation:
+            return None
+
+        self.results.clear()
+
+        result = self.calculate(
+            atoms=atoms,
+            properties=(name,),
+            system_changes=all_changes,
+        )
+
+        if atoms is not None and result.task_name.upper() == "SCF":
+            self._update_from_result(result, adopt_potential=True)
+
+        if name not in self.results:
+            raise PropertyNotImplementedError(
+                f"{name} not present in this calculation"
+            )
+
+        value = self.results[name]
+        return value.copy() if isinstance(value, np.ndarray) else value
 
     def scf(self, *args, **kwargs):
         """Run an SCF calculation."""
