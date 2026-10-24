@@ -210,7 +210,7 @@ SYNC_POLICY = Keyword(
         "missing": "Transfer files only when the destination is missing.",
         "never": "Never transfer files.",
     },
-    transform=None,
+    transform='lower',
 )
 EXECUTOR = Keyword(
     {
@@ -218,7 +218,7 @@ EXECUTOR = Keyword(
         "ssh": "Run through ASE2SPRKKR on a machine reached by SSH.",
         "psij": "Submit through a PSI/J scheduler backend.",
     },
-    transform=None,
+    transform='lower',
 )
 
 """ The definition of ASE2SPRKKR configuration """
