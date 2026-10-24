@@ -11,9 +11,6 @@ if not __package__:
     __package__ = "ase2sprkkr.tools.commands"
 sys.path.append(str(Path(__file__).resolve().parents[3]))
 
-from ... import InputParameters, ResultFile, executables  # NOQA
-from ...common.tools import main  # NOQA
-
 
 help = "Show capabilities of ase2sprkkr (known tasks, result file formats etc.)."
 description = """\n Example of usage:
@@ -58,6 +55,10 @@ def parser(parser):
 
 
 def run(args, global_args):
+    from ... import InputParameters, ResultFile
+    from ...sprkkr.executables import executables  # NOQA
+    from ...common.tools import main  # NOQA
+
 
     print("ASE2SPRKKR\n==========\nA tool to run SPRKKR calculations\n\n")
 
