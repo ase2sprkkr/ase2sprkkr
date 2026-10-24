@@ -2,7 +2,7 @@ from dataclasses import FrozenInstanceError
 
 import pytest
 
-from ase2sprkkr import executables as public_executables
+from ase2sprkkr.sprkkr.executables import executables as public_executables
 from ...common.module_registry import RegistryDefinitionError, RegistryEntryNotFound
 from ..executables import ExecutableDefinition, _ExecutableRegistry, executables
 
