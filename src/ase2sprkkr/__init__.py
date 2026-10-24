@@ -10,15 +10,10 @@ __all__ = (
     "SPRKKR",
     "InputParameters",
     "Potential",
-    "PotentialFileChanged",
-    "FileState",
-    "FileVersion",
-    "FileVersionCaptureError",
     "SPRKKRAtoms",
     "promote_ase_atoms",
     "ResultFile",
     "TaskResult",
-    "executables",
     "__version__",
     "config",
 )
@@ -30,14 +25,7 @@ from .sprkkr.calculator import SPRKKR  # NOQA: F401, E402
 from .input_parameters.input_parameters import InputParameters  # NOQA: F401, E402
 
 """ Potential file object and its stable runtime exception contract """
-from .potentials.potentials import Potential, PotentialFileChanged  # NOQA: F401, E402
-
-""" Content-aware filesystem provenance shared with client applications """
-from .common.file_versions import (  # NOQA: F401, E402
-    FileState,
-    FileVersion,
-    FileVersionCaptureError,
-)
+from .potentials.potentials import Potential  # NOQA: F401, E402
 
 """ An extension of ASE atoms object """
 from .sprkkr.sprkkr_atoms import SPRKKRAtoms  # NOQA: F401, E402
@@ -48,14 +36,11 @@ promote_ase_atoms = SPRKKRAtoms.promote_ase_atoms
 """ Structured SPR-KKR result file """
 from .result_files import ResultFile  # NOQA: F401, E402
 
-""" Read-only metadata for known SPR-KKR executables """
-from .sprkkr.executables import executables  # NOQA: F401, E402
-
 
 def __getattr__(name):
     if name == "OutputFile":
         warnings.warn(
-            "ase2sprkkr.OutputFile is deprecated; use ase2sprkkr.ResultFile instead.",
+            "ase2sprkkr.OutputFile is deprecated (the class have been renamed); use ase2sprkkr.ResultFile instead.",
             DeprecationWarning,
             stacklevel=2,
         )
