@@ -150,6 +150,9 @@ def _read_selected_definitions(text, selectors, *, filename=None, allow_dangerou
 class InputValueDefinition(ConfigurationValueDefinition):
     result_class = InputValue
 
+    def _resolve_is_optional(self, is_optional):
+        return True if is_optional is None else is_optional
+
     @cached_class_property
     def delimiter():
         with generate_grammar():
@@ -169,6 +172,9 @@ class InputValueDefinition(ConfigurationValueDefinition):
 class InputSectionDefinition(ConfigurationSectionDefinition):
     child_class = InputValueDefinition
     result_class = InputSection
+
+    def _resolve_is_optional(self, is_optional):
+        return True if is_optional is None else is_optional
     custom_class = staticmethod(
         CustomConfigurationValue.factory(InputValueDefinition, mixed)
     )

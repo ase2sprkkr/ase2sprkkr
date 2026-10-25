@@ -600,3 +600,31 @@ def test_cli_and_input_autodetection_with_broken_user_schema(tmp_path):
             f"{command!r} failed: {completed.stderr}\n{completed.stdout}"
         )
         assert ("Skipping invalid registry entry" in completed.stderr) == should_warn
+
+
+
+@pytest.mark.parametrize("name", ("ARPES", "AIPES", "SPLEED", "BAND"))
+def test_spec_input_requires_explicit_task_selector(name):
+    import pyparsing as pp
+
+    task = InputParameters.task_registry[name]
+    definition = InputParameters.definition(name)
+    parameters = InputParameters.create(name)
+    parameters.CONTROL.POTFIL = "Fe.pot"
+    text = parameters.to_string(validate=True)
+    assert "TASK" in text
+
+    # A present TASK section without its positional selector must be rejected.
+    missing_selector = text.replace("TASK     " + name, "TASK     ", 1)
+    if missing_selector == text:
+        import re
+        missing_selector = re.sub(
+            rf"(?m)^(TASK\s+){name}\b", r"\1", text, count=1
+        )
+    assert missing_selector != text
+    with pytest.raises(pp.ParseBaseException):
+        definition.read_from_string(missing_selector)
+    with pytest.raises(pp.ParseBaseException):
+        InputParameters.input_parameters_registry.read_for_task(
+            task, io.StringIO(missing_selector)
+        )

@@ -137,6 +137,11 @@ class ValueDefinition(RealItemDefinition):
 
     name_in_grammar = None
     is_generated = False
+
+    def _resolve_is_optional(self, is_optional):
+        if is_optional is None:
+            return self.is_required is False
+        return is_optional
     is_validated = None  # default is is_generated
 
     item_type = "value"
@@ -362,9 +367,6 @@ class ValueDefinition(RealItemDefinition):
         if is_required is None:
             is_required = not is_expert and (not is_optional and default_value is None)
         self.is_required = is_required
-
-        if is_optional is None:
-            is_optional = is_required is False
 
         super().__init__(
             name=name,

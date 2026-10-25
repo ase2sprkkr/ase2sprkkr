@@ -276,3 +276,31 @@ XSITES NR=3 FLAG
     reread = definition.read_from_file(output, allow_dangerous=True)
     assert parameters.ENERGY.NE() == "sss"
     assert str(parameters.as_dict()) == str(reread.as_dict())
+
+
+def test_explicit_nonoptional_values_in_unordered_input_sections():
+    """Only explicitly non-optional items must appear in unordered input."""
+    definition = cd.InputParametersDefinition("required_unordered", [
+        cd.InputSectionDefinition("MAIN", [
+            V("VALUE", 7, is_optional=False),
+            V("DEFAULT", 9),
+            V("OTHER", 11, is_optional=True),
+        ], is_optional=False),
+        cd.InputSectionDefinition("EXTRA", [V("FLAG", 1)]),
+    ])
+
+    assert definition["MAIN"]["VALUE"].is_optional is False
+    assert definition["MAIN"]["DEFAULT"].is_optional is True
+    assert definition["EXTRA"].is_optional is True
+    parsed = definition.read_from_string("MAIN VALUE=7")
+    assert parsed.MAIN.VALUE() == 7
+    assert parsed.MAIN.DEFAULT() == 9
+
+    with pytest.raises(pp.ParseBaseException, match=r"MAIN\.VALUE"):
+        definition.read_from_string("MAIN OTHER=11")
+    with pytest.raises(pp.ParseBaseException, match=r"MAIN"):
+        definition.read_from_string("EXTRA FLAG=1")
+
+    copied = definition.copy()
+    with pytest.raises(pp.ParseBaseException, match=r"MAIN\.VALUE"):
+        copied.read_from_string("MAIN OTHER=11")

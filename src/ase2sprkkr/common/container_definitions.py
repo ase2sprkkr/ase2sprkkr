@@ -56,7 +56,7 @@ class ContainerDefinition(RealItemDefinition):
         written_name=None,
         info=None,
         description=None,
-        is_optional=False,
+        is_optional=None,
         is_hidden=False,
         is_expert=False,
         has_hidden_members=False,
@@ -414,7 +414,17 @@ class ContainerDefinition(RealItemDefinition):
             if first:
                 values = first + pp.Optional(delimiter + values)
 
-        values.set_parse_action(lambda x: dict_from_parsed(x.asList()))
+        def parse_values(tokens):
+            parsed = dict_from_parsed(tokens.asList())
+            if not self.force_order:
+                for member in self._members.values():
+                    if not member.is_optional and not member.is_generated and member.name not in parsed:
+                        raise pp.ParseException(
+                            f"Missing non-optional input item {member.get_path()}"
+                        )
+            return parsed
+
+        values.set_parse_action(parse_values)
         if self.write_last_delimiter:
             values = values + pp.Optional(delimiter)
         if self.is_repeated and not self.repeated_with_name:

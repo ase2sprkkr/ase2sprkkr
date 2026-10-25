@@ -116,6 +116,7 @@ def input_parameters_definition():
                         ),
                         _task_default,
                         is_required=True,
+                        is_optional=False,
                         name_in_grammar=False,
                         info="Type of the calculation",
                     ),
@@ -139,6 +140,7 @@ def input_parameters_definition():
                         info="Set to 0 to use an old input.inp from old rslab",
                     ),
                 ],
+                is_optional=False,
             ),
             Section(
                 "SPEC_PH",

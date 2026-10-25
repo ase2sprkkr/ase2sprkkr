@@ -102,10 +102,14 @@ class BaseDefinition:
 
     #
     #
-    def __init__(self, name, is_optional=False, condition=None):
+    def _resolve_is_optional(self, is_optional):
+        """Resolve an unspecified grammar-optional flag for this definition."""
+        return False if is_optional is None else is_optional
+
+    def __init__(self, name, is_optional=None, condition=None):
         self.name = name
         self.name_lcase = name.lower()
-        self.is_optional = is_optional
+        self.is_optional = self._resolve_is_optional(is_optional)
         self.condition = condition
         self.grammar_hooks = []
         self.condition = condition
@@ -330,7 +334,7 @@ class RealItemDefinition(BaseDefinition):
         self,
         name,
         written_name=None,
-        is_optional=False,
+        is_optional=None,
         is_hidden=False,
         is_expert=False,
         name_in_grammar=None,

@@ -761,7 +761,7 @@ def test_generated_numpy_view_mutates_without_rollback():
 
 def test_missing_sections_are_validation_results():
     definition = cd.InputParametersDefinition(
-        [cd.InputSectionDefinition("REQUIRED", [V("VALUE", int, None)])]
+        [cd.InputSectionDefinition("REQUIRED", [V("VALUE", int, None)], is_optional=False)]
     )
     found = definition.create_object().check_for_errors(print=False)
     assert any(

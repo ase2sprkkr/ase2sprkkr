@@ -374,9 +374,6 @@ class InputParametersRegistry(ModuleRegistry):
             inputfile=file,
         )
 
-        if task.executable == "kkrspec" and not out.TASK.TASK.is_set():
-            raise TaskMismatchError(task.name, None)
-
         task_name = out.task_name
         if task_name != task.name:
             raise TaskMismatchError(task.name, task_name)
