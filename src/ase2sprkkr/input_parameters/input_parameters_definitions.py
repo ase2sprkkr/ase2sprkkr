@@ -312,6 +312,12 @@ class InputParametersDefinition(ConfigurationFileDefinition):
     def _generic_info(self):
         return f"Input parameters format {self.name}"
 
+    def copy(self, **kwargs):
+        copied = super().copy(**kwargs)
+        if '_task_definition' in self.__dict__:
+            copied._task_definition = self._task_definition
+        return copied
+
 
 class _CachedPreparseIPD(InputParametersDefinition):
     """Preparser only: no mutations after grammar compilation."""
