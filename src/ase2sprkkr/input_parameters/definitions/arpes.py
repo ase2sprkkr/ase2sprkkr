@@ -311,7 +311,7 @@ def input_parameters_definition():
             ),
         ],
         validators=_validate_angular_scan,
-        info="ARPES - Angle resolved photoemission spectroscopy",
+        info="Angle resolved photoemission spectroscopy",
     )
 
 

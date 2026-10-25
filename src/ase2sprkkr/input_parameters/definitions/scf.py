@@ -58,7 +58,7 @@ def input_parameters_definition():
     schema = SCFInputParametersDefinition(
         "scf",
         [CONTROL("SCF"), TASK("SCF"), TAU, energy, scf, SITES, STRCONST, CPA, MODE],
-        info="SCF - Calculate a self-consistent potential",
+        info="Calculate a self-consistent potential",
         validators=_validate_scf,
     )
     schema._task_definition = TaskDefinition(

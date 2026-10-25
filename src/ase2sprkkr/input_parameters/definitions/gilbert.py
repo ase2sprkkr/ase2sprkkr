@@ -113,7 +113,7 @@ def input_parameters_definition():
         description="Standard periodic magnetic FREL Gilbert damping at EF. Native GIL requires KMROT=0. "
                     "RDTAU is set by native INITVAR; compatible initialization TAU data may be required. "
                     "MCS, RDLM and NLCPA workflows are not audited here.",
-        info="GILBERT - The Gilbert damping parameter calculation"
+        info="The Gilbert damping parameter calculation"
     )
     schema._task_definition = TaskDefinition("GILBERT", executable="kkrchi", output_files=(
             "{dataset}alfa_x.dat",

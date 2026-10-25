@@ -275,6 +275,9 @@ class InputParametersRegistry(ModuleRegistry):
             )
         # A differently named registry entry is a preset of its original IPD,
         # not another canonical schema or task.
+
+        user_defined = self.is_user_defined(module)
+
         canonical = str(value.name).upper() == name
         task = value._task_definition
         if task is not None:
@@ -283,15 +286,18 @@ class InputParametersRegistry(ModuleRegistry):
                     f"{module.__name__}._task_definition must be TaskDefinition, "
                     f"got {type(task).__name__}"
                 )
-            if canonical and task.name != name:
-                raise RegistryDefinitionError(
-                    f"Canonical task {task.name} does not match input schema {name}"
-                )
-            if canonical and task.input_parameters_definition_name != name:
-                raise RegistryDefinitionError(
-                    f"Canonical task {task.name} references input schema "
-                    f"{task.input_parameters_definition_name} instead of {name}"
-                )
+            if not user_defined:
+                if task.name != name:
+                    raise RegistryDefinitionError(
+                        f"Canonical task {task.name} does not match input schema {name}"
+                    )
+                if task.input_parameters_definition_name != name:
+                    raise RegistryDefinitionError(
+                        f"Canonical task {task.name} references input schema "
+                        f"{task.input_parameters_definition_name} instead of {name}"
+                    )
+        if user_defined and value.name in self:
+            value.name = name
 
         process_input_parameters_definition(module, value)
         return value

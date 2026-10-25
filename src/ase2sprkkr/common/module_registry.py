@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import importlib
 import pkgutil
+import os
 import warnings
 from threading import RLock
 from types import MappingProxyType
@@ -136,6 +137,9 @@ class ModuleRegistry:
         if self._factory and callable(value):
             value = value()
         return value
+
+    def is_user_defined(self, module):
+        return os.path.dirname(module.__file__) != self.package.__path__[0]
 
     def prepare_value(self, name, module, value):
         """Validate or transform a freshly loaded value."""

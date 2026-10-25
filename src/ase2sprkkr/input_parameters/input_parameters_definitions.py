@@ -195,6 +195,12 @@ class InputParametersDefinition(ConfigurationFileDefinition):
     The association is internal and must not be changed after registration.
     """
 
+    _derived_from_name = None
+    """ If one copies the definition, it should be listed under its new name, but
+    retain the original name as well, to retain the information, to which "task"
+    it originally belongs """
+
+
     child_class = InputSectionDefinition
     result_class = InputParameters
     custom_class = staticmethod(
@@ -316,7 +322,33 @@ class InputParametersDefinition(ConfigurationFileDefinition):
         copied = super().copy(**kwargs)
         if '_task_definition' in self.__dict__:
             copied._task_definition = self._task_definition
+        copied._derived_from_name = self.derived_from_name
         return copied
+
+    @property
+    def derived_from_name(self):
+        return self._derived_from_name or self.name
+
+    @property
+    def display_name(self):
+        name = self.name.upper()
+        if self._derived_from_name:
+            derived_from = self._derived_from_name.upper()
+        else:
+            derived_from = name
+
+        return (
+            derived_from if derived_from == name
+            else f"{name}({derived_from})"
+        )
+
+    def info(self, generic=True):
+        description = super().info(generic)
+        return (
+            f"{self.display_name} - {description}"
+            if description else self.display_name
+        )
+
 
 
 class _CachedPreparseIPD(InputParametersDefinition):
