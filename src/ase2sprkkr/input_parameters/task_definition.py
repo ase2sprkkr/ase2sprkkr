@@ -349,6 +349,8 @@ class InputParametersRegistry(ModuleRegistry):
         *,
         input_definition=None,
         allow_dangerous=False,
+        allow_incomplete=False,
+        report_invalid=None,
     ):
         """Read input with an exact schema and require it to represent *task*.
 
@@ -358,10 +360,11 @@ class InputParametersRegistry(ModuleRegistry):
         object may intentionally be unregistered, which supports experimental
         or custom parsers while retaining the task-identity check.
 
-        The expected task is deliberately *not* supplied as parsing context.
-        Shared-schema defaults must therefore identify the file independently
-        of what the caller expected. ``requested_task_name`` is provenance and
-        is attached only after the parsed identity has been verified.
+        In strict mode the expected task is not supplied as parsing context.
+        In incomplete mode it is available to callable defaults, but any
+        explicit selector in the file must still agree with the expected task.
+        This allows recovery of a partial file without silently overriding a
+        conflicting task identity.
         """
         from .input_parameters_definitions import InputParametersDefinition
 
@@ -379,7 +382,10 @@ class InputParametersRegistry(ModuleRegistry):
         out = definition.read_from_file(
             file,
             allow_dangerous=allow_dangerous,
+            allow_incomplete=allow_incomplete,
             inputfile=file,
+            **({"requested_task_name": task.name} if allow_incomplete else {}),
+            **({"report_invalid": report_invalid} if report_invalid is not None else {}),
         )
 
         task_name = out.task_name

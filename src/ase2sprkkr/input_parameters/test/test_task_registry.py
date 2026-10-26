@@ -412,6 +412,43 @@ def test_read_for_distinct_task_requires_matching_native_identity():
         ip_registry.read_for_task(jxc, io.StringIO(text))
 
 
+
+
+def test_expected_task_does_not_supply_missing_shared_task_selector():
+    """An expected task only fills a missing selector in incomplete mode."""
+    from pathlib import Path
+    import pyparsing as pp
+    from ...common.warnings import DataValidityWarning
+    from ..task_definition import TaskMismatchError
+
+    example = Path(__file__).resolve().parent.parent / "examples" / "arpes.in"
+    original = example.read_text()
+    incomplete = original.replace("TASK     ARPES\n", "TASK\n", 1)
+    assert incomplete != original
+
+    registry = InputParameters.input_parameters_registry
+    spleed = InputParameters.task_registry["SPLEED"]
+
+    # Strict parsing still requires the native task selector.
+    with pytest.raises(pp.ParseBaseException, match="TASK"):
+        registry.read_for_task(spleed, io.StringIO(incomplete))
+
+    # Incomplete parsing is an explicit opt-in, with a diagnostic.
+    with pytest.warns(DataValidityWarning, match="TASK.TASK"):
+        parsed = registry.read_for_task(
+            spleed, io.StringIO(incomplete), allow_incomplete=True
+        )
+    assert parsed.task_name == "SPLEED"
+    assert parsed.requested_task_name == "SPLEED"
+    assert not parsed.TASK.TASK.is_set()
+
+    # An explicitly supplied, incompatible selector cannot be overridden.
+    with pytest.raises(TaskMismatchError):
+        registry.read_for_task(
+            spleed, io.StringIO(original), allow_incomplete=True
+        )
+
+
 def test_create_from_dmi_result_keeps_dmi_defaults():
     result = SimpleNamespace(
         last_iteration=SimpleNamespace(

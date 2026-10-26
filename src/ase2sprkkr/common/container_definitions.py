@@ -9,10 +9,17 @@ from .parsing_results import dict_from_parsed
 
 
 import pyparsing as pp
+from contextvars import ContextVar
 from typing import Iterable, Optional, Union
+
+from .warnings import DataValidityError
 import re
 import inspect
 from io import StringIO
+
+
+# The mode is parse-local; nested grammars use it without mutating the IPD.
+_allow_incomplete_parsing = ContextVar("allow_incomplete_parsing", default=False)
 
 
 class ContainerDefinition(RealItemDefinition):
@@ -336,6 +343,7 @@ class ContainerDefinition(RealItemDefinition):
         else:
             custom_value = None
         delimiter = delimiter or self.delimiter
+        allow_incomplete = _allow_incomplete_parsing.get()
 
         def repeated_grammars():
             """If the item can be repeated, do it here - we don't know, whether there is a fixed order in any way
@@ -363,7 +371,7 @@ class ContainerDefinition(RealItemDefinition):
                     if item.condition and self.force_order:
                         add = item.condition.prepare_grammar(item, add)
                     # Conditional optionality is checked on the runtime tree.
-                    if item.is_optional:
+                    if allow_incomplete or item.is_optional:
                         add = pp.Optional(add)
                     grammar_chain = grammar_chain + add
             yield head_item, grammar_chain
@@ -396,7 +404,7 @@ class ContainerDefinition(RealItemDefinition):
                     if head.condition:
                         g = head.condition.prepare_grammar(head, g)
                     # A callback cannot be resolved during grammar construction.
-                    if head.is_optional:
+                    if allow_incomplete or head.is_optional:
                         g = pp.Optional(g)
                     yield g
 
@@ -422,7 +430,9 @@ class ContainerDefinition(RealItemDefinition):
 
         def parse_values(tokens):
             parsed = dict_from_parsed(tokens.asList())
-            if not self.force_order:
+            # Ordered grammars enforce presence themselves in strict mode.
+            # In incomplete mode they, too, must report omitted members.
+            if not self.force_order or allow_incomplete:
                 for member in self._members.values():
                     # Conditional presence must be checked against the complete
                     # runtime configuration, not an individual parsed section.
@@ -433,9 +443,11 @@ class ContainerDefinition(RealItemDefinition):
                         and member.name not in parsed
                         and member.name not in parsed.checks
                     ):
-                        raise pp.ParseException(
-                            f"Missing non-optional input item {member.get_path()}"
-                        )
+                        message = f"Missing non-optional input item {member.get_path()}"
+                        if allow_incomplete:
+                            DataValidityError.warn(message)
+                        else:
+                            raise pp.ParseException(message)
             return parsed
 
         values.set_parse_action(parse_values)
@@ -504,17 +516,27 @@ class ContainerDefinition(RealItemDefinition):
         """Has/ve the first child(s) in an unordered sequence fixed position?"""
         return not dict_first_item(self._members).is_independent_on_the_predecessor
 
-    def parse_file(self, file, return_value_only=True, allow_dangerous=False):
-        """Parse the file, return the parsed data as dictionary"""
-        grammar = self.grammar(allow_dangerous)
-        out = grammar.parse_file(file, parse_all=True)
-        return self.parse_return(out, return_value_only)
+    def parse_file(self, file, return_value_only=True, allow_dangerous=False,
+                   allow_incomplete=False):
+        """Parse a file, optionally warning about missing required members."""
+        token = _allow_incomplete_parsing.set(allow_incomplete)
+        try:
+            grammar = self.grammar(allow_dangerous)
+            out = grammar.parse_file(file, parse_all=True)
+            return self.parse_return(out, return_value_only)
+        finally:
+            _allow_incomplete_parsing.reset(token)
 
-    def parse(self, string, whole_string=True, return_value_only=True, allow_dangerous=False):
-        """Parse the string, return the parsed data as dictionary"""
-        grammar = self.grammar(allow_dangerous)
-        out = grammar.parse_string(string, parse_all=True)
-        return self.parse_return(out, return_value_only)
+    def parse(self, string, whole_string=True, return_value_only=True,
+              allow_dangerous=False, allow_incomplete=False):
+        """Parse a string, optionally warning about missing required members."""
+        token = _allow_incomplete_parsing.set(allow_incomplete)
+        try:
+            grammar = self.grammar(allow_dangerous)
+            out = grammar.parse_string(string, parse_all=True)
+            return self.parse_return(out, return_value_only)
+        finally:
+            _allow_incomplete_parsing.reset(token)
 
     def parse_return(self, val, return_value_only: bool = True):
         """Clean up the parsed values (unpack then from unnecessary containers)
@@ -544,10 +566,17 @@ class ContainerDefinition(RealItemDefinition):
             result = start + result
         return self.parse(result, whole_string)
 
-    def read_from_file(self, file, allow_dangerous=False, **kwargs):
-        """Read a configuration file and return the parsed Configuration object"""
+    def read_from_file(self, file, allow_dangerous=False, *,
+                       allow_incomplete=False, report_invalid=None, **kwargs):
+        """Read a configuration file into an object.
+
+        ``allow_incomplete`` relaxes presence requirements, not value syntax.
+        """
         out = self.result_class(definition=self, **kwargs)
-        out.read_from_file(file, allow_dangerous=allow_dangerous)
+        out.read_from_file(
+            file, allow_dangerous=allow_dangerous,
+            allow_incomplete=allow_incomplete, report_invalid=report_invalid,
+        )
         return out
 
     def read_from_dict(self, values, **kwargs):
@@ -556,7 +585,9 @@ class ContainerDefinition(RealItemDefinition):
         return out
 
     def read_from_string(self, string, allow_dangerous=False, **kwargs):
-        return self.read_from_file(StringIO(string), allow_dangerous, **kwargs)
+        return self.read_from_file(
+            StringIO(string), allow_dangerous=allow_dangerous, **kwargs
+        )
 
     repeated_class = RepeatedConfigurationContainer
     """ Class for the repeated sections """

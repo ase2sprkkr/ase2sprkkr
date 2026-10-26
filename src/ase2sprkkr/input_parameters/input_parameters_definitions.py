@@ -117,7 +117,9 @@ def _task_preparse_definition():
     return ipd
 
 
-def _read_selected_definitions(text, selectors, *, filename=None, allow_dangerous=False):
+def _read_selected_definitions(text, selectors, *, filename=None,
+                               allow_dangerous=False, allow_incomplete=False,
+                               report_invalid=None):
     """Try only IPDs nominated by detected native TASK keywords."""
     mapping = _task_selector_map()
     candidates = []
@@ -133,6 +135,8 @@ def _read_selected_definitions(text, selectors, *, filename=None, allow_dangerou
         return definition.read_from_file(
             _snapshot_stream(text, filename),
             allow_dangerous=allow_dangerous,
+            **({"allow_incomplete": True} if allow_incomplete else {}),
+            **({"report_invalid": report_invalid} if report_invalid is not None else {}),
         )
 
     if len(candidates) == 1:
@@ -260,7 +264,8 @@ class InputParametersDefinition(ConfigurationFileDefinition):
         return tuple(normalized)
 
     @maybeclassmethod
-    def from_file(self, cls, file, allow_dangerous=False):
+    def from_file(self, cls, file, allow_dangerous=False, *,
+                  allow_incomplete=False, report_invalid=None):
         """Read one input; on the class autodetect an IPD, on an instance use it.
 
         Read a bounded snapshot of the input once, independently of path/stream.
@@ -272,6 +277,8 @@ class InputParametersDefinition(ConfigurationFileDefinition):
             return self.read_from_file(
                 _snapshot_stream(text, filename),
                 allow_dangerous=allow_dangerous,
+                allow_incomplete=allow_incomplete,
+                report_invalid=report_invalid,
             )
 
         preview = _task_preparse_definition().read_from_string(
@@ -280,10 +287,14 @@ class InputParametersDefinition(ConfigurationFileDefinition):
         selected = preview.TASK.TASK()
         selectors = tuple(selected) if selected is not None else ()
         if not selectors:
+            if allow_incomplete:
+                raise ValueError("Cannot autodetect incomplete input without TASK selector; supply an explicit definition or task")
             selectors = ("SCF",)
         return _read_selected_definitions(
             text, selectors, filename=filename,
             allow_dangerous=allow_dangerous,
+            allow_incomplete=allow_incomplete,
+            report_invalid=report_invalid,
         )
 
     def task_definition_name(self, parameters):

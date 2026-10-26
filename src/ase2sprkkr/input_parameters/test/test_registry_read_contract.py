@@ -177,8 +177,8 @@ def test_expected_task_does_not_supply_missing_shared_task_selector():
     task = InputParameters.task_registry["SPLEED"]
 
     with pytest.raises(
-        TaskMismatchError,
-        match=r"read for task 'SPLEED'.*task None",
+        pp.ParseSyntaxException,
+        match=r"Missing non-optional input item TASK.TASK",
     ):
         registry.read_for_task(task, StringIO(text))
 

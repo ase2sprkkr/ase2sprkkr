@@ -20,6 +20,8 @@ from .warnings import (
     ReportInvalidPolicy,
     RetainInvalidPolicy,
     ValidationReason,
+    ValidationResult,
+    catch_warnings_of,
 )
 
 
@@ -905,7 +907,9 @@ class RootConfigurationContainer(ConfigurationContainer):
 
     _filename = None
 
-    def read_from_file(self, file, clear_first: bool = True, allow_dangerous: bool = False):
+    def read_from_file(self, file, clear_first: bool = True,
+                       allow_dangerous: bool = False, *, allow_incomplete=False,
+                       report_invalid: Optional[ReportInvalidPolicy] = None):
         """Read data from a file
 
         Parameters
@@ -918,10 +922,22 @@ class RootConfigurationContainer(ConfigurationContainer):
           Otherwise, the data in the sections that are not present in the
           file are preserved.
         allow_dangerous
-          Allow to load dangerous_values, i.e. the values that do not pass the requirements for the input values (e.g. of a different type or constraint-violating)
+          Allow values violating type or other constraints.
+        allow_incomplete
+          Allow missing non-optional items and report their absence.
+        report_invalid
+          Validation reporting policy: "raise", "warn" (default for parsing),
+          or "ignore".
         """
-        values = self._definition.parse_file(file, allow_dangerous=allow_dangerous)
-        with self._mutation("parse") as (transaction, _policy):
+        # Feed grammar diagnostics through the same policy as semantic validation.
+        # Failed parse attempts cannot emit partial diagnostics.
+        with catch_warnings_of(ValidationResult) as parse_issues:
+            values = self._definition.parse_file(
+                file, allow_dangerous=allow_dangerous,
+                allow_incomplete=allow_incomplete,
+            )
+        with self._mutation("parse", report_invalid=report_invalid) as (transaction, policy):
+            policy.add_semantic(parse_issues)
             if clear_first:
                 self.stage_clear(transaction, check_required=False)
             self.stage(
