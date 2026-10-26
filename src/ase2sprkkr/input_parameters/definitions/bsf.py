@@ -12,6 +12,7 @@ from ...physics.lattice_data import bravais_number
 from ..input_parameters_definitions import InputParametersDefinition, InputValueDefinition as V
 from ._file_manifests import tau_file
 from .sections import CONTROL, CPA, ENERGY, MODE, SITES, STRCONST, TASK, TAU
+from ._energy import energy_relative_default, energy_absolute_default
 
 
 EK = "EK"
@@ -390,9 +391,9 @@ def _energy_definition():
         defaults={"GRID": _grid_default, "NE": _ne_default, "ImE": 0.001},
     )
     energy.copy_member("NE", type=SetOf(Integer(min=1), min_length=1, max_length=2))
-    energy["EMIN"]._energy_default_value = _emin_default
-    energy["EMAX"]._energy_default_value = _emax_default
-    energy["EMAXEV"]._energy_default_value = _emaxev_default
+    energy["EMIN"].default_value = energy_absolute_default('EMIN', _emin_default)
+    energy["EMAX"].default_value = energy_absolute_default('EMAX', _emax_default)
+    energy["EMAXEV"].default_value = energy_relative_default('EMAX', _emaxev_default)
     return energy
 
 
