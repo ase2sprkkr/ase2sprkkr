@@ -120,7 +120,7 @@ class SPRKKR(BaseCalculator):
     @input_parameters.setter
     def input_parameters(self, value):
         if value is not None:
-            value = InputParameters.create_input_parameters(value)
+            value = InputParameters.create(value)
         self._input_parameters = value
 
     def set(

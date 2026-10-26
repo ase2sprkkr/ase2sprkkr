@@ -284,12 +284,8 @@ class TestDefinitions:
             ip.TASK.NKDIR = 10
 
     def test_defaults(self):
-        task_names = set(InputParameters.input_parameters_registry.names())
-        task_names.remove("BSF")
-        task_names.update(("BSFEK", "BSFKK"))
-
-        for name in sorted(task_names):
-            ip = InputParameters.create(name)
+        for name in InputParameters.task_registry.names():
+            ip = InputParameters.for_task(name)
             ip.CONTROL.POTFIL = "xxx"
             definition = ip._definition
             try:

@@ -282,7 +282,7 @@ def _resolve_input_parameters(
 
     if isinstance(value, (str, os.PathLike)):
         if isinstance(value, str) and InputParameters.is_task_name(value):
-            value = InputParameters.create_input_parameters(value)
+            value = InputParameters.create(value)
         else:
             parameter_filename = _calculation_path(value, directory)
             parsed = InputParameters.from_file(parameter_filename)

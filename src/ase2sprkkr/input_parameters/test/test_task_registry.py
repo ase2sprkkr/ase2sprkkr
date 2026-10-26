@@ -75,8 +75,10 @@ def test_bsf_is_schema_not_task_and_views_keep_schema_defaults():
     assert ek.requested_task_name == "BSFEK"
     assert ek.task_name == "BSFKK"
 
+    assert InputParameters.for_definition("BSF")._definition is schema
+    assert InputParameters.create("BSF")._definition is schema
     with pytest.raises(RegistryEntryNotFound):
-        InputParameters.create("BSF")
+        InputParameters.for_task("BSF")
     assert InputParameters.is_task_name("BSF") is False
 
 
@@ -89,6 +91,37 @@ def test_input_and_task_registry_namespaces_are_distinct():
     assert "BSFEK" not in input_names
     assert "BSF" not in task_names
     assert {"ARPES", "SPLEED", "BSFEK", "BSFKK"} <= task_names
+
+
+def test_input_parameters_factory_entry_points():
+    scf_schema = InputParameters.definition("SCF")
+
+    from_definition = InputParameters.for_definition("SCF")
+    assert from_definition._definition is scf_schema
+    assert from_definition.requested_task_name is None
+
+    from_task = InputParameters.for_task("SCF")
+    assert from_task._definition is scf_schema
+    assert from_task.requested_task_name == "SCF"
+    assert InputParameters.create("SCF").requested_task_name == "SCF"
+
+    # The schema and task namespaces are deliberately different.
+    bsf_schema = InputParameters.definition("BSF")
+    assert InputParameters.for_definition("BSF")._definition is bsf_schema
+    assert InputParameters.create("BSF")._definition is bsf_schema
+    with pytest.raises(RegistryEntryNotFound):
+        InputParameters.for_task("BSF")
+    with pytest.raises(RegistryEntryNotFound):
+        InputParameters.for_definition("BSFEK")
+
+    parameters = InputParameters.create("BSFEK")
+    assert parameters.requested_task_name == "BSFEK"
+    assert InputParameters.create(parameters) is parameters
+
+    filename = os.path.join(os.path.dirname(__file__), "..", "examples", "scf.in")
+    assert InputParameters.create(filename).task_name == "SCF"
+    with open(filename) as stream:
+        assert InputParameters.create(stream).task_name == "SCF"
 
 
 def test_input_parameters_registry_owns_input_parameter_operations():
@@ -546,12 +579,13 @@ def test_user_preset_ipd_reuses_canonical_task_without_autodetection_ambiguity(t
     arpes_example = os.path.join(os.path.dirname(__file__), "..", "examples", "arpes.in")
     source = (
         "from ase2sprkkr.input_parameters.input_parameters import InputParameters as IP\n"
-        "arpes = IP.create('MYARPES')\n"
+        "arpes = IP.for_definition('MYARPES')\n"
+        "assert IP.create('MYARPES').TAU.NKTAB() == 555\n"
         "assert arpes._definition is IP.definition('MYARPES')\n"
         "assert arpes.task_name == 'ARPES'\n"
         "assert arpes.TAU.NKTAB() == 555\n"
         "assert arpes.task_definition_required() is IP.task_registry['ARPES']\n"
-        "scf = IP.create('MYSCF')\n"
+        "scf = IP.for_definition('MYSCF')\n"
         "assert scf.task_definition_required() is IP.task_registry['SCF']\n"
         "assert 'MYARPES' not in IP.task_registry.names()\n"
         "assert 'MYSCF' not in IP.task_registry.names()\n"

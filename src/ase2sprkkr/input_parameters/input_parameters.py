@@ -289,33 +289,42 @@ class InputParameters(ConfigurationFile):
         return name if name in cls.task_registry else False
 
     @classmethod
-    def create_input_parameters(cls, arg):
+    def for_definition(cls, name):
+        """Create input parameters using a named input-parameter definition.
+
+        Unlike :meth:`for_task`, this also accepts shared schemas such
+        as BSF and user-defined presets.
+        """
+        return cls.input_parameters_registry[name].create_object()
+
+    @classmethod
+    def for_task(cls, name):
+        """Create input parameters for a registered SPR-KKR task."""
+        task = cls.task_registry[name]
+        return cls.input_parameters_registry.create_for_task(task)
+
+    @classmethod
+    def create(cls, arg):
+        """Create or obtain input parameters from a task, schema, or file.
+
+        Strings naming both a task and a schema are resolved as tasks.
+        Unknown strings are treated as filenames. Existing parameter
+        instances are returned unchanged.
+        """
         if isinstance(arg, str):
-            name = cls.is_task_name(arg)
-            if name or arg.upper() in cls.input_parameters_registry:
-                return cls.create(name or arg)
+            name = cls.task_registry.normalize_name(arg)
+            if name in cls.task_registry:
+                return cls.for_task(name)
+            if name in cls.input_parameters_registry:
+                return cls.for_definition(name)
             return cls.from_file(arg)
         if isinstance(arg, io.IOBase):
             return cls.from_file(arg)
         return arg
 
     @classmethod
-    def create(cls, name):
-        """Create a task's parameters, or a named preset of a canonical schema."""
-        name = cls.task_registry.normalize_name(name)
-        try:
-            task = cls.task_registry[name]
-        except RegistryEntryNotFound:
-            definition = cls.input_parameters_registry[name]
-            if cls.input_parameters_registry.normalize_name(definition.name) == name:
-                # A canonical shared schema (e.g. BSF) is not a task.
-                raise RegistryEntryNotFound(name) from None
-            return definition.create_object()
-        return cls.input_parameters_registry.create_for_task(task)
-
-    @classmethod
     def default_parameters(cls):
-        return cls.create("SCF")
+        return cls.for_task("SCF")
 
     @classmethod
     def from_file(cls, filename, allow_dangerous: bool = False):
