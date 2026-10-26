@@ -70,19 +70,17 @@ def _energy_relative_default(option):
     return None if option._container[option.name[:-2]].is_set() else _energy_default(option)
 
 
-def _energy_absolute_optional(option):
-    return option._container[option.name + 'EV']() is not None
-
-
 def _energy_bound(name, values):
     """Define a paired absolute/relative bound with task-specific defaults.
 
     values contains (absolute Ry default, description, relative eV default).
     Either default may be a top-level callable accepting its Option. Shared
     precedence and validation are independent of the task's numerical values.
+    Both absolute bounds are optional in the native input: when omitted,
+    SPRKKR uses its task-specific or Fermi-energy fallback.
     """
     absolute = V(name, float, _energy_absolute_default, info=values[1],
-                 is_optional=_energy_absolute_optional)
+                 is_optional=True)
     relative = V(name + 'EV', float, _energy_relative_default,
                  info=f'{name}, given in eV with respect to the Fermi level', is_optional=True)
     absolute._energy_default_value = values[0]
@@ -355,6 +353,8 @@ def ENERGY(emin=(-0.2, "The real part of the lowest E-value", None), emax=None, 
     default). An explicit absolute bound suppresses its relative default;
     an active relative bound suppresses the absolute default. Explicit relative
     values take precedence if both representations are set, as in SPRKKR.
+    Absolute bounds may be omitted; that does not suppress their configured
+    defaults when saving an input file.
     """
     egrid = Keyword({
        0:'only real energies -- Gauss integration mesh',
@@ -393,7 +393,7 @@ def ENERGY(emin=(-0.2, "The real part of the lowest E-value", None), emax=None, 
                 _sections_energy_emax_from_emin_default_value,
                 info="The same value as EMIN",
                 is_hidden=True,
-                is_optional=_energy_absolute_optional,
+                is_optional=True,
             ),
             V(
                 "EMAXEV",
