@@ -358,6 +358,7 @@ class ContainerDefinition(RealItemDefinition):
                     add = delimiter + grammar
                     if item.condition and self.force_order:
                         add = item.condition.prepare_grammar(item, add)
+                    # Conditional optionality is checked on the runtime tree.
                     if item.is_optional:
                         add = pp.Optional(add)
                     grammar_chain = grammar_chain + add
@@ -390,6 +391,7 @@ class ContainerDefinition(RealItemDefinition):
                     g = delim + g
                     if head.condition:
                         g = head.condition.prepare_grammar(head, g)
+                    # A callback cannot be resolved during grammar construction.
                     if head.is_optional:
                         g = pp.Optional(g)
                     yield g

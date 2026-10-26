@@ -693,8 +693,23 @@ class Option(BaseOption):
         d = self._definition
 
         container = self._container
-        if why == "parse" and d.validate_parsed:
-            d.validate_parsed(self)
+        if why == "parse":
+            if d.validate_parsed:
+                d.validate_parsed(self)
+            parsed = getattr(container, "_parsed_values", None)
+            if (
+                parsed is not None
+                and d.is_stored
+                and d.allowed(container)
+                and not d.is_optional_for(self)
+                and self.name not in parsed
+                and self.name not in getattr(parsed, "checks", ())
+            ):
+                ValidationResult.emit(
+                    DataValidityError(
+                        f"Missing non-optional input item {self._get_path()}"
+                    )
+                )
         if not d.allowed(container):
             return
 

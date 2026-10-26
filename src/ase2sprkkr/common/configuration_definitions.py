@@ -77,8 +77,9 @@ class BaseDefinition:
     name: str
         Name of the value/section
 
-    is_optional: bool
-        This element can be omited in the parsed file
+    is_optional: bool or callable
+        Whether this element may be omitted from a parsed file. A callable
+        accepts the runtime item and is evaluated after parsing.
 
     condition
        If defined, the condition
@@ -134,6 +135,11 @@ class BaseDefinition:
         if not self.condition:
             return True
         return self.condition(self, container)
+
+    def is_optional_for(self, item):
+        """Evaluate whether the runtime item may be omitted from input."""
+        optional = self.is_optional
+        return bool(optional(item)) if callable(optional) else bool(optional)
 
     def add_grammar_hook(self, hook):
         """Added hooks process the grammar of the option/container.
@@ -359,8 +365,9 @@ class RealItemDefinition(BaseDefinition):
          written_name: str or None
            Name to write to the input file. Default None means use the name.
 
-         is_optional: boolean
-           If True, this section/value can be missing in the .pot/task file
+         is_optional: bool or callable
+           If True, the section/value may be omitted from input. A callable
+           accepts its runtime item and is evaluated after parsing.
 
          is_hidden: boolean
            Hidden values are not offered to a user, usually they are

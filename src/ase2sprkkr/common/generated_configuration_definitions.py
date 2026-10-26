@@ -220,8 +220,6 @@ class Length(InheritingValueModifier):
         allowed = self.allowed(section)
         if present and not allowed:
             raise pp.ParseException(f"Option {self.get_path()} is not allowed for the current configuration")
-        if not present and allowed and not self.is_optional:
-            raise pp.ParseException(f"Required option {self.get_path()} is missing")
 
     def _create_grammar(self, allow_dangerous):
         """Add check for the length"""

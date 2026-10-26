@@ -57,6 +57,16 @@ def _kk_item(_definition, container):
     return bsf_mode(_root(container)) != EK
 
 
+def _ek_vectors_optional(option):
+    """Predefined paths do not require explicit k-space segments."""
+    return not _ek_vectors_item(None, option._container)
+
+
+def _kk_optional(option):
+    """The K-K grid is needed only in the single-energy mode."""
+    return bsf_mode(_root(option)) != KK
+
+
 def _ka_item(definition, container):
     return _kk_item(definition, container) or _ek_vectors_item(definition, container)
 
@@ -307,7 +317,7 @@ def _task_definition():
                 ),
                 condition=_ek_vectors_item,
                 info="Number of directions treated in k-spaces",
-                is_optional=False,
+                is_optional=_ek_vectors_optional,
                 is_required=False,
             ),
             V(
@@ -319,7 +329,7 @@ def _task_definition():
                     "First k-vector segment in k-space in multiples of 2π/a and "
                     "rectangular coordinates with * = 1, ...,NKDIR"
                 ),
-                is_optional=False,
+                is_optional=_ek_vectors_optional,
                 is_required=False,
             ),
             V(
@@ -331,7 +341,7 @@ def _task_definition():
                     "Last k-vector segment in k-space in multiples of 2π/a and "
                     "rectangular coordinates with * = 1, ...,NKDIR"
                 ),
-                is_optional=False,
+                is_optional=_ek_vectors_optional,
                 is_required=False,
             ),
             V(
@@ -339,27 +349,31 @@ def _task_definition():
                 Integer(min=2),
                 condition=_kk_item,
                 info="number of k-points along k1",
-                is_optional=True,
+                is_optional=_kk_optional,
+                is_required=False,
             ),
             V(
                 "NK2",
                 Integer(min=2),
                 condition=_kk_item,
                 info="number of k-points along k2",
-                is_optional=True,
+                is_optional=_kk_optional,
+                is_required=False,
             ),
             V(
                 "K1",
                 SetOf(float, length=3),
                 condition=_kk_item,
-                is_optional=True,
+                is_optional=_kk_optional,
+                is_required=False,
                 info="First endpoint of the K-K region; native subtracts KA, then orthogonalizes the second direction.",
             ),
             V(
                 "K2",
                 SetOf(float, length=3),
                 condition=_kk_item,
-                is_optional=True,
+                is_optional=_kk_optional,
+                is_required=False,
                 info="Second endpoint of the K-K region; native subtracts KA and orthogonalizes relative to K1-KA.",
             ),
         ],

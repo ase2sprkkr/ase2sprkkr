@@ -217,10 +217,12 @@ class ValueDefinition(RealItemDefinition):
           If True, the value is readed/writed from the output file.
           If None, set to False if the value is Generated.
 
-        is_optional: bool or None
-          If True, the value can be omited, if fixed order in the section is required
-          None means True just if required is False (or it is determined to be False),
-          see the ``required`` parameter.
+        is_optional: bool or callable or None
+          If True, the value may be omitted from the input. A callable
+          receives the runtime Option and is evaluated after parsing, when
+          the entire configuration is available. During grammar construction
+          callable optionality is treated as optional. None means True
+          if is_required is False (or inferred to be False).
 
         is_required: bool or callable or str
           Required options must have a value when parsing or saving (however,
@@ -466,7 +468,9 @@ class ValueDefinition(RealItemDefinition):
             out += f" ≝ {value}"
 
         flags = []
-        if self.is_optional:
+        if callable(self.is_optional):
+            flags.append("conditionally optional")
+        elif self.is_optional:
             flags.append("optional")
         if self.is_hidden:
             flags.append("hidden")
