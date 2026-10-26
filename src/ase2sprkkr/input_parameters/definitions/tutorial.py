@@ -1,6 +1,6 @@
 """Complete native SPR-KKR 9.7 TUTORIAL dispatch and input parameters."""
 import numpy as np
-from .sections import CONTROL, TASK, TAU, ENERGY, SITES, MODE, CPA, STRCONST
+from ._sections import CONTROL, TASK, TAU, ENERGY, SITES, MODE, CPA, STRCONST
 from ...common.grammar_types import Integer, Keyword, SetOf
 from ...common.warnings import DataValidityError
 from ..task_definition import TaskDefinition

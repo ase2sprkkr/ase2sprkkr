@@ -5,7 +5,7 @@ from ...common.warnings import DataValidityError, DataValidityWarning
 from ..input_parameters_definitions import InputParametersDefinition as InputParameters, InputValueDefinition as V
 from ..task_definition import TaskDefinition
 from ._file_manifests import core_level_output_name, resolve_file
-from .sections import CONTROL, ENERGY, MODE, SITES, STRCONST, TASK, TAU
+from ._sections import CONTROL, ENERGY, MODE, SITES, STRCONST, TASK, TAU
 
 
 class CLXPSInputParametersDefinition(InputParameters):

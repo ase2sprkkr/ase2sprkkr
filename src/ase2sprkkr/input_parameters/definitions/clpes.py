@@ -3,7 +3,7 @@ import numpy as np
 from .arpes import input_parameters_definition as arpes_parameters
 from ..task_definition import TaskDefinition
 from ..tasks._spec_files import SPEC_INPUT_FILES, SPEC_OUTPUT_FILES
-from .sections import CONTROL
+from ._sections import CONTROL
 from ...common.grammar_types import Integer, Keyword, SetOf
 from ...common.warnings import DataValidityError
 from ..input_parameters_definitions import InputSectionDefinition as Section, InputValueDefinition as V

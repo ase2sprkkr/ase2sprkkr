@@ -5,7 +5,7 @@ from ...common.warnings import DataValidityError, DataValidityWarning
 from ._file_manifests import XrayRateInputParametersDefinition
 from ..input_parameters_definitions import InputValueDefinition as V
 from ..task_definition import TaskDefinition
-from .sections import CONTROL, ENERGY, MODE, SITES, TASK, TAU
+from ._sections import CONTROL, ENERGY, MODE, SITES, TASK, TAU
 
 
 def _validate(parameters, _values, why):

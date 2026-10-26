@@ -3,7 +3,7 @@ import numpy as np
 from ..task_definition import TaskDefinition
 from ...common.warnings import DataValidityError
 from ._file_manifests import TauCacheInputParametersDefinition
-from .sections import CONTROL, ENERGY, MODE, SITES, STRCONST, TASK, TAU
+from ._sections import CONTROL, ENERGY, MODE, SITES, STRCONST, TASK, TAU
 
 
 def _validate_stoner(parameters, _values, why):

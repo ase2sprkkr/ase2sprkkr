@@ -7,7 +7,7 @@ from ...common.generated_configuration_definitions import Length
 from ...common.grammar_types import Array
 from ...common.warnings import DataValidityError
 from ...potentials.definitions.potential import potential_definition
-from ..definitions.sections import ENERGY, TAU
+from ..definitions._sections import ENERGY, TAU
 from ..input_parameters import InputParameters
 from ..input_parameters_definitions import (
     InputParametersDefinition,

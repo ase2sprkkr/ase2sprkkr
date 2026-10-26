@@ -3,7 +3,7 @@
 from ._file_manifests import resolve_file
 from ...common.grammar_types import Integer, SetOf
 from ...common.warnings import DataValidityError
-from .sections import CONTROL, TASK, TAU, ENERGY, SCF, MODE
+from ._sections import CONTROL, TASK, TAU, ENERGY, SCF, MODE
 from ..input_parameters_definitions import InputParametersDefinition
 from ..task_definition import TaskDefinition
 

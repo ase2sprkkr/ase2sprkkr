@@ -4,7 +4,7 @@ import numpy as np
 from ...common.grammar_types import Integer, SetOf, Keyword
 from ...common.warnings import DataValidityError
 from ._file_manifests import resolve_file
-from .sections import CONTROL, TAU, ENERGY, SCF, SITES, STRCONST, CPA, MODE, TASK
+from ._sections import CONTROL, TAU, ENERGY, SCF, SITES, STRCONST, CPA, MODE, TASK
 from ..input_parameters_definitions import InputParametersDefinition
 from ..task_definition import TaskDefinition, TaskFile
 

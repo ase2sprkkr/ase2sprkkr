@@ -3,7 +3,7 @@ import numpy as np
 from ...common.grammar_types import Integer, SetOf, real
 from ...common.warnings import DataValidityError
 from ._file_manifests import resolve_file, xray_shell_label
-from .sections import CONTROL, TAU, MODE, CPA, STRCONST, ENERGY, TASK, SITES
+from ._sections import CONTROL, TAU, MODE, CPA, STRCONST, ENERGY, TASK, SITES
 from ..input_parameters_definitions import InputParametersDefinition as InputParameters, InputValueDefinition as V, InputSectionDefinition as Section
 from ..task_definition import TaskDefinition
 

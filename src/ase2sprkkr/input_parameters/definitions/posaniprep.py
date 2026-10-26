@@ -2,7 +2,7 @@
 import numpy as np
 from ...common.grammar_types import Keyword
 from ...common.warnings import DataValidityError, DataValidityWarning
-from .sections import TASK, CONTROL, TAU, ENERGY, SITES, STRCONST, MODE, CPA
+from ._sections import TASK, CONTROL, TAU, ENERGY, SITES, STRCONST, MODE, CPA
 from ..input_parameters_definitions import InputParametersDefinition as InputParameters, InputValueDefinition as V, InputSectionDefinition as Section
 from ..task_definition import TaskDefinition
 

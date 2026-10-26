@@ -11,7 +11,7 @@ from ..input_parameters import InputSection
 from ...physics.lattice_data import bravais_number
 from ..input_parameters_definitions import InputParametersDefinition, InputValueDefinition as V
 from ._file_manifests import tau_file
-from .sections import CONTROL, CPA, ENERGY, MODE, SITES, STRCONST, TASK, TAU
+from ._sections import CONTROL, CPA, ENERGY, MODE, SITES, STRCONST, TASK, TAU
 from ._energy import energy_relative_default, energy_absoluie_default
 
 

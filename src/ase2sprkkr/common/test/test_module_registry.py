@@ -280,3 +280,17 @@ def test_filtered_tolerant_enumeration_does_not_import_unrelated_modules(
     registry = ModuleRegistry(package, "value")
     assert list(registry.iter_valid_values(names=["VALID"])) == [7]
     assert "_ase2sprkkr_registry_filtered.unrelated" not in sys.modules
+
+
+def test_underscore_modules_are_private_even_with_custom_include(tmp_path, monkeypatch):
+    package = _package(
+        tmp_path, monkeypatch, "_ase2sprkkr_registry_private",
+        {"alpha": "value = 42\n", "_helper": "raise AssertionError('private module imported')\n"},
+    )
+    registry = ModuleRegistry(package, "value", include=lambda name: True)
+    assert registry.names() == ("ALPHA",)
+    assert "_HELPER" not in registry
+    with pytest.raises(RegistryEntryNotFound):
+        registry["_helper"]
+    assert registry["alpha"] == 42
+    assert "_ase2sprkkr_registry_private._helper" not in sys.modules

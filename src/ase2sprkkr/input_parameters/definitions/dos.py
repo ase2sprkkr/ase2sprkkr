@@ -3,7 +3,7 @@
 import numpy as np
 from ...common.grammar_types import Integer, SetOf
 from ...common.warnings import DataValidityError, DataValidityWarning
-from .sections import CONTROL, TAU, ENERGY, TASK, SITES, MODE, CPA, STRCONST
+from ._sections import CONTROL, TAU, ENERGY, TASK, SITES, MODE, CPA, STRCONST
 from ..input_parameters_definitions import InputParametersDefinition
 from ..task_definition import TaskDefinition, TaskFile
 

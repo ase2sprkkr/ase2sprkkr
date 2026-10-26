@@ -3,7 +3,7 @@ from ...common.grammar_types import Integer, SetOf
 from ...common.warnings import DataValidityError
 from ..input_parameters_definitions import InputParametersDefinition as InputParameters
 from ..task_definition import TaskDefinition
-from .sections import CONTROL, ENERGY, MODE, SITES, STRCONST, TASK, TAU
+from ._sections import CONTROL, ENERGY, MODE, SITES, STRCONST, TASK, TAU
 
 
 def _validate(parameters, _values, why):

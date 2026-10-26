@@ -1,7 +1,7 @@
 """Serial ASA magnetic susceptibility; native iterations are disabled."""
 from ...common.grammar_types import Integer, SetOf
 from ...common.warnings import DataValidityError
-from .sections import CONTROL, TAU, MODE, CPA, STRCONST, ENERGY, TASK, SITES
+from ._sections import CONTROL, TAU, MODE, CPA, STRCONST, ENERGY, TASK, SITES
 from ..input_parameters_definitions import InputParametersDefinition as InputParameters, InputValueDefinition as V, InputSectionDefinition as Section
 from ..task_definition import TaskDefinition
 
