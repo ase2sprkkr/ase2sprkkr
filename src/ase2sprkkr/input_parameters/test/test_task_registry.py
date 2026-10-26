@@ -12,6 +12,7 @@ import pytest
 from ...common.module_registry import RegistryDefinitionError, RegistryEntryNotFound
 from ..input_parameters import InputParameters
 from ..task_definition import InputParametersRegistry, TaskDefinition, TaskRegistry
+from ...common.warnings import DataValidityWarning
 
 
 def _package(tmp_path, monkeypatch, name, modules):
@@ -71,7 +72,8 @@ def test_bsf_is_schema_not_task_and_views_keep_schema_defaults():
     assert ek.task_name == "BSFEK"
     assert kk.task_name == "BSFKK"
 
-    ek.ENERGY.NE = [1]
+    with pytest.warns(DataValidityWarning, match='ENERGY.NE selects BSF-KK, but BSF-EK was requested'):
+        ek.ENERGY.NE = [1]
     assert ek.requested_task_name == "BSFEK"
     assert ek.task_name == "BSFKK"
 
