@@ -108,20 +108,26 @@ def test_unrecognized_task_switch_without_known_selector_defaults_to_scf():
 
 def test_selected_parser_failure_never_falls_back(monkeypatch):
     from unittest.mock import Mock
+    from .. import input_parameters_definitions as mod
 
     selected = InputParameters.definition("ARPES")
     fallback = InputParameters.definition("SCF")
     error = pp.ParseException("invalid ARPES input")
     chosen_reader = Mock(side_effect=error)
     unrelated_reader = Mock(return_value=object())
+
     monkeypatch.setattr(selected, "read_from_file", chosen_reader)
     monkeypatch.setattr(fallback, "read_from_file", unrelated_reader)
+    monkeypatch.setattr(mod, "_task_selector_map", lambda: {
+        "ARPES": (selected,),
+        "SCF": (fallback,),
+    })
 
     with pytest.raises(pp.ParseException, match="invalid ARPES"):
         InputParametersDefinition.from_file(io.StringIO("TASK ARPES"))
+
     chosen_reader.assert_called_once()
     unrelated_reader.assert_not_called()
-
 
 def test_error_policy_with_multiple_candidate_ipds(monkeypatch):
     from .. import input_parameters_definitions as mod
