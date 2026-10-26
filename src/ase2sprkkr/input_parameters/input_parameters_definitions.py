@@ -224,11 +224,6 @@ class InputParametersDefinition(ConfigurationFileDefinition):
     according to the defining module's origin.
     """
 
-    def copy(self, *args, **kwargs):
-        copied = super().copy(*args, **kwargs)
-        copied.is_user_defined = self.is_user_defined
-        return copied
-
     _derived_from_name = None
     """ If one copies the definition, it should be listed under its new name, but
     retain the original name as well, to retain the information, to which "task"
@@ -352,16 +347,21 @@ class InputParametersDefinition(ConfigurationFileDefinition):
     def _generic_info(self):
         return f"Input parameters format {self.name}"
 
-    def copy(self, **kwargs):
+    def copy(self, *args, new_schema=False, **kwargs):
         copied = super().copy(**kwargs)
+        if not new_schema:
+            copied._derived_from_name = self.derived_from_name
+        copied.is_user_defined = self.is_user_defined
         if '_task_definition' in self.__dict__:
             copied._task_definition = self._task_definition
-        copied._derived_from_name = self.derived_from_name
         return copied
 
     @property
     def derived_from_name(self):
         return self._derived_from_name or self.name
+
+    def is_derived_definition(self):
+        return self._derived_from_name and self._derived_from_name != self.name
 
     @property
     def display_name(self):

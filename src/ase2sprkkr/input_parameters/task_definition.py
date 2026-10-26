@@ -311,12 +311,11 @@ class InputParametersRegistry(ModuleRegistry):
         process_input_parameters_definition(module, value)
         return value
 
-    def iter_canonical_values(self):
+    def iter_canonical_values(self, *, name_contains=None):
         """Yield canonical IPDs, excluding named copies used as presets."""
-        for name in self.names(include_aliases=False):
-            for definition in self.iter_valid_values(names=(name,)):
-                if self.normalize_name(definition.derived_from_name) == name:
-                    yield definition
+        yield from self.iter_valid_values(include_aliases=False,
+                                          name_contains=name_contains,
+                                          condition=lambda d: not d.is_derived_definition())
 
     def definition_for_task(self, task):
         """Return the schema identified by declarative task metadata."""
@@ -537,10 +536,10 @@ class TaskRegistry:
             return False
         return True
 
-    def names(self):
+    def names(self, *, name_contains=None):
         """Enumerate valid tasks; broken unrelated definitions are skipped."""
-        names = {task.name for task in self.extra_tasks.iter_valid_values()}
-        for schema in self.input_parameters_registry.iter_canonical_values():
+        names = {task.name for task in self.extra_tasks.iter_valid_values(name_contains=name_contains)}
+        for schema in self.input_parameters_registry.iter_canonical_values(name_contains=name_contains):
             task = schema._task_definition
             if task is None:
                 continue
@@ -552,8 +551,8 @@ class TaskRegistry:
             names.add(name)
         return tuple(sorted(names))
 
-    def values(self):
-        return tuple(self[name] for name in self.names())
+    def values(self, *, name_contains=None):
+        return tuple(self[name] for name in self.names(name_contains=name_contains))
 
     def task_for_parameters(self, parameters):
         """Resolve the task represented by concrete parameter values."""

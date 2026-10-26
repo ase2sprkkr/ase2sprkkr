@@ -48,7 +48,12 @@ def input_parameters_definition():
     energy.copy_member("NE", type=SetOf(Integer(min=2), min_length=1, max_length=2))
     energy.copy_member("EMINEV", info="Incident energy lower bound in eV; NOT relative to EF in SPLEED.")
     energy.copy_member("EMAXEV", info="Incident energy upper bound in eV; NOT relative to EF in SPLEED.")
-    out = arpes_parameters().copy(name="spleed", remove=["SPEC_PH"], add=[CONTROL("SPLEED"), energy],
+
+    out = arpes_parameters().copy(
+        new_schema=True,
+        name="spleed",
+        remove=["SPEC_PH"],
+        add=[CONTROL("SPLEED"), energy],
         validators=_validate_spleed, info="Spin-polarized low-energy electron diffraction",
         description="Dedicated fixed-angle SPLEED. Incident energies are read as eV. Native SPOL default 1 is retained. "
                     "Modern input requires NE>=2 here; momentum and alternative polarization workflows are not audited.")

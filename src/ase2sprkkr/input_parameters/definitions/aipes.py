@@ -37,7 +37,9 @@ def _validate_aipes(p, _values, why):
 
 
 def input_parameters_definition():
-    out = arpes_parameters().copy(name="aipes", add=[CONTROL("AIPES")], validators=_validate_aipes,
+    out = arpes_parameters().copy(
+        new_schema = True,
+        name="aipes", add=[CONTROL("AIPES")], validators=_validate_aipes,
         info="Native angle-integrated valence photoemission with surface contribution",
         description="AIPES is a native local/incoherent photoemission approximation plus surface contribution, "
                     "not numerical integration of an ARPES angular mesh. Fixed electron geometry is audited here; "

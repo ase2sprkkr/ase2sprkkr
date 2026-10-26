@@ -34,7 +34,7 @@ def parser(parser):
         "-t",
         help="Show informations about the known tasks. You can limit the output to a given task/section/option by an optional agrument [TASK]",
         nargs="?",
-        const=True,
+        const=True
     )
     parser.add_argument(
         "--output-file", "-o", help="Show information about known structured result files.", nargs="?", const=True
@@ -65,13 +65,9 @@ def run(args, global_args):
     def info_task(args, filter):
         registry = InputParameters.input_parameters_registry
         task_registry = InputParameters.task_registry
-        entries = [
-            (task.name, registry.definition_for_task(task), task.experimental)
-            for task in task_registry.values()
-        ]
 
         if filter is True:
-            path = None
+            path = False
             print(
                 'The known SPRKKR tasks (kind of input parameters)\n'
                 '---------------------------------------------------'
@@ -83,17 +79,14 @@ def run(args, global_args):
                 filter, path = filter.split('.', 1)
             else:
                 path = None
-            entries = [entry for entry in entries if filter.upper() in entry[0]]
-            known = {name for name, _, _ in entries}
-            # A user-defined preset is a named schema, not a new task.
-            matching = (name for name in registry.names(include_aliases=False)
-                        if filter.upper() in name)
-            for definition in registry.iter_valid_values(names=matching):
-                if definition.name.upper() != definition.derived_from_name.upper():
-                    name = definition.display_name
-                    if name not in known:
-                        entries.append((name, definition, definition.experimental))
-                        known.add(name)
+
+
+        entries = [
+                (task.name, registry.definition_for_task(task), task.experimental)
+                for task in task_registry.values(name_contains=filter.upper())
+        ]
+
+        if filter is not True:
             if not entries:
                 print(f"There is no known SPRKKR task with '{filter.upper()}' in its name")
                 return
@@ -118,7 +111,7 @@ def run(args, global_args):
         experimental_started = False
         for task_name, definition, experimental in entries:
             members = None
-            if path is not None:
+            if path is not False:
                 members = list(definition.create_object().get_members(path, is_option=None))
                 if not members:
                     continue

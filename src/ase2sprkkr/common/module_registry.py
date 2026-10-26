@@ -131,8 +131,8 @@ class ModuleRegistry:
             value = vars(module)[self.attribute]
         except KeyError as exc:
             raise RegistryDefinitionError(
-                f"Registry module {module.__name__!r} does not define required "
-                f"export {self.attribute!r}"
+                f"Registry module {module.__name__!r} in {module.__file__!r} "
+                f"does not define required export {self.attribute!r}"
             ) from exc
         if self._factory and callable(value):
             value = value()
@@ -192,22 +192,25 @@ class ModuleRegistry:
         module_names = self._discover_module_names()
         return requested in module_names or requested in self.aliases
 
-    def names(self, *, include_aliases=True):
+    def names(self, *, include_aliases=True, name_contains=None):
         """Return discovered names without importing registry modules."""
         module_names = self._discover_module_names()
+        if name_contains is not None:
+            module_names = (i for i in module_names if name_contains in i)
         names = list(module_names)
         if include_aliases:
             names.extend(self.aliases)
         return tuple(names)
 
-    def values(self, *, include_aliases=False):
+    def values(self, *, include_aliases=False, name_contains=None):
         """Load and return registered values."""
         return tuple(
             self[name]
-            for name in self.names(include_aliases=include_aliases)
+            for name in self.names(include_aliases=include_aliases, name_contains=name_contains)
         )
 
-    def iter_valid_values(self, *, names=None):
+    def iter_valid_values(self, *, names=None, include_aliases=False,
+                                   name_contains=None, condition=None):
         """Load entries in an enumeration, warning and skipping invalid ones.
 
         A direct lookup and :meth:`values` remain strict. The optional names
@@ -215,7 +218,7 @@ class ModuleRegistry:
         filtered enumerations. Each failing entry is warned about at most once.
         """
         if names is None:
-            names = self.names(include_aliases=False)
+            names = self.names(include_aliases=include_aliases, name_contains=name_contains)
         for name in names:
             try:
                 value = self[name]
@@ -232,7 +235,8 @@ class ModuleRegistry:
                         stacklevel=2,
                     )
                 continue
-            yield value
+            if not condition or condition(value):
+                yield value
 
     @property
     def modules(self):

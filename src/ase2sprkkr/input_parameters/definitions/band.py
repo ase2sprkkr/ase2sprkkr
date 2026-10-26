@@ -36,7 +36,9 @@ def _validate_band(p, _values, why):
 
 
 def input_parameters_definition():
-    out = arpes_parameters().copy(name="band", add=[CONTROL("BAND"), Section("SPEC_BAND", [
+    out = arpes_parameters().copy(
+        new_schema=True,
+        name="band", add=[CONTROL("BAND"), Section("SPEC_BAND", [
         V("NEIGMAX", Integer(min=1), 100000, info="Capacity for accepted band roots; native stops when exhausted."),
         V("EIG_IME", 0.01, info="Positive cutoff on abs(Im(kz)); explicitly supplied to prevent damping-dependent native fallback."),
         V("CALC_TRANS_PROB", False, info="Also calculate TRLEED transmission probabilities; advanced numerical workflow."),
