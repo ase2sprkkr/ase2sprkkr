@@ -6,7 +6,7 @@ import pyparsing as pp
 import pytest
 
 from ...common import grammar_types as gt
-from ...common.configuration_definitions import gather, switch
+from ...common.configuration_definitions import VirtualDefinition, gather, switch
 from ...common.configuration_transaction import ConfigurationTransaction
 from ...common.generated_configuration_definitions import GeneratedValueDefinition, Length
 from ...common.options import DangerousValue
@@ -285,6 +285,27 @@ def test_standard_container_access_during_transactions():
     copied = generated_definition.copy().create_object()
     copied.CONTROL.VALUES = [1, 2]
     assert copied.CONTROL.NVALUES() == 2
+
+
+def test_definition_storage_metadata():
+    definition = cd.InputParametersDefinition.definition_from_dict(
+        {
+            "CONTROL": [
+                V("VALUES", gt.Array(int), is_optional=True),
+                V("NVALUES", Length("VALUES")),
+                V("NOT_STORED", int, is_stored=False),
+                GeneratedValueDefinition("GENERATED", lambda section: 1),
+            ]
+        }
+    )
+
+    assert not VirtualDefinition("VIRTUAL").is_stored
+    assert definition.is_stored
+    assert definition["CONTROL"].is_stored
+    assert definition["CONTROL"]["VALUES"].is_stored
+    assert definition["CONTROL"]["NVALUES"].is_stored
+    assert not definition["CONTROL"]["NOT_STORED"].is_stored
+    assert not definition["CONTROL"]["GENERATED"].is_stored
 
 
 def test_generated_option_uses_its_runtime_section():

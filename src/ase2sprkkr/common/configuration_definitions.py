@@ -101,6 +101,11 @@ class BaseDefinition:
     is_generated = False
     """Whether the runtime option computes its value from other values."""
 
+    is_stored = False
+    """Whether this definition has an explicit representation in input files.
+    Virtual definitions and non-stored generated values are not stored.
+    """
+
     #
     #
     def _resolve_is_optional(self, is_optional):
@@ -322,6 +327,9 @@ class RealItemDefinition(BaseDefinition):
 
     result_class = None
     """ Parsing of the data results in an instance of this class. To be redefined in descendants. """
+
+    is_stored = True
+    """Real values and containers are present in input files by default."""
 
     name_in_grammar = True
     """ Is the name of the value/section present in the file?
