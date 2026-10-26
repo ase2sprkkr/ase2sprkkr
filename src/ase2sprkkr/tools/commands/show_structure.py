@@ -48,6 +48,12 @@ def parser(parser):
         help="Show the potential structure.",
     )
     parser.add_argument(
+        "--close_after", "--close-after",
+        type=float,
+        default=None,
+        help="Close each ASE viewer after this many seconds (blocking mode).",
+    )
+    parser.add_argument(
         "--no-view", action="store_true",
         help="Do not launch ASE viewers, including automatic viewing (useful for headless runs).",
     )
@@ -105,10 +111,15 @@ def run(args, global_args=None):
     primary_exported = bool(args.output or (not args.input and potential_output))
     show_primary = args.visualise or (not explicit_view and not primary_exported)
 
+    viewer_options = {
+        "scale_radii": args.scale_radii,
+        "blocking": args.close_after is not None,
+        "close_after": args.close_after,
+    }
     if args.visualise_potential:
-        view(potential_atoms, scale_radii=args.scale_radii)
+        view(potential_atoms, **viewer_options)
     if show_primary and (args.input or not args.visualise_potential):
-        view(atoms, scale_radii=args.scale_radii)
+        view(atoms, **viewer_options)
 
 
 if __name__ == "__main__":
