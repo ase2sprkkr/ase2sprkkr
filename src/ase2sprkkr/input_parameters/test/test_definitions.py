@@ -120,6 +120,50 @@ class TestDefinitions:
             assert parsed.name == "bsf"
             np.testing.assert_equal(ip.to_dict(), parsed.to_dict())
 
+    def test_bsfek_kpath_makes_generated_segments_optional_in_input(self):
+        ip = InputParameters.create("BSFEK")
+        ip.CONTROL.POTFIL = "x"
+        ip.TASK.KPATH = 1
+        text = ip.to_string(validate=True)
+        assert "NKDIR=" not in text
+        assert "KA1=" not in text
+        assert "KE1=" not in text
+        parsed = InputParameters.definition("BSF").read_from_string(text)
+        assert parsed.TASK.KPATH() == "1"
+
+    def test_bsfek_explicit_segments_require_input_members(self):
+        ip = InputParameters.create("BSFEK")
+        ip.CONTROL.POTFIL = "x"
+        ip.TASK.NKDIR = 1
+        text = ip.to_string(validate=True)
+        definition = InputParameters.definition("BSF")
+        definition.read_from_string(text)
+
+        def omit(name):
+            return "".join(
+                line for line in text.splitlines(keepends=True)
+                if not line.lstrip().startswith(f"{name}=")
+            )
+
+        with pytest.warns(DataValidityError, match="Missing non-optional input item TASK.NKDIR"):
+            definition.read_from_string(omit("NKDIR"))
+        with pytest.warns(DataValidityError, match="Missing non-optional input item TASK.KE"):
+            definition.read_from_string(omit("KE1"))
+
+    def test_bsfkk_required_grid_is_checked_after_parse(self):
+        ip = InputParameters.create("BSFKK")
+        ip.CONTROL.POTFIL = "x"
+        self.set_bsfkk_grid(ip)
+        definition = InputParameters.definition("BSF")
+        text = ip.to_string(validate=True)
+        definition.read_from_string(text)
+        without_k1 = "".join(
+            line for line in text.splitlines(keepends=True)
+            if not line.lstrip().startswith("K1=")
+        )
+        with pytest.warns(DataValidityError, match="Missing non-optional input item TASK.K1"):
+            definition.read_from_string(without_k1)
+
     def test_bsfek_k_path_is_checked_when_saving(self):
         ip = InputParameters.create("BSFEK")
         ip.CONTROL.POTFIL = "x"
