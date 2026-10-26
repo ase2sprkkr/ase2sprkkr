@@ -6,6 +6,7 @@ import pytest
 from ase2sprkkr.input_parameters.input_parameters import InputParameters
 from ase2sprkkr.input_parameters.definitions.sections import ENERGY, TASK
 from ase2sprkkr.input_parameters.input_parameters_definitions import InputParametersDefinition
+from ase2sprkkr.common.warnings import DataValidityError
 
 
 def test_custom_energy_defaults_use_the_same_precedence_as_arpes():
@@ -52,3 +53,48 @@ def test_spectroscopy_defaults_follow_reader(task, theta, phi, spol):
     assert tuple(p.SPEC_EL.PHI()) == (phi, phi)
     assert p.SPEC_EL.NT() == p.SPEC_EL.NP() == 1
     assert p.SPEC_EL.SPOL() == spol
+
+
+@pytest.mark.parametrize("task", ("DOS", "XAS"))
+@pytest.mark.parametrize("omitted", (("EMIN",), ("EMAX",), ("EMIN", "EMAX")))
+def test_absolute_energy_bounds_are_optional_in_parsed_input(task, omitted):
+    p = InputParameters.create(task)
+    p.CONTROL.POTFIL = "Fe.pot"
+    original = p.to_string()
+    lines = original.splitlines()
+    for name in omitted:
+        assert any(line.strip().startswith(name + "=") for line in lines)
+
+    missing_bounds = "\n".join(
+        line for line in lines
+        if not any(line.strip().startswith(name + "=") for name in omitted)
+    ) + "\n"
+    restored = p._definition.read_from_string(missing_bounds)
+
+    # Omitting a keyword must not change the Python task defaults or their
+    # serialization policy; SPRKKR's native omitted-value behavior is separate.
+    for name in ("EMIN", "EMAX"):
+        assert restored.ENERGY[name]() == p.ENERGY[name]()
+    assert restored.to_string() == original
+
+
+def test_derived_upper_bound_is_optional_too():
+    energy = ENERGY(emax="emin")
+    assert energy["EMIN"].is_optional is True
+    assert energy["EMAX"].is_optional is True
+
+    p = InputParameters.create("WFPLOT")
+    p.CONTROL.POTFIL = "Fe.pot"
+    without_upper = "\n".join(
+        line for line in p.to_string().splitlines()
+        if not line.strip().startswith("EMAX=")
+    ) + "\n"
+    restored = p._definition.read_from_string(without_upper)
+    assert restored.ENERGY.EMAX() == restored.ENERGY.EMIN()
+
+
+def test_optional_absolute_bounds_do_not_disable_relative_pair_validation():
+    p = InputParameters.create("DOS")
+    p.ENERGY.EMINEV = -3.0
+    with pytest.raises(DataValidityError, match="must be supplied together"):
+        p.validate("save")
