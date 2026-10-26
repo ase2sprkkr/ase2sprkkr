@@ -14,6 +14,7 @@ def view(
     graph: str = "",
     terminal=False,
     blocking: bool = False,
+
 ):
     """Visualise atoms using ase viewer
 
@@ -62,7 +63,10 @@ def view(
         if terminal:
             args.append("--terminal={}".format(terminal))
 
-        proc = subprocess.Popen(args, stdin=subprocess.PIPE)
+        proc = subprocess.Popen(args,
+                                stdin=subprocess.PIPE,
+                                start_new_session=True,
+                                )
         proc.stdin.write(buf.getvalue())
         proc.stdin.close()
         return proc
