@@ -343,6 +343,7 @@ class RealItemDefinition(BaseDefinition):
         is_optional=None,
         is_hidden=False,
         is_expert=False,
+        experimental=False,
         name_in_grammar=None,
         name_format=None,
         info=None,
@@ -381,6 +382,9 @@ class RealItemDefinition(BaseDefinition):
          is_expert: boolean
            Expert values/sections are not required and they are somewhat hidden
            from the user
+
+         experimental: bool
+           Whether this value or section is experimental (metadata only).
 
          name_in_grammar: boolean or None
            If False, there the name of the variable is not printed in the
@@ -452,6 +456,7 @@ class RealItemDefinition(BaseDefinition):
         """ The name of the option/section """
         self.name_regex = name_regex
         self.is_expert = is_expert
+        self.experimental = experimental
         self.is_hidden = is_hidden
         self.write_condition = write_condition or _definition_write_condition_always_true
         if name_in_grammar is not None:

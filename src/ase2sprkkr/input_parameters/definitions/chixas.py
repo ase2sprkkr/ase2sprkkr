@@ -92,5 +92,5 @@ def input_parameters_definition():
                     "Input-only validation cannot establish agreement with the potential or DOS normalization. "
                     "Spin-resolved orbital input, restart and TAU cache workflows are outside this audit."
     )
-    schema._task_definition = TaskDefinition("CHIXAS", executable="kkrchi", mpi=False)
+    schema._task_definition = TaskDefinition("CHIXAS", experimental=True, executable="kkrchi", mpi=False)
     return schema

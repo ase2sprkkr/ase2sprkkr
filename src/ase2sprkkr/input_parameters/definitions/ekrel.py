@@ -72,5 +72,5 @@ def input_parameters_definition():
                     "even for F-SURF, so its lattice restrictions remain relevant. "
                     "MPI is implemented in the native k-loop; numerical output is unverified."
     )
-    schema._task_definition = TaskDefinition("EKREL", executable="kkrgen", mpi=True, output_files=("{dataset}.bnd",))
+    schema._task_definition = TaskDefinition("EKREL", experimental=True, executable="kkrgen", mpi=True, output_files=("{dataset}.bnd",))
     return schema

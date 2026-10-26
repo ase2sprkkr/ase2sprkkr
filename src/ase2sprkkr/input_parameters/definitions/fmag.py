@@ -33,5 +33,5 @@ def input_parameters_definition():
                     "The momentum mesh is fixed to 100 points. FULLPOT stops in GEN. "
                     "Normalization of a zero magnetic moment is unguarded in SPR-KKR. Numerical output is unverified."
     )
-    schema._task_definition = TaskDefinition("FMAG", executable="kkrgen", mpi=True, output_files=("{dataset}_fmag_*.agr", "{dataset}_dens_*.agr"))
+    schema._task_definition = TaskDefinition("FMAG", experimental=True, executable="kkrgen", mpi=True, output_files=("{dataset}_fmag_*.agr", "{dataset}_dens_*.agr"))
     return schema

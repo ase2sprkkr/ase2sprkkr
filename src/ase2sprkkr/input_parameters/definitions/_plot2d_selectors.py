@@ -55,6 +55,6 @@ def plot2d_parameters(task):
         description="Requires consistent stored data. FULLPOT=true does not convert an ASA potential. "
                     "The native test writer has fixed sampling details and output filenames; no numerical run certified here.")
 
-    schema._task_definition = TaskDefinition(task, executable="kkrgen", mpi=False,
+    schema._task_definition = TaskDefinition(task, experimental=True, executable="kkrgen", mpi=False,
         output_files=_PLY_OUTPUTS)
     return schema

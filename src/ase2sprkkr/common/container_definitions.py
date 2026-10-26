@@ -59,6 +59,7 @@ class ContainerDefinition(RealItemDefinition):
         is_optional=None,
         is_hidden=False,
         is_expert=False,
+        experimental=False,
         has_hidden_members=False,
         name_in_grammar=None,
         force_order=None,
@@ -94,6 +95,7 @@ class ContainerDefinition(RealItemDefinition):
             is_optional=is_optional,
             is_hidden=is_hidden,
             is_expert=is_expert,
+            experimental=experimental,
             name_in_grammar=name_in_grammar,
             info=info,
             description=description,
@@ -175,6 +177,8 @@ class ContainerDefinition(RealItemDefinition):
             flags.append("optional")
         if self.is_expert:
             flags.append("expert")
+        if self.experimental:
+            flags.append("experimental")
         if self.is_repeated:
             flags.append("repeated")
         if flags:

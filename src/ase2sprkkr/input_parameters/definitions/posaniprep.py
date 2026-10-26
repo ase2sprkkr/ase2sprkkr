@@ -43,5 +43,5 @@ def input_parameters_definition():
                     "Uses an electronic potential and writes DATASET_pos_dat.pan. Native code keeps s_1/2 only. "
                     "Requires KMROT=0 and NQ=NT for the current export; an existing DATASET_positron.rho can suppress the energy loop and must not be reused as this task's cache."
     )
-    schema._task_definition = TaskDefinition("POSANIPREP", executable="kkrgen", mpi=False, output_files=("{dataset}_pos_dat.pan",))
+    schema._task_definition = TaskDefinition("POSANIPREP", experimental=True, executable="kkrgen", mpi=False, output_files=("{dataset}_pos_dat.pan",))
     return schema

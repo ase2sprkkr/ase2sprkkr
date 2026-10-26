@@ -60,5 +60,5 @@ def input_parameters_definition():
                     "TASK.NEB controls energy and photon grids; initialization ENERGY bounds are unused by OPT_ABS. "
                     "Native low-temperature KBT and frequency allocation require safeguards. MPI not certified here."
     )
-    schema._task_definition = TaskDefinition("OPTABS", executable="kkrchi", mpi=False, output_files=("sig_?????_ISPR??_NV.dat", "sig_?????_ISPR??_VC.dat"))
+    schema._task_definition = TaskDefinition("OPTABS", experimental=True, executable="kkrchi", mpi=False, output_files=("sig_?????_ISPR??_NV.dat", "sig_?????_ISPR??_VC.dat"))
     return schema

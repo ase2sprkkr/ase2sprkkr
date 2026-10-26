@@ -47,5 +47,5 @@ def input_parameters_definition():
                     "are explicitly written to avoid native initialization defects. RELT1 additionally "
                     "uses signed kappa values as loop bounds, so numerical relaxation rates remain unverified."
     )
-    schema._task_definition = TaskDefinition("T1", executable="kkrgen", mpi=False)
+    schema._task_definition = TaskDefinition("T1", experimental=True, executable="kkrgen", mpi=False)
     return schema

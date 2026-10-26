@@ -87,5 +87,5 @@ def input_parameters_definition():
                     "Geometries use index 0 for one overriding geometry, or consecutive indices 1..10. "
                     "FULLPOT, DMFT and LDA+U are unsupported; numerical output is unverified."
     )
-    schema._task_definition = TaskDefinition("CLXPS", executable="kkrgen", mpi=False)
+    schema._task_definition = TaskDefinition("CLXPS", experimental=True, executable="kkrgen", mpi=False)
     return schema

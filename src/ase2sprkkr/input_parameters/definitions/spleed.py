@@ -60,8 +60,7 @@ def input_parameters_definition():
     task = out["TASK"].copy(remove=["CRYS_VEC"], add=[V("CRYS_VECS", False, info="Native key: disables primitive crystal vectors for Miller indices when present.")])
     schema = out.copy(add=[task])
     schema.task_selectors = ("SPLEED",)
-    schema._task_definition = TaskDefinition(
-        "SPLEED", executable="kkrspec", mpi=False, output_reader="SPEC",
+    schema._task_definition = TaskDefinition("SPLEED", experimental=True, executable="kkrspec", mpi=False, output_reader="SPEC",
         input_files=SPEC_INPUT_FILES, output_files=SPEC_OUTPUT_FILES,
     )
     return schema

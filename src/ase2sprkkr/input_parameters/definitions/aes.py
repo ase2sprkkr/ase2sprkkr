@@ -61,5 +61,5 @@ def input_parameters_definition():
                     "The source stops for NQ>1. ENERGY.NE must allocate enough capacity for the TAU file. "
                     "FULLPOT, DMFT and LDA+U are unsupported. Numerical output is unverified."
     )
-    schema._task_definition = TaskDefinition("AES", executable="kkrgen", mpi=False, cache_files=("ME", *(f"ME{i}" for i in range(1, 13))))
+    schema._task_definition = TaskDefinition("AES", experimental=True, executable="kkrgen", mpi=False, cache_files=("ME", *(f"ME{i}" for i in range(1, 13))))
     return schema

@@ -112,5 +112,5 @@ def input_parameters_definition():
         description="BAND plots only the first ENERGY point. CORE uses CL and MJ. "
                     "FULLPOT, DMFT and LDA+U are unsupported by SPR-KKR 9.7."
     )
-    schema._task_definition = TaskDefinition("WFPLOT", executable="kkrgen", mpi=False)
+    schema._task_definition = TaskDefinition("WFPLOT", experimental=True, executable="kkrgen", mpi=False)
     return schema

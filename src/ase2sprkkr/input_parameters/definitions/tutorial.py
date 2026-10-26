@@ -161,5 +161,5 @@ def input_parameters_definition():
                     "wave functions and absolute Ry bounds. DOS-CLU requires explicit TAU cluster geometry; DOS-BULK "
                     "and GEN retain the supplied TAU settings. Native diagnostic branches are not certified for MPI."
     )
-    schema._task_definition = TaskDefinition("TUTORIAL", executable="kkrgen", mpi=False)
+    schema._task_definition = TaskDefinition("TUTORIAL", experimental=True, executable="kkrgen", mpi=False)
     return schema

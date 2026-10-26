@@ -60,8 +60,7 @@ def input_parameters_definition():
     ])
     schema = out.copy(add=[task, energy, photon, cl])
     schema.task_selectors = ("CLPES",)
-    schema._task_definition = TaskDefinition(
-        "CLPES", executable="kkrspec", mpi=False, output_reader="ARPES",
+    schema._task_definition = TaskDefinition("CLPES", experimental=True, executable="kkrspec", mpi=False, output_reader="ARPES",
         input_files=SPEC_INPUT_FILES,
         output_files=(*SPEC_OUTPUT_FILES, "{dataset}_corewf")
     )

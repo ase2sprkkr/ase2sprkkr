@@ -52,8 +52,7 @@ def input_parameters_definition():
         out["SPEC_EL"].copy_member(name, type=Integer(min=1))
     schema = out.copy(add=[task, energy])
     schema.task_selectors = ("AIPES",)
-    schema._task_definition = TaskDefinition(
-        "AIPES", executable="kkrspec", mpi=False, output_reader="SPEC",
+    schema._task_definition = TaskDefinition("AIPES", experimental=True, executable="kkrspec", mpi=False, output_reader="SPEC",
         input_files=SPEC_INPUT_FILES, output_files=SPEC_OUTPUT_FILES,
     )
     return schema

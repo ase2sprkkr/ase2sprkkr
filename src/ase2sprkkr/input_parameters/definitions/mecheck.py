@@ -93,5 +93,5 @@ def input_parameters_definition():
                     "Full-potential branches exist but are numerically unverified. "
                     "The compiled K_CALC_ME=2 disables the J-to-Z consistency test."
     )
-    schema._task_definition = TaskDefinition("MECHECK", executable="kkrgen", mpi=False)
+    schema._task_definition = TaskDefinition("MECHECK", experimental=True, executable="kkrgen", mpi=False)
     return schema

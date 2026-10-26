@@ -47,5 +47,5 @@ def input_parameters_definition():
                     "Uses an electronic potential and may reuse DATASET_positron.rho. "
                     "Integration bounds need physical verification. Lifetime enhancement is fixed independently of POSVC."
     )
-    schema._task_definition = TaskDefinition("POSANITAU", executable="kkrgen", mpi=False, cache_files=("{dataset}_positron.rho",))
+    schema._task_definition = TaskDefinition("POSANITAU", experimental=True, executable="kkrgen", mpi=False, cache_files=("{dataset}_positron.rho",))
     return schema

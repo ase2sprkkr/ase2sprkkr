@@ -163,6 +163,7 @@ class ValueDefinition(RealItemDefinition):
         is_optional=None,
         is_required=None,
         is_expert=False,
+        experimental=False,
         is_repeated: Union[bool, str, RealItemDefinition.Repeated] = False,
         repeated_delimiter=None,
         repeated_count=None,
@@ -247,6 +248,9 @@ class ValueDefinition(RealItemDefinition):
 
         is_hidden: bool
           The value is hidden from the user (no container.name access to the value).
+
+        experimental: bool
+          Mark an experimental value in the metadata and help text.
 
         is_expert: Union[bool,mixed]
           Expert values are somewhat hidden (e.g. listed at end) from the user.
@@ -376,6 +380,7 @@ class ValueDefinition(RealItemDefinition):
             is_optional=is_optional,
             is_hidden=is_hidden,
             is_expert=is_expert,
+            experimental=experimental,
             name_in_grammar=name_in_grammar,
             info=info,
             description=description,
@@ -478,6 +483,8 @@ class ValueDefinition(RealItemDefinition):
             flags.append("hidden")
         if self.is_expert:
             flags.append("expert")
+        if self.experimental:
+            flags.append("experimental")
         if self.is_expert == self.is_always_added:
             flags.append("always add" if self.is_expert else "add non-default")
         if self.is_repeated:

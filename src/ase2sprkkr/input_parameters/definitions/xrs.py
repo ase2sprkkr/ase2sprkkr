@@ -63,5 +63,5 @@ def input_parameters_definition():
                     "Native SIG is only partly initialized, so numerical results require Fortran repair. "
                     "OUTPUT is forced to SIGMA and MESPLIT to true. Dynamic workflow is not read for XRS."
     )
-    schema._task_definition = TaskDefinition("XRS", executable="kkrgen", mpi=False)
+    schema._task_definition = TaskDefinition("XRS", experimental=True, executable="kkrgen", mpi=False)
     return schema

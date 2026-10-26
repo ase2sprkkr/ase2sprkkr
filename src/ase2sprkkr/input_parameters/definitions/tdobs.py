@@ -48,7 +48,7 @@ def input_parameters_definition():
              "SPR-KKR 9.7 has no separate TDOBS postprocessing branch. A missing tau file triggers its normal "
              "recomputation fallback. Serial only: native GEN MPI guard does not permit TDOBS."
     )
-    schema._task_definition = TaskDefinition("TDOBS", executable="kkrgen", mpi=False, output_files=("{dataset}.dos",))
+    schema._task_definition = TaskDefinition("TDOBS", experimental=True, executable="kkrgen", mpi=False, output_files=("{dataset}.dos",))
     return schema
 
 

@@ -137,5 +137,5 @@ def input_parameters_definition():
                     "Full-potential branches exist but have not been tested here. "
                     "Photon scans must use a single initial electron energy."
     )
-    schema._task_definition = TaskDefinition("MEPLOT", executable="kkrgen", mpi=False)
+    schema._task_definition = TaskDefinition("MEPLOT", experimental=True, executable="kkrgen", mpi=False)
     return schema

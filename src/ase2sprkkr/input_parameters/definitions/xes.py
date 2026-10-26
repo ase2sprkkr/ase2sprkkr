@@ -59,5 +59,5 @@ def input_parameters_definition():
                     "Native XES forces EMAX=EF. RXES shares the calculation with RXAS; numerical emission "
                     "interpretation is unverified. MESPLIT is forced true and is not exposed as a tunable flag."
     )
-    schema._task_definition = TaskDefinition("XES", executable="kkrgen", mpi=False)
+    schema._task_definition = TaskDefinition("XES", experimental=True, executable="kkrgen", mpi=False)
     return schema

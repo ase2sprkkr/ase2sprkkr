@@ -64,71 +64,94 @@ def run(args, global_args):
 
     def info_task(args, filter):
         registry = InputParameters.input_parameters_registry
+        task_registry = InputParameters.task_registry
+        entries = [
+            (task.name, registry.definition_for_task(task), task.experimental)
+            for task in task_registry.values()
+        ]
+
         if filter is True:
-            input_parameters = registry.iter_valid_values()
             path = None
             print(
-                "The known SPRKKR tasks (kind of input parameters)\n---------------------------------------------------"
+                'The known SPRKKR tasks (kind of input parameters)\n'
+                '---------------------------------------------------'
             )
-            tasks = "the known SPRKKR tasks"
-            anyof = "any of "
+            tasks = 'the known SPRKKR tasks'
+            anyof = 'any of '
         else:
-            if "." in filter:
-                filter, path = filter.split(".", 1)
+            if '.' in filter:
+                filter, path = filter.split('.', 1)
             else:
                 path = None
+            entries = [entry for entry in entries if filter.upper() in entry[0]]
+            known = {name for name, _, _ in entries}
+            # A user-defined preset is a named schema, not a new task.
             matching = (name for name in registry.names(include_aliases=False)
                         if filter.upper() in name)
-            input_parameters = list(registry.iter_valid_values(names=matching))
-            if len(input_parameters) == 0:
-                print("There is no known SPRKKR task with '{filter.upper()}' in its name")
+            for definition in registry.iter_valid_values(names=matching):
+                if definition.name.upper() != definition.derived_from_name.upper():
+                    name = definition.display_name
+                    if name not in known:
+                        entries.append((name, definition, definition.experimental))
+                        known.add(name)
+            if not entries:
+                print(f"There is no known SPRKKR task with '{filter.upper()}' in its name")
                 return
-            if filter == "":
-                tasks = "the known SPRKKR tasks"
-                anyof = "any of "
-            elif len(input_parameters) == 1 and input_parameters[0].name.upper() == filter.upper():
-                tasks = f"the task '{input_parameters[0].name.upper()}'"
-                anyof = ""
+            if filter == '':
+                tasks = 'the known SPRKKR tasks'
+                anyof = 'any of '
+            elif len(entries) == 1 and entries[0][0].upper() == filter.upper():
+                tasks = f"the task '{entries[0][0]}'"
+                anyof = ''
             else:
                 tasks = f"the tasks containing '{filter}'"
-                anyof = "any of "
+                anyof = 'any of '
             if path:
-                x = f"The configuration sections/values '{path.upper()}' in {anyof}{tasks}"
-                print(f"{x}\n{'-' * len(x)}")
+                title = f"The configuration sections/values '{path.upper()}' in {anyof}{tasks}"
             else:
-                x = f"{tasks.capitalize()}'"
-                print(f"{x}\n{'-' * len(x)}")
+                title = tasks.capitalize()
+            print(f"{title}\n{'-' * len(title)}")
 
+        # Keep the task identity distinct from its possibly shared schema.
+        entries.sort(key=lambda entry: (entry[2], entry[0]))
         found = False
-
-        for i in input_parameters:
-
-            def print_ip(i, prefix="", add=None):
-                if args.verbose or args.verbose is None and filter is not True:
-                    print("\n")
-                    if add:
-                        print(add)
-                    print(i.description(prefix=prefix, verbose=True))
-                else:
-                    if add:
-                        print(add)
-                    print(prefix + i.info())
-
+        experimental_started = False
+        for task_name, definition, experimental in entries:
+            members = None
             if path is not None:
-                ii = list(i.create_object().get_members(path, is_option=None))
-                if not ii:
+                members = list(definition.create_object().get_members(path, is_option=None))
+                if not members:
                     continue
-                found = True
-                for val in ii:
-                    val = val._definition
-                    add = f"{val.item_type.capitalize()} {val.get_path()} of task {i.name.upper()}:"
-                    print_ip(val, "  ", add)
+
+            if experimental and not experimental_started:
+                print("\n  Experimental tasks")
+                print("  ~~~~~~~~~~~~~~~~~~")
+                experimental_started = True
+
+            if members is not None:
+                for member in members:
+                    found = True
+                    member = member._definition
+                    title = f"{member.item_type.capitalize()} {member.get_path()} of task {task_name}:"
+                    print(title)
+                    if args.verbose is not False:
+                        print(member.description(prefix='  ', verbose=True))
+                    else:
+                        print('  ' + member.info())
+            elif args.verbose:
+                print(f"\nTask {task_name}:")
+                print(definition.description(verbose=True))
             else:
-                print_ip(i, prefix="")
+                summary = definition.info()
+                prefix = definition.display_name
+                if summary.startswith(prefix + ' - '):
+                    summary = summary[len(prefix) + 3:]
+                elif summary == prefix:
+                    summary = ''
+                print(f"{task_name} - {summary}" if summary else task_name)
 
         if path and not found:
-            out = f"There is no member named '{path}' in {anyof}{tasks}"
-            print(out)
+            print(f"There is no member named '{path}' in {anyof}{tasks}")
 
     def info_output_file(args, filter):
         print("Known SPR-KKR structured result files\n------------------------------------")

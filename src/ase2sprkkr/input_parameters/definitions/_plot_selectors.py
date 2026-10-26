@@ -27,6 +27,6 @@ def plot_parameters(task, info):
         description="Selective native PLOTPRS output from the existing potential, without an SCF or DOS calculation. "
                     "Native initialization maps this selector to internal TASK=PLOTPRS while retaining its output flag.")
 
-    schema._task_definition = TaskDefinition(task, executable="kkrgen", mpi=False,
+    schema._task_definition = TaskDefinition(task, experimental=True, executable="kkrgen", mpi=False,
         output_files=_OUTPUTS[task])
     return schema

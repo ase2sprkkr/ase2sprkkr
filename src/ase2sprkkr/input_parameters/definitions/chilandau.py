@@ -49,5 +49,5 @@ def input_parameters_definition():
                     "Native MPI has allocation and reduction defects. Converge both energy mesh and neighbour radius. "
                     "Native output contains partial energy sums; use the last serial block."
     )
-    schema._task_definition = TaskDefinition("CHILANDAU", executable="kkrchi", mpi=False)
+    schema._task_definition = TaskDefinition("CHILANDAU", experimental=True, executable="kkrchi", mpi=False)
     return schema

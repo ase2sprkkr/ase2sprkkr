@@ -38,7 +38,7 @@ def input_parameters_definition():
                     "DMFT and LDA+U are unsupported. Selective PLOTPOT/PLOTRHO/PLOTSFN task aliases "
                     "are not registered by this definition; standalone PLOTRHO has a native allocation bug."
     )
-    schema._task_definition = TaskDefinition("PLOTPRS", executable="kkrgen", mpi=False, output_files=(
+    schema._task_definition = TaskDefinition("PLOTPRS", experimental=True, executable="kkrgen", mpi=False, output_files=(
             "{dataset}_V_*.agr",
             "{dataset}_VNS_*.agr",
             "{dataset}_RHO_*.agr",

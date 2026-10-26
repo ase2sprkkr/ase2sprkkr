@@ -149,6 +149,7 @@ class TaskDefinition:
     name: str
     executable: str
     mpi: bool
+    experimental: bool
     output_reader_name: Optional[str]
     input_files: Tuple[TaskFile, ...]
     output_files: Tuple[TaskFile, ...]
@@ -161,6 +162,7 @@ class TaskDefinition:
         name: Optional[str] = None,
         executable: str = "kkrscf",
         mpi: bool = True,
+        experimental: bool = False,
         output_reader_name: Optional[str] = None,
         output_reader: Optional[str] = None,
         input_files: Iterable[_FileTemplate] = (),
@@ -176,6 +178,8 @@ class TaskDefinition:
         executable = _validate_executable(executable)
         if type(mpi) is not bool:
             raise TypeError("mpi must be a bool")
+        if type(experimental) is not bool:
+            raise TypeError("experimental must be a bool")
         if output_reader_name is not None and output_reader is not None:
             raise TypeError(
                 "Specify only one of output_reader_name and output_reader"
@@ -193,6 +197,7 @@ class TaskDefinition:
         object.__setattr__(self, "name", task_name)
         object.__setattr__(self, "executable", executable)
         object.__setattr__(self, "mpi", mpi)
+        object.__setattr__(self, "experimental", experimental)
         object.__setattr__(self, "output_reader_name", output_reader_name)
         for kind, values in (
             ("input", input_files),
@@ -298,6 +303,9 @@ class InputParametersRegistry(ModuleRegistry):
                     )
         if user_defined and value.name in self:
             value.name = name
+
+        if task is not None and task.experimental:
+            value.experimental = True
 
         process_input_parameters_definition(module, value)
         return value

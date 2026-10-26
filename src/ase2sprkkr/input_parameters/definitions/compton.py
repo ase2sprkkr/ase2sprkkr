@@ -106,5 +106,5 @@ def input_parameters_definition():
                            "ONLY_CORE and USE_ZJOVZZ workflows are not audited. NONMAG is allowed. "
                            "Native code forces the ZJ wavefunction convention even for FULLPOT."
     )
-    schema._task_definition = TaskDefinition("COMPTON", executable="kkrgen", mpi=True)
+    schema._task_definition = TaskDefinition("COMPTON", experimental=True, executable="kkrgen", mpi=True)
     return schema

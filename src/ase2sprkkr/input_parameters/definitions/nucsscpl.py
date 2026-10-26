@@ -47,7 +47,7 @@ def input_parameters_definition():
                     "FULLPOT and KMROT!=0 are rejected by native code. Isotopes come from TABMUQIN; "
                     "the task does not read isotope or nuclear-moment input parameters."
     )
-    schema._task_definition = TaskDefinition("NUCSSCPL", executable="kkrgen", mpi=False, output_files=(
+    schema._task_definition = TaskDefinition("NUCSSCPL", experimental=True, executable="kkrgen", mpi=False, output_files=(
             "{dataset}_A_ij.dat",
             "RK.dat",
             "tab_aij.dat",
