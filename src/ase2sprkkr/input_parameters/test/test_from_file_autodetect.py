@@ -11,6 +11,7 @@ from ..input_parameters_definitions import (
     InputParametersDefinition,
     MAX_INPUT_FILE_SIZE,
     _read_input_text,
+    _TaskSelectorMap,
     _task_preparse_definition,
     _task_selector_map,
 )
@@ -38,12 +39,51 @@ def test_preparse_ipd_is_cached_and_contains_only_repeated_task():
 
 def test_mapping_is_declarative_and_independent_of_adsi():
     mapping = _task_selector_map()
-    assert mapping["JXC"] == mapping["DMI"]
-    for task in ("ARPES", "SPLEED", "AIPES", "BAND"):
-        assert mapping[task] == (InputParameters.definition(task),)
-    assert mapping["BSF"] == (InputParameters.definition("BSF"),)
+    assert mapping.definitions("JXC", user_defined=False) == mapping.definitions(
+        "DMI", user_defined=False
+    )
+    for task in ("ARPES", "SPLEED", "AIPES", "BAND", "BSF"):
+        assert mapping.definitions(task, user_defined=False) == (
+            InputParameters.definition(task),
+        )
+        assert mapping.definitions(task) == mapping[task]
+        assert all(
+            definition.is_user_defined
+            for definition in mapping.definitions(task, user_defined=True)
+        )
     for definition in InputParameters.definitions.values():
         assert definition.accepted_task_selectors()
+
+
+def test_ipd_origin_defaults_registration_and_copy(tmp_path):
+    from types import SimpleNamespace
+
+    builtin = InputParameters.definition("ARPES")
+    assert builtin.is_user_defined is False
+    assert builtin.copy().is_user_defined is False
+
+    custom = InputParametersDefinition("MYARPES", [])
+    assert custom.is_user_defined is True
+    assert custom.copy().is_user_defined is True
+
+    module = SimpleNamespace(
+        __name__="_user_myarpes",
+        __file__=str(tmp_path / "myarpes.py"),
+        __doc__="",
+    )
+    InputParameters.input_parameters_registry.prepare_value(
+        "MYARPES", module, custom
+    )
+    assert custom.is_user_defined is True
+    assert custom.copy().is_user_defined is True
+
+    mapping = _TaskSelectorMap({"ARPES": (builtin, custom)})
+    assert mapping["ARPES"] == (builtin, custom)
+    assert mapping.definitions("ARPES") == (builtin, custom)
+    assert mapping.definitions("ARPES", user_defined=False) == (builtin,)
+    assert mapping.definitions("ARPES", user_defined=True) == (custom,)
+    with pytest.raises(TypeError, match="user_defined"):
+        mapping.definitions("ARPES", user_defined="False")
 
 
 def test_class_vs_instance_from_file():
