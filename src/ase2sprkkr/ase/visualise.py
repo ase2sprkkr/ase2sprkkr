@@ -14,7 +14,7 @@ def view(
     graph: str = "",
     terminal=False,
     blocking: bool = False,
-
+    close_after: float | None = None,
 ):
     """Visualise atoms using ase viewer
 
@@ -37,15 +37,22 @@ def view(
     terminal
 
     blocking
-      Run the viewer in a subprocess to achieve nonblocking viewing.
+      If False, launch the viewer in a subprocess and return immediately.
+
+    close_after
+      Seconds after which the Tk viewer exits its event loop. When set,
+      the viewer runs in the current process, even if blocking is False.
     """
     from ase.gui.images import Images
+
+    if close_after is not None and close_after < 0:
+        raise ValueError("close_after must not be negative")
 
     if repeat is not None:
         if isinstance(repeat, int):
             repeat = [repeat] * 3
 
-    if not blocking:
+    if not blocking and close_after is None:
         buf = BytesIO()
         write(buf, atoms, format="traj")
 
@@ -96,4 +103,6 @@ def view(
             del os.environ["MPLBACKEND"]
 
         gui = GUI(images, rotations, bonds, graph)
+        if close_after is not None:
+            gui.window.win.after(round(close_after * 1000), gui.window.win.quit)
         gui.run()
