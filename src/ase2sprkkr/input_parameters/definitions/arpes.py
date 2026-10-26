@@ -2,7 +2,7 @@
 
 import numpy as np
 from ...common.grammar_types import Integer, SetOf, DefKeyword, Keyword, Range, Array, flag
-from .sections import CONTROL, TAU, ENERGY, SITES
+from ._sections import CONTROL, TAU, ENERGY, SITES
 from ..input_parameters_definitions import (
     InputParametersDefinition as InputParameters,
     InputValueDefinition as V,

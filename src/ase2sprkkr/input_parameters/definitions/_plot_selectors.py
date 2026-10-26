@@ -1,5 +1,5 @@
 """Shared native PLOTPRS selectors (not a separate task)."""
-from .sections import CONTROL, TASK, TAU, ENERGY, SITES
+from ._sections import CONTROL, TASK, TAU, ENERGY, SITES
 from ...common.warnings import DataValidityError
 from ..task_definition import TaskDefinition
 from ..input_parameters_definitions import InputParametersDefinition, InputSectionDefinition as Section, InputValueDefinition as V

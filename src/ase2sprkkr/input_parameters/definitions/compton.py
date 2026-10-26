@@ -2,7 +2,7 @@
 import numpy as np
 from ...common.grammar_types import Integer, SetOf
 from ...common.warnings import DataValidityError, DataValidityWarning
-from .sections import TASK, CONTROL, TAU, ENERGY, SITES, STRCONST, MODE, CPA
+from ._sections import TASK, CONTROL, TAU, ENERGY, SITES, STRCONST, MODE, CPA
 from ._file_manifests import RequiredTauInputParametersDefinition, resolve_file
 from ..input_parameters_definitions import InputValueDefinition as V
 from ..task_definition import TaskDefinition

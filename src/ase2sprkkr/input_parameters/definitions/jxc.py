@@ -1,7 +1,7 @@
 """JXC task definition."""
 
 from ._file_manifests import resolve_file
-from .sections import CONTROL, TAU, ENERGY, SITES, STRCONST, MODE
+from ._sections import CONTROL, TAU, ENERGY, SITES, STRCONST, MODE
 from ..input_parameters_definitions import (
     InputParametersDefinition, InputSectionDefinition as Section,
     InputValueDefinition as V,

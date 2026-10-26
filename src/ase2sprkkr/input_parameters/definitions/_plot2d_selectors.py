@@ -1,6 +1,6 @@
 """Native PLOT2DPR input selectors and their geometry."""
 import numpy as np
-from .sections import CONTROL, TASK, TAU, ENERGY, SITES
+from ._sections import CONTROL, TASK, TAU, ENERGY, SITES
 from ...common.grammar_types import Integer, SetOf
 from ...common.warnings import DataValidityError
 from ..task_definition import TaskDefinition

@@ -50,7 +50,7 @@ class ModuleRegistry:
     ):
         self.package = package
         self.attribute = attribute
-        self._include = include or (lambda name: not name.startswith("_"))
+        self._include = include or (lambda name: True)
         self._factory = factory
         self.aliases = MappingProxyType(self._normalize_aliases(aliases or {}))
         self._lock = RLock()
@@ -96,7 +96,7 @@ class ModuleRegistry:
                     pkgutil.iter_modules(self.package.__path__),
                     key=lambda item: item.name,
                 ):
-                    if not self._include(item.name):
+                    if item.name.startswith("_") or not self._include(item.name):
                         continue
                     name = self.normalize_name(item.name)
                     if name in discovered:

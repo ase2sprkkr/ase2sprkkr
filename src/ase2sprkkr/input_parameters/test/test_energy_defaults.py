@@ -4,7 +4,7 @@ import pickle
 import pytest
 
 from ase2sprkkr.input_parameters.input_parameters import InputParameters
-from ase2sprkkr.input_parameters.definitions.sections import ENERGY, TASK
+from ase2sprkkr.input_parameters.definitions._sections import ENERGY, TASK
 from ase2sprkkr.input_parameters.input_parameters_definitions import InputParametersDefinition
 from ase2sprkkr.common.warnings import DataValidityError
 

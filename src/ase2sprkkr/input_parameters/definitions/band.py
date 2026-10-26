@@ -5,7 +5,7 @@ from ...common.warnings import DataValidityError
 from ..task_definition import TaskDefinition
 from ..tasks._spec_files import SPEC_INPUT_FILES, SPEC_OUTPUT_FILES
 from .arpes import input_parameters_definition as arpes_parameters
-from .sections import CONTROL
+from ._sections import CONTROL
 from ..input_parameters_definitions import InputValueDefinition as V, InputSectionDefinition as Section
 
 

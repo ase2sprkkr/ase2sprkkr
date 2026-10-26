@@ -5,7 +5,7 @@ from ...common.warnings import DataValidityError, DataValidityWarning
 from ..input_parameters_definitions import InputValueDefinition as V
 from ..task_definition import TaskDefinition
 from ._file_manifests import NrSpectroscopyInputParametersDefinition
-from .sections import CONTROL, ENERGY, MODE, SITES, STRCONST, TASK, TAU
+from ._sections import CONTROL, ENERGY, MODE, SITES, STRCONST, TASK, TAU
 
 
 def _validate_aps(parameters, _values, why):

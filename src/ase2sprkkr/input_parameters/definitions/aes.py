@@ -8,7 +8,7 @@ from ._file_manifests import (
     core_level_output_name,
     resolve_file,
 )
-from .sections import CONTROL, ENERGY, MODE, SITES, STRCONST, TASK, TAU
+from ._sections import CONTROL, ENERGY, MODE, SITES, STRCONST, TASK, TAU
 
 
 class AESInputParametersDefinition(RequiredTauInputParametersDefinition):

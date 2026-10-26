@@ -4,7 +4,7 @@ import numpy as np
 from ...common.grammar_types import real, Keyword, Integer
 from ...common.warnings import DataValidityError
 from ._file_manifests import TauCacheInputParametersDefinition, resolve_file
-from .sections import CONTROL, TAU, ENERGY, SITES, TASK, MODE, CPA, STRCONST
+from ._sections import CONTROL, TAU, ENERGY, SITES, TASK, MODE, CPA, STRCONST
 from ..input_parameters_definitions import InputValueDefinition as V
 from ..task_definition import TaskDefinition
 
