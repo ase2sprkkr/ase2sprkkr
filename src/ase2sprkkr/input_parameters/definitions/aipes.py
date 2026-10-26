@@ -6,6 +6,7 @@ from ..task_definition import TaskDefinition
 from ..tasks._spec_files import SPEC_INPUT_FILES, SPEC_OUTPUT_FILES
 from .arpes import input_parameters_definition as arpes_parameters
 from .sections import CONTROL
+from ._energy import energy_relative_default
 from ..input_parameters_definitions import InputValueDefinition as V
 
 
@@ -48,7 +49,7 @@ def input_parameters_definition():
     task.copy_member("TASK", default_value="AIPES")
     energy = out["ENERGY"].copy()
     energy.copy_member("NE", type=SetOf(Integer(min=1), min_length=1, max_length=2))
-    energy["EMAXEV"]._energy_default_value = 0.0
+    energy["EMAXEV"].default_value = energy_relative_default('EMAX', 0.0)
     energy.copy_member("EWORK_EV", info="Work function in eV.")
     for name in ("NT", "NP"):
         out["SPEC_EL"].copy_member(name, type=Integer(min=1))

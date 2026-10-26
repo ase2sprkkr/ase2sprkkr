@@ -2,11 +2,11 @@
 (input files for SPR-KKR tasks)"""
 
 from ...common.grammar_types import SetOf, DefKeyword, flag, energy, Integer, Keyword
-
 from ..input_parameters_definitions import InputSectionDefinition as Section, InputValueDefinition as V
 from ...sprkkr.sprkkr_grammar_types import Site, AtomicType
 from functools import partial
 from ...common.warnings import DataValidityError
+from ._energy import energy_bound
 
 
 def relative_energy_supported(section):
@@ -50,42 +50,6 @@ def _sections_tau_bzint_weyl_write_condition(option):
     return option._container.BZINT() == "WEYL"
 
 
-def _energy_default(option):
-    """Evaluate a task-supplied default, which may depend on the current mode."""
-    value = option._definition._energy_default_value
-    return value(option) if callable(value) else value
-
-
-def _energy_absolute_default(option):
-    """Suppress an absolute fallback when the relative representation is active."""
-    return None if option._container[option.name + 'EV']() is not None else _energy_default(option)
-
-
-def _energy_relative_default(option):
-    """Suppress a relative fallback when an absolute value was explicitly set.
-
-    Check storage with is_set(), not the absolute getter: that getter already
-    depends on this relative value, and calling it would recurse.
-    """
-    return None if option._container[option.name[:-2]].is_set() else _energy_default(option)
-
-
-def _energy_bound(name, values):
-    """Define a paired absolute/relative bound with task-specific defaults.
-
-    values contains (absolute Ry default, description, relative eV default).
-    Either default may be a top-level callable accepting its Option. Shared
-    precedence and validation are independent of the task's numerical values.
-    Both absolute bounds are optional in the native input: when omitted,
-    SPRKKR uses its task-specific or Fermi-energy fallback.
-    """
-    absolute = V(name, float, _energy_absolute_default, info=values[1],
-                 is_optional=True)
-    relative = V(name + 'EV', float, _energy_relative_default,
-                 info=f'{name}, given in eV with respect to the Fermi level', is_optional=True)
-    absolute._energy_default_value = values[0]
-    relative._energy_default_value = values[2]
-    return [absolute, relative]
 
 
 def _sections_energy_emax_from_emin_default_value(option):
@@ -384,7 +348,7 @@ def ENERGY(emin=(-0.2, "The real part of the lowest E-value", None), emax=None, 
     ]
 
     if emin:
-        vals += _energy_bound("EMIN", emin)
+        vals += energy_bound("EMIN", emin)
     if emax == "emin":
         vals += [
             V(
@@ -405,7 +369,7 @@ def ENERGY(emin=(-0.2, "The real part of the lowest E-value", None), emax=None, 
             ),
         ]
     elif emax:
-        vals += _energy_bound("EMAX", emax)
+        vals += energy_bound("EMAX", emax)
     vals += add
     return Section("ENERGY", vals, validators=_validate_energy_reference)
 

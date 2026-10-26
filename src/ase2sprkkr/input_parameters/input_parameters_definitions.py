@@ -178,12 +178,6 @@ class InputValueDefinition(ConfigurationValueDefinition):
     type_from_type_map = {bool: flag}
     type_of_dangerous = mixed
 
-    def copy(self, **kwargs):
-        copied = super().copy(**kwargs)
-        if hasattr(self, "_energy_default_value"):
-            copied._energy_default_value = self._energy_default_value
-        return copied
-
 
 class InputSectionDefinition(ConfigurationSectionDefinition):
     child_class = InputValueDefinition
