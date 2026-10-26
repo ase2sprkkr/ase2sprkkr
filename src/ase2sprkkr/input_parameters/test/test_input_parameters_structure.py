@@ -21,6 +21,14 @@ def compact(value):
     return re.sub(r"\s+", " ", value).strip()
 
 
+def length_is_optional(option):
+    """Require an input count whenever any of its source fields has a value."""
+    return all(
+        option._container[name]() is None
+        for name in option._definition._length_of
+    )
+
+
 def test_gather():
     definition = cd.InputParametersDefinition.definition_from_dict(
         {
@@ -171,7 +179,10 @@ def test_length():
         {
             "ENERGY": [
                 V("A", 1),
-                V("NK", Length("K1", "K2")),
+                V(
+                    "NK", Length("K1", "K2"),
+                    is_optional=length_is_optional, is_required=False,
+                ),
                 V("K1", gt.Array(int), is_optional=True),
                 V("K2", gt.Array(int), is_optional=True),
             ]
@@ -183,8 +194,16 @@ def test_length():
     parsed = definition.read_from_string(parameters.to_string())
     assert parsed.ENERGY.NK() == 3
 
-    with pytest.raises(pp.ParseBaseException, match="Missing non-optional input item"):
-        definition.read_from_string("ENERGY A=1 K1=1 2 3 K2=2 2 3")
+    for sources in ("K1=1 2 3", "K2=2 2 3", "K1=1 2 3 K2=2 2 3"):
+        with pytest.raises(pp.ParseBaseException, match="Missing non-optional input item ENERGY.NK"):
+            definition.read_from_string(f"ENERGY A=1 {sources}")
+
+    with warnings.catch_warnings():
+        warnings.simplefilter("error", DataValidityError)
+        absent = definition.read_from_string("ENERGY A=1")
+        assert "NK=" not in absent.to_string()
+    assert absent.ENERGY.NK() is None
+    assert not hasattr(absent.ENERGY, "_parsed_values")
 
     with pytest.raises(DataValidityError):
         parsed.ENERGY.NK = 7
@@ -295,7 +314,10 @@ def test_definition_storage_metadata():
         {
             "CONTROL": [
                 V("VALUES", gt.Array(int), is_optional=True),
-                V("NVALUES", Length("VALUES")),
+                V(
+                    "NVALUES", Length("VALUES"),
+                    is_optional=length_is_optional, is_required=False,
+                ),
                 V("NOT_STORED", int, is_stored=False, is_optional=False, is_required=False),
                 GeneratedValueDefinition("GENERATED", lambda section: 1),
             ]
@@ -384,7 +406,10 @@ def test_conditional_length():
         {
             "CONTROL": [
                 V("VALUES", gt.Array(int), is_optional=True),
-                V("NVALUES", Length("VALUES"), condition=mode_is_one),
+                V(
+                    "NVALUES", Length("VALUES"), condition=mode_is_one,
+                    is_optional=length_is_optional, is_required=False,
+                ),
                 V("MODE", 1),
             ]
         }
@@ -404,6 +429,14 @@ def test_conditional_length():
     with pytest.raises(pp.ParseBaseException, match="Missing non-optional input item"):
         definition.read_from_string("CONTROL VALUES=1 2 3 MODE=1")
 
+    for mode in (1, 2):
+        with warnings.catch_warnings():
+            warnings.simplefilter("error", DataValidityError)
+            absent = definition.read_from_string(f"CONTROL MODE={mode}")
+            assert "NVALUES=" not in absent.to_string()
+        assert absent.CONTROL["NVALUES"]() is None
+        assert not hasattr(absent.CONTROL, "_parsed_values")
+
     with warnings.catch_warnings():
         warnings.simplefilter("error", DataValidityError)
         inactive = definition.read_from_string("CONTROL VALUES=1 2 3 MODE=2")
@@ -418,8 +451,12 @@ def test_cross_section_conditional_length():
     definition = cd.InputParametersDefinition.definition_from_dict(
         {
             "SECTION_A": [
+                V("OTHER", 1),
                 V("VALUES", gt.Array(int), is_optional=True),
-                V("NVALUES", Length("VALUES"), condition=mode_is_one),
+                V(
+                    "NVALUES", Length("VALUES"), condition=mode_is_one,
+                    is_optional=length_is_optional, is_required=False,
+                ),
             ],
             "SECTION_B": [V("MODE", 1)],
         }
@@ -445,6 +482,14 @@ def test_cross_section_conditional_length():
         )
     with pytest.raises(pp.ParseBaseException, match="Missing non-optional input item"):
         definition.read_from_string("SECTION_A VALUES=1 2 3\nSECTION_B MODE=1")
+
+    for mode in (1, 2):
+        with warnings.catch_warnings():
+            warnings.simplefilter("error", DataValidityError)
+            absent = definition.read_from_string(f"SECTION_A OTHER=1\nSECTION_B MODE={mode}")
+            assert "NVALUES=" not in absent.to_string()
+        assert absent.SECTION_A["NVALUES"]() is None
+        assert not hasattr(absent.SECTION_A, "_parsed_values")
 
     with warnings.catch_warnings():
         warnings.simplefilter("error", DataValidityError)
