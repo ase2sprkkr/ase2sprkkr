@@ -315,7 +315,7 @@ class InputParametersRegistry(ModuleRegistry):
         """Yield canonical IPDs, excluding named copies used as presets."""
         for name in self.names(include_aliases=False):
             for definition in self.iter_valid_values(names=(name,)):
-                if self.normalize_name(definition.name) == name:
+                if not definition.is_user_defined or self.normalize_name(definition.name) == name:
                     yield definition
 
     def definition_for_task(self, task):
