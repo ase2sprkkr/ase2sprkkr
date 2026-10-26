@@ -34,8 +34,12 @@ class Potential(ConfigurationFile):
         if set_from_atoms and atoms is not None:
             self.set_from_atoms()
 
-    def read_from_file(self, file, atoms=None, allow_dangerous=False):
-        super().read_from_file(file, allow_dangerous=allow_dangerous)
+    def read_from_file(self, file, atoms=None, allow_dangerous=False,
+                       allow_incomplete=False, report_invalid=None):
+        super().read_from_file(file,
+                               allow_dangerous=allow_dangerous,
+                               allow_incomplete=allow_incomplete,
+                               report_invalid=report_invalid)
         self.make_complete()
         if atoms is not False:
             if atoms is None:

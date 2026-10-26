@@ -343,3 +343,106 @@ def test_scalar_task_selector_and_registration_immutability_contract():
         schema.task_selectors = invalid
         with pytest.raises(ValueError):
             schema.accepted_task_selectors()
+
+
+def test_incomplete_explicit_ipd_accepts_missing_required_selector():
+    source = (_EXAMPLES / "arpes.in").read_text()
+    incomplete = source.replace("TASK     ARPES\n", "TASK\n", 1)
+    assert source != incomplete
+    definition = InputParameters.definition("ARPES")
+
+    with pytest.raises(pp.ParseBaseException):
+        definition.read_from_file(io.StringIO(incomplete))
+
+    with pytest.warns(UserWarning, match="Missing non-optional input item.*TASK"):
+        parsed = definition.read_from_file(
+            io.StringIO(incomplete), allow_incomplete=True
+        )
+    assert parsed.definition_name == "ARPES"
+    assert not parsed.TASK.TASK.is_set()
+
+
+def test_incomplete_autodetect_does_not_guess_scf_or_shared_task():
+    source = (_EXAMPLES / "arpes.in").read_text()
+    incomplete = source.replace("TASK     ARPES\n", "TASK\n", 1)
+    with pytest.raises(ValueError, match="Cannot autodetect incomplete"):
+        InputParameters.from_file(io.StringIO(incomplete), allow_incomplete=True)
+
+
+def test_incomplete_explicit_task_retains_identity_checks():
+    from ..task_definition import TaskMismatchError
+
+    source = (_EXAMPLES / "arpes.in").read_text()
+    incomplete = source.replace("TASK     ARPES\n", "TASK\n", 1)
+    registry = InputParameters.input_parameters_registry
+    task = InputParameters.task_registry["SPLEED"]
+
+    parsed = registry.read_for_task(
+        task, io.StringIO(incomplete), allow_incomplete=True
+    )
+    assert parsed.task_name == "SPLEED"
+    assert parsed.requested_task_name == "SPLEED"
+    assert not parsed.TASK.TASK.is_set()
+
+    with pytest.raises(TaskMismatchError):
+        registry.read_for_task(
+            task, io.StringIO(source), allow_incomplete=True
+        )
+
+
+def test_incomplete_mode_still_rejects_invalid_value():
+    definition = InputParameters.definition("ARPES")
+    with pytest.raises(pp.ParseBaseException):
+        definition.read_from_string(
+            "TASK ARPES\nSPEC_EL NT=not_an_integer\n", allow_incomplete=True
+        )
+
+
+def test_incomplete_parse_uses_validation_reporting_policy():
+    from ...common.warnings import DataValidityError, DataValidityWarning
+    import warnings
+
+    definition = InputParameters.definition("ARPES")
+    source = (_EXAMPLES / "arpes.in").read_text()
+    incomplete = source.replace("TASK     ARPES\n", "TASK\n", 1)
+
+    with pytest.warns(DataValidityError, match=r"Missing non-optional input item.*TASK"):
+        parsed = definition.read_from_file(
+            io.StringIO(incomplete),
+            allow_incomplete=True,
+            report_invalid="warn",
+        )
+    assert not parsed.TASK.TASK.is_set()
+
+    with pytest.raises(DataValidityError, match="TASK"):
+        definition.read_from_file(
+            io.StringIO(incomplete),
+            allow_incomplete=True,
+            report_invalid="raise",
+        )
+
+    with warnings.catch_warnings(record=True) as recorded:
+        warnings.simplefilter("always", DataValidityWarning)
+        parsed = definition.read_from_file(
+            io.StringIO(incomplete),
+            allow_incomplete=True,
+            report_invalid="ignore",
+        )
+    assert not any(issubclass(w.category, DataValidityWarning) for w in recorded)
+    assert not parsed.TASK.TASK.is_set()
+
+
+def test_incomplete_parse_does_not_warn_on_failed_parse():
+    from ...common.warnings import DataValidityWarning
+    import warnings
+
+    definition = InputParameters.definition("ARPES")
+    with warnings.catch_warnings(record=True) as recorded:
+        warnings.simplefilter("always")
+        with pytest.raises(pp.ParseBaseException):
+            definition.read_from_string(
+                "TASK ARPES\nSPEC_EL NT=not_an_integer\n",
+                allow_incomplete=True,
+            )
+
+    assert not any(issubclass(w.category, DataValidityWarning) for w in recorded)

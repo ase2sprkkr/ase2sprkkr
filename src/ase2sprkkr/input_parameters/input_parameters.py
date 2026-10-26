@@ -327,12 +327,14 @@ class InputParameters(ConfigurationFile):
         return cls.for_task("SCF")
 
     @classmethod
-    def from_file(cls, filename, allow_dangerous: bool = False):
+    def from_file(cls, filename, allow_dangerous: bool = False, *,
+                  allow_incomplete: bool = False, report_invalid=None):
         """Read with the IPD class-level selector autodetection."""
         from .input_parameters_definitions import InputParametersDefinition
 
         return InputParametersDefinition.from_file(
-            filename, allow_dangerous=allow_dangerous
+            filename, allow_dangerous=allow_dangerous,
+            allow_incomplete=allow_incomplete, report_invalid=report_invalid,
         )
 
     def __repr__(self):
