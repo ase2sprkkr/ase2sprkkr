@@ -315,7 +315,7 @@ class InputParametersRegistry(ModuleRegistry):
         """Yield canonical IPDs, excluding named copies used as presets."""
         for name in self.names(include_aliases=False):
             for definition in self.iter_valid_values(names=(name,)):
-                if not definition.is_user_defined or self.normalize_name(definition.name) == name:
+                if self.normalize_name(definition.derived_from_name) == name:
                     yield definition
 
     def definition_for_task(self, task):
@@ -496,15 +496,21 @@ class TaskRegistry:
         )
 
     def _input_task(self, name):
+        """ Tasks, defined by the input_parameters """
         try:
             definition = self.input_parameters_registry[name]
         except RegistryEntryNotFound:
             return None
-        if self.input_parameters_registry.normalize_name(definition.name) != name:
+        task = definition._task_definition
+
+        """ Maybe, the definition just use task from another "canonical" definition """
+        if task and task.name == name:
+            return task
+        else:
             return None
-        return definition._task_definition
 
     def _extra_task(self, name):
+        """ Tasks, defined separatelly, to be shared by more tasks """
         try:
             return self.extra_tasks[name]
         except RegistryEntryNotFound:

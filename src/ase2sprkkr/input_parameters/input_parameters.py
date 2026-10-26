@@ -115,7 +115,7 @@ class InputParameters(ConfigurationFile):
             )
         expected = self.input_parameters_registry.definition_for_task(task)
         if (expected is not self._definition
-                and expected.name.upper() != self._definition.name.upper()):
+                and expected.name.upper() != self._definition.derived_from_name.upper()):
             raise RuntimeError(
                 f"Task {task.name} uses a different input schema; "
                 "use change_task() to switch schemas explicitly."
