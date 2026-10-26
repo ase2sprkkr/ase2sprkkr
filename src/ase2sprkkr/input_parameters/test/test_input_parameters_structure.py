@@ -367,8 +367,9 @@ def test_conditional_length():
         definition.read_from_string("CONTROL VALUES=1 2 3 NVALUES=3 MODE=2")
     with pytest.raises(pp.ParseBaseException):
         definition.read_from_string("CONTROL VALUES=1 2 3 NVALUES=2 MODE=2")
-    with pytest.raises(pp.ParseBaseException):
-        definition.read_from_string("CONTROL VALUES=1 2 3 MODE=1")
+    with pytest.warns(DataValidityError, match="Missing non-optional input item"):
+        missing = definition.read_from_string("CONTROL VALUES=1 2 3 MODE=1")
+    assert missing.CONTROL.NVALUES() == 3
 
     with warnings.catch_warnings():
         warnings.simplefilter("error", DataValidityError)
@@ -409,8 +410,9 @@ def test_cross_section_conditional_length():
         definition.read_from_string(
             "SECTION_A VALUES=1 2 3 NVALUES=2\nSECTION_B MODE=2"
         )
-    with pytest.raises(pp.ParseBaseException):
-        definition.read_from_string("SECTION_A VALUES=1 2 3\nSECTION_B MODE=1")
+    with pytest.warns(DataValidityError, match="Missing non-optional input item"):
+        missing = definition.read_from_string("SECTION_A VALUES=1 2 3\nSECTION_B MODE=1")
+    assert missing.SECTION_A.NVALUES() == 3
 
     with warnings.catch_warnings():
         warnings.simplefilter("error", DataValidityError)
