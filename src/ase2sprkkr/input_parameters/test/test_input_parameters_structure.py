@@ -183,6 +183,9 @@ def test_length():
     parsed = definition.read_from_string(parameters.to_string())
     assert parsed.ENERGY.NK() == 3
 
+    with pytest.raises(pp.ParseBaseException, match="Missing non-optional input item"):
+        definition.read_from_string("ENERGY A=1 K1=1 2 3 K2=2 2 3")
+
     with pytest.raises(DataValidityError):
         parsed.ENERGY.NK = 7
     with pytest.raises(DataValidityError):
@@ -293,7 +296,7 @@ def test_definition_storage_metadata():
             "CONTROL": [
                 V("VALUES", gt.Array(int), is_optional=True),
                 V("NVALUES", Length("VALUES")),
-                V("NOT_STORED", int, is_stored=False),
+                V("NOT_STORED", int, is_stored=False, is_optional=False, is_required=False),
                 GeneratedValueDefinition("GENERATED", lambda section: 1),
             ]
         }
@@ -306,6 +309,16 @@ def test_definition_storage_metadata():
     assert definition["CONTROL"]["NVALUES"].is_stored
     assert not definition["CONTROL"]["NOT_STORED"].is_stored
     assert not definition["CONTROL"]["GENERATED"].is_stored
+
+    # Length is generated but explicitly stored; other generated/non-stored
+    # options must not be required by the input grammar.
+    with warnings.catch_warnings():
+        warnings.simplefilter("error", DataValidityError)
+        parsed = definition.read_from_string("CONTROL VALUES=1 2 3 NVALUES=3")
+    assert parsed.CONTROL.NVALUES() == 3
+
+    with pytest.raises(pp.ParseBaseException, match="Missing non-optional input item"):
+        definition.read_from_string("CONTROL VALUES=1 2 3")
 
 
 def test_generated_option_uses_its_runtime_section():
@@ -388,7 +401,7 @@ def test_conditional_length():
         definition.read_from_string("CONTROL VALUES=1 2 3 NVALUES=3 MODE=2")
     with pytest.raises(pp.ParseBaseException):
         definition.read_from_string("CONTROL VALUES=1 2 3 NVALUES=2 MODE=2")
-    with pytest.raises(pp.ParseBaseException):
+    with pytest.raises(pp.ParseBaseException, match="Missing non-optional input item"):
         definition.read_from_string("CONTROL VALUES=1 2 3 MODE=1")
 
     with warnings.catch_warnings():
@@ -430,7 +443,7 @@ def test_cross_section_conditional_length():
         definition.read_from_string(
             "SECTION_A VALUES=1 2 3 NVALUES=2\nSECTION_B MODE=2"
         )
-    with pytest.raises(pp.ParseBaseException):
+    with pytest.raises(pp.ParseBaseException, match="Missing non-optional input item"):
         definition.read_from_string("SECTION_A VALUES=1 2 3\nSECTION_B MODE=1")
 
     with warnings.catch_warnings():

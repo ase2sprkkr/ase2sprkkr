@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import copy
 import numpy as np
+import pyparsing as pp
 from typing import Any, Optional, Union
 from collections.abc import Mapping
 
@@ -705,10 +706,11 @@ class Option(BaseOption):
                 and self.name not in parsed
                 and self.name not in getattr(parsed, "checks", ())
             ):
-                ValidationResult.emit(
-                    DataValidityError(
-                        f"Missing non-optional input item {self._get_path()}"
-                    )
+                # Conditions and callable optionality are resolved here, once
+                # all sections have been staged. Absence is a parse error,
+                # unlike semantic validation of an explicitly supplied value.
+                raise pp.ParseException(
+                    f"Missing non-optional input item {self._get_path()}"
                 )
         if not d.allowed(container):
             return

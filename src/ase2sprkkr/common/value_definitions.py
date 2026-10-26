@@ -221,7 +221,8 @@ class ValueDefinition(RealItemDefinition):
 
         is_stored: bool
           If True, the value is readed/writed from the output file.
-          If None, set to False if the value is Generated.
+          If None, inherit the definition class default (normally True,
+          False for non-stored generated definitions).
 
         is_optional: bool or callable or None
           If True, the value may be omitted from the input. A callable
@@ -334,7 +335,7 @@ class ValueDefinition(RealItemDefinition):
             self.is_always_added = is_always_added
 
         self.init_by_default = init_by_default
-        self.is_stored = not self.is_generated if is_stored is None else is_stored
+        self.is_stored = self.__class__.is_stored if is_stored is None else is_stored
 
         if fixed_value is None:
             self.is_fixed = False
