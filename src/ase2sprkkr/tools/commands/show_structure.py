@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 """
-This is a script to visualise potential or in_struct.inp files. Run it to see the doc.
+Display or export atomic structures from an SPR-KKR potential and an optional
+in_struct.inp file.
 """
 
 from pathlib import Path
@@ -11,122 +12,103 @@ import sys
 
 sys.path.append(str(Path(__file__).resolve().parents[3]))
 
-help = "Visualise potential (and possibly in_struct.inp) files."
-description = "You can either use ase visualisation tools or export it to cif file"
+help = "Visualise potential (and optionally in_struct.inp) files."
+description = (
+    "Display the structure in ASE, export it using an ASE format, or both. "
+    "Without an output filename or an explicit viewing option, display the "
+    "structure (the potential structure if --input is omitted)."
+)
 aliases = ["view"]
 
 
 def parser(parser):
-    parser.add_argument("potential_file", help="SPRKKR potential file (.pot)")
+    parser.add_argument("potential_file", help="SPR-KKR potential file (.pot)")
     parser.add_argument(
-        "-i", "--input", help="in_struct.inp file name (if not specified, only pot file will be ploted)", required=False
-    )
-
-    parser.add_argument(
-        "-o",
-        "--output",
-        type=str,
-        help="Output file name for structure, by default use temp file and visualise it.",
-        required=False,
+        "-i", "--input",
+        help="Optional in_struct.inp file; otherwise use the potential structure.",
     )
     parser.add_argument(
-        "-O",
-        "--potential-output",
-        type=str,
-        help="Output file name for the potential. Default is a temp file, pass no argument to use <output_file>pot.<ext>",
-        const=True,
-        required=False,
-        nargs="?",
-    )
-
-    parser.add_argument(
-        "-f",
-        "--format",
-        type=str,
-        help="Output files format (see the allowed formats in ASE, default cif)",
-        default="cif",
-        required=False,
+        "-o", "--output",
+        help="Export the input structure, or the potential structure if --input is omitted.",
     )
     parser.add_argument(
-        "-a",
-        "--visualise",
-        help="Visualise the struct (default, if no output file is given)",
-        action="store_true",
-        required=False,
+        "-O", "--potential-output", nargs="?", const=True,
+        help="Export the potential structure; without a filename, derive <output>_pot.<ext> (requires -o).",
     )
     parser.add_argument(
-        "-A", "--visualise-potential", help="Visualise the potential", action="store_true", required=False
+        "-f", "--format", default="cif",
+        help="ASE export format (default: cif).",
     )
     parser.add_argument(
-        "-s", "--scale-radii", help="Ase visualisation atomic radius", type=float, required=False, default=0.5
+        "-a", "--visualise", action="store_true",
+        help="Show the input structure (or the potential structure without --input).",
     )
     parser.add_argument(
-        "-v",
-        "--vac",
-        dest="vacuum_height",
-        type=float,
-        help="Visualisation-size of vacuum atoms in AA (default=10.0)",
-        default=10.0,
-        required=False,
+        "-A", "--visualise-potential", action="store_true",
+        help="Show the potential structure.",
     )
     parser.add_argument(
-        "-b", "--nbulk", type=int, help="Repetition of bulk unit (default=2)", default=2, required=False
+        "--no-view", action="store_true",
+        help="Do not launch ASE viewers, including automatic viewing (useful for headless runs).",
+    )
+    parser.add_argument(
+        "-s", "--scale-radii", type=float, default=0.5,
+        help="ASE viewer atomic radius scale (default: 0.5).",
+    )
+    parser.add_argument(
+        "-v", "--vac", dest="vacuum_height", type=float, default=10.0,
+        help="Vacuum height in angstroms (default: 10.0).",
+    )
+    parser.add_argument(
+        "-b", "--nbulk", type=int, default=2,
+        help="Number of bulk-unit repetitions (default: 2).",
     )
 
 
-def run(args, global_args):
-    from ...potentials.potentials import Potential  # NOQA
-    from ...sprkkr.structure import structure_file_to_atoms  # NOQA
-    from ...ase.visualise import view  # NOQA
-    from tempfile import NamedTemporaryFile
+def run(args, global_args=None):
+    """Build the requested structures, export selected files and/or open ASE."""
+    from ...potentials.potentials import Potential
+    from ...sprkkr.structure import structure_file_to_atoms
+    from ...ase.visualise import view
 
-    tmps = []
+    potential_output = args.potential_output
+    if potential_output is True:
+        if not args.output:
+            raise ValueError("--potential-output without a filename requires --output")
+        output = Path(args.output)
+        potential_output = str(output.with_name(f"{output.stem}_pot{output.suffix}"))
 
-    def temp():
-        file = NamedTemporaryFile()
-        tmps.append(file)
-        return file.name
+    potential = Potential.from_file(args.potential_file)
+    potential_atoms = potential.atoms
 
-    try:
-        ciffile = args.output or temp()
-        if args.potential_output is True:
-            cf = ciffile.rsplit(".", 1)
-            ciffpotfile = ".".join((cf[0] + "_pot", *cf[1:]))
-        elif args.potential_output:
-            ciffpotfile = args.potential_output
-        else:
-            ciffpotfile = temp()
-        if not ciffile:
-            ciffile = temp()
+    # The primary structure is the input structure, when present, or the
+    # structure carried by the potential itself.
+    if args.input:
+        atoms = structure_file_to_atoms(
+            args.input, potential, n_bulk=args.nbulk,
+            vacuum_height=args.vacuum_height,
+        )
+    else:
+        atoms = potential_atoms
 
-        outformat = args.format
-        structure_filename = args.input
+    if args.output:
+        atoms.write(args.output, format=args.format)
+    if potential_output:
+        potential_atoms.write(potential_output, format=args.format)
 
-        # read the potential
-        potential = Potential.from_file(args.potential_file)
-        pot_atoms = potential.atoms
+    if args.no_view:
+        return
 
-        def ase_view(atoms):
-            view(atoms, scale_radii=args.scale_radii)
+    # Explicit viewing options select exactly what to show. Otherwise show
+    # the primary structure when it has not been exported to a file.
+    explicit_view = args.visualise or args.visualise_potential
+    primary_exported = bool(args.output or (not args.input and potential_output))
+    show_primary = args.visualise or (not explicit_view and not primary_exported)
 
-        if args.visualise_potential or (len(tmps) == 2 and not structure_filename):
-            ase_view(pot_atoms)
-        pot_atoms.write(ciffpotfile, format=outformat)
-
-        # From here on visualisation of in_structure.inp
-        if structure_filename:
-            # Extract data from structure file
-            structure = structure_file_to_atoms(
-                args.input, potential, n_bulk=args.nbulk, vacuum_height=args.vacuum_height
-            )
-            # Visualise the structure or write out to the file
-            structure.write(ciffile, format=outformat)
-
-            if args.visualise or (len(tmps) == 2 and not args.visualise_potential):
-                ase_view(structure)
-    finally:
-        for i in tmps:
-            i.close()
+    if args.visualise_potential:
+        view(potential_atoms, scale_radii=args.scale_radii)
+    if show_primary and (args.input or not args.visualise_potential):
+        view(atoms, scale_radii=args.scale_radii)
 
 
 if __name__ == "__main__":

@@ -18,7 +18,9 @@ def test_tool_example(script):
     lines = script.read_text().splitlines()
     assert len(lines) >= 2, f"{script} does not contain a command"
 
-    command = [argument for argument in shlex.split(lines[1]) if argument != "-a"]
+    # Keep the example command unchanged, but suppress its GUI in automated
+    # runs; examples should still open the viewer when run normally.
+    command = [*shlex.split(lines[1]), "--no-view"]
     result = subprocess.run(
         command,
         cwd=script.parent,
