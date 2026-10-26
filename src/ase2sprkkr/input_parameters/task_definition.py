@@ -307,6 +307,7 @@ class InputParametersRegistry(ModuleRegistry):
         if task is not None and task.experimental:
             value.experimental = True
 
+        value.is_user_defined = user_defined
         process_input_parameters_definition(module, value)
         return value
 

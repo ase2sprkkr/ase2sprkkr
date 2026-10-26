@@ -61,6 +61,22 @@ def _snapshot_stream(text, filename):
     return stream
 
 
+class _TaskSelectorMap(dict):
+    """Map TASK selectors to IPDs, allowing filtering by their origin."""
+
+    def definitions(self, selector, *, user_defined=None):
+        """Return all, built-in, or user-defined candidates for a selector."""
+        candidates = self[selector]
+        if user_defined is None:
+            return candidates
+        if type(user_defined) is not bool:
+            raise TypeError("user_defined must be True, False, or None")
+        return tuple(
+            definition for definition in candidates
+            if definition.is_user_defined is user_defined
+        )
+
+
 @cache
 def _task_selector_map():
     """A single map for the singleton input-definition registry."""
@@ -72,7 +88,7 @@ def _task_selector_map():
             selectors.setdefault(token, [])
             if all(definition is not other for other in selectors[token]):
                 selectors[token].append(definition)
-    return {key: tuple(value) for key, value in selectors.items()}
+    return _TaskSelectorMap({key: tuple(value) for key, value in selectors.items()})
 
 
 @cache
@@ -200,6 +216,18 @@ class InputParametersDefinition(ConfigurationFileDefinition):
 
     The association is internal and must not be changed after registration.
     """
+
+    is_user_defined = True
+    """Whether the definition comes from user code.
+
+    Standalone definitions default to True; registration overrides this
+    according to the defining module's origin.
+    """
+
+    def copy(self, *args, **kwargs):
+        copied = super().copy(*args, **kwargs)
+        copied.is_user_defined = self.is_user_defined
+        return copied
 
     _derived_from_name = None
     """ If one copies the definition, it should be listed under its new name, but
