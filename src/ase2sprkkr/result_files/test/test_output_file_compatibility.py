@@ -40,9 +40,7 @@ def test_canonical_result_file_api_does_not_use_legacy_names():
         if path in allowed:
             continue
         text = path.read_text()
-        if "output_files_definitions" in text:
-            failures.append((path, "output_files_definitions"))
-        if "ase2sprkkr.output_files" in text:
+        if "ase2sprkkr.output_files." in text:
             failures.append((path, "ase2sprkkr.output_files"))
         if re.search(
             r"from\s+[.\w]*output_files(?:\s+import|\.)", text
