@@ -31,16 +31,16 @@ def data_spc(parameters):
 
 
 def data_pol1_spc(parameters):
-    return None if _single_polarization(parameters) else "{dataset}_data_pol1.spc"
+    return None if _single_polarization(parameters) else "{dataset}_{CONTROL.ADSI}_pol1.spc"
 
 
 def data_pol2_spc(parameters):
-    return None if _single_polarization(parameters) else "{dataset}_data_pol2.spc"
+    return None if _single_polarization(parameters) else "{dataset}_{CONTROL.ADSI}_pol2.spc"
 
 
 SPEC_INPUT_FILES = (input_inp, struc_inp)
 SPEC_OUTPUT_FILES = (
-    "{dataset}_SPEC.out",
+    "{dataset}_{CONTROL.ADSI}_SPEC.out",
     data_spc,
     data_pol1_spc,
     data_pol2_spc,
