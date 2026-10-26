@@ -1,3 +1,4 @@
+import os
 import shlex
 import subprocess
 from pathlib import Path
@@ -18,14 +19,18 @@ def test_tool_example(script):
     lines = script.read_text().splitlines()
     assert len(lines) >= 2, f"{script} does not contain a command"
 
-    # Keep the example command unchanged, but suppress its GUI in automated
-    # runs; examples should still open the viewer when run normally.
-    command = [*shlex.split(lines[1]), "--no-view"]
+    command = shlex.split(lines[1])
+    if command[1:2] in (["show-structure"], ["view"]) and os.environ.get("DISPLAY"):
+        command.extend(["--close_after", "0.1"])
+    else:
+        # Headless test workers cannot create Tk windows.
+        command.append("--no-view")
     result = subprocess.run(
         command,
         cwd=script.parent,
         capture_output=True,
         text=True,
+        timeout=60,
     )
 
     assert result.returncode == 0, (
