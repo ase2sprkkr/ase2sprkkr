@@ -342,10 +342,15 @@ class InputParameters(ConfigurationFile):
         )
 
     def __repr__(self):
-        task = self.task_definition
+        definition = self._definition
+        name = definition.display_name
+        out = f"{definition.configuration_type_name} for {name}"
+        task = self.task_name
         if task is None:
-            return self._definition.configuration_type_name + " (detached schema)"
-        return self._definition.configuration_type_name + " for task " + task.name
+            return out + " (detached schema)"
+        if task != name:
+            out += f" (task: {task})"
+        return out
 
     def change_task(self, task, retain_values=False):
         if retain_values:
