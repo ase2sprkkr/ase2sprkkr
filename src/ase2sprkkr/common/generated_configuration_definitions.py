@@ -221,14 +221,14 @@ class Length(InheritingValueModifier):
         if present and not allowed:
             raise pp.ParseException(f"Option {self.get_path()} is not allowed for the current configuration")
 
-    def _create_grammar(self, allow_dangerous):
+    def _create_grammar(self, allow_dangerous, *, allow_incomplete=False):
         """Add check for the length"""
 
         def mark_for_validation(tokens: Any) -> tuple:
             """Mark parsed length ``tokens`` for deferred validation."""
             return ValidateKey(tokens[0]), tokens[1]
 
-        out = super()._create_grammar()
+        out = super()._create_grammar(allow_incomplete=allow_incomplete)
         return out.set_parse_action(mark_for_validation)
 
 

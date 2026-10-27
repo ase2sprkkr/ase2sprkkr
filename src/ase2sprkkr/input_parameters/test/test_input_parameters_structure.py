@@ -428,6 +428,77 @@ def test_parse_validation_sees_keyword_assignments():
     assert not hasattr(parameters.CONTROL, "_parsed_values")
 
 
+@pytest.mark.parametrize("force_order", [False, True])
+def test_strict_and_incomplete_grammars_can_be_reused_independently(force_order):
+    definition = cd.InputParametersDefinition.definition_from_dict(
+        {"CONTROL": [V("REQUIRED", int, is_optional=False), V("MODE", 1)]}
+    )
+    definition["CONTROL"].force_order = force_order
+    incomplete_grammar = definition.grammar(allow_incomplete=True)
+    strict_grammar = definition.grammar()
+
+    for _ in range(2):
+        with pytest.raises(pp.ParseBaseException):
+            strict_grammar.parse_string("CONTROL MODE=2", parse_all=True)
+        with pytest.warns(DataValidityError, match="CONTROL.REQUIRED") as issues:
+            parsed = definition.parse_return(
+                incomplete_grammar.parse_string("CONTROL MODE=2", parse_all=True)
+            )
+        assert len(issues) == 1
+        assert parsed.to_dict() == {"CONTROL": {"MODE": 2}}
+
+
+def test_incomplete_parse_can_be_validated_later():
+    definition = cd.InputParametersDefinition.definition_from_dict(
+        {"CONTROL": [V("REQUIRED", int, is_optional=lambda _option: False), V("MODE", 1)]}
+    )
+    values = definition.parse("CONTROL MODE=2", allow_incomplete=True)
+    parameters = definition.create_object()
+
+    # The parse call has finished; its policy must travel with the values.
+    with pytest.warns(DataValidityError, match="CONTROL.REQUIRED") as issues:
+        parameters.set(values, validation_reason="parse")
+    assert len(issues) == 1
+    assert parameters.CONTROL.MODE() == 2
+    assert not hasattr(parameters, "_parsed_values")
+    assert not hasattr(parameters.CONTROL, "_parsed_values")
+
+    # Merging keyword assignments must preserve the section's parse metadata.
+    with pytest.warns(DataValidityError, match="CONTROL.REQUIRED") as issues:
+        parameters.CONTROL.set(values["CONTROL"], MODE=3, validation_reason="parse")
+    assert len(issues) == 1
+    assert parameters.CONTROL.MODE() == 3
+    assert not hasattr(parameters.CONTROL, "_parsed_values")
+
+
+def test_incomplete_read_does_not_relax_nested_strict_validation():
+    definition = cd.InputParametersDefinition.definition_from_dict(
+        {"CONTROL": [V("REQUIRED", int, is_optional=lambda _option: False), V("MODE", 1)]}
+    )
+    strict = definition.create_object()
+    validated = []
+
+    def validate_nested(_section, _values, why):
+        if why == "parse":
+            with pytest.raises(pp.ParseBaseException, match="CONTROL.REQUIRED"):
+                strict.CONTROL.set(MODE=9, validation_reason="parse")
+            validated.append(True)
+
+    outer_definition = cd.InputParametersDefinition(
+        [cd.InputSectionDefinition(
+            "CONTROL", [V("REQUIRED", int, is_optional=False, is_required=False), V("MODE", 1)],
+            validators=validate_nested,
+        )]
+    )
+    with pytest.warns(DataValidityError, match="CONTROL.REQUIRED") as issues:
+        outer = outer_definition.read_from_string("CONTROL MODE=2", allow_incomplete=True)
+    assert len(issues) == 1
+    assert validated == [True]
+    assert strict.CONTROL.MODE() == 1
+    assert not hasattr(strict.CONTROL, "_parsed_values")
+    assert not hasattr(outer.CONTROL, "_parsed_values")
+
+
 def test_adding_empty_custom_member_is_validated():
     def reject_extra(root, _values, _why):
         if "EXTRA" in root:

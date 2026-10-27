@@ -670,11 +670,14 @@ class ValueDefinition(RealItemDefinition):
             return None
         return self._hooked_grammar
 
-    def _create_grammar(self, allow_dangerous=False, name_in_grammar=None, name_value_delimiter=None, original=False):
+    def _create_grammar(
+        self, allow_dangerous=False, name_in_grammar=None,
+        name_value_delimiter=None, original=False, *, allow_incomplete=False
+    ):
         """Return a grammar for the name-value pair"""
         if self.output_definition is not self and not original:
             g = self.output_definition._grammar
-            return g and g(allow_dangerous)
+            return g and g(allow_dangerous, allow_incomplete=allow_incomplete)
 
         name_in_grammar = name_in_grammar if name_in_grammar is not None else self.name_in_grammar
         if (name_value_delimiter is None and name_in_grammar) or name_value_delimiter is True:

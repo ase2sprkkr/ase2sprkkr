@@ -1,5 +1,4 @@
 import pyparsing as pp
-from contextvars import ContextVar
 
 """ This module contains classes and functions related to gathering the output
 of parsing section. It takes care of multiplicity of values etc...
@@ -14,9 +13,6 @@ passed to the class, e.g.
 
 is parsed as ArrayKey("MDIRQ", 1).
 """
-
-# Shared by grammar construction and validation of the staged parse results.
-_allow_incomplete_parsing = ContextVar("allow_incomplete_parsing", default=False)
 
 
 class Result:
@@ -163,10 +159,15 @@ class RepeatedKey(Key):
 
 
 class Values(dict):
-    """Result of dict_from_parsed: dictionary with named deferred checks."""
+    """Parsed values with named deferred checks and their presence policy.
 
-    def __init__(self):
+    ``allow_incomplete`` travels with each parsed container to its deferred
+    validation, even when parsing and staging happen in separate calls.
+    """
+
+    def __init__(self, *, allow_incomplete=False):
         super().__init__()
+        self.allow_incomplete = allow_incomplete
         #Set for uniqueness checks
         self.checks = {}
         #These values needs postprocess
@@ -176,11 +177,12 @@ class Values(dict):
         return {i: j.to_dict() if isinstance(j, Values) else j for i, j in self.items()}
 
 
-def dict_from_parsed(values):
+def dict_from_parsed(values, *, allow_incomplete=False):
     """Create a dictionary from the arguments.
     From duplicate arguments create numpy arrays.
     Moreover, if there is key of type (a,b), it will be transformed to subdictionary.
     Such a keys do not allow duplicates.
+    ``allow_incomplete`` records the presence policy for deferred validation.
 
     >>> dict_from_parsed([("x", "y"), ((DictKey("a", 1)), 1), ((DictKey("a", 3)), 2)])
     {'x': 'y', 'a': {1: 1, 3: 2}}
@@ -190,7 +192,7 @@ def dict_from_parsed(values):
     >>> dict_from_parsed([(RepeatedKey("x"), 1), (RepeatedKey("x"), 2)])
     {'x': [1, 2]}
     """
-    out = Values()
+    out = Values(allow_incomplete=allow_incomplete)
     duplicates = set()
     errors = []
 

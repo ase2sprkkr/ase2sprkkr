@@ -394,5 +394,5 @@ class _CachedPreparseIPD(InputParametersDefinition):
     """Preparser only: no mutations after grammar compilation."""
 
     @cache
-    def grammar(self, allow_dangerous=False):
-        return super().grammar(allow_dangerous)
+    def grammar(self, allow_dangerous=False, *, allow_incomplete=False):
+        return super().grammar(allow_dangerous, allow_incomplete=allow_incomplete)

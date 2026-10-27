@@ -15,7 +15,6 @@ import copy
 import itertools
 from typing import Callable, Iterator, Mapping, Optional, Union, Any
 from .configuration_transaction import ConfigurationTransaction
-from .parsing_results import _allow_incomplete_parsing
 from .warnings import (
     DataValidityError,
     ReportInvalidPolicy,
@@ -937,19 +936,15 @@ class RootConfigurationContainer(ConfigurationContainer):
                 file, allow_dangerous=allow_dangerous,
                 allow_incomplete=allow_incomplete,
             )
-        token = _allow_incomplete_parsing.set(allow_incomplete)
-        try:
-            with self._mutation("parse", report_invalid=report_invalid) as (transaction, policy):
-                policy.add_semantic(parse_issues)
-                if clear_first:
-                    self.stage_clear(transaction, check_required=False)
-                self.stage(
-                    transaction,
-                    values,
-                    unknown="add",
-                )
-        finally:
-            _allow_incomplete_parsing.reset(token)
+        with self._mutation("parse", report_invalid=report_invalid) as (transaction, policy):
+            policy.add_semantic(parse_issues)
+            if clear_first:
+                self.stage_clear(transaction, check_required=False)
+            self.stage(
+                transaction,
+                values,
+                unknown="add",
+            )
         self._filename = filename_from_file(file, None)
 
     @property

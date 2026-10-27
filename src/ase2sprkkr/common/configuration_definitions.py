@@ -161,7 +161,7 @@ class BaseDefinition:
         """Remove a grammar hook"""
         self.grammar_hooks.remove(hook)
 
-    def grammar(self, allow_dangerous: bool = False):
+    def grammar(self, allow_dangerous: bool = False, *, allow_incomplete: bool = False):
         """Generate grammar with the correct settings of pyparsing global state.
 
         Parameters
@@ -169,10 +169,14 @@ class BaseDefinition:
         allow_dangerous
          Allow dangerous values - i.e. values that do not fulfill the requirements
          for the given-option value (i.e. a type requirement or other constraints).
+        allow_incomplete
+         Allow missing non-optional input items, reporting them as validation issues.
         """
         self._finalize()
         with generate_grammar():
-            return self._grammar and self._grammar(allow_dangerous)
+            return self._grammar and self._grammar(
+                allow_dangerous, allow_incomplete=allow_incomplete
+            )
 
     def _get_root_definition(self):
         """Return the root of the definition tree containing this item."""
@@ -760,9 +764,9 @@ class Stub(VirtualDefinition):
             return False
         return item._save_to_file(file, always=True, name_in_grammar=name_in_grammar, delimiter=delimiter)
 
-    def _create_grammar(self, allow_dangerous=False, **kwargs):
+    def _create_grammar(self, allow_dangerous=False, *, allow_incomplete=False, **kwargs):
         item = self.container[self.item]
-        out = item._grammar(allow_dangerous)
+        out = item._grammar(allow_dangerous, allow_incomplete=allow_incomplete)
         return pp.Forward() << out
 
     @property
@@ -805,7 +809,7 @@ class Gather:
         self.value_delimiter = value_delimiter
         self.value_delimiter_grammar = value_delimiter_grammar
 
-    def _grammar(self, allow_dangerous=False, **kwargs):
+    def _grammar(self, allow_dangerous=False, *, allow_incomplete=False, **kwargs):
         names = [i._grammar_of_name() for i in self.items if i.name_in_grammar]
         ln = len(names)
         delimiter = bool(names)
@@ -813,7 +817,10 @@ class Gather:
         def values():
             nonlocal delimiter
             for i in self.items:
-                yield i._grammar(allow_dangerous, name_value_delimiter=delimiter, name_in_grammar=False, original=True)
+                yield i._grammar(
+                    allow_dangerous, allow_incomplete=allow_incomplete,
+                    name_value_delimiter=delimiter, name_in_grammar=False, original=True,
+                )
                 delimiter = self.value_delimiter_grammar
 
         names.extend(values())
@@ -1063,7 +1070,7 @@ class SeparatorDefinition(VirtualDefinition):
                 separator_type = KeywordSeparator(separator_type)
             self.separator_type = separator_type
 
-    def _create_grammar(self, allow_dangerous=False):
+    def _create_grammar(self, allow_dangerous=False, *, allow_incomplete=False):
         return pp.Suppress(self.separator_type.grammar())
 
     def _save_to_file(self, file, value, always=False, name_in_grammar=None, delimiter=""):
