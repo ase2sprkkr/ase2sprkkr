@@ -21,6 +21,7 @@ logger = logging.getLogger(__name__)
 _PROJECT_SCHEMA_VERSION = 2
 _HIERARCHY_LOCK = ".hierarchy.lock"
 ProjectChangedListener = Callable[[str], None]
+_UNCHANGED = object()
 
 
 class ProjectRepositoryError(RuntimeError):
@@ -64,6 +65,7 @@ class Project:
     generation: int
     name: str
     parent_id: str | None = None
+    directory: str | None = None
 
     def __post_init__(self) -> None:
         project_id = _project_id(self.id)
@@ -76,18 +78,29 @@ class Project:
         object.__setattr__(self, "id", project_id)
         object.__setattr__(self, "name", name)
         object.__setattr__(self, "parent_id", parent_id)
+        object.__setattr__(self, "directory", _project_directory(self.directory))
 
-    def rename(self, name: str) -> "Project":
-        """Return this project with a validated display name."""
-        normalized = _project_name(name)
-        return self if normalized == self.name else replace(self, name=normalized)
+    def modify(
+        self, *, name=_UNCHANGED, parent_id=_UNCHANGED, directory=_UNCHANGED
+    ) -> "Project":
+        """Return an edited snapshot without changing its generation.
 
-    def move_to(self, parent_id: str | None) -> "Project":
-        """Return this project with a different direct parent."""
-        parent = None if parent_id is None else _project_id(parent_id)
-        if parent == self.id:
-            raise ValueError("Project cannot be its own parent")
-        return self if parent == self.parent_id else replace(self, parent_id=parent)
+        Omitted arguments preserve their current values. Pass ``None`` to
+        clear ``parent_id`` or ``directory``. The same validation as for
+        a newly constructed project applies to every supplied attribute.
+        """
+        changes = {
+            key: value for key, value in (
+                ("name", name),
+                ("parent_id", parent_id),
+                ("directory", directory),
+            ) if value is not _UNCHANGED
+        }
+        if not changes:
+            return self
+        updated = replace(self, **changes)
+        return self if updated == self else updated
+
 
 def default_projects_directory() -> Path:
     """Return the ASE2SPRKKR state directory containing project JSON files."""
@@ -107,6 +120,16 @@ def _project_name(value: str) -> str:
     if not name:
         raise ValueError("Project name must not be empty")
     return name
+
+
+def _project_directory(value: str | Path | None) -> str | None:
+    """Normalize optional project-local work directory, without creating it."""
+    if value is None:
+        return None
+    if not isinstance(value, (str, Path)):
+        raise TypeError("Project directory must be a path or None")
+    value = str(value).strip()
+    return str(Path(value).expanduser().resolve()) if value else None
 
 
 def validate_hierarchy(projects: tuple[Project, ...]) -> None:
@@ -217,7 +240,10 @@ class ProjectRepository:
             self._notify(project_id)
         return projects
 
-    def create(self, name: str, *, parent_id: str | None = None) -> Project:
+    def create(
+        self, name: str, *, parent_id: str | None = None,
+        directory: str | Path | None = None,
+    ) -> Project:
         """Create a root or child project at generation one."""
         parent = None if parent_id is None else _project_id(parent_id)
         project = Project(
@@ -225,6 +251,7 @@ class ProjectRepository:
             generation=1,
             name=name,
             parent_id=parent,
+            directory=directory,
         )
         with self._hierarchy_lock():
             projects = self._read_projects()
@@ -399,6 +426,7 @@ class ProjectRepository:
                     "generation": project.generation,
                     "name": project.name,
                     "parent_id": project.parent_id,
+                    "directory": project.directory,
                     },
                 mode=0o600,
                 indent=2,
