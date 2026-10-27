@@ -37,7 +37,7 @@ def input_parameters_definition():
     schema = XrayRateInputParametersDefinition(
         "xas",
         [CONTROL("XAS"), TAU, MODE, energy,
-        TASK("XAS").copy([
+        TASK("XAS", add=[
             V("IT", Integer(min=1), 1, info="Atom type index, not site index."),
             V("CL", Keyword(*(f"{n}{s}" for n in range(1, 6) for s in "SPDF")), "2P", info="Initial core shell."),
             V("OUTPUT", Keyword("MBARN", "BARN", "SIGMA"), is_optional=True, info="Default cross section in Mb; SIGMA uses 10^15/s."),

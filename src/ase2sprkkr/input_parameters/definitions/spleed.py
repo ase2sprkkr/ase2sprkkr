@@ -49,21 +49,25 @@ def input_parameters_definition():
     energy.copy_member("EMINEV", info="Incident energy lower bound in eV; NOT relative to EF in SPLEED.")
     energy.copy_member("EMAXEV", info="Incident energy upper bound in eV; NOT relative to EF in SPLEED.")
 
-    out = arpes_parameters().copy(
-        new_schema=True,
-        name="spleed",
-        remove=["SPEC_PH"],
-        add=[CONTROL("SPLEED"), energy],
-        validators=_validate_spleed, info="Spin-polarized low-energy electron diffraction",
-        description="Dedicated fixed-angle SPLEED. Incident energies are read as eV. Native SPOL default 1 is retained. "
-                    "Modern input requires NE>=2 here; momentum and alternative polarization workflows are not audited.")
-    out["TASK"].copy_member("TASK", default_value="SPLEED")
+    out = arpes_parameters()
     out["SPEC_EL"].copy_member("NT", type=Integer(min=1))
     out["SPEC_EL"].copy_member("NP", type=Integer(min=1))
     out["SPEC_STR"].copy_member("N_LAYER", default_value=1)
     out["SPEC_STR"].copy_member("NLAT_G_VEC", default_value=30)
-    task = out["TASK"].copy(remove=["CRYS_VEC"], add=[V("CRYS_VECS", False, info="Native key: disables primitive crystal vectors for Miller indices when present.")])
-    schema = out.copy(add=[task])
+    task = out["TASK"].copy(remove=["CRYS_VEC"], add=[
+        out["TASK"]["TASK"].copy(default_value="SPLEED"),
+        V("CRYS_VECS", False, info="Native key: disables primitive crystal vectors for Miller indices when present."),
+    ])
+    schema = out.copy(
+        new_schema=True,
+        name="spleed",
+        remove=["SPEC_PH"],
+        validators=_validate_spleed,
+        info="Spin-polarized low-energy electron diffraction",
+        description="Dedicated fixed-angle SPLEED. Incident energies are read as eV. Native SPOL default 1 is retained. "
+                    "Modern input requires NE>=2 here; momentum and alternative polarization workflows are not audited.",
+        add=[CONTROL("SPLEED"), energy, task, out["SPEC_EL"], out["SPEC_STR"]],
+    )
     schema.task_selectors = ("SPLEED",)
     schema._task_definition = TaskDefinition("SPLEED", experimental=True, executable="kkrspec", mpi=False, output_reader="SPEC",
         input_files=SPEC_INPUT_FILES, output_files=SPEC_OUTPUT_FILES,

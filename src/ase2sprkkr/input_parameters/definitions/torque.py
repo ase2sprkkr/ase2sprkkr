@@ -51,12 +51,10 @@ def input_parameters_definition():
             MODE.copy(add=[mmode]),
             STRCONST,
             energy,
-            TASK("TORQUE").copy(
-                [
-                    V("THETAQ", SetOf(float, min_length=1), [90.0], info="Polar angles of the torque axis per site, in degrees."),
-                    V("PHIQ", SetOf(float, min_length=1), [90.0], info="Azimuthal angles of the torque axis per site, in degrees."),
-                ]
-            ),
+            TASK("TORQUE", add=[
+                V("THETAQ", SetOf(float, min_length=1), [90.0], info="Polar angles of the torque axis per site, in degrees."),
+                V("PHIQ", SetOf(float, min_length=1), [90.0], info="Azimuthal angles of the torque axis per site, in degrees."),
+            ]),
             SITES,
         ],
         info="TORQUE",

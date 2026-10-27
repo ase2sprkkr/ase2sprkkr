@@ -116,8 +116,11 @@ def input_parameters_definition():
     mmode = MODE["MODE"].copy(warning_condition=_jxc_mode_warning_condition)
     energy = ENERGY(defaults={"NE": [30], "ImE": 0.01})
     energy.copy_member("NE", type=SetOf(Integer(min=1), min_length=1, max_length=2))
-    tau = TAU.copy()
-    tau.copy_member("BZINT", default_value="POINTS")
+    tau = TAU.copy(
+        add=[
+            TAU["BZINT"].copy(default_value="POINTS"),
+        ],
+    )
     schema = JxcInputParametersDefinition(
         "jxc",
         [

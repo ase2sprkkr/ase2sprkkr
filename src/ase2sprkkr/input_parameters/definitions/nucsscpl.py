@@ -26,12 +26,15 @@ def _validate(parameters, _values, why):
 def input_parameters_definition():
     control = CONTROL("NUCSSCPL").copy(add=[V("FINNUC", False, info="Finite nucleus; forbidden by this task.")])
     control.copy_member("NONMAG", default_value=True, is_always_added=True)
-    tau = TAU.copy()
-    tau.copy_member("BZINT", default_value="POINTS")
+    tau = TAU.copy(
+        add=[
+            TAU["BZINT"].copy(default_value="POINTS"),
+        ],
+    )
     energy = ENERGY(emax=(None, "GRID=5 uses the Fermi energy", None), defaults={"GRID": 5, "NE": 30, "ImE": 0.01})
     energy.copy_member("EMAX", is_optional=True)
     energy.copy_member("NE", type=SetOf(Integer(min=1), min_length=1, max_length=2))
-    task = TASK("NUCSSCPL").copy([
+    task = TASK("NUCSSCPL", add=[
         V("CLURAD", 2.2, info="Cluster radius in ALAT units; explicit convenience default."),
         V("NSHLCLU", Integer(min=0), is_optional=True, info="Shell count; overrides CLURAD."),
         V("SELECT", SetOf(str, min_length=1, max_length=100), is_optional=True, info="Included element symbols."),

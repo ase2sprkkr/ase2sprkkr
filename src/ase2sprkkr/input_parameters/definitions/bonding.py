@@ -20,10 +20,13 @@ def _validate(parameters, _values, why):
 
 
 def input_parameters_definition():
-    tau = TAU.copy()
-    tau.copy_member("BZINT", default_value="CLUSTER")
-    tau.copy_member("MOL", default_value=True, is_always_added=True)
-    tau.copy_member("NSHLCLU", default_value=0, is_always_added=True)
+    tau = TAU.copy(
+        add=[
+            TAU["BZINT"].copy(default_value="CLUSTER"),
+            TAU["MOL"].copy(default_value=True, is_always_added=True),
+            TAU["NSHLCLU"].copy(default_value=0, is_always_added=True),
+        ],
+    )
     energy = ENERGY(emax=(1.0, "Explicit upper scan bound in Ry", None), defaults={"GRID": 3, "NE": 300, "ImE": 0.01})
     energy.copy_member("NE", type=SetOf(Integer(min=2), min_length=1, max_length=2))
     schema = InputParameters(

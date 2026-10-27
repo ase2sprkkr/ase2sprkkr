@@ -35,7 +35,7 @@ def input_parameters_definition():
         "chilandau",
         [CONTROL("CHILANDAU"), TAU, MODE, CPA, STRCONST, energy,
             Section("SCF", [V("FULLPOT", False)], is_optional=True, is_expert=True),
-            TASK("CHILANDAU").copy([
+            TASK("CHILANDAU", add=[
                 V("CLURAD", 2.2, info="Neighbour radius in ALAT units; explicit convergence choice, not a native default."),
                 V("NSHLCLU", Integer(min=0), is_optional=True, info="Shell count overrides CLURAD when supplied."),
                 V("SELECT", SetOf(str, min_length=1, max_length=100), is_optional=True, info="Select neighbouring sites by element."),

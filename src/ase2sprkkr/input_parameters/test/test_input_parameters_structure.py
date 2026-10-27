@@ -174,6 +174,49 @@ def test_copy():
     assert definition["ENERGY"]["A"].default_value == 1
 
 
+@pytest.mark.parametrize("remove_replaced", [False, True])
+def test_copy_skips_discarded_members(monkeypatch, remove_replaced):
+    section = cd.InputSectionDefinition(
+        "CONTROL", [V("KEPT", 1), V("REPLACED", 2), V("LAST", 3), V("REMOVED", 4)]
+    )
+
+    def discarded_copy(**kwargs):
+        raise AssertionError("Discarded definitions must not be copied")
+
+    for name in ("REPLACED", "REMOVED"):
+        monkeypatch.setattr(section[name], "copy", discarded_copy)
+    replacement = V("REPLACED", 5)
+    removed = ["REMOVED", "REPLACED"] if remove_replaced else ["REMOVED"]
+    copied = section.copy(add=[replacement, V("NEW", 6)], remove=removed)
+
+    expected = ["KEPT", "LAST", "REPLACED", "NEW"] if remove_replaced else ["KEPT", "REPLACED", "LAST", "NEW"]
+    assert list(copied.names()) == expected
+    assert copied["KEPT"] is not section["KEPT"]
+    assert copied["REPLACED"] is replacement
+    copied["KEPT"].default_value = 7
+    assert section["KEPT"].default_value == 1
+    assert list(section.names()) == ["KEPT", "REPLACED", "LAST", "REMOVED"]
+    with pytest.raises(KeyError):
+        section.copy(remove=["MISSING"])
+
+
+@pytest.mark.parametrize("task", ["aipes", "band", "clpes", "spleed"])
+def test_customized_spectroscopy_definitions_are_independent(task):
+    from importlib import import_module
+
+    factory = import_module(f"ase2sprkkr.input_parameters.definitions.{task}").input_parameters_definition
+    first = factory()
+    second = factory()
+    for section in first.members():
+        assert section is not second[section.name]
+        assert section.container is first
+        for value in section.members():
+            assert value is not second[section.name][value.name]
+            assert value.container is section
+    first["ENERGY"]["NE"].default_value = [10]
+    assert not np.array_equal(first["ENERGY"]["NE"].default_value, second["ENERGY"]["NE"].default_value)
+
+
 def test_length():
     definition = cd.InputParametersDefinition.definition_from_dict(
         {

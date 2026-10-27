@@ -36,7 +36,7 @@ def input_parameters_definition():
     energy = ENERGY(emax=(None, "XES forces the upper bound to EF", None), defaults={"GRID": 3, "NE": 300, "ImE": 0.01})
     energy.copy_member("EMAX", is_optional=True)
     energy.copy_member("NE", type=SetOf(Integer(min=2), min_length=1, max_length=2))
-    task = TASK("XES").copy([
+    task = TASK("XES", add=[
         V("IT", Integer(min=1), 1, is_always_added=False, info="Atom type, not site index."),
         V("CL", Keyword(*(f"{n}{s}" for n in range(1, 6) for s in "SPDF")), "2P", is_always_added=False),
         V("ME", Keyword("ADA", "NAB", "GRV"), "ADA", is_always_added=False),

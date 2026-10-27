@@ -36,28 +36,34 @@ def _validate_band(p, _values, why):
 
 
 def input_parameters_definition():
-    out = arpes_parameters().copy(
-        new_schema=True,
-        name="band", add=[CONTROL("BAND"), Section("SPEC_BAND", [
-        V("NEIGMAX", Integer(min=1), 100000, info="Capacity for accepted band roots; native stops when exhausted."),
-        V("EIG_IME", 0.01, info="Positive cutoff on abs(Im(kz)); explicitly supplied to prevent damping-dependent native fallback."),
-        V("CALC_TRANS_PROB", False, info="Also calculate TRLEED transmission probabilities; advanced numerical workflow."),
-    ])], validators=_validate_band, info="KKRSPEC Bloch band calculation",
-        description="KKRSPEC BAND uses transfer-matrix Bloch eigenvalues and a kz imaginary-part filter. "
-                    "It is not BSF or EKREL. Default momentum mesh is one k_parallel point; spectral range is relative to EF. "
-                    "Transmission, many-body, full-potential and parallel branches are not numerically certified.")
-    task = out["TASK"].copy(remove=["CRYS_VEC"], add=[V("CRYS_VECS", False, info="Presence disables primitive crystal vectors for Miller indices.")])
-    task.copy_member("TASK", default_value="BAND")
-    energy = out["ENERGY"].copy()
+    out = arpes_parameters()
+    task = out["TASK"].copy(remove=["CRYS_VEC"], add=[
+        out["TASK"]["TASK"].copy(default_value="BAND"),
+        V("CRYS_VECS", False, info="Presence disables primitive crystal vectors for Miller indices."),
+    ])
+    energy = out["ENERGY"]
     energy.copy_member("NE", type=SetOf(Integer(min=1), min_length=1, max_length=2))
     energy.copy_member("EWORK_EV", info="Work function in eV, used by the shared spectroscopic setup.")
     energy.copy_member("IMV_INI_EV", default_value=0.0)
     energy.copy_member("IMV_FIN_EV", default_value=0.0)
-    electron = out["SPEC_EL"].copy()
+    electron = out["SPEC_EL"]
     electron.copy_member("K1", default_value=[0., 0.], is_always_added=True)
     electron.copy_member("NK1", type=Integer(min=1), default_value=1, is_always_added=True)
     electron.copy_member("NK2", type=Integer(min=1))
-    schema = out.copy(add=[task, energy, electron])
+    schema = out.copy(
+        new_schema=True,
+        name="band",
+        validators=_validate_band,
+        info="KKRSPEC Bloch band calculation",
+        description="KKRSPEC BAND uses transfer-matrix Bloch eigenvalues and a kz imaginary-part filter. "
+                    "It is not BSF or EKREL. Default momentum mesh is one k_parallel point; spectral range is relative to EF. "
+                    "Transmission, many-body, full-potential and parallel branches are not numerically certified.",
+        add=[CONTROL("BAND"), Section("SPEC_BAND", [
+            V("NEIGMAX", Integer(min=1), 100000, info="Capacity for accepted band roots; native stops when exhausted."),
+            V("EIG_IME", 0.01, info="Positive cutoff on abs(Im(kz)); explicitly supplied to prevent damping-dependent native fallback."),
+            V("CALC_TRANS_PROB", False, info="Also calculate TRLEED transmission probabilities; advanced numerical workflow."),
+        ]), task, energy, electron],
+    )
     schema.task_selectors = ("BAND",)
     schema._task_definition = TaskDefinition("BAND", experimental=True, executable="kkrspec", mpi=False, output_reader="SPEC",
         input_files=SPEC_INPUT_FILES, output_files=SPEC_OUTPUT_FILES,

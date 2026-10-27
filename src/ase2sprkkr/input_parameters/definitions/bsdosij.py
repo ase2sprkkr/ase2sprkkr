@@ -25,9 +25,12 @@ def input_parameters_definition():
     energy = ENERGY(emax=(None, "Omitted upper bound delegates to EF", None), defaults={"GRID": 3, "NE": 300, "ImE": 0.01})
     energy.copy_member("EMAX", is_optional=True)
     energy.copy_member("NE", type=SetOf(Integer(min=1), min_length=1, max_length=2))
-    tau = TAU.copy()
-    tau.copy_member("BZINT", default_value="POINTS")
-    task = TASK("BSDOSIJ").copy([
+    tau = TAU.copy(
+        add=[
+            TAU["BZINT"].copy(default_value="POINTS"),
+        ],
+    )
+    task = TASK("BSDOSIJ", add=[
         V("CLURAD", 2.2, info="Cluster radius in ALAT units; explicit convenience default."),
         V("NSHLCLU", Integer(min=0), is_optional=True, info="Shell count; overrides CLURAD."),
         V("SELECT", SetOf(str, min_length=1, max_length=100), is_optional=True, info="Included element symbols."),

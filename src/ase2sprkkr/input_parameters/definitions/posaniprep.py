@@ -28,12 +28,15 @@ def _validate_posaniprep(p, _values, why):
 
 def input_parameters_definition():
     energy = ENERGY(defaults={"GRID": [0], "NE": [1], "ImE": 0.0})
-    tau = TAU.copy()
-    tau.copy_member("BZINT", default_value="POINTS")
+    tau = TAU.copy(
+        add=[
+            TAU["BZINT"].copy(default_value="POINTS"),
+        ],
+    )
     schema = InputParameters(
         "posaniprep",
         [CONTROL("POSANIPREP"), tau, MODE, STRCONST, CPA, energy, Section("SCF", [V("FULLPOT", False)], is_optional=True, is_expert=True),
-                       TASK("POSANIPREP").copy([
+                       TASK("POSANIPREP", add=[
                            V("POSVC", Keyword({"BM": "Native BM correlation potential", "DR": "Native DR correlation potential", "IPM": "Independent-particle model"}), "BM",
                              info="ASA electron-positron correlation potential: BM, DR, or independent-particle IPM."),
                        ]), SITES],

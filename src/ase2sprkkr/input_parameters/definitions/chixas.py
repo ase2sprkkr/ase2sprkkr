@@ -76,7 +76,7 @@ def input_parameters_definition():
         "chixas",
         [CONTROL("CHIXAS"), TAU, MODE, CPA, STRCONST, energy,
             Section("SCF", [V("FULLPOT", False)], is_optional=True, is_expert=True),
-            TASK("CHIXAS").copy([
+            TASK("CHIXAS", add=[
                 V("ITXRAY", Integer(min=1), 1, info="Absorbing atom type; native key is ITXRAY, not IT."),
                 V("CL", str, "2P", info="Initial core shell."),
                 V("NEF", SetOf(real, min_length=1), is_repeated="NUMBERED", is_optional=True,

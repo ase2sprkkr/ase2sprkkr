@@ -42,14 +42,14 @@ def _validate_clpes(p, _container, why):
 
 
 def input_parameters_definition():
-    out = arpes_parameters().copy(name="clpes", add=[CONTROL("CLPES")], validators=_validate_clpes,
-        info="Core-level photoemission and photoelectron diffraction",
-        description="Ordered potential only: native CLPES stops for CPA. Energy window is generated from core levels +/-3 eV; NE=1 selects IE_ICST. Photon energy must exceed the emission threshold.")
-    task = out["TASK"].copy(remove=["CRYS_VEC"], add=[V("CRYS_VECS", False)])
-    task.copy_member("TASK", type=Keyword("CLPES"), default_value="CLPES")
-    energy = out["ENERGY"].copy()
+    out = arpes_parameters()
+    task = out["TASK"].copy(remove=["CRYS_VEC"], add=[
+        out["TASK"]["TASK"].copy(type=Keyword("CLPES"), default_value="CLPES"),
+        V("CRYS_VECS", False),
+    ])
+    energy = out["ENERGY"]
     energy.copy_member("NE", type=SetOf(Integer(min=1), min_length=1, max_length=2))
-    photon = out["SPEC_PH"].copy()
+    photon = out["SPEC_PH"]
     photon.copy_member("EPHOT", default_value=1000.0)
     for name in ("EMIN", "EMAX", "EMINEV", "EMAXEV"):
         energy.copy_member(name, info="Initialization bound; CLPES replaces the spectral window using core energies +/-3 eV.")
@@ -58,7 +58,13 @@ def input_parameters_definition():
         V("CL", Keyword(*[f"{n}{l}" for n in range(1, 8) for i, l in enumerate("SPDF") if i < n]), "2P", is_always_added=True),
         V("IE_ICST", Integer(min=1), 1, info="Core state index, used only for NE=1."),
     ])
-    schema = out.copy(add=[task, energy, photon, cl])
+    schema = out.copy(
+        name="clpes",
+        validators=_validate_clpes,
+        info="Core-level photoemission and photoelectron diffraction",
+        description="Ordered potential only: native CLPES stops for CPA. Energy window is generated from core levels +/-3 eV; NE=1 selects IE_ICST. Photon energy must exceed the emission threshold.",
+        add=[CONTROL("CLPES"), task, energy, photon, cl],
+    )
     schema.task_selectors = ("CLPES",)
     schema._task_definition = TaskDefinition("CLPES", experimental=True, executable="kkrspec", mpi=False, output_reader="ARPES",
         input_files=SPEC_INPUT_FILES,

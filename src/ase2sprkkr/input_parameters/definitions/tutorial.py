@@ -118,7 +118,7 @@ def _validate_tutorial(p, _container, why):
 
 
 def input_parameters_definition():
-    task = TASK("TUTORIAL").copy(add=[
+    task = TASK("TUTORIAL", add=[
         V("TUT-TASK", Keyword(TUTORIAL_TASKS), "YLM", is_always_added=True,
           info="Select the native educational or diagnostic calculation."),
         V("L", Integer(min=0), 2, info="YLM angular momentum; RWF-E selected l (must be below NL)."),
@@ -135,12 +135,18 @@ def input_parameters_definition():
     scf = Section("SCF", [V("FULLPOT", False,
         info="Native potential format takes precedence; POT-DECOMP/POT-XC/CORE-ALL and audited RWF require ASA.")],
         is_optional=True, is_expert=True)
-    mode = MODE.copy()
-    mode.copy_member("MODE", type=Keyword("NREL", "SREL", "SP-SREL", "FREL"), default_value=_tutorial_mode)
-    mode = mode.copy(is_expert=False, is_optional=False)
-    tau = TAU.copy()
-    tau.copy_member("BZINT", default_value=_tutorial_bzint)
-    tau.copy_member("KKRMODE", default_value=_tutorial_kkrmode, is_always_added=True)
+    mode = MODE.copy(
+        add=[
+            MODE["MODE"].copy(type=Keyword("NREL", "SREL", "SP-SREL", "FREL"), default_value=_tutorial_mode),
+        ],
+        is_expert=False, is_optional=False,
+    )
+    tau = TAU.copy(
+        add=[
+            TAU["BZINT"].copy(default_value=_tutorial_bzint),
+            TAU["KKRMODE"].copy(default_value=_tutorial_kkrmode, is_always_added=True),
+        ],
+    )
     energy = ENERGY(emin=(_tutorial_emin, "Absolute lower energy in Ry; RWF ignores relative eV bounds", None),
         emax=(1.0, "Absolute upper energy in Ry", None),
         defaults={"GRID": _tutorial_grid, "NE": _tutorial_ne, "ImE": _tutorial_ime})

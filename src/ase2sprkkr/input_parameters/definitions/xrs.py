@@ -38,7 +38,7 @@ def _validate(parameters, _values, why):
 def input_parameters_definition():
     energy = ENERGY(emin=None, emax=(4.0, "Explicit upper scan bound in Ry", None), defaults={"GRID": 6, "NE": 180, "ImE": 0.01})
     energy.copy_member("NE", type=SetOf(Integer(min=2), min_length=1, max_length=2))
-    task = TASK("XRS").copy([
+    task = TASK("XRS", add=[
         V("IT", Integer(min=1), 1, is_always_added=False, info="Atom type, not site index."),
         V("CL", Keyword(*(f"{n}{s}" for n in range(1, 6) for s in "SPDF")), "2P", is_always_added=False),
         V("ME", Keyword("ADA", "NAB", "GRV"), "ADA", is_always_added=False),

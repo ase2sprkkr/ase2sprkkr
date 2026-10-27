@@ -44,7 +44,7 @@ def input_parameters_definition():
         "sigma",
         [CONTROL("SIGMA"), TAU, MODE, CPA, STRCONST, energy,
             Section("SCF", [V("FULLPOT", False)], is_optional=True, is_expert=True),
-            TASK("SIGMA").copy([
+            TASK("SIGMA", add=[
                 V("SIGSPROJ", SetOf(Integer(min=1, max=16), min_length=1, max_length=16), is_optional=True,
                   info="Response operator indices; first must be 1 or 9. Omitted native FREL selection is 1..16."),
                 V("SP_NO_ALPHA", False, info="Disable alpha part of the spin-polarization operator."),

@@ -46,13 +46,16 @@ def _validate_scf(p, _values, why):
 
 
 def input_parameters_definition():
-    scf = SCF.copy()
-    scf.copy_member("ALG", type=Keyword({"BROYDEN2": "Broyden's second method", "TCHEBY": "Tchebychev mixing", "ANDERSON": "Anderson mixing"}), default_value="BROYDEN2")
-    scf.copy_member("NITER", type=Integer(min=1))
-    scf.copy_member("ISTBRY", type=Integer(min=1))
-    scf.copy_member("ITDEPT", type=Integer(min=3, max=40), info="Broyden/Anderson history depth; native resets values below 3 to 40 and caps values above 40.")
-    scf.copy_member("MIXOP", info="Orbital-polarization mixing; omitted native value is initialized before reading MIX and is not necessarily the user-supplied MIX.")
-    scf.copy_member("EFGUESS", info="Initial Fermi-energy guess in Ry; skips the initial search when building a starting potential, not all later EF updates.")
+    scf = SCF.copy(
+        add=[
+            SCF["ALG"].copy(type=Keyword({"BROYDEN2": "Broyden's second method", "TCHEBY": "Tchebychev mixing", "ANDERSON": "Anderson mixing"}), default_value="BROYDEN2"),
+            SCF["NITER"].copy(type=Integer(min=1)),
+            SCF["ISTBRY"].copy(type=Integer(min=1)),
+            SCF["ITDEPT"].copy(type=Integer(min=3, max=40), info="Broyden/Anderson history depth; native resets values below 3 to 40 and caps values above 40."),
+            SCF["MIXOP"].copy(info="Orbital-polarization mixing; omitted native value is initialized before reading MIX and is not necessarily the user-supplied MIX."),
+            SCF["EFGUESS"].copy(info="Initial Fermi-energy guess in Ry; skips the initial search when building a starting potential, not all later EF updates."),
+        ],
+    )
     energy = ENERGY()
     energy.copy_member("NE", type=SetOf(Integer(min=1), min_length=1, max_length=2))
     schema = SCFInputParametersDefinition(

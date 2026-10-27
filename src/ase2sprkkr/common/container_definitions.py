@@ -314,10 +314,17 @@ class ContainerDefinition(RealItemDefinition):
 
     def _get_init_args_for_copy(self, add=[], remove=[], defaults={}, **kwargs):
         """Get the args to copy the container."""
-        members = dict(((k, i.copy()) for k, i in self._members.items()))
+        members = dict(self._members)
         for i in remove:
             del members[i]
-        members.update(self._dict_from_named_values(add))
+        added = self._dict_from_named_values(add)
+        # Replacements are already supplied by the caller. Copy only members
+        # that survive, retaining the original order of replaced members.
+        members = {
+            name: added[name] if name in added else member.copy()
+            for name, member in members.items()
+        }
+        members.update(added)
         for i, v in defaults.items():
             members[i].default_value = members[i].type.convert(v)
 

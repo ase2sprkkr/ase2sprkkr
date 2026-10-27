@@ -36,7 +36,7 @@ def input_parameters_definition():
         "chi",
         [CONTROL("CHI"), TAU, mode, CPA, STRCONST, energy,
             Section("SCF", [V("FULLPOT", False)], is_optional=True, is_expert=True),
-            TASK("CHI").copy([
+            TASK("CHI", add=[
                 V("CHIPRINT", Integer(min=0), is_optional=True, info="Response preparation print control."),
                 V("NOSYMCHI", False, info="Disable response symmetry; also disables global symmetry in native INITVAR."),
             ]), SITES],

@@ -81,9 +81,13 @@ def input_parameters_definition():
     energy = ENERGY(defaults={"GRID": [5, 5], "NE": [30, 50], "ImE": 0.01})
     energy.copy_member("NE", type=SetOf(Integer(min=1), min_length=1, max_length=2))
     energy.copy_member("SPLITSS", default_value=True, is_always_added=True)
-    tau = TAU.copy(add=[V("TAUDIR", str, is_optional=True, info="Existing DATASET.tau.dir directory by default."),
-                        V("TAUPATH", str, is_optional=True, info="Parent of TAUDIR; native default is current directory.")])
-    tau.copy_member("BZINT", default_value="POINTS")
+    tau = TAU.copy(
+        add=[
+            V("TAUDIR", str, is_optional=True, info="Existing DATASET.tau.dir directory by default."),
+            V("TAUPATH", str, is_optional=True, info="Parent of TAUDIR; native default is current directory."),
+            TAU["BZINT"].copy(default_value="POINTS"),
+        ],
+    )
     members = [
         V("SPLITSS", True, is_always_added=True, info="Required here as well as in ENERGY: COMPTON rereads this flag."),
         V("MEMODE", Integer(min=1, max=2), 1, info="1 interpolates radial matrix elements; 2 evaluates each momentum."),
@@ -99,7 +103,7 @@ def input_parameters_definition():
     schema = ComptonInputParametersDefinition(
         "compton",
         [CONTROL("COMPTON"), tau, MODE, STRCONST, CPA,
-                           energy, TASK("COMPTON").copy(members), SITES],
+                           energy, TASK("COMPTON", add=members), SITES],
         validators=_validate_compton,
         info="Compton momentum density and profiles",
         description="Periodic FREL split-contour workflow using an existing compatible TAU directory. "

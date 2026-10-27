@@ -43,7 +43,7 @@ def input_parameters_definition():
         [CONTROL("OPTABS"), TAU, MODE, CPA, STRCONST,
             ENERGY(emin=None, emax=None, defaults={"GRID": [0], "NE": [1], "ImE": 0.01}),
             Section("SCF", [V("FULLPOT", False)], is_optional=True, is_expert=True),
-            TASK("OPTABS").copy([
+            TASK("OPTABS", add=[
                 V("NEB", Integer(min=3), 30, info="Initial-state energy resolution; also actual frequency count before thermal extension."),
                 V("NOMEGA", Integer(min=3), 100, info="Allocated frequency capacity; native later resets the actual count to NEB."),
                 V("OMEGA1", 0.0, is_always_added=True, info="Use zero: native replaces it by OMEGA2/NEB; arbitrary offsets miss energy-pair matching."),

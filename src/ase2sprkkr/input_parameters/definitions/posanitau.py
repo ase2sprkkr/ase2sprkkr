@@ -32,12 +32,15 @@ def input_parameters_definition():
     energy = ENERGY(emax=(None, "Upper integration bound in Ry; omitted native value is EF.", None),
                     defaults={"GRID": [5], "NE": [30], "ImE": 0.01})
     energy.copy_member("NE", type=SetOf(Integer(min=1), min_length=1, max_length=2))
-    tau = TAU.copy()
-    tau.copy_member("BZINT", default_value="POINTS")
+    tau = TAU.copy(
+        add=[
+            TAU["BZINT"].copy(default_value="POINTS"),
+        ],
+    )
     schema = InputParameters(
         "posanitau",
         [CONTROL("POSANITAU"), tau, MODE, STRCONST, CPA, energy, Section("SCF", [V("FULLPOT", False)], is_optional=True, is_expert=True),
-                       TASK("POSANITAU").copy([
+                       TASK("POSANITAU", add=[
                            V("POSVC", Keyword({"BM": "Native BM correlation potential", "DR": "Native DR correlation potential", "IPM": "Independent-particle model"}), "BM",
                              info="ASA electron-positron correlation potential: BM, DR, or independent-particle IPM."),
                        ]), SITES],

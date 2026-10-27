@@ -37,7 +37,7 @@ def _validate_plot2d(p, _container, why):
 
 
 def plot2d_parameters(task):
-    t = TASK(task).copy(add=[
+    t = TASK(task, add=[
         V("AVEC", SetOf(float, length=3), [2., 0., 0.], info="Plot window vector in atomic units."),
         V("BVEC", SetOf(float, length=3), [0., 2., 0.], info="Window vector; native orthogonalizes it against AVEC, preserving length."),
         V("DVEC", SetOf(float, length=3), [0., 0., 0.], info="Plot window displacement in atomic units."),

@@ -84,9 +84,13 @@ def input_parameters_definition():
     energy = ENERGY(defaults={"GRID": [5], "NE": [30], "ImE": 0.01})
     energy.copy_member("NE", type=SetOf(Integer(min=1), min_length=1, max_length=2))
     energy.copy_member("SPLITSS", default_value=False)
-    tau = TAU.copy(add=[V("TAUDIR", str, is_optional=True, info="Existing DATASET.tau.dir directory by default."),
-                        V("TAUPATH", str, is_optional=True, info="Parent of TAUDIR; native default is current directory.")])
-    tau.copy_member("BZINT", default_value="POINTS")
+    tau = TAU.copy(
+        add=[
+            V("TAUDIR", str, is_optional=True, info="Existing DATASET.tau.dir directory by default."),
+            V("TAUPATH", str, is_optional=True, info="Parent of TAUDIR; native default is current directory."),
+            TAU["BZINT"].copy(default_value="POINTS"),
+        ],
+    )
     members = [
         V("SPLITSS", False, info="Excluded from this single-contour workflow."),
         V("MEMODE", Integer(min=1, max=2), 1, info="1 interpolates radial matrix elements; 2 evaluates each momentum."),
@@ -103,7 +107,7 @@ def input_parameters_definition():
     schema = PosaniInputParametersDefinition(
         "posani",
         [control, tau, MODE, STRCONST, CPA,
-                           energy, TASK("POSANI").copy(members), SITES],
+                           energy, TASK("POSANI", add=members), SITES],
         validators=_validate_posani,
         info="Positron annihilation momentum density and profiles",
         description="Periodic FREL workflow using electron potential, electron TAU data and DATASET_pos_dat.pan from POSANIPREP. Native TAUQQ reader/writer assumes NQ=NT; other systems are unsafe. "

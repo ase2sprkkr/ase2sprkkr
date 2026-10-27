@@ -31,8 +31,11 @@ def _validate_aps(parameters, _values, why):
 
 
 def input_parameters_definition():
-    mode = MODE.copy()
-    mode.copy_member("MODE", default_value="SREL")
+    mode = MODE.copy(
+        add=[
+            MODE["MODE"].copy(default_value="SREL"),
+        ],
+    )
     schema = NrSpectroscopyInputParametersDefinition(
         "aps",
         [CONTROL("APS"), TAU, mode, STRCONST,
