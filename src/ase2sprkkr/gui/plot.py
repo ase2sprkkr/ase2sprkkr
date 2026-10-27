@@ -58,7 +58,7 @@ def create_rc_context(latex: Optional[bool] = None):
     """
     Create the context that sets defaults for plotting
     """
-    params = rc_params
+    params = rc_params.copy()
     if latex is not None:
         params["text.usetex"] = latex
     return rc_context(params)

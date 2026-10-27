@@ -20,7 +20,8 @@ def generate_grammar():
         if hasattr(pe, "DEFAULT_WHITE_CHARS"):
             old = pe.DEFAULT_WHITE_CHARS
         if hasattr(pp.Keyword, "DEFAULT_KEYWORD_CHARS"):
-            kchars = pp.Keyword.DEFAULT_KEYWORD_CHARS + "-"
+            kchars = pp.Keyword.DEFAULT_KEYWORD_CHARS
+            pp.Keyword.DEFAULT_KEYWORD_CHARS = kchars + "-"
         pe.set_default_whitespace_chars(" \t\r")
         yield
     finally:
