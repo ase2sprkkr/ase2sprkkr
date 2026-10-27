@@ -1,8 +1,29 @@
 """ Energy related default functions """
 
 import functools
+import numpy as np
 
 from ..input_parameters_definitions import InputValueDefinition as V
+from ...common.warnings import DataValidityError, DataValidityWarning
+
+
+def validate_dos_energy(p, _values, why):
+    """Validate the shared DOS/TDOBS energy-grid requirements."""
+    if why == "set":
+        return None
+    issues = []
+    for grid, ne in zip(p.ENERGY.GRID(), p.ENERGY.NE()):
+        if grid in ("2", "3") and ne < 2:
+            issues.append(DataValidityError("DOS GRID=2/3 requires at least two energy points."))
+    if not np.isfinite(p.ENERGY.ImE()) or p.ENERGY.ImE() < 0:
+        issues.append(DataValidityError("DOS ImE must be finite and nonnegative."))
+    if "3" in p.ENERGY.GRID() and p.ENERGY.ImE() == 0:
+        issues.append(DataValidityWarning("DOS ImE=0 puts GRID=3 on the real axis; check poles and convergence."))
+    for name in ("EMIN", "EMAX", "EMINEV", "EMAXEV"):
+        value = p.ENERGY[name]()
+        if value is not None and not np.isfinite(value):
+            issues.append(DataValidityError(f"DOS {name} must be finite."))
+    return issues or None
 
 def _energy_default(value, option):
     """Evaluate a task-supplied default, which may depend on the current mode."""

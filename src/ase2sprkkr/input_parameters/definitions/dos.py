@@ -1,29 +1,10 @@
 """DOS input-parameter definition."""
 
-import numpy as np
 from ...common.grammar_types import Integer, SetOf
-from ...common.warnings import DataValidityError, DataValidityWarning
+from ._energy import validate_dos_energy as _validate_dos
 from ._sections import CONTROL, TAU, ENERGY, TASK, SITES, MODE, CPA, STRCONST
 from ..input_parameters_definitions import InputParametersDefinition
 from ..task_definition import TaskDefinition, TaskFile
-
-
-def _validate_dos(p, _values, why):
-    if why == "set":
-        return None
-    issues = []
-    for grid, ne in zip(p.ENERGY.GRID(), p.ENERGY.NE()):
-        if grid in ("2", "3") and ne < 2:
-            issues.append(DataValidityError("DOS GRID=2/3 requires at least two energy points."))
-    if not np.isfinite(p.ENERGY.ImE()) or p.ENERGY.ImE() < 0:
-        issues.append(DataValidityError("DOS ImE must be finite and nonnegative."))
-    if "3" in p.ENERGY.GRID() and p.ENERGY.ImE() == 0:
-        issues.append(DataValidityWarning("DOS ImE=0 puts GRID=3 on the real axis; check poles and convergence."))
-    for name in ("EMIN", "EMAX", "EMINEV", "EMAXEV"):
-        value = p.ENERGY[name]()
-        if value is not None and not np.isfinite(value):
-            issues.append(DataValidityError(f"DOS {name} must be finite."))
-    return issues or None
 
 
 def input_parameters_definition():
