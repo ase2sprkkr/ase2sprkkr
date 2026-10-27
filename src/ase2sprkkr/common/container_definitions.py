@@ -5,21 +5,16 @@ from .repeated_configuration_containers import RepeatedConfigurationContainer
 from .configuration_containers import Section
 from .repetition import Repeated
 from .decorators import add_to_signature, cache
-from .parsing_results import dict_from_parsed
+from .parsing_results import dict_from_parsed, _allow_incomplete_parsing
 
 
 import pyparsing as pp
-from contextvars import ContextVar
 from typing import Iterable, Optional, Union
 
 from .warnings import DataValidityError
 import re
 import inspect
 from io import StringIO
-
-
-# The mode is parse-local; nested grammars use it without mutating the IPD.
-_allow_incomplete_parsing = ContextVar("allow_incomplete_parsing", default=False)
 
 
 class ContainerDefinition(RealItemDefinition):

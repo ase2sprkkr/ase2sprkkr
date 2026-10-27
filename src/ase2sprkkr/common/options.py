@@ -13,6 +13,7 @@ from .configuration import Configuration, UnknownMemberPolicy
 from ..common.misc import as_integer
 from .dangerous_values import DangerousValue
 from .configuration_transaction import ConfigurationTransaction
+from .parsing_results import _allow_incomplete_parsing
 from .warnings import (
     DataValidityError,
     InvalidValuePolicy,
@@ -709,9 +710,13 @@ class Option(BaseOption):
                 # Conditions and callable optionality are resolved here, once
                 # all sections have been staged. Absence is a parse error,
                 # unlike semantic validation of an explicitly supplied value.
-                raise pp.ParseException(
-                    f"Missing non-optional input item {self._get_path()}"
-                )
+                message = f"Missing non-optional input item {self._get_path()}"
+                if not _allow_incomplete_parsing.get():
+                    raise pp.ParseException(message)
+                # The grammar already reported unconditional omissions.
+                # Runtime-dependent presence is resolved only at this stage.
+                if d.condition is not None or callable(d.is_optional):
+                    DataValidityError.warn(message)
         if not d.allowed(container):
             return
 

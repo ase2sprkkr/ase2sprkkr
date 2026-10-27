@@ -1,4 +1,5 @@
 import pyparsing as pp
+from contextvars import ContextVar
 
 """ This module contains classes and functions related to gathering the output
 of parsing section. It takes care of multiplicity of values etc...
@@ -13,6 +14,10 @@ passed to the class, e.g.
 
 is parsed as ArrayKey("MDIRQ", 1).
 """
+
+# Shared by grammar construction and validation of the staged parse results.
+_allow_incomplete_parsing = ContextVar("allow_incomplete_parsing", default=False)
+
 
 class Result:
     """When data are parsed, some (repeated) options can yield
