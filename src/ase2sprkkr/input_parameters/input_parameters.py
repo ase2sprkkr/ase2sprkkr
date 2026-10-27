@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import io
+import os
 from collections.abc import Mapping
 from . import definitions, tasks
 from .task_definition import InputParametersRegistry, TaskRegistry
@@ -308,7 +309,7 @@ class InputParameters(ConfigurationFile):
         """Create or obtain input parameters from a task, schema, or file.
 
         Strings naming both a task and a schema are resolved as tasks.
-        Unknown strings are treated as filenames. Existing parameter
+        Unknown strings are treated as filenames. Existing input parameters
         instances are returned unchanged.
         """
         if isinstance(arg, str):
@@ -317,10 +318,13 @@ class InputParameters(ConfigurationFile):
                 return cls.for_task(name)
             if name in cls.input_parameters_registry:
                 return cls.for_definition(name)
-            return cls.from_file(arg)
+            if os.path.exists(arg):
+                return cls.from_file(arg)
         if isinstance(arg, io.IOBase):
             return cls.from_file(arg)
-        return arg
+        if isinstance(arg, cls):
+            return arg
+        raise ValueError(f"InputParameters can not be created from {arg}")
 
     @classmethod
     def default_parameters(cls):
