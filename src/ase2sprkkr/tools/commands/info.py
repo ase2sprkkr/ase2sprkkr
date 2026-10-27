@@ -83,7 +83,7 @@ def run(args, global_args):
 
         entries = [
                 (task.name, registry.definition_for_task(task), task.experimental)
-                for task in task_registry.values(name_contains=filter.upper())
+                for task in task_registry.values(name_contains=None if filter is True else filter.upper())
         ]
 
         if filter is not True:

@@ -15,7 +15,8 @@ EXAMPLES = Path(__file__).parent.parent / "examples"
 
 
 def _reader_setting(values):
-    def read_from_file(self, _file, *, allow_dangerous=False):
+    def read_from_file(self, _file, *, allow_dangerous=False, allow_incomplete=False,
+                       report_invalid=None):
         self.set(values, retain_invalid="all", report_invalid="ignore")
 
     return read_from_file
@@ -106,7 +107,7 @@ def test_read_for_task_uses_definition_reader_without_expected_task_context(monk
         (
             "historical.inp",
             True,
-            {"inputfile": "historical.inp"},
+            {"inputfile": "historical.inp", "allow_incomplete": False},
         )
     ]
     assert out.requested_task_name == "BSFEK"

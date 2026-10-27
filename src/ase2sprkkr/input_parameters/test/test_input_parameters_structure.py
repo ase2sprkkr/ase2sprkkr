@@ -472,6 +472,17 @@ def test_conditional_length():
     with pytest.raises(pp.ParseBaseException, match="Missing non-optional input item"):
         definition.read_from_string("CONTROL VALUES=1 2 3 MODE=1")
 
+    with pytest.warns(DataValidityError, match="Missing non-optional input item CONTROL.NVALUES") as issues:
+        incomplete = definition.read_from_string(
+            "CONTROL VALUES=1 2 3 MODE=1", allow_incomplete=True
+        )
+    assert len(issues) == 1
+    assert incomplete.CONTROL.NVALUES() == 3
+    assert not hasattr(incomplete.CONTROL, "_parsed_values")
+    # Incomplete parsing must not relax subsequent strict reads of the schema.
+    with pytest.raises(pp.ParseBaseException, match="Missing non-optional input item"):
+        definition.read_from_string("CONTROL VALUES=1 2 3 MODE=1")
+
     for mode in (1, 2):
         with warnings.catch_warnings():
             warnings.simplefilter("error", DataValidityError)

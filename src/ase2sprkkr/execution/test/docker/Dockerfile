@@ -34,6 +34,7 @@ RUN python3 -m venv "$VIRTUAL_ENV" \
         packaging \
         pytest \
         pyyaml \
+        "ruamel.yaml>=0.18.16" \
         requests \
         argcomplete \
         unyt \

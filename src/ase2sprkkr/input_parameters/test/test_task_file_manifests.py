@@ -105,7 +105,7 @@ def test_spec_outputs_follow_polarization_and_task(tmp_path):
         parameters = InputParameters.create(task)
         parameters.CONTROL.DATASET = "Fe"
         outputs = (
-            str(tmp_path / "Fe_SPEC.out"),
+            str(tmp_path / f"Fe_{task}_SPEC.out"),
             str(tmp_path / "Fe_data.spc"),
         )
         if task == "CLPES":
@@ -121,16 +121,16 @@ def test_spec_outputs_follow_polarization_and_task(tmp_path):
                 parameters.SPEC_PH.NPOL = npol
                 output_files = parameters.output_files(str(tmp_path))
                 expected = (
-                    str(tmp_path / "Fe_SPEC.out"),
-                    str(tmp_path / "Fe_data_pol1.spc"),
-                    str(tmp_path / "Fe_data_pol2.spc"),
+                    str(tmp_path / f"Fe_{task}_SPEC.out"),
+                    str(tmp_path / f"Fe_{task}_pol1.spc"),
+                    str(tmp_path / f"Fe_{task}_pol2.spc"),
                 )
                 assert output_files == expected
 
     parameters = InputParameters.create("BAND")
     parameters.CONTROL.DATASET = "Fe"
     assert parameters.output_files(str(tmp_path)) == (
-        str(tmp_path / "Fe_SPEC.out"), str(tmp_path / "Fe_data.spc"),
+        str(tmp_path / "Fe_BAND_SPEC.out"), str(tmp_path / "Fe_data.spc"),
     )
 
     parameters = InputParameters.create("SPLEED")
@@ -139,7 +139,7 @@ def test_spec_outputs_follow_polarization_and_task(tmp_path):
         parameters.SPEC_EL.TYP = diagram
         declared = parameters.output_files(str(tmp_path))
         assert tuple(map(str, declared)) == (
-            str(tmp_path / "Fe_SPEC.out"), str(tmp_path / "Fe_data.spc"),
+            str(tmp_path / "Fe_SPLEED_SPEC.out"), str(tmp_path / "Fe_data.spc"),
         )
         assert all(not f.optional for f in declared)
 

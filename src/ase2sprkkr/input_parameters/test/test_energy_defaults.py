@@ -90,7 +90,7 @@ def test_derived_upper_bound_is_optional_too():
         if not line.strip().startswith("EMAX=")
     ) + "\n"
     restored = p._definition.read_from_string(without_upper)
-    assert restored.ENERGY.EMAX() == restored.ENERGY.EMIN()
+    assert restored.ENERGY["EMAX"]() == restored.ENERGY.EMIN()
 
 
 def test_optional_absolute_bounds_do_not_disable_relative_pair_validation():

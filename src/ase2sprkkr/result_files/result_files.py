@@ -39,6 +39,9 @@ class ResultFile(ConfigurationFile):
         clear_first=True,
         allow_dangerous=False,
         potential=None,
+        *,
+        allow_incomplete=False,
+        report_invalid=None,
     ):
         """Read result data and optionally associate its potential."""
 
@@ -48,6 +51,8 @@ class ResultFile(ConfigurationFile):
             file,
             clear_first=clear_first,
             allow_dangerous=allow_dangerous,
+            allow_incomplete=allow_incomplete,
+            report_invalid=report_invalid,
         )
 
     @classmethod

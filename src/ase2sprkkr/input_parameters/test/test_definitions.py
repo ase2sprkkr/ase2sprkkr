@@ -4,6 +4,7 @@ import re
 import tempfile
 
 import numpy as np
+import pyparsing as pp
 import pytest
 
 from ...common.grammar_types import Keyword
@@ -145,9 +146,9 @@ class TestDefinitions:
                 if not line.lstrip().startswith(f"{name}=")
             )
 
-        with pytest.warns(DataValidityError, match="Missing non-optional input item TASK.NKDIR"):
+        with pytest.raises(pp.ParseBaseException, match="Missing non-optional input item TASK.NKDIR"):
             definition.read_from_string(omit("NKDIR"))
-        with pytest.warns(DataValidityError, match="Missing non-optional input item TASK.KE"):
+        with pytest.raises(pp.ParseBaseException, match="Missing non-optional input item TASK.KE"):
             definition.read_from_string(omit("KE1"))
 
     def test_bsfkk_required_grid_is_checked_after_parse(self):
@@ -161,7 +162,7 @@ class TestDefinitions:
             line for line in text.splitlines(keepends=True)
             if not line.lstrip().startswith("K1=")
         )
-        with pytest.warns(DataValidityError, match="Missing non-optional input item TASK.K1"):
+        with pytest.raises(pp.ParseBaseException, match="Missing non-optional input item TASK.K1"):
             definition.read_from_string(without_k1)
 
     def test_bsfek_k_path_is_checked_when_saving(self):

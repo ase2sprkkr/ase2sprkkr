@@ -100,7 +100,7 @@ class TestOutput:
 
         class DummyDefinition:
             @staticmethod
-            def parse_file(file, allow_dangerous=False):
+            def parse_file(file, allow_dangerous=False, allow_incomplete=False):
                 return {"parsed": True}
 
         class DummyOutput(ResultFile):

@@ -1,5 +1,6 @@
 import inspect
 import pickle
+from functools import partial
 
 import pytest
 
@@ -82,6 +83,10 @@ def _iter_callback_hooks(root, seen=None):
 
 
 def _assert_importable_hook(path, hook):
+    if isinstance(hook, partial):
+        _assert_importable_hook(f"{path}.func", hook.func)
+        pickle.dumps(hook)
+        return
     assert inspect.isfunction(hook), (
         f"{path} should reference a module-level function, got {type(hook)!r}"
     )

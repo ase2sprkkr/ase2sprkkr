@@ -40,7 +40,7 @@ def structures(monkeypatch):
     monkeypatch.setattr(structure, "structure_file_to_atoms", convert)
     monkeypatch.setattr(
         visualise, "view",
-        lambda atoms, scale_radii: views.append((atoms.name, scale_radii)),
+        lambda atoms, scale_radii, blocking=False, close_after=None: views.append((atoms.name, scale_radii)),
     )
     return writes, views, conversions
 

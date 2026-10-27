@@ -85,8 +85,8 @@ def test_arpes_result_uses_native_spec_file_manifest(tmp_path):
                 parameters.SPEC_PH.NPOL = 3
                 dichroic = ArpesResult(parameters, None, tmp_path)
                 assert dichroic.spc_filenames == (
-                    str(tmp_path / "sample_data_pol1.spc"),
-                    str(tmp_path / "sample_data_pol2.spc"),
+                    str(tmp_path / "sample_ARPES_pol1.spc"),
+                    str(tmp_path / "sample_ARPES_pol2.spc"),
                 )
 
 def test_spec_reader_requires_a_native_structured_band_file(tmp_path):
