@@ -5,30 +5,66 @@ from __future__ import annotations
 import ast
 import importlib.machinery
 import os
+import pickle
 import shutil
+import subprocess
+import sys
+import tempfile
 import types
 from pathlib import Path
 
 
 def load_legacy_configuration(file, definition):
-    """Execute one legacy config file against a fresh configuration object."""
+    """Execute a legacy hook in a fresh process and import its explicit values.
+
+    Both public config aliases refer to the child configuration. Arbitrary
+    imports, registry changes and failed hooks cannot mutate the caller.
+    """
+    from .configuration_yaml import _set_persisted_configuration
+
+    source = Path(file).resolve()
+    with tempfile.TemporaryDirectory(prefix="ase2sprkkr-migrate-") as directory:
+        schema = Path(directory) / "definition.pickle"
+        snapshot = Path(directory) / "values.pickle"
+        with schema.open("wb") as stream:
+            pickle.dump(definition, stream)
+        environment = dict(os.environ, ASE2SPRKKR_NO_USER_PROFILE="1")
+        result = subprocess.run(
+            [sys.executable, "-c",
+             ("from ase2sprkkr.configuration_migration import _legacy_worker; "
+              "import sys; _legacy_worker(*sys.argv[1:])"),
+             os.fspath(source), os.fspath(schema), os.fspath(snapshot)],
+            env=environment, stderr=subprocess.PIPE, text=True, check=False,
+        )
+        if result.returncode != 0:
+            raise RuntimeError(
+                f"Loading legacy configuration {source} failed in its worker "
+                f"(exit {result.returncode}):\n{result.stderr.strip()}"
+            )
+        with snapshot.open("rb") as stream:
+            values = pickle.load(stream)
+    migrated = definition.create_object()
+    migrated.profiles._legacy_write_warning_emitted = True
+    _set_persisted_configuration(migrated, values)
+    return migrated
+
+
+def _legacy_worker(source, schema, snapshot):
+    """Child-only entry point; exchange pickles only inside the private tempdir."""
+    import ase2sprkkr
+
     from . import configuration
 
-    migrated = definition.create_object()
-    # The user is already explicitly migrating the deprecated configuration;
-    # do not warn about the legacy writes performed while reading it.
+    with open(schema, "rb") as stream:
+        migrated = pickle.load(stream).create_object()
     migrated.profiles._legacy_write_warning_emitted = True
-    original = configuration.config
-    configuration.config = migrated
-    try:
-        loader = importlib.machinery.SourceFileLoader(
-            "ase2sprkkr.personal_migration", os.fspath(file)
-        )
-        module = types.ModuleType(loader.name)
-        loader.exec_module(module)
-    finally:
-        configuration.config = original
-    return migrated
+    configuration.config = ase2sprkkr.config = migrated
+    loader = importlib.machinery.SourceFileLoader("ase2sprkkr.personal_migration", source)
+    module = types.ModuleType(loader.name)
+    loader.exec_module(module)
+    values = migrated.as_dict(only_changed="explicit", generated=False) or {}
+    with open(snapshot, "wb") as stream:
+        pickle.dump(values, stream)
 
 
 def _migrated_profile_name(profiles):
