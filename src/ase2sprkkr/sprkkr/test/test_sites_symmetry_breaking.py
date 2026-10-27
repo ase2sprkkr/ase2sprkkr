@@ -38,6 +38,19 @@ def shared_sites(pristine_atoms):
     return atoms, site0, site1
 
 
+def test_remesh_rejects_shared_site_then_changes_only_detached_site(shared_sites):
+    _, site0, site1 = shared_sites
+    original = site0.site_type.mesh
+    mesh = ExponentialMesh(0.9, 0.005, None, None, 200, None)
+    with pytest.raises(RuntimeError, match="break_symmetry"):
+        site0.remesh(mesh)
+    assert site0.site_type.mesh is site1.site_type.mesh is original
+    site0.break_symmetry()
+    site0.remesh(mesh)
+    assert site0.site_type.mesh is mesh
+    assert site1.site_type.mesh is original
+
+
 class TestSymmetryCheckOccupation:
     def test_setter_rejects_shared_then_works_after_break_symmetry(self, shared_sites):
         _, site0, site1 = shared_sites

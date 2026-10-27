@@ -463,6 +463,7 @@ class Site:
     def remesh(self, mesh, map=None):
         if isinstance(mesh, SitePropertyProxy):
             mesh = mesh._get_target()
+        self._check_mutation_allowed()
         return self._site_type.remesh(mesh, map)
 
     @property
