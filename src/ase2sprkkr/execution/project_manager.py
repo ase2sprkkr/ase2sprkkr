@@ -24,9 +24,8 @@ class ExecutionManager(_ExecutionManager):
             identity = project.id if isinstance(project, Project) else str(project)
             current = self.projects.project(identity)
             self._project_id = current.id
-            if store is None:
-                root = self.projects.directory.parent / "projects_runs"
-                store = RunStore(root)
+        if store is None:
+            store = RunStore(self.projects.directory.parent / "projects_runs")
         super().__init__(
             store, executor_pool=executor_pool,
             submitting_grace=submitting_grace,
@@ -69,4 +68,39 @@ class ExecutionManager(_ExecutionManager):
             process_result=process_result, task=task,
             input_definition=input_definition, dataset=dataset,
             callback=callback, run_id=run_id,
+        )
+
+    def load_result(self, run):
+        """Retrieve and parse one completed historical SPR-KKR calculation."""
+        record = self.retrieve_result_files(run)
+        if not self.output_file_is_current(record):
+            raise OSError(f"Historical output of run {record.id} is missing or modified")
+        from ..outputs.task_result import TaskResult
+        return TaskResult.from_run_record(record)
+
+    def attach_sprkkr(self, run, *, callback=None, output_listener=None):
+        """Reconnect using the task-specific result reader stored with the run."""
+        record = self.store.get(run) if isinstance(run, str) else run
+        if (record.state.value == "failed"
+                and record.failure_phase is not None
+                and record.failure_phase.value == "download"
+                and record.return_code == 0):
+            record = self.resume_download(record)
+
+        def process_result(outcome):
+            from ..outputs.task_result import TaskResult
+            return TaskResult.from_run_record(
+                record, output_file=outcome.output_file,
+                error_file=outcome.error_file, return_code=outcome.return_code,
+            )
+
+        def completed(result):
+            if result is not None:
+                result.run_record = self.store.get(record.id)
+            if callback is not None:
+                callback(result)
+
+        return self.attach(
+            record, process_result=process_result,
+            callback=completed, output_listener=output_listener,
         )

@@ -226,6 +226,72 @@ class TaskResult:
         )
         return reader.read_from_file(filename)
 
+    @classmethod
+    def from_run(cls, run, manager=None):
+        """Load a persisted run using an execution manager.
+
+        With no manager, use the shared default project-run store. The
+        manager retrieves missing files and checks their saved fingerprints.
+        """
+        if manager is None:
+            from ..execution.project_manager import ExecutionManager
+
+            manager = ExecutionManager()
+        return manager.load_result(run)
+
+    @classmethod
+    def from_run_record(
+        cls, record, *, output_file=None, error_file=None, return_code=None
+    ):
+        """Parse a locally available run using its persisted task metadata.
+
+        File retrieval and fingerprint verification are handled by
+        :meth:`from_run` through ExecutionManager, not by this method.
+        """
+        from .reader_registry import reader_registry
+
+        files = record.files
+        if files is None:
+            raise FileNotFoundError(f"Run {record.id} has no recorded output files")
+        output = files.output_file if output_file is None else output_file
+        if output is None:
+            raise FileNotFoundError(f"Run {record.id} has no recorded output file")
+
+        input_file = files.input_file
+        available_input = (
+            input_file if input_file is not None and os.path.isfile(input_file) else None
+        )
+        parameters = None
+        if available_input is not None:
+            if record.input_definition is None:
+                parameters = input_parameters.InputParameters.from_file(available_input)
+            else:
+                definition = input_parameters.InputParameters.definition(
+                    record.input_definition
+                )
+                parameters = definition.read_from_file(available_input)
+
+            effective_task = parameters.task_name
+            if effective_task is not None and effective_task.upper() != record.task.upper():
+                raise ValueError(
+                    f"Run {record.id} records task {record.task!r}, but its "
+                    f"input file selects {effective_task!r}"
+                )
+
+        reader = reader_registry.class_for_task_name(record.task)(
+            parameters, None, record.execution.directory.local, task_name=record.task
+        )
+        result = reader.read_from_file(
+            output,
+            error_file,
+            return_code=(
+                record.return_code if return_code is None else return_code
+            ) or 0,
+            input_file=available_input,
+        )
+        result.run_record = record
+        return result
+
 
 class KkrOutputReader:
     """Parse SPR-KKR output streams into a TaskResult.
