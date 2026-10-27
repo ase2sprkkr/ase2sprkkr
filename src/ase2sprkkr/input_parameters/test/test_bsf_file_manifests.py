@@ -32,15 +32,16 @@ def test_bsf_schema_access_is_distinct_from_task_creation():
     parameters.ENERGY.NE = [200]
     assert parameters.task_name == "BSFEK"
     assert parameters.task_definition.name == "BSFEK"
-
-    with pytest.raises(RegistryEntryNotFound):
-        InputParameters.create("BSF")
-    with pytest.raises(RegistryEntryNotFound):
-        InputParameters.create_input_parameters("BSF")
+    out = InputParameters.create("BSF")
+    assert out.task_name == 'BSFKK'
+    assert out.name == 'bsf'
+    out = InputParameters.for_definition("BSF")
+    assert out.task_name == 'BSFKK'
+    assert out.name == 'bsf'
 
 
 def test_unknown_task_or_definition_still_fails():
     from ase2sprkkr.common.module_registry import RegistryEntryNotFound
 
-    with pytest.raises(RegistryEntryNotFound):
+    with pytest.raises(ValueError):
         InputParameters.create("DOES_NOT_EXIST")
