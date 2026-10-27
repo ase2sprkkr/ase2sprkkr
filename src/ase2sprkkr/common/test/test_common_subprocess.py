@@ -11,10 +11,7 @@ from .. import subprocess as subprocess_module
 @pytest.fixture(autouse=True)
 def shutdown_subprocess_pool():
     yield
-    pool = subprocess_module._pool
-    if pool is not None:
-        pool.shutdown()
-        subprocess_module._pool = None
+    subprocess_module.close_subprocess_pool()
 
 
 def _get_sigchld_handler():
@@ -78,3 +75,30 @@ def test_failed_call_shuts_down_pool():
         subprocess_module.in_subprocess(lambda: None)
 
     assert subprocess_module._pool is None
+
+
+def test_failed_old_call_does_not_discard_a_new_pool(monkeypatch):
+    closed = []
+    replacement = object()
+
+    class Future:
+        def result(self):
+            subprocess_module._pool = replacement
+            raise ValueError("old worker failed")
+
+    class Pool:
+        def submit(self, *args, **kwargs):
+            return Future()
+
+        def shutdown(self, **kwargs):
+            closed.append(self)
+
+    previous = Pool()
+    monkeypatch.setattr(subprocess_module, "_pool", previous)
+    try:
+        with pytest.raises(RuntimeError, match="old worker failed"):
+            subprocess_module.in_subprocess(int)
+        assert subprocess_module._pool is replacement
+        assert closed == [previous]
+    finally:
+        subprocess_module._pool = None
