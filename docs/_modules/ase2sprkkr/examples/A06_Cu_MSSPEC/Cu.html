@@ -56,10 +56,10 @@
 <ul>
 <li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://sprkkr.org">SPR-KKR</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.sprkkr.org/wp-content/uploads/2026/05/kkr_manual.pdf">SPR-KKR manual</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
 <ul>
@@ -92,12 +92,12 @@
              
   <h1>Source code for ase2sprkkr.examples.A06_Cu_MSSPEC.Cu</h1><div class="highlight"><pre>
 <span></span><span class="ch">#!/usr/bin/env python</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 <span class="sd">Simple SCF calculations for fcc Cu in combination with msspec code to generate</span>
 <span class="sd">photoelectron diffraction.</span>
 
 <span class="sd">Call with ``msspec`` and/or ``sprkkr`` commandline argument.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">glob</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
@@ -109,10 +109,10 @@
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.examples.A06_Cu_MSSPEC.Cu.main.html#ase2sprkkr.examples.A06_Cu_MSSPEC.Cu.main">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
     <span class="c1"># Create a copper cell</span>
-    <span class="n">Cu</span> <span class="o">=</span> <span class="n">bulk</span><span class="p">(</span><span class="s2">&quot;Cu&quot;</span><span class="p">)</span>
+    <span class="n">Cu</span> <span class="o">=</span> <span class="n">bulk</span><span class="p">(</span><span class="s2">"Cu"</span><span class="p">)</span>
 
     <span class="c1"># ########## SPRKKR part</span>
-    <span class="k">if</span> <span class="s2">&quot;sprkkr&quot;</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
+    <span class="k">if</span> <span class="s2">"sprkkr"</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
         <span class="c1"># create a SPRKKR calculator</span>
         <span class="n">calc</span> <span class="o">=</span> <span class="n">SPRKKR</span><span class="p">(</span><span class="n">atoms</span><span class="o">=</span><span class="n">Cu</span><span class="p">,</span> <span class="n">mpi</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
@@ -129,7 +129,7 @@
 
         <span class="c1"># Now use the calculator with the newly converged potential</span>
         <span class="n">calc</span> <span class="o">=</span> <span class="n">out_scf</span><span class="o">.</span><span class="n">calculator</span>
-        <span class="n">calc</span><span class="o">.</span><span class="n">input_parameters</span> <span class="o">=</span> <span class="s2">&quot;PHAGEN&quot;</span>
+        <span class="n">calc</span><span class="o">.</span><span class="n">input_parameters</span> <span class="o">=</span> <span class="s2">"PHAGEN"</span>
         <span class="n">calc</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">SCF</span><span class="o">.</span><span class="n">MIX</span> <span class="o">=</span> <span class="mf">0.20</span>
         <span class="n">calc</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">ENERGY</span><span class="o">.</span><span class="n">ImE</span> <span class="o">=</span> <span class="mf">0.0</span>
         <span class="n">calc</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">ENERGY</span><span class="o">.</span><span class="n">GRID</span> <span class="o">=</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
@@ -137,31 +137,31 @@
         <span class="n">calc</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span><span class="n">potential</span><span class="o">=</span><span class="n">out_scf</span><span class="o">.</span><span class="n">potential_filename</span><span class="p">)</span>
 
     <span class="c1"># ######### MsSpec part</span>
-    <span class="k">if</span> <span class="s2">&quot;msspec&quot;</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
+    <span class="k">if</span> <span class="s2">"msspec"</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
         <span class="kn">from</span><span class="w"> </span><span class="nn">msspec.calculator</span><span class="w"> </span><span class="kn">import</span> <span class="n">MSSPEC</span>
         <span class="kn">from</span><span class="w"> </span><span class="nn">msspec.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_atom_index</span><span class="p">,</span> <span class="n">hemispherical_cluster</span><span class="p">,</span> <span class="n">SPRKKRPotential</span>
 
-        <span class="n">pot</span> <span class="o">=</span> <span class="n">SPRKKRPotential</span><span class="p">(</span><span class="n">Cu</span><span class="p">,</span> <span class="s2">&quot;Cu_scf.pot_new&quot;</span><span class="p">,</span> <span class="o">*</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;*PHAGEN.pot&quot;</span><span class="p">))</span>
+        <span class="n">pot</span> <span class="o">=</span> <span class="n">SPRKKRPotential</span><span class="p">(</span><span class="n">Cu</span><span class="p">,</span> <span class="s2">"Cu_scf.pot_new"</span><span class="p">,</span> <span class="o">*</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">"*PHAGEN.pot"</span><span class="p">))</span>
 
         <span class="n">nplanes</span> <span class="o">=</span> <span class="mi">3</span>
         <span class="n">cluster</span> <span class="o">=</span> <span class="n">hemispherical_cluster</span><span class="p">(</span><span class="n">Cu</span><span class="p">,</span> <span class="n">planes</span><span class="o">=</span><span class="n">nplanes</span><span class="p">,</span> <span class="n">emitter_plane</span><span class="o">=</span><span class="n">nplanes</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
         <span class="n">cluster</span><span class="o">.</span><span class="n">absorber</span> <span class="o">=</span> <span class="n">get_atom_index</span><span class="p">(</span><span class="n">cluster</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
 
-        <span class="n">calc</span> <span class="o">=</span> <span class="n">MSSPEC</span><span class="p">(</span><span class="n">folder</span><span class="o">=</span><span class="s2">&quot;calc&quot;</span><span class="p">)</span>
+        <span class="n">calc</span> <span class="o">=</span> <span class="n">MSSPEC</span><span class="p">(</span><span class="n">folder</span><span class="o">=</span><span class="s2">"calc"</span><span class="p">)</span>
         <span class="n">calc</span><span class="o">.</span><span class="n">set_atoms</span><span class="p">(</span><span class="n">cluster</span><span class="p">)</span>
         <span class="n">calc</span><span class="o">.</span><span class="n">tmatrix_parameters</span><span class="o">.</span><span class="n">potential</span> <span class="o">=</span> <span class="n">pot</span>
 
-        <span class="n">data</span> <span class="o">=</span> <span class="n">calc</span><span class="o">.</span><span class="n">get_theta_scan</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="s2">&quot;2p3/2&quot;</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">calc</span><span class="o">.</span><span class="n">get_theta_scan</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="s2">"2p3/2"</span><span class="p">)</span>
         <span class="n">data</span><span class="o">.</span><span class="n">view</span><span class="p">()</span>
 
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Please specify either &#39;sprkkr&#39;, &#39;msspec&#39; keywords or both of them on the command line&quot;</span><span class="p">)</span></div>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">"Please specify either 'sprkkr', 'msspec' keywords or both of them on the command line"</span><span class="p">)</span></div>
 
 
 
 <span class="c1"># Just run the script only when directly called from command line</span>
 
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
     <span class="n">main</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span>
 </pre></div>
 

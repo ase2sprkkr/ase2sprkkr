@@ -56,10 +56,10 @@
 <ul>
 <li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://sprkkr.org">SPR-KKR</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.sprkkr.org/wp-content/uploads/2026/05/kkr_manual.pdf">SPR-KKR manual</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
 <ul>
@@ -91,13 +91,13 @@
            <div itemprop="articleBody">
              
   <h1>Source code for ase2sprkkr.examples.A15_Ni2FeGa_CPA_scan.cpa_scan</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Scan Fe/Co substitution in Ni2FeGa with the coherent potential approximation.&quot;&quot;&quot;</span>
+<span></span><span class="sd">"""Scan Fe/Co substitution in Ni2FeGa with the coherent potential approximation."""</span>
 
 
 <div class="viewcode-block" id="make_ni2fega">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.examples.A15_Ni2FeGa_CPA_scan.cpa_scan.make_ni2fega.html#ase2sprkkr.examples.A15_Ni2FeGa_CPA_scan.cpa_scan.make_ni2fega">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">make_ni2fega</span><span class="p">():</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Build the ordered primitive cell used as the scan template.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Build the ordered primitive cell used as the scan template."""</span>
     <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">ase2sprkkr</span><span class="w"> </span><span class="kn">import</span> <span class="n">SPRKKRAtoms</span>
 
@@ -105,7 +105,7 @@
         <span class="p">[[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]]</span>
     <span class="p">)</span>
     <span class="k">return</span> <span class="n">SPRKKRAtoms</span><span class="p">(</span>
-        <span class="n">symbols</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Ni&quot;</span><span class="p">,</span> <span class="s2">&quot;Ni&quot;</span><span class="p">,</span> <span class="s2">&quot;Fe&quot;</span><span class="p">,</span> <span class="s2">&quot;Ga&quot;</span><span class="p">],</span>
+        <span class="n">symbols</span><span class="o">=</span><span class="p">[</span><span class="s2">"Ni"</span><span class="p">,</span> <span class="s2">"Ni"</span><span class="p">,</span> <span class="s2">"Fe"</span><span class="p">,</span> <span class="s2">"Ga"</span><span class="p">],</span>
         <span class="n">scaled_positions</span><span class="o">=</span><span class="p">[</span>
             <span class="p">[</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">],</span>
             <span class="p">[</span><span class="mf">0.75</span><span class="p">,</span> <span class="mf">0.75</span><span class="p">,</span> <span class="mf">0.75</span><span class="p">],</span>
@@ -132,17 +132,17 @@
     <span class="k">for</span> <span class="n">fe_fraction</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mi">21</span><span class="p">):</span>
         <span class="n">atoms</span> <span class="o">=</span> <span class="n">template</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
         <span class="n">atoms</span><span class="o">.</span><span class="n">sites</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">site_type</span><span class="o">.</span><span class="n">occupation</span><span class="o">.</span><span class="n">set</span><span class="p">(</span>
-            <span class="p">{</span><span class="s2">&quot;Fe&quot;</span><span class="p">:</span> <span class="n">fe_fraction</span><span class="p">,</span> <span class="s2">&quot;Co&quot;</span><span class="p">:</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="n">fe_fraction</span><span class="p">}</span>
+            <span class="p">{</span><span class="s2">"Fe"</span><span class="p">:</span> <span class="n">fe_fraction</span><span class="p">,</span> <span class="s2">"Co"</span><span class="p">:</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="n">fe_fraction</span><span class="p">}</span>
         <span class="p">)</span>
         <span class="n">result</span> <span class="o">=</span> <span class="n">SPRKKR</span><span class="p">(</span><span class="n">atoms</span><span class="o">=</span><span class="n">atoms</span><span class="p">)</span><span class="o">.</span><span class="n">calculate</span><span class="p">()</span>
         <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">fe_fraction</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">energy</span><span class="p">))</span>
 
     <span class="k">for</span> <span class="n">fe_fraction</span><span class="p">,</span> <span class="n">energy</span> <span class="ow">in</span> <span class="n">results</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Fe fraction=</span><span class="si">{</span><span class="n">fe_fraction</span><span class="si">:</span><span class="s2">5.2f</span><span class="si">}</span><span class="s2">, total energy=</span><span class="si">{</span><span class="n">energy</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Fe fraction=</span><span class="si">{</span><span class="n">fe_fraction</span><span class="si">:</span><span class="s2">5.2f</span><span class="si">}</span><span class="s2">, total energy=</span><span class="si">{</span><span class="n">energy</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span></div>
 
 
 
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
     <span class="n">main</span><span class="p">()</span>
 </pre></div>
 

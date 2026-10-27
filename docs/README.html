@@ -57,10 +57,10 @@
 <ul>
 <li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://sprkkr.org">SPR-KKR</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.sprkkr.org/wp-content/uploads/2026/05/kkr_manual.pdf">SPR-KKR manual</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
 <ul>
@@ -102,15 +102,17 @@ calculation.</p>
 <section id="usefull-links">
 <h2>Usefull links<a class="headerlink" href="#usefull-links" title="Link to this heading"></a></h2>
 <ul class="simple">
-<li><p><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></p></li>
-<li><p><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - Atomic Simulation
-Environment</a></p></li>
+<li><p><a class="reference external" href="https://www.sprkkr.org/">SPR-KKR</a></p></li>
 <li><p><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">Online version of this
 documentation</a></p></li>
+<li><p><a class="reference external" href="https://groups.google.com/g/ase2sprkkr/">E-mail group for news and
+discussion</a></p></li>
 <li><p><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr/">GitHub repository of the ASE2SPRKKR
 package</a></p></li>
-<li><p><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR
+<li><p><a class="reference external" href="https://www.sprkkr.org/manual/">SPR-KKR
 manual</a></p></li>
+<li><p><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - Atomic Simulation
+Environment</a></p></li>
 </ul>
 </section>
 <section id="installation-of-the-package-using-package-managers">
@@ -219,7 +221,7 @@ copying them out from pyproject.toml:</p>
 to update this help) run the following snippet to install all the build-dependencies
 mentioned in pyproject.toml:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>tomllib
-pip<span class="w"> </span>install<span class="w"> </span>--no-build-isolation<span class="w"> </span><span class="k">$(</span>python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import tomllib; print(&#39; &#39;.join(tomllib.load(open(&#39;pyproject.toml&#39;,&#39;rb&#39;))[&#39;build-system&#39;][&#39;requires&#39;]))&quot;</span><span class="k">)</span>
+pip<span class="w"> </span>install<span class="w"> </span>--no-build-isolation<span class="w"> </span><span class="k">$(</span>python<span class="w"> </span>-c<span class="w"> </span><span class="s2">"import tomllib; print(' '.join(tomllib.load(open('pyproject.toml','rb'))['build-system']['requires']))"</span><span class="k">)</span>
 </pre></div>
 </div>
 <p>2. The limitation of the editable install is, that it won’t see

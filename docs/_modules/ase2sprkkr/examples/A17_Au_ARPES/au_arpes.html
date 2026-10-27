@@ -56,10 +56,10 @@
 <ul>
 <li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://sprkkr.org">SPR-KKR</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.sprkkr.org/wp-content/uploads/2026/05/kkr_manual.pdf">SPR-KKR manual</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
 <ul>
@@ -91,7 +91,7 @@
            <div itemprop="articleBody">
              
   <h1>Source code for ase2sprkkr.examples.A17_Au_ARPES.au_arpes</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Calculate Au bulk DOS, angle-resolved photoemission and a Fermi map.&quot;&quot;&quot;</span>
+<span></span><span class="sd">"""Calculate Au bulk DOS, angle-resolved photoemission and a Fermi map."""</span>
 
 
 <div class="viewcode-block" id="main">
@@ -102,28 +102,28 @@
 
     <span class="c1"># The SCF step produces the converged potential required by all subsequent</span>
     <span class="c1"># spectroscopy tasks in this self-contained workflow.</span>
-    <span class="n">gold</span> <span class="o">=</span> <span class="n">bulk</span><span class="p">(</span><span class="s2">&quot;Au&quot;</span><span class="p">,</span> <span class="s2">&quot;fcc&quot;</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="mf">4.08</span><span class="p">)</span>
+    <span class="n">gold</span> <span class="o">=</span> <span class="n">bulk</span><span class="p">(</span><span class="s2">"Au"</span><span class="p">,</span> <span class="s2">"fcc"</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="mf">4.08</span><span class="p">)</span>
     <span class="n">scf_options</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">&quot;CONTROL.KRMT&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
-        <span class="s2">&quot;TAU.NKTAB3D&quot;</span><span class="p">:</span> <span class="mi">1000</span><span class="p">,</span>
-        <span class="s2">&quot;SCF.VXC&quot;</span><span class="p">:</span> <span class="s2">&quot;VWN&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;SCF.FULLPOT&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-        <span class="s2">&quot;SCF.NITER&quot;</span><span class="p">:</span> <span class="mi">2000</span><span class="p">,</span>
-        <span class="s2">&quot;SCF.MIX&quot;</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span>
-        <span class="s2">&quot;SCF.TOL&quot;</span><span class="p">:</span> <span class="mf">1e-5</span><span class="p">,</span>
+        <span class="s2">"CONTROL.KRMT"</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+        <span class="s2">"TAU.NKTAB3D"</span><span class="p">:</span> <span class="mi">1000</span><span class="p">,</span>
+        <span class="s2">"SCF.VXC"</span><span class="p">:</span> <span class="s2">"VWN"</span><span class="p">,</span>
+        <span class="s2">"SCF.FULLPOT"</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="s2">"SCF.NITER"</span><span class="p">:</span> <span class="mi">2000</span><span class="p">,</span>
+        <span class="s2">"SCF.MIX"</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span>
+        <span class="s2">"SCF.TOL"</span><span class="p">:</span> <span class="mf">1e-5</span><span class="p">,</span>
     <span class="p">}</span>
     <span class="n">calculator</span> <span class="o">=</span> <span class="n">SPRKKR</span><span class="p">(</span><span class="n">atoms</span><span class="o">=</span><span class="n">gold</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="n">scf_options</span><span class="p">)</span>
     <span class="n">calculator</span><span class="o">.</span><span class="n">calculate</span><span class="p">()</span>
 
     <span class="c1"># A DOS calculation is a useful check of the converged bulk potential.</span>
     <span class="n">dos_result</span> <span class="o">=</span> <span class="n">calculator</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span>
-        <span class="n">input_parameters</span><span class="o">=</span><span class="s2">&quot;dos&quot;</span><span class="p">,</span>
+        <span class="n">input_parameters</span><span class="o">=</span><span class="s2">"dos"</span><span class="p">,</span>
         <span class="n">options</span><span class="o">=</span><span class="p">{</span>
-            <span class="s2">&quot;ENERGY.ImE&quot;</span><span class="p">:</span> <span class="mf">0.001</span><span class="p">,</span>
-            <span class="s2">&quot;ENERGY.EMINEV&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">12.0</span><span class="p">,</span>
-            <span class="s2">&quot;ENERGY.EMAXEV&quot;</span><span class="p">:</span> <span class="mf">7.0</span><span class="p">,</span>
-            <span class="s2">&quot;ENERGY.NE&quot;</span><span class="p">:</span> <span class="mi">1000</span><span class="p">,</span>
-            <span class="s2">&quot;TAU.NKTAB&quot;</span><span class="p">:</span> <span class="mi">2500</span><span class="p">,</span>
+            <span class="s2">"ENERGY.ImE"</span><span class="p">:</span> <span class="mf">0.001</span><span class="p">,</span>
+            <span class="s2">"ENERGY.EMINEV"</span><span class="p">:</span> <span class="o">-</span><span class="mf">12.0</span><span class="p">,</span>
+            <span class="s2">"ENERGY.EMAXEV"</span><span class="p">:</span> <span class="mf">7.0</span><span class="p">,</span>
+            <span class="s2">"ENERGY.NE"</span><span class="p">:</span> <span class="mi">1000</span><span class="p">,</span>
+            <span class="s2">"TAU.NKTAB"</span><span class="p">:</span> <span class="mi">2500</span><span class="p">,</span>
         <span class="p">},</span>
     <span class="p">)</span>
     <span class="n">dos_result</span><span class="o">.</span><span class="n">dos</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
@@ -131,49 +131,49 @@
     <span class="c1"># One-step ARPES includes photon geometry, the surface orientation and the</span>
     <span class="c1"># detector scan in a single calculation.</span>
     <span class="n">arpes_options</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">&quot;TAU.NKTAB&quot;</span><span class="p">:</span> <span class="mi">500</span><span class="p">,</span>
-        <span class="s2">&quot;ENERGY.EMINEV&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">4.0</span><span class="p">,</span>
-        <span class="s2">&quot;ENERGY.EMAXEV&quot;</span><span class="p">:</span> <span class="mf">2.0</span><span class="p">,</span>
-        <span class="s2">&quot;ENERGY.EWORK_EV&quot;</span><span class="p">:</span> <span class="mf">5.0</span><span class="p">,</span>
-        <span class="s2">&quot;ENERGY.NE&quot;</span><span class="p">:</span> <span class="mi">300</span><span class="p">,</span>
-        <span class="s2">&quot;ENERGY.IMV_INI_EV&quot;</span><span class="p">:</span> <span class="mf">0.02</span><span class="p">,</span>
-        <span class="s2">&quot;ENERGY.IMV_FIN_EV&quot;</span><span class="p">:</span> <span class="mf">2.0</span><span class="p">,</span>
-        <span class="s2">&quot;TASK.MILLER_HKL&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
-        <span class="s2">&quot;SPEC_PH.THETA&quot;</span><span class="p">:</span> <span class="mi">45</span><span class="p">,</span>
-        <span class="s2">&quot;SPEC_PH.PHI&quot;</span><span class="p">:</span> <span class="mi">90</span><span class="p">,</span>
-        <span class="s2">&quot;SPEC_PH.EPHOT&quot;</span><span class="p">:</span> <span class="mi">50</span><span class="p">,</span>
-        <span class="s2">&quot;SPEC_STR.N_LAYDBL&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">12</span><span class="p">,</span> <span class="mi">12</span><span class="p">],</span>
-        <span class="s2">&quot;SPEC_STR.N_LAYER&quot;</span><span class="p">:</span> <span class="mi">30</span><span class="p">,</span>
-        <span class="s2">&quot;SPEC_EL.THETA&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">],</span>
-        <span class="s2">&quot;SPEC_EL.NT&quot;</span><span class="p">:</span> <span class="mi">200</span><span class="p">,</span>
-        <span class="s2">&quot;SPEC_EL.SPOL&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+        <span class="s2">"TAU.NKTAB"</span><span class="p">:</span> <span class="mi">500</span><span class="p">,</span>
+        <span class="s2">"ENERGY.EMINEV"</span><span class="p">:</span> <span class="o">-</span><span class="mf">4.0</span><span class="p">,</span>
+        <span class="s2">"ENERGY.EMAXEV"</span><span class="p">:</span> <span class="mf">2.0</span><span class="p">,</span>
+        <span class="s2">"ENERGY.EWORK_EV"</span><span class="p">:</span> <span class="mf">5.0</span><span class="p">,</span>
+        <span class="s2">"ENERGY.NE"</span><span class="p">:</span> <span class="mi">300</span><span class="p">,</span>
+        <span class="s2">"ENERGY.IMV_INI_EV"</span><span class="p">:</span> <span class="mf">0.02</span><span class="p">,</span>
+        <span class="s2">"ENERGY.IMV_FIN_EV"</span><span class="p">:</span> <span class="mf">2.0</span><span class="p">,</span>
+        <span class="s2">"TASK.MILLER_HKL"</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+        <span class="s2">"SPEC_PH.THETA"</span><span class="p">:</span> <span class="mi">45</span><span class="p">,</span>
+        <span class="s2">"SPEC_PH.PHI"</span><span class="p">:</span> <span class="mi">90</span><span class="p">,</span>
+        <span class="s2">"SPEC_PH.EPHOT"</span><span class="p">:</span> <span class="mi">50</span><span class="p">,</span>
+        <span class="s2">"SPEC_STR.N_LAYDBL"</span><span class="p">:</span> <span class="p">[</span><span class="mi">12</span><span class="p">,</span> <span class="mi">12</span><span class="p">],</span>
+        <span class="s2">"SPEC_STR.N_LAYER"</span><span class="p">:</span> <span class="mi">30</span><span class="p">,</span>
+        <span class="s2">"SPEC_EL.THETA"</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">],</span>
+        <span class="s2">"SPEC_EL.NT"</span><span class="p">:</span> <span class="mi">200</span><span class="p">,</span>
+        <span class="s2">"SPEC_EL.SPOL"</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
     <span class="p">}</span>
     <span class="n">arpes_result</span> <span class="o">=</span> <span class="n">calculator</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span>
-        <span class="n">input_parameters</span><span class="o">=</span><span class="s2">&quot;arpes&quot;</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="n">arpes_options</span>
+        <span class="n">input_parameters</span><span class="o">=</span><span class="s2">"arpes"</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="n">arpes_options</span>
     <span class="p">)</span>
     <span class="n">arpes_result</span><span class="o">.</span><span class="n">spc</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
 
     <span class="c1"># Reuse the same experimental geometry on a two-dimensional k grid at EF.</span>
     <span class="n">fermi_options</span> <span class="o">=</span> <span class="p">{</span>
         <span class="o">**</span><span class="n">arpes_options</span><span class="p">,</span>
-        <span class="s2">&quot;ENERGY.EMINEV&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
-        <span class="s2">&quot;ENERGY.EMAXEV&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
-        <span class="s2">&quot;ENERGY.NE&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-        <span class="s2">&quot;SPEC_EL.KA&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.5</span><span class="p">],</span>
-        <span class="s2">&quot;SPEC_EL.K1&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
-        <span class="s2">&quot;SPEC_EL.K2&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
-        <span class="s2">&quot;SPEC_EL.NK1&quot;</span><span class="p">:</span> <span class="mi">120</span><span class="p">,</span>
-        <span class="s2">&quot;SPEC_EL.NK2&quot;</span><span class="p">:</span> <span class="mi">120</span><span class="p">,</span>
-        <span class="s2">&quot;SPEC_EL.PSPIN&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+        <span class="s2">"ENERGY.EMINEV"</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+        <span class="s2">"ENERGY.EMAXEV"</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+        <span class="s2">"ENERGY.NE"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="s2">"SPEC_EL.KA"</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.5</span><span class="p">],</span>
+        <span class="s2">"SPEC_EL.K1"</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+        <span class="s2">"SPEC_EL.K2"</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+        <span class="s2">"SPEC_EL.NK1"</span><span class="p">:</span> <span class="mi">120</span><span class="p">,</span>
+        <span class="s2">"SPEC_EL.NK2"</span><span class="p">:</span> <span class="mi">120</span><span class="p">,</span>
+        <span class="s2">"SPEC_EL.PSPIN"</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
     <span class="p">}</span>
     <span class="n">fermi_result</span> <span class="o">=</span> <span class="n">calculator</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span>
-        <span class="n">input_parameters</span><span class="o">=</span><span class="s2">&quot;arpes&quot;</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="n">fermi_options</span>
+        <span class="n">input_parameters</span><span class="o">=</span><span class="s2">"arpes"</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="n">fermi_options</span>
     <span class="p">)</span>
     <span class="n">fermi_result</span><span class="o">.</span><span class="n">spc</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span></div>
 
 
 
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
     <span class="n">main</span><span class="p">()</span>
 </pre></div>
 

@@ -56,10 +56,10 @@
 <ul>
 <li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://sprkkr.org">SPR-KKR</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.sprkkr.org/wp-content/uploads/2026/05/kkr_manual.pdf">SPR-KKR manual</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
 <ul>
@@ -97,8 +97,8 @@
 <span class="c1"># For shells where IK is not relevant (LC=0), IK=1 is used as a consistent key.</span>
 <span class="c1">#</span>
 <span class="c1"># Two datasets are available:</span>
-<span class="c1">#   &#39;campbell-papp&#39;      — J. L. Campbell &amp; T. Papp, At. Data Nucl. Data Tables 77, 1 (2001)</span>
-<span class="c1">#   &#39;fuggle-inglesfield&#39; — J. C. Fuggle &amp; J. E. Inglesfield, Topics in Applied Physics</span>
+<span class="c1">#   'campbell-papp'      — J. L. Campbell &amp; T. Papp, At. Data Nucl. Data Tables 77, 1 (2001)</span>
+<span class="c1">#   'fuggle-inglesfield' — J. C. Fuggle &amp; J. E. Inglesfield, Topics in Applied Physics</span>
 <span class="c1">#                          vol. 69, Springer (1992), Appendix B; as used in xband/wcorehole.f.</span>
 <span class="c1">#                          Only K and L shells are tabulated; M and higher return 0.</span>
 
@@ -2269,24 +2269,24 @@
         <span class="p">]</span>
     <span class="p">),</span>
     <span class="c1"># The remaining shells (O1-O5, P1-P3) were in the Fortran header but had no data.</span>
-    <span class="c1"># They are omitted here as per the original source code&#39;s data section.</span>
+    <span class="c1"># They are omitted here as per the original source code's data section.</span>
 <span class="p">}</span>
 
 <span class="c1"># Backward-compatible alias</span>
 <span class="n">core_hole_width_data</span> <span class="o">=</span> <span class="n">core_hole_width_data_campbell_papp</span>
 
 <span class="n">_CORE_HOLE_WIDTH_SOURCES</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;campbell-papp&quot;</span><span class="p">:</span> <span class="n">core_hole_width_data_campbell_papp</span><span class="p">,</span>
-    <span class="s2">&quot;fuggle-inglesfield&quot;</span><span class="p">:</span> <span class="n">core_hole_width_data_fuggle_inglesfield</span><span class="p">,</span>
-    <span class="s2">&quot;xband6&quot;</span><span class="p">:</span> <span class="n">core_hole_width_data_fuggle_inglesfield</span><span class="p">,</span>
-    <span class="s2">&quot;xband8&quot;</span><span class="p">:</span> <span class="n">core_hole_width_data_campbell_papp</span><span class="p">,</span>
+    <span class="s2">"campbell-papp"</span><span class="p">:</span> <span class="n">core_hole_width_data_campbell_papp</span><span class="p">,</span>
+    <span class="s2">"fuggle-inglesfield"</span><span class="p">:</span> <span class="n">core_hole_width_data_fuggle_inglesfield</span><span class="p">,</span>
+    <span class="s2">"xband6"</span><span class="p">:</span> <span class="n">core_hole_width_data_fuggle_inglesfield</span><span class="p">,</span>
+    <span class="s2">"xband8"</span><span class="p">:</span> <span class="n">core_hole_width_data_campbell_papp</span><span class="p">,</span>
 <span class="p">}</span>
 
 
 <div class="viewcode-block" id="core_hole_width">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.physics.core_hole_width.core_hole_width.html#ase2sprkkr.physics.core_hole_width.core_hole_width">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">core_hole_width</span><span class="p">(</span><span class="n">Z</span><span class="p">,</span> <span class="n">NC</span><span class="p">,</span> <span class="n">LC</span><span class="p">,</span> <span class="n">IK</span><span class="p">,</span> <span class="n">source</span><span class="o">=</span><span class="s2">&quot;campbell-papp&quot;</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">core_hole_width</span><span class="p">(</span><span class="n">Z</span><span class="p">,</span> <span class="n">NC</span><span class="p">,</span> <span class="n">LC</span><span class="p">,</span> <span class="n">IK</span><span class="p">,</span> <span class="n">source</span><span class="o">=</span><span class="s2">"campbell-papp"</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Calculates the Lorentzian core-hole life time (width) in [eV] based on</span>
 <span class="sd">    atomic number and quantum numbers of the core shell.</span>
 
@@ -2300,22 +2300,22 @@
 <span class="sd">        LC (int): Angular momentum quantum number of core shell.</span>
 <span class="sd">        IK (int): Selects SOC-split subshell (1: j=l-1/2, 2: j=l+1/2).</span>
 <span class="sd">                  For shells without SOC splitting (LC=0), this is not used.</span>
-<span class="sd">        source (str): Dataset to use. One of &#39;campbell-papp&#39; (default, Campbell &amp;</span>
-<span class="sd">                      Papp 2001, covers K–N7) or &#39;fuggle-inglesfield&#39; (Fuggle &amp;</span>
+<span class="sd">        source (str): Dataset to use. One of 'campbell-papp' (default, Campbell &amp;</span>
+<span class="sd">                      Papp 2001, covers K–N7) or 'fuggle-inglesfield' (Fuggle &amp;</span>
 <span class="sd">                      Inglesfield 1992, K and L shells only; returns 0 for higher).</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        float: Lorentzian core-hole width in eV.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="c1"># Check if the atomic number is within the valid range</span>
     <span class="k">if</span> <span class="n">Z</span> <span class="o">&lt;</span> <span class="mi">1</span> <span class="ow">or</span> <span class="n">Z</span> <span class="o">&gt;</span> <span class="mi">104</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error in core_hole_width: Z=</span><span class="si">{</span><span class="n">Z</span><span class="si">}</span><span class="s2"> is out of the valid range [1, 104].&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Error in core_hole_width: Z=</span><span class="si">{</span><span class="n">Z</span><span class="si">}</span><span class="s2"> is out of the valid range [1, 104]."</span><span class="p">)</span>
 
     <span class="n">dataset</span> <span class="o">=</span> <span class="n">_CORE_HOLE_WIDTH_SOURCES</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">dataset</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;Unknown core-hole width source &#39;</span><span class="si">{</span><span class="n">source</span><span class="si">}</span><span class="s2">&#39;. Valid options are: </span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="n">_CORE_HOLE_WIDTH_SOURCES</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s2">"Unknown core-hole width source '</span><span class="si">{</span><span class="n">source</span><span class="si">}</span><span class="s2">'. Valid options are: </span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="n">_CORE_HOLE_WIDTH_SOURCES</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span>
         <span class="p">)</span>
 
     <span class="c1"># Fortran uses 1-based indexing for arrays, so we convert the atomic number Z.</span>
@@ -2332,7 +2332,7 @@
     <span class="k">try</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">arr</span><span class="p">[</span><span class="n">z_index</span><span class="p">]</span>
     <span class="k">except</span> <span class="p">(</span><span class="ne">IndexError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown data for lorentzian core hole for Z=</span><span class="si">{</span><span class="n">Z</span><span class="si">}</span><span class="s2">, NC=</span><span class="si">{</span><span class="n">NC</span><span class="si">}</span><span class="s2">, LC=</span><span class="si">{</span><span class="n">LC</span><span class="si">}</span><span class="s2">, IK=</span><span class="si">{</span><span class="n">IK</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Unknown data for lorentzian core hole for Z=</span><span class="si">{</span><span class="n">Z</span><span class="si">}</span><span class="s2">, NC=</span><span class="si">{</span><span class="n">NC</span><span class="si">}</span><span class="s2">, LC=</span><span class="si">{</span><span class="n">LC</span><span class="si">}</span><span class="s2">, IK=</span><span class="si">{</span><span class="n">IK</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span></div>
 
 </pre></div>
 

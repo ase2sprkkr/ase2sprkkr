@@ -57,10 +57,10 @@
 <ul>
 <li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://sprkkr.org">SPR-KKR</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.sprkkr.org/wp-content/uploads/2026/05/kkr_manual.pdf">SPR-KKR manual</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
 <ul>
@@ -126,10 +126,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.ase.register.html">register</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.ase.register.calculator.html">calculator</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.ase.register.register.html">register</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.ase.register.sprkkr_reader.html">sprkkr_reader</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.ase.register.sprkkr_writer.html">sprkkr_writer</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.ase.symbols.html">symbols</a><ul>
@@ -255,6 +252,7 @@
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.file_utils.html">file_utils</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.file_utils.filename_from_file.html">filename_from_file</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.file_utils.Directory.html">Directory</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.file_utils.FilePath.html">FilePath</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.formats.html">formats</a><ul>
@@ -341,6 +339,7 @@
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.parsing_results.html">parsing_results</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.parsing_results.dict_from_parsed.html">dict_from_parsed</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.parsing_results.ArrayKey.html">ArrayKey</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.parsing_results.DefArrayKey.html">DefArrayKey</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.parsing_results.DefDictKey.html">DefDictKey</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.parsing_results.DictKey.html">DictKey</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.parsing_results.IgnoredKey.html">IgnoredKey</a></li>
@@ -362,6 +361,11 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.repeated_configuration_containers.html">repeated_configuration_containers</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.repeated_configuration_containers.RepeatedConfigurationContainer.html">RepeatedConfigurationContainer</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.repetition.html">repetition</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.repetition.Repeated.html">Repeated</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.repetition.RepeatedNumberedIf.html">RepeatedNumberedIf</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.section_adaptors.html">section_adaptors</a><ul>
@@ -456,6 +460,17 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.configuration.V.html">V</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.configuration.V.html#ase2sprkkr.configuration.V"><code class="docutils literal notranslate"><span class="pre">V</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.conftest.html">conftest</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.conftest.pytest_collection_modifyitems.html">pytest_collection_modifyitems</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.conftest.pytest_collection_modifyitems.html#ase2sprkkr.conftest.pytest_collection_modifyitems"><code class="docutils literal notranslate"><span class="pre">pytest_collection_modifyitems()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.conftest.pytest_configure.html">pytest_configure</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.conftest.pytest_configure.html#ase2sprkkr.conftest.pytest_configure"><code class="docutils literal notranslate"><span class="pre">pytest_configure()</span></code></a></li>
 </ul>
 </li>
 </ul>

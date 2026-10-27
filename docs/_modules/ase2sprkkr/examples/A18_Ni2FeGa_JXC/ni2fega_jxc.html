@@ -56,10 +56,10 @@
 <ul>
 <li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://sprkkr.org">SPR-KKR</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.sprkkr.org/wp-content/uploads/2026/05/kkr_manual.pdf">SPR-KKR manual</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
 <ul>
@@ -91,13 +91,13 @@
            <div itemprop="articleBody">
              
   <h1>Source code for ase2sprkkr.examples.A18_Ni2FeGa_JXC.ni2fega_jxc</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Calculate Ni2FeGa exchange couplings and export them for UppASD.&quot;&quot;&quot;</span>
+<span></span><span class="sd">"""Calculate Ni2FeGa exchange couplings and export them for UppASD."""</span>
 
 
 <div class="viewcode-block" id="make_ni2fega">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.examples.A18_Ni2FeGa_JXC.ni2fega_jxc.make_ni2fega.html#ase2sprkkr.examples.A18_Ni2FeGa_JXC.ni2fega_jxc.make_ni2fega">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">make_ni2fega</span><span class="p">():</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the ordered primitive Ni2FeGa Heusler cell.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Return the ordered primitive Ni2FeGa Heusler cell."""</span>
     <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">ase2sprkkr</span><span class="w"> </span><span class="kn">import</span> <span class="n">SPRKKRAtoms</span>
 
@@ -105,7 +105,7 @@
         <span class="p">[[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]]</span>
     <span class="p">)</span>
     <span class="k">return</span> <span class="n">SPRKKRAtoms</span><span class="p">(</span>
-        <span class="n">symbols</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Ni&quot;</span><span class="p">,</span> <span class="s2">&quot;Ni&quot;</span><span class="p">,</span> <span class="s2">&quot;Fe&quot;</span><span class="p">,</span> <span class="s2">&quot;Ga&quot;</span><span class="p">],</span>
+        <span class="n">symbols</span><span class="o">=</span><span class="p">[</span><span class="s2">"Ni"</span><span class="p">,</span> <span class="s2">"Ni"</span><span class="p">,</span> <span class="s2">"Fe"</span><span class="p">,</span> <span class="s2">"Ga"</span><span class="p">],</span>
         <span class="n">scaled_positions</span><span class="o">=</span><span class="p">[</span>
             <span class="p">[</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">],</span>
             <span class="p">[</span><span class="mf">0.75</span><span class="p">,</span> <span class="mf">0.75</span><span class="p">,</span> <span class="mf">0.75</span><span class="p">],</span>
@@ -129,29 +129,29 @@
     <span class="n">scf_result</span> <span class="o">=</span> <span class="n">calculator</span><span class="o">.</span><span class="n">calculate</span><span class="p">()</span>
 
     <span class="n">jxc_options</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">&quot;CONTROL.DATASET&quot;</span><span class="p">:</span> <span class="s2">&quot;Ni2FeGa&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;TAU.NKTAB&quot;</span><span class="p">:</span> <span class="mi">1000</span><span class="p">,</span>
-        <span class="s2">&quot;MODE.LLOYD&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-        <span class="s2">&quot;TASK.CLURAD&quot;</span><span class="p">:</span> <span class="mf">4.5</span><span class="p">,</span>
-        <span class="s2">&quot;SITES.NL&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
-        <span class="s2">&quot;MODE&quot;</span><span class="p">:</span> <span class="s2">&quot;SP-SREL&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;ENERGY.NE&quot;</span><span class="p">:</span> <span class="mi">32</span><span class="p">,</span>
+        <span class="s2">"CONTROL.DATASET"</span><span class="p">:</span> <span class="s2">"Ni2FeGa"</span><span class="p">,</span>
+        <span class="s2">"TAU.NKTAB"</span><span class="p">:</span> <span class="mi">1000</span><span class="p">,</span>
+        <span class="s2">"MODE.LLOYD"</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="s2">"TASK.CLURAD"</span><span class="p">:</span> <span class="mf">4.5</span><span class="p">,</span>
+        <span class="s2">"SITES.NL"</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+        <span class="s2">"MODE"</span><span class="p">:</span> <span class="s2">"SP-SREL"</span><span class="p">,</span>
+        <span class="s2">"ENERGY.NE"</span><span class="p">:</span> <span class="mi">32</span><span class="p">,</span>
     <span class="p">}</span>
     <span class="n">result</span> <span class="o">=</span> <span class="n">calculator</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span>
         <span class="n">potential</span><span class="o">=</span><span class="n">scf_result</span><span class="o">.</span><span class="n">potential_filename</span><span class="p">,</span>
-        <span class="n">input_parameters</span><span class="o">=</span><span class="s2">&quot;jxc&quot;</span><span class="p">,</span>
+        <span class="n">input_parameters</span><span class="o">=</span><span class="s2">"jxc"</span><span class="p">,</span>
         <span class="n">options</span><span class="o">=</span><span class="n">jxc_options</span><span class="p">,</span>
     <span class="p">)</span>
 
-    <span class="c1"># Inspect all three exchange-tensor components, report SPR-KKR&#39;s mean-field</span>
+    <span class="c1"># Inspect all three exchange-tensor components, report SPR-KKR's mean-field</span>
     <span class="c1"># Curie temperature and create jfile/posfile/momfile/inpsd for UppASD.</span>
     <span class="n">result</span><span class="o">.</span><span class="n">jxc</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">layout</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Mean-field Curie temperature:&quot;</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">mean_field_curie_temperature</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"Mean-field Curie temperature:"</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">mean_field_curie_temperature</span><span class="p">)</span>
     <span class="n">result</span><span class="o">.</span><span class="n">write_uppasd_files</span><span class="p">()</span></div>
 
 
 
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
     <span class="n">main</span><span class="p">()</span>
 </pre></div>
 

@@ -56,10 +56,10 @@
 <ul>
 <li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://sprkkr.org">SPR-KKR</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.sprkkr.org/wp-content/uploads/2026/05/kkr_manual.pdf">SPR-KKR manual</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
 <ul>
@@ -91,8 +91,8 @@
            <div itemprop="articleBody">
              
   <h1>Source code for ase2sprkkr.sprkkr.io_data</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;IoData classes serves are intermediate object used as storage during</span>
-<span class="sd">reading or writing of potential/input_parameters files.&quot;&quot;&quot;</span>
+<span></span><span class="sd">"""IoData classes serves are intermediate object used as storage during</span>
+<span class="sd">reading or writing of potential/input_parameters files."""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">..common.decorators</span><span class="w"> </span><span class="kn">import</span> <span class="n">cached_property</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">..common.unique_values</span><span class="w"> </span><span class="kn">import</span> <span class="n">UniqueValuesMapping</span>
@@ -102,9 +102,9 @@
 <div class="viewcode-block" id="unique_mapping">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.io_data.unique_mapping.html#ase2sprkkr.sprkkr.io_data.unique_mapping">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">unique_mapping</span><span class="p">(</span><span class="n">fce</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Create function (with a cached result), that returns UniqueValuesMapping from a given iterator</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="nd">@wraps</span><span class="p">(</span><span class="n">fce</span><span class="p">)</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_unique_mapping</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -118,8 +118,8 @@
 <div class="viewcode-block" id="BaseIoData">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.io_data.BaseIoData.html#ase2sprkkr.sprkkr.io_data.BaseIoData">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">BaseIoData</span><span class="p">(</span><span class="nb">dict</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class for object used during reading/writing.</span>
-<span class="sd">    For a potential future use.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Base class for object used during reading/writing.</span>
+<span class="sd">    For a potential future use."""</span>
 
     <span class="k">pass</span></div>
 
@@ -128,11 +128,11 @@
 <div class="viewcode-block" id="WriteIoData">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.io_data.WriteIoData.html#ase2sprkkr.sprkkr.io_data.WriteIoData">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">WriteIoData</span><span class="p">(</span><span class="n">BaseIoData</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;During writing of potential file, some lists are needed in more sections,</span>
+<span class="w">    </span><span class="sd">"""During writing of potential file, some lists are needed in more sections,</span>
 <span class="sd">    typically one section contains the list itself, while another(s) reference(s)</span>
 <span class="sd">    the items of the list.</span>
 <span class="sd">    So the lists are created on demand and cached for its further use.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="WriteIoData.__init__">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.io_data.WriteIoData.html#ase2sprkkr.sprkkr.io_data.WriteIoData.__init__">[docs]</a>
@@ -194,7 +194,7 @@
 <div class="viewcode-block" id="ReadIoData">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.io_data.ReadIoData.html#ase2sprkkr.sprkkr.io_data.ReadIoData">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">ReadIoData</span><span class="p">(</span><span class="n">BaseIoData</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Object to store data during reading of a potential file.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Object to store data during reading of a potential file."""</span>
 
 <div class="viewcode-block" id="ReadIoData.__init__">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.io_data.ReadIoData.html#ase2sprkkr.sprkkr.io_data.ReadIoData.__init__">[docs]</a>
@@ -205,10 +205,10 @@
 <div class="viewcode-block" id="ReadIoData.apply_on_atoms">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.io_data.ReadIoData.html#ase2sprkkr.sprkkr.io_data.ReadIoData.apply_on_atoms">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">apply_on_atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">handler</span><span class="p">,</span> <span class="n">atoms</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Apply the given function on the atoms object, if not-None is given.</span>
+<span class="w">        </span><span class="sd">"""Apply the given function on the atoms object, if not-None is given.</span>
 <span class="sd">        However, the store the handler, to be executed (or repeated) on a newly</span>
 <span class="sd">        given atoms - for the case, that a new atoms object will be created later</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="n">atoms</span><span class="p">:</span>
             <span class="n">handler</span><span class="p">(</span><span class="n">atoms</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_postponed</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">handler</span><span class="p">)</span></div>
@@ -217,7 +217,7 @@
 <div class="viewcode-block" id="ReadIoData.update_atoms">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.io_data.ReadIoData.html#ase2sprkkr.sprkkr.io_data.ReadIoData.update_atoms">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">update_atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Replay are the stored handlers on the given atoms object&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Replay are the stored handlers on the given atoms object"""</span>
         <span class="k">if</span> <span class="n">atoms</span><span class="o">.</span><span class="n">are_sites_inited</span><span class="p">():</span>
             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">atoms</span><span class="o">.</span><span class="n">sites</span><span class="p">:</span>
                 <span class="n">i</span><span class="o">.</span><span class="n">_clear_data</span><span class="p">()</span>

@@ -56,10 +56,10 @@
 <ul>
 <li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://sprkkr.org">SPR-KKR</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.sprkkr.org/wp-content/uploads/2026/05/kkr_manual.pdf">SPR-KKR manual</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
 <ul>
@@ -91,13 +91,13 @@
            <div itemprop="articleBody">
              
   <h1>Source code for ase2sprkkr.potentials.potential_definitions</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span></span><span class="sd">"""</span>
 <span class="sd">This file contains the classes for definitions of Potentials:</span>
 <span class="sd">the list of sections and their allowed (or standard) options</span>
 <span class="sd">and their value formats. InputParameterss and potentials have a simlilar</span>
 <span class="sd">structure, so they share common functionalities from</span>
 <span class="sd">sprkkr.common.configuration_definitions</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">pyparsing</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pp</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">..common.grammar</span><span class="w"> </span><span class="kn">import</span> <span class="n">line_end</span>
@@ -119,16 +119,16 @@
 <div class="viewcode-block" id="PotValueDefinition">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.potential_definitions.PotValueDefinition.html#ase2sprkkr.potentials.definitions.potential.PotValueDefinition">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">PotValueDefinition</span><span class="p">(</span><span class="n">ConfigurationValueDefinition</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Definition of a configuration option in a potential</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="nd">@cached_class_property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">grammar_of_delimiter</span><span class="p">():</span>
-        <span class="k">return</span> <span class="n">pp</span><span class="o">.</span><span class="n">Empty</span><span class="p">()</span><span class="o">.</span><span class="n">set_name</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">pp</span><span class="o">.</span><span class="n">Empty</span><span class="p">()</span><span class="o">.</span><span class="n">set_name</span><span class="p">(</span><span class="s2">" "</span><span class="p">)</span>
 
-    <span class="n">prefix</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-    <span class="n">name_value_delimiter</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span>
+    <span class="n">prefix</span> <span class="o">=</span> <span class="s2">""</span>
+    <span class="n">name_value_delimiter</span> <span class="o">=</span> <span class="s2">"</span><span class="se">\t</span><span class="s2">"</span>
 
 <div class="viewcode-block" id="PotValueDefinition.__init__">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.potential_definitions.PotValueDefinition.html#ase2sprkkr.potentials.definitions.potential.PotValueDefinition.__init__">[docs]</a>
@@ -143,11 +143,11 @@
 <div class="viewcode-block" id="Separator">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.potential_definitions.Separator.html#ase2sprkkr.potentials.definitions.potential.Separator">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Separator</span><span class="p">(</span><span class="n">SeparatorDefinition</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A special (hidden) value, that appears in a potential header section.</span>
 
 <span class="sd">    The separator is a line of doublecross</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="n">separator_type</span> <span class="o">=</span> <span class="n">separator</span></div>
 
@@ -156,35 +156,35 @@
 <div class="viewcode-block" id="PotSectionDefinition">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.potential_definitions.PotSectionDefinition.html#ase2sprkkr.potentials.definitions.potential.PotSectionDefinition">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">PotSectionDefinition</span><span class="p">(</span><span class="n">ConfigurationSectionDefinition</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;This class describes the format of one</span>
-<span class="sd">    value of a standard potential section&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""This class describes the format of one</span>
+<span class="sd">    value of a standard potential section"""</span>
 
     <span class="n">force_order</span> <span class="o">=</span> <span class="kc">True</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; The order of items in potential file is fixed &quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">""" The order of items in potential file is fixed """</span>
 
-    <span class="n">value_name_format</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{:&lt;12}</span><span class="s2">&quot;</span>
+    <span class="n">value_name_format</span> <span class="o">=</span> <span class="s2">"</span><span class="si">{:&lt;12}</span><span class="s2">"</span>
 
     <span class="n">child_class</span> <span class="o">=</span> <span class="n">PotValueDefinition</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; standard child class &quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">""" standard child class """</span>
 
     <span class="n">custom_class</span> <span class="o">=</span> <span class="nb">staticmethod</span><span class="p">(</span><span class="n">CustomConfigurationValue</span><span class="o">.</span><span class="n">factory</span><span class="p">(</span><span class="n">PotValueDefinition</span><span class="p">,</span> <span class="n">pot_mixed</span><span class="p">))</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; Adding a custom values is allowed &quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">""" Adding a custom values is allowed """</span>
 
-    <span class="n">delimiter</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; options are delimited by newline in ouptut. &quot;&quot;&quot;</span>
+    <span class="n">delimiter</span> <span class="o">=</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span>
+<span class="w">    </span><span class="sd">""" options are delimited by newline in ouptut. """</span>
 
     <span class="n">grammar_of_delimiter</span> <span class="o">=</span> <span class="n">line_end</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; items are separated by newline &quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">""" items are separated by newline """</span>
 
 <div class="viewcode-block" id="PotSectionDefinition.depends_on">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.potential_definitions.PotSectionDefinition.html#ase2sprkkr.potentials.definitions.potential.PotSectionDefinition.depends_on">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">depends_on</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;The order of processing of sections during reading can be different than the order during a write. So, if the function should not be processed before given named sections, name then.</span>
+<span class="w">        </span><span class="sd">"""The order of processing of sections during reading can be different than the order during a write. So, if the function should not be processed before given named sections, name then.</span>
 
 <span class="sd">        Return</span>
 <span class="sd">        ------</span>
 <span class="sd">        prerequisites: [ str, str, ... ]</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">return</span> <span class="p">[]</span></div>
 
 
@@ -193,7 +193,7 @@
 <div class="viewcode-block" id="PotSectionDefinition.__init__">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.potential_definitions.PotSectionDefinition.html#ase2sprkkr.potentials.definitions.potential.PotSectionDefinition.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">mandatory</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        For the documentation of the other parameters, see</span>
 <span class="sd">        :meth:`ase2sprkkr.common.SectionDefinition`</span>
 
@@ -202,7 +202,7 @@
 <span class="sd">        mandatory</span>
 <span class="sd">          Is the section mandatory? I.e. the potential file is required to</span>
 <span class="sd">          contain this sections.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mandatory</span> <span class="o">=</span> <span class="n">mandatory</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 </div>
@@ -212,15 +212,15 @@
 <div class="viewcode-block" id="ASEArraySectionDefinition">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.potential_definitions.ASEArraySectionDefinition.html#ase2sprkkr.potentials.definitions.potential.ASEArraySectionDefinition">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">ASEArraySectionDefinition</span><span class="p">(</span><span class="n">PotSectionDefinition</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A definition of a section, that contains an ASE datas (Atoms.setArray)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="ASEArraySectionDefinition.__init__">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.potential_definitions.ASEArraySectionDefinition.html#ase2sprkkr.potentials.definitions.potential.ASEArraySectionDefinition.__init__">[docs]</a>
     <span class="nd">@add_to_signature</span><span class="p">(</span><span class="n">PotSectionDefinition</span><span class="o">.</span><span class="fm">__init__</span><span class="p">)</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">array_name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        For the documentation of the other parameters, see</span>
 <span class="sd">        :meth:`ase2sprkkr.potential_definitions.PotSectionDefinition`</span>
 <span class="sd">        and its predecessor</span>
@@ -229,8 +229,8 @@
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        array_name: str</span>
-<span class="sd">          The name of the ASE array that contains the section&#39;s data</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">          The name of the ASE array that contains the section's data</span>
+<span class="sd">        """</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">array_name</span> <span class="o">=</span> <span class="n">array_name</span></div>
 
@@ -238,8 +238,8 @@
 <div class="viewcode-block" id="ASEArraySectionDefinition.depends_on">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.potential_definitions.ASEArraySectionDefinition.html#ase2sprkkr.potentials.definitions.potential.ASEArraySectionDefinition.depends_on">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">depends_on</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Array size is required&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="p">[</span><span class="s2">&quot;SITES&quot;</span><span class="p">]</span></div>
+<span class="w">        </span><span class="sd">"""Array size is required"""</span>
+        <span class="k">return</span> <span class="p">[</span><span class="s2">"SITES"</span><span class="p">]</span></div>
 
 
     <span class="n">result_class</span> <span class="o">=</span> <span class="n">ASEArraySection</span></div>
@@ -249,35 +249,35 @@
 <div class="viewcode-block" id="PotentialDefinition">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.potential_definitions.PotentialDefinition.html#ase2sprkkr.potentials.definitions.potential.PotentialDefinition">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">PotentialDefinition</span><span class="p">(</span><span class="n">ConfigurationFileDefinition</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;This class describes the format of a potential file&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""This class describes the format of a potential file"""</span>
 
     <span class="n">child_class</span> <span class="o">=</span> <span class="n">PotSectionDefinition</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; Definition of the standard child class: &quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">""" Definition of the standard child class: """</span>
 
     <span class="n">result_class</span> <span class="o">=</span> <span class="n">Potential</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; The parsing of a potential file results in an instance of Potential. &quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">""" The parsing of a potential file results in an instance of Potential. """</span>
 
-    <span class="n">configuration_type_name</span> <span class="o">=</span> <span class="s2">&quot;POTENTIAL FILE&quot;</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; Name of the container type in the runtime documentation &quot;&quot;&quot;</span>
+    <span class="n">configuration_type_name</span> <span class="o">=</span> <span class="s2">"POTENTIAL FILE"</span>
+<span class="w">    </span><span class="sd">""" Name of the container type in the runtime documentation """</span>
 
     <span class="n">force_order</span> <span class="o">=</span> <span class="kc">True</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; The order of items in potential file is fixed &quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">""" The order of items in potential file is fixed """</span>
 
-    <span class="n">delimiter</span> <span class="o">=</span> <span class="s2">&quot;*&quot;</span> <span class="o">*</span> <span class="mi">79</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; Sections delimiter &quot;&quot;&quot;</span>
+    <span class="n">delimiter</span> <span class="o">=</span> <span class="s2">"*"</span> <span class="o">*</span> <span class="mi">79</span> <span class="o">+</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span>
+<span class="w">    </span><span class="sd">""" Sections delimiter """</span>
 
     <span class="nd">@cached_class_property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">grammar_of_delimiter</span><span class="p">():</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Grammar of the sections delimiter&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Grammar of the sections delimiter"""</span>
         <span class="k">return</span> <span class="n">SectionString</span><span class="o">.</span><span class="n">grammar_of_delimiter</span><span class="p">()</span>
 
     <span class="n">custom_class</span> <span class="o">=</span> <span class="n">CustomPotentialSection</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; Unknown sections will be of this type &quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">""" Unknown sections will be of this type """</span>
 
 <div class="viewcode-block" id="PotentialDefinition._generic_info">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.potential_definitions.PotentialDefinition.html#ase2sprkkr.potentials.definitions.potential.PotentialDefinition._generic_info">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">_generic_info</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s2">&quot;Definition of the format of SPRKKR potential file&quot;</span></div>
+        <span class="k">return</span> <span class="s2">"Definition of the format of SPRKKR potential file"</span></div>
 
 
 <div class="viewcode-block" id="PotentialDefinition.custom_value_grammar">
@@ -285,12 +285,12 @@
     <span class="nd">@classmethod</span>
     <span class="nd">@cache</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">custom_value_grammar</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Unknown sections are parsed by this grammar&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Unknown sections are parsed by this grammar"""</span>
         <span class="k">return</span> <span class="n">SectionString</span><span class="o">.</span><span class="n">_grammar</span></div>
 
 
-    <span class="n">custom_name_characters</span> <span class="o">=</span> <span class="n">ConfigurationFileDefinition</span><span class="o">.</span><span class="n">custom_name_characters</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; There can be space in a potential-section name &quot;&quot;&quot;</span></div>
+    <span class="n">custom_name_characters</span> <span class="o">=</span> <span class="n">ConfigurationFileDefinition</span><span class="o">.</span><span class="n">custom_name_characters</span> <span class="o">+</span> <span class="s2">" "</span>
+<span class="w">    </span><span class="sd">""" There can be space in a potential-section name """</span></div>
 
 </pre></div>
 

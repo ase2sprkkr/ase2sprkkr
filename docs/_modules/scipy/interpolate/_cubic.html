@@ -56,10 +56,10 @@
 <ul>
 <li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://sprkkr.org">SPR-KKR</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.sprkkr.org/wp-content/uploads/2026/05/kkr_manual.pdf">SPR-KKR manual</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
 <ul>
@@ -91,7 +91,7 @@
            <div itemprop="articleBody">
              
   <h1>Source code for scipy.interpolate._cubic</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Interpolation algorithms using piecewise cubic polynomials.&quot;&quot;&quot;</span>
+<span></span><span class="sd">"""Interpolation algorithms using piecewise cubic polynomials."""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Literal</span>
 
@@ -99,30 +99,30 @@
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">scipy.linalg</span><span class="w"> </span><span class="kn">import</span> <span class="n">solve</span><span class="p">,</span> <span class="n">solve_banded</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">scipy._lib._array_api</span><span class="w"> </span><span class="kn">import</span> <span class="n">array_namespace</span><span class="p">,</span> <span class="n">xp_size</span><span class="p">,</span> <span class="n">xp_capabilities</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">scipy._lib.array_api_compat</span><span class="w"> </span><span class="kn">import</span> <span class="n">numpy</span> <span class="k">as</span> <span class="n">np_compat</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy._external.array_api_compat</span><span class="w"> </span><span class="kn">import</span> <span class="n">numpy</span> <span class="k">as</span> <span class="n">np_compat</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">.</span><span class="w"> </span><span class="kn">import</span> <span class="n">PPoly</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">._polyint</span><span class="w"> </span><span class="kn">import</span> <span class="n">_isscalar</span>
 
-<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;CubicHermiteSpline&quot;</span><span class="p">,</span> <span class="s2">&quot;PchipInterpolator&quot;</span><span class="p">,</span> <span class="s2">&quot;pchip_interpolate&quot;</span><span class="p">,</span>
-           <span class="s2">&quot;Akima1DInterpolator&quot;</span><span class="p">,</span> <span class="s2">&quot;CubicSpline&quot;</span><span class="p">]</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"CubicHermiteSpline"</span><span class="p">,</span> <span class="s2">"PchipInterpolator"</span><span class="p">,</span> <span class="s2">"pchip_interpolate"</span><span class="p">,</span>
+           <span class="s2">"Akima1DInterpolator"</span><span class="p">,</span> <span class="s2">"CubicSpline"</span><span class="p">]</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">prepare_input</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">axis</span><span class="p">,</span> <span class="n">dydx</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">xp</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Prepare input for cubic spline interpolators.</span>
+<span class="w">    </span><span class="sd">"""Prepare input for cubic spline interpolators.</span>
 
 <span class="sd">    All data are converted to numpy arrays and checked for correctness.</span>
 <span class="sd">    Axes equal to `axis` of arrays `y` and `dydx` are moved to be the 0th</span>
 <span class="sd">    axis. The value of `axis` is converted to lie in</span>
 <span class="sd">    [0, number of dimensions of `y`).</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="n">xp</span><span class="o">.</span><span class="n">asarray</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span>
-    <span class="k">if</span> <span class="n">xp</span><span class="o">.</span><span class="n">isdtype</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="s2">&quot;complex floating&quot;</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;`x` must contain real values.&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">xp</span><span class="o">.</span><span class="n">isdtype</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="s2">"complex floating"</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"`x` must contain real values."</span><span class="p">)</span>
     <span class="n">x</span> <span class="o">=</span> <span class="n">xp</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">xp</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">xp</span><span class="o">.</span><span class="n">isdtype</span><span class="p">(</span><span class="n">y</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="s2">&quot;complex floating&quot;</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">xp</span><span class="o">.</span><span class="n">isdtype</span><span class="p">(</span><span class="n">y</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="s2">"complex floating"</span><span class="p">):</span>
         <span class="n">dtype</span> <span class="o">=</span> <span class="n">xp</span><span class="o">.</span><span class="n">complex128</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">dtype</span> <span class="o">=</span> <span class="n">xp</span><span class="o">.</span><span class="n">float64</span>
@@ -130,32 +130,32 @@
     <span class="k">if</span> <span class="n">dydx</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">dydx</span> <span class="o">=</span> <span class="n">xp</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">dydx</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">y</span><span class="o">.</span><span class="n">shape</span> <span class="o">!=</span> <span class="n">dydx</span><span class="o">.</span><span class="n">shape</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The shapes of `y` and `dydx` must be identical.&quot;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">xp</span><span class="o">.</span><span class="n">isdtype</span><span class="p">(</span><span class="n">dydx</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="s2">&quot;complex floating&quot;</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"The shapes of `y` and `dydx` must be identical."</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">xp</span><span class="o">.</span><span class="n">isdtype</span><span class="p">(</span><span class="n">dydx</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="s2">"complex floating"</span><span class="p">):</span>
             <span class="n">dtype</span> <span class="o">=</span> <span class="n">xp</span><span class="o">.</span><span class="n">complex128</span>
         <span class="n">dydx</span> <span class="o">=</span> <span class="n">xp</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">dydx</span><span class="p">,</span> <span class="n">dtype</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
     <span class="n">y</span> <span class="o">=</span> <span class="n">xp</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">dtype</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="n">axis</span> <span class="o">=</span> <span class="n">axis</span> <span class="o">%</span> <span class="n">y</span><span class="o">.</span><span class="n">ndim</span>
     <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;`x` must be 1-dimensional.&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"`x` must be 1-dimensional."</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;`x` must contain at least 2 elements.&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"`x` must contain at least 2 elements."</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="n">y</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="n">axis</span><span class="p">]:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The length of `y` along `axis`=</span><span class="si">{</span><span class="n">axis</span><span class="si">}</span><span class="s2"> doesn&#39;t &quot;</span>
-                         <span class="s2">&quot;match the length of `x`&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"The length of `y` along `axis`=</span><span class="si">{</span><span class="n">axis</span><span class="si">}</span><span class="s2"> doesn't "</span>
+                         <span class="s2">"match the length of `x`"</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">xp</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">xp</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">x</span><span class="p">)):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;`x` must contain only finite values.&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"`x` must contain only finite values."</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">xp</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">xp</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">y</span><span class="p">)):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;`y` must contain only finite values.&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"`y` must contain only finite values."</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">dydx</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">xp</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">xp</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">dydx</span><span class="p">)):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;`dydx` must contain only finite values.&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"`dydx` must contain only finite values."</span><span class="p">)</span>
 
     <span class="n">dx</span> <span class="o">=</span> <span class="n">xp</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">xp</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">dx</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;`x` must be strictly increasing sequence.&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"`x` must be strictly increasing sequence."</span><span class="p">)</span>
 
     <span class="n">y</span> <span class="o">=</span> <span class="n">xp</span><span class="o">.</span><span class="n">moveaxis</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">axis</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">dydx</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -167,12 +167,12 @@
 <span class="nd">@xp_capabilities</span><span class="p">(</span>
     <span class="n">cpu_only</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">jax_jit</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
     <span class="n">skip_backends</span><span class="o">=</span><span class="p">[</span>
-        <span class="p">(</span><span class="s2">&quot;dask.array&quot;</span><span class="p">,</span>
-         <span class="s2">&quot;https://github.com/data-apis/array-api-extra/issues/488&quot;</span><span class="p">)</span>
+        <span class="p">(</span><span class="s2">"dask.array"</span><span class="p">,</span>
+         <span class="s2">"https://github.com/data-apis/array-api-extra/issues/488"</span><span class="p">)</span>
     <span class="p">]</span>
 <span class="p">)</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">CubicHermiteSpline</span><span class="p">(</span><span class="n">PPoly</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Piecewise cubic interpolator to fit values and first derivatives (C1 smooth).</span>
+<span class="w">    </span><span class="sd">"""Piecewise cubic interpolator to fit values and first derivatives (C1 smooth).</span>
 
 <span class="sd">    The result is represented as a `PPoly` instance.</span>
 
@@ -193,10 +193,11 @@
 <span class="sd">        Axis along which `y` is assumed to be varying. Meaning that for</span>
 <span class="sd">        ``x[i]`` the corresponding values are ``np.take(y, i, axis=axis)``.</span>
 <span class="sd">        Default is 0.</span>
-<span class="sd">    extrapolate : {bool, &#39;periodic&#39;, None}, optional</span>
+<span class="sd">    extrapolate : {bool, 'periodic', None}, optional</span>
 <span class="sd">        If bool, determines whether to extrapolate to out-of-bounds points</span>
-<span class="sd">        based on first and last intervals, or to return NaNs. If &#39;periodic&#39;,</span>
+<span class="sd">        based on first and last intervals, or to return NaNs. If 'periodic',</span>
 <span class="sd">        periodic extrapolation is used. If None (default), it is set to True.</span>
+<span class="sd">        See :ref:`tutorial-interpolate_out_of_bounds`.</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
@@ -237,7 +238,7 @@
 <span class="sd">    .. [1] `Cubic Hermite spline</span>
 <span class="sd">            &lt;https://en.wikipedia.org/wiki/Cubic_Hermite_spline&gt;`_</span>
 <span class="sd">            on Wikipedia.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">dydx</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">extrapolate</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="n">xp</span> <span class="o">=</span> <span class="n">array_namespace</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">dydx</span><span class="p">)</span>
@@ -262,15 +263,19 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">axis</span> <span class="o">=</span> <span class="n">axis</span>
 
 
-<span class="nd">@xp_capabilities</span><span class="p">(</span>
-    <span class="n">cpu_only</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">jax_jit</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-    <span class="n">skip_backends</span><span class="o">=</span><span class="p">[</span>
-        <span class="p">(</span><span class="s2">&quot;dask.array&quot;</span><span class="p">,</span>
-         <span class="s2">&quot;https://github.com/data-apis/array-api-extra/issues/488&quot;</span><span class="p">)</span>
-    <span class="p">]</span>
-<span class="p">)</span>
+<span class="c1"># The commented out xp_capabilities below are probably right but since</span>
+<span class="c1"># this is untested, mark as np_only. TODO: convert the tests.</span>
+<span class="c1">#</span>
+<span class="c1"># @xp_capabilities(</span>
+<span class="c1">#     cpu_only=True, jax_jit=False,</span>
+<span class="c1">#     skip_backends=[</span>
+<span class="c1">#         ("dask.array",</span>
+<span class="c1">#          "https://github.com/data-apis/array-api-extra/issues/488")</span>
+<span class="c1">#     ]</span>
+<span class="c1"># )</span>
+<span class="nd">@xp_capabilities</span><span class="p">(</span><span class="n">np_only</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">reason</span><span class="o">=</span><span class="s2">"not tested"</span><span class="p">)</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">PchipInterpolator</span><span class="p">(</span><span class="n">CubicHermiteSpline</span><span class="p">):</span>
-<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;PCHIP shape-preserving interpolator (C1 smooth).</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">"""PCHIP shape-preserving interpolator (C1 smooth).</span>
 
 <span class="sd">    ``x`` and ``y`` are arrays of values used to approximate some function f,</span>
 <span class="sd">    with ``y = f(x)``. The interpolant uses monotonic cubic splines</span>
@@ -283,15 +288,17 @@
 <span class="sd">        A 1-D array of monotonically increasing real values. ``x`` cannot</span>
 <span class="sd">        include duplicate values (otherwise f is overspecified)</span>
 <span class="sd">    y : ndarray, shape (..., npoints, ...)</span>
-<span class="sd">        An N-D array of real values. ``y``&#39;s length along the interpolation</span>
+<span class="sd">        An N-D array of real values. ``y``'s length along the interpolation</span>
 <span class="sd">        axis must be equal to the length of ``x``. Use the ``axis``</span>
 <span class="sd">        parameter to select the interpolation axis.</span>
 <span class="sd">    axis : int, optional</span>
 <span class="sd">        Axis in the ``y`` array corresponding to the x-coordinate values. Defaults</span>
 <span class="sd">        to ``axis=0``.</span>
-<span class="sd">    extrapolate : bool, optional</span>
-<span class="sd">        Whether to extrapolate to out-of-bounds points based on first</span>
-<span class="sd">        and last intervals, or to return NaNs.</span>
+<span class="sd">    extrapolate : {bool, 'periodic', None}, optional</span>
+<span class="sd">        If bool, determines whether to extrapolate to out-of-bounds points</span>
+<span class="sd">        based on first and last intervals, or to return NaNs. If 'periodic',</span>
+<span class="sd">        periodic extrapolation is used. If None (default), it is set to True.</span>
+<span class="sd">        See :ref:`tutorial-interpolate_out_of_bounds`.</span>
 
 <span class="sd">    Methods</span>
 <span class="sd">    -------</span>
@@ -318,18 +325,18 @@
 <span class="sd">    The first derivatives are guaranteed to be continuous, but the second</span>
 <span class="sd">    derivatives may jump at :math:`x_k`.</span>
 
-<span class="sd">    Determines the derivatives at the points :math:`x_k`, :math:`f&#39;_k`,</span>
+<span class="sd">    Determines the derivatives at the points :math:`x_k`, :math:`f'_k`,</span>
 <span class="sd">    by using PCHIP algorithm [1]_.</span>
 
 <span class="sd">    Let :math:`h_k = x_{k+1} - x_k`, and  :math:`d_k = (y_{k+1} - y_k) / h_k`</span>
 <span class="sd">    are the slopes at internal points :math:`x_k`.</span>
 <span class="sd">    If the signs of :math:`d_k` and :math:`d_{k-1}` are different or either of</span>
-<span class="sd">    them equals zero, then :math:`f&#39;_k = 0`. Otherwise, it is given by the</span>
+<span class="sd">    them equals zero, then :math:`f'_k = 0`. Otherwise, it is given by the</span>
 <span class="sd">    weighted harmonic mean</span>
 
 <span class="sd">    .. math::</span>
 
-<span class="sd">        \frac{w_1 + w_2}{f&#39;_k} = \frac{w_1}{d_{k-1}} + \frac{w_2}{d_k}</span>
+<span class="sd">        \frac{w_1 + w_2}{f'_k} = \frac{w_1}{d_{k-1}} + \frac{w_2}{d_k}</span>
 
 <span class="sd">    where :math:`w_1 = 2 h_k + h_{k-1}` and :math:`w_2 = h_k + 2 h_{k-1}`.</span>
 
@@ -346,18 +353,15 @@
 <span class="sd">    .. [2] C. Moler, Numerical Computing with Matlab, 2004.</span>
 <span class="sd">           :doi:`10.1137/1.9780898717952`</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="c1"># PchipInterpolator is not generic in scipy-stubs</span>
-    <span class="n">__class_getitem__</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">extrapolate</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="n">xp</span> <span class="o">=</span> <span class="n">array_namespace</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
         <span class="n">x</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">axis</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">prepare_input</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">axis</span><span class="p">,</span> <span class="n">xp</span><span class="o">=</span><span class="n">xp</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">xp</span><span class="o">.</span><span class="n">isdtype</span><span class="p">(</span><span class="n">y</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="s2">&quot;complex floating&quot;</span><span class="p">):</span>
-            <span class="n">msg</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;`PchipInterpolator` only works with real values for `y`. &quot;</span>
-                   <span class="s2">&quot;If you are trying to use the real components of the passed array, &quot;</span>
-                   <span class="s2">&quot;use `np.real` on the array before passing to `PchipInterpolator`.&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">xp</span><span class="o">.</span><span class="n">isdtype</span><span class="p">(</span><span class="n">y</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="s2">"complex floating"</span><span class="p">):</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"`PchipInterpolator` only works with real values for `y`. "</span>
+                   <span class="s2">"If you are trying to use the real components of the passed array, "</span>
+                   <span class="s2">"use `np.real` on the array before passing to `PchipInterpolator`."</span><span class="p">)</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
         <span class="n">xv</span> <span class="o">=</span> <span class="n">xp</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],)</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span><span class="p">,)</span><span class="o">*</span><span class="p">(</span><span class="n">y</span><span class="o">.</span><span class="n">ndim</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
         <span class="n">dk</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_find_derivatives</span><span class="p">(</span><span class="n">xv</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">xp</span><span class="o">=</span><span class="n">xp</span><span class="p">)</span>
@@ -392,7 +396,7 @@
         <span class="c1">#   where h_k is the spacing between x_k and x_{k+1}</span>
         <span class="n">y_shape</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">shape</span>
         <span class="k">if</span> <span class="n">y</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="c1"># So that _edge_case doesn&#39;t end up assigning to scalars</span>
+            <span class="c1"># So that _edge_case doesn't end up assigning to scalars</span>
             <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span>
             <span class="n">y</span> <span class="o">=</span> <span class="n">y</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span>
 
@@ -413,8 +417,8 @@
         <span class="n">w2</span> <span class="o">=</span> <span class="n">hk</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">+</span> <span class="mi">2</span><span class="o">*</span><span class="n">hk</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
 
         <span class="c1"># values where division by zero occurs will be excluded</span>
-        <span class="c1"># by &#39;condition&#39; afterwards</span>
-        <span class="k">with</span> <span class="n">np</span><span class="o">.</span><span class="n">errstate</span><span class="p">(</span><span class="n">divide</span><span class="o">=</span><span class="s1">&#39;ignore&#39;</span><span class="p">,</span> <span class="n">invalid</span><span class="o">=</span><span class="s1">&#39;ignore&#39;</span><span class="p">):</span>
+        <span class="c1"># by 'condition' afterwards</span>
+        <span class="k">with</span> <span class="n">np</span><span class="o">.</span><span class="n">errstate</span><span class="p">(</span><span class="n">divide</span><span class="o">=</span><span class="s1">'ignore'</span><span class="p">,</span> <span class="n">invalid</span><span class="o">=</span><span class="s1">'ignore'</span><span class="p">):</span>
             <span class="n">whmean</span> <span class="o">=</span> <span class="p">(</span><span class="n">w1</span><span class="o">/</span><span class="n">mk</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">w2</span><span class="o">/</span><span class="n">mk</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span> <span class="o">/</span> <span class="p">(</span><span class="n">w1</span> <span class="o">+</span> <span class="n">w2</span><span class="p">)</span>
 
         <span class="n">dk</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
@@ -430,7 +434,7 @@
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">pchip_interpolate</span><span class="p">(</span><span class="n">xi</span><span class="p">,</span> <span class="n">yi</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">der</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Convenience function for pchip interpolation.</span>
 
 <span class="sd">    xi and yi are arrays of values used to approximate some function f,</span>
@@ -444,7 +448,7 @@
 <span class="sd">    xi : array_like</span>
 <span class="sd">        A sorted list of x-coordinates, of length N.</span>
 <span class="sd">    yi : array_like</span>
-<span class="sd">        A 1-D array of real values. `yi`&#39;s length along the interpolation</span>
+<span class="sd">        A 1-D array of real values. `yi`'s length along the interpolation</span>
 <span class="sd">        axis must be equal to the length of `xi`. If N-D array, use axis</span>
 <span class="sd">        parameter to select correct axis.</span>
 <span class="sd">    x : scalar or array_like</span>
@@ -475,12 +479,12 @@
 <span class="sd">    &gt;&gt;&gt; y_observed = np.sin(x_observed)</span>
 <span class="sd">    &gt;&gt;&gt; x = np.linspace(min(x_observed), max(x_observed), num=100)</span>
 <span class="sd">    &gt;&gt;&gt; y = pchip_interpolate(x_observed, y_observed, x)</span>
-<span class="sd">    &gt;&gt;&gt; plt.plot(x_observed, y_observed, &quot;o&quot;, label=&quot;observation&quot;)</span>
-<span class="sd">    &gt;&gt;&gt; plt.plot(x, y, label=&quot;pchip interpolation&quot;)</span>
+<span class="sd">    &gt;&gt;&gt; plt.plot(x_observed, y_observed, "o", label="observation")</span>
+<span class="sd">    &gt;&gt;&gt; plt.plot(x, y, label="pchip interpolation")</span>
 <span class="sd">    &gt;&gt;&gt; plt.legend()</span>
 <span class="sd">    &gt;&gt;&gt; plt.show()</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">P</span> <span class="o">=</span> <span class="n">PchipInterpolator</span><span class="p">(</span><span class="n">xi</span><span class="p">,</span> <span class="n">yi</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">der</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
@@ -492,12 +496,12 @@
 
 
 <span class="nd">@xp_capabilities</span><span class="p">(</span><span class="n">cpu_only</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">xfail_backends</span><span class="o">=</span><span class="p">[</span>
-    <span class="p">(</span><span class="s2">&quot;dask.array&quot;</span><span class="p">,</span> <span class="s2">&quot;lacks nd fancy indexing&quot;</span><span class="p">),</span>
-    <span class="p">(</span><span class="s2">&quot;jax.numpy&quot;</span><span class="p">,</span> <span class="s2">&quot;immutable arrays&quot;</span><span class="p">),</span>
-    <span class="p">(</span><span class="s2">&quot;array_api_strict&quot;</span><span class="p">,</span> <span class="s2">&quot;fancy indexing __setitem__&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">"dask.array"</span><span class="p">,</span> <span class="s2">"lacks nd fancy indexing"</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">"jax.numpy"</span><span class="p">,</span> <span class="s2">"immutable arrays"</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">"array_api_strict"</span><span class="p">,</span> <span class="s2">"fancy indexing __setitem__"</span><span class="p">),</span>
 <span class="p">])</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Akima1DInterpolator</span><span class="p">(</span><span class="n">CubicHermiteSpline</span><span class="p">):</span>
-<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Akima &quot;visually pleasing&quot; interpolator (C1 smooth).</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">"""Akima "visually pleasing" interpolator (C1 smooth).</span>
 
 <span class="sd">    Fit piecewise cubic polynomials, given vectors x and y. The interpolation</span>
 <span class="sd">    method by Akima uses a continuously differentiable sub-spline built from</span>
@@ -515,16 +519,17 @@
 <span class="sd">    axis : int, optional</span>
 <span class="sd">        Axis in the ``y`` array corresponding to the x-coordinate values. Defaults</span>
 <span class="sd">        to ``axis=0``.</span>
-<span class="sd">    method : {&#39;akima&#39;, &#39;makima&#39;}, optional</span>
-<span class="sd">        If ``&quot;makima&quot;``, use the modified Akima interpolation [2]_.</span>
-<span class="sd">        Defaults to ``&quot;akima&quot;``, use the Akima interpolation [1]_.</span>
+<span class="sd">    method : {'akima', 'makima'}, optional</span>
+<span class="sd">        If ``"makima"``, use the modified Akima interpolation [2]_.</span>
+<span class="sd">        Defaults to ``"akima"``, use the Akima interpolation [1]_.</span>
 
 <span class="sd">        .. versionadded:: 1.13.0</span>
 
-<span class="sd">    extrapolate : {bool, None}, optional</span>
+<span class="sd">    extrapolate : {bool, 'periodic', None}, optional</span>
 <span class="sd">        If bool, determines whether to extrapolate to out-of-bounds points</span>
-<span class="sd">        based on first and last intervals, or to return NaNs. If None,</span>
-<span class="sd">        ``extrapolate`` is set to False.</span>
+<span class="sd">        based on first and last intervals, or to return NaNs. If 'periodic',</span>
+<span class="sd">        periodic extrapolation is used. If None (default), it is set to False.</span>
+<span class="sd">        See :ref:`tutorial-interpolate_out_of_bounds`.</span>
 
 <span class="sd">    Methods</span>
 <span class="sd">    -------</span>
@@ -550,14 +555,14 @@
 <span class="sd">    curve through a few given points for purposes of plotting.</span>
 
 <span class="sd">    Let :math:`\delta_i = (y_{i+1} - y_i) / (x_{i+1} - x_i)` be the slopes of</span>
-<span class="sd">    the interval :math:`\left[x_i, x_{i+1}\right)`. Akima&#39;s derivative at</span>
+<span class="sd">    the interval :math:`\left[x_i, x_{i+1}\right)`. Akima's derivative at</span>
 <span class="sd">    :math:`x_i` is defined as:</span>
 
 <span class="sd">    .. math::</span>
 
 <span class="sd">        d_i = \frac{w_1}{w_1 + w_2}\delta_{i-1} + \frac{w_2}{w_1 + w_2}\delta_i</span>
 
-<span class="sd">    In the Akima interpolation [1]_ (``method=&quot;akima&quot;``), the weights are:</span>
+<span class="sd">    In the Akima interpolation [1]_ (``method="akima"``), the weights are:</span>
 
 <span class="sd">    .. math::</span>
 
@@ -566,7 +571,7 @@
 <span class="sd">        w_2 &amp;= |\delta_{i-1} - \delta_{i-2}|</span>
 <span class="sd">        \end{aligned}</span>
 
-<span class="sd">    In the modified Akima interpolation [2]_ (``method=&quot;makima&quot;``),</span>
+<span class="sd">    In the modified Akima interpolation [2]_ (``method="makima"``),</span>
 <span class="sd">    to eliminate overshoot and avoid edge cases of both numerator and</span>
 <span class="sd">    denominator being equal to 0, the weights are modified as follows:</span>
 
@@ -579,7 +584,7 @@
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
-<span class="sd">    Comparison of ``method=&quot;akima&quot;`` and ``method=&quot;makima&quot;``:</span>
+<span class="sd">    Comparison of ``method="akima"`` and ``method="makima"``:</span>
 
 <span class="sd">    &gt;&gt;&gt; import numpy as np</span>
 <span class="sd">    &gt;&gt;&gt; from scipy.interpolate import Akima1DInterpolator</span>
@@ -587,17 +592,17 @@
 <span class="sd">    &gt;&gt;&gt; x = np.linspace(1, 7, 7)</span>
 <span class="sd">    &gt;&gt;&gt; y = np.array([-1, -1, -1, 0, 1, 1, 1])</span>
 <span class="sd">    &gt;&gt;&gt; xs = np.linspace(min(x), max(x), num=100)</span>
-<span class="sd">    &gt;&gt;&gt; y_akima = Akima1DInterpolator(x, y, method=&quot;akima&quot;)(xs)</span>
-<span class="sd">    &gt;&gt;&gt; y_makima = Akima1DInterpolator(x, y, method=&quot;makima&quot;)(xs)</span>
+<span class="sd">    &gt;&gt;&gt; y_akima = Akima1DInterpolator(x, y, method="akima")(xs)</span>
+<span class="sd">    &gt;&gt;&gt; y_makima = Akima1DInterpolator(x, y, method="makima")(xs)</span>
 
 <span class="sd">    &gt;&gt;&gt; fig, ax = plt.subplots()</span>
-<span class="sd">    &gt;&gt;&gt; ax.plot(x, y, &quot;o&quot;, label=&quot;data&quot;)</span>
-<span class="sd">    &gt;&gt;&gt; ax.plot(xs, y_akima, label=&quot;akima&quot;)</span>
-<span class="sd">    &gt;&gt;&gt; ax.plot(xs, y_makima, label=&quot;makima&quot;)</span>
+<span class="sd">    &gt;&gt;&gt; ax.plot(x, y, "o", label="data")</span>
+<span class="sd">    &gt;&gt;&gt; ax.plot(xs, y_akima, label="akima")</span>
+<span class="sd">    &gt;&gt;&gt; ax.plot(xs, y_makima, label="makima")</span>
 <span class="sd">    &gt;&gt;&gt; ax.legend()</span>
 <span class="sd">    &gt;&gt;&gt; fig.show()</span>
 
-<span class="sd">    The overshoot that occurred in ``&quot;akima&quot;`` has been avoided in ``&quot;makima&quot;``.</span>
+<span class="sd">    The overshoot that occurred in ``"akima"`` has been avoided in ``"makima"``.</span>
 
 <span class="sd">    References</span>
 <span class="sd">    ----------</span>
@@ -607,26 +612,23 @@
 <span class="sd">    .. [2] Makima Piecewise Cubic Interpolation. Cleve Moler and Cosmin Ionita, 2019.</span>
 <span class="sd">           https://blogs.mathworks.com/cleve/2019/04/29/makima-piecewise-cubic-interpolation/</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
-    <span class="c1"># PchipInterpolator is not generic in scipy-stubs</span>
-    <span class="n">__class_getitem__</span> <span class="o">=</span> <span class="kc">None</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">method</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;akima&quot;</span><span class="p">,</span> <span class="s2">&quot;makima&quot;</span><span class="p">]</span><span class="o">=</span><span class="s2">&quot;akima&quot;</span><span class="p">,</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">method</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"akima"</span><span class="p">,</span> <span class="s2">"makima"</span><span class="p">]</span><span class="o">=</span><span class="s2">"akima"</span><span class="p">,</span>
                  <span class="n">extrapolate</span><span class="p">:</span><span class="nb">bool</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">method</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">&quot;akima&quot;</span><span class="p">,</span> <span class="s2">&quot;makima&quot;</span><span class="p">}:</span>
-            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;`method`=</span><span class="si">{</span><span class="n">method</span><span class="si">}</span><span class="s2"> is unsupported.&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">method</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">"akima"</span><span class="p">,</span> <span class="s2">"makima"</span><span class="p">}:</span>
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"`method`=</span><span class="si">{</span><span class="n">method</span><span class="si">}</span><span class="s2"> is unsupported."</span><span class="p">)</span>
         <span class="c1"># Original implementation in MATLAB by N. Shamsundar (BSD licensed), see</span>
         <span class="c1"># https://www.mathworks.com/matlabcentral/fileexchange/1814-akima-interpolation</span>
 
         <span class="n">xp</span> <span class="o">=</span> <span class="n">array_namespace</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
         <span class="n">x</span><span class="p">,</span> <span class="n">dx</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">axis</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">prepare_input</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">axis</span><span class="p">,</span> <span class="n">xp</span><span class="o">=</span><span class="n">xp</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">xp</span><span class="o">.</span><span class="n">isdtype</span><span class="p">(</span><span class="n">y</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="s2">&quot;complex floating&quot;</span><span class="p">):</span>
-            <span class="n">msg</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;`Akima1DInterpolator` only works with real values for `y`. &quot;</span>
-                   <span class="s2">&quot;If you are trying to use the real components of the passed array, &quot;</span>
-                   <span class="s2">&quot;use `np.real` on the array before passing to &quot;</span>
-                   <span class="s2">&quot;`Akima1DInterpolator`.&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">xp</span><span class="o">.</span><span class="n">isdtype</span><span class="p">(</span><span class="n">y</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="s2">"complex floating"</span><span class="p">):</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"`Akima1DInterpolator` only works with real values for `y`. "</span>
+                   <span class="s2">"If you are trying to use the real components of the passed array, "</span>
+                   <span class="s2">"use `np.real` on the array before passing to "</span>
+                   <span class="s2">"`Akima1DInterpolator`."</span><span class="p">)</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
 
         <span class="c1"># Akima extrapolation historically False; parent class defaults to True.</span>
@@ -657,7 +659,7 @@
             <span class="n">t</span> <span class="o">=</span> <span class="mf">.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">m</span><span class="p">[</span><span class="mi">3</span><span class="p">:,</span> <span class="o">...</span><span class="p">]</span> <span class="o">+</span> <span class="n">m</span><span class="p">[:</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="o">...</span><span class="p">])</span>
             <span class="c1"># get the denominator of the slope t</span>
             <span class="n">dm</span> <span class="o">=</span> <span class="n">xp</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">xp</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
-            <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;makima&quot;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">"makima"</span><span class="p">:</span>
                 <span class="n">pm</span> <span class="o">=</span> <span class="n">xp</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">m</span><span class="p">[</span><span class="mi">1</span><span class="p">:,</span> <span class="o">...</span><span class="p">]</span> <span class="o">+</span> <span class="n">m</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">...</span><span class="p">])</span>
                 <span class="n">f1</span> <span class="o">=</span> <span class="n">dm</span><span class="p">[</span><span class="mi">2</span><span class="p">:,</span> <span class="o">...</span><span class="p">]</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">pm</span><span class="p">[</span><span class="mi">2</span><span class="p">:,</span> <span class="o">...</span><span class="p">]</span>
                 <span class="n">f2</span> <span class="o">=</span> <span class="n">dm</span><span class="p">[:</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">pm</span><span class="p">[:</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span>
@@ -670,7 +672,7 @@
             <span class="c1"># however, akima has a qualitative discontinuity near f12=0</span>
             <span class="c1"># a finite cutoff moves it, but cannot remove it.</span>
             <span class="c1"># the cutoff break_mult could be made a keyword argument</span>
-            <span class="c1"># method=&#39;akima&#39; also benefits from a check for m2=m3</span>
+            <span class="c1"># method='akima' also benefits from a check for m2=m3</span>
             <span class="n">break_mult</span> <span class="o">=</span> <span class="mf">1.e-9</span>
 
             <span class="n">f12</span> <span class="o">=</span> <span class="n">f1</span> <span class="o">+</span> <span class="n">f2</span>
@@ -690,31 +692,33 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">axis</span> <span class="o">=</span> <span class="n">axis</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">extend</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Extending a 1-D Akima interpolator is not &quot;</span>
-                                  <span class="s2">&quot;yet implemented&quot;</span><span class="p">)</span>
+<span class="w">        </span><span class="sd">"""Extending a 1-D Akima interpolator is not yet implemented."""</span>
+        <span class="c1"># numpydoc ignore=PR01</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">"Extending a 1-D Akima interpolator is not "</span>
+                                  <span class="s2">"yet implemented"</span><span class="p">)</span>
 
     <span class="c1"># These are inherited from PPoly, but they do not produce an Akima</span>
     <span class="c1"># interpolator. Hence stub them out.</span>
     <span class="nd">@classmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">from_spline</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">tck</span><span class="p">,</span> <span class="n">extrapolate</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;This method does not make sense for &quot;</span>
-                                  <span class="s2">&quot;an Akima interpolator.&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">"This method does not make sense for "</span>
+                                  <span class="s2">"an Akima interpolator."</span><span class="p">)</span>
 
     <span class="nd">@classmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">from_bernstein_basis</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">bp</span><span class="p">,</span> <span class="n">extrapolate</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;This method does not make sense for &quot;</span>
-                                  <span class="s2">&quot;an Akima interpolator.&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">"This method does not make sense for "</span>
+                                  <span class="s2">"an Akima interpolator."</span><span class="p">)</span>
 
 
 <span class="nd">@xp_capabilities</span><span class="p">(</span>
     <span class="n">cpu_only</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">jax_jit</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
     <span class="n">skip_backends</span><span class="o">=</span><span class="p">[</span>
-        <span class="p">(</span><span class="s2">&quot;dask.array&quot;</span><span class="p">,</span>
-         <span class="s2">&quot;https://github.com/data-apis/array-api-extra/issues/488&quot;</span><span class="p">)</span>
+        <span class="p">(</span><span class="s2">"dask.array"</span><span class="p">,</span>
+         <span class="s2">"https://github.com/data-apis/array-api-extra/issues/488"</span><span class="p">)</span>
     <span class="p">]</span>
 <span class="p">)</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">CubicSpline</span><span class="p">(</span><span class="n">CubicHermiteSpline</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Piecewise cubic interpolator to fit values (C2 smooth).</span>
+<span class="w">    </span><span class="sd">"""Piecewise cubic interpolator to fit values (C2 smooth).</span>
 
 <span class="sd">    Interpolate data with a piecewise cubic polynomial which is twice</span>
 <span class="sd">    continuously differentiable [1]_. The result is represented as a `PPoly`</span>
@@ -733,7 +737,7 @@
 <span class="sd">        Axis along which `y` is assumed to be varying. Meaning that for</span>
 <span class="sd">        ``x[i]`` the corresponding values are ``np.take(y, i, axis=axis)``.</span>
 <span class="sd">        Default is 0.</span>
-<span class="sd">    bc_type : string or 2-tuple, optional</span>
+<span class="sd">    bc_type : str or 2-tuple, optional</span>
 <span class="sd">        Boundary condition type. Two additional equations, given by the</span>
 <span class="sd">        boundary conditions, are required to determine all coefficients of</span>
 <span class="sd">        polynomials on each segment [2]_.</span>
@@ -741,21 +745,21 @@
 <span class="sd">        If `bc_type` is a string, then the specified condition will be applied</span>
 <span class="sd">        at both ends of a spline. Available conditions are:</span>
 
-<span class="sd">        * &#39;not-a-knot&#39; (default): The first and second segment at a curve end</span>
+<span class="sd">        * 'not-a-knot' (default): The first and second segment at a curve end</span>
 <span class="sd">          are the same polynomial. It is a good default when there is no</span>
 <span class="sd">          information on boundary conditions.</span>
-<span class="sd">        * &#39;periodic&#39;: The interpolated functions is assumed to be periodic</span>
+<span class="sd">        * 'periodic': The interpolated functions is assumed to be periodic</span>
 <span class="sd">          of period ``x[-1] - x[0]``. The first and last value of `y` must be</span>
 <span class="sd">          identical: ``y[0] == y[-1]``. This boundary condition will result in</span>
-<span class="sd">          ``y&#39;[0] == y&#39;[-1]`` and ``y&#39;&#39;[0] == y&#39;&#39;[-1]``.</span>
-<span class="sd">        * &#39;clamped&#39;: The first derivative at curves ends are zero. Assuming</span>
+<span class="sd">          ``y'[0] == y'[-1]`` and ``y''[0] == y''[-1]``.</span>
+<span class="sd">        * 'clamped': The first derivative at curves ends are zero. Assuming</span>
 <span class="sd">          a 1D `y`, ``bc_type=((1, 0.0), (1, 0.0))`` is the same condition.</span>
-<span class="sd">        * &#39;natural&#39;: The second derivative at curve ends are zero. Assuming</span>
+<span class="sd">        * 'natural': The second derivative at curve ends are zero. Assuming</span>
 <span class="sd">          a 1D `y`, ``bc_type=((2, 0.0), (2, 0.0))`` is the same condition.</span>
 
 <span class="sd">        If `bc_type` is a 2-tuple, the first and the second value will be</span>
 <span class="sd">        applied at the curve start and end respectively. The tuple values can</span>
-<span class="sd">        be one of the previously mentioned strings (except &#39;periodic&#39;) or a</span>
+<span class="sd">        be one of the previously mentioned strings (except 'periodic') or a</span>
 <span class="sd">        tuple ``(order, deriv_values)`` allowing to specify arbitrary</span>
 <span class="sd">        derivatives at curve ends:</span>
 
@@ -765,11 +769,12 @@
 <span class="sd">          `y` is 1-D, then `deriv_value` must be a scalar. If `y` is 3-D with</span>
 <span class="sd">          the shape (n0, n1, n2) and axis=2, then `deriv_value` must be 2-D</span>
 <span class="sd">          and have the shape (n0, n1).</span>
-<span class="sd">    extrapolate : {bool, &#39;periodic&#39;, None}, optional</span>
+<span class="sd">    extrapolate : {bool, 'periodic', None}, optional</span>
 <span class="sd">        If bool, determines whether to extrapolate to out-of-bounds points</span>
-<span class="sd">        based on first and last intervals, or to return NaNs. If &#39;periodic&#39;,</span>
+<span class="sd">        based on first and last intervals, or to return NaNs. If 'periodic',</span>
 <span class="sd">        periodic extrapolation is used. If None (default), ``extrapolate`` is</span>
-<span class="sd">        set to &#39;periodic&#39; for ``bc_type=&#39;periodic&#39;`` and to True otherwise.</span>
+<span class="sd">        set to 'periodic' for ``bc_type='periodic'`` and to True otherwise.</span>
+<span class="sd">        See :ref:`tutorial-interpolate_out_of_bounds`.</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
@@ -805,12 +810,12 @@
 <span class="sd">    former controls only construction of a spline, and the latter only</span>
 <span class="sd">    evaluation.</span>
 
-<span class="sd">    When a boundary condition is &#39;not-a-knot&#39; and n = 2, it is replaced by</span>
+<span class="sd">    When a boundary condition is 'not-a-knot' and n = 2, it is replaced by</span>
 <span class="sd">    a condition that the first derivative is equal to the linear interpolant</span>
-<span class="sd">    slope. When both boundary conditions are &#39;not-a-knot&#39; and n = 3, the</span>
+<span class="sd">    slope. When both boundary conditions are 'not-a-knot' and n = 3, the</span>
 <span class="sd">    solution is sought as a parabola passing through given points.</span>
 
-<span class="sd">    When &#39;not-a-knot&#39; boundary conditions is applied to both ends, the</span>
+<span class="sd">    When 'not-a-knot' boundary conditions is applied to both ends, the</span>
 <span class="sd">    resulting spline will be the same as returned by `splrep` (with ``s=0``)</span>
 <span class="sd">    and `InterpolatedUnivariateSpline`, but these two methods use a</span>
 <span class="sd">    representation in B-spline basis.</span>
@@ -831,14 +836,14 @@
 <span class="sd">    &gt;&gt;&gt; cs = CubicSpline(x, y)</span>
 <span class="sd">    &gt;&gt;&gt; xs = np.arange(-0.5, 9.6, 0.1)</span>
 <span class="sd">    &gt;&gt;&gt; fig, ax = plt.subplots(figsize=(6.5, 4))</span>
-<span class="sd">    &gt;&gt;&gt; ax.plot(x, y, &#39;o&#39;, label=&#39;data&#39;)</span>
-<span class="sd">    &gt;&gt;&gt; ax.plot(xs, np.sin(xs), label=&#39;true&#39;)</span>
-<span class="sd">    &gt;&gt;&gt; ax.plot(xs, cs(xs), label=&quot;S&quot;)</span>
-<span class="sd">    &gt;&gt;&gt; ax.plot(xs, cs(xs, 1), label=&quot;S&#39;&quot;)</span>
-<span class="sd">    &gt;&gt;&gt; ax.plot(xs, cs(xs, 2), label=&quot;S&#39;&#39;&quot;)</span>
-<span class="sd">    &gt;&gt;&gt; ax.plot(xs, cs(xs, 3), label=&quot;S&#39;&#39;&#39;&quot;)</span>
+<span class="sd">    &gt;&gt;&gt; ax.plot(x, y, 'o', label='data')</span>
+<span class="sd">    &gt;&gt;&gt; ax.plot(xs, np.sin(xs), label='true')</span>
+<span class="sd">    &gt;&gt;&gt; ax.plot(xs, cs(xs), label="S")</span>
+<span class="sd">    &gt;&gt;&gt; ax.plot(xs, cs(xs, 1), label="S'")</span>
+<span class="sd">    &gt;&gt;&gt; ax.plot(xs, cs(xs, 2), label="S''")</span>
+<span class="sd">    &gt;&gt;&gt; ax.plot(xs, cs(xs, 3), label="S'''")</span>
 <span class="sd">    &gt;&gt;&gt; ax.set_xlim(-0.5, 9.5)</span>
-<span class="sd">    &gt;&gt;&gt; ax.legend(loc=&#39;lower left&#39;, ncol=2)</span>
+<span class="sd">    &gt;&gt;&gt; ax.legend(loc='lower left', ncol=2)</span>
 <span class="sd">    &gt;&gt;&gt; plt.show()</span>
 
 <span class="sd">    In the second example, the unit circle is interpolated with a spline. A</span>
@@ -849,23 +854,23 @@
 
 <span class="sd">    &gt;&gt;&gt; theta = 2 * np.pi * np.linspace(0, 1, 5)</span>
 <span class="sd">    &gt;&gt;&gt; y = np.c_[np.cos(theta), np.sin(theta)]</span>
-<span class="sd">    &gt;&gt;&gt; cs = CubicSpline(theta, y, bc_type=&#39;periodic&#39;)</span>
-<span class="sd">    &gt;&gt;&gt; print(&quot;ds/dx={:.1f} ds/dy={:.1f}&quot;.format(cs(0, 1)[0], cs(0, 1)[1]))</span>
+<span class="sd">    &gt;&gt;&gt; cs = CubicSpline(theta, y, bc_type='periodic')</span>
+<span class="sd">    &gt;&gt;&gt; print("ds/dx={:.1f} ds/dy={:.1f}".format(cs(0, 1)[0], cs(0, 1)[1]))</span>
 <span class="sd">    ds/dx=0.0 ds/dy=1.0</span>
 <span class="sd">    &gt;&gt;&gt; xs = 2 * np.pi * np.linspace(0, 1, 100)</span>
 <span class="sd">    &gt;&gt;&gt; fig, ax = plt.subplots(figsize=(6.5, 4))</span>
-<span class="sd">    &gt;&gt;&gt; ax.plot(y[:, 0], y[:, 1], &#39;o&#39;, label=&#39;data&#39;)</span>
-<span class="sd">    &gt;&gt;&gt; ax.plot(np.cos(xs), np.sin(xs), label=&#39;true&#39;)</span>
-<span class="sd">    &gt;&gt;&gt; ax.plot(cs(xs)[:, 0], cs(xs)[:, 1], label=&#39;spline&#39;)</span>
-<span class="sd">    &gt;&gt;&gt; ax.axes.set_aspect(&#39;equal&#39;)</span>
-<span class="sd">    &gt;&gt;&gt; ax.legend(loc=&#39;center&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; ax.plot(y[:, 0], y[:, 1], 'o', label='data')</span>
+<span class="sd">    &gt;&gt;&gt; ax.plot(np.cos(xs), np.sin(xs), label='true')</span>
+<span class="sd">    &gt;&gt;&gt; ax.plot(cs(xs)[:, 0], cs(xs)[:, 1], label='spline')</span>
+<span class="sd">    &gt;&gt;&gt; ax.axes.set_aspect('equal')</span>
+<span class="sd">    &gt;&gt;&gt; ax.legend(loc='center')</span>
 <span class="sd">    &gt;&gt;&gt; plt.show()</span>
 
 <span class="sd">    The third example is the interpolation of a polynomial y = x**3 on the</span>
 <span class="sd">    interval 0 &lt;= x&lt;= 1. A cubic spline can represent this function exactly.</span>
 <span class="sd">    To achieve that we need to specify values and first derivatives at</span>
-<span class="sd">    endpoints of the interval. Note that y&#39; = 3 * x**2 and thus y&#39;(0) = 0 and</span>
-<span class="sd">    y&#39;(1) = 3.</span>
+<span class="sd">    endpoints of the interval. Note that y' = 3 * x**2 and thus y'(0) = 0 and</span>
+<span class="sd">    y'(1) = 3.</span>
 
 <span class="sd">    &gt;&gt;&gt; cs = CubicSpline([0, 1], [0, 1], bc_type=((1, 0), (1, 3)))</span>
 <span class="sd">    &gt;&gt;&gt; x = np.linspace(0, 1)</span>
@@ -877,10 +882,10 @@
 <span class="sd">    .. [1] `Cubic Spline Interpolation</span>
 <span class="sd">            &lt;https://en.wikiversity.org/wiki/Cubic_Spline_Interpolation&gt;`_</span>
 <span class="sd">            on Wikiversity.</span>
-<span class="sd">    .. [2] Carl de Boor, &quot;A Practical Guide to Splines&quot;, Springer-Verlag, 1978.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    .. [2] Carl de Boor, "A Practical Guide to Splines", Springer-Verlag, 1978.</span>
+<span class="sd">    """</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">bc_type</span><span class="o">=</span><span class="s1">&#39;not-a-knot&#39;</span><span class="p">,</span> <span class="n">extrapolate</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">bc_type</span><span class="o">=</span><span class="s1">'not-a-knot'</span><span class="p">,</span> <span class="n">extrapolate</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="n">xp</span> <span class="o">=</span> <span class="n">array_namespace</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
         <span class="n">x</span><span class="p">,</span> <span class="n">dx</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">axis</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">prepare_input</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">axis</span><span class="p">,</span> <span class="n">xp</span><span class="o">=</span><span class="n">np_compat</span><span class="p">)</span>
         <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
@@ -888,8 +893,8 @@
         <span class="n">bc</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_validate_bc</span><span class="p">(</span><span class="n">bc_type</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">y</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="n">axis</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">extrapolate</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">bc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;periodic&#39;</span><span class="p">:</span>
-                <span class="n">extrapolate</span> <span class="o">=</span> <span class="s1">&#39;periodic&#39;</span>
+            <span class="k">if</span> <span class="n">bc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">'periodic'</span><span class="p">:</span>
+                <span class="n">extrapolate</span> <span class="o">=</span> <span class="s1">'periodic'</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">extrapolate</span> <span class="o">=</span> <span class="kc">True</span>
 
@@ -900,21 +905,21 @@
             <span class="n">dxr</span> <span class="o">=</span> <span class="n">dx</span><span class="o">.</span><span class="n">reshape</span><span class="p">([</span><span class="n">dx</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">+</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">y</span><span class="o">.</span><span class="n">ndim</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span>
             <span class="n">slope</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">/</span> <span class="n">dxr</span>
 
-            <span class="c1"># If bc is &#39;not-a-knot&#39; this change is just a convention.</span>
-            <span class="c1"># If bc is &#39;periodic&#39; then we already checked that y[0] == y[-1],</span>
+            <span class="c1"># If bc is 'not-a-knot' this change is just a convention.</span>
+            <span class="c1"># If bc is 'periodic' then we already checked that y[0] == y[-1],</span>
             <span class="c1"># and the spline is just a constant, we handle this case in the</span>
             <span class="c1"># same way by setting the first derivatives to slope, which is 0.</span>
             <span class="k">if</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">bc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;not-a-knot&#39;</span><span class="p">,</span> <span class="s1">&#39;periodic&#39;</span><span class="p">]:</span>
+                <span class="k">if</span> <span class="n">bc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'not-a-knot'</span><span class="p">,</span> <span class="s1">'periodic'</span><span class="p">]:</span>
                     <span class="n">bc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">slope</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-                <span class="k">if</span> <span class="n">bc</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;not-a-knot&#39;</span><span class="p">,</span> <span class="s1">&#39;periodic&#39;</span><span class="p">]:</span>
+                <span class="k">if</span> <span class="n">bc</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'not-a-knot'</span><span class="p">,</span> <span class="s1">'periodic'</span><span class="p">]:</span>
                     <span class="n">bc</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">slope</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 
-            <span class="c1"># This is a special case, when both conditions are &#39;not-a-knot&#39;</span>
-            <span class="c1"># and n == 3. In this case &#39;not-a-knot&#39; can&#39;t be handled regularly</span>
+            <span class="c1"># This is a special case, when both conditions are 'not-a-knot'</span>
+            <span class="c1"># and n == 3. In this case 'not-a-knot' can't be handled regularly</span>
             <span class="c1"># as the both conditions are identical. We handle this case by</span>
             <span class="c1"># constructing a parabola passing through given points.</span>
-            <span class="k">if</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">3</span> <span class="ow">and</span> <span class="n">bc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;not-a-knot&#39;</span> <span class="ow">and</span> <span class="n">bc</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;not-a-knot&#39;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">3</span> <span class="ow">and</span> <span class="n">bc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">'not-a-knot'</span> <span class="ow">and</span> <span class="n">bc</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s1">'not-a-knot'</span><span class="p">:</span>
                 <span class="n">A</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>  <span class="c1"># This is a standard matrix.</span>
                 <span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="mi">3</span><span class="p">,)</span> <span class="o">+</span> <span class="n">y</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">y</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
 
@@ -933,7 +938,7 @@
                 <span class="n">m</span> <span class="o">=</span> <span class="n">b</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
                 <span class="n">s</span> <span class="o">=</span> <span class="n">solve</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">b</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="n">overwrite_a</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">overwrite_b</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                           <span class="n">check_finite</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
-            <span class="k">elif</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">3</span> <span class="ow">and</span> <span class="n">bc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;periodic&#39;</span><span class="p">:</span>
+            <span class="k">elif</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">3</span> <span class="ow">and</span> <span class="n">bc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">'periodic'</span><span class="p">:</span>
                 <span class="c1"># In case when number of points is 3 we compute the derivatives</span>
                 <span class="c1"># manually</span>
                 <span class="n">t</span> <span class="o">=</span> <span class="p">(</span><span class="n">slope</span> <span class="o">/</span> <span class="n">dxr</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1.</span> <span class="o">/</span> <span class="n">dxr</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
@@ -959,7 +964,7 @@
 
                 <span class="n">bc_start</span><span class="p">,</span> <span class="n">bc_end</span> <span class="o">=</span> <span class="n">bc</span>
 
-                <span class="k">if</span> <span class="n">bc_start</span> <span class="o">==</span> <span class="s1">&#39;periodic&#39;</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">bc_start</span> <span class="o">==</span> <span class="s1">'periodic'</span><span class="p">:</span>
                     <span class="c1"># Due to the periodicity, and because y[-1] = y[0], the</span>
                     <span class="c1"># linear system has (n-1) unknowns/equations instead of n:</span>
                     <span class="n">A</span> <span class="o">=</span> <span class="n">A</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
@@ -969,7 +974,7 @@
                     <span class="n">b</span> <span class="o">=</span> <span class="n">b</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
 
                     <span class="c1"># Also, due to the periodicity, the system is not tri-diagonal.</span>
-                    <span class="c1"># We need to compute a &quot;condensed&quot; matrix of shape (n-2, n-2).</span>
+                    <span class="c1"># We need to compute a "condensed" matrix of shape (n-2, n-2).</span>
                     <span class="c1"># See https://web.archive.org/web/20151220180652/http://www.cfm.brown.edu/people/gk/chap6/node14.html</span>
                     <span class="c1"># for more explanations.</span>
                     <span class="c1"># The condensed matrix is obtained by removing the last column</span>
@@ -1012,7 +1017,7 @@
                     <span class="n">s</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">s_m1</span>
                     <span class="n">s</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">s</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="k">if</span> <span class="n">bc_start</span> <span class="o">==</span> <span class="s1">&#39;not-a-knot&#39;</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">bc_start</span> <span class="o">==</span> <span class="s1">'not-a-knot'</span><span class="p">:</span>
                         <span class="n">A</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">dx</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
                         <span class="n">A</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
                         <span class="n">d</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
@@ -1027,7 +1032,7 @@
                         <span class="n">A</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">dx</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
                         <span class="n">b</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">bc_start</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">dx</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="mi">3</span> <span class="o">*</span> <span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 
-                    <span class="k">if</span> <span class="n">bc_end</span> <span class="o">==</span> <span class="s1">&#39;not-a-knot&#39;</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">bc_end</span> <span class="o">==</span> <span class="s1">'not-a-knot'</span><span class="p">:</span>
                         <span class="n">A</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">dx</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
                         <span class="n">A</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span>
                         <span class="n">d</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span>
@@ -1053,7 +1058,7 @@
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">_validate_bc</span><span class="p">(</span><span class="n">bc_type</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">expected_deriv_shape</span><span class="p">,</span> <span class="n">axis</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Validate and prepare boundary conditions.</span>
+<span class="w">        </span><span class="sd">"""Validate and prepare boundary conditions.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -1062,56 +1067,56 @@
 <span class="sd">        y : ndarray</span>
 <span class="sd">            y casted to complex dtype if one of the boundary conditions has</span>
 <span class="sd">            complex dtype.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">bc_type</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-            <span class="k">if</span> <span class="n">bc_type</span> <span class="o">==</span> <span class="s1">&#39;periodic&#39;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">bc_type</span> <span class="o">==</span> <span class="s1">'periodic'</span><span class="p">:</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">y</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">rtol</span><span class="o">=</span><span class="mf">1e-15</span><span class="p">,</span> <span class="n">atol</span><span class="o">=</span><span class="mf">1e-15</span><span class="p">):</span>
                     <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                        <span class="sa">f</span><span class="s2">&quot;The first and last `y` point along axis </span><span class="si">{</span><span class="n">axis</span><span class="si">}</span><span class="s2"> must &quot;</span>
-                        <span class="s2">&quot;be identical (within machine precision) when &quot;</span>
-                        <span class="s2">&quot;bc_type=&#39;periodic&#39;.&quot;</span><span class="p">)</span>
+                        <span class="sa">f</span><span class="s2">"The first and last `y` point along axis </span><span class="si">{</span><span class="n">axis</span><span class="si">}</span><span class="s2"> must "</span>
+                        <span class="s2">"be identical (within machine precision) when "</span>
+                        <span class="s2">"bc_type='periodic'."</span><span class="p">)</span>
 
             <span class="n">bc_type</span> <span class="o">=</span> <span class="p">(</span><span class="n">bc_type</span><span class="p">,</span> <span class="n">bc_type</span><span class="p">)</span>
 
         <span class="k">else</span><span class="p">:</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">bc_type</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;`bc_type` must contain 2 elements to &quot;</span>
-                                 <span class="s2">&quot;specify start and end conditions.&quot;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"`bc_type` must contain 2 elements to "</span>
+                                 <span class="s2">"specify start and end conditions."</span><span class="p">)</span>
 
-            <span class="k">if</span> <span class="s1">&#39;periodic&#39;</span> <span class="ow">in</span> <span class="n">bc_type</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;&#39;periodic&#39; `bc_type` is defined for both &quot;</span>
-                                 <span class="s2">&quot;curve ends and cannot be used with other &quot;</span>
-                                 <span class="s2">&quot;boundary conditions.&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="s1">'periodic'</span> <span class="ow">in</span> <span class="n">bc_type</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"'periodic' `bc_type` is defined for both "</span>
+                                 <span class="s2">"curve ends and cannot be used with other "</span>
+                                 <span class="s2">"boundary conditions."</span><span class="p">)</span>
 
         <span class="n">validated_bc</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">bc</span> <span class="ow">in</span> <span class="n">bc_type</span><span class="p">:</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">bc</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-                <span class="k">if</span> <span class="n">bc</span> <span class="o">==</span> <span class="s1">&#39;clamped&#39;</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">bc</span> <span class="o">==</span> <span class="s1">'clamped'</span><span class="p">:</span>
                     <span class="n">validated_bc</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">expected_deriv_shape</span><span class="p">)))</span>
-                <span class="k">elif</span> <span class="n">bc</span> <span class="o">==</span> <span class="s1">&#39;natural&#39;</span><span class="p">:</span>
+                <span class="k">elif</span> <span class="n">bc</span> <span class="o">==</span> <span class="s1">'natural'</span><span class="p">:</span>
                     <span class="n">validated_bc</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">expected_deriv_shape</span><span class="p">)))</span>
-                <span class="k">elif</span> <span class="n">bc</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;not-a-knot&#39;</span><span class="p">,</span> <span class="s1">&#39;periodic&#39;</span><span class="p">]:</span>
+                <span class="k">elif</span> <span class="n">bc</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'not-a-knot'</span><span class="p">,</span> <span class="s1">'periodic'</span><span class="p">]:</span>
                     <span class="n">validated_bc</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">bc</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;bc_type=</span><span class="si">{</span><span class="n">bc</span><span class="si">}</span><span class="s2"> is not allowed.&quot;</span><span class="p">)</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"bc_type=</span><span class="si">{</span><span class="n">bc</span><span class="si">}</span><span class="s2"> is not allowed."</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">try</span><span class="p">:</span>
                     <span class="n">deriv_order</span><span class="p">,</span> <span class="n">deriv_value</span> <span class="o">=</span> <span class="n">bc</span>
                 <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
                     <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                        <span class="s2">&quot;A specified derivative value must be &quot;</span>
-                        <span class="s2">&quot;given in the form (order, value).&quot;</span>
+                        <span class="s2">"A specified derivative value must be "</span>
+                        <span class="s2">"given in the form (order, value)."</span>
                     <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
 
                 <span class="k">if</span> <span class="n">deriv_order</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]:</span>
-                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The specified derivative order must &quot;</span>
-                                     <span class="s2">&quot;be 1 or 2.&quot;</span><span class="p">)</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"The specified derivative order must "</span>
+                                     <span class="s2">"be 1 or 2."</span><span class="p">)</span>
 
                 <span class="n">deriv_value</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">deriv_value</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">deriv_value</span><span class="o">.</span><span class="n">shape</span> <span class="o">!=</span> <span class="n">expected_deriv_shape</span><span class="p">:</span>
                     <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                        <span class="sa">f</span><span class="s2">&quot;`deriv_value` shape </span><span class="si">{</span><span class="n">deriv_value</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2"> is not &quot;</span>
-                        <span class="sa">f</span><span class="s2">&quot;the expected one </span><span class="si">{</span><span class="n">expected_deriv_shape</span><span class="si">}</span><span class="s2">.&quot;</span>
+                        <span class="sa">f</span><span class="s2">"`deriv_value` shape </span><span class="si">{</span><span class="n">deriv_value</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2"> is not "</span>
+                        <span class="sa">f</span><span class="s2">"the expected one </span><span class="si">{</span><span class="n">expected_deriv_shape</span><span class="si">}</span><span class="s2">."</span>
                     <span class="p">)</span>
 
                 <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">issubdtype</span><span class="p">(</span><span class="n">deriv_value</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">complexfloating</span><span class="p">):</span>

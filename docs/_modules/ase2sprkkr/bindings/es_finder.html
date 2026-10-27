@@ -56,10 +56,10 @@
 <ul>
 <li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://sprkkr.org">SPR-KKR</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.sprkkr.org/wp-content/uploads/2026/05/kkr_manual.pdf">SPR-KKR manual</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
 <ul>
@@ -91,10 +91,10 @@
            <div itemprop="articleBody">
              
   <h1>Source code for ase2sprkkr.bindings.es_finder</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span></span><span class="sd">"""</span>
 <span class="sd">Binding for the es_finder package, that can determine the ideal positions</span>
 <span class="sd">of empty spheres to fill the gaps in the primitive cell.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
@@ -137,12 +137,12 @@
     <span class="n">grid</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">48</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">48</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">48</span><span class="p">]]),</span>
     <span class="n">verbosity</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>  <span class="c1"># Verbosity of output</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Compute the best coverage of the primitive cell with spheres.</span>
 
 <span class="sd">    The function computes:</span>
 <span class="sd">     - the best radii of atomic-sites spheres</span>
-<span class="sd">     - the positions of &#39;vacuum pseudoatom&#39; spheres and their radii to be added to the structure</span>
+<span class="sd">     - the positions of 'vacuum pseudoatom' spheres and their radii to be added to the structure</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -187,14 +187,14 @@
 <span class="sd">    verbosity</span>
 <span class="sd">      Verbosity of the output of the algorithm</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="n">run_finder</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span>
-            <span class="s2">&quot;Cannot import es_finder or pymatgen. Please install it, or set empty_spheres parameter to False&quot;</span>
+            <span class="s2">"Cannot import es_finder or pymatgen. Please install it, or set empty_spheres parameter to False"</span>
         <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">import_error</span>
 
     <span class="n">params</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">locals</span><span class="p">())</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;atoms&quot;</span><span class="p">,</span> <span class="s2">&quot;overlap_matrix&quot;</span><span class="p">,</span> <span class="s2">&quot;radii_ratios_map&quot;</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"atoms"</span><span class="p">,</span> <span class="s2">"overlap_matrix"</span><span class="p">,</span> <span class="s2">"radii_ratios_map"</span><span class="p">):</span>
         <span class="k">del</span> <span class="n">params</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
 
     <span class="k">if</span> <span class="n">radii_ratios_map</span><span class="p">:</span>
@@ -206,18 +206,18 @@
     <span class="n">sym_dataset</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">spacegroup_info</span><span class="o">.</span><span class="n">dataset</span>
     <span class="k">if</span> <span class="n">sym_dataset</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">sym_dataset</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;translations&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">)),</span>
-            <span class="s2">&quot;rotations&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">)),</span>
-            <span class="s2">&quot;number&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-            <span class="s2">&quot;hall_number&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-            <span class="s2">&quot;hall&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+            <span class="s2">"translations"</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">)),</span>
+            <span class="s2">"rotations"</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">)),</span>
+            <span class="s2">"number"</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="s2">"hall_number"</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="s2">"hall"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
         <span class="p">}</span>
     <span class="n">symmetry</span> <span class="o">=</span> <span class="n">Symmetry</span><span class="p">(</span>
-        <span class="n">sym_dataset</span><span class="p">[</span><span class="s2">&quot;rotations&quot;</span><span class="p">],</span>
-        <span class="n">sym_dataset</span><span class="p">[</span><span class="s2">&quot;translations&quot;</span><span class="p">],</span>
-        <span class="n">sym_dataset</span><span class="p">[</span><span class="s2">&quot;number&quot;</span><span class="p">],</span>
-        <span class="n">sym_dataset</span><span class="p">[</span><span class="s2">&quot;hall_number&quot;</span><span class="p">],</span>
-        <span class="n">sym_dataset</span><span class="p">[</span><span class="s2">&quot;hall&quot;</span><span class="p">],</span>
+        <span class="n">sym_dataset</span><span class="p">[</span><span class="s2">"rotations"</span><span class="p">],</span>
+        <span class="n">sym_dataset</span><span class="p">[</span><span class="s2">"translations"</span><span class="p">],</span>
+        <span class="n">sym_dataset</span><span class="p">[</span><span class="s2">"number"</span><span class="p">],</span>
+        <span class="n">sym_dataset</span><span class="p">[</span><span class="s2">"hall_number"</span><span class="p">],</span>
+        <span class="n">sym_dataset</span><span class="p">[</span><span class="s2">"hall"</span><span class="p">],</span>
     <span class="p">)</span>
 
     <span class="n">pmg_structure</span> <span class="o">=</span> <span class="n">AseAtomsAdaptor</span><span class="o">.</span><span class="n">get_structure</span><span class="p">(</span><span class="n">atoms</span><span class="p">)</span>

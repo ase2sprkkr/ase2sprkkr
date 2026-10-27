@@ -56,10 +56,10 @@
 <ul>
 <li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://sprkkr.org">SPR-KKR</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.sprkkr.org/wp-content/uploads/2026/05/kkr_manual.pdf">SPR-KKR manual</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
 <ul>
@@ -94,7 +94,7 @@
 <div class="viewcode-block" id="check_symmetry">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.ase.pbc.check_symmetry.html#ase2sprkkr.ase.pbc.check_symmetry">[docs]</a>
 <span></span><span class="k">def</span><span class="w"> </span><span class="nf">check_symmetry</span><span class="p">(</span><span class="n">pbc</span><span class="p">,</span> <span class="n">symmetry</span><span class="p">,</span> <span class="n">error</span><span class="p">,</span> <span class="n">err_class</span><span class="o">=</span><span class="ne">ValueError</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check the symmetry of the PCB, raise an exception, if they not satisfy the requirements&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Check the symmetry of the PCB, raise an exception, if they not satisfy the requirements"""</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">pbc</span> <span class="o">==</span> <span class="n">symmetry</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>
         <span class="k">if</span> <span class="nb">callable</span><span class="p">(</span><span class="n">error</span><span class="p">):</span>
             <span class="n">error</span> <span class="o">=</span> <span class="n">error</span><span class="p">()</span>

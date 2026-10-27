@@ -59,10 +59,10 @@
 <ul>
 <li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://sprkkr.org">SPR-KKR</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.sprkkr.org/wp-content/uploads/2026/05/kkr_manual.pdf">SPR-KKR manual</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
 <ul class="current">
@@ -93,6 +93,7 @@
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.parsing_results.html">parsing_results</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.process_output_reader.html">process_output_reader</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.repeated_configuration_containers.html">repeated_configuration_containers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.repetition.html">repetition</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="ase2sprkkr.common.section_adaptors.html">section_adaptors</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.section_adaptors.MergeSectionAdaptor.html">MergeSectionAdaptor</a></li>
 <li class="toctree-l4 current"><a class="current reference internal" href="#">MergeSectionDefinitionAdaptor</a></li>
@@ -108,6 +109,7 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration.html">configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.conftest.html">conftest</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.examples.html">examples</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.gui.html">gui</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.input_parameters.html">input_parameters</a></li>
@@ -153,26 +155,31 @@
 <h1>MergeSectionDefinitionAdaptor<a class="headerlink" href="#mergesectiondefinitionadaptor" title="Link to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="ase2sprkkr.common.section_adaptors.MergeSectionDefinitionAdaptor">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.common.section_adaptors.</span></span><span class="sig-name descname"><span class="pre">MergeSectionDefinitionAdaptor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">definition</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/section_adaptors.html#MergeSectionDefinitionAdaptor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.section_adaptors.MergeSectionDefinitionAdaptor" title="Link to this definition"></a></dt>
-<dd><p>This class returns a read-only dict-like class
-that merge values from a dict (e.g. newly parsed data) and from the
-definition of a section</p>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.common.section_adaptors.</span></span><span class="sig-name descname"><span class="pre">MergeSectionDefinitionAdaptor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">definition</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/section_adaptors.html#MergeSectionDefinitionAdaptor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.section_adaptors.MergeSectionDefinitionAdaptor" title="Link to this definition"></a></dt>
+<dd><p>Read-only view merging parsed data with configuration definitions.</p>
+<p>Nested container values are exposed as adaptors sharing the same <code class="docutils literal notranslate"><span class="pre">root</span></code>,
+which allows deferred conditions to inspect sibling sections.</p>
 <p class="rubric">Class hierarchy</p>
-<div class="graphviz"><img src="../_images/inheritance-606f9b2bb8593f40752a417e4a75c3487711b37e.png" alt="Inheritance diagram of ase2sprkkr.common.section_adaptors.MergeSectionDefinitionAdaptor" usemap="#inheritanced2ed2634d5" class="inheritance graphviz" /></div>
+<div class="graphviz"><img src="../_images/inheritance-b90811ee8594f9abb6be8f9f0e86860c95ed2499.png" alt="Inheritance diagram of ase2sprkkr.common.section_adaptors.MergeSectionDefinitionAdaptor" usemap="#inheritanced2ed2634d5" class="inheritance graphviz" /></div>
 <map id="inheritanced2ed2634d5" name="inheritanced2ed2634d5">
-<area shape="rect" id="node1" href="#ase2sprkkr.common.section_adaptors.MergeSectionDefinitionAdaptor" target="_top" title="This class returns a read&#45;only dict&#45;like class" alt="" coords="5,5,345,33"/>
+<area shape="rect" id="node1" href="#ase2sprkkr.common.section_adaptors.MergeSectionDefinitionAdaptor" target="_top" title="Read&#45;only view merging parsed data with configuration definitions." alt="" coords="5,5,345,33"/>
 </map><div class="line-block">
 <div class="line"><br /></div>
 </div>
 <p class="rubric">Constructor</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.common.section_adaptors.MergeSectionDefinitionAdaptor.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">definition</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/section_adaptors.html#MergeSectionDefinitionAdaptor.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.section_adaptors.MergeSectionDefinitionAdaptor.__init__" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">definition</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/section_adaptors.html#MergeSectionDefinitionAdaptor.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.section_adaptors.MergeSectionDefinitionAdaptor.__init__" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.common.section_adaptors.MergeSectionDefinitionAdaptor.get">
 <span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/section_adaptors.html#MergeSectionDefinitionAdaptor.get"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.section_adaptors.MergeSectionDefinitionAdaptor.get" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.common.section_adaptors.MergeSectionDefinitionAdaptor.was_parsed">
+<span class="sig-name descname"><span class="pre">was_parsed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/section_adaptors.html#MergeSectionDefinitionAdaptor.was_parsed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.section_adaptors.MergeSectionDefinitionAdaptor.was_parsed" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">

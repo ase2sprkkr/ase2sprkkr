@@ -59,10 +59,10 @@
 <ul>
 <li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://sprkkr.org">SPR-KKR</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.sprkkr.org/wp-content/uploads/2026/05/kkr_manual.pdf">SPR-KKR manual</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
 <ul class="current">
@@ -111,6 +111,7 @@
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.parsing_results.html">parsing_results</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.process_output_reader.html">process_output_reader</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.repeated_configuration_containers.html">repeated_configuration_containers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.repetition.html">repetition</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.section_adaptors.html">section_adaptors</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.subprocess.html">subprocess</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.tools.html">tools</a></li>
@@ -121,6 +122,7 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration.html">configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.conftest.html">conftest</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.examples.html">examples</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.gui.html">gui</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.input_parameters.html">input_parameters</a></li>
@@ -208,13 +210,20 @@ to hide the inactive members</p></li>
 <dd><p>Can be redefined for validating whole section</p>
 </dd></dl>
 
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ase2sprkkr.common.configuration_definitions.BaseDefinition.validate_parsed">
+<span class="sig-name descname"><span class="pre">validate_parsed</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#ase2sprkkr.common.configuration_definitions.BaseDefinition.validate_parsed" title="Link to this definition"></a></dt>
+<dd><p>Can be redefined for checks that require knowing which input items were explicitly parsed.</p>
+</dd></dl>
+
 <dl class="py class">
 <dt class="sig sig-object py" id="ase2sprkkr.common.configuration_definitions.BaseDefinition.Repeated">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Repeated</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/configuration_definitions.html#BaseDefinition.Repeated"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.configuration_definitions.BaseDefinition.Repeated" title="Link to this definition"></a></dt>
-<dd><dl class="py class">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Repeated</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ase2sprkkr.common.configuration_definitions.BaseDefinition.Repeated" title="Link to this definition"></a></dt>
+<dd><p>Supported repetition modes; retained here as part of the public definition API.</p>
+<dl class="py class">
 <dt class="sig sig-object py" id="ase2sprkkr.common.configuration_definitions.BaseDefinition.Repeated.Type">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/configuration_definitions.html#BaseDefinition.Repeated.Type"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.configuration_definitions.BaseDefinition.Repeated.Type" title="Link to this definition"></a></dt>
-<dd><p>Type of repetition.</p>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ase2sprkkr.common.configuration_definitions.BaseDefinition.Repeated.Type" title="Link to this definition"></a></dt>
+<dd><p>Storage used for a repeated item.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ase2sprkkr.common.configuration_definitions.BaseDefinition.Repeated.Type.NO">
 <span class="sig-name descname"><span class="pre">NO</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#ase2sprkkr.common.configuration_definitions.BaseDefinition.Repeated.Type.NO" title="Link to this definition"></a></dt>
@@ -239,8 +248,13 @@ to hide the inactive members</p></li>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="ase2sprkkr.common.configuration_definitions.BaseDefinition.Repeated.Numbering">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Numbering</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/configuration_definitions.html#BaseDefinition.Repeated.Numbering"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.configuration_definitions.BaseDefinition.Repeated.Numbering" title="Link to this definition"></a></dt>
-<dd><p>Is the output numbered or not?</p>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Numbering</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ase2sprkkr.common.configuration_definitions.BaseDefinition.Repeated.Numbering" title="Link to this definition"></a></dt>
+<dd><p>Numbering used by an item name.</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="ase2sprkkr.common.configuration_definitions.BaseDefinition.Repeated.Numbering.has_default">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">has_default</span></span><a class="headerlink" href="#ase2sprkkr.common.configuration_definitions.BaseDefinition.Repeated.Numbering.has_default" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ase2sprkkr.common.configuration_definitions.BaseDefinition.Repeated.Numbering.NO">
 <span class="sig-name descname"><span class="pre">NO</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#ase2sprkkr.common.configuration_definitions.BaseDefinition.Repeated.Numbering.NO" title="Link to this definition"></a></dt>
@@ -256,16 +270,35 @@ to hide the inactive members</p></li>
 <span class="sig-name descname"><span class="pre">WITH_DEFAULT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></em><a class="headerlink" href="#ase2sprkkr.common.configuration_definitions.BaseDefinition.Repeated.Numbering.WITH_DEFAULT" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
-<dl class="py property">
-<dt class="sig sig-object py" id="ase2sprkkr.common.configuration_definitions.BaseDefinition.Repeated.Numbering.has_default">
-<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">has_default</span></span><a class="headerlink" href="#ase2sprkkr.common.configuration_definitions.BaseDefinition.Repeated.Numbering.has_default" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+</dd></dl>
 
+<dl class="py property">
+<dt class="sig sig-object py" id="ase2sprkkr.common.configuration_definitions.BaseDefinition.Repeated.grammar_numbering">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">grammar_numbering</span></span><a class="headerlink" href="#ase2sprkkr.common.configuration_definitions.BaseDefinition.Repeated.grammar_numbering" title="Link to this definition"></a></dt>
+<dd><p>Numbering syntax accepted by the parser.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="ase2sprkkr.common.configuration_definitions.BaseDefinition.Repeated.numbering_condition">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">numbering_condition</span></span><a class="headerlink" href="#ase2sprkkr.common.configuration_definitions.BaseDefinition.Repeated.numbering_condition" title="Link to this definition"></a></dt>
+<dd><p>Condition controlling output numbering, if there is one.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.common.configuration_definitions.BaseDefinition.Repeated.numbering_for">
+<span class="sig-name descname"><span class="pre">numbering_for</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">option</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ase2sprkkr.common.configuration_definitions.BaseDefinition.Repeated.numbering_for" title="Link to this definition"></a></dt>
+<dd><p>Return the numbering to use when writing <code class="docutils literal notranslate"><span class="pre">option</span></code>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.common.configuration_definitions.BaseDefinition.Repeated.NUMBERED_IF">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">NUMBERED_IF</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">condition</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ase2sprkkr.common.configuration_definitions.BaseDefinition.Repeated.NUMBERED_IF" title="Link to this definition"></a></dt>
+<dd><p>Create a dense repeated value numbered when <code class="docutils literal notranslate"><span class="pre">condition(option)</span></code> is true.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.common.configuration_definitions.BaseDefinition.Repeated.create">
-<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">create</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">val</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grammar_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/configuration_definitions.html#BaseDefinition.Repeated.create"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.configuration_definitions.BaseDefinition.Repeated.create" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">create</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grammar_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ase2sprkkr.common.configuration_definitions.BaseDefinition.Repeated.create" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py property">

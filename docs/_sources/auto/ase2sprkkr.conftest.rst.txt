@@ -1,0 +1,43 @@
+conftest
+========
+
+Full name: **ase2sprkkr.conftest**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.conftest
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      pytest_collection_modifyitems
+      pytest_configure
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

@@ -59,10 +59,10 @@
 <ul>
 <li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://sprkkr.org">SPR-KKR</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.sprkkr.org/wp-content/uploads/2026/05/kkr_manual.pdf">SPR-KKR manual</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
 <ul class="current">
@@ -72,6 +72,7 @@
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.common.html">common</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration.html">configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.conftest.html">conftest</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.examples.html">examples</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.gui.html">gui</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.input_parameters.html">input_parameters</a></li>
@@ -157,6 +158,36 @@
 :param value: The value of the option.
 :type value: mixed</p>
 </dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ase2sprkkr.outputs.result_options.OutputFileOption._FILE_DISPLAY_NAMES">
+<span class="sig-name descname"><span class="pre">_FILE_DISPLAY_NAMES</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'bloch-sf':</span> <span class="pre">'Bloch</span> <span class="pre">spectral</span> <span class="pre">function</span> <span class="pre">(BSF)',</span> <span class="pre">'converged':</span> <span class="pre">'Converged</span> <span class="pre">potential</span> <span class="pre">file',</span> <span class="pre">'dij':</span> <span class="pre">'Exchange</span> <span class="pre">tensors',</span> <span class="pre">'dmi':</span> <span class="pre">'Dzyaloshinskii–Moriya</span> <span class="pre">vectors',</span> <span class="pre">'dos':</span> <span class="pre">'Density</span> <span class="pre">of</span> <span class="pre">states</span> <span class="pre">(DOS)',</span> <span class="pre">'input':</span> <span class="pre">'Input</span> <span class="pre">file',</span> <span class="pre">'jxc':</span> <span class="pre">'Exchange</span> <span class="pre">couplings',</span> <span class="pre">'output':</span> <span class="pre">'Output</span> <span class="pre">file',</span> <span class="pre">'potential':</span> <span class="pre">'Potential</span> <span class="pre">file',</span> <span class="pre">'spc':</span> <span class="pre">'Photoemission</span> <span class="pre">spectrum'}</span></em><a class="headerlink" href="#ase2sprkkr.outputs.result_options.OutputFileOption._FILE_DISPLAY_NAMES" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ase2sprkkr.outputs.result_options.OutputFileOption._TYPE_DISPLAY_NAMES">
+<span class="sig-name descname"><span class="pre">_TYPE_DISPLAY_NAMES</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'bsf':</span> <span class="pre">'Bloch</span> <span class="pre">spectral</span> <span class="pre">function</span> <span class="pre">(BSF)',</span> <span class="pre">'dos':</span> <span class="pre">'Density</span> <span class="pre">of</span> <span class="pre">states</span> <span class="pre">(DOS)',</span> <span class="pre">'jxc':</span> <span class="pre">'Exchange-interaction</span> <span class="pre">data',</span> <span class="pre">'rat':</span> <span class="pre">'X-ray</span> <span class="pre">spectroscopy</span> <span class="pre">data',</span> <span class="pre">'spc':</span> <span class="pre">'Photoemission</span> <span class="pre">spectrum'}</span></em><a class="headerlink" href="#ase2sprkkr.outputs.result_options.OutputFileOption._TYPE_DISPLAY_NAMES" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ase2sprkkr.outputs.result_options.OutputFileOption._FILE_INFO">
+<span class="sig-name descname"><span class="pre">_FILE_INFO</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'converged':</span> <span class="pre">'Potential</span> <span class="pre">produced</span> <span class="pre">by</span> <span class="pre">the</span> <span class="pre">converged</span> <span class="pre">SCF</span> <span class="pre">calculation.',</span> <span class="pre">'input':</span> <span class="pre">'Input</span> <span class="pre">parameters</span> <span class="pre">used</span> <span class="pre">for</span> <span class="pre">this</span> <span class="pre">calculation.',</span> <span class="pre">'output':</span> <span class="pre">'Main</span> <span class="pre">text</span> <span class="pre">output</span> <span class="pre">produced</span> <span class="pre">by</span> <span class="pre">SPR-KKR.',</span> <span class="pre">'potential':</span> <span class="pre">'Potential</span> <span class="pre">used</span> <span class="pre">as</span> <span class="pre">input</span> <span class="pre">for</span> <span class="pre">this</span> <span class="pre">calculation.'}</span></em><a class="headerlink" href="#ase2sprkkr.outputs.result_options.OutputFileOption._FILE_INFO" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ase2sprkkr.outputs.result_options.OutputFileOption._TYPE_INFO">
+<span class="sig-name descname"><span class="pre">_TYPE_INFO</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'bsf':</span> <span class="pre">'Bloch</span> <span class="pre">spectral-function</span> <span class="pre">data</span> <span class="pre">produced</span> <span class="pre">by</span> <span class="pre">the</span> <span class="pre">calculation.',</span> <span class="pre">'dos':</span> <span class="pre">'Density-of-states</span> <span class="pre">data</span> <span class="pre">produced</span> <span class="pre">by</span> <span class="pre">the</span> <span class="pre">calculation.',</span> <span class="pre">'jxc':</span> <span class="pre">'Exchange-interaction</span> <span class="pre">data</span> <span class="pre">produced</span> <span class="pre">by</span> <span class="pre">the</span> <span class="pre">calculation.',</span> <span class="pre">'rat':</span> <span class="pre">'X-ray</span> <span class="pre">spectroscopy</span> <span class="pre">data</span> <span class="pre">produced</span> <span class="pre">by</span> <span class="pre">the</span> <span class="pre">calculation.',</span> <span class="pre">'spc':</span> <span class="pre">'Photoemission</span> <span class="pre">spectrum</span> <span class="pre">data</span> <span class="pre">produced</span> <span class="pre">by</span> <span class="pre">the</span> <span class="pre">calculation.'}</span></em><a class="headerlink" href="#ase2sprkkr.outputs.result_options.OutputFileOption._TYPE_INFO" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="ase2sprkkr.outputs.result_options.OutputFileOption.info">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">info</span></span><a class="headerlink" href="#ase2sprkkr.outputs.result_options.OutputFileOption.info" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="ase2sprkkr.outputs.result_options.OutputFileOption.display_name">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">display_name</span></span><a class="headerlink" href="#ase2sprkkr.outputs.result_options.OutputFileOption.display_name" title="Link to this definition"></a></dt>
+<dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.outputs.result_options.OutputFileOption.path">

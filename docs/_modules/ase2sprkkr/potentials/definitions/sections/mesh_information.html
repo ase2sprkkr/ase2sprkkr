@@ -56,10 +56,10 @@
 <ul>
 <li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://sprkkr.org">SPR-KKR</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.sprkkr.org/wp-content/uploads/2026/05/kkr_manual.pdf">SPR-KKR manual</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
 <ul>
@@ -105,14 +105,14 @@
 <div class="viewcode-block" id="MeshInformationSection">
 <a class="viewcode-back" href="../../../../../auto/ase2sprkkr.potentials.definitions.sections.mesh_information.MeshInformationSection.html#ase2sprkkr.potentials.definitions.sections.mesh_information.MeshInformationSection">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">MeshInformationSection</span><span class="p">(</span><span class="n">UniqueListSection</span><span class="p">):</span>
-    <span class="n">_value_name</span> <span class="o">=</span> <span class="s2">&quot;meshes&quot;</span>
+    <span class="n">_value_name</span> <span class="o">=</span> <span class="s2">"meshes"</span>
     <span class="n">_value_class</span> <span class="o">=</span> <span class="n">ExponentialMesh</span>
 
 <div class="viewcode-block" id="MeshInformationSection._set_from_atoms">
 <a class="viewcode-back" href="../../../../../auto/ase2sprkkr.potentials.definitions.sections.mesh_information.MeshInformationSection.html#ase2sprkkr.potentials.definitions.sections.mesh_information.MeshInformationSection._set_from_atoms">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">_set_from_atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">:</span> <span class="n">SPRKKRAtoms</span><span class="p">,</span> <span class="n">write_io_data</span><span class="p">:</span> <span class="n">WriteIoData</span><span class="p">):</span>
         <span class="n">ul</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">write_io_data</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value_name</span><span class="p">)</span>
-        <span class="bp">self</span><span class="p">[</span><span class="s2">&quot;DATA&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">set</span><span class="p">([</span><span class="n">i</span><span class="o">.</span><span class="n">to_tuple</span><span class="p">()</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">ul</span><span class="o">.</span><span class="n">iter_unique</span><span class="p">()])</span>
+        <span class="bp">self</span><span class="p">[</span><span class="s2">"DATA"</span><span class="p">]</span><span class="o">.</span><span class="n">set</span><span class="p">([</span><span class="n">i</span><span class="o">.</span><span class="n">to_tuple</span><span class="p">()</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">ul</span><span class="o">.</span><span class="n">iter_unique</span><span class="p">()])</span>
         <span class="n">fullpot</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="o">.</span><span class="n">fullpot_tuple</span><span class="p">()</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">ul</span><span class="o">.</span><span class="n">iter_unique</span><span class="p">()]</span>
 
         <span class="n">found</span> <span class="o">=</span> <span class="kc">None</span>
@@ -127,9 +127,9 @@
                 <span class="n">found</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">found</span><span class="p">:</span>
-                <span class="bp">self</span><span class="p">[</span><span class="s2">&quot;FULLPOT&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">fullpot</span><span class="p">)</span>
+                <span class="bp">self</span><span class="p">[</span><span class="s2">"FULLPOT"</span><span class="p">]</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">fullpot</span><span class="p">)</span>
             <span class="k">return</span>
-        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;FULLPOT mesh information missing for some meshes&quot;</span><span class="p">)</span></div>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">"FULLPOT mesh information missing for some meshes"</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="MeshInformationSection._update_atoms">
@@ -137,7 +137,7 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">_update_atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">:</span> <span class="n">SPRKKRAtoms</span><span class="p">,</span> <span class="n">read_io_data</span><span class="p">:</span> <span class="n">ReadIoData</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">_update_atoms</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">read_io_data</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">FULLPOT</span><span class="p">()</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">full</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">read_io_data</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_value_name</span><span class="p">],</span> <span class="bp">self</span><span class="p">[</span><span class="s2">&quot;FULLPOT&quot;</span><span class="p">]()):</span>
+            <span class="k">for</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">full</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">read_io_data</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_value_name</span><span class="p">],</span> <span class="bp">self</span><span class="p">[</span><span class="s2">"FULLPOT"</span><span class="p">]()):</span>
                 <span class="n">mesh</span><span class="o">.</span><span class="n">set_fullpot</span><span class="p">(</span><span class="n">full</span><span class="p">)</span></div>
 </div>
 
@@ -148,26 +148,26 @@
 <span class="k">class</span><span class="w"> </span><span class="nc">MeshInformationSectionDefinition</span><span class="p">(</span><span class="n">PotSectionDefinition</span><span class="p">):</span>
 <div class="viewcode-block" id="MeshInformationSectionDefinition.__init__">
 <a class="viewcode-back" href="../../../../../auto/ase2sprkkr.potentials.definitions.sections.mesh_information.MeshInformationSectionDefinition.html#ase2sprkkr.potentials.definitions.sections.mesh_information.MeshInformationSectionDefinition.__init__">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;MESH INFORMATION&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"MESH INFORMATION"</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="n">V</span> <span class="o">=</span> <span class="n">PotValueDefinition</span>
         <span class="n">members</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="n">V</span><span class="p">(</span><span class="s2">&quot;MESH-TYPE&quot;</span><span class="p">,</span> <span class="n">DefKeyword</span><span class="p">(</span><span class="s2">&quot;EXPONENTIAL&quot;</span><span class="p">)),</span>
+            <span class="n">V</span><span class="p">(</span><span class="s2">"MESH-TYPE"</span><span class="p">,</span> <span class="n">DefKeyword</span><span class="p">(</span><span class="s2">"EXPONENTIAL"</span><span class="p">)),</span>
             <span class="n">V</span><span class="p">(</span>
-                <span class="s2">&quot;DATA&quot;</span><span class="p">,</span>
+                <span class="s2">"DATA"</span><span class="p">,</span>
                 <span class="n">Table</span><span class="p">(</span>
-                    <span class="p">{</span><span class="s2">&quot;R(1)&quot;</span><span class="p">:</span> <span class="mf">1e-6</span><span class="p">,</span> <span class="s2">&quot;DX&quot;</span><span class="p">:</span> <span class="mf">2e-2</span><span class="p">,</span> <span class="s2">&quot;JRMT&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;RMT&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span> <span class="s2">&quot;JRWS&quot;</span><span class="p">:</span> <span class="mi">721</span><span class="p">,</span> <span class="s2">&quot;RWS&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">},</span>
-                    <span class="n">numbering</span><span class="o">=</span><span class="s2">&quot;IM&quot;</span><span class="p">,</span>
-                    <span class="n">numbering_format</span><span class="o">=</span><span class="s2">&quot;&gt;5&quot;</span><span class="p">,</span>
-                    <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;&gt;16&quot;</span><span class="p">,</span>  <span class="c1"># header_length=80</span>
+                    <span class="p">{</span><span class="s2">"R(1)"</span><span class="p">:</span> <span class="mf">1e-6</span><span class="p">,</span> <span class="s2">"DX"</span><span class="p">:</span> <span class="mf">2e-2</span><span class="p">,</span> <span class="s2">"JRMT"</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">"RMT"</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span> <span class="s2">"JRWS"</span><span class="p">:</span> <span class="mi">721</span><span class="p">,</span> <span class="s2">"RWS"</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">},</span>
+                    <span class="n">numbering</span><span class="o">=</span><span class="s2">"IM"</span><span class="p">,</span>
+                    <span class="n">numbering_format</span><span class="o">=</span><span class="s2">"&gt;5"</span><span class="p">,</span>
+                    <span class="nb">format</span><span class="o">=</span><span class="s2">"&gt;16"</span><span class="p">,</span>  <span class="c1"># header_length=80</span>
                 <span class="p">),</span>
             <span class="p">),</span>
             <span class="n">V</span><span class="p">(</span>
-                <span class="s2">&quot;FULLPOT&quot;</span><span class="p">,</span>
+                <span class="s2">"FULLPOT"</span><span class="p">,</span>
                 <span class="n">Table</span><span class="p">(</span>
-                    <span class="p">{</span><span class="s2">&quot;JRNS1&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="s2">&quot;JRCRI&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="s2">&quot;NPAN&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="s2">&quot;JRCUT&quot;</span><span class="p">:</span> <span class="n">Array</span><span class="p">(</span><span class="nb">int</span><span class="p">)},</span>
-                    <span class="n">numbering</span><span class="o">=</span><span class="s2">&quot;IM&quot;</span><span class="p">,</span>
-                    <span class="n">numbering_format</span><span class="o">=</span><span class="s2">&quot;&gt;5&quot;</span><span class="p">,</span>
-                    <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;&gt;16&quot;</span><span class="p">,</span>
+                    <span class="p">{</span><span class="s2">"JRNS1"</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="s2">"JRCRI"</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="s2">"NPAN"</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="s2">"JRCUT"</span><span class="p">:</span> <span class="n">Array</span><span class="p">(</span><span class="nb">int</span><span class="p">)},</span>
+                    <span class="n">numbering</span><span class="o">=</span><span class="s2">"IM"</span><span class="p">,</span>
+                    <span class="n">numbering_format</span><span class="o">=</span><span class="s2">"&gt;5"</span><span class="p">,</span>
+                    <span class="nb">format</span><span class="o">=</span><span class="s2">"&gt;16"</span><span class="p">,</span>
                 <span class="p">),</span>
                 <span class="n">is_optional</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
             <span class="p">),</span>

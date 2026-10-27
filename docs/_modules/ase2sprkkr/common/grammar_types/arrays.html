@@ -56,10 +56,10 @@
 <ul>
 <li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://sprkkr.org">SPR-KKR</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.sprkkr.org/wp-content/uploads/2026/05/kkr_manual.pdf">SPR-KKR manual</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
 <ul>
@@ -91,7 +91,7 @@
            <div itemprop="articleBody">
              
   <h1>Source code for ase2sprkkr.common.grammar_types.arrays</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Grammar types for array, sequences and tables&quot;&quot;&quot;</span>
+<span></span><span class="sd">"""Grammar types for array, sequences and tables"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">namedtuple</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
@@ -131,10 +131,10 @@
 <div class="viewcode-block" id="Array">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.arrays.Array.html#ase2sprkkr.common.grammar_types.arrays.Array">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Array</span><span class="p">(</span><span class="n">GrammarType</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;A (numpy) array of values of one type&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""A (numpy) array of values of one type"""</span>
 
-    <span class="n">delimiter</span> <span class="o">=</span> <span class="n">White</span><span class="p">(</span><span class="s2">&quot; </span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">suppress</span><span class="p">()</span>
-    <span class="n">delimiter_str</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span>
+    <span class="n">delimiter</span> <span class="o">=</span> <span class="n">White</span><span class="p">(</span><span class="s2">" </span><span class="se">\t</span><span class="s2">"</span><span class="p">)</span><span class="o">.</span><span class="n">suppress</span><span class="p">()</span>
+    <span class="n">delimiter_str</span> <span class="o">=</span> <span class="s2">" "</span>
     <span class="n">array_access</span> <span class="o">=</span> <span class="kc">True</span>
 
 <div class="viewcode-block" id="Array.__init__">
@@ -152,7 +152,7 @@
         <span class="n">delimiter</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
     <span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        type</span>
@@ -176,11 +176,11 @@
 <span class="sd">        as_list</span>
 <span class="sd">          Type of the value array. True means List, False means np.ndarray, or custom type (e.g. tuple)</span>
 <span class="sd">          can be provided. However, the value can be set using tuple or list anyway.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="nb">type</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)):</span>
             <span class="k">if</span> <span class="n">default_value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                    <span class="s2">&quot;It is not possible for an Array to provide default_value both in &#39;default_value&#39; and in &#39;type&#39; argument&quot;</span>
+                    <span class="s2">"It is not possible for an Array to provide default_value both in 'default_value' and in 'type' argument"</span>
                 <span class="p">)</span>
             <span class="n">default_value</span> <span class="o">=</span> <span class="nb">type</span>
             <span class="nb">type</span> <span class="o">=</span> <span class="nb">type</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="vm">__class__</span>
@@ -214,7 +214,7 @@
 
                 <span class="k">def</span><span class="w"> </span><span class="nf">check</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
                     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">!=</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:</span>
-                        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Wrong number of list items&quot;</span><span class="p">)</span>
+                        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Wrong number of list items"</span><span class="p">)</span>
                     <span class="k">return</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
 
                 <span class="n">grammar</span><span class="o">.</span><span class="n">set_parse_action</span><span class="p">(</span><span class="n">check</span><span class="p">)</span>
@@ -235,7 +235,7 @@
 
     <span class="k">def</span><span class="w"> </span><span class="nf">__getstate__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-        <span class="n">state</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;_grammar&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">state</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">"_grammar"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">state</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">__setstate__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
@@ -257,26 +257,26 @@
     <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_length</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_length</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_length</span><span class="p">:</span>
-                <span class="n">length</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot; of length </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">min_length</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="n">length</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">" of length </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">min_length</span><span class="si">}</span><span class="s2">"</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">length</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+                <span class="n">length</span> <span class="o">=</span> <span class="s2">""</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_length</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">length</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{self.min_length}</span><span class="s2">&lt;=n&quot;</span>
+                <span class="n">length</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">min_length</span><span class="si">}</span><span class="s2">&lt;=n"</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">length</span> <span class="o">=</span> <span class="s2">&quot;n&quot;</span>
+                <span class="n">length</span> <span class="o">=</span> <span class="s2">"n"</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_length</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">length</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;&lt;=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">max_length</span><span class="si">}</span><span class="s2">&quot;</span>
-            <span class="n">length</span> <span class="o">=</span> <span class="s2">&quot; with length &quot;</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Array(of </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="si">}{</span><span class="n">length</span><span class="si">}</span><span class="s2">)&quot;</span>
+                <span class="n">length</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">"&lt;=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">max_length</span><span class="si">}</span><span class="s2">"</span>
+            <span class="n">length</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">" with length </span><span class="si">{</span><span class="n">length</span><span class="si">}</span><span class="s2">"</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">"Array(of </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="si">}{</span><span class="n">length</span><span class="si">}</span><span class="s2">)"</span>
 
 <div class="viewcode-block" id="Array.grammar_name">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.arrays.Array.html#ase2sprkkr.common.grammar_types.arrays.Array.grammar_name">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">grammar_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">gn</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">grammar_name</span><span class="p">()</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_length</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_length</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_length</span><span class="p">:</span>
-            <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">min_length</span><span class="si">}</span><span class="s2">*</span><span class="si">{</span><span class="n">gn</span><span class="si">}</span><span class="s2">&quot;</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">gn</span><span class="si">}{</span><span class="bp">self</span><span class="o">.</span><span class="n">delimiter_str</span><span class="si">}{</span><span class="n">gn</span><span class="si">}{</span><span class="bp">self</span><span class="o">.</span><span class="n">delimiter_str</span><span class="si">}</span><span class="s2">...&quot;</span></div>
+            <span class="k">return</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">min_length</span><span class="si">}</span><span class="s2">*</span><span class="si">{</span><span class="n">gn</span><span class="si">}</span><span class="s2">"</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">gn</span><span class="si">}{</span><span class="bp">self</span><span class="o">.</span><span class="n">delimiter_str</span><span class="si">}{</span><span class="n">gn</span><span class="si">}{</span><span class="bp">self</span><span class="o">.</span><span class="n">delimiter_str</span><span class="si">}</span><span class="s2">..."</span></div>
 
 
 <div class="viewcode-block" id="Array._string">
@@ -296,7 +296,7 @@
 
 <div class="viewcode-block" id="Array._validate">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.arrays.Array.html#ase2sprkkr.common.grammar_types.arrays.Array._validate">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">why</span><span class="o">=</span><span class="s2">&quot;set&quot;</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">why</span><span class="o">=</span><span class="s2">"set"</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">callable</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">as_list</span><span class="p">):</span>
             <span class="bp">cls</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">as_list</span>
         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">as_list</span><span class="p">:</span>
@@ -304,17 +304,17 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">cls</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="bp">cls</span><span class="p">):</span>
-            <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;A value of the </span><span class="si">{</span><span class="bp">cls</span><span class="si">}</span><span class="s2"> type is required, a </span><span class="si">{</span><span class="n">value</span><span class="o">.</span><span class="vm">__class__</span><span class="si">}</span><span class="s2"> is given&quot;</span>
+            <span class="k">return</span> <span class="sa">f</span><span class="s2">"A value of the </span><span class="si">{</span><span class="bp">cls</span><span class="si">}</span><span class="s2"> type is required, a </span><span class="si">{</span><span class="n">value</span><span class="o">.</span><span class="vm">__class__</span><span class="si">}</span><span class="s2"> is given"</span>
 
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
             <span class="k">try</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">why</span><span class="o">=</span><span class="s2">&quot;set&quot;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">why</span><span class="o">=</span><span class="s2">"set"</span><span class="p">)</span>
             <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Value </span><span class="si">{}</span><span class="s2"> in the set is incorrect: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)))</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Value </span><span class="si">{}</span><span class="s2"> in the set is incorrect: </span><span class="si">{}</span><span class="s2">"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)))</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_length</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_length</span><span class="p">:</span>
-            <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;The array should be at least </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">min_length</span><span class="si">}</span><span class="s2"> items long, it has </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="si">}</span><span class="s2"> items&quot;</span>
+            <span class="k">return</span> <span class="sa">f</span><span class="s2">"The array should be at least </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">min_length</span><span class="si">}</span><span class="s2"> items long, it has </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="si">}</span><span class="s2"> items"</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_length</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_length</span><span class="p">:</span>
-            <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;The array can not have more than </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">max_length</span><span class="si">}</span><span class="s2"> items, it has </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="si">}</span><span class="s2"> items&quot;</span>
+            <span class="k">return</span> <span class="sa">f</span><span class="s2">"The array can not have more than </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">max_length</span><span class="si">}</span><span class="s2"> items, it has </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="si">}</span><span class="s2"> items"</span>
         <span class="k">return</span> <span class="kc">True</span></div>
 
 
@@ -323,9 +323,9 @@
     <span class="nd">@cached_property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">_dtype_condition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 
-        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">__version__</span> <span class="o">&gt;=</span> <span class="s2">&quot;1.23&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">__version__</span> <span class="o">&gt;=</span> <span class="s2">"1.23"</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">_array_dtype_condition_always_true</span>
-        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">__version__</span> <span class="o">&gt;=</span> <span class="s2">&quot;1.20&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">__version__</span> <span class="o">&gt;=</span> <span class="s2">"1.20"</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">_array_dtype_condition_not_object</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">_array_dtype_condition_not_object_and_scalar</span></div>
@@ -344,7 +344,7 @@
         <span class="nb">type</span> <span class="o">=</span> <span class="n">numpy_types</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">type</span><span class="p">,</span> <span class="nb">type</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="s2">&quot;__iter__&quot;</span><span class="p">):</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="s2">"__iter__"</span><span class="p">):</span>
                 <span class="n">value</span> <span class="o">=</span> <span class="p">[</span><span class="n">value</span><span class="p">]</span>
                 <span class="n">ln</span> <span class="o">=</span> <span class="mi">1</span>
             <span class="k">else</span><span class="p">:</span>
@@ -384,24 +384,30 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_length</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_length</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_length</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">dtype</span><span class="p">,</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">min_length</span><span class="p">,)</span> <span class="o">+</span> <span class="n">shape</span>
         <span class="k">return</span> <span class="nb">object</span></div>
-</div>
 
+
+<div class="viewcode-block" id="Array.additional_description">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.arrays.Array.html#ase2sprkkr.common.grammar_types.arrays.Array.additional_description">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">additional_description</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prefix</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">additional_description</span><span class="p">(</span><span class="n">prefix</span><span class="p">)</span></div>
+</div>
 
 
 <div class="viewcode-block" id="SetOf">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.arrays.SetOf.html#ase2sprkkr.common.grammar_types.arrays.SetOf">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">SetOf</span><span class="p">(</span><span class="n">Array</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Set of values of the same type. E.g. {1,2,3}&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Set of values of the same type. E.g. {1,2,3}"""</span>
 
-    <span class="n">delimiter</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">Suppress</span><span class="p">(</span><span class="n">pp</span><span class="o">.</span><span class="n">Literal</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span> <span class="o">|</span> <span class="n">pp</span><span class="o">.</span><span class="n">Literal</span><span class="p">(</span><span class="s2">&quot;;&quot;</span><span class="p">)</span> <span class="o">|</span> <span class="n">White</span><span class="p">(</span><span class="s2">&quot; </span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">set_name</span><span class="p">(</span><span class="s2">&quot;[,; ]&quot;</span><span class="p">)</span>
-    <span class="n">delimiter_str</span> <span class="o">=</span> <span class="s2">&quot;,&quot;</span>
+    <span class="n">delimiter</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">Suppress</span><span class="p">(</span><span class="n">pp</span><span class="o">.</span><span class="n">Literal</span><span class="p">(</span><span class="s2">","</span><span class="p">)</span> <span class="o">|</span> <span class="n">pp</span><span class="o">.</span><span class="n">Literal</span><span class="p">(</span><span class="s2">";"</span><span class="p">)</span> <span class="o">|</span> <span class="n">White</span><span class="p">(</span><span class="s2">" </span><span class="se">\t</span><span class="s2">"</span><span class="p">))</span><span class="o">.</span><span class="n">set_name</span><span class="p">(</span><span class="s2">"[,; ]"</span><span class="p">)</span>
+    <span class="n">delimiter_str</span> <span class="o">=</span> <span class="s2">","</span>
 
 <div class="viewcode-block" id="SetOf.__init__">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.arrays.SetOf.html#ase2sprkkr.common.grammar_types.arrays.SetOf.__init__">[docs]</a>
     <span class="nd">@add_to_signature</span><span class="p">(</span><span class="n">Array</span><span class="o">.</span><span class="fm">__init__</span><span class="p">)</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">type</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="n">kwargs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;prefix&quot;</span><span class="p">,</span> <span class="s2">&quot;{&quot;</span><span class="p">)</span>
-        <span class="n">kwargs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;postfix&quot;</span><span class="p">,</span> <span class="s2">&quot;}&quot;</span><span class="p">)</span>
+        <span class="n">kwargs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">"prefix"</span><span class="p">,</span> <span class="s2">"{"</span><span class="p">)</span>
+        <span class="n">kwargs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">"postfix"</span><span class="p">,</span> <span class="s2">"}"</span><span class="p">)</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="nb">type</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 
@@ -427,7 +433,7 @@
 <div class="viewcode-block" id="Complex.__init__">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.arrays.Complex.html#ase2sprkkr.common.grammar_types.arrays.Complex.__init__">[docs]</a>
     <span class="nd">@add_to_signature</span><span class="p">(</span><span class="n">TypedGrammarType</span><span class="o">.</span><span class="fm">__init__</span><span class="p">)</span>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s2">""</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">Array</span><span class="p">(</span><span class="n">Real</span><span class="o">.</span><span class="n">I</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="n">delimiter</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_build_grammar</span><span class="p">()</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span></div>
@@ -447,7 +453,7 @@
 
     <span class="k">def</span><span class="w"> </span><span class="nf">__getstate__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-        <span class="n">state</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;_grammar&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">state</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">"_grammar"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">state</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">__setstate__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
@@ -462,14 +468,14 @@
 
 <div class="viewcode-block" id="Complex._validate">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.arrays.Complex.html#ase2sprkkr.common.grammar_types.arrays.Complex._validate">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">why</span><span class="o">=</span><span class="s2">&quot;set&quot;</span><span class="p">):</span>
-        <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="p">(</span><span class="nb">complex</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">complexfloating</span><span class="p">))</span> <span class="ow">or</span> <span class="s2">&quot;A complex value required, </span><span class="si">{value}</span><span class="s2"> given.&quot;</span></div>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">why</span><span class="o">=</span><span class="s2">"set"</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="p">(</span><span class="nb">complex</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">complexfloating</span><span class="p">))</span> <span class="ow">or</span> <span class="s2">"A complex value required, </span><span class="si">{value}</span><span class="s2"> given."</span></div>
 
 
 <div class="viewcode-block" id="Complex._grammar_name">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.arrays.Complex.html#ase2sprkkr.common.grammar_types.arrays.Complex._grammar_name">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">_grammar_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s2">&quot;{complex (as 2 reals)}&quot;</span></div>
+        <span class="k">return</span> <span class="s2">"{complex (as 2 reals)}"</span></div>
 
 
 <div class="viewcode-block" id="Complex.transform_grammar">
@@ -483,7 +489,7 @@
 <div class="viewcode-block" id="Complex._string">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.arrays.Complex.html#ase2sprkkr.common.grammar_types.arrays.Complex._string">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">real</span><span class="o">.</span><span class="n">_string</span><span class="p">(</span><span class="n">val</span><span class="o">.</span><span class="n">real</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">real</span><span class="o">.</span><span class="n">_string</span><span class="p">(</span><span class="n">val</span><span class="o">.</span><span class="n">imag</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">real</span><span class="o">.</span><span class="n">_string</span><span class="p">(</span><span class="n">val</span><span class="o">.</span><span class="n">real</span><span class="p">)</span> <span class="o">+</span> <span class="s2">" "</span> <span class="o">+</span> <span class="n">real</span><span class="o">.</span><span class="n">_string</span><span class="p">(</span><span class="n">val</span><span class="o">.</span><span class="n">imag</span><span class="p">)</span></div>
 
 
     <span class="fm">__str__</span> <span class="o">=</span> <span class="n">GrammarType</span><span class="o">.</span><span class="fm">__str__</span></div>
@@ -493,14 +499,14 @@
 <div class="viewcode-block" id="Sequence">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.arrays.Sequence.html#ase2sprkkr.common.grammar_types.arrays.Sequence">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Sequence</span><span class="p">(</span><span class="n">GrammarType</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;A sequence of values of given types&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""A sequence of values of given types"""</span>
 
 <div class="viewcode-block" id="Sequence.__init__">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.arrays.Sequence.html#ase2sprkkr.common.grammar_types.arrays.Sequence.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="o">*</span><span class="n">types</span><span class="p">,</span>
-        <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="nb">format</span><span class="o">=</span><span class="s2">""</span><span class="p">,</span>
         <span class="n">format_all</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="n">allowed_values</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">default_values</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
@@ -511,7 +517,7 @@
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">names</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">names</span> <span class="o">=</span> <span class="n">names</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">names</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="k">else</span> <span class="p">{</span><span class="n">name</span><span class="p">:</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">names</span><span class="p">)}</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">value_type</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">names</span><span class="p">),</span> <span class="n">names</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">value_type</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s2">"_"</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">names</span><span class="p">),</span> <span class="n">names</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">value_constructor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">value_type</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">value_constructor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">value_type</span>
         <span class="k">else</span><span class="p">:</span>
@@ -552,16 +558,16 @@
         <span class="n">grammar</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">And</span><span class="p">(</span><span class="n">grammars</span><span class="p">)</span><span class="o">.</span><span class="n">set_parse_action</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">value_constructor</span><span class="p">(</span><span class="o">*</span><span class="n">x</span><span class="p">))</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">allowed_values</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">grammar</span><span class="o">.</span><span class="n">add_condition_ex</span><span class="p">(</span>
-                <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">allowed_values</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> is not in the list of allowed values&quot;</span>
+                <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">allowed_values</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> is not in the list of allowed values"</span>
             <span class="p">)</span>
         <span class="k">return</span> <span class="n">grammar</span></div>
 
 
 <div class="viewcode-block" id="Sequence._validate">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.arrays.Sequence.html#ase2sprkkr.common.grammar_types.arrays.Sequence._validate">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">why</span><span class="o">=</span><span class="s2">&quot;set&quot;</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">why</span><span class="o">=</span><span class="s2">"set"</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value_type</span><span class="p">))</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">types</span><span class="p">):</span>
-            <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;A tuple of </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">types</span><span class="p">)</span><span class="si">}</span><span class="s2"> values is required&quot;</span>
+            <span class="k">return</span> <span class="sa">f</span><span class="s2">"A tuple of </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">types</span><span class="p">)</span><span class="si">}</span><span class="s2"> values is required"</span>
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">types</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
             <span class="n">i</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">j</span><span class="p">,</span> <span class="n">why</span><span class="o">=</span><span class="n">why</span><span class="p">)</span>
         <span class="k">return</span> <span class="kc">True</span></div>
@@ -582,7 +588,7 @@
 <div class="viewcode-block" id="Sequence.grammar_name">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.arrays.Sequence.html#ase2sprkkr.common.grammar_types.arrays.Sequence.grammar_name">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">grammar_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">j</span><span class="o">.</span><span class="n">grammar_name</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">types</span><span class="p">))</span></div>
+        <span class="k">return</span> <span class="s2">" "</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">j</span><span class="o">.</span><span class="n">grammar_name</span><span class="p">()</span><span class="si">}</span><span class="s2">"</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">types</span><span class="p">))</span></div>
 
 
 <div class="viewcode-block" id="Sequence._string">
@@ -590,9 +596,9 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
         <span class="n">out</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">types</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
-            <span class="n">out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
+            <span class="n">out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">" "</span><span class="p">)</span>
             <span class="n">out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">string</span><span class="p">(</span><span class="n">v</span><span class="p">))</span>
-        <span class="k">return</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">out</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">out</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Sequence.enrich">
@@ -629,11 +635,11 @@
 <div class="viewcode-block" id="SpecialColumn">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.arrays.SpecialColumn.html#ase2sprkkr.common.grammar_types.arrays.SpecialColumn">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">SpecialColumn</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;A special column for :class:`Table`&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""A special column for :class:`Table`"""</span>
 
 <div class="viewcode-block" id="SpecialColumn.__init__">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.arrays.SpecialColumn.html#ase2sprkkr.common.grammar_types.arrays.SpecialColumn.__init__">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table</span><span class="p">,</span> <span class="n">column</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="nb">format</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">default_format</span><span class="o">=</span><span class="s2">&quot;&lt;4&quot;</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table</span><span class="p">,</span> <span class="n">column</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="nb">format</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">default_format</span><span class="o">=</span><span class="s2">"&lt;4"</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">column</span><span class="o">.</span><span class="vm">__class__</span> <span class="ow">is</span> <span class="nb">str</span><span class="p">:</span>
             <span class="n">label</span> <span class="o">=</span> <span class="n">column</span>
             <span class="n">column</span> <span class="o">=</span> <span class="kc">True</span>
@@ -670,27 +676,27 @@
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.arrays.SpecialColumn.html#ase2sprkkr.common.grammar_types.arrays.SpecialColumn.format_string">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">format_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">column</span><span class="p">:</span>
-            <span class="k">return</span> <span class="s2">&quot;&quot;</span>
+            <span class="k">return</span> <span class="s2">""</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">column</span><span class="o">.</span><span class="n">format_string</span><span class="p">(</span><span class="n">val</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="SpecialColumn.header">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.arrays.SpecialColumn.html#ase2sprkkr.common.grammar_types.arrays.SpecialColumn.header">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">header</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">format_string</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">label</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">format_string</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">label</span> <span class="ow">or</span> <span class="s2">""</span><span class="p">)</span> <span class="o">+</span> <span class="s2">" "</span></div>
 
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">column</span><span class="p">:</span>
-            <span class="k">return</span> <span class="s2">&quot;&lt;Special column not present&gt;&quot;</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&lt;Special column</span><span class="si">{</span><span class="s1">&#39; &#39;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="si">}{</span><span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="si">}</span><span class="s2"> of type </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">column</span><span class="si">}</span><span class="s2">&gt;&quot;</span></div>
+            <span class="k">return</span> <span class="s2">"&lt;Special column not present&gt;"</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">"&lt;Special column</span><span class="si">{</span><span class="s1">' '</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">''</span><span class="si">}{</span><span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="si">}</span><span class="s2"> of type </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">column</span><span class="si">}</span><span class="s2">&gt;"</span></div>
 
 
 
 <div class="viewcode-block" id="Table">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.arrays.Table.html#ase2sprkkr.common.grammar_types.arrays.Table">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Table</span><span class="p">(</span><span class="n">GrammarType</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Table, optionaly with named columns, e.g.</span>
 
 <span class="sd">      ::text</span>
@@ -699,7 +705,7 @@
 <span class="sd">         1         1         1         1     1 1.000</span>
 <span class="sd">         2         2         2         1     2 1.000</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="n">array_access</span> <span class="o">=</span> <span class="kc">True</span>
     <span class="n">name_in_grammar</span> <span class="o">=</span> <span class="kc">False</span>
@@ -711,7 +717,7 @@
         <span class="n">columns</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">GrammarType</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">header</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">free_header</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-        <span class="nb">format</span><span class="o">=</span><span class="p">{</span><span class="nb">float</span><span class="p">:</span> <span class="s2">&quot;&gt;22.14&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">:</span> <span class="s2">&quot;&gt;16&quot;</span><span class="p">},</span>
+        <span class="nb">format</span><span class="o">=</span><span class="p">{</span><span class="nb">float</span><span class="p">:</span> <span class="s2">"&gt;22.14"</span><span class="p">,</span> <span class="kc">None</span><span class="p">:</span> <span class="s2">"&gt;16"</span><span class="p">},</span>
         <span class="n">format_all</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="n">numbering</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">GrammarType</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">numbering_label</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -728,12 +734,12 @@
         <span class="n">default_values</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="n">named_result</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">group_size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">group_size_format</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">{:&lt;12}{}</span><span class="s2">&quot;</span><span class="p">,</span>
+        <span class="n">group_size_format</span><span class="o">=</span><span class="s2">"</span><span class="si">{:&lt;12}{}</span><span class="s2">"</span><span class="p">,</span>
         <span class="n">groups_as_list</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">repeat_sparse</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
     <span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        columns</span>
@@ -795,7 +801,7 @@
 <span class="sd">        repeat_sparse</span>
 <span class="sd">          There can be rows, that have only some columns, given as list.</span>
 <span class="sd">          Then the data will be added from the previous row.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="n">columns</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">columns</span> <span class="o">=</span> <span class="n">kwargs</span>
             <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{}</span>
@@ -869,7 +875,7 @@
                 <span class="n">grp_size</span><span class="o">.</span><span class="n">group_size</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
             <span class="n">grp_size</span> <span class="o">=</span> <span class="n">Unsigned</span><span class="o">.</span><span class="n">I</span><span class="o">.</span><span class="n">grammar</span><span class="p">()</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span><span class="o">.</span><span class="n">set_parse_action</span><span class="p">(</span><span class="n">set_g_size</span><span class="p">)</span>
-            <span class="n">grammar</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">Suppress</span><span class="p">(</span><span class="n">pp</span><span class="o">.</span><span class="n">CaselessKeyword</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">group_size</span><span class="p">)</span> <span class="o">+</span> <span class="n">grp_size</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="n">grammar</span>
+            <span class="n">grammar</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">Suppress</span><span class="p">(</span><span class="n">pp</span><span class="o">.</span><span class="n">CaselessKeyword</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">group_size</span><span class="p">)</span> <span class="o">+</span> <span class="n">grp_size</span> <span class="o">+</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span> <span class="o">+</span> <span class="n">grammar</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">free_header</span><span class="p">:</span>
@@ -877,18 +883,18 @@
                 <span class="k">if</span> <span class="nb">callable</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">free_header</span><span class="p">):</span>
                     <span class="n">fh</span><span class="o">.</span><span class="n">add_condition_ex</span><span class="p">(</span>
                         <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">free_header</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
-                        <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;This is not an allowed header for table </span><span class="si">{</span><span class="n">param_name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                        <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"This is not an allowed header for table </span><span class="si">{</span><span class="n">param_name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
                     <span class="p">)</span>
                 <span class="n">grammar</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">Suppress</span><span class="p">(</span><span class="n">fh</span><span class="p">)</span> <span class="o">+</span> <span class="n">grammar</span>
             <span class="k">else</span><span class="p">:</span>
 
                 <span class="k">def</span><span class="w"> </span><span class="nf">names</span><span class="p">():</span>
                     <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">names</span><span class="p">:</span>
-                        <span class="k">if</span> <span class="s2">&quot; &quot;</span> <span class="ow">in</span> <span class="n">n</span><span class="p">:</span>
-<span class="w">                            </span><span class="sd">&quot;&quot;&quot; multiple column headers for one column are allowed</span>
-<span class="sd">                          -- see Occupation section&quot;&quot;&quot;</span>
-                            <span class="k">yield from</span> <span class="nb">map</span><span class="p">(</span><span class="n">pp</span><span class="o">.</span><span class="n">CaselessKeyword</span><span class="p">,</span> <span class="n">n</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">))</span>
-                        <span class="k">elif</span> <span class="n">n</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="s2">" "</span> <span class="ow">in</span> <span class="n">n</span><span class="p">:</span>
+<span class="w">                            </span><span class="sd">""" multiple column headers for one column are allowed</span>
+<span class="sd">                          -- see Occupation section"""</span>
+                            <span class="k">yield from</span> <span class="nb">map</span><span class="p">(</span><span class="n">pp</span><span class="o">.</span><span class="n">CaselessKeyword</span><span class="p">,</span> <span class="n">n</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">" "</span><span class="p">))</span>
+                        <span class="k">elif</span> <span class="n">n</span> <span class="o">!=</span> <span class="s2">""</span><span class="p">:</span>
                             <span class="k">yield</span> <span class="n">pp</span><span class="o">.</span><span class="n">CaselessKeyword</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
 
                 <span class="n">header</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">And</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">names</span><span class="p">()))</span>
@@ -901,7 +907,7 @@
             <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">free_numbering</span><span class="p">:</span>
                 <span class="n">should_be</span> <span class="o">=</span> <span class="p">[</span><span class="o">*</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">datas</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="n">x</span><span class="p">[::</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="n">should_be</span><span class="p">:</span>
-                    <span class="k">raise</span> <span class="n">pp</span><span class="o">.</span><span class="n">ParseException</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">loc</span><span class="p">,</span> <span class="s2">&quot;The first column should contain row numbering&quot;</span><span class="p">)</span>
+                    <span class="k">raise</span> <span class="n">pp</span><span class="o">.</span><span class="n">ParseException</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">loc</span><span class="p">,</span> <span class="s2">"The first column should contain row numbering"</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">tabelize</span><span class="p">(</span><span class="n">datas</span><span class="p">)</span>
 
         <span class="k">def</span><span class="w"> </span><span class="nf">data_grouping</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">loc</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
@@ -911,7 +917,7 @@
             <span class="n">c</span> <span class="o">=</span> <span class="mi">0</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">%</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">grp_size</span><span class="o">.</span><span class="n">group_size</span><span class="p">):</span>
                 <span class="k">raise</span> <span class="n">pp</span><span class="o">.</span><span class="n">ParseException</span><span class="p">(</span>
-                    <span class="n">s</span><span class="p">,</span> <span class="n">loc</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;The data in the table should be grouped by groups of length </span><span class="si">{</span><span class="n">grp_size</span><span class="o">.</span><span class="n">group_size</span><span class="si">}</span><span class="s2">.&quot;</span>
+                    <span class="n">s</span><span class="p">,</span> <span class="n">loc</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"The data in the table should be grouped by groups of length </span><span class="si">{</span><span class="n">grp_size</span><span class="o">.</span><span class="n">group_size</span><span class="si">}</span><span class="s2">."</span>
                 <span class="p">)</span>
             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">),</span> <span class="mi">2</span><span class="p">):</span>
                 <span class="n">c</span> <span class="o">+=</span> <span class="mi">1</span>
@@ -923,9 +929,9 @@
                     <span class="k">raise</span> <span class="n">pp</span><span class="o">.</span><span class="n">ParseException</span><span class="p">(</span>
                         <span class="n">s</span><span class="p">,</span>
                         <span class="n">loc</span><span class="p">,</span>
-                        <span class="s2">&quot;The value in the first column should &quot;</span>
-                        <span class="s2">&quot;be a row numbering within a group of a length </span><span class="si">{grp_size.group_size}</span><span class="s2">.&quot;</span>
-                        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">}</span><span class="s2"> encountered, </span><span class="si">{</span><span class="n">c</span><span class="si">}</span><span class="s2"> expected.&quot;</span><span class="p">,</span>
+                        <span class="s2">"The value in the first column should "</span>
+                        <span class="s2">"be a row numbering within a group of a length </span><span class="si">{grp_size.group_size}</span><span class="s2">."</span>
+                        <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">}</span><span class="s2"> encountered, </span><span class="si">{</span><span class="n">c</span><span class="si">}</span><span class="s2"> expected."</span><span class="p">,</span>
                     <span class="p">)</span>
                 <span class="n">curr</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
             <span class="n">out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tabelize</span><span class="p">(</span><span class="n">curr</span><span class="p">))</span>
@@ -942,21 +948,21 @@
                 <span class="k">raise</span> <span class="n">pp</span><span class="o">.</span><span class="n">ParseException</span><span class="p">(</span>
                     <span class="n">s</span><span class="p">,</span>
                     <span class="n">loc</span><span class="p">,</span>
-                    <span class="s2">&quot;The value in the first column should &quot;</span>
-                    <span class="s2">&quot;be a monotone numbering of a groups. &quot;</span>
-                    <span class="s2">&quot;On the {i//3+1}th row, </span><span class="si">{data[i]}</span><span class="s2"> encountered, </span><span class="si">{expected}</span><span class="s2"> expected.&quot;</span><span class="p">,</span>
+                    <span class="s2">"The value in the first column should "</span>
+                    <span class="s2">"be a monotone numbering of a groups. "</span>
+                    <span class="s2">"On the {i//3+1}th row, </span><span class="si">{data[i]}</span><span class="s2"> encountered, </span><span class="si">{expected}</span><span class="s2"> expected."</span><span class="p">,</span>
                 <span class="p">)</span>
 
             <span class="n">val</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
             <span class="k">if</span> <span class="n">val</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
-                <span class="n">numbering_error</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;1&quot;</span><span class="p">)</span>
+                <span class="n">numbering_error</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s2">"1"</span><span class="p">)</span>
             <span class="n">out</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="n">curr</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="n">grp</span> <span class="o">=</span> <span class="mi">0</span>
             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">),</span> <span class="mi">3</span><span class="p">):</span>
                 <span class="k">if</span> <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="n">val</span><span class="p">:</span>
                     <span class="k">if</span> <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="n">val</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:</span>
-                        <span class="n">numbering_error</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">val</span><span class="si">}</span><span class="s2">&#39; or &#39;</span><span class="si">{</span><span class="n">val</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+                        <span class="n">numbering_error</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"'</span><span class="si">{</span><span class="n">val</span><span class="si">}</span><span class="s2">' or '</span><span class="si">{</span><span class="n">val</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">'"</span><span class="p">)</span>
                     <span class="n">out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tabelize</span><span class="p">(</span><span class="n">curr</span><span class="p">))</span>
                     <span class="n">curr</span> <span class="o">=</span> <span class="p">[]</span>
                     <span class="n">val</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
@@ -966,9 +972,9 @@
                     <span class="k">raise</span> <span class="n">pp</span><span class="o">.</span><span class="n">ParseException</span><span class="p">(</span>
                         <span class="n">s</span><span class="p">,</span>
                         <span class="n">loc</span><span class="p">,</span>
-                        <span class="s2">&quot;The value in the second column should &quot;</span>
-                        <span class="s2">&quot;be a row numbering within a group. &quot;</span>
-                        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2"> encountered, </span><span class="si">{</span><span class="n">grp</span><span class="si">}</span><span class="s2"> expected.&quot;</span><span class="p">,</span>
+                        <span class="s2">"The value in the second column should "</span>
+                        <span class="s2">"be a row numbering within a group. "</span>
+                        <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2"> encountered, </span><span class="si">{</span><span class="n">grp</span><span class="si">}</span><span class="s2"> expected."</span><span class="p">,</span>
                     <span class="p">)</span>
                 <span class="n">curr</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">2</span><span class="p">])</span>
             <span class="n">out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tabelize</span><span class="p">(</span><span class="n">curr</span><span class="p">))</span>
@@ -978,7 +984,7 @@
                         <span class="k">raise</span> <span class="n">pp</span><span class="o">.</span><span class="n">ParseException</span><span class="p">(</span>
                             <span class="n">s</span><span class="p">,</span>
                             <span class="n">loc</span><span class="p">,</span>
-                            <span class="sa">f</span><span class="s2">&quot;The group </span><span class="si">{</span><span class="n">i</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2"> should have </span><span class="si">{</span><span class="n">grp_size</span><span class="o">.</span><span class="n">group_size</span><span class="si">}</span><span class="s2"> members, it has </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">g</span><span class="p">)</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">,</span>
+                            <span class="sa">f</span><span class="s2">"The group </span><span class="si">{</span><span class="n">i</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2"> should have </span><span class="si">{</span><span class="n">grp_size</span><span class="o">.</span><span class="n">group_size</span><span class="si">}</span><span class="s2"> members, it has </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">g</span><span class="p">)</span><span class="si">}</span><span class="s2">."</span><span class="p">,</span>
                         <span class="p">)</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">groups_as_list</span><span class="p">:</span>
                 <span class="k">return</span> <span class="p">[</span><span class="n">out</span><span class="p">]</span>
@@ -1027,7 +1033,7 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="p">:</span>
             <span class="n">names</span> <span class="o">=</span> <span class="p">((</span><span class="n">i</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)</span> <span class="k">else</span> <span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">names</span><span class="p">)</span>
             <span class="n">formated</span> <span class="o">=</span> <span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">format_string</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="k">for</span> <span class="n">n</span><span class="p">,</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">names</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sequence</span><span class="o">.</span><span class="n">types</span><span class="p">))</span>
-            <span class="n">header</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">formated</span><span class="p">)</span>
+            <span class="n">header</span> <span class="o">=</span> <span class="s2">" "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">formated</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">special_columns</span><span class="p">():</span>
                 <span class="n">header</span> <span class="o">=</span> <span class="n">i</span><span class="o">.</span><span class="n">header</span><span class="p">()</span> <span class="o">+</span> <span class="n">header</span>
             <span class="n">out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">header</span><span class="p">)</span>
@@ -1057,23 +1063,23 @@
             <span class="k">for</span> <span class="n">n</span><span class="p">,</span> <span class="n">d</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">unflatten</span><span class="p">(</span><span class="n">data</span><span class="p">),</span> <span class="mi">1</span><span class="p">):</span>
                 <span class="n">line</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">numbering</span><span class="o">.</span><span class="n">format_string</span><span class="p">(</span><span class="n">n</span><span class="p">))</span>
 
-        <span class="k">return</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">out</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">out</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Table._validate">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.arrays.Table.html#ase2sprkkr.common.grammar_types.arrays.Table._validate">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">why</span><span class="o">=</span><span class="s2">&quot;set&quot;</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">why</span><span class="o">=</span><span class="s2">"set"</span><span class="p">):</span>
         <span class="k">def</span><span class="w"> </span><span class="nf">validate</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
-                <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Numpy array as a value required </span><span class="si">{</span><span class="n">value</span><span class="o">.</span><span class="vm">__class__</span><span class="si">}</span><span class="s2"> given&quot;</span>
+                <span class="k">return</span> <span class="sa">f</span><span class="s2">"Numpy array as a value required </span><span class="si">{</span><span class="n">value</span><span class="o">.</span><span class="vm">__class__</span><span class="si">}</span><span class="s2"> given"</span>
             <span class="n">dtype</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_numpy_type</span>
             <span class="n">dim</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dtype</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">flatten</span> <span class="k">else</span> <span class="mi">2</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">!=</span> <span class="n">dim</span><span class="p">:</span>
-                <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;The array should have dimension=</span><span class="si">{</span><span class="n">dim</span><span class="si">}</span><span class="s2">, it has dimension </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="k">return</span> <span class="sa">f</span><span class="s2">"The array should have dimension=</span><span class="si">{</span><span class="n">dim</span><span class="si">}</span><span class="s2">, it has dimension </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span>
             <span class="k">if</span> <span class="n">value</span><span class="o">.</span><span class="n">dtype</span> <span class="o">!=</span> <span class="n">dtype</span><span class="p">:</span>
-                <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;The data type of the value should be </span><span class="si">{</span><span class="n">dtype</span><span class="si">}</span><span class="s2">, it is </span><span class="si">{</span><span class="n">value</span><span class="o">.</span><span class="n">dtype</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="k">return</span> <span class="sa">f</span><span class="s2">"The data type of the value should be </span><span class="si">{</span><span class="n">dtype</span><span class="si">}</span><span class="s2">, it is </span><span class="si">{</span><span class="n">value</span><span class="o">.</span><span class="n">dtype</span><span class="si">}</span><span class="s2">"</span>
             <span class="k">if</span> <span class="n">dim</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">and</span> <span class="n">value</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sequence</span><span class="o">.</span><span class="n">types</span><span class="p">):</span>
-                <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;The array is required to have </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sequence</span><span class="o">.</span><span class="n">types</span><span class="p">)</span><span class="si">}</span><span class="s2"> columns, it has </span><span class="si">{</span><span class="n">value</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="k">return</span> <span class="sa">f</span><span class="s2">"The array is required to have </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sequence</span><span class="o">.</span><span class="n">types</span><span class="p">)</span><span class="si">}</span><span class="s2"> columns, it has </span><span class="si">{</span><span class="n">value</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span>
             <span class="k">return</span> <span class="kc">True</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">grouping</span><span class="p">:</span>
@@ -1082,11 +1088,11 @@
                 <span class="k">return</span> <span class="n">out</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)):</span>
-                <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;The grouped table accepts list of table data as a value, </span><span class="si">{</span><span class="n">value</span><span class="o">.</span><span class="vm">__class__</span><span class="si">}</span><span class="s2"> have been given.&quot;</span>
+                <span class="k">return</span> <span class="sa">f</span><span class="s2">"The grouped table accepts list of table data as a value, </span><span class="si">{</span><span class="n">value</span><span class="o">.</span><span class="vm">__class__</span><span class="si">}</span><span class="s2"> have been given."</span>
             <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">d</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
                 <span class="n">out</span> <span class="o">=</span> <span class="n">validate</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">out</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">True</span><span class="p">:</span>
-                    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;The </span><span class="si">{</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">th table has invalid data: </span><span class="si">{</span><span class="n">out</span><span class="si">}</span><span class="s2">&quot;</span>
+                    <span class="k">return</span> <span class="sa">f</span><span class="s2">"The </span><span class="si">{</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">th table has invalid data: </span><span class="si">{</span><span class="n">out</span><span class="si">}</span><span class="s2">"</span>
             <span class="n">size</span> <span class="o">=</span> <span class="kc">None</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">group_size</span><span class="p">:</span>
                 <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">d</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
@@ -1094,10 +1100,10 @@
                         <span class="n">size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
                     <span class="k">else</span><span class="p">:</span>
                         <span class="k">if</span> <span class="n">size</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">d</span><span class="p">):</span>
-                            <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Size of the </span><span class="si">{</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">th table should be same as of the first one, i.e. </span><span class="si">{</span><span class="n">size</span><span class="si">}</span><span class="s2">&quot;</span>
+                            <span class="k">return</span> <span class="sa">f</span><span class="s2">"Size of the </span><span class="si">{</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">th table should be same as of the first one, i.e. </span><span class="si">{</span><span class="n">size</span><span class="si">}</span><span class="s2">"</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">length</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">length</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
-            <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;The array is required to have </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">length</span><span class="si">}</span><span class="s2"> rows, it has </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="k">return</span> <span class="sa">f</span><span class="s2">"The array is required to have </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">length</span><span class="si">}</span><span class="s2"> rows, it has </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span>
         <span class="k">return</span> <span class="kc">True</span></div>
 
 
@@ -1129,12 +1135,12 @@
                 <span class="k">if</span> <span class="n">t</span><span class="o">.</span><span class="n">numpy_type</span> <span class="o">!=</span> <span class="n">dtype</span><span class="p">:</span>
                     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">named_result</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
                         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                            <span class="s2">&quot;The table should not have structured dtype, but has columns have different types&quot;</span>
+                            <span class="s2">"The table should not have structured dtype, but has columns have different types"</span>
                         <span class="p">)</span>
                     <span class="k">break</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">dtype</span>
-        <span class="n">names</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">names</span> <span class="ow">or</span> <span class="n">itertools</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+        <span class="n">names</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">names</span> <span class="ow">or</span> <span class="n">itertools</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="s2">""</span><span class="p">)</span>
         <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">names</span><span class="p">,</span> <span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">numpy_type</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">types</span><span class="p">)))</span></div>
 
 
@@ -1147,9 +1153,9 @@
 <div class="viewcode-block" id="Table.zero_data">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.arrays.Table.html#ase2sprkkr.common.grammar_types.arrays.Table.zero_data">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">zero_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">length</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return array of zeros with the given number of rows and</span>
+<span class="w">        </span><span class="sd">"""Return array of zeros with the given number of rows and</span>
 <span class="sd">        with the dtype of the table</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">dtype</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">numpy_type</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dtype</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">length</span><span class="p">,</span> <span class="n">dtype</span><span class="p">)</span>
@@ -1161,10 +1167,10 @@
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.arrays.Table.html#ase2sprkkr.common.grammar_types.arrays.Table.grammar_name">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">grammar_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">names</span><span class="p">:</span>
-            <span class="n">data</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">j</span><span class="o">.</span><span class="n">grammar_name</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">names</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sequence</span><span class="o">.</span><span class="n">types</span><span class="p">)))</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="s2">" "</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">j</span><span class="o">.</span><span class="n">grammar_name</span><span class="p">()</span><span class="si">}</span><span class="s2">"</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">names</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sequence</span><span class="o">.</span><span class="n">types</span><span class="p">)))</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sequence</span><span class="o">.</span><span class="n">grammar_name</span><span class="p">()</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&lt;TABLE of </span><span class="si">{</span><span class="n">data</span><span class="si">}</span><span class="s2">&gt;&quot;</span></div>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">"&lt;TABLE of </span><span class="si">{</span><span class="n">data</span><span class="si">}</span><span class="s2">&gt;"</span></div>
 
 
     <span class="n">is_the_same_value</span> <span class="o">=</span> <span class="nb">staticmethod</span><span class="p">(</span><span class="n">compare_numpy_values</span><span class="p">)</span></div>
@@ -1172,13 +1178,13 @@
 
 
 <span class="n">set_of_integers</span> <span class="o">=</span> <span class="n">SetOf</span><span class="p">(</span><span class="n">Integer</span><span class="o">.</span><span class="n">I</span><span class="p">)</span>
-<span class="sd">&quot;&quot;&quot; A standard grammar type instance for array of integers (of any length, used by variant types) &quot;&quot;&quot;</span>
+<span class="sd">""" A standard grammar type instance for array of integers (of any length, used by variant types) """</span>
 
 <span class="n">set_of_reals</span> <span class="o">=</span> <span class="n">SetOf</span><span class="p">(</span><span class="n">Real</span><span class="o">.</span><span class="n">I</span><span class="p">)</span>
-<span class="sd">&quot;&quot;&quot; A standard grammar type instance for array of reals (of any length, used by variant types) &quot;&quot;&quot;</span>
+<span class="sd">""" A standard grammar type instance for array of reals (of any length, used by variant types) """</span>
 
 <span class="n">complex_number</span> <span class="o">=</span> <span class="n">Complex</span><span class="o">.</span><span class="n">I</span> <span class="o">=</span> <span class="n">Complex</span><span class="p">()</span>  <span class="c1"># NOQA E741</span>
-<span class="sd">&quot;&quot;&quot; A standard grammar type instance for complex numbers &quot;&quot;&quot;</span>
+<span class="sd">""" A standard grammar type instance for complex numbers """</span>
 </pre></div>
 
            </div>

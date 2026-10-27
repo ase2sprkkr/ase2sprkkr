@@ -56,10 +56,10 @@
 <ul>
 <li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://sprkkr.org">SPR-KKR</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.sprkkr.org/wp-content/uploads/2026/05/kkr_manual.pdf">SPR-KKR manual</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
 <ul>
@@ -108,22 +108,22 @@
 <div class="viewcode-block" id="HostMadelungPotentialSectionDefinition">
 <a class="viewcode-back" href="../../../../../auto/ase2sprkkr.potentials.definitions.sections.host_madelung_potential.HostMadelungPotentialSectionDefinition.html#ase2sprkkr.potentials.definitions.sections.host_madelung_potential.HostMadelungPotentialSectionDefinition">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">HostMadelungPotentialSectionDefinition</span><span class="p">(</span><span class="n">PotSectionDefinition</span><span class="p">):</span>
-    <span class="n">array_name</span> <span class="o">=</span> <span class="s2">&quot;host_madelung_potential&quot;</span>
+    <span class="n">array_name</span> <span class="o">=</span> <span class="s2">"host_madelung_potential"</span>
 
 <div class="viewcode-block" id="HostMadelungPotentialSectionDefinition.__init__">
 <a class="viewcode-back" href="../../../../../auto/ase2sprkkr.potentials.definitions.sections.host_madelung_potential.HostMadelungPotentialSectionDefinition.html#ase2sprkkr.potentials.definitions.sections.host_madelung_potential.HostMadelungPotentialSectionDefinition.__init__">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;HOST MADELUNG POTENTIAL&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"HOST MADELUNG POTENTIAL"</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="n">V</span> <span class="o">=</span> <span class="n">PotValueDefinition</span>
         <span class="n">members</span> <span class="o">=</span> <span class="p">[</span>
             <span class="n">V</span><span class="p">(</span>
-                <span class="s2">&quot;DATA&quot;</span><span class="p">,</span>
+                <span class="s2">"DATA"</span><span class="p">,</span>
                 <span class="n">Table</span><span class="p">(</span>
-                    <span class="n">numbering</span><span class="o">=</span><span class="s2">&quot;IQ&quot;</span><span class="p">,</span>
+                    <span class="n">numbering</span><span class="o">=</span><span class="s2">"IQ"</span><span class="p">,</span>
                     <span class="n">grouping</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                    <span class="n">group_size</span><span class="o">=</span><span class="s2">&quot;NLMTOP-POT&quot;</span><span class="p">,</span>
+                    <span class="n">group_size</span><span class="o">=</span><span class="s2">"NLMTOP-POT"</span><span class="p">,</span>
                     <span class="n">VLMMAD</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span>
-                    <span class="n">numbering_format</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">{:&gt;10}</span><span class="s2">&quot;</span><span class="p">,</span>
-                    <span class="n">grouping_format</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">{:&gt;3}</span><span class="s2">&quot;</span><span class="p">,</span>
+                    <span class="n">numbering_format</span><span class="o">=</span><span class="s2">"</span><span class="si">{:&gt;10}</span><span class="s2">"</span><span class="p">,</span>
+                    <span class="n">grouping_format</span><span class="o">=</span><span class="s2">"</span><span class="si">{:&gt;3}</span><span class="s2">"</span><span class="p">,</span>
                     <span class="n">flatten</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                 <span class="p">),</span>
                 <span class="n">name_in_grammar</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>

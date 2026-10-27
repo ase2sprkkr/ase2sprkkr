@@ -56,10 +56,10 @@
 <ul>
 <li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://sprkkr.org">SPR-KKR</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.sprkkr.org/wp-content/uploads/2026/05/kkr_manual.pdf">SPR-KKR manual</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
 <ul>
@@ -91,7 +91,7 @@
            <div itemprop="articleBody">
              
   <h1>Source code for ase2sprkkr.input_parameters.definitions.dos</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;DOS task input parameters definition&quot;&quot;&quot;</span>
+<span></span><span class="sd">"""DOS task input parameters definition"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">.sections</span><span class="w"> </span><span class="kn">import</span> <span class="n">CONTROL</span><span class="p">,</span> <span class="n">TAU</span><span class="p">,</span> <span class="n">ENERGY</span><span class="p">,</span> <span class="n">TASK</span><span class="p">,</span> <span class="n">SITES</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">..input_parameters_definitions</span><span class="w"> </span><span class="kn">import</span> <span class="n">InputParametersDefinition</span> <span class="k">as</span> <span class="n">InputParameters</span>
@@ -101,22 +101,22 @@
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.definitions.dos.input_parameters.html#ase2sprkkr.input_parameters.definitions.dos.input_parameters">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">input_parameters</span><span class="p">():</span>
     <span class="k">return</span> <span class="n">InputParameters</span><span class="p">(</span>
-        <span class="s2">&quot;dos&quot;</span><span class="p">,</span>
+        <span class="s2">"dos"</span><span class="p">,</span>
         <span class="p">[</span>
-            <span class="n">CONTROL</span><span class="p">(</span><span class="s2">&quot;DOS&quot;</span><span class="p">),</span>
+            <span class="n">CONTROL</span><span class="p">(</span><span class="s2">"DOS"</span><span class="p">),</span>
             <span class="n">TAU</span><span class="p">,</span>
-            <span class="n">ENERGY</span><span class="p">(</span><span class="n">emax</span><span class="o">=</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="s2">&quot;value of the highest energy&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span> <span class="n">defaults</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;GRID&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;NE&quot;</span><span class="p">:</span> <span class="mi">300</span><span class="p">,</span> <span class="s2">&quot;ImE&quot;</span><span class="p">:</span> <span class="mf">0.01</span><span class="p">}),</span>
-            <span class="n">TASK</span><span class="p">(</span><span class="s2">&quot;DOS&quot;</span><span class="p">),</span>
+            <span class="n">ENERGY</span><span class="p">(</span><span class="n">emax</span><span class="o">=</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="s2">"value of the highest energy"</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span> <span class="n">defaults</span><span class="o">=</span><span class="p">{</span><span class="s2">"GRID"</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s2">"NE"</span><span class="p">:</span> <span class="mi">300</span><span class="p">,</span> <span class="s2">"ImE"</span><span class="p">:</span> <span class="mf">0.01</span><span class="p">}),</span>
+            <span class="n">TASK</span><span class="p">(</span><span class="s2">"DOS"</span><span class="p">),</span>
             <span class="n">SITES</span><span class="p">,</span>
         <span class="p">],</span>
-        <span class="n">executable</span><span class="o">=</span><span class="s2">&quot;kkrgen&quot;</span><span class="p">,</span>
+        <span class="n">executable</span><span class="o">=</span><span class="s2">"kkrgen"</span><span class="p">,</span>
         <span class="n">mpi</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="n">info</span><span class="o">=</span><span class="s2">&quot;DOS - The density of states computation&quot;</span><span class="p">,</span>
+        <span class="n">info</span><span class="o">=</span><span class="s2">"DOS - The density of states computation"</span><span class="p">,</span>
     <span class="p">)</span></div>
 
 
 
-<span class="sd">&quot;&quot;&quot; DOS - density of states input parameters definition&quot;&quot;&quot;</span>
+<span class="sd">""" DOS - density of states input parameters definition"""</span>
 </pre></div>
 
            </div>

@@ -9,14 +9,15 @@ structure calculation.
 
 ## Usefull links
 
-- [SPR-KKR](https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr)
-- [ASE - Atomic Simulation Environment](https://wiki.fysik.dtu.dk/ase/)
+- [SPR-KKR](https://www.sprkkr.org/)
 - [Online version of this
   documentation](https://ase2sprkkr.github.io/ase2sprkkr/)
+- [E-mail group for news and
+  discussion](https://groups.google.com/g/ase2sprkkr/)
 - [GitHub repository of the ASE2SPRKKR
   package](https://github.com/ase2sprkkr/ase2sprkkr/)
-- [SPR-KKR
-  manual](https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/)
+- [SPR-KKR manual](https://www.sprkkr.org/manual/)
+- [ASE - Atomic Simulation Environment](https://wiki.fysik.dtu.dk/ase/)
 
 ## Installation of the package using package managers
 

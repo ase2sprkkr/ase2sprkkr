@@ -1,0 +1,51 @@
+repetition
+==========
+
+Full name: **ase2sprkkr.common.repetition**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.common.repetition.Repeated  ase2sprkkr.common.repetition.RepeatedNumberedIf 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.common.repetition
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      Repeated
+      RepeatedNumberedIf
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

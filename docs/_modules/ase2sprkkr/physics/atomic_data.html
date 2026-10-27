@@ -56,10 +56,10 @@
 <ul>
 <li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://sprkkr.org">SPR-KKR</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.sprkkr.org/wp-content/uploads/2026/05/kkr_manual.pdf">SPR-KKR manual</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
 <ul>
@@ -91,7 +91,7 @@
            <div itemprop="articleBody">
              
   <h1>Source code for ase2sprkkr.physics.atomic_data</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Lightweight access to elemental properties not included in ASE.&quot;&quot;&quot;</span>
+<span></span><span class="sd">"""Lightweight access to elemental properties not included in ASE."""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">cache</span>
 
@@ -100,7 +100,7 @@
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.physics.atomic_data.periodic_table.html#ase2sprkkr.physics.atomic_data.periodic_table">[docs]</a>
 <span class="nd">@cache</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">periodic_table</span><span class="p">():</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the shared Elementy periodic table.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Return the shared Elementy periodic table."""</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">elementy</span><span class="w"> </span><span class="kn">import</span> <span class="n">PeriodicTable</span>
 
     <span class="k">return</span> <span class="n">PeriodicTable</span><span class="p">()</span></div>
@@ -110,11 +110,11 @@
 <div class="viewcode-block" id="valence_electrons">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.physics.atomic_data.valence_electrons.html#ase2sprkkr.physics.atomic_data.valence_electrons">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">valence_electrons</span><span class="p">(</span><span class="n">symbol</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the conventional number of valence electrons for an element.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Return the conventional number of valence electrons for an element."""</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">periodic_table</span><span class="p">()</span><span class="o">.</span><span class="n">elements</span><span class="p">[</span><span class="n">symbol</span><span class="p">][</span><span class="s2">&quot;valence_electrons&quot;</span><span class="p">])</span>
+        <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">periodic_table</span><span class="p">()</span><span class="o">.</span><span class="n">elements</span><span class="p">[</span><span class="n">symbol</span><span class="p">][</span><span class="s2">"valence_electrons"</span><span class="p">])</span>
     <span class="k">except</span> <span class="ne">KeyError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown chemical element: </span><span class="si">{</span><span class="n">symbol</span><span class="si">!r}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span></div>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Unknown chemical element: </span><span class="si">{</span><span class="n">symbol</span><span class="si">!r}</span><span class="s2">"</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span></div>
 
 </pre></div>
 

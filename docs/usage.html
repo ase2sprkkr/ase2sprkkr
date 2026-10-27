@@ -80,10 +80,10 @@
 <ul>
 <li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://sprkkr.org">SPR-KKR</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.sprkkr.org/wp-content/uploads/2026/05/kkr_manual.pdf">SPR-KKR manual</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
 <ul>
@@ -170,7 +170,7 @@ structure and, using SPR-KKR calculator, run the calculation:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ase.build</span><span class="w"> </span><span class="kn">import</span> <span class="n">bulk</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">ase2sprkkr.sprkkr.calculator</span><span class="w"> </span><span class="kn">import</span> <span class="n">SPRKKR</span>
 
-<span class="n">atoms</span> <span class="o">=</span> <span class="n">bulk</span><span class="p">(</span><span class="s1">&#39;Li&#39;</span><span class="p">)</span>
+<span class="n">atoms</span> <span class="o">=</span> <span class="n">bulk</span><span class="p">(</span><span class="s1">'Li'</span><span class="p">)</span>
 <span class="n">calculator</span> <span class="o">=</span> <span class="n">SPRKKR</span><span class="p">(</span><span class="n">atoms</span><span class="o">=</span><span class="n">atoms</span><span class="p">)</span>
 <span class="n">calculator</span><span class="o">.</span><span class="n">calculate</span><span class="p">()</span>
 </pre></div>
@@ -193,7 +193,7 @@ the atoms object to the ASE2SPRKKR one. It is done automatically, if you
 pass the atoms object into the SPRKKR calculator constructor, however,
 you can do it manually, if needed.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ase.build</span><span class="w"> </span><span class="kn">import</span> <span class="n">bulk</span>
-<span class="n">atoms</span><span class="o">=</span><span class="n">bulk</span><span class="p">(</span><span class="s1">&#39;LiCl&#39;</span><span class="p">,</span> <span class="s1">&#39;rocksalt&#39;</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="mf">5.64</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">atoms</span><span class="o">=</span><span class="n">bulk</span><span class="p">(</span><span class="s1">'LiCl'</span><span class="p">,</span> <span class="s1">'rocksalt'</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="mf">5.64</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">ase2sprkkr</span><span class="w"> </span><span class="kn">import</span> <span class="n">promote_ase_atoms</span>
 <span class="n">atoms</span> <span class="o">=</span> <span class="n">promote_ase_atoms</span><span class="p">(</span><span class="n">atoms</span><span class="p">)</span>
 </pre></div>
@@ -205,17 +205,17 @@ symmetry of the structure (see the SPRKKRAtoms.compute_sites_symmetry
 method). Sites object in the sites array holds all the SPRKKR specific
 properties of the sites. You can change the occupation of a given site
 by calling the <a class="reference internal" href="auto/ase2sprkkr.sprkkr.occupations.Occupation.html#ase2sprkkr.sprkkr.occupations.Occupation.set" title="ase2sprkkr.sprkkr.occupations.Occupation.set"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Site.occupation.set</span></code></a> method:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">atoms</span><span class="o">.</span><span class="n">sites</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">occupation</span><span class="o">.</span><span class="n">set</span><span class="p">({</span><span class="s1">&#39;Cl&#39;</span><span class="p">:</span><span class="mf">0.5</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span> <span class="p">:</span> <span class="mf">0.5</span> <span class="p">})</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">atoms</span><span class="o">.</span><span class="n">sites</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">occupation</span><span class="o">.</span><span class="n">set</span><span class="p">({</span><span class="s1">'Cl'</span><span class="p">:</span><span class="mf">0.5</span><span class="p">,</span> <span class="s1">'I'</span> <span class="p">:</span> <span class="mf">0.5</span> <span class="p">})</span>
 </pre></div>
 </div>
 <p>Atomic type can be given both by a chemical symbol or atomic number. You
 can also just add an atomic type to the site:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">atoms</span><span class="o">.</span><span class="n">sites</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">occupation</span><span class="p">[</span><span class="s1">&#39;Br&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.2</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">atoms</span><span class="o">.</span><span class="n">sites</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">occupation</span><span class="p">[</span><span class="s1">'Br'</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.2</span>
 </pre></div>
 </div>
 <p>– the occupations of the currently presented atomic types are lowered
 accordingly — or just query the occupation of a given atomic type:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">atoms</span><span class="o">.</span><span class="n">sites</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">occupation</span><span class="p">[</span><span class="s1">&#39;Br&#39;</span><span class="p">]</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">atoms</span><span class="o">.</span><span class="n">sites</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">occupation</span><span class="p">[</span><span class="s1">'Br'</span><span class="p">]</span>
 </pre></div>
 </div>
 <p>Some codes stores the occupation information in
@@ -231,10 +231,10 @@ func:<cite>promote_ase_atoms&lt;ase2sprkkr.promote_ase_atoms&gt;</cite> is calle
 method (see e.g.
 <a class="reference internal" href="auto/ase2sprkkr.outputs.readers.scf.ScfResult.html#ase2sprkkr.outputs.readers.scf.ScfResult" title="ase2sprkkr.outputs.readers.scf.ScfResult"><code class="xref py py-class docutils literal notranslate"><span class="pre">ase2sprkkr.outputs.readers.scf.ScfResult</span></code></a>.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">out</span> <span class="o">=</span> <span class="n">calculator</span><span class="o">.</span><span class="n">calculate</span><span class="p">()</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Energy is </span><span class="si">{</span><span class="n">out</span><span class="o">.</span><span class="n">energy</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;There were </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">iterations</span><span class="p">})</span><span class="w"> </span><span class="n">iterations</span><span class="s2">&quot;)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The convergence error is </span><span class="si">{</span><span class="n">out</span><span class="o">.</span><span class="n">iterations</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="s1">&#39;error&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The moments are </span><span class="si">{</span><span class="n">out</span><span class="o">.</span><span class="n">last_iteration</span><span class="p">[</span><span class="s1">&#39;moment&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Energy is </span><span class="si">{</span><span class="n">out</span><span class="o">.</span><span class="n">energy</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"There were </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">iterations</span><span class="p">})</span><span class="w"> </span><span class="n">iterations</span><span class="s2">")</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"The convergence error is </span><span class="si">{</span><span class="n">out</span><span class="o">.</span><span class="n">iterations</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="s1">'error'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"The moments are </span><span class="si">{</span><span class="n">out</span><span class="o">.</span><span class="n">last_iteration</span><span class="p">[</span><span class="s1">'moment'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>For the SCF task, you can request the newly-created potential file,
@@ -242,7 +242,7 @@ either by filename, or by a Potential object, from which you can read
 the other results in a text format (you are encouraged to contribute to
 ase2sprkkr to define the format of not-yet-implemented sections of
 potential).</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Potential has been saved to: </span><span class="si">{</span><span class="n">out</span><span class="o">.</span><span class="n">potential_filename</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Potential has been saved to: </span><span class="si">{</span><span class="n">out</span><span class="o">.</span><span class="n">potential_filename</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 <span class="n">potential</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">potential</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">potential</span><span class="o">.</span><span class="n">CHARGE</span><span class="p">())</span>
 </pre></div>
@@ -256,12 +256,12 @@ to do a self-consistent cycle to compute the wavefunctions. You can
 either choose the task and its parameters either during creating the
 calculator via <code class="docutils literal notranslate"><span class="pre">input_parameters</span></code> argument:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">calculator</span> <span class="o">=</span> <span class="n">SPRKKR</span><span class="p">(</span><span class="n">atoms</span><span class="o">=</span><span class="n">atoms</span><span class="p">,</span>
-                    <span class="n">input_parameters</span><span class="o">=</span><span class="s1">&#39;PHAGEN&#39;</span><span class="p">,</span>
-                    <span class="n">options</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;NE&#39;</span><span class="p">:</span> <span class="mi">5</span><span class="p">})</span>
+                    <span class="n">input_parameters</span><span class="o">=</span><span class="s1">'PHAGEN'</span><span class="p">,</span>
+                    <span class="n">options</span><span class="o">=</span><span class="p">{</span><span class="s1">'NE'</span><span class="p">:</span> <span class="mi">5</span><span class="p">})</span>
 </pre></div>
 </div>
 <p>or one-time in the <code class="docutils literal notranslate"><span class="pre">calculate</span></code> methods:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">calculator</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span><span class="n">input_parameters</span><span class="o">=</span><span class="s1">&#39;PHAGEN&#39;</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;NE&#39;</span><span class="p">:</span> <span class="mi">5</span><span class="p">})</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">calculator</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span><span class="n">input_parameters</span><span class="o">=</span><span class="s1">'PHAGEN'</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="p">{</span><span class="s1">'NE'</span><span class="p">:</span> <span class="mi">5</span><span class="p">})</span>
 </pre></div>
 </div>
 <p>The <code class="docutils literal notranslate"><span class="pre">input_parameters</span></code> argument accepts either a name of one of the
@@ -269,10 +269,10 @@ predefined task (SCF, PHAGEN, ARPES, DOS), which uses a predefined set
 of parameters for the task, the filename (containing either dot or
 slash) from where the parameters will be loaded or the
 <a class="reference internal" href="auto/ase2sprkkr.input_parameters.input_parameters.InputParameters.html#ase2sprkkr.input_parameters.input_parameters.InputParameters" title="ase2sprkkr.input_parameters.input_parameters.InputParameters"><code class="xref py py-class docutils literal notranslate"><span class="pre">InputParameters</span></code></a> object (see the later example).</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">calculator</span> <span class="o">=</span> <span class="n">SPRKKR</span><span class="p">(</span><span class="n">atoms</span><span class="o">=</span><span class="n">atoms</span><span class="p">,</span> <span class="n">input_parameters</span><span class="o">=</span><span class="s1">&#39;PHAGEN&#39;</span><span class="p">,</span>
-                    <span class="n">options</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;NE&#39;</span><span class="p">:</span> <span class="mi">5</span><span class="p">})</span>
-<span class="n">calculator</span> <span class="o">=</span> <span class="n">SPRKKR</span><span class="p">(</span><span class="n">atoms</span><span class="o">=</span><span class="n">atoms</span><span class="p">,</span> <span class="n">input_parameters</span><span class="o">=</span><span class="s1">&#39;./input.inp&#39;</span><span class="p">,</span>
-                    <span class="n">options</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;NE&#39;</span><span class="p">:</span> <span class="mi">5</span><span class="p">})</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">calculator</span> <span class="o">=</span> <span class="n">SPRKKR</span><span class="p">(</span><span class="n">atoms</span><span class="o">=</span><span class="n">atoms</span><span class="p">,</span> <span class="n">input_parameters</span><span class="o">=</span><span class="s1">'PHAGEN'</span><span class="p">,</span>
+                    <span class="n">options</span><span class="o">=</span><span class="p">{</span><span class="s1">'NE'</span><span class="p">:</span> <span class="mi">5</span><span class="p">})</span>
+<span class="n">calculator</span> <span class="o">=</span> <span class="n">SPRKKR</span><span class="p">(</span><span class="n">atoms</span><span class="o">=</span><span class="n">atoms</span><span class="p">,</span> <span class="n">input_parameters</span><span class="o">=</span><span class="s1">'./input.inp'</span><span class="p">,</span>
+                    <span class="n">options</span><span class="o">=</span><span class="p">{</span><span class="s1">'NE'</span><span class="p">:</span> <span class="mi">5</span><span class="p">})</span>
 </pre></div>
 </div>
 <p>You can see and modify the input parameters of a calculator using its
@@ -281,7 +281,7 @@ and
 <code class="xref py py-meth docutils literal notranslate"><span class="pre">set</span></code>
 methods:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">calculator</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">NE</span> <span class="o">=</span> <span class="mi">5</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">calculator</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;NE&#39;</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">calculator</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'NE'</span><span class="p">))</span>
 </pre></div>
 </div>
 <p>We can see, that both the
@@ -294,15 +294,15 @@ manual). They get/set the first (known, according to the definition of
 the input parameters) parameter with the given name. However, if it is
 necessary to avoid a name conflict, you can either use <code class="docutils literal notranslate"><span class="pre">SECTION.VALUE</span></code>
 notation</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">calculator</span><span class="o">.</span><span class="n">set</span><span class="p">({</span><span class="s1">&#39;ENERGY.NE&#39;</span><span class="p">:</span><span class="mi">6</span><span class="p">})</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">calculator</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;ENERGY.NE&#39;</span><span class="p">))</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">calculator</span><span class="o">.</span><span class="n">set</span><span class="p">({</span><span class="s1">'ENERGY.NE'</span><span class="p">:</span><span class="mi">6</span><span class="p">})</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">calculator</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'ENERGY.NE'</span><span class="p">))</span>
 </pre></div>
 </div>
 <p>…or use the <code class="xref py py-meth docutils literal notranslate"><span class="pre">input_parameters</span></code> property of the calculator. Through
 this property (which contains <a class="reference internal" href="auto/ase2sprkkr.input_parameters.input_parameters.InputParameters.html#ase2sprkkr.input_parameters.input_parameters.InputParameters" title="ase2sprkkr.input_parameters.input_parameters.InputParameters"><code class="xref py py-class docutils literal notranslate"><span class="pre">InputParameters</span></code></a> object) the sections
 and their parameters are directly acessible. During interactive work,
 you can use tab-completion to see the sections and their parameters.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">calculator</span> <span class="o">=</span> <span class="n">SPRKKR</span><span class="p">(</span><span class="n">input_paramters</span> <span class="o">=</span> <span class="s1">&#39;SCF&#39;</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">calculator</span> <span class="o">=</span> <span class="n">SPRKKR</span><span class="p">(</span><span class="n">input_paramters</span> <span class="o">=</span> <span class="s1">'SCF'</span><span class="p">)</span>
 <span class="n">calculator</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">ENERGY</span><span class="o">.</span><span class="n">NE</span> <span class="o">=</span> <span class="mi">5</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">calculator</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">ENERGY</span><span class="o">.</span><span class="n">NE</span><span class="p">())</span>
 <span class="n">calculator</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">ENERGY</span><span class="o">.&lt;</span><span class="n">tab</span><span class="o">&gt;</span>
@@ -321,7 +321,7 @@ or to the
 <a class="reference internal" href="auto/ase2sprkkr.sprkkr.calculator.SPRKKR.html#ase2sprkkr.sprkkr.calculator.SPRKKR.calculate" title="ase2sprkkr.sprkkr.calculator.SPRKKR.calculate"><code class="xref py py-meth docutils literal notranslate"><span class="pre">InputParameters</span></code></a>
 method</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ase2sprkkr.input_parameters.input_parameters</span><span class="w"> </span><span class="kn">import</span> <span class="n">InputParameters</span>
-<span class="n">input_parameters</span> <span class="o">=</span> <span class="n">InputParameters</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="s1">&#39;SCF&#39;</span><span class="p">)</span>
+<span class="n">input_parameters</span> <span class="o">=</span> <span class="n">InputParameters</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="s1">'SCF'</span><span class="p">)</span>
 <span class="n">input_parameters</span><span class="o">.</span><span class="n">ENERGY</span><span class="o">.</span><span class="n">NE</span> <span class="o">=</span> <span class="mi">5</span>
 <span class="n">input_parameters</span><span class="o">.</span><span class="n">TAU</span><span class="o">.</span><span class="n">NKTAB</span> <span class="o">=</span> <span class="mi">13</span>
 <span class="n">calculator</span> <span class="o">=</span> <span class="n">SPRKKR</span><span class="p">(</span><span class="n">atoms</span><span class="o">=</span><span class="n">atoms</span><span class="p">,</span> <span class="n">input_parameters</span><span class="o">=</span><span class="n">input_parameters</span><span class="p">)</span>
@@ -329,8 +329,8 @@ method</p>
 </div>
 <p>You can also add your own custom (not-predefined) parameters and
 sections, if there is a need.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">input_parameters</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s1">&#39;MY_CUSTOM_SECTION&#39;</span><span class="p">)</span>
-<span class="n">input_parameters</span><span class="o">.</span><span class="n">MY_CUSTOM_SECTION</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s1">&#39;MY_CUSTOM_VALUE&#39;</span><span class="p">,</span> <span class="mi">17</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">input_parameters</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s1">'MY_CUSTOM_SECTION'</span><span class="p">)</span>
+<span class="n">input_parameters</span><span class="o">.</span><span class="n">MY_CUSTOM_SECTION</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s1">'MY_CUSTOM_VALUE'</span><span class="p">,</span> <span class="mi">17</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>If you work with input parameters readed from an already created input
@@ -338,16 +338,16 @@ file, you can use the
 <a class="reference internal" href="auto/ase2sprkkr.input_parameters.input_parameters.InputParameters.html#ase2sprkkr.input_parameters.input_parameters.InputParameters.calculate" title="ase2sprkkr.input_parameters.input_parameters.InputParameters.calculate"><code class="xref py py-meth docutils literal notranslate"><span class="pre">calculate</span></code></a>
 method to avoid the necessity to
 create the calculator (manually):</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">input_parameters</span> <span class="o">=</span> <span class="n">InputParameters</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="s1">&#39;input.inp&#39;</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">input_parameters</span> <span class="o">=</span> <span class="n">InputParameters</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="s1">'input.inp'</span><span class="p">)</span>
 <span class="n">input_parameters</span><span class="o">.</span><span class="n">calculate</span><span class="p">()</span>
 </pre></div>
 </div>
 <p>The input parameters can be set or reset (to the task-predefined values,
 to the values provided in a <code class="xref py py-class docutils literal notranslate"><span class="pre">InputParameters</span></code> object or to the values contained
 in an input file) via the calculator <a class="reference internal" href="auto/ase2sprkkr.sprkkr.calculator.SPRKKR.html#ase2sprkkr.sprkkr.calculator.SPRKKR.input_parameters" title="ase2sprkkr.sprkkr.calculator.SPRKKR.input_parameters"><code class="xref py py-meth docutils literal notranslate"><span class="pre">input_parameters</span></code></a> property.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">calculator</span><span class="o">.</span><span class="n">input_parameters</span> <span class="o">=</span> <span class="s1">&#39;SCF&#39;</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">calculator</span><span class="o">.</span><span class="n">input_parameters</span> <span class="o">=</span> <span class="s1">'SCF'</span>
 <span class="n">calculator</span><span class="o">.</span><span class="n">input_parameters</span> <span class="o">=</span> <span class="n">input_parameters</span>
-<span class="n">calculator</span><span class="o">.</span><span class="n">input_parameters</span> <span class="o">=</span> <span class="s1">&#39;./input_file.inp&#39;</span>
+<span class="n">calculator</span><span class="o">.</span><span class="n">input_parameters</span> <span class="o">=</span> <span class="s1">'./input_file.inp'</span>
 </pre></div>
 </div>
 </section>
@@ -361,16 +361,16 @@ and
 properties of a calculator (the
 <a class="reference internal" href="auto/ase2sprkkr.outputs.readers.scf.ScfResult.html#ase2sprkkr.outputs.readers.scf.ScfResult.potential_filename" title="ase2sprkkr.outputs.readers.scf.ScfResult.potential_filename"><code class="xref py py-meth docutils literal notranslate"><span class="pre">out.potential_filename</span></code></a>
 property contains the name of the `converged potential’)</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">calculator</span> <span class="o">=</span> <span class="n">SPRKKR</span><span class="p">(</span><span class="n">atoms</span><span class="o">=</span><span class="n">atoms</span><span class="p">,</span> <span class="n">input_parameters</span><span class="o">=</span><span class="s1">&#39;SCF&#39;</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">calculator</span> <span class="o">=</span> <span class="n">SPRKKR</span><span class="p">(</span><span class="n">atoms</span><span class="o">=</span><span class="n">atoms</span><span class="p">,</span> <span class="n">input_parameters</span><span class="o">=</span><span class="s1">'SCF'</span><span class="p">)</span>
 <span class="n">out</span> <span class="o">=</span> <span class="n">calculator</span><span class="o">.</span><span class="n">calculate</span><span class="p">()</span>
-<span class="n">calculator</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span><span class="n">input_parameters</span><span class="o">=</span><span class="s1">&#39;PHAGEN&#39;</span><span class="p">,</span> <span class="n">potential</span><span class="o">=</span><span class="n">out</span><span class="o">.</span><span class="n">potential_filename</span><span class="p">)</span>
+<span class="n">calculator</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span><span class="n">input_parameters</span><span class="o">=</span><span class="s1">'PHAGEN'</span><span class="p">,</span> <span class="n">potential</span><span class="o">=</span><span class="n">out</span><span class="o">.</span><span class="n">potential_filename</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>…or you can use calculator associated with the converged potential,
 which is available in the <a class="reference internal" href="auto/ase2sprkkr.outputs.readers.scf.ScfResult.html#ase2sprkkr.outputs.readers.scf.ScfResult.calculator" title="ase2sprkkr.outputs.readers.scf.ScfResult.calculator"><code class="xref py py-meth docutils literal notranslate"><span class="pre">output.calculator</span></code></a> property of a SCF task
 result:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">out</span> <span class="o">=</span> <span class="n">calculator</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span><span class="n">input_parameters</span><span class="o">=</span><span class="s1">&#39;SCF&#39;</span><span class="p">)</span>
-<span class="n">out</span><span class="o">.</span><span class="n">calculator</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span><span class="n">input_parameters</span><span class="o">=</span><span class="s1">&#39;PHAGEN&#39;</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">out</span> <span class="o">=</span> <span class="n">calculator</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span><span class="n">input_parameters</span><span class="o">=</span><span class="s1">'SCF'</span><span class="p">)</span>
+<span class="n">out</span><span class="o">.</span><span class="n">calculator</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span><span class="n">input_parameters</span><span class="o">=</span><span class="s1">'PHAGEN'</span><span class="p">)</span>
 </pre></div>
 </div>
 </section>
@@ -382,8 +382,8 @@ to use the method
 <a class="reference internal" href="auto/ase2sprkkr.input_parameters.input_parameters.InputParameters.html#ase2sprkkr.input_parameters.input_parameters.InputParameters.calculate" title="ase2sprkkr.input_parameters.input_parameters.InputParameters.calculate"><code class="xref py py-meth docutils literal notranslate"><span class="pre">calculate</span></code></a>
 of InputParameters object to avoid the
 necessity to create the calculator.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">input_parameters</span> <span class="o">=</span> <span class="n">InputParameters</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="s1">&#39;an_input_file.inp&#39;</span><span class="p">)</span>
-<span class="n">input_parameters</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span><span class="n">potential</span><span class="o">=</span><span class="s1">&#39;a_potential_file.pot&#39;</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">input_parameters</span> <span class="o">=</span> <span class="n">InputParameters</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="s1">'an_input_file.inp'</span><span class="p">)</span>
+<span class="n">input_parameters</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span><span class="n">potential</span><span class="o">=</span><span class="s1">'a_potential_file.pot'</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>or you can of course just set the calculator
@@ -403,7 +403,7 @@ SPR-KKR are given in potential file. The potential file is created from
 the atoms automatically by the calculator. However, it is possible to
 pass your own manually (or earlier) created potential file to the
 calculation:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">calculator</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span><span class="n">potential</span> <span class="o">=</span> <span class="s1">&#39;my_potential_file&#39;</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">calculator</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span><span class="n">potential</span> <span class="o">=</span> <span class="s1">'my_potential_file'</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>or to create the <a class="reference internal" href="auto/ase2sprkkr.potentials.potentials.Potential.html#ase2sprkkr.potentials.potentials.Potential" title="ase2sprkkr.potentials.potentials.Potential"><code class="xref py py-class docutils literal notranslate"><span class="pre">Potential</span></code></a> object manually from ASE atoms object and to
@@ -524,8 +524,8 @@ automatically. If the detection failed, the message is printed and
 non-MPI calculation is runned. In this case, or if you want to use a
 different MPI implementation, you have to pass the correct mpi runner
 and its arguments to the calculator:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">calculator</span> <span class="o">=</span> <span class="n">SPRKKR</span><span class="p">(</span><span class="n">atoms</span><span class="o">=</span><span class="n">atoms</span><span class="p">,</span> <span class="n">mpi</span> <span class="o">=</span> <span class="s1">&#39;path/to/my/mpirunner&#39;</span><span class="p">)</span>
-<span class="n">calculator</span> <span class="o">=</span> <span class="n">SPRKKR</span><span class="p">(</span><span class="n">atoms</span><span class="o">=</span><span class="n">atoms</span><span class="p">,</span> <span class="n">mpi</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;path/to/my/mpirunner&#39;</span><span class="p">,</span><span class="s1">&#39;-np&#39;</span><span class="p">,</span><span class="s1">&#39;4&#39;</span><span class="p">])</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">calculator</span> <span class="o">=</span> <span class="n">SPRKKR</span><span class="p">(</span><span class="n">atoms</span><span class="o">=</span><span class="n">atoms</span><span class="p">,</span> <span class="n">mpi</span> <span class="o">=</span> <span class="s1">'path/to/my/mpirunner'</span><span class="p">)</span>
+<span class="n">calculator</span> <span class="o">=</span> <span class="n">SPRKKR</span><span class="p">(</span><span class="n">atoms</span><span class="o">=</span><span class="n">atoms</span><span class="p">,</span> <span class="n">mpi</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'path/to/my/mpirunner'</span><span class="p">,</span><span class="s1">'-np'</span><span class="p">,</span><span class="s1">'4'</span><span class="p">])</span>
 </pre></div>
 </div>
 <p>In the case you use common mpi runners (<code class="docutils literal notranslate"><span class="pre">mpirun</span></code>, <code class="docutils literal notranslate"><span class="pre">mpirun.openmpi</span></code>

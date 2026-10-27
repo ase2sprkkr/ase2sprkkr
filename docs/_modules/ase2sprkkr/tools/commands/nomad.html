@@ -56,10 +56,10 @@
 <ul>
 <li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://sprkkr.org">SPR-KKR</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.sprkkr.org/wp-content/uploads/2026/05/kkr_manual.pdf">SPR-KKR manual</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
 <ul>
@@ -92,25 +92,25 @@
              
   <h1>Source code for ase2sprkkr.tools.commands.nomad</h1><div class="highlight"><pre>
 <span></span><span class="ch">#!/usr/bin/env python</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 <span class="sd">This is a script to upload to NOMAD repository.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">argparse</span>
 
 <span class="k">if</span> <span class="ow">not</span> <span class="n">__package__</span><span class="p">:</span>
-    <span class="n">__package__</span> <span class="o">=</span> <span class="s2">&quot;ase2sprkkr.tools.commands&quot;</span>
+    <span class="n">__package__</span> <span class="o">=</span> <span class="s2">"ase2sprkkr.tools.commands"</span>
 <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span><span class="o">.</span><span class="n">parents</span><span class="p">[</span><span class="mi">3</span><span class="p">]))</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">...common.tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">main</span>  <span class="c1"># NOQA</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">...bindings.nomad.nomad_api</span><span class="w"> </span><span class="kn">import</span> <span class="n">NomadApi</span>  <span class="c1"># NOQA</span>
 
 
-<span class="n">help</span> <span class="o">=</span> <span class="s2">&quot;Upload given datas to NOMAD&quot;</span>
-<span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span><span class="se">\n</span><span class="s2"> Uploads a given output file to a NOMAD. You either have to specify your Nomad username and type your password on the prompt.</span>
-<span class="s2">Or you can authenticate once using -a switch, then the token will be stored. &quot;&quot;&quot;</span>
+<span class="n">help</span> <span class="o">=</span> <span class="s2">"Upload given datas to NOMAD"</span>
+<span class="n">description</span> <span class="o">=</span> <span class="s2">"""</span><span class="se">\n</span><span class="s2"> Uploads a given output file to a NOMAD. You either have to specify your Nomad username and type your password on the prompt.</span>
+<span class="s2">Or you can authenticate once using -a switch, then the token will be stored. """</span>
 
 
 <div class="viewcode-block" id="parser">
@@ -118,54 +118,54 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">parser</span><span class="p">(</span><span class="n">parser</span><span class="p">):</span>
 
     <span class="n">nomad</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">add_help</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-    <span class="n">nomad</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--nomad-url&quot;</span><span class="p">,</span> <span class="s2">&quot;-N&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Nomad URL.&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">NomadApi</span><span class="o">.</span><span class="n">default_api_url</span><span class="p">)</span>
+    <span class="n">nomad</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"--nomad-url"</span><span class="p">,</span> <span class="s2">"-N"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Nomad URL."</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">NomadApi</span><span class="o">.</span><span class="n">default_api_url</span><span class="p">)</span>
     <span class="n">nomad</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s2">&quot;--password&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;-P&quot;</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Nomad password. Since there is command-line history in the most of shells, it is not reccomended to use.&quot;</span><span class="p">,</span>
+        <span class="s2">"--password"</span><span class="p">,</span>
+        <span class="s2">"-P"</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">"Nomad password. Since there is command-line history in the most of shells, it is not reccomended to use."</span><span class="p">,</span>
         <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
     <span class="p">)</span>
 
     <span class="n">nomad_auth</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">add_help</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">parents</span><span class="o">=</span><span class="p">[</span><span class="n">nomad</span><span class="p">])</span>
     <span class="n">group</span> <span class="o">=</span> <span class="n">nomad_auth</span><span class="o">.</span><span class="n">add_mutually_exclusive_group</span><span class="p">()</span>
     <span class="n">group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s2">&quot;--token&quot;</span><span class="p">,</span> <span class="s2">&quot;-t&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Nomad token. Can be also specified in config.nomad.token.&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span>
+        <span class="s2">"--token"</span><span class="p">,</span> <span class="s2">"-t"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Nomad token. Can be also specified in config.nomad.token."</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span>
     <span class="p">)</span>
-    <span class="n">group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--user&quot;</span><span class="p">,</span> <span class="s2">&quot;-u&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Nomad user name. &quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"--user"</span><span class="p">,</span> <span class="s2">"-u"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Nomad user name. "</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
     <span class="n">subs</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_subparsers</span><span class="p">(</span><span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="n">sub</span> <span class="o">=</span> <span class="n">subs</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span>
-        <span class="s2">&quot;authenticate&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Retrieve and store Nomad token for further passwordless authentication.&quot;</span><span class="p">,</span> <span class="n">parents</span><span class="o">=</span><span class="p">[</span><span class="n">nomad</span><span class="p">]</span>
+        <span class="s2">"authenticate"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Retrieve and store Nomad token for further passwordless authentication."</span><span class="p">,</span> <span class="n">parents</span><span class="o">=</span><span class="p">[</span><span class="n">nomad</span><span class="p">]</span>
     <span class="p">)</span>
     <span class="n">group</span> <span class="o">=</span> <span class="n">sub</span><span class="o">.</span><span class="n">add_mutually_exclusive_group</span><span class="p">(</span><span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Nomad user name. &quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s2">&quot;?&quot;</span><span class="p">)</span>
-    <span class="n">group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--delete-credentials&quot;</span><span class="p">,</span> <span class="s2">&quot;-d&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Clear authentication data.&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">)</span>
-    <span class="n">sub</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--print-token&quot;</span><span class="p">,</span> <span class="s2">&quot;-o&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Print the resulting token.&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">)</span>
-    <span class="n">sub</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--do-not-store&quot;</span><span class="p">,</span> <span class="s2">&quot;-n&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Only obtain the token, do not store it.&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">)</span>
+    <span class="n">group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"user"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Nomad user name. "</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s2">"?"</span><span class="p">)</span>
+    <span class="n">group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"--delete-credentials"</span><span class="p">,</span> <span class="s2">"-d"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Clear authentication data."</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">"store_true"</span><span class="p">)</span>
+    <span class="n">sub</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"--print-token"</span><span class="p">,</span> <span class="s2">"-o"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Print the resulting token."</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">"store_true"</span><span class="p">)</span>
+    <span class="n">sub</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"--do-not-store"</span><span class="p">,</span> <span class="s2">"-n"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Only obtain the token, do not store it."</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">"store_true"</span><span class="p">)</span>
     <span class="n">sub</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s2">&quot;--expires&quot;</span><span class="p">,</span> <span class="s2">&quot;-e&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Validity of the token (in days), the default is one year.&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">365</span>
+        <span class="s2">"--expires"</span><span class="p">,</span> <span class="s2">"-e"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Validity of the token (in days), the default is one year."</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">365</span>
     <span class="p">)</span>
     <span class="n">sub</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">authenticate</span><span class="p">,</span> <span class="n">api</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">token</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
-    <span class="n">sub</span> <span class="o">=</span> <span class="n">subs</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span><span class="s2">&quot;token&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Print the (currently stored) Nomad authentication token&quot;</span><span class="p">)</span>
+    <span class="n">sub</span> <span class="o">=</span> <span class="n">subs</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span><span class="s2">"token"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Print the (currently stored) Nomad authentication token"</span><span class="p">)</span>
     <span class="n">sub</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">token</span><span class="p">,</span> <span class="n">api</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">token</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
-    <span class="n">sub</span> <span class="o">=</span> <span class="n">subs</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span><span class="s2">&quot;upload&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Upload a file to nomad&quot;</span><span class="p">,</span> <span class="n">parents</span><span class="o">=</span><span class="p">[</span><span class="n">nomad_auth</span><span class="p">])</span>
+    <span class="n">sub</span> <span class="o">=</span> <span class="n">subs</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span><span class="s2">"upload"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Upload a file to nomad"</span><span class="p">,</span> <span class="n">parents</span><span class="o">=</span><span class="p">[</span><span class="n">nomad_auth</span><span class="p">])</span>
     <span class="n">sub</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s2">&quot;output_files&quot;</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;The output file to be uploaded. If you specify more files, they will be uploaded in single upload.&quot;</span><span class="p">,</span>
-        <span class="n">nargs</span><span class="o">=</span><span class="s2">&quot;+&quot;</span><span class="p">,</span>
+        <span class="s2">"output_files"</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">"The output file to be uploaded. If you specify more files, they will be uploaded in single upload."</span><span class="p">,</span>
+        <span class="n">nargs</span><span class="o">=</span><span class="s2">"+"</span><span class="p">,</span>
         <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">sub</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">upload</span><span class="p">,</span> <span class="n">api</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">token</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-    <span class="n">sub</span> <span class="o">=</span> <span class="n">subs</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span><span class="s2">&quot;zip&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Create Nomad archive&quot;</span><span class="p">)</span>
-    <span class="n">sub</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;zip&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Name of the archive&quot;</span><span class="p">)</span>
+    <span class="n">sub</span> <span class="o">=</span> <span class="n">subs</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span><span class="s2">"zip"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Create Nomad archive"</span><span class="p">)</span>
+    <span class="n">sub</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"zip"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Name of the archive"</span><span class="p">)</span>
     <span class="n">sub</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s2">&quot;output_files&quot;</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;The output file to be uploaded. If you specify more files, they will be uploaded in single upload.&quot;</span><span class="p">,</span>
-        <span class="n">nargs</span><span class="o">=</span><span class="s2">&quot;+&quot;</span><span class="p">,</span>
+        <span class="s2">"output_files"</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">"The output file to be uploaded. If you specify more files, they will be uploaded in single upload."</span><span class="p">,</span>
+        <span class="n">nargs</span><span class="o">=</span><span class="s2">"+"</span><span class="p">,</span>
         <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">sub</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">zipp</span><span class="p">,</span> <span class="n">api</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">token</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
@@ -184,14 +184,14 @@
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">delete_credentials</span><span class="p">:</span>
         <span class="n">token</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">config</span><span class="o">.</span><span class="n">nomad</span><span class="o">.</span><span class="n">token</span><span class="o">.</span><span class="n">set_permanent</span><span class="p">(</span>
-            <span class="n">token</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;Authentication token to Nomad \(written by &#39;ase2sprkkr nomad authenticate [^\s]+&#39;\)&quot;</span><span class="p">,</span> <span class="kc">True</span>
+            <span class="n">token</span><span class="p">,</span> <span class="sa">r</span><span class="s2">"Authentication token to Nomad \(written by 'ase2sprkkr nomad authenticate [^\s]+'\)"</span><span class="p">,</span> <span class="kc">True</span>
         <span class="p">)</span>
         <span class="k">return</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">token</span> <span class="o">=</span> <span class="n">retrieve_token</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">expires</span> <span class="o">*</span> <span class="mi">24</span> <span class="o">*</span> <span class="mi">3600</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">args</span><span class="o">.</span><span class="n">do_not_store</span><span class="p">:</span>
         <span class="n">config</span><span class="o">.</span><span class="n">nomad</span><span class="o">.</span><span class="n">token</span><span class="o">.</span><span class="n">set_permanent</span><span class="p">(</span>
-            <span class="n">token</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Authentication token to Nomad (written by &#39;ase2sprkkr nomad authenticate </span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">user</span><span class="si">}</span><span class="s2">&#39;)&quot;</span>
+            <span class="n">token</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"Authentication token to Nomad (written by 'ase2sprkkr nomad authenticate </span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">user</span><span class="si">}</span><span class="s2">')"</span>
         <span class="p">)</span>
 
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">print_token</span><span class="p">:</span>
@@ -206,7 +206,7 @@
 
     <span class="n">password</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">password</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">password</span><span class="p">:</span>
-        <span class="n">password</span> <span class="o">=</span> <span class="n">getpass</span><span class="o">.</span><span class="n">getpass</span><span class="p">(</span><span class="n">prompt</span><span class="o">=</span><span class="s2">&quot;Nomad password: &quot;</span><span class="p">)</span>
+        <span class="n">password</span> <span class="o">=</span> <span class="n">getpass</span><span class="o">.</span><span class="n">getpass</span><span class="p">(</span><span class="n">prompt</span><span class="o">=</span><span class="s2">"Nomad password: "</span><span class="p">)</span>
     <span class="n">token</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">get_authentication_token</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">user</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="n">expires</span><span class="o">=</span><span class="n">expires</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">token</span></div>
 
@@ -223,7 +223,7 @@
         <span class="n">token</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">nomad</span><span class="o">.</span><span class="n">token</span><span class="p">()</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">token</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-            <span class="s2">&quot;No Nomad authentization token: please either supply -u parameter, or run `nomad authenticate`&quot;</span>
+            <span class="s2">"No Nomad authentization token: please either supply -u parameter, or run `nomad authenticate`"</span>
         <span class="p">)</span>
     <span class="k">return</span> <span class="n">token</span></div>
 

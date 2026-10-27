@@ -56,10 +56,10 @@
 <ul>
 <li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://sprkkr.org">SPR-KKR</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.sprkkr.org/wp-content/uploads/2026/05/kkr_manual.pdf">SPR-KKR manual</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
 <ul>
@@ -99,7 +99,7 @@
 
 <div class="viewcode-block" id="EmptySpheresResult">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.bindings.empty_spheres.EmptySpheresResult.html#ase2sprkkr.bindings.empty_spheres.EmptySpheresResult">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">EmptySpheresResult</span><span class="p">(</span><span class="n">namedtuple</span><span class="p">(</span><span class="s2">&quot;EmptySpheresResult&quot;</span><span class="p">,</span> <span class="s2">&quot;positions radii&quot;</span><span class="p">)):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">EmptySpheresResult</span><span class="p">(</span><span class="n">namedtuple</span><span class="p">(</span><span class="s2">"EmptySpheresResult"</span><span class="p">,</span> <span class="s2">"positions radii"</span><span class="p">)):</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">radii</span><span class="p">)</span></div>
 
@@ -107,58 +107,58 @@
 
 <div class="viewcode-block" id="empty_spheres">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.bindings.empty_spheres.empty_spheres.html#ase2sprkkr.bindings.empty_spheres.empty_spheres">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">empty_spheres</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return centres and radii of empty spheres to add.</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">empty_spheres</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">"auto"</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Return centres and radii of empty spheres to add.</span>
 
-<span class="sd">    ``method=&#39;auto&#39;`` uses the optional es_finder backend when both es_finder</span>
-<span class="sd">    and Pymatgen are importable, otherwise it uses the ase2sprkkr &quot;in-house&quot;</span>
+<span class="sd">    ``method='auto'`` uses the optional es_finder backend when both es_finder</span>
+<span class="sd">    and Pymatgen are importable, otherwise it uses the ase2sprkkr "in-house"</span>
 <span class="sd">    method taken from XBand.</span>
 <span class="sd">    es_finder is not publicly available package. An explicitly requested but</span>
 <span class="sd">    unavailable es_finder backend also falls back to the in-house implementation,</span>
 <span class="sd">    after emitting a warning.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">es_finder_available</span> <span class="o">=</span> <span class="n">es_finder</span><span class="o">.</span><span class="n">is_enabled</span>
 
-    <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;auto&quot;</span><span class="p">:</span>
-        <span class="n">method</span> <span class="o">=</span> <span class="s2">&quot;es_finder&quot;</span> <span class="k">if</span> <span class="n">es_finder_available</span> <span class="k">else</span> <span class="s2">&quot;inhouse&quot;</span>
+    <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">"auto"</span><span class="p">:</span>
+        <span class="n">method</span> <span class="o">=</span> <span class="s2">"es_finder"</span> <span class="k">if</span> <span class="n">es_finder_available</span> <span class="k">else</span> <span class="s2">"inhouse"</span>
 
-    <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;es_finder&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">"es_finder"</span><span class="p">:</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">es_finder_available</span><span class="p">:</span>
             <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
-                <span class="s2">&quot;The es_finder method requires both es_finder and pymatgen, &quot;</span>
-                <span class="s2">&quot;but at least one of them is not installed. Falling back to &quot;</span>
-                <span class="s2">&quot;the inhouse empty-spheres method. Install optional support &quot;</span>
-                <span class="s1">&#39;for pymatgen with: python -m pip install &quot;ase2sprkkr[es_finder]&quot;; &#39;</span>
-                <span class="s2">&quot;es_finder itself must also be installed.&quot;</span><span class="p">,</span>
+                <span class="s2">"The es_finder method requires both es_finder and pymatgen, "</span>
+                <span class="s2">"but at least one of them is not installed. Falling back to "</span>
+                <span class="s2">"the inhouse empty-spheres method. Install optional support "</span>
+                <span class="s1">'for pymatgen with: python -m pip install "ase2sprkkr[es_finder]"; '</span>
+                <span class="s2">"es_finder itself must also be installed."</span><span class="p">,</span>
                 <span class="ne">RuntimeWarning</span><span class="p">,</span>
                 <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
             <span class="p">)</span>
-            <span class="n">method</span> <span class="o">=</span> <span class="s2">&quot;inhouse&quot;</span>
+            <span class="n">method</span> <span class="o">=</span> <span class="s2">"inhouse"</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">es_finder</span><span class="o">.</span><span class="n">empty_spheres</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">method</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;inhouse&quot;</span><span class="p">,</span> <span class="s2">&quot;xband&quot;</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">method</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"inhouse"</span><span class="p">,</span> <span class="s2">"xband"</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">spheres</span><span class="o">.</span><span class="n">empty_spheres</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Unknown empty-spheres method </span><span class="si">{!r}</span><span class="s2">; use &#39;auto&#39;, &#39;es_finder&#39;, or &#39;inhouse&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">method</span><span class="p">))</span></div>
+    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Unknown empty-spheres method </span><span class="si">{!r}</span><span class="s2">; use 'auto', 'es_finder', or 'inhouse'"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">method</span><span class="p">))</span></div>
 
 
 
 <div class="viewcode-block" id="empty_spheres_atoms">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.bindings.empty_spheres.empty_spheres_atoms.html#ase2sprkkr.bindings.empty_spheres.empty_spheres_atoms">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">empty_spheres_atoms</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">round_zero</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Update the structure of the (SPRKKR) ASE atoms, adding the empty</span>
 <span class="sd">    spheres and updating the shpheres radii of the atomic sites, according</span>
 <span class="sd">    to an :func:`empty_spheres` result.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">res</span> <span class="o">=</span> <span class="n">empty_spheres</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
     <span class="n">num</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">radii</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">num</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">None</span>
 
     <span class="n">empty</span> <span class="o">=</span> <span class="n">SPRKKRAtoms</span><span class="p">(</span>
-        <span class="n">symbols</span><span class="o">=</span><span class="s2">&quot;X&quot;</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">radii</span><span class="p">),</span> <span class="n">positions</span><span class="o">=</span><span class="n">res</span><span class="o">.</span><span class="n">positions</span><span class="p">,</span> <span class="n">pbc</span><span class="o">=</span><span class="n">atoms</span><span class="o">.</span><span class="n">pbc</span><span class="p">,</span> <span class="n">cell</span><span class="o">=</span><span class="n">atoms</span><span class="o">.</span><span class="n">cell</span><span class="p">,</span> <span class="n">symmetry</span><span class="o">=</span><span class="kc">False</span>
+        <span class="n">symbols</span><span class="o">=</span><span class="s2">"X"</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">radii</span><span class="p">),</span> <span class="n">positions</span><span class="o">=</span><span class="n">res</span><span class="o">.</span><span class="n">positions</span><span class="p">,</span> <span class="n">pbc</span><span class="o">=</span><span class="n">atoms</span><span class="o">.</span><span class="n">pbc</span><span class="p">,</span> <span class="n">cell</span><span class="o">=</span><span class="n">atoms</span><span class="o">.</span><span class="n">cell</span><span class="p">,</span> <span class="n">symmetry</span><span class="o">=</span><span class="kc">False</span>
     <span class="p">)</span>
     <span class="k">if</span> <span class="n">round_zero</span><span class="p">:</span>
         <span class="n">empty</span><span class="o">.</span><span class="n">positions</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">empty</span><span class="o">.</span><span class="n">positions</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-15</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>

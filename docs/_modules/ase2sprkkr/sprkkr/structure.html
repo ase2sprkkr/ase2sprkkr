@@ -56,10 +56,10 @@
 <ul>
 <li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://sprkkr.org">SPR-KKR</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.sprkkr.org/wp-content/uploads/2026/05/kkr_manual.pdf">SPR-KKR manual</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
 <ul>
@@ -91,7 +91,7 @@
            <div itemprop="articleBody">
              
   <h1>Source code for ase2sprkkr.sprkkr.structure</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span></span><span class="sd">"""</span>
 <span class="sd">Helper classes for a2s_visualise_in_struct utility.</span>
 
 <span class="sd">This file contains function structure_file_to_atoms, which is used for</span>
@@ -100,7 +100,7 @@
 
 <span class="sd">TODO: This implementaion can handle only one-purpose reading of the structure</span>
 <span class="sd">file.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">ase</span><span class="w"> </span><span class="kn">import</span> <span class="n">Atom</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.sprkkr_atoms</span><span class="w"> </span><span class="kn">import</span> <span class="n">SPRKKRAtoms</span>
@@ -116,7 +116,7 @@
 <div class="viewcode-block" id="AtomData">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.structure.AtomData.html#ase2sprkkr.sprkkr.structure.AtomData">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">AtomData</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;A helper object for reading in_structure.inp file&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""A helper object for reading in_structure.inp file"""</span>
 
 <div class="viewcode-block" id="AtomData.__init__">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.structure.AtomData.html#ase2sprkkr.sprkkr.structure.AtomData.__init__">[docs]</a>
@@ -134,8 +134,8 @@
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.structure.AtomData.html#ase2sprkkr.sprkkr.structure.AtomData.from_text">[docs]</a>
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">from_text</span><span class="p">(</span><span class="n">lines</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create the Atom data object from the two text lines</span>
-<span class="sd">        :from a in_structure.inp file&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Create the Atom data object from the two text lines</span>
+<span class="sd">        :from a in_structure.inp file"""</span>
         <span class="n">atom</span> <span class="o">=</span> <span class="n">AtomData</span><span class="p">()</span>
         <span class="n">atom</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">atom</span><span class="o">.</span><span class="n">type_id</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">lines</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">()[:</span><span class="mi">2</span><span class="p">])</span>
         <span class="n">pos</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">floatjm</span><span class="p">,</span> <span class="n">lines</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">()[:</span><span class="mi">3</span><span class="p">]))</span>
@@ -147,7 +147,7 @@
 
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">s</span> <span class="o">=</span> <span class="s2">&quot;&lt;SiteData(id=</span><span class="si">{:d}</span><span class="s2">, pos=</span><span class="si">{}</span><span class="s2">,</span><span class="si">{}</span><span class="s2">,</span><span class="si">{}</span><span class="s2">,type=</span><span class="si">{:d}</span><span class="s2">)&gt;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="s2">"&lt;SiteData(id=</span><span class="si">{:d}</span><span class="s2">, pos=</span><span class="si">{}</span><span class="s2">,</span><span class="si">{}</span><span class="s2">,</span><span class="si">{}</span><span class="s2">,type=</span><span class="si">{:d}</span><span class="s2">)&gt;"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pos</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">pos</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">pos</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">type_id</span>
         <span class="p">)</span>
         <span class="k">return</span> <span class="n">s</span>
@@ -156,7 +156,7 @@
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.structure.AtomData.html#ase2sprkkr.sprkkr.structure.AtomData.get_symbol">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_symbol</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">potential</span><span class="p">):</span>
         <span class="n">IT</span> <span class="o">=</span> <span class="n">potential</span><span class="o">.</span><span class="n">OCCUPATION</span><span class="o">.</span><span class="n">DATA</span><span class="p">()[</span><span class="bp">self</span><span class="o">.</span><span class="n">type_id</span> <span class="o">-</span> <span class="mi">1</span><span class="p">][</span><span class="mi">3</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
-        <span class="n">z</span> <span class="o">=</span> <span class="n">potential</span><span class="o">.</span><span class="n">TYPES</span><span class="o">.</span><span class="n">DATA</span><span class="p">()[</span><span class="n">IT</span> <span class="o">-</span> <span class="mi">1</span><span class="p">][</span><span class="s2">&quot;ZT&quot;</span><span class="p">]</span>
+        <span class="n">z</span> <span class="o">=</span> <span class="n">potential</span><span class="o">.</span><span class="n">TYPES</span><span class="o">.</span><span class="n">DATA</span><span class="p">()[</span><span class="n">IT</span> <span class="o">-</span> <span class="mi">1</span><span class="p">][</span><span class="s2">"ZT"</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">chemical_symbols</span><span class="p">[</span><span class="n">z</span><span class="p">]</span></div>
 </div>
 
@@ -175,12 +175,12 @@
 
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">s</span> <span class="o">=</span> <span class="s2">&quot;&lt;LayerData(id=</span><span class="si">{:d}</span><span class="s2">, number of atoms in layer=</span><span class="si">{:d}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nat</span><span class="p">)</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="s2">"&lt;LayerData(id=</span><span class="si">{:d}</span><span class="s2">, number of atoms in layer=</span><span class="si">{:d}</span><span class="s2">)"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nat</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">atom</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span><span class="p">:</span>
-            <span class="n">s</span> <span class="o">+=</span> <span class="s2">&quot;   Atom in Layer id=</span><span class="si">{:d}</span><span class="s2">, pos=</span><span class="si">{}</span><span class="s2">,</span><span class="si">{}</span><span class="s2">,</span><span class="si">{}</span><span class="s2">,type=</span><span class="si">{:d}</span><span class="s2"> &quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">s</span> <span class="o">+=</span> <span class="s2">"   Atom in Layer id=</span><span class="si">{:d}</span><span class="s2">, pos=</span><span class="si">{}</span><span class="s2">,</span><span class="si">{}</span><span class="s2">,</span><span class="si">{}</span><span class="s2">,type=</span><span class="si">{:d}</span><span class="s2"> "</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                 <span class="n">atom</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">atom</span><span class="o">.</span><span class="n">pos</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">atom</span><span class="o">.</span><span class="n">pos</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">atom</span><span class="o">.</span><span class="n">pos</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">atom</span><span class="o">.</span><span class="n">type_id</span>
             <span class="p">)</span>
-        <span class="n">s</span> <span class="o">+=</span> <span class="s2">&quot;&gt;</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="n">s</span> <span class="o">+=</span> <span class="s2">"&gt;</span><span class="se">\n</span><span class="s2">"</span>
         <span class="k">return</span> <span class="n">s</span></div>
 
 
@@ -191,7 +191,7 @@
     <span class="k">try</span><span class="p">:</span>
         <span class="n">result</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">inp</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Wrong float </span><span class="si">{}</span><span class="s2">, set to 0.0!&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">inp</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">"Wrong float </span><span class="si">{}</span><span class="s2">, set to 0.0!"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">inp</span><span class="p">))</span>
         <span class="n">result</span> <span class="o">=</span> <span class="mf">0.0</span>
     <span class="k">return</span> <span class="n">result</span></div>
 
@@ -203,7 +203,7 @@
 <div class="viewcode-block" id="structure_file_to_atoms">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.structure.structure_file_to_atoms.html#ase2sprkkr.sprkkr.structure.structure_file_to_atoms">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">structure_file_to_atoms</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">potential</span><span class="p">:</span> <span class="n">Potential</span><span class="p">,</span> <span class="n">n_bulk</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">vacuum_height</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">10.0</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Read in_structure.inp file (that contains informations about the structure of a surface)</span>
 <span class="sd">    and create the ASE atoms object according to the readed data.</span>
 
@@ -220,7 +220,7 @@
 
 <span class="sd">    vacuum_height: float</span>
 <span class="sd">      Height of the vacuum above the surface.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
 
@@ -311,7 +311,7 @@
 
 
 
-<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;structure_file_to_atoms&quot;</span><span class="p">]</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"structure_file_to_atoms"</span><span class="p">]</span>
 </pre></div>
 
            </div>

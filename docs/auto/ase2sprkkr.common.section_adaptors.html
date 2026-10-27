@@ -23,7 +23,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="MergeSectionAdaptor" href="ase2sprkkr.common.section_adaptors.MergeSectionAdaptor.html" />
-    <link rel="prev" title="RepeatedConfigurationContainer" href="ase2sprkkr.common.repeated_configuration_containers.RepeatedConfigurationContainer.html" /> 
+    <link rel="prev" title="RepeatedNumberedIf" href="ase2sprkkr.common.repetition.RepeatedNumberedIf.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -59,10 +59,10 @@
 <ul>
 <li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://sprkkr.org">SPR-KKR</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.sprkkr.org/wp-content/uploads/2026/05/kkr_manual.pdf">SPR-KKR manual</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
 <ul class="current">
@@ -93,6 +93,7 @@
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.parsing_results.html">parsing_results</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.process_output_reader.html">process_output_reader</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.repeated_configuration_containers.html">repeated_configuration_containers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.repetition.html">repetition</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">section_adaptors</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.section_adaptors.MergeSectionAdaptor.html">MergeSectionAdaptor</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.section_adaptors.MergeSectionDefinitionAdaptor.html">MergeSectionDefinitionAdaptor</a></li>
@@ -108,6 +109,7 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.configuration.html">configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.conftest.html">conftest</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.examples.html">examples</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.gui.html">gui</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.input_parameters.html">input_parameters</a></li>
@@ -152,10 +154,10 @@
 <h1>section_adaptors<a class="headerlink" href="#section-adaptors" title="Link to this heading"></a></h1>
 <p>Full name: <strong>ase2sprkkr.common.section_adaptors</strong></p>
 <p class="rubric">Module class hierarchy</p>
-<div class="graphviz"><img src="../_images/inheritance-8a7421128c3ffa105b6b3b1b4332d2d8abbb12d8.png" alt="Inheritance diagram of ase2sprkkr.common.section_adaptors.MergeSectionAdaptor, ase2sprkkr.common.section_adaptors.MergeSectionDefinitionAdaptor, ase2sprkkr.common.section_adaptors.SectionAdaptor" usemap="#inheritancec94d6c420b" class="inheritance graphviz" /></div>
+<div class="graphviz"><img src="../_images/inheritance-5c4855db2e12f9150ae3637a9a1d16692d7dd1e9.png" alt="Inheritance diagram of ase2sprkkr.common.section_adaptors.MergeSectionAdaptor, ase2sprkkr.common.section_adaptors.MergeSectionDefinitionAdaptor, ase2sprkkr.common.section_adaptors.SectionAdaptor" usemap="#inheritancec94d6c420b" class="inheritance graphviz" /></div>
 <map id="inheritancec94d6c420b" name="inheritancec94d6c420b">
 <area shape="rect" id="node1" href="ase2sprkkr.common.section_adaptors.MergeSectionAdaptor.html#ase2sprkkr.common.section_adaptors.MergeSectionAdaptor" target="_top" title="This class returns a read&#45;only dict&#45;like class" alt="" coords="37,109,198,137"/>
-<area shape="rect" id="node2" href="ase2sprkkr.common.section_adaptors.MergeSectionDefinitionAdaptor.html#ase2sprkkr.common.section_adaptors.MergeSectionDefinitionAdaptor" target="_top" title="This class returns a read&#45;only dict&#45;like class" alt="" coords="5,57,230,85"/>
+<area shape="rect" id="node2" href="ase2sprkkr.common.section_adaptors.MergeSectionDefinitionAdaptor.html#ase2sprkkr.common.section_adaptors.MergeSectionDefinitionAdaptor" target="_top" title="Read&#45;only view merging parsed data with configuration definitions." alt="" coords="5,57,230,85"/>
 <area shape="rect" id="node3" href="ase2sprkkr.common.section_adaptors.SectionAdaptor.html#ase2sprkkr.common.section_adaptors.SectionAdaptor" target="_top" title="This class wraps a container to behave as a read&#45;only dict with" alt="" coords="57,5,178,33"/>
 </map><div class="line-block">
 <div class="line"><br /></div>
@@ -170,7 +172,7 @@ the old section and the newly set data. This classes handles the issue.</p>
 <td><p>This class returns a read-only dict-like class that merge values from a dict (e.g. newly parsed data) and from the a section.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.section_adaptors.MergeSectionDefinitionAdaptor.html#ase2sprkkr.common.section_adaptors.MergeSectionDefinitionAdaptor" title="ase2sprkkr.common.section_adaptors.MergeSectionDefinitionAdaptor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MergeSectionDefinitionAdaptor</span></code></a>(values, definition)</p></td>
-<td><p>This class returns a read-only dict-like class that merge values from a dict (e.g. newly parsed data) and from the definition of a section.</p></td>
+<td><p>Read-only view merging parsed data with configuration definitions.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.section_adaptors.SectionAdaptor.html#ase2sprkkr.common.section_adaptors.SectionAdaptor" title="ase2sprkkr.common.section_adaptors.SectionAdaptor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SectionAdaptor</span></code></a>(container)</p></td>
 <td><p>This class wraps a container to behave as a read-only dict with some other &quot;addons&quot; It is used during validation of a container.</p></td>
@@ -183,7 +185,7 @@ the old section and the newly set data. This classes handles the issue.</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="ase2sprkkr.common.repeated_configuration_containers.RepeatedConfigurationContainer.html" class="btn btn-neutral float-left" title="RepeatedConfigurationContainer" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="ase2sprkkr.common.repetition.RepeatedNumberedIf.html" class="btn btn-neutral float-left" title="RepeatedNumberedIf" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="ase2sprkkr.common.section_adaptors.MergeSectionAdaptor.html" class="btn btn-neutral float-right" title="MergeSectionAdaptor" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

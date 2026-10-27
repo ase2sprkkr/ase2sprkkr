@@ -1,0 +1,291 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ase2sprkkr.common.repetition &mdash; ASE2SPRKKR  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/plot_directive.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/mods.css?v=26f6988d" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            ASE2SPRKKR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage.html">How to use the package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../how-to-install.html">More about the package installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../philosophy.html">Philosophy of the package (for developers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../authors.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Examples</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://sprkkr.org">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.sprkkr.org/wp-content/uploads/2026/05/kkr_manual.pdf">SPR-KKR manual</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../auto/ase2sprkkr.html">ase2sprkkr</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">ASE2SPRKKR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">ase2sprkkr.common.repetition</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for ase2sprkkr.common.repetition</h1><div class="highlight"><pre>
+<span></span><span class="sd">"""Definitions of the supported configuration-item repetition modes."""</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">Enum</span><span class="p">,</span> <span class="n">nonmember</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Union</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.parsing_results</span><span class="w"> </span><span class="kn">import</span> <span class="n">ArrayKey</span><span class="p">,</span> <span class="n">DefArrayKey</span><span class="p">,</span> <span class="n">DefDictKey</span><span class="p">,</span> <span class="n">DictKey</span><span class="p">,</span> <span class="n">IgnoredKey</span><span class="p">,</span> <span class="n">Key</span><span class="p">,</span> <span class="n">RepeatedKey</span>
+
+
+<div class="viewcode-block" id="Repeated">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.repetition.Repeated.html#ase2sprkkr.common.configuration_definitions.Repeated">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Repeated</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Describe how repeated configuration items are parsed and stored."""</span>
+
+<div class="viewcode-block" id="Repeated.Type">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.repetition.Repeated.html#ase2sprkkr.common.configuration_definitions.Repeated.Type">[docs]</a>
+    <span class="nd">@nonmember</span>
+    <span class="k">class</span><span class="w"> </span><span class="nc">Type</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Storage used for a repeated item."""</span>
+
+        <span class="n">NO</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">ARRAY</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
+        <span class="n">LIST</span> <span class="o">=</span> <span class="nb">list</span>
+        <span class="n">DICT</span> <span class="o">=</span> <span class="nb">dict</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="fm">__bool__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span></div>
+
+
+<div class="viewcode-block" id="Repeated.Numbering">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.repetition.Repeated.html#ase2sprkkr.common.configuration_definitions.Repeated.Numbering">[docs]</a>
+    <span class="nd">@nonmember</span>
+    <span class="k">class</span><span class="w"> </span><span class="nc">Numbering</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Numbering used by an item name."""</span>
+
+        <span class="n">NO</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">YES</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">WITH_DEFAULT</span> <span class="o">=</span> <span class="mi">2</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="fm">__bool__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&gt;</span> <span class="mi">0</span>
+
+        <span class="nd">@property</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">has_default</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">==</span> <span class="mi">2</span></div>
+
+
+<div class="viewcode-block" id="Repeated.__init__">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.repetition.Repeated.html#ase2sprkkr.common.configuration_definitions.Repeated.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="nb">type</span><span class="p">:</span> <span class="n">Type</span><span class="p">,</span>
+        <span class="n">key_type</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Key</span><span class="p">,</span> <span class="nb">callable</span><span class="p">]</span> <span class="o">=</span> <span class="n">Key</span><span class="o">.</span><span class="n">NONE</span><span class="p">,</span>
+        <span class="n">is_numbered</span><span class="p">:</span> <span class="n">Numbering</span> <span class="o">=</span> <span class="n">Numbering</span><span class="o">.</span><span class="n">NO</span><span class="p">,</span>
+        <span class="n">has_header</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="nb">type</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">key_type</span> <span class="o">=</span> <span class="n">key_type</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">is_numbered</span> <span class="o">=</span> <span class="n">is_numbered</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">has_header</span> <span class="o">=</span> <span class="n">has_header</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__bool__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Type</span><span class="o">.</span><span class="n">NO</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">grammar_numbering</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Numbering syntax accepted by the parser."""</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_numbered</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">numbering_condition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Condition controlling output numbering, if there is one."""</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="Repeated.numbering_for">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.repetition.Repeated.html#ase2sprkkr.common.configuration_definitions.Repeated.numbering_for">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">numbering_for</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">option</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Return the numbering to use when writing ``option``."""</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_numbered</span></div>
+
+
+<div class="viewcode-block" id="Repeated.NUMBERED_IF">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.repetition.Repeated.html#ase2sprkkr.common.configuration_definitions.Repeated.NUMBERED_IF">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">NUMBERED_IF</span><span class="p">(</span><span class="n">condition</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Create a dense repeated value numbered when ``condition(option)`` is true."""</span>
+        <span class="k">return</span> <span class="n">RepeatedNumberedIf</span><span class="p">(</span><span class="n">condition</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Repeated.create">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.repetition.Repeated.html#ase2sprkkr.common.configuration_definitions.Repeated.create">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">grammar_type</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">NO</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">grammar_type</span><span class="p">,</span> <span class="s2">"is_numpy_array"</span><span class="p">)</span> <span class="ow">and</span> <span class="n">grammar_type</span><span class="o">.</span><span class="n">is_numpy_array</span><span class="p">:</span>
+                <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">ARRAY</span>
+            <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">REPEATED</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">cls</span><span class="p">[</span><span class="n">value</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">value</span></div>
+
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_array</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="ow">in</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Type</span><span class="o">.</span><span class="n">ARRAY</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">Type</span><span class="o">.</span><span class="n">LIST</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">Type</span><span class="o">.</span><span class="n">DICT</span>
+
+    <span class="n">NO</span> <span class="o">=</span> <span class="n">Type</span><span class="o">.</span><span class="n">NO</span>
+    <span class="n">IGNORED</span> <span class="o">=</span> <span class="p">(</span><span class="n">Type</span><span class="o">.</span><span class="n">NO</span><span class="p">,</span> <span class="n">IgnoredKey</span><span class="p">)</span>
+    <span class="n">REPEATED</span> <span class="o">=</span> <span class="p">(</span><span class="n">Type</span><span class="o">.</span><span class="n">LIST</span><span class="p">,</span> <span class="n">RepeatedKey</span><span class="p">)</span>
+    <span class="n">ARRAY</span> <span class="o">=</span> <span class="p">(</span><span class="n">Type</span><span class="o">.</span><span class="n">ARRAY</span><span class="p">,</span> <span class="n">RepeatedKey</span><span class="p">)</span>
+    <span class="n">LIST_SECTION</span> <span class="o">=</span> <span class="p">(</span><span class="n">Type</span><span class="o">.</span><span class="n">LIST</span><span class="p">,</span> <span class="n">Key</span><span class="o">.</span><span class="n">NONE</span><span class="p">,</span> <span class="n">Numbering</span><span class="o">.</span><span class="n">NO</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+    <span class="n">DICT_SECTION</span> <span class="o">=</span> <span class="p">(</span><span class="n">Type</span><span class="o">.</span><span class="n">DICT</span><span class="p">,</span> <span class="n">Key</span><span class="o">.</span><span class="n">NONE</span><span class="p">,</span> <span class="n">Numbering</span><span class="o">.</span><span class="n">NO</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+    <span class="n">NUMBERED</span> <span class="o">=</span> <span class="p">(</span><span class="n">Type</span><span class="o">.</span><span class="n">ARRAY</span><span class="p">,</span> <span class="n">ArrayKey</span><span class="p">,</span> <span class="n">Numbering</span><span class="o">.</span><span class="n">YES</span><span class="p">)</span>
+    <span class="n">DICT</span> <span class="o">=</span> <span class="p">(</span><span class="n">Type</span><span class="o">.</span><span class="n">DICT</span><span class="p">,</span> <span class="n">DictKey</span><span class="p">,</span> <span class="n">Numbering</span><span class="o">.</span><span class="n">YES</span><span class="p">)</span>
+    <span class="n">DEFAULTDICT</span> <span class="o">=</span> <span class="p">(</span><span class="n">Type</span><span class="o">.</span><span class="n">DICT</span><span class="p">,</span> <span class="n">DefDictKey</span><span class="p">,</span> <span class="n">Numbering</span><span class="o">.</span><span class="n">WITH_DEFAULT</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="RepeatedNumberedIf">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.repetition.RepeatedNumberedIf.html#ase2sprkkr.common.configuration_definitions.RepeatedNumberedIf">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">RepeatedNumberedIf</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Dense repetition whose output numbering is selected at runtime.</span>
+
+<span class="sd">    The parser accepts both ``NAME`` and ``NAME&lt;number&gt;`` because the option</span>
+<span class="sd">    controlling the condition may occur later in the input. Values are always</span>
+<span class="sd">    stored as an array; ``condition(option)`` only controls validation and the</span>
+<span class="sd">    spelling used for output.</span>
+<span class="sd">    """</span>
+
+    <span class="nb">type</span> <span class="o">=</span> <span class="n">Repeated</span><span class="o">.</span><span class="n">Type</span><span class="o">.</span><span class="n">ARRAY</span>
+    <span class="n">key_type</span> <span class="o">=</span> <span class="n">DefArrayKey</span>
+    <span class="n">is_numbered</span> <span class="o">=</span> <span class="n">Repeated</span><span class="o">.</span><span class="n">Numbering</span><span class="o">.</span><span class="n">YES</span>
+    <span class="n">grammar_numbering</span> <span class="o">=</span> <span class="n">Repeated</span><span class="o">.</span><span class="n">Numbering</span><span class="o">.</span><span class="n">WITH_DEFAULT</span>
+    <span class="n">has_header</span> <span class="o">=</span> <span class="kc">True</span>
+
+<div class="viewcode-block" id="RepeatedNumberedIf.__init__">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.repetition.RepeatedNumberedIf.html#ase2sprkkr.common.configuration_definitions.RepeatedNumberedIf.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">condition</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">callable</span><span class="p">(</span><span class="n">condition</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">"The NUMBERED_IF condition has to be callable"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">numbering_condition</span> <span class="o">=</span> <span class="n">condition</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__bool__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">True</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_array</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">True</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+<div class="viewcode-block" id="RepeatedNumberedIf.numbering_for">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.repetition.RepeatedNumberedIf.html#ase2sprkkr.common.configuration_definitions.RepeatedNumberedIf.numbering_for">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">numbering_for</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">option</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">Repeated</span><span class="o">.</span><span class="n">Numbering</span><span class="o">.</span><span class="n">YES</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">numbering_condition</span><span class="p">(</span><span class="n">option</span><span class="p">)</span> <span class="k">else</span> <span class="n">Repeated</span><span class="o">.</span><span class="n">Numbering</span><span class="o">.</span><span class="n">NO</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Matyáš Novák &amp; Jano Minár.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,36 @@
+RepeatedNumberedIf
+==================
+
+
+.. currentmodule:: ase2sprkkr.common.repetition
+
+.. autoclass:: RepeatedNumberedIf
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.common.repetition.RepeatedNumberedIf
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

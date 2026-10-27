@@ -56,10 +56,10 @@
 <ul>
 <li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://sprkkr.org">SPR-KKR</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.sprkkr.org/wp-content/uploads/2026/05/kkr_manual.pdf">SPR-KKR manual</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
 <ul>
@@ -121,7 +121,7 @@
         <span class="n">show</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">dpi</span><span class="o">=</span><span class="mi">800</span><span class="p">,</span>
         <span class="n">separate_plots</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-        <span class="n">layout_kind</span><span class="o">=</span><span class="s2">&quot;constrained&quot;</span><span class="p">,</span>
+        <span class="n">layout_kind</span><span class="o">=</span><span class="s2">"constrained"</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="k">with</span> <span class="n">Multiplot</span><span class="p">(</span>
@@ -144,15 +144,15 @@
 <div class="viewcode-block" id="ARPESOutputFile._arithmetic_values">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.output_files.definitions.spc.ARPESOutputFile.html#ase2sprkkr.output_files.definitions.spc.ARPESOutputFile._arithmetic_values">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">_arithmetic_values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="p">[(</span><span class="s2">&quot;RAW_DATA&quot;</span><span class="p">,</span> <span class="p">(</span><span class="nb">slice</span><span class="p">(</span><span class="kc">None</span><span class="p">),</span> <span class="nb">slice</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">6</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">MODE</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;energy&quot;</span> <span class="k">else</span> <span class="mi">5</span><span class="p">)))]</span></div>
+        <span class="k">return</span> <span class="p">[(</span><span class="s2">"RAW_DATA"</span><span class="p">,</span> <span class="p">(</span><span class="nb">slice</span><span class="p">(</span><span class="kc">None</span><span class="p">),</span> <span class="nb">slice</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">6</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">MODE</span><span class="p">()</span> <span class="o">==</span> <span class="s2">"energy"</span> <span class="k">else</span> <span class="mi">5</span><span class="p">)))]</span></div>
 
 
 <div class="viewcode-block" id="ARPESOutputFile._assert_arithmetic">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.output_files.definitions.spc.ARPESOutputFile.html#ase2sprkkr.output_files.definitions.spc.ARPESOutputFile._assert_arithmetic">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">_assert_arithmetic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check, that the file can be summed/subtracked from an other file&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Check, that the file can be summed/subtracked from an other file"""</span>
         <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">MODE</span><span class="p">()</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">MODE</span><span class="p">()</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">MODE</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;energy&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">MODE</span><span class="p">()</span> <span class="o">==</span> <span class="s2">"energy"</span><span class="p">:</span>
             <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">ENERGY</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">ENERGY</span><span class="p">())</span>
             <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">THETA</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">THETA</span><span class="p">())</span>
         <span class="k">else</span><span class="p">:</span>
@@ -176,22 +176,22 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">plot</span><span class="p">(</span><span class="n">option</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="n">c</span> <span class="o">=</span> <span class="n">option</span><span class="o">.</span><span class="n">_container</span>
         <span class="n">kw</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;show_zero_line&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-            <span class="s2">&quot;mode&quot;</span><span class="p">:</span> <span class="s2">&quot;from_zero&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;norm&quot;</span><span class="p">:</span> <span class="s2">&quot;log&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;vmax&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">([</span><span class="n">c</span><span class="o">.</span><span class="n">TOTAL</span><span class="p">()</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="n">c</span><span class="o">.</span><span class="n">UP</span><span class="p">()</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="n">c</span><span class="o">.</span><span class="n">DOWN</span><span class="p">()</span><span class="o">.</span><span class="n">max</span><span class="p">()]),</span>
+            <span class="s2">"show_zero_line"</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">"mode"</span><span class="p">:</span> <span class="s2">"from_zero"</span><span class="p">,</span>
+            <span class="s2">"norm"</span><span class="p">:</span> <span class="s2">"log"</span><span class="p">,</span>
+            <span class="s2">"vmax"</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">([</span><span class="n">c</span><span class="o">.</span><span class="n">TOTAL</span><span class="p">()</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="n">c</span><span class="o">.</span><span class="n">UP</span><span class="p">()</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="n">c</span><span class="o">.</span><span class="n">DOWN</span><span class="p">()</span><span class="o">.</span><span class="n">max</span><span class="p">()]),</span>
         <span class="p">}</span>
 
-        <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">MODE</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;energy&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">MODE</span><span class="p">()</span> <span class="o">==</span> <span class="s2">"energy"</span><span class="p">:</span>
             <span class="n">x</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">THETA</span><span class="p">()</span>
             <span class="n">y</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">ENERGY</span><span class="p">()</span>
-            <span class="n">kw</span><span class="p">[</span><span class="s2">&quot;xlabel&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;$\theta$ (deg)&quot;</span>
-            <span class="n">kw</span><span class="p">[</span><span class="s2">&quot;ylabel&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;$E-E_{\rm F}$ (eV)&quot;</span>
+            <span class="n">kw</span><span class="p">[</span><span class="s2">"xlabel"</span><span class="p">]</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">"$\theta$ (deg)"</span>
+            <span class="n">kw</span><span class="p">[</span><span class="s2">"ylabel"</span><span class="p">]</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">"$E-E_{\rm F}$ (eV)"</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">x</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">KX</span><span class="p">()</span>
             <span class="n">y</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">KY</span><span class="p">()</span>
-            <span class="n">kw</span><span class="p">[</span><span class="s2">&quot;xlabel&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;$k_x$ (Å$^{-1}$)&quot;</span>
-            <span class="n">kw</span><span class="p">[</span><span class="s2">&quot;ylabel&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;$k_y$ (Å$^{-1}$)&quot;</span>
+            <span class="n">kw</span><span class="p">[</span><span class="s2">"xlabel"</span><span class="p">]</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">"$k_x$ (Å$^{-1}$)"</span>
+            <span class="n">kw</span><span class="p">[</span><span class="s2">"ylabel"</span><span class="p">]</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">"$k_y$ (Å$^{-1}$)"</span>
 
         <span class="n">kw</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="n">colormesh</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">option</span><span class="p">(),</span> <span class="o">**</span><span class="n">kw</span><span class="p">)</span>
@@ -200,71 +200,71 @@
         <span class="k">return</span> <span class="nb">slice</span><span class="p">(</span><span class="kc">None</span><span class="p">),</span> <span class="n">j</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">determinant</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">c</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">MODE</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;energy&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">MODE</span><span class="p">()</span> <span class="o">==</span> <span class="s2">"energy"</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">data</span><span class="p">[:,</span> <span class="mi">7</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">NE</span><span class="p">(),</span> <span class="n">c</span><span class="o">.</span><span class="n">NT</span><span class="p">())</span>
         <span class="k">return</span> <span class="n">data</span><span class="p">[:,</span> <span class="mi">6</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">NE</span><span class="p">(),</span> <span class="n">c</span><span class="o">.</span><span class="n">NT</span><span class="p">())</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">ii</span><span class="p">(</span><span class="n">j</span><span class="p">):</span>
         <span class="k">def</span><span class="w"> </span><span class="nf">fn</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">c</span><span class="p">):</span>
-            <span class="n">first</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">NE</span> <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">MODE</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;energy&quot;</span> <span class="k">else</span> <span class="n">c</span><span class="o">.</span><span class="n">NP</span>
+            <span class="n">first</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">NE</span> <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">MODE</span><span class="p">()</span> <span class="o">==</span> <span class="s2">"energy"</span> <span class="k">else</span> <span class="n">c</span><span class="o">.</span><span class="n">NP</span>
             <span class="k">return</span> <span class="n">data</span><span class="p">[:,</span> <span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">first</span><span class="p">(),</span> <span class="n">c</span><span class="o">.</span><span class="n">NT</span><span class="p">())</span>
 
         <span class="k">return</span> <span class="n">fn</span>
 
     <span class="n">definition</span> <span class="o">=</span> <span class="n">create_output_file_definition</span><span class="p">(</span>
-        <span class="s2">&quot;ARPES&quot;</span><span class="p">,</span>
+        <span class="s2">"ARPES"</span><span class="p">,</span>
         <span class="p">[</span>
-            <span class="n">V</span><span class="p">(</span><span class="s2">&quot;NT&quot;</span><span class="p">,</span> <span class="nb">int</span><span class="p">),</span>
-            <span class="n">V</span><span class="p">(</span><span class="s2">&quot;NP&quot;</span><span class="p">,</span> <span class="nb">int</span><span class="p">),</span>
-            <span class="n">V</span><span class="p">(</span><span class="s2">&quot;COMMENT&quot;</span><span class="p">,</span> <span class="n">Prefixed</span><span class="p">(</span><span class="s2">&quot;#&quot;</span><span class="p">),</span> <span class="n">name_in_grammar</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
-            <span class="n">V</span><span class="p">(</span><span class="s2">&quot;RAW_DATA&quot;</span><span class="p">,</span> <span class="n">NumpyArray</span><span class="p">(</span><span class="n">written_shape</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">8</span><span class="p">)),</span> <span class="n">name_in_grammar</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
-            <span class="n">GV</span><span class="p">(</span><span class="s2">&quot;MODE&quot;</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">c</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="kc">None</span><span class="p">:</span> <span class="s2">&quot;energy&quot;</span> <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">NE</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="k">else</span> <span class="s2">&quot;kx_ky&quot;</span><span class="p">),</span>
+            <span class="n">V</span><span class="p">(</span><span class="s2">"NT"</span><span class="p">,</span> <span class="nb">int</span><span class="p">),</span>
+            <span class="n">V</span><span class="p">(</span><span class="s2">"NP"</span><span class="p">,</span> <span class="nb">int</span><span class="p">),</span>
+            <span class="n">V</span><span class="p">(</span><span class="s2">"COMMENT"</span><span class="p">,</span> <span class="n">Prefixed</span><span class="p">(</span><span class="s2">"#"</span><span class="p">),</span> <span class="n">name_in_grammar</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+            <span class="n">V</span><span class="p">(</span><span class="s2">"RAW_DATA"</span><span class="p">,</span> <span class="n">NumpyArray</span><span class="p">(</span><span class="n">written_shape</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">8</span><span class="p">)),</span> <span class="n">name_in_grammar</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+            <span class="n">GV</span><span class="p">(</span><span class="s2">"MODE"</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">c</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="kc">None</span><span class="p">:</span> <span class="s2">"energy"</span> <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">NE</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="k">else</span> <span class="s2">"kx_ky"</span><span class="p">),</span>
             <span class="o">*</span><span class="n">switch</span><span class="p">(</span>
-                <span class="s2">&quot;MODE&quot;</span><span class="p">,</span>
+                <span class="s2">"MODE"</span><span class="p">,</span>
                 <span class="p">{</span>
-                    <span class="s2">&quot;energy&quot;</span><span class="p">:</span> <span class="p">[</span>
-                        <span class="n">NV</span><span class="p">(</span><span class="s2">&quot;THETA&quot;</span><span class="p">,</span> <span class="s2">&quot;RAW_DATA&quot;</span><span class="p">,</span> <span class="n">i</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;NE&quot;</span><span class="p">,</span> <span class="s2">&quot;NT&quot;</span><span class="p">)),</span>
-                        <span class="n">NV</span><span class="p">(</span><span class="s2">&quot;ENERGY&quot;</span><span class="p">,</span> <span class="s2">&quot;RAW_DATA&quot;</span><span class="p">,</span> <span class="n">i</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;NE&quot;</span><span class="p">,</span> <span class="s2">&quot;NT&quot;</span><span class="p">)),</span>
-                        <span class="n">NV</span><span class="p">(</span><span class="s2">&quot;K&quot;</span><span class="p">,</span> <span class="s2">&quot;RAW_DATA&quot;</span><span class="p">,</span> <span class="n">i</span><span class="p">(</span><span class="mi">6</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;NE&quot;</span><span class="p">,</span> <span class="s2">&quot;NT&quot;</span><span class="p">),</span> <span class="n">info</span><span class="o">=</span><span class="s2">&quot;K_parallel (pi/A)&quot;</span><span class="p">),</span>
+                    <span class="s2">"energy"</span><span class="p">:</span> <span class="p">[</span>
+                        <span class="n">NV</span><span class="p">(</span><span class="s2">"THETA"</span><span class="p">,</span> <span class="s2">"RAW_DATA"</span><span class="p">,</span> <span class="n">i</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="s2">"NE"</span><span class="p">,</span> <span class="s2">"NT"</span><span class="p">)),</span>
+                        <span class="n">NV</span><span class="p">(</span><span class="s2">"ENERGY"</span><span class="p">,</span> <span class="s2">"RAW_DATA"</span><span class="p">,</span> <span class="n">i</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="s2">"NE"</span><span class="p">,</span> <span class="s2">"NT"</span><span class="p">)),</span>
+                        <span class="n">NV</span><span class="p">(</span><span class="s2">"K"</span><span class="p">,</span> <span class="s2">"RAW_DATA"</span><span class="p">,</span> <span class="n">i</span><span class="p">(</span><span class="mi">6</span><span class="p">),</span> <span class="p">(</span><span class="s2">"NE"</span><span class="p">,</span> <span class="s2">"NT"</span><span class="p">),</span> <span class="n">info</span><span class="o">=</span><span class="s2">"K_parallel (pi/A)"</span><span class="p">),</span>
                     <span class="p">],</span>
-                    <span class="s2">&quot;kx_ky&quot;</span><span class="p">:</span> <span class="p">[</span>
-                        <span class="n">NV</span><span class="p">(</span><span class="s2">&quot;KX&quot;</span><span class="p">,</span> <span class="s2">&quot;RAW_DATA&quot;</span><span class="p">,</span> <span class="n">i</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;NP&quot;</span><span class="p">,</span> <span class="s2">&quot;NT&quot;</span><span class="p">),</span> <span class="n">info</span><span class="o">=</span><span class="s2">&quot;k_x coordinate (1/Å)&quot;</span><span class="p">),</span>
-                        <span class="n">NV</span><span class="p">(</span><span class="s2">&quot;KY&quot;</span><span class="p">,</span> <span class="s2">&quot;RAW_DATA&quot;</span><span class="p">,</span> <span class="n">i</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;NP&quot;</span><span class="p">,</span> <span class="s2">&quot;NT&quot;</span><span class="p">),</span> <span class="n">info</span><span class="o">=</span><span class="s2">&quot;k_y coordinate (1/Å)&quot;</span><span class="p">),</span>
+                    <span class="s2">"kx_ky"</span><span class="p">:</span> <span class="p">[</span>
+                        <span class="n">NV</span><span class="p">(</span><span class="s2">"KX"</span><span class="p">,</span> <span class="s2">"RAW_DATA"</span><span class="p">,</span> <span class="n">i</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="s2">"NP"</span><span class="p">,</span> <span class="s2">"NT"</span><span class="p">),</span> <span class="n">info</span><span class="o">=</span><span class="s2">"k_x coordinate (1/Å)"</span><span class="p">),</span>
+                        <span class="n">NV</span><span class="p">(</span><span class="s2">"KY"</span><span class="p">,</span> <span class="s2">"RAW_DATA"</span><span class="p">,</span> <span class="n">i</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="s2">"NP"</span><span class="p">,</span> <span class="s2">"NT"</span><span class="p">),</span> <span class="n">info</span><span class="o">=</span><span class="s2">"k_y coordinate (1/Å)"</span><span class="p">),</span>
                     <span class="p">],</span>
                 <span class="p">},</span>
             <span class="p">),</span>
             <span class="n">NV</span><span class="p">(</span>
-                <span class="s2">&quot;TOTAL&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;RAW_DATA&quot;</span><span class="p">,</span>
+                <span class="s2">"TOTAL"</span><span class="p">,</span>
+                <span class="s2">"RAW_DATA"</span><span class="p">,</span>
                 <span class="n">ii</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span>
-                <span class="n">info</span><span class="o">=</span><span class="s2">&quot;Total intensity&quot;</span><span class="p">,</span>
-                <span class="n">plot</span><span class="o">=</span><span class="n">change_default_kwargs</span><span class="p">(</span><span class="n">plot</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;Total intensity&quot;</span><span class="p">,</span> <span class="n">colormap</span><span class="o">=</span><span class="s2">&quot;gray&quot;</span><span class="p">),</span>
+                <span class="n">info</span><span class="o">=</span><span class="s2">"Total intensity"</span><span class="p">,</span>
+                <span class="n">plot</span><span class="o">=</span><span class="n">change_default_kwargs</span><span class="p">(</span><span class="n">plot</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="sa">r</span><span class="s2">"Total intensity"</span><span class="p">,</span> <span class="n">colormap</span><span class="o">=</span><span class="s2">"gray"</span><span class="p">),</span>
             <span class="p">),</span>
             <span class="n">NV</span><span class="p">(</span>
-                <span class="s2">&quot;UP&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;RAW_DATA&quot;</span><span class="p">,</span>
+                <span class="s2">"UP"</span><span class="p">,</span>
+                <span class="s2">"RAW_DATA"</span><span class="p">,</span>
                 <span class="n">ii</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span>
-                <span class="n">info</span><span class="o">=</span><span class="s2">&quot;Spin up&quot;</span><span class="p">,</span>
-                <span class="n">plot</span><span class="o">=</span><span class="n">change_default_kwargs</span><span class="p">(</span><span class="n">plot</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;Spin up&quot;</span><span class="p">,</span> <span class="n">colormap</span><span class="o">=</span><span class="s2">&quot;gray&quot;</span><span class="p">),</span>
+                <span class="n">info</span><span class="o">=</span><span class="s2">"Spin up"</span><span class="p">,</span>
+                <span class="n">plot</span><span class="o">=</span><span class="n">change_default_kwargs</span><span class="p">(</span><span class="n">plot</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="sa">r</span><span class="s2">"Spin up"</span><span class="p">,</span> <span class="n">colormap</span><span class="o">=</span><span class="s2">"gray"</span><span class="p">),</span>
             <span class="p">),</span>
             <span class="n">NV</span><span class="p">(</span>
-                <span class="s2">&quot;DOWN&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;RAW_DATA&quot;</span><span class="p">,</span>
+                <span class="s2">"DOWN"</span><span class="p">,</span>
+                <span class="s2">"RAW_DATA"</span><span class="p">,</span>
                 <span class="n">ii</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span>
-                <span class="n">info</span><span class="o">=</span><span class="s2">&quot;Spin down&quot;</span><span class="p">,</span>
-                <span class="n">plot</span><span class="o">=</span><span class="n">change_default_kwargs</span><span class="p">(</span><span class="n">plot</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;Spin down&quot;</span><span class="p">,</span> <span class="n">colormap</span><span class="o">=</span><span class="s2">&quot;gray&quot;</span><span class="p">),</span>
+                <span class="n">info</span><span class="o">=</span><span class="s2">"Spin down"</span><span class="p">,</span>
+                <span class="n">plot</span><span class="o">=</span><span class="n">change_default_kwargs</span><span class="p">(</span><span class="n">plot</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="sa">r</span><span class="s2">"Spin down"</span><span class="p">,</span> <span class="n">colormap</span><span class="o">=</span><span class="s2">"gray"</span><span class="p">),</span>
             <span class="p">),</span>
             <span class="n">NV</span><span class="p">(</span>
-                <span class="s2">&quot;POLARIZATION&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;RAW_DATA&quot;</span><span class="p">,</span>
+                <span class="s2">"POLARIZATION"</span><span class="p">,</span>
+                <span class="s2">"RAW_DATA"</span><span class="p">,</span>
                 <span class="n">ii</span><span class="p">(</span><span class="mi">5</span><span class="p">),</span>
-                <span class="n">info</span><span class="o">=</span><span class="s2">&quot;Spin polarization&quot;</span><span class="p">,</span>
-                <span class="n">plot</span><span class="o">=</span><span class="n">change_default_kwargs</span><span class="p">(</span><span class="n">plot</span><span class="p">,</span> <span class="n">colormap</span><span class="o">=</span><span class="s2">&quot;bwr&quot;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;Spin polarization&quot;</span><span class="p">),</span>
+                <span class="n">info</span><span class="o">=</span><span class="s2">"Spin polarization"</span><span class="p">,</span>
+                <span class="n">plot</span><span class="o">=</span><span class="n">change_default_kwargs</span><span class="p">(</span><span class="n">plot</span><span class="p">,</span> <span class="n">colormap</span><span class="o">=</span><span class="s2">"bwr"</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="sa">r</span><span class="s2">"Spin polarization"</span><span class="p">),</span>
             <span class="p">),</span>
-            <span class="n">NV</span><span class="p">(</span><span class="s2">&quot;DETERMINANT&quot;</span><span class="p">,</span> <span class="s2">&quot;RAW_DATA&quot;</span><span class="p">,</span> <span class="n">determinant</span><span class="p">),</span>
+            <span class="n">NV</span><span class="p">(</span><span class="s2">"DETERMINANT"</span><span class="p">,</span> <span class="s2">"RAW_DATA"</span><span class="p">,</span> <span class="n">determinant</span><span class="p">),</span>
         <span class="p">],</span>
         <span class="bp">cls</span><span class="o">=</span><span class="n">ARPESDefinition</span><span class="p">,</span>
-        <span class="n">info</span><span class="o">=</span><span class="s2">&quot;ARPES (Angle-resolved photoemission spectroscopy) output (.spc file).&quot;</span><span class="p">,</span>
+        <span class="n">info</span><span class="o">=</span><span class="s2">"ARPES (Angle-resolved photoemission spectroscopy) output (.spc file)."</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="k">return</span> <span class="n">definition</span></div>
 

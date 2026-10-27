@@ -1,13 +1,14 @@
 Changelog
 =========
 
-Version 3.5
+Version 3.6
 -----------
 * `promote_ase_atoms` can be directly imported from the `ase2sprkkr` root package
 * Changing properties via `site` is disallowed in cases where `site_type` is shared
 * JXC output file parsing and plotting
 * XAS output file parsing and plotting
 * Beyond-DFT parammeters (DFTM, DFT+U,...)
+* Hyperfine-field switches
 * Semi-infinite structure building improved
 * Uppasd improvements: direct calling of `sd`, input file stub writing
 * Improved layout for multiple plots
@@ -22,6 +23,7 @@ Version 3.5
 * SLURM work manager auto-detection
 * Examples from ASE2SPRKKR article were added
 * Runtime dependencies were revisited
+* BaseCalculator is used as a base class for SPRKKRCalculator
 
 Internals
 ~~~~~~~~~

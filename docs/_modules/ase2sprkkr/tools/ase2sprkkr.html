@@ -56,10 +56,10 @@
 <ul>
 <li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://sprkkr.org">SPR-KKR</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.sprkkr.org/wp-content/uploads/2026/05/kkr_manual.pdf">SPR-KKR manual</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
 <ul>
@@ -93,9 +93,9 @@
   <h1>Source code for ase2sprkkr.tools.ase2sprkkr</h1><div class="highlight"><pre>
 <span></span><span class="ch">#!/usr/bin/env python</span>
 <span class="c1"># PYTHON_ARGCOMPLETE_OK</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 <span class="sd">The main ase2sprkkr scripts. See the commands subdir for the available commands.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">argparse</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">argcomplete</span>
@@ -114,11 +114,11 @@
     <span class="k">if</span> <span class="ow">not</span> <span class="n">__package__</span><span class="p">:</span>
         <span class="n">path</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span><span class="o">.</span><span class="n">parents</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
-        <span class="n">spec</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">spec_from_file_location</span><span class="p">(</span><span class="s2">&quot;ase2sprkkr&quot;</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">&quot;ase2sprkkr&quot;</span><span class="p">,</span> <span class="s2">&quot;__init__.py&quot;</span><span class="p">))</span>
+        <span class="n">spec</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">spec_from_file_location</span><span class="p">(</span><span class="s2">"ase2sprkkr"</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">"ase2sprkkr"</span><span class="p">,</span> <span class="s2">"__init__.py"</span><span class="p">))</span>
         <span class="n">ase2sprkkr</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">module_from_spec</span><span class="p">(</span><span class="n">spec</span><span class="p">)</span>
-        <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="s2">&quot;ase2sprkkr&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ase2sprkkr</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="s2">"ase2sprkkr"</span><span class="p">]</span> <span class="o">=</span> <span class="n">ase2sprkkr</span>
         <span class="n">spec</span><span class="o">.</span><span class="n">loader</span><span class="o">.</span><span class="n">exec_module</span><span class="p">(</span><span class="n">ase2sprkkr</span><span class="p">)</span>
-        <span class="n">__package__</span> <span class="o">=</span> <span class="s2">&quot;ase2sprkkr.tools&quot;</span></div>
+        <span class="n">__package__</span> <span class="o">=</span> <span class="s2">"ase2sprkkr.tools"</span></div>
 
 
 
@@ -136,49 +136,49 @@
             <span class="k">raise</span> <span class="n">ArgparseError</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">)</span>
 
         <span class="k">def</span><span class="w"> </span><span class="nf">exit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="n">ArgparseError</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">ArgparseError</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span> <span class="ow">or</span> <span class="s2">""</span><span class="p">)</span>
 
     <span class="n">parser</span> <span class="o">=</span> <span class="n">Parser</span><span class="p">(</span>
-        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;ASE2SPRKKR tool — command-line interface for ASE2SPRKKR functionalities&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">"ASE2SPRKKR tool — command-line interface for ASE2SPRKKR functionalities"</span><span class="p">,</span>
         <span class="n">formatter_class</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">RawDescriptionHelpFormatter</span><span class="p">,</span>
-        <span class="n">epilog</span><span class="o">=</span><span class="s2">&quot;You can install autocompleting for bash and zsh by running/adding to the .bashrc: </span><span class="se">\n</span><span class="s2">&quot;</span>
-        <span class="s1">&#39;eval &quot;$(register-python-argcomplete ase2sprkkr)&quot;&#39;</span><span class="p">,</span>
+        <span class="n">epilog</span><span class="o">=</span><span class="s2">"You can install autocompleting for bash and zsh by running/adding to the .bashrc: </span><span class="se">\n</span><span class="s2">"</span>
+        <span class="s1">'eval "$(register-python-argcomplete ase2sprkkr)"'</span><span class="p">,</span>
     <span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--version&quot;</span><span class="p">,</span> <span class="s2">&quot;-v&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Print the version of ASE2SPRKKR.&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--debug&quot;</span><span class="p">,</span> <span class="s2">&quot;-G&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Raise a debugger on an unhandled exception.&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--profile&quot;</span><span class="p">,</span> <span class="s2">&quot;-P&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Run a python profiler on the command.&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">)</span>
-    <span class="c1"># parser.add_argument(&#39;--no-user-profile&#39;, &#39;-U&#39;, help=&#39;Do not load the user profile file.&#39;, action=&#39;store_true&#39;)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"--version"</span><span class="p">,</span> <span class="s2">"-v"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Print the version of ASE2SPRKKR."</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">"store_true"</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"--debug"</span><span class="p">,</span> <span class="s2">"-G"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Raise a debugger on an unhandled exception."</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">"store_true"</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"--profile"</span><span class="p">,</span> <span class="s2">"-P"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Run a python profiler on the command."</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">"store_true"</span><span class="p">)</span>
+    <span class="c1"># parser.add_argument('--no-user-profile', '-U', help='Do not load the user profile file.', action='store_true')</span>
 
     <span class="n">subs</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_subparsers</span><span class="p">(</span>
-        <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;ase2sprkkr_command&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Run ase2sprkkr &lt;subcommand&gt; -h for futhrer info&quot;</span><span class="p">,</span>
+        <span class="n">dest</span><span class="o">=</span><span class="s2">"ase2sprkkr_command"</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">"Run ase2sprkkr &lt;subcommand&gt; -h for futhrer info"</span><span class="p">,</span>
     <span class="p">)</span>
 
-    <span class="c1"># os.environ[&#39;ASE2SPRKKR_NO_USER_PROFILE&#39;] = &#39;1&#39;</span>
+    <span class="c1"># os.environ['ASE2SPRKKR_NO_USER_PROFILE'] = '1'</span>
     <span class="n">fix_package</span><span class="p">()</span>
     <span class="kn">import</span><span class="w"> </span><span class="nn">ase2sprkkr.tools.commands</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">commands</span>  <span class="c1"># NOQA</span>
 
     <span class="n">names</span> <span class="o">=</span> <span class="p">(</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">pkgutil</span><span class="o">.</span><span class="n">iter_modules</span><span class="p">(</span><span class="n">commands</span><span class="o">.</span><span class="n">__path__</span><span class="p">))</span>
     <span class="n">im</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span>
-    <span class="n">modules</span> <span class="o">=</span> <span class="p">(</span><span class="n">im</span><span class="p">(</span><span class="n">commands</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="n">i</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">__package__</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">names</span><span class="p">)</span>
-    <span class="n">modules</span> <span class="o">=</span> <span class="p">{</span><span class="n">m</span><span class="o">.</span><span class="vm">__name__</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">1</span><span class="p">]:</span> <span class="n">m</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">modules</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="s2">&quot;parser&quot;</span><span class="p">)}</span>
+    <span class="n">modules</span> <span class="o">=</span> <span class="p">(</span><span class="n">im</span><span class="p">(</span><span class="n">commands</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">+</span> <span class="s2">"."</span> <span class="o">+</span> <span class="n">i</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">__package__</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">names</span><span class="p">)</span>
+    <span class="n">modules</span> <span class="o">=</span> <span class="p">{</span><span class="n">m</span><span class="o">.</span><span class="vm">__name__</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s2">"."</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">1</span><span class="p">]:</span> <span class="n">m</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">modules</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="s2">"parser"</span><span class="p">)}</span>
     <span class="n">unknowns</span> <span class="o">=</span> <span class="p">{}</span>
 
     <span class="n">aliases</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="n">parsers</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">modules</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-        <span class="n">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">,</span> <span class="s2">&quot;-&quot;</span><span class="p">)</span>
-        <span class="n">alias</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="s2">&quot;aliases&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">"_"</span><span class="p">,</span> <span class="s2">"-"</span><span class="p">)</span>
+        <span class="n">alias</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="s2">"aliases"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
         <span class="n">sub</span> <span class="o">=</span> <span class="n">subs</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span>
             <span class="n">name</span><span class="p">,</span>
             <span class="n">help</span><span class="o">=</span><span class="n">m</span><span class="o">.</span><span class="n">help</span><span class="p">,</span>
             <span class="n">aliases</span><span class="o">=</span><span class="n">alias</span> <span class="ow">or</span> <span class="p">[],</span>
             <span class="n">formatter_class</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">RawDescriptionHelpFormatter</span><span class="p">,</span>
-            <span class="n">description</span><span class="o">=</span><span class="n">m</span><span class="o">.</span><span class="n">help</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="n">m</span><span class="o">.</span><span class="n">description</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="n">m</span><span class="o">.</span><span class="n">help</span> <span class="o">+</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span> <span class="o">+</span> <span class="n">m</span><span class="o">.</span><span class="n">description</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="k">if</span> <span class="n">alias</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">alias</span><span class="p">:</span>
                 <span class="n">aliases</span><span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="o">=</span> <span class="n">name</span>
-        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="s2">&quot;unknowns&quot;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="s2">"unknowns"</span><span class="p">):</span>
             <span class="n">unknowns</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">unknowns</span>
         <span class="n">m</span><span class="o">.</span><span class="n">parser</span><span class="p">(</span><span class="n">sub</span><span class="p">)</span>
         <span class="n">parsers</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">sub</span>
@@ -190,13 +190,13 @@
 
         <span class="n">module</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">ase2sprkkr_command</span>
         <span class="k">if</span> <span class="n">module</span><span class="p">:</span>
-            <span class="n">module</span> <span class="o">=</span> <span class="n">aliases</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">module</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">)</span>
+            <span class="n">module</span> <span class="o">=</span> <span class="n">aliases</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">module</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">"-"</span><span class="p">,</span> <span class="s2">"_"</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">remainder</span><span class="p">:</span>
             <span class="n">where</span> <span class="o">=</span> <span class="n">unknowns</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">ase2sprkkr_command</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">where</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                  <span class="n">eparser</span> <span class="o">=</span> <span class="n">parsers</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">parser</span><span class="p">)</span>
-                 <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot; ! ERROR: Unknown argument(s) &#39;</span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">remainder</span><span class="p">)</span><span class="si">}</span><span class="s2">&#39; for the &#39;</span><span class="si">{</span><span class="n">eparser</span><span class="o">.</span><span class="n">prog</span><span class="si">}</span><span class="s2">&#39; command. !&quot;</span>
+                 <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">" ! ERROR: Unknown argument(s) '</span><span class="si">{</span><span class="s1">', '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">remainder</span><span class="p">)</span><span class="si">}</span><span class="s2">' for the '</span><span class="si">{</span><span class="n">eparser</span><span class="o">.</span><span class="n">prog</span><span class="si">}</span><span class="s2">' command. !"</span>
                  <span class="n">parser_error</span><span class="p">(</span><span class="n">eparser</span><span class="p">,</span> <span class="n">msg</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">where</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">where</span><span class="p">)</span>
@@ -209,7 +209,7 @@
             <span class="n">add_debug_hook</span><span class="p">()</span>
 
         <span class="n">global_args</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;debug&quot;</span><span class="p">,</span> <span class="s2">&quot;profile&quot;</span><span class="p">]:</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">"debug"</span><span class="p">,</span> <span class="s2">"profile"</span><span class="p">]:</span>
             <span class="n">global_args</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
             <span class="nb">delattr</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
 
@@ -236,7 +236,7 @@
         <span class="nb">print</span><span class="p">()</span>
         <span class="nb">print</span><span class="p">(</span><span class="n">Fore</span><span class="o">.</span><span class="n">RED</span> <span class="o">+</span> <span class="n">msg</span> <span class="o">+</span> <span class="n">Style</span><span class="o">.</span><span class="n">RESET_ALL</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">()</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="o">*</span><span class="mi">30</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">'-'</span><span class="o">*</span><span class="mi">30</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">()</span>
         <span class="n">parser</span><span class="o">.</span><span class="n">print_help</span><span class="p">()</span>
         <span class="nb">print</span><span class="p">()</span>
@@ -249,15 +249,15 @@
         <span class="n">msg</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
 
         <span class="k">def</span><span class="w"> </span><span class="nf">enhance</span><span class="p">():</span>
-            <span class="n">match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^argument ase2sprkkr_command: invalid choice: (.*)&quot;</span><span class="p">,</span> <span class="n">msg</span><span class="p">)</span>
+            <span class="n">match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s2">"^argument ase2sprkkr_command: invalid choice: (.*)"</span><span class="p">,</span> <span class="n">msg</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">match</span><span class="p">:</span>
-                <span class="k">return</span> <span class="s2">&quot;ase2sprkkr: unknown command:&quot;</span> <span class="o">+</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">msg</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;the following arguments are required:&#39;</span><span class="p">):</span>
-                <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">e</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">prog</span><span class="si">}</span><span class="s2">: &quot;</span> <span class="o">+</span> <span class="n">msg</span>
+                <span class="k">return</span> <span class="s2">"ase2sprkkr: unknown command:"</span> <span class="o">+</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">msg</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">'the following arguments are required:'</span><span class="p">):</span>
+                <span class="k">return</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">e</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">prog</span><span class="si">}</span><span class="s2">: "</span> <span class="o">+</span> <span class="n">msg</span>
             <span class="k">return</span> <span class="n">msg</span>
 
         <span class="n">msg</span> <span class="o">=</span> <span class="n">enhance</span><span class="p">()</span>
-        <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot; ! </span><span class="si">{</span><span class="n">msg</span><span class="si">}</span><span class="s2"> !&quot;</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">" ! </span><span class="si">{</span><span class="n">msg</span><span class="si">}</span><span class="s2"> !"</span>
         <span class="n">parser_error</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">parser</span><span class="p">,</span> <span class="n">msg</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">profile</span><span class="p">:</span>
@@ -280,7 +280,7 @@
 
 
 
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
     <span class="n">run</span><span class="p">()</span>
 </pre></div>
 

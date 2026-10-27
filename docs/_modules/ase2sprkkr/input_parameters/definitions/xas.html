@@ -56,10 +56,10 @@
 <ul>
 <li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://sprkkr.org">SPR-KKR</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.sprkkr.org/wp-content/uploads/2026/05/kkr_manual.pdf">SPR-KKR manual</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
 <ul>
@@ -91,7 +91,7 @@
            <div itemprop="articleBody">
              
   <h1>Source code for ase2sprkkr.input_parameters.definitions.xas</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;XAS task input parameters definition&quot;&quot;&quot;</span>
+<span></span><span class="sd">"""XAS task input parameters definition"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">...common.grammar_types</span><span class="w"> </span><span class="kn">import</span> <span class="n">DefKeyword</span><span class="p">,</span> <span class="n">flag</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.sections</span><span class="w"> </span><span class="kn">import</span> <span class="n">CONTROL</span><span class="p">,</span> <span class="n">TASK</span><span class="p">,</span> <span class="n">TAU</span><span class="p">,</span> <span class="n">ENERGY</span><span class="p">,</span> <span class="n">SITES</span><span class="p">,</span> <span class="n">MODE</span>
@@ -101,52 +101,52 @@
 <div class="viewcode-block" id="input_parameters">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.definitions.xas.input_parameters.html#ase2sprkkr.input_parameters.definitions.xas.input_parameters">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">input_parameters</span><span class="p">():</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;XAS -xas task input parameters definition&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""XAS -xas task input parameters definition"""</span>
     <span class="n">input_parameters</span> <span class="o">=</span> <span class="n">InputParameters</span><span class="p">(</span>
-        <span class="s2">&quot;xas&quot;</span><span class="p">,</span>
+        <span class="s2">"xas"</span><span class="p">,</span>
         <span class="p">[</span>
-            <span class="n">CONTROL</span><span class="p">(</span><span class="s2">&quot;XAS&quot;</span><span class="p">),</span>
+            <span class="n">CONTROL</span><span class="p">(</span><span class="s2">"XAS"</span><span class="p">),</span>
             <span class="n">TAU</span><span class="p">,</span>
             <span class="n">MODE</span><span class="p">,</span>
-            <span class="n">ENERGY</span><span class="p">(</span><span class="n">defaults</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;EMAX&quot;</span><span class="p">:</span> <span class="mf">4.0</span><span class="p">,</span> <span class="s2">&quot;ImE&quot;</span><span class="p">:</span> <span class="mf">0.01</span><span class="p">,</span> <span class="s2">&quot;GRID&quot;</span><span class="p">:</span> <span class="mi">6</span><span class="p">,</span> <span class="s2">&quot;NE&quot;</span><span class="p">:</span> <span class="mi">180</span><span class="p">}),</span>
-            <span class="n">TASK</span><span class="p">(</span><span class="s2">&quot;XAS&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span>
+            <span class="n">ENERGY</span><span class="p">(</span><span class="n">defaults</span><span class="o">=</span><span class="p">{</span><span class="s2">"EMAX"</span><span class="p">:</span> <span class="mf">4.0</span><span class="p">,</span> <span class="s2">"ImE"</span><span class="p">:</span> <span class="mf">0.01</span><span class="p">,</span> <span class="s2">"GRID"</span><span class="p">:</span> <span class="mi">6</span><span class="p">,</span> <span class="s2">"NE"</span><span class="p">:</span> <span class="mi">180</span><span class="p">}),</span>
+            <span class="n">TASK</span><span class="p">(</span><span class="s2">"XAS"</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span>
                 <span class="p">[</span>
-                    <span class="n">V</span><span class="p">(</span><span class="s2">&quot;IT&quot;</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">is_required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;atom type IT&quot;&quot;&quot;</span><span class="p">),</span>
-                    <span class="n">V</span><span class="p">(</span><span class="s2">&quot;CL&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="s2">&quot;2P&quot;</span><span class="p">,</span> <span class="n">is_required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;initial core level shell&quot;&quot;&quot;</span><span class="p">),</span>
-                    <span class="n">V</span><span class="p">(</span><span class="s2">&quot;MECHECK&quot;</span><span class="p">,</span> <span class="n">flag</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="n">is_optional</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+                    <span class="n">V</span><span class="p">(</span><span class="s2">"IT"</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">is_required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s2">"""atom type IT"""</span><span class="p">),</span>
+                    <span class="n">V</span><span class="p">(</span><span class="s2">"CL"</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="s2">"2P"</span><span class="p">,</span> <span class="n">is_required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s2">"""initial core level shell"""</span><span class="p">),</span>
+                    <span class="n">V</span><span class="p">(</span><span class="s2">"MECHECK"</span><span class="p">,</span> <span class="n">flag</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="n">is_optional</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
                     <span class="n">V</span><span class="p">(</span>
-                        <span class="s2">&quot;OUTPUT&quot;</span><span class="p">,</span>
+                        <span class="s2">"OUTPUT"</span><span class="p">,</span>
                         <span class="n">DefKeyword</span><span class="p">(</span>
                             <span class="p">{</span>
-                                <span class="s2">&quot;MBARN&quot;</span><span class="p">:</span> <span class="s2">&quot;output of absorption coefficient µas µ atom = µ Vuc in [Mbarn] &quot;</span><span class="p">,</span>
-                                <span class="s2">&quot;SIGMA&quot;</span><span class="p">:</span> <span class="s2">&quot;SIGMA : output as absorptive part of optical conductivity σ = µ c/4π in [10E15/s ]&quot;</span><span class="p">,</span>
+                                <span class="s2">"MBARN"</span><span class="p">:</span> <span class="s2">"output of absorption coefficient µas µ atom = µ Vuc in [Mbarn] "</span><span class="p">,</span>
+                                <span class="s2">"SIGMA"</span><span class="p">:</span> <span class="s2">"SIGMA : output as absorptive part of optical conductivity σ = µ c/4π in [10E15/s ]"</span><span class="p">,</span>
                             <span class="p">}</span>
                         <span class="p">),</span>
                         <span class="n">is_expert</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                         <span class="n">is_optional</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                        <span class="n">info</span><span class="o">=</span><span class="s2">&quot;write extra output&quot;</span><span class="p">,</span>
+                        <span class="n">info</span><span class="o">=</span><span class="s2">"write extra output"</span><span class="p">,</span>
                     <span class="p">),</span>
                     <span class="n">V</span><span class="p">(</span>
-                        <span class="s2">&quot;FRAMETET&quot;</span><span class="p">,</span>
+                        <span class="s2">"FRAMETET"</span><span class="p">,</span>
                         <span class="nb">float</span><span class="p">,</span>
                         <span class="n">is_expert</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                         <span class="n">is_optional</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                        <span class="n">info</span><span class="o">=</span><span class="s2">&quot;Polar angle θ (FRAMETET) defining the orientation of the electric field vector of the incident light with respect to the material surface normal. Default is FRAMETET = 0, meaning the field lies along the surface normal.&quot;</span><span class="p">,</span>
+                        <span class="n">info</span><span class="o">=</span><span class="s2">"Polar angle θ (FRAMETET) defining the orientation of the electric field vector of the incident light with respect to the material surface normal. Default is FRAMETET = 0, meaning the field lies along the surface normal."</span><span class="p">,</span>
                     <span class="p">),</span>
                     <span class="n">V</span><span class="p">(</span>
-                        <span class="s2">&quot;FRAMEPHI&quot;</span><span class="p">,</span>
+                        <span class="s2">"FRAMEPHI"</span><span class="p">,</span>
                         <span class="nb">float</span><span class="p">,</span>
                         <span class="n">is_expert</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                         <span class="n">is_optional</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                        <span class="n">info</span><span class="o">=</span><span class="s2">&quot;Azimuthal angle φ (FRAMEPHI) defining the in-plane rotation of the electric field vector of the incident light relative to the surface reference axis. Default is FRAMEPHI = 0, corresponding to alignment with the x-axis of the surface frame.&quot;</span><span class="p">,</span>
+                        <span class="n">info</span><span class="o">=</span><span class="s2">"Azimuthal angle φ (FRAMEPHI) defining the in-plane rotation of the electric field vector of the incident light relative to the surface reference axis. Default is FRAMEPHI = 0, corresponding to alignment with the x-axis of the surface frame."</span><span class="p">,</span>
                     <span class="p">),</span>
                 <span class="p">]</span>
             <span class="p">),</span>
             <span class="n">SITES</span><span class="p">,</span>
         <span class="p">],</span>
-        <span class="n">executable</span><span class="o">=</span><span class="s2">&quot;kkrgen&quot;</span><span class="p">,</span>
+        <span class="n">executable</span><span class="o">=</span><span class="s2">"kkrgen"</span><span class="p">,</span>
         <span class="n">mpi</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="n">info</span><span class="o">=</span><span class="s2">&quot;Calculates X-ray absorption spectra&quot;</span><span class="p">,</span>
+        <span class="n">info</span><span class="o">=</span><span class="s2">"Calculates X-ray absorption spectra"</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="k">return</span> <span class="n">input_parameters</span></div>
 

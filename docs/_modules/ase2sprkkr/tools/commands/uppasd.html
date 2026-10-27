@@ -56,10 +56,10 @@
 <ul>
 <li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://sprkkr.org">SPR-KKR</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.sprkkr.org/wp-content/uploads/2026/05/kkr_manual.pdf">SPR-KKR manual</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
 <ul>
@@ -92,71 +92,71 @@
              
   <h1>Source code for ase2sprkkr.tools.commands.uppasd</h1><div class="highlight"><pre>
 <span></span><span class="ch">#!/usr/bin/env python3</span>
-<span class="sd">&quot;&quot;&quot;Convert SPRKKR output to UppASD input files and Jij plots.&quot;&quot;&quot;</span>
+<span class="sd">"""Convert SPRKKR output to UppASD input files and Jij plots."""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">...common.tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">main</span>  <span class="c1"># NOQA</span>
 
 <span class="k">if</span> <span class="ow">not</span> <span class="n">__package__</span><span class="p">:</span>
-    <span class="n">__package__</span> <span class="o">=</span> <span class="s2">&quot;ase2sprkkr.tools.commands&quot;</span>
+    <span class="n">__package__</span> <span class="o">=</span> <span class="s2">"ase2sprkkr.tools.commands"</span>
 <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span><span class="o">.</span><span class="n">parents</span><span class="p">[</span><span class="mi">3</span><span class="p">]))</span>
 
-<span class="n">help</span> <span class="o">=</span> <span class="s2">&quot;Convert SPRKKR output to UppASD input files and plots the computed Jij (experimental)&quot;</span>
-<span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;Given .pot, .jxc and .dmi file, plot the Jij values.&quot;</span>
+<span class="n">help</span> <span class="o">=</span> <span class="s2">"Convert SPRKKR output to UppASD input files and plots the computed Jij (experimental)"</span>
+<span class="n">description</span> <span class="o">=</span> <span class="s2">"Given .pot, .jxc and .dmi file, plot the Jij values."</span>
 
 
 <div class="viewcode-block" id="parser">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.tools.commands.uppasd.parser.html#ase2sprkkr.tools.commands.uppasd.parser">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">parser</span><span class="p">(</span><span class="n">parser</span><span class="p">):</span>
-    <span class="n">group</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s2">&quot;Input files&quot;</span><span class="p">)</span>
+    <span class="n">group</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s2">"Input files"</span><span class="p">)</span>
     <span class="n">group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s2">&quot;outfile&quot;</span><span class="p">,</span>
+        <span class="s2">"outfile"</span><span class="p">,</span>
         <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
         <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Output file name of a JXC computation (if it is given, other files can be found automatically)&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">"Output file name of a JXC computation (if it is given, other files can be found automatically)"</span><span class="p">,</span>
     <span class="p">)</span>
-    <span class="n">group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-p&quot;</span><span class="p">,</span> <span class="s2">&quot;--pot-file&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Input potential file (.pot or .pot_new)&quot;</span><span class="p">)</span>
+    <span class="n">group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"-p"</span><span class="p">,</span> <span class="s2">"--pot-file"</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Input potential file (.pot or .pot_new)"</span><span class="p">)</span>
     <span class="n">group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s2">&quot;-j&quot;</span><span class="p">,</span> <span class="s2">&quot;--jxc-file&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Input exchange interaction file (_XCPLTEN_Jij.dat)&quot;</span>
+        <span class="s2">"-j"</span><span class="p">,</span> <span class="s2">"--jxc-file"</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Input exchange interaction file (_XCPLTEN_Jij.dat)"</span>
     <span class="p">)</span>
-    <span class="n">group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-d&quot;</span><span class="p">,</span> <span class="s2">&quot;--dmi-file&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Input DMI file (_DMIVEC_Dij.dat)&quot;</span><span class="p">)</span>
+    <span class="n">group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"-d"</span><span class="p">,</span> <span class="s2">"--dmi-file"</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Input DMI file (_DMIVEC_Dij.dat)"</span><span class="p">)</span>
 
-    <span class="n">group</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s2">&quot;Geerating uppasd files&quot;</span><span class="p">)</span>
-    <span class="n">group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-o&quot;</span><span class="p">,</span> <span class="s2">&quot;--output-dir&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Output directory for files&quot;</span><span class="p">)</span>
-    <span class="n">group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-u&quot;</span><span class="p">,</span> <span class="s2">&quot;--inpsd&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Write inpsd input file stub&quot;</span><span class="p">)</span>
-    <span class="n">group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-n&quot;</span><span class="p">,</span> <span class="s2">&quot;--no-write&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Skip writing output files&quot;</span><span class="p">)</span>
+    <span class="n">group</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s2">"Geerating uppasd files"</span><span class="p">)</span>
+    <span class="n">group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"-o"</span><span class="p">,</span> <span class="s2">"--output-dir"</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">"."</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Output directory for files"</span><span class="p">)</span>
+    <span class="n">group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"-u"</span><span class="p">,</span> <span class="s2">"--inpsd"</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">"store_true"</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Write inpsd input file stub"</span><span class="p">)</span>
+    <span class="n">group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"-n"</span><span class="p">,</span> <span class="s2">"--no-write"</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">"store_true"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Skip writing output files"</span><span class="p">)</span>
 
-    <span class="n">group</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s2">&quot;Plotting&quot;</span><span class="p">)</span>
-    <span class="n">group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--plot&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Generate exchange interaction plots&quot;</span><span class="p">)</span>
-    <span class="n">group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--no-plot&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Skip generating plots&quot;</span><span class="p">)</span>
-    <span class="n">group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--separate-plots&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Generate one plot file per site type&quot;</span><span class="p">)</span>
+    <span class="n">group</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s2">"Plotting"</span><span class="p">)</span>
+    <span class="n">group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"--plot"</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">"store_true"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Generate exchange interaction plots"</span><span class="p">)</span>
+    <span class="n">group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"--no-plot"</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">"store_true"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Skip generating plots"</span><span class="p">)</span>
+    <span class="n">group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"--separate-plots"</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">"store_true"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Generate one plot file per site type"</span><span class="p">)</span>
     <span class="n">group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s2">&quot;--axis&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;all&quot;</span><span class="p">,</span> <span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="s2">&quot;z&quot;</span><span class="p">),</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;all&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;DMI component to plot: all, x, y, or z&quot;</span>
+        <span class="s2">"--axis"</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="p">(</span><span class="s2">"all"</span><span class="p">,</span> <span class="s2">"x"</span><span class="p">,</span> <span class="s2">"y"</span><span class="p">,</span> <span class="s2">"z"</span><span class="p">),</span> <span class="n">default</span><span class="o">=</span><span class="s2">"all"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"DMI component to plot: all, x, y, or z"</span>
     <span class="p">)</span>
     <span class="n">group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s2">&quot;-r&quot;</span><span class="p">,</span> <span class="s2">&quot;--exchange-radius&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">4.0</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Maximum distance for exchange interaction plots&quot;</span>
+        <span class="s2">"-r"</span><span class="p">,</span> <span class="s2">"--exchange-radius"</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">4.0</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Maximum distance for exchange interaction plots"</span>
     <span class="p">)</span>
     <span class="n">group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s2">&quot;-c&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;--cartesian&quot;</span><span class="p">,</span>
-        <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_const&quot;</span><span class="p">,</span>
-        <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;coordinates&quot;</span><span class="p">,</span>
-        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;lattice&quot;</span><span class="p">,</span>
-        <span class="n">const</span><span class="o">=</span><span class="s2">&quot;cartesian&quot;</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Use cartesian coordinates for interaction instead of lattice ones&quot;</span><span class="p">,</span>
+        <span class="s2">"-c"</span><span class="p">,</span>
+        <span class="s2">"--cartesian"</span><span class="p">,</span>
+        <span class="n">action</span><span class="o">=</span><span class="s2">"store_const"</span><span class="p">,</span>
+        <span class="n">dest</span><span class="o">=</span><span class="s2">"coordinates"</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">"lattice"</span><span class="p">,</span>
+        <span class="n">const</span><span class="o">=</span><span class="s2">"cartesian"</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">"Use cartesian coordinates for interaction instead of lattice ones"</span><span class="p">,</span>
     <span class="p">)</span>
-    <span class="n">group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-f&quot;</span><span class="p">,</span> <span class="s2">&quot;--font-size&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">14</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Font size for plots&quot;</span><span class="p">)</span>
+    <span class="n">group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"-f"</span><span class="p">,</span> <span class="s2">"--font-size"</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">14</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Font size for plots"</span><span class="p">)</span>
 
-    <span class="n">group</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s2">&quot;Filtering&quot;</span><span class="p">)</span>
+    <span class="n">group</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s2">"Filtering"</span><span class="p">)</span>
     <span class="n">group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s2">&quot;-e&quot;</span><span class="p">,</span> <span class="s2">&quot;--exclude&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s2">&quot;*&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Comma-separated site selectors to exclude&quot;</span>
+        <span class="s2">"-e"</span><span class="p">,</span> <span class="s2">"--exclude"</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s2">"*"</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Comma-separated site selectors to exclude"</span>
     <span class="p">)</span>
     <span class="n">group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s2">&quot;-i&quot;</span><span class="p">,</span> <span class="s2">&quot;--include&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s2">&quot;*&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Comma-separated site selectors to include&quot;</span>
+        <span class="s2">"-i"</span><span class="p">,</span> <span class="s2">"--include"</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s2">"*"</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Comma-separated site selectors to include"</span>
     <span class="p">)</span>
     <span class="n">group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s2">&quot;--include-vacuum&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Include vacuum sites in selector matching and exported outputs&quot;</span>
+        <span class="s2">"--include-vacuum"</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">"store_true"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Include vacuum sites in selector matching and exported outputs"</span>
     <span class="p">)</span></div>
 
 
@@ -172,21 +172,21 @@
     <span class="kn">from</span><span class="w"> </span><span class="nn">...potentials.potentials</span><span class="w"> </span><span class="kn">import</span> <span class="n">Potential</span>  <span class="c1"># NOQA</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_load_jxc_output</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">potential</span><span class="p">):</span>
-        <span class="n">output</span> <span class="o">=</span> <span class="n">OutputFile</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">try_only</span><span class="o">=</span><span class="s2">&quot;jxc&quot;</span><span class="p">,</span> <span class="n">unknown</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="n">OutputFile</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">try_only</span><span class="o">=</span><span class="s2">"jxc"</span><span class="p">,</span> <span class="n">unknown</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         <span class="n">output</span><span class="o">.</span><span class="n">potential</span> <span class="o">=</span> <span class="n">potential</span>
         <span class="k">return</span> <span class="n">output</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_plot_exchange_interactions</span><span class="p">(</span>
-        <span class="n">output</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">,</span> <span class="n">selector</span><span class="p">,</span> <span class="n">exchange_radius</span><span class="p">,</span> <span class="n">font_size</span><span class="p">,</span> <span class="n">separate_plots</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="s2">&quot;all&quot;</span>
+        <span class="n">output</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">,</span> <span class="n">selector</span><span class="p">,</span> <span class="n">exchange_radius</span><span class="p">,</span> <span class="n">font_size</span><span class="p">,</span> <span class="n">separate_plots</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="s2">"all"</span>
     <span class="p">):</span>
         <span class="k">if</span> <span class="n">output</span><span class="o">.</span><span class="n">is_Jij</span><span class="p">():</span>
-            <span class="n">plot_name</span> <span class="o">=</span> <span class="s2">&quot;Jij&quot;</span>
-        <span class="k">elif</span> <span class="n">axis</span> <span class="o">==</span> <span class="s2">&quot;all&quot;</span><span class="p">:</span>
-            <span class="n">plot_name</span> <span class="o">=</span> <span class="s2">&quot;Dij&quot;</span>
+            <span class="n">plot_name</span> <span class="o">=</span> <span class="s2">"Jij"</span>
+        <span class="k">elif</span> <span class="n">axis</span> <span class="o">==</span> <span class="s2">"all"</span><span class="p">:</span>
+            <span class="n">plot_name</span> <span class="o">=</span> <span class="s2">"Dij"</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">plot_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Dij_</span><span class="si">{</span><span class="n">axis</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="n">plot_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"Dij_</span><span class="si">{</span><span class="n">axis</span><span class="si">}</span><span class="s2">"</span>
 
-        <span class="n">filename</span> <span class="o">=</span> <span class="n">output_dir</span> <span class="o">/</span> <span class="p">(</span><span class="s2">&quot;</span><span class="si">{name}</span><span class="s2">.pdf&quot;</span> <span class="k">if</span> <span class="n">separate_plots</span> <span class="k">else</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">plot_name</span><span class="si">}</span><span class="s2">.pdf&quot;</span><span class="p">)</span>
+        <span class="n">filename</span> <span class="o">=</span> <span class="n">output_dir</span> <span class="o">/</span> <span class="p">(</span><span class="s2">"</span><span class="si">{name}</span><span class="s2">.pdf"</span> <span class="k">if</span> <span class="n">separate_plots</span> <span class="k">else</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">plot_name</span><span class="si">}</span><span class="s2">.pdf"</span><span class="p">)</span>
         <span class="n">out</span> <span class="o">=</span> <span class="n">output</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
             <span class="n">layout</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
             <span class="n">filename</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span>
@@ -198,9 +198,9 @@
             <span class="n">separate_plots</span><span class="o">=</span><span class="n">separate_plots</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="k">if</span> <span class="n">out</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Created plot files in: </span><span class="si">{</span><span class="n">output_dir</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Created plot files in: </span><span class="si">{</span><span class="n">output_dir</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;No interaction data to plot&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">"No interaction data to plot"</span><span class="p">)</span>
         <span class="k">return</span> <span class="kc">True</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">find_files_by_pattern</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
@@ -208,11 +208,11 @@
             <span class="k">if</span> <span class="n">result</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">result</span><span class="o">.</span><span class="n">potential_filename</span><span class="p">:</span>
                 <span class="n">pot_files</span> <span class="o">=</span> <span class="p">[</span><span class="n">result</span><span class="o">.</span><span class="n">potential_filename</span><span class="p">]</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">pot_files</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;*.pot_new&quot;</span><span class="p">)</span>
+                <span class="n">pot_files</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">"*.pot_new"</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">pot_files</span><span class="p">:</span>
                 <span class="n">args</span><span class="o">.</span><span class="n">pot_file</span> <span class="o">=</span> <span class="n">pot_files</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">pot_files</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;*.pot&quot;</span><span class="p">)</span>
+                <span class="n">pot_files</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">"*.pot"</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">pot_files</span><span class="p">:</span>
                     <span class="n">args</span><span class="o">.</span><span class="n">pot_file</span> <span class="o">=</span> <span class="n">pot_files</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
@@ -223,7 +223,7 @@
                 <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
                     <span class="n">jxc_files</span> <span class="o">=</span> <span class="kc">None</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">jxc_files</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;*_XCPLTEN_Jij.dat&quot;</span><span class="p">)</span>
+                <span class="n">jxc_files</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">"*_XCPLTEN_Jij.dat"</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">jxc_files</span><span class="p">:</span>
                 <span class="n">args</span><span class="o">.</span><span class="n">jxc_file</span> <span class="o">=</span> <span class="n">jxc_files</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
@@ -234,7 +234,7 @@
                 <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
                     <span class="n">dmi_files</span> <span class="o">=</span> <span class="kc">None</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">dmi_files</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;*_DMIVEC_Dij.dat&quot;</span><span class="p">)</span>
+                <span class="n">dmi_files</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">"*_DMIVEC_Dij.dat"</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">dmi_files</span><span class="p">:</span>
                 <span class="n">args</span><span class="o">.</span><span class="n">dmi_file</span> <span class="o">=</span> <span class="n">dmi_files</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
@@ -244,8 +244,8 @@
         <span class="kn">from</span><span class="w"> </span><span class="nn">ase2sprkkr</span><span class="w"> </span><span class="kn">import</span> <span class="n">TaskResult</span>
 
         <span class="n">result</span> <span class="o">=</span> <span class="n">TaskResult</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">outfile</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">!=</span> <span class="s2">&quot;JxcResult&quot;</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Given output file is not an output of a JXC calculation&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">!=</span> <span class="s2">"JxcResult"</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Given output file is not an output of a JXC calculation"</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">result</span> <span class="o">=</span> <span class="kc">None</span>
 
@@ -254,7 +254,7 @@
     <span class="n">output_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">pot_file</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error: No potential file found!&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">"Error: No potential file found!"</span><span class="p">)</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
     <span class="k">try</span><span class="p">:</span>
@@ -265,12 +265,12 @@
             <span class="n">jxc_output</span> <span class="o">=</span> <span class="n">_load_jxc_output</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">jxc_file</span><span class="p">,</span> <span class="n">potential</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">jxc_output</span> <span class="o">=</span> <span class="kc">None</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;No JXC file found - skipping exchange processing&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">"No JXC file found - skipping exchange processing"</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">dmi_file</span><span class="p">:</span>
             <span class="n">dmi_output</span> <span class="o">=</span> <span class="n">_load_jxc_output</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">dmi_file</span><span class="p">,</span> <span class="n">potential</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">args</span><span class="o">.</span><span class="n">jxc_file</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;No DMI file found - skipping DMI export&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">"No DMI file found - skipping DMI export"</span><span class="p">)</span>
             <span class="n">dmi_output</span> <span class="o">=</span> <span class="kc">None</span>
 
         <span class="n">selector_obj</span> <span class="o">=</span> <span class="n">jxc_output</span> <span class="ow">or</span> <span class="n">dmi_output</span> <span class="ow">or</span> <span class="n">JXCOutputFile</span><span class="o">.</span><span class="n">from_atoms</span><span class="p">(</span><span class="n">atoms</span><span class="p">)</span>
@@ -278,14 +278,14 @@
             <span class="n">iq</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">include</span><span class="p">,</span> <span class="n">it</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">include</span><span class="p">,</span> <span class="n">exclude_it</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">exclude</span><span class="p">,</span> <span class="n">exclude_vc</span><span class="o">=</span><span class="ow">not</span> <span class="n">args</span><span class="o">.</span><span class="n">include_vacuum</span>
         <span class="p">)</span>
         <span class="n">coordinates</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">Coordinates</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">coordinates</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Potential: </span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">pot_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Number of atoms: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">atoms</span><span class="o">.</span><span class="n">sites</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Potential: </span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">pot_file</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Number of atoms: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">atoms</span><span class="o">.</span><span class="n">sites</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">selector</span><span class="o">.</span><span class="n">it</span> <span class="ow">is</span> <span class="ow">not</span> <span class="o">...</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Selected IQs: </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="n">i</span><span class="p">:</span><span class="w"> </span><span class="n">selector_obj</span><span class="o">.</span><span class="n">it_labels</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="w"> </span><span class="n">selector</span><span class="o">.</span><span class="n">it</span><span class="p">))</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Selected IQs: </span><span class="si">{</span><span class="s1">', '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="n">i</span><span class="p">:</span><span class="w"> </span><span class="n">selector_obj</span><span class="o">.</span><span class="n">it_labels</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="w"> </span><span class="n">selector</span><span class="o">.</span><span class="n">it</span><span class="p">))</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">args</span><span class="o">.</span><span class="n">no_write</span> <span class="ow">and</span> <span class="n">dmi_output</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">dmi_output</span><span class="o">.</span><span class="n">write_uppasd_file</span><span class="p">(</span>
-                <span class="n">output_dir</span> <span class="o">/</span> <span class="s2">&quot;dmfile.dat&quot;</span><span class="p">,</span>
+                <span class="n">output_dir</span> <span class="o">/</span> <span class="s2">"dmfile.dat"</span><span class="p">,</span>
                 <span class="n">selector</span><span class="o">=</span><span class="n">selector</span><span class="p">,</span>
                 <span class="n">exchange_radius</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">exchange_radius</span><span class="p">,</span>
                 <span class="n">coordinates</span><span class="o">=</span><span class="n">coordinates</span><span class="p">,</span>
@@ -293,16 +293,16 @@
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">args</span><span class="o">.</span><span class="n">no_write</span> <span class="ow">and</span> <span class="n">jxc_output</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">jxc_output</span><span class="o">.</span><span class="n">write_uppasd_file</span><span class="p">(</span>
-                <span class="n">output_dir</span> <span class="o">/</span> <span class="s2">&quot;jfile.dat&quot;</span><span class="p">,</span>
+                <span class="n">output_dir</span> <span class="o">/</span> <span class="s2">"jfile.dat"</span><span class="p">,</span>
                 <span class="n">selector</span><span class="o">=</span><span class="n">selector</span><span class="p">,</span>
                 <span class="n">exchange_radius</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">exchange_radius</span><span class="p">,</span>
                 <span class="n">coordinates</span><span class="o">=</span><span class="n">coordinates</span><span class="p">,</span>
             <span class="p">)</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">args</span><span class="o">.</span><span class="n">no_write</span><span class="p">:</span>
-            <span class="n">write_pos_file</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">output_dir</span> <span class="o">/</span> <span class="s2">&quot;posfile.dat&quot;</span><span class="p">,</span> <span class="n">selector</span><span class="o">=</span><span class="n">selector</span><span class="p">)</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">write_mom_file</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">output_dir</span> <span class="o">/</span> <span class="s2">&quot;momfile.dat&quot;</span><span class="p">,</span> <span class="n">selector</span><span class="o">=</span><span class="n">selector</span><span class="p">):</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Warning: no selected site type has moments. Skipping momfile.dat.&quot;</span><span class="p">)</span>
+            <span class="n">write_pos_file</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">output_dir</span> <span class="o">/</span> <span class="s2">"posfile.dat"</span><span class="p">,</span> <span class="n">selector</span><span class="o">=</span><span class="n">selector</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">write_mom_file</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">output_dir</span> <span class="o">/</span> <span class="s2">"momfile.dat"</span><span class="p">,</span> <span class="n">selector</span><span class="o">=</span><span class="n">selector</span><span class="p">):</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">"Warning: no selected site type has moments. Skipping momfile.dat."</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">inpsd</span><span class="p">:</span>
                 <span class="n">write_inpsd_file</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">directory</span><span class="o">=</span><span class="n">output_dir</span><span class="p">)</span>
 
@@ -328,17 +328,17 @@
             <span class="p">)</span>
 
     <span class="k">except</span> <span class="ne">FileNotFoundError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error: </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Error: </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">global_args</span><span class="p">[</span><span class="s2">&quot;debug&quot;</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="n">global_args</span><span class="p">[</span><span class="s2">"debug"</span><span class="p">]:</span>
             <span class="k">raise</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unexpected error: </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Unexpected error: </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span></div>
 
 
 
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
     <span class="n">main</span><span class="p">(</span><span class="nb">globals</span><span class="p">())</span>
 </pre></div>
 

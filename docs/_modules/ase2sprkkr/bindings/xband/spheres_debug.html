@@ -56,10 +56,10 @@
 <ul>
 <li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://sprkkr.org">SPR-KKR</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.sprkkr.org/wp-content/uploads/2026/05/kkr_manual.pdf">SPR-KKR manual</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
 <ul>
@@ -133,7 +133,7 @@
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.bindings.xband.spheres_debug._fmt_f64.html#ase2sprkkr.bindings.xband.spheres_debug._fmt_f64">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">_fmt_f64</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="c1"># Force exponent form that gfortran accepts and is stable for copy-paste.</span>
-    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="si">:</span><span class="s2">.17e</span><span class="si">}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;e&quot;</span><span class="p">,</span> <span class="s2">&quot;d&quot;</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="si">:</span><span class="s2">.17e</span><span class="si">}</span><span class="s2">"</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">"e"</span><span class="p">,</span> <span class="s2">"d"</span><span class="p">)</span></div>
 
 
 
@@ -147,22 +147,22 @@
 <div class="viewcode-block" id="_pad4">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.bindings.xband.spheres_debug._pad4.html#ase2sprkkr.bindings.xband.spheres_debug._pad4">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">_pad4</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-    <span class="n">s</span> <span class="o">=</span> <span class="p">(</span><span class="n">s</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span><span class="p">)[:</span><span class="mi">4</span><span class="p">]</span>
-    <span class="k">return</span> <span class="p">(</span><span class="n">s</span> <span class="o">+</span> <span class="s2">&quot;    &quot;</span><span class="p">)[:</span><span class="mi">4</span><span class="p">]</span></div>
+    <span class="n">s</span> <span class="o">=</span> <span class="p">(</span><span class="n">s</span> <span class="ow">or</span> <span class="s2">""</span><span class="p">)[:</span><span class="mi">4</span><span class="p">]</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">s</span> <span class="o">+</span> <span class="s2">"    "</span><span class="p">)[:</span><span class="mi">4</span><span class="p">]</span></div>
 
 
 
 <div class="viewcode-block" id="_as_list_literal_f64">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.bindings.xband.spheres_debug._as_list_literal_f64.html#ase2sprkkr.bindings.xband.spheres_debug._as_list_literal_f64">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">_as_list_literal_f64</span><span class="p">(</span><span class="n">values</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-    <span class="k">return</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">_fmt_f64</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">values</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="s2">", "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">_fmt_f64</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">values</span><span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="_as_list_literal_i32">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.bindings.xband.spheres_debug._as_list_literal_i32.html#ase2sprkkr.bindings.xband.spheres_debug._as_list_literal_i32">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">_as_list_literal_i32</span><span class="p">(</span><span class="n">values</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-    <span class="k">return</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">_fmt_i32</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">values</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="s2">", "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">_fmt_i32</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">values</span><span class="p">)</span></div>
 
 
 
@@ -202,9 +202,9 @@
     <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="n">ui</span><span class="p">:</span>
         <span class="n">site</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">sites</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
         <span class="k">for</span> <span class="n">typ</span><span class="p">,</span> <span class="n">occ</span> <span class="ow">in</span> <span class="n">site</span><span class="o">.</span><span class="n">occupation</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-            <span class="n">symbols4</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_pad4</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">typ</span><span class="p">,</span> <span class="s2">&quot;symbol&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">typ</span><span class="p">))))</span>
+            <span class="n">symbols4</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_pad4</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">typ</span><span class="p">,</span> <span class="s2">"symbol"</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">typ</span><span class="p">))))</span>
             <span class="n">occupations</span><span class="p">[</span><span class="n">type_no</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">occ</span><span class="p">)</span>
-            <span class="n">atomic_numbers</span><span class="p">[</span><span class="n">type_no</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">typ</span><span class="p">,</span> <span class="s2">&quot;atomic_number&quot;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">))</span>
+            <span class="n">atomic_numbers</span><span class="p">[</span><span class="n">type_no</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">typ</span><span class="p">,</span> <span class="s2">"atomic_number"</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">))</span>
             <span class="n">type_eq_class</span><span class="p">[</span><span class="n">type_no</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">index</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>  <span class="c1"># 1-based, matches spheres.pyx</span>
             <span class="n">type_no</span> <span class="o">+=</span> <span class="mi">1</span>
 
@@ -213,7 +213,7 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="n">mesh3</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">mesh3</span><span class="o">.</span><span class="n">shape</span> <span class="o">!=</span> <span class="p">(</span><span class="mi">3</span><span class="p">,):</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;mesh must be int or length-3 sequence&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"mesh must be int or length-3 sequence"</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">verbose</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
         <span class="n">verbose_i</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">verbose</span> <span class="k">else</span> <span class="mi">0</span>
@@ -272,9 +272,9 @@
     <span class="n">mesh</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="mi">24</span><span class="p">,</span>
     <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">max_spheres</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">256</span><span class="p">,</span>
-    <span class="n">program_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;repro_find_empty_spheres&quot;</span><span class="p">,</span>
+    <span class="n">program_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"repro_find_empty_spheres"</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a standalone Fortran program that calls `FIND_EMPTY_SPHERES`.</span>
+<span class="w">    </span><span class="sd">"""Return a standalone Fortran program that calls `FIND_EMPTY_SPHERES`.</span>
 
 <span class="sd">    The emitted program mirrors `spheres.pyx` data preparation:</span>
 <span class="sd">    - radii in Bohr</span>
@@ -283,7 +283,7 @@
 <span class="sd">    - symmetry rotations/translations layout as seen by Fortran</span>
 
 <span class="sd">    It is meant for debugging crashes / wrong results by reproducing the exact call.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="n">inp</span> <span class="o">=</span> <span class="n">_collect_inputs</span><span class="p">(</span>
         <span class="n">atoms</span><span class="p">,</span> <span class="n">min_radius</span><span class="o">=</span><span class="n">min_radius</span><span class="p">,</span> <span class="n">max_radius</span><span class="o">=</span><span class="n">max_radius</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span> <span class="n">max_spheres</span><span class="o">=</span><span class="n">max_spheres</span>
@@ -295,95 +295,95 @@
     <span class="c1"># Fortran expects NTMAX=200 in radii.f90; keep that as a conservative max.</span>
     <span class="n">ntmax</span> <span class="o">=</span> <span class="mi">200</span>
     <span class="k">if</span> <span class="n">inp</span><span class="o">.</span><span class="n">n_types</span> <span class="o">&gt;</span> <span class="n">ntmax</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;n_types=</span><span class="si">{</span><span class="n">inp</span><span class="o">.</span><span class="n">n_types</span><span class="si">}</span><span class="s2"> exceeds NTMAX=</span><span class="si">{</span><span class="n">ntmax</span><span class="si">}</span><span class="s2"> used by FIND_EMPTY_SPHERES&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"n_types=</span><span class="si">{</span><span class="n">inp</span><span class="o">.</span><span class="n">n_types</span><span class="si">}</span><span class="s2"> exceeds NTMAX=</span><span class="si">{</span><span class="n">ntmax</span><span class="si">}</span><span class="s2"> used by FIND_EMPTY_SPHERES"</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">n</span> <span class="o">&gt;</span> <span class="n">ntmax</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;n_atoms=</span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s2"> exceeds NTMAX=</span><span class="si">{</span><span class="n">ntmax</span><span class="si">}</span><span class="s2"> used by FIND_EMPTY_SPHERES&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"n_atoms=</span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s2"> exceeds NTMAX=</span><span class="si">{</span><span class="n">ntmax</span><span class="si">}</span><span class="s2"> used by FIND_EMPTY_SPHERES"</span><span class="p">)</span>
 
     <span class="n">lines</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">a</span> <span class="o">=</span> <span class="n">lines</span><span class="o">.</span><span class="n">append</span>
 
-    <span class="n">a</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;program </span><span class="si">{</span><span class="n">program_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="n">a</span><span class="p">(</span><span class="s2">&quot;  implicit none&quot;</span><span class="p">)</span>
-    <span class="n">a</span><span class="p">(</span><span class="s2">&quot;  integer, parameter :: NTMAX=200&quot;</span><span class="p">)</span>
-    <span class="n">a</span><span class="p">(</span><span class="s2">&quot;  integer, parameter :: MAXDIM=1000000&quot;</span><span class="p">)</span>
-    <span class="n">a</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
-    <span class="n">a</span><span class="p">(</span><span class="s2">&quot;  integer :: ret&quot;</span><span class="p">)</span>
-    <span class="n">a</span><span class="p">(</span><span class="s2">&quot;  integer :: n_out&quot;</span><span class="p">)</span>
-    <span class="n">a</span><span class="p">(</span><span class="s2">&quot;  integer :: nq&quot;</span><span class="p">)</span>
-    <span class="n">a</span><span class="p">(</span><span class="s2">&quot;  integer :: nm&quot;</span><span class="p">)</span>
-    <span class="n">a</span><span class="p">(</span><span class="s2">&quot;  integer :: nsort&quot;</span><span class="p">)</span>
-    <span class="n">a</span><span class="p">(</span><span class="s2">&quot;  integer :: verbose&quot;</span><span class="p">)</span>
-    <span class="n">a</span><span class="p">(</span><span class="s2">&quot;  integer :: n_symmetry_ops&quot;</span><span class="p">)</span>
-    <span class="n">a</span><span class="p">(</span><span class="s2">&quot;  real(8) :: rmines, rmaxes, alat&quot;</span><span class="p">)</span>
-    <span class="n">a</span><span class="p">(</span><span class="s2">&quot;  integer :: mesh(3)&quot;</span><span class="p">)</span>
-    <span class="n">a</span><span class="p">(</span><span class="s2">&quot;  real(8) :: cell(3,3)&quot;</span><span class="p">)</span>
-    <span class="n">a</span><span class="p">(</span><span class="s2">&quot;  real(8) :: centres(3, MAXDIM)&quot;</span><span class="p">)</span>
-    <span class="n">a</span><span class="p">(</span><span class="s2">&quot;  real(8) :: radii(MAXDIM)&quot;</span><span class="p">)</span>
-    <span class="n">a</span><span class="p">(</span><span class="s2">&quot;  real(8) :: bas(3, NTMAX)&quot;</span><span class="p">)</span>
-    <span class="n">a</span><span class="p">(</span><span class="s2">&quot;  integer :: imq(NTMAX)&quot;</span><span class="p">)</span>
-    <span class="n">a</span><span class="p">(</span><span class="s2">&quot;  integer :: imt(NTMAX)&quot;</span><span class="p">)</span>
-    <span class="n">a</span><span class="p">(</span><span class="s2">&quot;  character(len=4) :: txtt(NTMAX)&quot;</span><span class="p">)</span>
-    <span class="n">a</span><span class="p">(</span><span class="s2">&quot;  real(8) :: z(NTMAX)&quot;</span><span class="p">)</span>
-    <span class="n">a</span><span class="p">(</span><span class="s2">&quot;  real(8) :: conc(NTMAX)&quot;</span><span class="p">)</span>
-    <span class="n">a</span><span class="p">(</span><span class="s2">&quot;  real(8) :: rotations(3,3,96)&quot;</span><span class="p">)</span>
-    <span class="n">a</span><span class="p">(</span><span class="s2">&quot;  real(8) :: translations(3,96)&quot;</span><span class="p">)</span>
-    <span class="n">a</span><span class="p">(</span><span class="s2">&quot;  integer :: i&quot;</span><span class="p">)</span>
-    <span class="n">a</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">(</span><span class="sa">f</span><span class="s2">"program </span><span class="si">{</span><span class="n">program_name</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">(</span><span class="s2">"  implicit none"</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">(</span><span class="s2">"  integer, parameter :: NTMAX=200"</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">(</span><span class="s2">"  integer, parameter :: MAXDIM=1000000"</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">(</span><span class="s2">""</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">(</span><span class="s2">"  integer :: ret"</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">(</span><span class="s2">"  integer :: n_out"</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">(</span><span class="s2">"  integer :: nq"</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">(</span><span class="s2">"  integer :: nm"</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">(</span><span class="s2">"  integer :: nsort"</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">(</span><span class="s2">"  integer :: verbose"</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">(</span><span class="s2">"  integer :: n_symmetry_ops"</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">(</span><span class="s2">"  real(8) :: rmines, rmaxes, alat"</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">(</span><span class="s2">"  integer :: mesh(3)"</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">(</span><span class="s2">"  real(8) :: cell(3,3)"</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">(</span><span class="s2">"  real(8) :: centres(3, MAXDIM)"</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">(</span><span class="s2">"  real(8) :: radii(MAXDIM)"</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">(</span><span class="s2">"  real(8) :: bas(3, NTMAX)"</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">(</span><span class="s2">"  integer :: imq(NTMAX)"</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">(</span><span class="s2">"  integer :: imt(NTMAX)"</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">(</span><span class="s2">"  character(len=4) :: txtt(NTMAX)"</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">(</span><span class="s2">"  real(8) :: z(NTMAX)"</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">(</span><span class="s2">"  real(8) :: conc(NTMAX)"</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">(</span><span class="s2">"  real(8) :: rotations(3,3,96)"</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">(</span><span class="s2">"  real(8) :: translations(3,96)"</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">(</span><span class="s2">"  integer :: i"</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">(</span><span class="s2">""</span><span class="p">)</span>
 
-    <span class="n">a</span><span class="p">(</span><span class="s2">&quot;  integer, external :: find_empty_spheres&quot;</span><span class="p">)</span>
-    <span class="n">a</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">(</span><span class="s2">"  integer, external :: find_empty_spheres"</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">(</span><span class="s2">""</span><span class="p">)</span>
 
-    <span class="n">a</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  n_out = </span><span class="si">{</span><span class="n">n_out</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="n">a</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  nq = </span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="n">a</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  nm = </span><span class="si">{</span><span class="n">inp</span><span class="o">.</span><span class="n">n_classes</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="n">a</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  nsort = </span><span class="si">{</span><span class="n">inp</span><span class="o">.</span><span class="n">n_types</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="n">a</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  verbose = </span><span class="si">{</span><span class="n">inp</span><span class="o">.</span><span class="n">verbose</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="n">a</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  rmines = </span><span class="si">{</span><span class="n">_fmt_f64</span><span class="p">(</span><span class="n">inp</span><span class="o">.</span><span class="n">min_radius_bohr</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="n">a</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  rmaxes = </span><span class="si">{</span><span class="n">_fmt_f64</span><span class="p">(</span><span class="n">inp</span><span class="o">.</span><span class="n">max_radius_bohr</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="n">a</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  alat = </span><span class="si">{</span><span class="n">_fmt_f64</span><span class="p">(</span><span class="n">inp</span><span class="o">.</span><span class="n">alat_bohr</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="n">a</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  mesh = (/ </span><span class="si">{</span><span class="n">_as_list_literal_i32</span><span class="p">(</span><span class="n">inp</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span><span class="si">}</span><span class="s2"> /)&quot;</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  n_out = </span><span class="si">{</span><span class="n">n_out</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  nq = </span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  nm = </span><span class="si">{</span><span class="n">inp</span><span class="o">.</span><span class="n">n_classes</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  nsort = </span><span class="si">{</span><span class="n">inp</span><span class="o">.</span><span class="n">n_types</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  verbose = </span><span class="si">{</span><span class="n">inp</span><span class="o">.</span><span class="n">verbose</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  rmines = </span><span class="si">{</span><span class="n">_fmt_f64</span><span class="p">(</span><span class="n">inp</span><span class="o">.</span><span class="n">min_radius_bohr</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  rmaxes = </span><span class="si">{</span><span class="n">_fmt_f64</span><span class="p">(</span><span class="n">inp</span><span class="o">.</span><span class="n">max_radius_bohr</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  alat = </span><span class="si">{</span><span class="n">_fmt_f64</span><span class="p">(</span><span class="n">inp</span><span class="o">.</span><span class="n">alat_bohr</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  mesh = (/ </span><span class="si">{</span><span class="n">_as_list_literal_i32</span><span class="p">(</span><span class="n">inp</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span><span class="si">}</span><span class="s2"> /)"</span><span class="p">)</span>
 
-    <span class="n">a</span><span class="p">(</span><span class="s2">&quot;  cell(:,:) = 0d0&quot;</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">(</span><span class="s2">"  cell(:,:) = 0d0"</span><span class="p">)</span>
     <span class="c1"># Cell rows -&gt; Fortran columns (matches spheres.pyx + Fortran column-major view)</span>
     <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
         <span class="n">row</span> <span class="o">=</span> <span class="n">inp</span><span class="o">.</span><span class="n">cell_scaled</span><span class="p">[</span><span class="n">col</span><span class="p">,</span> <span class="p">:]</span>
         <span class="n">a</span><span class="p">(</span>
-            <span class="s2">&quot;  cell(1:3,</span><span class="si">{j}</span><span class="s2">) = (/ </span><span class="si">{x0}</span><span class="s2">, </span><span class="si">{x1}</span><span class="s2">, </span><span class="si">{x2}</span><span class="s2"> /)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="s2">"  cell(1:3,</span><span class="si">{j}</span><span class="s2">) = (/ </span><span class="si">{x0}</span><span class="s2">, </span><span class="si">{x1}</span><span class="s2">, </span><span class="si">{x2}</span><span class="s2"> /)"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                 <span class="n">j</span><span class="o">=</span><span class="n">col</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">x0</span><span class="o">=</span><span class="n">_fmt_f64</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">x1</span><span class="o">=</span><span class="n">_fmt_f64</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="n">x2</span><span class="o">=</span><span class="n">_fmt_f64</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
             <span class="p">)</span>
         <span class="p">)</span>
 
-    <span class="n">a</span><span class="p">(</span><span class="s2">&quot;  bas(:,:) = 0d0&quot;</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">(</span><span class="s2">"  bas(:,:) = 0d0"</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
         <span class="n">p</span> <span class="o">=</span> <span class="n">inp</span><span class="o">.</span><span class="n">positions_scaled</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:]</span>
         <span class="n">a</span><span class="p">(</span>
-            <span class="s2">&quot;  bas(1:3,</span><span class="si">{j}</span><span class="s2">) = (/ </span><span class="si">{x0}</span><span class="s2">, </span><span class="si">{x1}</span><span class="s2">, </span><span class="si">{x2}</span><span class="s2"> /)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="s2">"  bas(1:3,</span><span class="si">{j}</span><span class="s2">) = (/ </span><span class="si">{x0}</span><span class="s2">, </span><span class="si">{x1}</span><span class="s2">, </span><span class="si">{x2}</span><span class="s2"> /)"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                 <span class="n">j</span><span class="o">=</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">x0</span><span class="o">=</span><span class="n">_fmt_f64</span><span class="p">(</span><span class="n">p</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">x1</span><span class="o">=</span><span class="n">_fmt_f64</span><span class="p">(</span><span class="n">p</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="n">x2</span><span class="o">=</span><span class="n">_fmt_f64</span><span class="p">(</span><span class="n">p</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
             <span class="p">)</span>
         <span class="p">)</span>
 
-    <span class="n">a</span><span class="p">(</span><span class="s2">&quot;  imq(:) = 0&quot;</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">(</span><span class="s2">"  imq(:) = 0"</span><span class="p">)</span>
     <span class="c1"># mapping is 1-based already</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
-        <span class="n">a</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  imq(</span><span class="si">{</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">) = </span><span class="si">{</span><span class="n">_fmt_i32</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">inp</span><span class="o">.</span><span class="n">mapping</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">a</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  imq(</span><span class="si">{</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">) = </span><span class="si">{</span><span class="n">_fmt_i32</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">inp</span><span class="o">.</span><span class="n">mapping</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
-    <span class="n">a</span><span class="p">(</span><span class="s2">&quot;  txtt(:) = &#39;    &#39;&quot;</span><span class="p">)</span>
-    <span class="n">a</span><span class="p">(</span><span class="s2">&quot;  z(:) = 0d0&quot;</span><span class="p">)</span>
-    <span class="n">a</span><span class="p">(</span><span class="s2">&quot;  conc(:) = 0d0&quot;</span><span class="p">)</span>
-    <span class="n">a</span><span class="p">(</span><span class="s2">&quot;  imt(:) = 0&quot;</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">(</span><span class="s2">"  txtt(:) = '    '"</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">(</span><span class="s2">"  z(:) = 0d0"</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">(</span><span class="s2">"  conc(:) = 0d0"</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">(</span><span class="s2">"  imt(:) = 0"</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">inp</span><span class="o">.</span><span class="n">n_types</span><span class="p">):</span>
-        <span class="n">a</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  txtt(</span><span class="si">{</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">) = &#39;</span><span class="si">{</span><span class="n">inp</span><span class="o">.</span><span class="n">symbols4</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
-        <span class="n">a</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  z(</span><span class="si">{</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">) = </span><span class="si">{</span><span class="n">_fmt_f64</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">inp</span><span class="o">.</span><span class="n">atomic_numbers</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="n">a</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  conc(</span><span class="si">{</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">) = </span><span class="si">{</span><span class="n">_fmt_f64</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">inp</span><span class="o">.</span><span class="n">occupations</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="n">a</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  imt(</span><span class="si">{</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">) = </span><span class="si">{</span><span class="n">_fmt_i32</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">inp</span><span class="o">.</span><span class="n">type_eq_class</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">a</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  txtt(</span><span class="si">{</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">) = '</span><span class="si">{</span><span class="n">inp</span><span class="o">.</span><span class="n">symbols4</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">}</span><span class="s2">'"</span><span class="p">)</span>
+        <span class="n">a</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  z(</span><span class="si">{</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">) = </span><span class="si">{</span><span class="n">_fmt_f64</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">inp</span><span class="o">.</span><span class="n">atomic_numbers</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="n">a</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  conc(</span><span class="si">{</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">) = </span><span class="si">{</span><span class="n">_fmt_f64</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">inp</span><span class="o">.</span><span class="n">occupations</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="n">a</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  imt(</span><span class="si">{</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">) = </span><span class="si">{</span><span class="n">_fmt_i32</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">inp</span><span class="o">.</span><span class="n">type_eq_class</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
-    <span class="n">a</span><span class="p">(</span><span class="s2">&quot;  rotations(:,:,:) = 0d0&quot;</span><span class="p">)</span>
-    <span class="n">a</span><span class="p">(</span><span class="s2">&quot;  translations(:,:) = 0d0&quot;</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">(</span><span class="s2">"  rotations(:,:,:) = 0d0"</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">(</span><span class="s2">"  translations(:,:) = 0d0"</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">inp</span><span class="o">.</span><span class="n">n_symmetry_ops</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">inp</span><span class="o">.</span><span class="n">rotations</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">inp</span><span class="o">.</span><span class="n">translations</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">inp</span><span class="o">.</span><span class="n">n_symmetry_ops</span> <span class="o">&gt;</span> <span class="mi">96</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;n_symmetry_ops=</span><span class="si">{</span><span class="n">inp</span><span class="o">.</span><span class="n">n_symmetry_ops</span><span class="si">}</span><span class="s2"> exceeds 96 hardcoded in emitted program&quot;</span><span class="p">)</span>
-        <span class="n">a</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  n_symmetry_ops = </span><span class="si">{</span><span class="n">inp</span><span class="o">.</span><span class="n">n_symmetry_ops</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"n_symmetry_ops=</span><span class="si">{</span><span class="n">inp</span><span class="o">.</span><span class="n">n_symmetry_ops</span><span class="si">}</span><span class="s2"> exceeds 96 hardcoded in emitted program"</span><span class="p">)</span>
+        <span class="n">a</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  n_symmetry_ops = </span><span class="si">{</span><span class="n">inp</span><span class="o">.</span><span class="n">n_symmetry_ops</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">op</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">inp</span><span class="o">.</span><span class="n">n_symmetry_ops</span><span class="p">):</span>
             <span class="n">r</span> <span class="o">=</span> <span class="n">inp</span><span class="o">.</span><span class="n">rotations</span><span class="p">[</span><span class="n">op</span><span class="p">]</span>
             <span class="n">t</span> <span class="o">=</span> <span class="n">inp</span><span class="o">.</span><span class="n">translations</span><span class="p">[</span><span class="n">op</span><span class="p">]</span>
@@ -391,39 +391,39 @@
             <span class="c1"># rotations(:, :, op+1)</span>
             <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
                 <span class="n">a</span><span class="p">(</span>
-                    <span class="s2">&quot;  rotations(:,</span><span class="si">{j}</span><span class="s2">, </span><span class="si">{op}</span><span class="s2">) = (/ </span><span class="si">{x0}</span><span class="s2">, </span><span class="si">{x1}</span><span class="s2">, </span><span class="si">{x2}</span><span class="s2"> /)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="s2">"  rotations(:,</span><span class="si">{j}</span><span class="s2">, </span><span class="si">{op}</span><span class="s2">) = (/ </span><span class="si">{x0}</span><span class="s2">, </span><span class="si">{x1}</span><span class="s2">, </span><span class="si">{x2}</span><span class="s2"> /)"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                         <span class="n">op</span><span class="o">=</span><span class="n">op</span><span class="p">,</span> <span class="n">j</span><span class="o">=</span><span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">x0</span><span class="o">=</span><span class="n">_fmt_f64</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="mi">0</span><span class="p">]),</span> <span class="n">x1</span><span class="o">=</span><span class="n">_fmt_f64</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="mi">1</span><span class="p">]),</span> <span class="n">x2</span><span class="o">=</span><span class="n">_fmt_f64</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
                     <span class="p">)</span>
                 <span class="p">)</span>
             <span class="n">a</span><span class="p">(</span>
-                <span class="s2">&quot;  translations(1:3,</span><span class="si">{op}</span><span class="s2">) = (/ </span><span class="si">{x0}</span><span class="s2">, </span><span class="si">{x1}</span><span class="s2">, </span><span class="si">{x2}</span><span class="s2"> /)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="s2">"  translations(1:3,</span><span class="si">{op}</span><span class="s2">) = (/ </span><span class="si">{x0}</span><span class="s2">, </span><span class="si">{x1}</span><span class="s2">, </span><span class="si">{x2}</span><span class="s2"> /)"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                     <span class="n">op</span><span class="o">=</span><span class="n">op</span><span class="p">,</span> <span class="n">x0</span><span class="o">=</span><span class="n">_fmt_f64</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">x1</span><span class="o">=</span><span class="n">_fmt_f64</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="n">x2</span><span class="o">=</span><span class="n">_fmt_f64</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
                 <span class="p">)</span>
             <span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">a</span><span class="p">(</span><span class="s2">&quot;  n_symmetry_ops = -1&quot;</span><span class="p">)</span>
+        <span class="n">a</span><span class="p">(</span><span class="s2">"  n_symmetry_ops = -1"</span><span class="p">)</span>
 
-    <span class="n">a</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
-    <span class="n">a</span><span class="p">(</span><span class="s2">&quot;  ret = find_empty_spheres( &amp;&quot;</span><span class="p">)</span>
-    <span class="n">a</span><span class="p">(</span><span class="s2">&quot;    n_out, centres, radii, rmines, rmaxes, alat, cell, nq, bas, &amp;&quot;</span><span class="p">)</span>
-    <span class="n">a</span><span class="p">(</span><span class="s2">&quot;    imq, nm, nsort, txtt, z, conc, imt, mesh, &amp;&quot;</span><span class="p">)</span>
-    <span class="n">a</span><span class="p">(</span><span class="s2">&quot;    n_symmetry_ops, rotations, translations, verbose &amp;&quot;</span><span class="p">)</span>
-    <span class="n">a</span><span class="p">(</span><span class="s2">&quot;  )&quot;</span><span class="p">)</span>
-    <span class="n">a</span><span class="p">(</span><span class="s2">&quot;  print *, &#39;FIND_EMPTY_SPHERES ret=&#39;, ret&quot;</span><span class="p">)</span>
-    <span class="n">a</span><span class="p">(</span><span class="s2">&quot;  print *, &#39;N_OUT=&#39;, n_out&quot;</span><span class="p">)</span>
-    <span class="n">a</span><span class="p">(</span><span class="s2">&quot;  DO I=1,N_OUT&quot;</span><span class="p">)</span>
-    <span class="n">a</span><span class="p">(</span><span class="s2">&quot;     print *, CENTRES(:,I), RADII(I)&quot;</span><span class="p">)</span>
-    <span class="n">a</span><span class="p">(</span><span class="s2">&quot;  END DO&quot;</span><span class="p">)</span>
-    <span class="n">a</span><span class="p">(</span><span class="s2">&quot;end program&quot;</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">(</span><span class="s2">""</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">(</span><span class="s2">"  ret = find_empty_spheres( &amp;"</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">(</span><span class="s2">"    n_out, centres, radii, rmines, rmaxes, alat, cell, nq, bas, &amp;"</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">(</span><span class="s2">"    imq, nm, nsort, txtt, z, conc, imt, mesh, &amp;"</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">(</span><span class="s2">"    n_symmetry_ops, rotations, translations, verbose &amp;"</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">(</span><span class="s2">"  )"</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">(</span><span class="s2">"  print *, 'FIND_EMPTY_SPHERES ret=', ret"</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">(</span><span class="s2">"  print *, 'N_OUT=', n_out"</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">(</span><span class="s2">"  DO I=1,N_OUT"</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">(</span><span class="s2">"     print *, CENTRES(:,I), RADII(I)"</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">(</span><span class="s2">"  END DO"</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">(</span><span class="s2">"end program"</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span></div>
+    <span class="k">return</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span> <span class="o">+</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span></div>
 
 
 
 <div class="viewcode-block" id="print_find_empty_spheres_program">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.bindings.xband.spheres_debug.print_find_empty_spheres_program.html#ase2sprkkr.bindings.xband.spheres_debug.print_find_empty_spheres_program">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">print_find_empty_spheres_program</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">fortran_code_find_empty_spheres</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">),</span> <span class="n">end</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span></div>
+    <span class="nb">print</span><span class="p">(</span><span class="n">fortran_code_find_empty_spheres</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">),</span> <span class="n">end</span><span class="o">=</span><span class="s2">""</span><span class="p">)</span></div>
 
 </pre></div>
 
