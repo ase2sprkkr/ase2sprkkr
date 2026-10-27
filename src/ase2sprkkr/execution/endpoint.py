@@ -37,6 +37,25 @@ class ExecutorEndpoint:
                 value = tuple(value)
             object.__setattr__(self, name, value)
 
+        # Identity describes the backend actually constructed below. Irrelevant
+        # profile fields must not split its pool key or collision namespace.
+        if self.executor in ("local", "psij"):
+            for name, value in (
+                ("host", None), ("ssh_options", ()), ("remote_command", ()),
+                ("ssh_zstd", False),
+            ):
+                object.__setattr__(self, name, value)
+        if self.executor == "local":
+            object.__setattr__(self, "psij_backend", None)
+            object.__setattr__(self, "psij_url", None)
+        elif self.executor == "psij":
+            object.__setattr__(self, "psij_backend", self.psij_backend or "slurm")
+        elif self.executor == "ssh":
+            if not self.remote_command:
+                object.__setattr__(self, "remote_command", ("ase2sprkkr", "remote"))
+            if self.psij_backend is not None or self.psij_url is not None:
+                object.__setattr__(self, "psij_backend", self.psij_backend or "slurm")
+
 
 def endpoint_for_executor(executor) -> ExecutorEndpoint:
     """Describe a live executor without persisting launch/staging policy."""

@@ -4,6 +4,38 @@ from ase2sprkkr.execution import ExecutorPool
 from ase2sprkkr.sprkkr.profile import SPRKKRProfile, executor_from_profile
 
 
+def test_unused_local_profile_fields_share_backend_and_collision_namespace(tmp_path):
+    from ase2sprkkr.execution import ExecutorEndpoint
+    from ase2sprkkr.execution.manager import ExecutionManager, RunStore, submission_conflicts
+
+    pool = ExecutorPool()
+    plain = SPRKKRProfile()
+    unused = SPRKKRProfile(
+        host="unused", ssh_options=("-p", "2222"), ssh_zstd=True,
+        remote_command=("unused",), psij_backend="unused", psij_url="unused",
+    )
+    assert plain.endpoint == unused.endpoint == ExecutorEndpoint()
+    assert pool.for_profile(plain) is pool.for_profile(unused)
+    manager = ExecutionManager(RunStore(tmp_path / "runs"))
+    first = manager.new_record(task="SCF", directory=tmp_path, endpoint=plain.endpoint)
+    second = manager.new_record(task="SCF", directory=tmp_path, endpoint=unused.endpoint)
+    assert submission_conflicts(first, second)
+
+
+def test_endpoint_normalizes_known_defaults_without_resolving_hostnames():
+    from ase2sprkkr.execution import ExecutorEndpoint
+
+    assert ExecutorEndpoint(executor="psij") == ExecutorEndpoint(
+        executor="psij", psij_backend="slurm", host="unused",
+    )
+    assert ExecutorEndpoint(executor="ssh", host="cluster") == ExecutorEndpoint(
+        executor="ssh", host="cluster", remote_command=("ase2sprkkr", "remote"),
+    )
+    assert ExecutorEndpoint(executor="ssh", host="cluster") != ExecutorEndpoint(
+        executor="ssh", host="cluster.example.org",
+    )
+
+
 def test_executor_pool_reuses_backend_by_endpoint():
     pool = ExecutorPool()
     first_profile = SPRKKRProfile(executor="local", mpi=8)
