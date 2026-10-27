@@ -19,6 +19,27 @@ REF_XAS_AGR = os.path.join(DIRNAME, "xas_Cu_L23_x.agr")
 REF_SUMR_AGR = os.path.join(DIRNAME, "xas_Cu_L23_sumrule.agr")
 
 
+def test_generated_cache_tracks_fermi_and_can_be_cleared_explicitly(monkeypatch):
+    from ase2sprkkr.result_files.definition_registry import result_file_definition_registry
+
+    result = result_file_definition_registry["RAT"].create_object()
+    calls = []
+
+    def compute(self, **kwargs):
+        calls.append(self.EFERMI())
+        return {"fermi": self.EFERMI()}
+
+    monkeypatch.setattr(type(result), "compute_data", compute)
+    result.EFERMI = 0.1
+    first = result.generate_data()
+    assert result.generate_data() is first
+    result.EFERMI = 0.2
+    assert result.generate_data() == {"fermi": 0.2}
+    result.clear_cached_data()
+    assert result.generate_data() == {"fermi": 0.2}
+    assert calls == [0.1, 0.2, 0.2]
+
+
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------

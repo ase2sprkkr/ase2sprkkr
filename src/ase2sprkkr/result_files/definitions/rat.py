@@ -29,6 +29,19 @@ class RATResultFile(CommonResultFile):
     Result file for XAS (X-ray Absorption Spectroscopy) and related spectra (XMCD, spin and orbital sum-rule integrands).
     """
 
+    def __init__(self, definition, container=None, potential=None):
+        super().__init__(definition, container, potential=potential)
+        self.EFERMI.add_hook(self.clear_cached_data)
+
+    def clear_cached_data(self, _option=None):
+        """Discard derived spectra after editing source data.
+
+        EFERMI assignments clear the cache automatically. Call this explicitly
+        after changing group data, including direct writes into NumPy views.
+        """
+        for name in ("_data", "_data_key", "core_states_index", "core_state_types"):
+            self.__dict__.pop(name, None)
+
     def energies(self, group=0):
         """Energies in Ev relative to E-Fermi."""
         efermi = self.EFERMI()
