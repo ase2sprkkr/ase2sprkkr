@@ -20,10 +20,10 @@ ASE2SPRKKR software package
 
    ASE2SPRKKR homepage <https://ase2sprkkr.github.io/ase2sprkkr/>
    ASE - atomic simulation environment <https://wiki.fysik.dtu.dk/ase/>
-   SPR-KKR <https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr>
+   SPR-KKR <https://sprkkr.org>
    GitHub repository <https://github.com/ase2sprkkr/ase2sprkkr>
    PyPI package <https://pypi.org/project/ase2sprkkr>
-   SPR-KKR manual <https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/>
+   SPR-KKR manual <https://www.sprkkr.org/wp-content/uploads/2026/05/kkr_manual.pdf>
 
 
 Class documentation
