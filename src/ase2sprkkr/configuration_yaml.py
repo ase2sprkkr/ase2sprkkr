@@ -7,10 +7,13 @@ round-trip persistence.
 """
 
 import copy
+import os
+import shlex
+import stat
+import tempfile
+import warnings
 from collections.abc import Mapping
 from pathlib import Path
-import shlex
-import warnings
 
 import numpy as np
 from ruamel.yaml import YAML
@@ -47,11 +50,29 @@ def load_yaml_document(file):
 
 
 def dump_yaml_document(file, data):
-    """Write a YAML document using ruamel's round-trip representation."""
-    path = Path(file)
+    """Atomically replace a YAML document, retaining existing symlinks and mode."""
+    path = Path(file).resolve()
     path.parent.mkdir(parents=True, exist_ok=True)
-    with path.open("w", encoding="utf8") as stream:
-        _yaml().dump(data, stream)
+    temporary = None
+    try:
+        with tempfile.NamedTemporaryFile(
+            mode="w", encoding="utf8", dir=path.parent,
+            prefix=f".{path.name}.", suffix=".tmp", delete=False,
+        ) as stream:
+            temporary = Path(stream.name)
+            _yaml().dump(data, stream)
+            try:
+                mode = stat.S_IMODE(path.stat().st_mode)
+            except FileNotFoundError:
+                pass  # New user configuration files retain the temporary file's 0600.
+            else:
+                os.chmod(temporary, mode)
+            stream.flush()
+            os.fsync(stream.fileno())
+        os.replace(temporary, path)
+    finally:
+        if temporary is not None:
+            temporary.unlink(missing_ok=True)
 
 
 def _shell_string(value):
