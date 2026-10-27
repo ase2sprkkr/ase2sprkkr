@@ -1,8 +1,48 @@
+import os
+
+import pytest
+
+from ase2sprkkr import configuration
 from ase2sprkkr.configuration import definition
 from ase2sprkkr.configuration_migration import (
     clean_legacy_configuration,
+    load_legacy_configuration,
     migrate_legacy_configuration,
 )
+
+
+@pytest.mark.parametrize("config_import", [
+    "from ase2sprkkr import config",
+    "from ase2sprkkr.configuration import config",
+    "import ase2sprkkr; config = ase2sprkkr.config",
+])
+def test_migration_isolates_all_public_config_imports(tmp_path, config_import):
+    before = configuration.config.running.print_output()
+    requested = before is False
+    source = tmp_path / "__init__.py"
+    source.write_text(
+        f"{config_import}\n"
+        f"import os; assert os.getpid() != {os.getpid()}\n"
+        f"config.running.print_output = {requested!r}\n"
+    )
+
+    migrated = load_legacy_configuration(source, definition)
+    assert migrated.running.print_output() is requested
+    assert configuration.config.running.print_output() == before
+
+
+def test_failed_migration_cannot_mutate_parent_configuration(tmp_path):
+    before = configuration.config.running.print_output()
+    requested = before is False
+    source = tmp_path / "__init__.py"
+    source.write_text(
+        "from ase2sprkkr import config\n"
+        f"config.running.print_output = {requested!r}\n"
+        "raise ValueError('injected hook failure')\n"
+    )
+    with pytest.raises(RuntimeError, match="injected hook failure"):
+        load_legacy_configuration(source, definition)
+    assert configuration.config.running.print_output() == before
 
 
 def test_clean_legacy_configuration_removes_comments_and_extra_blank_lines(tmp_path):

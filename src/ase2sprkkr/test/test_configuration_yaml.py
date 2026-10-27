@@ -5,6 +5,7 @@ from ase2sprkkr.configuration import definition
 from ase2sprkkr.configuration_migration import clean_legacy_configuration
 from ase2sprkkr.configuration_yaml import (
     YamlConfigurationWarning,
+    dump_yaml_document,
     load_configuration_yaml,
     load_yaml_document,
     save_configuration_yaml,
@@ -13,6 +14,57 @@ from ase2sprkkr.configuration_yaml import (
 
 def fresh_config():
     return definition.create_object()
+
+
+def test_yaml_failed_serialization_preserves_original_and_cleans_temporary(tmp_path, monkeypatch):
+    from ase2sprkkr import configuration_yaml
+
+    path = tmp_path / "config.yaml"
+    original = "running:\n  print_output: false\n"
+    path.write_text(original)
+
+    class BrokenYaml:
+        def dump(self, data, stream):
+            stream.write("partial")
+            raise OSError("injected write failure")
+
+    monkeypatch.setattr(configuration_yaml, "_yaml", BrokenYaml)
+    with pytest.raises(OSError, match="injected write failure"):
+        dump_yaml_document(path, {})
+    assert path.read_text() == original
+    assert list(tmp_path.iterdir()) == [path]
+
+
+def test_yaml_failed_replace_preserves_original(tmp_path, monkeypatch):
+    from ase2sprkkr import configuration_yaml
+
+    path = tmp_path / "config.yaml"
+    path.write_text("original: true\n")
+
+    def fail_replace(*args):
+        raise OSError("injected rename failure")
+
+    monkeypatch.setattr(configuration_yaml.os, "replace", fail_replace)
+    with pytest.raises(OSError, match="injected rename failure"):
+        dump_yaml_document(path, {"new": True})
+    assert path.read_text() == "original: true\n"
+    assert list(tmp_path.iterdir()) == [path]
+
+
+def test_yaml_atomic_save_preserves_symlink_and_existing_permissions(tmp_path):
+    import os
+    import stat
+
+    target = tmp_path / "actual.yaml"
+    target.write_text("old: true\n")
+    target.chmod(0o640)
+    path = tmp_path / "config.yaml"
+    path.symlink_to(target)
+    dump_yaml_document(path, {"new": True})
+    assert path.is_symlink()
+    assert load_yaml_document(target) == {"new": True}
+    if os.name != "nt":
+        assert stat.S_IMODE(target.stat().st_mode) == 0o640
 
 
 def test_yaml_round_trip_named_profiles(tmp_path):
