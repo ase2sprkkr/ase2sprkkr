@@ -2,33 +2,49 @@
 Various pyparsing grammar elements and a few useful routines.
 """
 
-from contextlib import contextmanager
-import pyparsing as pp
 import re
-from .decorators import cache
+from contextlib import contextmanager
+from threading import Lock
 from typing import Optional
+
+import pyparsing as pp
+
+from .decorators import cache
+
+
+_grammar_lock = Lock()
+_grammar_users = 0
+_grammar_defaults = None
 
 
 @contextmanager
 def generate_grammar():
-    """Set the pyparsing newline handling
-    and then restore to the original state"""
+    """Share SPRKKR parser defaults until the last grammar builder exits.
+
+    Only entry and exit are synchronized; grammar construction can overlap.
+    Other pyparsing users must not rely on independent global defaults while
+    this context is active.
+    """
+    global _grammar_users, _grammar_defaults
+
+    pe = pp.ParserElement
+    with _grammar_lock:
+        if _grammar_users == 0:
+            _grammar_defaults = (pe.DEFAULT_WHITE_CHARS, pp.Keyword.DEFAULT_KEYWORD_CHARS)
+            pe.set_default_whitespace_chars(" \t\r")
+            if "-" not in pp.Keyword.DEFAULT_KEYWORD_CHARS:
+                pp.Keyword.DEFAULT_KEYWORD_CHARS += "-"
+        _grammar_users += 1
     try:
-        old = None
-        kchars = None
-        pe = pp.ParserElement
-        if hasattr(pe, "DEFAULT_WHITE_CHARS"):
-            old = pe.DEFAULT_WHITE_CHARS
-        if hasattr(pp.Keyword, "DEFAULT_KEYWORD_CHARS"):
-            kchars = pp.Keyword.DEFAULT_KEYWORD_CHARS
-            pp.Keyword.DEFAULT_KEYWORD_CHARS = kchars + "-"
-        pe.set_default_whitespace_chars(" \t\r")
         yield
     finally:
-        if old is not None:
-            pe.set_default_whitespace_chars(old)
-        if kchars is not None:
-            pp.Keyword.DEFAULT_KEYWORD_CHARS = kchars
+        with _grammar_lock:
+            _grammar_users -= 1
+            if _grammar_users == 0:
+                whitespace, keywords = _grammar_defaults
+                pe.set_default_whitespace_chars(whitespace)
+                pp.Keyword.DEFAULT_KEYWORD_CHARS = keywords
+                _grammar_defaults = None
 
 
 def replace_whitechars(expr):
