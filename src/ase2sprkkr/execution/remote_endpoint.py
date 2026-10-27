@@ -25,6 +25,7 @@ from .base import (
 )
 from .remote import FileSyncPolicy, RemoteRunner, _run_sync
 from .stream_protocol import FramedRunningCommand
+from .remote_protocol import CONTROL_PROTOCOL_VERSION
 from ..common.file_versions import file_digest
 from .run_model import FileEntry, CacheEntry, FileManifest, FileMapping, WorkingDirectory
 from .endpoint import endpoint_for_executor
@@ -415,8 +416,11 @@ class RemoteEndpointExecutor(Executor):
 
     async def _json_request(self, action, *args, payload=None):
         data = None if payload is None else json.dumps(payload).encode("utf8")
-        result = await self.transport.run((*self.command, action, *args), input=data)
+        result = await self.transport.run(self._control_command(action, *args), input=data)
         return json.loads(result.stdout.decode("utf8"))
+
+    def _control_command(self, action, *args):
+        return (*self.command, "--protocol-version", str(CONTROL_PROTOCOL_VERSION), action, *args)
 
     @staticmethod
     def _context(endpoint, launch):
@@ -511,7 +515,7 @@ class RemoteEndpointExecutor(Executor):
             elif offsets is not None:
                 options.append("--live-" + ("stdout" if kind == "out" else "stderr"))
         process = await self.transport.start(
-            (*self.command, "follow", str(backend_id), *options, "--framed")
+            self._control_command("follow", str(backend_id), *options, "--framed")
         )
         return FramedRunningCommand(process)
 

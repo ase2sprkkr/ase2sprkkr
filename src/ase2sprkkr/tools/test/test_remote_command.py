@@ -1,9 +1,17 @@
+import argparse
 import io
 import json
 from types import SimpleNamespace
 
+import pytest
+
 import ase2sprkkr.execution.remote_service as remote_service
+from ase2sprkkr.execution.remote_protocol import CONTROL_PROTOCOL_VERSION
 from ase2sprkkr.tools.commands import remote as remote_command
+
+
+def remote_args(**kwargs):
+    return SimpleNamespace(protocol_version=CONTROL_PROTOCOL_VERSION, **kwargs)
 
 
 def test_status_command_forwards_opaque_remote_handle(monkeypatch):
@@ -18,7 +26,7 @@ def test_status_command_forwards_opaque_remote_handle(monkeypatch):
     monkeypatch.setattr(remote_command, "_print_json", output.append)
 
     remote_command.run(
-        SimpleNamespace(remote_action="status", remote_id=remote_id),
+        remote_args(remote_action="status", remote_id=remote_id),
         None,
     )
 
@@ -43,7 +51,7 @@ def test_submit_command_passes_complete_request_to_stateless_service(monkeypatch
     monkeypatch.setattr(remote_command, "_print_json", output.append)
 
     remote_command.run(
-        SimpleNamespace(remote_action="submit", directory="/remote/work"),
+        remote_args(remote_action="submit", directory="/remote/work"),
         None,
     )
 
@@ -62,6 +70,24 @@ def test_resolve_mpi_command_preserves_integer_process_count(monkeypatch):
     output = []
     monkeypatch.setattr(remote_command, "_print_json", output.append)
 
-    remote_command.run(SimpleNamespace(remote_action="resolve-mpi"), None)
+    remote_command.run(remote_args(remote_action="resolve-mpi"), None)
 
     assert output == [{"mpi": ("mpirun", "-np", "4")}]
+
+
+def test_incompatible_protocol_rejected_before_request_is_read(monkeypatch):
+    monkeypatch.setattr(remote_command.sys, "stdin", io.StringIO("not JSON"))
+    args = SimpleNamespace(remote_action="submit", protocol_version=CONTROL_PROTOCOL_VERSION + 1)
+    with pytest.raises(ValueError, match="Unsupported remote control protocol"):
+        remote_command.run(args, None)
+
+
+def test_control_protocol_version_is_required_by_parser():
+    parser = argparse.ArgumentParser()
+    remote_command.parser(parser)
+    with pytest.raises(SystemExit):
+        parser.parse_args(["status", "opaque"])
+    parsed = parser.parse_args([
+        "--protocol-version", str(CONTROL_PROTOCOL_VERSION), "status", "opaque",
+    ])
+    assert parsed.protocol_version == CONTROL_PROTOCOL_VERSION

@@ -9,6 +9,8 @@ description = "Submit, inspect, follow and cancel remote execution handles."
 
 
 def parser(parser):
+    parser.add_argument("--protocol-version", type=int, required=True,
+                        help="remote control protocol version supplied by the client")
     actions = parser.add_subparsers(dest="remote_action", required=True)
 
     submit = actions.add_parser("submit")
@@ -67,6 +69,9 @@ class _FramedSink:
 
 
 def run(args, global_args):
+    from ...execution.remote_protocol import check_control_protocol
+
+    check_control_protocol(args.protocol_version)
     from ...execution.remote_service import (
         acknowledge_remote,
         acknowledge_submission,
