@@ -49,7 +49,7 @@ def run(*arguments):
     parser = argparse.ArgumentParser()
     show_structure.parser(parser)
     show_structure.run(parser.parse_args(["test.pot", *arguments]), {})
-    
+
 
 @pytest.mark.parametrize(
     "arguments, expected_writes, expected_views",

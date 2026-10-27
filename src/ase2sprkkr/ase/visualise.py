@@ -14,7 +14,7 @@ def view(
     graph: str = "",
     terminal=False,
     blocking: bool = False,
-    close_after: float | None = None,
+    close_after: Union[float, None] = None,
 ):
     """Visualise atoms using ase viewer
 
