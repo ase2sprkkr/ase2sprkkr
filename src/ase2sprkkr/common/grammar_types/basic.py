@@ -11,7 +11,7 @@ import itertools
 from unyt.array import unyt_quantity
 from collections import defaultdict
 
-from ..decorators import add_to_signature, cached_property
+from ..decorators import add_to_signature, cached_property, cached_class_property
 from ..grammar import generate_grammar, separator_grammar, replace_whitechars, optional_quote
 from .grammar_type import TypedGrammarType, GrammarType, add_to_parent_validation
 
@@ -325,11 +325,17 @@ class BaseString(TypedGrammarType):
     datatype = str
     datatype_name = "string"
 
+    @cached_class_property
+    def _validate_grammar(self):
+        """Force not to consider whitespaces to allow to check whitespaces, too. """
+        out = self._grammar.copy().leave_whitespace() + pp.StringEnd().set_whitespace_chars("")
+        return out
+
     @add_to_parent_validation
     def _validate(self, value, why="set"):
         if not why == "parse":
             try:
-                self._grammar.parse_string(value, True)
+                self._validate_grammar.parse_string(value, True)
             except pp.ParseException as e:
                 return f"Forbidden character '{e.line[e.col - 1]}' in the string"
         return True

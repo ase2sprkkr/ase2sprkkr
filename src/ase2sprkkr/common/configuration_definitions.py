@@ -847,7 +847,7 @@ class Gather:
         def write(i):
             val, write = i._written_value()
             if write:
-                if not i._definition.write_value(file, val, delimiter):
+                if not i._definition.write_value(file, i, val, delimiter):
                     raise NotImplementedError("Gathered values have to be always written")
             else:
                 raise NotImplementedError("Gathered values have to be always written")

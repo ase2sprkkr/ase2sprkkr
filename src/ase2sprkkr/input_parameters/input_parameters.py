@@ -92,6 +92,15 @@ class InputParameters(ConfigurationFile):
         )
         self._inputfile = inputfile
         self._outputfile = inputfile if outputfile is False else outputfile
+        self._directory = None
+
+    @property
+    def directory(self):
+        return self._directory
+
+    @directory.setter
+    def directory(self, value):
+        self._directory = value
 
     @property
     def task_name(self):

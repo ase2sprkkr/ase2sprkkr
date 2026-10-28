@@ -1,6 +1,8 @@
 """Definitions of sections to be used in definitions of input parameters
 (input files for SPR-KKR tasks)"""
 
+import os
+
 from ...common.grammar_types import SetOf, DefKeyword, flag, energy, Integer, Keyword
 from ..input_parameters_definitions import InputSectionDefinition as Section, InputValueDefinition as V
 from ...sprkkr.sprkkr_grammar_types import Site, AtomicType
@@ -50,8 +52,6 @@ def _sections_tau_bzint_weyl_write_condition(option):
     return option._container.BZINT() == "WEYL"
 
 
-
-
 def _sections_energy_emax_from_emin_default_value(option):
     return option._container.EMIN()
 
@@ -88,6 +88,15 @@ def _sections_xc_enrich(option):
     option.xc_info = _SECTIONS_XC_INFO
 
 
+def _map_filename(option, value):
+    if not os.path.isabs(value):
+        return value
+    dir = option._get_root_container().directory
+    if dir is None:
+        return os.path.basename(value)
+    return os.path.relpath(value, dir)
+
+
 def CONTROL(ADSI):
     """Create the definition of the CONTROL section of the task input file.
 
@@ -117,6 +126,7 @@ def CONTROL(ADSI):
                 str,
                 default_value_from_container=_sections_sfnfil_default_value,
                 is_always_added=False,
+                value_mapping = _map_filename,
                 info="Shape-function file used for full-potential calculations.",
             ),
             V("ADSI", str, ADSI, is_required=False, info="Type of the computation."),
@@ -124,6 +134,7 @@ def CONTROL(ADSI):
                 "POTFIL",
                 str,
                 is_required="save",
+                value_mapping = _map_filename,
                 info="The potential file (see SPRKKR documentation for its format). It isn't necessary to set it, it will be set by the calculator.",
             ),
             V(

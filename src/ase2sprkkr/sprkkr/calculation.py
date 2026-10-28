@@ -627,6 +627,8 @@ class PreparedCalculation:
                     potential_handle.close()
                 potential_file = potential_name
 
+            input_file_name = _require_named_file(opened_input, "input_file")
+            input_dir = os.path.dirname(input_file_name)
             if save_input:
                 if potential_file:
                     potential_file = os.path.abspath(os.fspath(potential_file))
@@ -643,8 +645,6 @@ class PreparedCalculation:
                 input_parameters.save_to_file(opened_input, atoms)
                 opened_input.seek(0)
             else:
-                input_name = _require_named_file(opened_input, "input_file")
-                input_dir = os.path.dirname(input_name) or work_directory
                 potential_file = _calculation_path(
                     input_parameters.CONTROL.POTFIL.result,
                     input_dir,

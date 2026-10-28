@@ -146,6 +146,8 @@ class ValueDefinition(RealItemDefinition):
 
     item_type = "value"
 
+    value_mapping = None
+
     def __init__(
         self,
         name,
@@ -179,6 +181,7 @@ class ValueDefinition(RealItemDefinition):
         delimiter=None,
         delimiter_grammar=None,
         indent=None,
+        value_mapping=None,
     ):
         """
         Definition of a configuration value.
@@ -310,7 +313,12 @@ class ValueDefinition(RealItemDefinition):
 
         delimiter
            If not None, use the specified name_value_delimiter instead of common one
+
+        value_mapping
+           The set value is transformed by given callback before validation and/or writing
         """
+        if value_mapping:
+            self.value_mapping = value_mapping
         if callable(default_value_from_container):
             default_value = default_value_from_container
             default_value_from_container = True
@@ -551,6 +559,8 @@ class ValueDefinition(RealItemDefinition):
         try:
             if value is None:
                 return True
+            if self.value_mapping:
+                value = self.value_mapping(opt, value)
             if self.is_fixed and not np.array_equal(self.default_value, value):
                 raise ValueError(
                     f"The value of {opt._get_path()} is required to be {self.default_value}, cannot set it to {value}"
@@ -715,11 +725,11 @@ class ValueDefinition(RealItemDefinition):
     def _save_to_file(self, file, option, always=False, name_in_grammar=None, delimiter=""):
         value, write = option._written_value(always)
         if write:
-            return self.write(file, value, name_in_grammar, delimiter=delimiter, option=option)
+            return self.write(file, option, value, name_in_grammar, delimiter=delimiter)
         else:
             return
 
-    def write(self, file, value, name_in_grammar=None, delimiter="", option=None):
+    def write(self, file, option, value, name_in_grammar=None, delimiter=""):
         """
         Write the option to the open file
 
@@ -747,14 +757,14 @@ class ValueDefinition(RealItemDefinition):
                 if delimiter:
                     file.write(str(delimiter))
                 self.write_name(file, name)
-                self.write_value(file, value, str(self.delimiter))
+                self.write_value(file, option, value, str(self.delimiter))
                 return True
             else:
                 if delimiter:
                     deli = str(delimiter) + self.prefix
                 else:
                     deli = self.prefix
-                return self.write_value(file, value, deli)
+                return self.write_value(file, option, value, deli)
 
         name = self.formated_name
         if self.is_repeated:
@@ -778,7 +788,7 @@ class ValueDefinition(RealItemDefinition):
         else:
             return write(name, value)
 
-    def write_value(self, file, value, delimiter=""):
+    def write_value(self, file, option, value, delimiter=""):
         """Write given value and a given delimiter before the value to a file"""
         dangerous = isinstance(value, DangerousValue)
         if dangerous:
@@ -809,6 +819,8 @@ class ValueDefinition(RealItemDefinition):
 
         if write_value:
             file.write(str(delimiter))
+            if self.value_mapping:
+                value = self.value_mapping(option, value)
             type.write(file, value)
             return True
         else:

@@ -135,6 +135,7 @@ def _read_selected_definitions(text, selectors, *, filename=None,
         return definition.read_from_file(
             _snapshot_stream(text, filename),
             allow_dangerous=allow_dangerous,
+            filename=filename,
             **({"allow_incomplete": True} if allow_incomplete else {}),
             **({"report_invalid": report_invalid} if report_invalid is not None else {}),
         )
@@ -278,6 +279,7 @@ class InputParametersDefinition(ConfigurationFileDefinition):
                 _snapshot_stream(text, filename),
                 allow_dangerous=allow_dangerous,
                 allow_incomplete=allow_incomplete,
+                filename = filename,
                 report_invalid=report_invalid,
             )
 
@@ -296,6 +298,15 @@ class InputParametersDefinition(ConfigurationFileDefinition):
             allow_incomplete=allow_incomplete,
             report_invalid=report_invalid,
         )
+
+    def read_from_file(self, file, allow_dangerous=False, *, filename=None,
+                       allow_incomplete=False, report_invalid=None, **kwargs):
+        out = super().read_from_file(file, allow_dangerous,
+                               allow_incomplete=allow_incomplete,
+                               report_invalid=report_invalid, **kwargs)
+        if filename:
+            out.directory = os.path.dirname(filename)
+        return out
 
     def task_definition_name(self, parameters):
         """Return the ASE2SPRKKR task name represented by *parameters*.
