@@ -16,8 +16,8 @@ class ProcessOutputParser:
     to the execution backend. Descendants only interpret the supplied streams.
     """
 
-    def __init__(self, print_output=False):
-        self.set_print_output(print_output)
+    def __init__(self, print_info=False):
+        self.print_info = print_info
 
     def result(self, output, error, return_code):
         """Postprocess parsed stdout/stderr after execution completes."""
@@ -36,9 +36,6 @@ class ProcessOutputParser:
 
     async def read_output(self, stdout, *args):
         raise NotImplementedError("Please, redefine ProcessOutputParser.read_output coroutine")
-
-    def set_print_output(self, print_output):
-        self.print_output = print_output
 
     @maybeclassmethod
     def read_from_file(self, cls, output, error=None, read_args=[], return_code=0):

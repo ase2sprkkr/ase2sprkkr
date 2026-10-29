@@ -12,6 +12,7 @@ from contextlib import ExitStack
 from dataclasses import dataclass
 
 from ..common.file_utils import Directory
+from ..common.output_printing import output_listeners
 from ..execution.base import ExecutionResources, ResourceOwnedRunner
 from ..execution.persistence import resolve_project_manager
 from ..execution.postprocessing import PostprocessingRunner
@@ -369,11 +370,12 @@ def _create_sprkkr_run(
     input_parameters = prepared.input_parameters
 
     try:
+        listeners, print_info = output_listeners(print_output)
         task = input_parameters.task_definition_required()
         reader = task.output_reader(
             input_parameters=input_parameters,
             calculator=result_context,
-            print_output=print_output,
+            print_info=print_info,
             directory=prepared.directory,
         )
         if executor is None:
@@ -423,7 +425,12 @@ def _create_sprkkr_run(
             gdb=gdb,
         )
 
+        def flush_listeners():
+            for listener in listeners:
+                listener.flush()
+
         def process_result(outcome):
+            flush_listeners()
             return reader.read_from_file(
                 outcome.output_file,
                 outcome.error_file,
@@ -434,6 +441,7 @@ def _create_sprkkr_run(
             )
 
         def finalized(out):
+            flush_listeners()
             resources.close(suppress_errors=True)
             if callback:
                 callback(out)
@@ -455,6 +463,8 @@ def _create_sprkkr_run(
                 dataset=input_parameters.CONTROL.DATASET.result,
                 callback=finalized,
             )
+        for listener in listeners:
+            runner.add_output_listener(listener)
         if read_callback:
             runner.add_output_listener(read_callback)
 

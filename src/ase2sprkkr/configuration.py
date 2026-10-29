@@ -347,17 +347,12 @@ definition = ConfigFileDefinition(
                 ),
                 V(
                     "print_output",
-                    Keyword(
-                        {
-                            True: "Print all output of SPRKKR executables to screen.",
-                            False: "Do not print any output of SPRKKR executables.",
-                            "info": "Print only brief information about iterations of SCF cycle.",
-                        },
-                        transform=None,
-                        quote='"',
+                    CustomMixed(
+                        (Bool.I, Array(AlwaysQString.I, as_list=tuple), AlwaysQString.I),
+                        string_type=AlwaysQString.I,
                     ),
                     default_value="info",
-                    info="Print output of SPRKKR calculation. Default value ``info`` prints only short info each iteration.",
+                    info="Print all (True), no output (False), short SCF summary ('info'), regex-matching lines, or combine modes in a tuple.",
                 ),
                 G(
                     "mpi",

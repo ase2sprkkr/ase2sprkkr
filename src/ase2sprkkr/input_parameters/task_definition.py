@@ -219,7 +219,7 @@ class TaskDefinition:
         self,
         input_parameters=None,
         calculator=None,
-        print_output=False,
+        print_info=False,
         directory=None,
     ):
         """Create this task's output reader through the reader registry."""
@@ -229,7 +229,7 @@ class TaskDefinition:
             self,
             input_parameters=input_parameters,
             calculator=calculator,
-            print_output=print_output,
+            print_info=print_info,
             directory=directory,
         )
 

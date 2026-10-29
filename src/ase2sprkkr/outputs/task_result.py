@@ -305,7 +305,7 @@ class KkrOutputReader:
         input_parameters,
         calculator,
         directory,
-        print_output=False,
+        print_info=False,
         task_name=None,
     ):
         self.input_parameters = input_parameters
@@ -319,12 +319,7 @@ class KkrOutputReader:
             if task is not None
             else None
         )
-        self.parser = self.parser_class(print_output)
-
-    @property
-    def print_output(self):
-        """Whether raw process output should be mirrored to the terminal."""
-        return bool(self.parser.print_output)
+        self.parser = self.parser_class(print_info=print_info)
 
     @classmethod
     def matches_output(cls, output):

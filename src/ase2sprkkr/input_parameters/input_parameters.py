@@ -253,12 +253,12 @@ class InputParameters(ConfigurationFile):
     def cache_files(self, directory):
         return self._task_files(directory, "cache")
 
-    def output_reader(self, calculator=None, print_output=False, directory=None):
+    def output_reader(self, calculator=None, print_info=False, directory=None):
         """Create the reader for the effective task represented by these values."""
         return self.task_definition_required().output_reader(
             input_parameters=self,
             calculator=calculator,
-            print_output=print_output,
+            print_info=print_info,
             directory=directory,
         )
 

@@ -127,13 +127,13 @@ def test_input_parameters_reader_helpers_remain_thin_task_facades(monkeypatch):
         self,
         input_parameters=None,
         calculator=None,
-        print_output=False,
+        print_info=False,
         directory=None,
     ):
         assert self is task
         assert input_parameters is parameters
         assert calculator == "calculator"
-        assert print_output is True
+        assert print_info is True
         assert directory == "directory"
         return reader_marker
 
@@ -155,7 +155,7 @@ def test_input_parameters_reader_helpers_remain_thin_task_facades(monkeypatch):
     monkeypatch.setattr(TaskDefinition, "output_reader", output_reader)
     assert parameters.output_reader(
         calculator="calculator",
-        print_output=True,
+        print_info=True,
         directory="directory",
     ) is reader_marker
 

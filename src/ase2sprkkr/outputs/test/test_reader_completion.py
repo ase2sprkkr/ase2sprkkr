@@ -8,8 +8,8 @@ from ..task_result import KkrOutputReader
 
 
 class _Parser:
-    def __init__(self, print_output=False):
-        self.print_output = print_output
+    def __init__(self, print_info=False):
+        self.print_info = print_info
         self.calls = []
         self.raise_on_nonzero = False
 

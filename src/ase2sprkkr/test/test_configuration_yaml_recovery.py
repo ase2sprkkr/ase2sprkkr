@@ -62,7 +62,7 @@ def test_invalid_section_option_does_not_disable_siblings(tmp_path):
     path = tmp_path / "config.yaml"
     path.write_text(
         "running:\n"
-        "  print_output: definitely-not-valid\n"
+        "  print_output: 42\n"
         "  mpi_warning: false\n"
         "nomad:\n"
         "  token: valid-token\n",
@@ -156,7 +156,7 @@ def test_save_preserves_only_invalid_children_of_known_section(tmp_path):
     path = tmp_path / "config.yaml"
     path.write_text(
         "running:\n"
-        "  print_output: definitely-not-valid\n",
+        "  print_output: 42\n",
         encoding="utf8",
     )
 
@@ -169,7 +169,7 @@ def test_save_preserves_only_invalid_children_of_known_section(tmp_path):
     save_configuration_yaml(config, path, document)
 
     data = load_yaml_document(path)
-    assert data["running"]["print_output"] == "definitely-not-valid"
+    assert data["running"]["print_output"] == 42
     assert "mpi_warning" not in data["running"]
     assert data["profiles"]["legacy"]["mpi_warning"] is False
 

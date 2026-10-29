@@ -107,7 +107,7 @@ class OutputReaderRegistry(ModuleRegistry):
         *,
         input_parameters=None,
         calculator=None,
-        print_output=False,
+        print_info=False,
         directory=None,
     ):
         """Construct the registered output reader for *task*."""
@@ -119,7 +119,7 @@ class OutputReaderRegistry(ModuleRegistry):
             input_parameters,
             calculator,
             directory,
-            print_output,
+            print_info,
         )
         if reader.task_name is None:
             reader.task_name = task.name

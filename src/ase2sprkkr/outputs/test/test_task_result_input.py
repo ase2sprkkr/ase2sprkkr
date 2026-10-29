@@ -5,8 +5,8 @@ from ase2sprkkr.outputs.task_result import KkrOutputReader, TaskResult
 
 
 class _Parser:
-    def __init__(self, print_output):
-        self.print_output = print_output
+    def __init__(self, print_info):
+        self.print_info = print_info
 
 
 class _Reader(KkrOutputReader):

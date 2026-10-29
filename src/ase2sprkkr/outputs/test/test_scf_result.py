@@ -56,11 +56,10 @@ def test_new_task_continuation_is_independent_of_original_calculator(
 
 def test_scf_info_output_includes_final_status(capsys):
     output = Path(__file__).parent.parent / "examples" / "scf.out"
-    parser = ScfOutputParser("info")
+    parser = ScfOutputParser(print_info=True)
     result = ScfResult(None, None, None)
 
     parser.read_from_file(output, read_args=[result])
 
     assert parser.print_info is True
-    assert parser.print_output is False
     assert "OK: The computation converged." in capsys.readouterr().out
