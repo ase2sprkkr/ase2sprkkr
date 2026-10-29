@@ -179,7 +179,7 @@ class TestGrammar:
         type = gt.String()
         for val, res in [("a", "a"), ("a a", Error), ("1", "1")]:
             test(val, res)
-        for v in [1, 15.0, (1, 2, 3)]:
+        for v in [1, 15.0, (1, 2, 3), ""]:
             test_invalid(v)
 
         type = gt.Energy()
