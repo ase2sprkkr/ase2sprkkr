@@ -337,6 +337,8 @@ class BaseString(TypedGrammarType):
             try:
                 self._validate_grammar.parse_string(value, True)
             except pp.ParseException as e:
+                if e.col > len(e.line):
+                    return "Unexpected end of the string"
                 return f"Forbidden character '{e.line[e.col - 1]}' in the string"
         return True
 
