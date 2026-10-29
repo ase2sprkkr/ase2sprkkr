@@ -76,7 +76,7 @@ def test_for_project_without_explicit_store_uses_shared_project_store(tmp_path):
 
     bound = unbound.for_project(project)
 
-    assert unbound.store is None
+    assert bound.store is unbound.store
     assert bound.project_id == project.id
     assert bound.store.directory == tmp_path / "projects_runs"
 
