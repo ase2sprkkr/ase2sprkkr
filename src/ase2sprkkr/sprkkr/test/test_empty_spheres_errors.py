@@ -3,7 +3,7 @@ from unittest.mock import Mock
 from ase.build import bulk
 import pytest
 
-from ase2sprkkr.sprkkr import calculation as calculation_module
+from ase2sprkkr.sprkkr import _preparation as preparation
 from ase2sprkkr.sprkkr.calculator import SPRKKR
 
 
@@ -18,7 +18,7 @@ def test_explicit_empty_sphere_search_errors_propagate(monkeypatch):
     # calculator also verifies preparation remains usable after each error.
     calculator = _calculator_without_potential()
     search = Mock(side_effect=RuntimeError("empty-sphere search failed"))
-    monkeypatch.setattr(calculation_module, "add_empty_spheres", search)
+    monkeypatch.setattr(preparation, "add_empty_spheres", search)
 
     for index, (empty_spheres, expected_options) in enumerate(
         (
@@ -38,7 +38,7 @@ def test_explicit_empty_sphere_search_errors_propagate(monkeypatch):
 def test_empty_spheres_false_skips_search(monkeypatch, tmp_path):
     calculator = _calculator_without_potential()
     search = Mock(side_effect=AssertionError("empty-sphere search must not run"))
-    monkeypatch.setattr(calculation_module, "add_empty_spheres", search)
+    monkeypatch.setattr(preparation, "add_empty_spheres", search)
 
     calculator.save_input(
         potential=False,

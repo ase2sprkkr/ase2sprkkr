@@ -4,8 +4,8 @@ from unittest.mock import patch
 import pytest
 from ase.build import bulk
 
-from .. import calculation as calculation_module
-from ..calculation import _resolve_empty_spheres
+from .. import _preparation as preparation
+from .._preparation import resolve_empty_spheres
 from ..calculator import SPRKKR
 
 
@@ -31,11 +31,11 @@ def test_auto_empty_spheres_only_for_effective_scf(
 
     def check_policy(**kwargs):
         selected_tasks.append(kwargs["input_parameters"].task_name)
-        _resolve_empty_spheres(**kwargs)
+        resolve_empty_spheres(**kwargs)
         raise PolicyChecked
 
-    monkeypatch.setattr(calculation_module, "_resolve_empty_spheres", check_policy)
-    with patch("ase2sprkkr.sprkkr.calculation.add_empty_spheres") as add_empty_spheres:
+    monkeypatch.setattr(preparation, "resolve_empty_spheres", check_policy)
+    with patch("ase2sprkkr.sprkkr._preparation.add_empty_spheres") as add_empty_spheres:
         with pytest.raises(PolicyChecked):
             calculator.save_input(input_parameters=input_parameters, task=task)
 
@@ -49,8 +49,8 @@ def test_auto_empty_spheres_uses_effective_task_identity():
     parameters = SimpleNamespace(task_name="SCF")
     atoms = SimpleNamespace(has_potential=lambda: False, sites=[])
 
-    with patch("ase2sprkkr.sprkkr.calculation.add_empty_spheres") as add_empty_spheres:
-        _resolve_empty_spheres(
+    with patch("ase2sprkkr.sprkkr._preparation.add_empty_spheres") as add_empty_spheres:
+        resolve_empty_spheres(
             input_parameters=parameters,
             atoms=atoms,
             empty_spheres="auto",

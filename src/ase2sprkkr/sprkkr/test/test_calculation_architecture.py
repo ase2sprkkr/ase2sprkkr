@@ -9,6 +9,7 @@ from ...execution.base import RunState
 from ...input_parameters.input_parameters import InputParameters
 from ...input_parameters.task_definition import TaskDefinition
 from ...potentials.potentials import Potential
+from .. import _preparation as preparation
 from .. import calculation
 from ..calculator import SPRKKR
 from ..profile import SPRKKRProfile
@@ -226,7 +227,7 @@ def test_failed_potential_serialization_preserves_primary_error_and_cleans_files
         empty_spheres=False,
     )
     opened = []
-    real_open_file = calculation._open_file
+    real_open_file = preparation.open_file
 
     def tracked_open_file(*args, **kwargs):
         file = real_open_file(*args, **kwargs)
@@ -236,7 +237,7 @@ def test_failed_potential_serialization_preserves_primary_error_and_cleans_files
     def fail_save(self, file, atoms=None, **kwargs):
         raise RuntimeError("potential serialization failed")
 
-    monkeypatch.setattr(calculation, "_open_file", tracked_open_file)
+    monkeypatch.setattr(preparation, "open_file", tracked_open_file)
     monkeypatch.setattr(Potential, "save_to_file", fail_save)
 
     with pytest.raises(RuntimeError, match="potential serialization failed"):
@@ -244,6 +245,39 @@ def test_failed_potential_serialization_preserves_primary_error_and_cleans_files
 
     assert len(opened) == 2
     assert all(file.closed for file in opened)
+
+
+def test_failed_preparation_cleans_temporary_artifacts_even_if_close_fails(
+    monkeypatch, fe_bulk
+):
+    calculator = SPRKKR(atoms=fe_bulk.copy(), empty_spheres=False, mpi=False)
+    opened = []
+    real_open_file = preparation.open_file
+    real_close = preparation.TemporaryNamedFile.close
+
+    def tracked_open_file(*args, **kwargs):
+        file = real_open_file(*args, **kwargs)
+        opened.append(file)
+        return file
+
+    def fail_save(self, file, atoms=None, **kwargs):
+        raise RuntimeError("potential serialization failed")
+
+    def fail_close(self):
+        real_close(self)
+        raise RuntimeError("cleanup failed")
+
+    monkeypatch.setattr(preparation, "open_file", tracked_open_file)
+    monkeypatch.setattr(preparation.TemporaryNamedFile, "close", fail_close)
+    monkeypatch.setattr(Potential, "save_to_file", fail_save)
+
+    with pytest.raises(RuntimeError, match="potential serialization failed"):
+        calculator.prepare(directory=False, input_file=False, potential_file=False)
+
+    assert len(opened) == 2
+    assert all(file.closed for file in opened)
+    assert all(not Path(file.name).exists() for file in opened)
+    assert not Path(opened[0].name).parent.exists()
 
 
 def test_reader_file_not_found_is_not_relabelled_as_missing_executable(

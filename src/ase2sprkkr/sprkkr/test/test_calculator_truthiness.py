@@ -5,7 +5,7 @@ import pytest
 
 from ...potentials.definitions.sections.sites import SitesSection
 from ...potentials.potentials import Potential
-from .. import calculation
+from .. import _preparation as preparation
 from ..atoms_region import AtomsRegion
 from ..calculator import SPRKKR
 from ..configuration import ConfigurationSectionTrait
@@ -111,22 +111,19 @@ def test_explicit_empty_atoms_override_default_atoms(monkeypatch, tmp_path):
 
     monkeypatch.setattr(Potential, "from_atoms", staticmethod(from_atoms))
 
-    potential, atoms, potential_file, save_input = (
-        calculation._resolve_potential_and_atoms(
-            potential=None,
-            atoms=explicit_atoms,
-            potential_file=None,
-            default_potential=None,
-            default_atoms=default_atoms,
-            restart_scf=False,
-            directory=tmp_path,
-        )
+    resolved = preparation.resolve_potential_and_atoms(
+        potential=None,
+        atoms=explicit_atoms,
+        potential_file=None,
+        default_potential=None,
+        default_atoms=default_atoms,
+        restart_scf=False,
+        directory=tmp_path,
     )
 
-    assert potential is generated
-    assert atoms is explicit_atoms
-    assert potential_file is None
-    assert save_input is None
+    assert resolved.potential is generated
+    assert resolved.atoms is explicit_atoms
+    assert resolved.filename is None
     assert seen == [explicit_atoms]
 
 
@@ -135,12 +132,12 @@ def test_empty_atoms_are_not_skipped_by_empty_sphere_policy(monkeypatch):
     calls = []
 
     monkeypatch.setattr(
-        calculation,
+        preparation,
         "add_empty_spheres",
         lambda value, **kwargs: calls.append((value, kwargs)),
     )
 
-    calculation._resolve_empty_spheres(
+    preparation.resolve_empty_spheres(
         input_parameters=None,
         atoms=atoms,
         empty_spheres=True,
@@ -152,10 +149,10 @@ def test_empty_atoms_are_not_skipped_by_empty_sphere_policy(monkeypatch):
 
 def test_empty_atoms_are_used_for_filename_symbols(monkeypatch):
     atoms = Atoms()
-    monkeypatch.setattr(calculation, "filename_from_symbols", lambda symbols: "empty")
+    monkeypatch.setattr(preparation, "filename_from_symbols", lambda symbols: "empty")
 
     assert (
-        calculation._symbols_for_filenames(
+        preparation.symbols_for_filenames(
             atoms,
             input_parameters=None,
             input_file=None,

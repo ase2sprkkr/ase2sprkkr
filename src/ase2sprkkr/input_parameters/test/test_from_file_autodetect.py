@@ -176,7 +176,7 @@ def test_error_policy_with_multiple_candidate_ipds(monkeypatch):
         def __init__(self, name, outcome):
             self.name, self.outcome, self.calls = name, outcome, 0
 
-        def read_from_file(self, stream, allow_dangerous=False):
+        def read_from_file(self, stream, allow_dangerous=False, *, filename=None):
             self.calls += 1
             stream.read()
             if isinstance(self.outcome, Exception):
@@ -228,7 +228,7 @@ def test_class_autodetection_tries_all_interleaved_candidates(monkeypatch):
             self.result = result
             self.calls = []
 
-        def read_from_file(self, stream, allow_dangerous=False):
+        def read_from_file(self, stream, allow_dangerous=False, *, filename=None):
             self.calls.append((stream.read(), allow_dangerous))
             if isinstance(self.result, Exception):
                 raise self.result
@@ -258,7 +258,7 @@ def test_all_candidate_failures_keep_each_diagnostic(monkeypatch):
         def __init__(self, name, error):
             self.name, self.error = name, error
 
-        def read_from_file(self, stream, allow_dangerous=False):
+        def read_from_file(self, stream, allow_dangerous=False, *, filename=None):
             raise pp.ParseException(self.error)
 
     monkeypatch.setattr(mod, "_task_selector_map", lambda: {

@@ -4,7 +4,7 @@ from unittest.mock import patch
 from ase.build import bulk
 import pytest
 
-from .. import calculation
+from .. import _preparation as preparation
 from ..calculator import SPRKKR
 
 
@@ -29,7 +29,7 @@ def test_save_input_preserves_explicit_false_file_sentinels():
                 return input_file
             raise _StopPotentialOpen
 
-        with patch.object(calculation, "_open_file", side_effect=open_file):
+        with patch.object(preparation, "open_file", side_effect=open_file):
             with pytest.raises(_StopPotentialOpen):
                 calculator.save_input(
                     input_file=False,
