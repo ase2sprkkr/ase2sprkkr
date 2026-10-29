@@ -136,10 +136,11 @@ def test_attach_uses_task_result_reconstruction(monkeypatch, tmp_path):
 
     monkeypatch.setattr(manager, "attach", attach)
     seen = []
+    expected_result = object()
 
     def parse(cls, persisted, **kwargs):
         seen.append((persisted, kwargs))
-        return type("Result", (), {})()
+        return expected_result
 
     monkeypatch.setattr(TaskResult, "from_run_record", classmethod(parse))
     assert manager.attach_sprkkr(record.id) is runner
@@ -150,7 +151,7 @@ def test_attach_uses_task_result_reconstruction(monkeypatch, tmp_path):
         input_file=None, output_file=str(output), error_file=None, return_code=0
     )
     result = captured["process_result"](outcome)
-    assert result.run_record.id == record.id
+    assert result is expected_result
     assert len(seen) == 1
     assert seen[0][0].id == record.id
     assert seen[0][1] == {
