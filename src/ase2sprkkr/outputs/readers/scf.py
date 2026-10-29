@@ -368,7 +368,7 @@ class ScfOutputParser(SprKkrOutputParser):
                     print(line)
                     first = False
                 run = line.replace("SPRKKR-run for:", "")
-                out["system_name"] = run
+                out["system_name"] = run.strip()
 
                 line = await readline_until(stdout, lambda line: b" E=" in line)
                 atoms = []
