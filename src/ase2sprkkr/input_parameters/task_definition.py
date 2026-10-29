@@ -7,7 +7,7 @@ import os
 import string
 from typing import Callable, Iterable, Optional, Tuple, Union
 
-from .definition._filenames import dataset_adsi
+from .definitions._filenames import dataset_adsi
 from ..common.doc import process_input_parameters_definition
 from ..common.module_registry import (
     ModuleRegistry,
