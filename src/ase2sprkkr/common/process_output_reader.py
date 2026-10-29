@@ -7,6 +7,7 @@ import numpy as np
 from .async_utils import run_coro_sync
 from .decorators import maybeclassmethod
 from .file_utils import filename_from_file
+from .output_printing import normalize_print_output
 
 
 class ProcessOutputParser:
@@ -38,7 +39,8 @@ class ProcessOutputParser:
         raise NotImplementedError("Please, redefine ProcessOutputParser.read_output coroutine")
 
     def set_print_output(self, print_output):
-        self.print_output = print_output
+        show_all, self.print_info, patterns = normalize_print_output(print_output)
+        self.print_output = show_all or bool(patterns)
 
     @maybeclassmethod
     def read_from_file(self, cls, output, error=None, read_args=[], return_code=0):

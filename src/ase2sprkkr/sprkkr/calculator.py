@@ -474,6 +474,12 @@ class SPRKKR(BaseCalculator):
         Per-call ``mpi``, ``executable_dir`` and ``executable_suffix`` values are
         immutable overrides of the selected execution profile.
 
+        ``print_output`` accepts False, True (full output), 'info' (an SCF
+        iteration summary), or a regular-expression string/compiled pattern
+        to print matching stdout/stderr lines as they arrive. A tuple such as
+        ``('info', r'WARNING|ERROR')`` combines the SCF summary with matches.
+        ``'info'`` on tasks other than SCF produces no summary.
+
         The callback of this synchronous convenience method is intentionally a
         success callback: it runs only after the result has updated calculator
         state. This differs from the lower-level terminal callback accepted by

@@ -19,6 +19,7 @@ from pathlib import Path
 from ..ase.symbols import filename_from_symbols
 from ..bindings.empty_spheres import add_empty_spheres
 from ..common.file_utils import Directory
+from ..common.output_printing import OutputPrinter
 from ..common.temporary import temporary_option_value
 from ..execution.base import ExecutionResources, ResourceOwnedRunner
 from ..execution.persistence import resolve_project_manager
@@ -860,6 +861,7 @@ def _create_sprkkr_run(
     input_parameters = prepared.input_parameters
 
     try:
+        output_printer = OutputPrinter(print_output)
         task = input_parameters.task_definition_required()
         reader = task.output_reader(
             input_parameters=input_parameters,
@@ -915,6 +917,7 @@ def _create_sprkkr_run(
         )
 
         def process_result(outcome):
+            output_printer.flush()
             return reader.read_from_file(
                 outcome.output_file,
                 outcome.error_file,
@@ -925,6 +928,7 @@ def _create_sprkkr_run(
             )
 
         def finalized(out):
+            output_printer.flush()
             resources.close(suppress_errors=True)
             if callback:
                 callback(out)
@@ -946,6 +950,8 @@ def _create_sprkkr_run(
                 dataset=input_parameters.CONTROL.DATASET.result,
                 callback=finalized,
             )
+        if output_printer.enabled:
+            runner.add_output_listener(output_printer)
         if read_callback:
             runner.add_output_listener(read_callback)
 

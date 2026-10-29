@@ -323,10 +323,6 @@ class ScfOutputParser(SprKkrOutputParser):
         rb"SPRKKR-run for:"
     )
 
-    def set_print_output(self, print_output):
-        self.print_info = print_output == "info"
-        self.print_output = print_output and not self.print_info
-
     async def read_output(self, stdout, result):
         await self.read_commons(stdout, result)
         potential_file = result.files["potential"]()
