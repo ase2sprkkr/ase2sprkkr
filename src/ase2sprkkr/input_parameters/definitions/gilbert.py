@@ -5,6 +5,7 @@ from ...common.grammar_types import real, Keyword, Integer
 from ...common.warnings import DataValidityError
 from ._file_manifests import TauCacheInputParametersDefinition, resolve_file
 from ._sections import CONTROL, TAU, ENERGY, SITES, TASK, MODE, CPA, STRCONST
+from ._sections import _map_filename
 from ..input_parameters_definitions import InputValueDefinition as V
 from ..task_definition import TaskDefinition
 
@@ -96,6 +97,7 @@ def input_parameters_definition():
                     "FLUCTFIL",
                     str,
                     is_required=False,
+                    value_mapping=_map_filename,
                     info="Data ﬁle which contains the information about "
                     "temperature dependent magnetization, taken from the "
                     "experiment or Monte Carlo simulations",
@@ -114,9 +116,9 @@ def input_parameters_definition():
         info="The Gilbert damping parameter calculation"
     )
     schema._task_definition = TaskDefinition("GILBERT", executable="kkrchi", output_files=(
-            "{dataset}alfa_x.dat",
-            "{dataset}alfa_T.dat",
-            "{dataset}_alfa_T.agr",
+            "{DATASET_ADSI}alfa_x.dat",
+            "{DATASET_ADSI}alfa_T.dat",
+            "{DATASET_ADSI}_alfa_T.agr",
         ))
     return schema
 

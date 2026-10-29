@@ -3,6 +3,7 @@
 import os
 
 from ..input_parameters_definitions import InputParametersDefinition
+from ._filenames import dataset_adsi
 
 
 _XRAY_SHELLS = "KLMNO"
@@ -42,7 +43,7 @@ def xray_shell_label(core_level):
 
 def core_level_output_name(parameters, extension, *, type_separator, shell_separator):
     """Return a constrained native filename pattern for one selected core shell."""
-    dataset = parameters.CONTROL.DATASET()
+    dataset = dataset_adsi(parameters)
     shell = xray_shell_label(parameters.TASK.CL())
     return f"{dataset}{type_separator}*{shell_separator}{shell}.{extension}"
 
@@ -51,7 +52,7 @@ def tau_file(parameters, directory):
     """Return the effective native TAU-directory file path."""
     filename = _optional_value(parameters.TAU, "TAUDIR")
     if not filename:
-        filename = f"{parameters.CONTROL.DATASET()}.tau.dir"
+        filename = dataset_adsi(parameters) + ".tau.dir"
 
     filename = os.fspath(filename)
     if os.path.isabs(filename):
@@ -115,6 +116,6 @@ class NrSpectroscopyInputParametersDefinition(InputParametersDefinition):
         if self.broadened_dos:
             gamma = _optional_value(parameters.TASK, "GAMMA")
             if gamma is not None and gamma > 0:
-                files.append(resolve_file(directory, f"{parameters.CONTROL.DATASET()}.dos.brd"))
+                files.append(resolve_file(directory, f"{dataset_adsi(parameters)}.dos.brd"))
 
         return tuple(files)

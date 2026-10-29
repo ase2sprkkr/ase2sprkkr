@@ -3,7 +3,8 @@
 
 import os
 
-from ...common.grammar_types import SetOf, DefKeyword, flag, energy, Integer, Keyword
+from ...common.grammar_types import SetOf, DefKeyword, flag, energy, Integer, Keyword, String
+from ._filenames import dataset_adsi
 from ..input_parameters_definitions import InputSectionDefinition as Section, InputValueDefinition as V
 from ...sprkkr.sprkkr_grammar_types import Site, AtomicType
 from functools import partial
@@ -91,10 +92,53 @@ def _sections_xc_enrich(option):
 def _map_filename(option, value):
     if not os.path.isabs(value):
         return value
-    dir = option._get_root_container().directory
-    if dir is None:
-        return os.path.basename(value)
-    return os.path.relpath(value, dir)
+    # Without an explicit run directory, use this process's cwd. Dropping the
+    # parent directory would silently redirect references to a different file.
+    return os.path.relpath(value, option._get_root_container().directory)
+
+
+def _tau_directory_default(section):
+    """Make an absolute DATASET's implicit TAUDIR available for path mapping.
+
+    Relative datasets keep SPR-KKR's ordinary omitted default. For an absolute
+    prefix, writing TAUDIR explicitly prevents TAUPATH from being prepended to
+    the newly relative DATASET prefix a second time.
+    """
+    control = section._get_root_container().CONTROL
+    dataset = control.DATASET()
+    if not dataset or not os.path.isabs(dataset):
+        return None
+    return dataset_adsi(section._get_root_container()) + ".tau.dir"
+
+
+def _map_tau_filename(option, value):
+    """Render TAUDIR relative to TAUPATH, which is itself relative to cwd.
+
+    Native SPR-KKR concatenates the two values. An absolute TAUDIR must
+    therefore be made relative to its effective TAUPATH, rather than to cwd.
+    """
+    if not os.path.isabs(value):
+        return value
+    parent = option._container.TAUPATH()
+    if not parent or parent == ".":
+        return _map_filename(option, value)
+    if not os.path.isabs(parent):
+        directory = option._get_root_container().directory or os.curdir
+        parent = os.path.join(directory, parent)
+    return os.path.relpath(value, parent)
+
+
+class _AdsiString(String):
+    """An empty Python ADSI is serialized by omitting the native keyword."""
+
+    def _validate(self, value, why="set"):
+        if isinstance(value, str) and value == "":
+            return True
+        return super()._validate(value, why)
+
+
+def _adsi_write_condition(option):
+    return bool(option())
 
 
 def CONTROL(ADSI):
@@ -119,7 +163,8 @@ def CONTROL(ADSI):
                 "case",
                 is_required=True,
                 result_is_visible=True,
-                info="The custom field for the description of the problem - the output files will been called 'DATASET.<ext>'.",
+                value_mapping=_map_filename,
+                info="Filename prefix; nonempty ADSI is appended with an underscore for native DATSET outputs.",
             ),
             V(
                 "SFNFIL",
@@ -129,7 +174,9 @@ def CONTROL(ADSI):
                 value_mapping = _map_filename,
                 info="Shape-function file used for full-potential calculations.",
             ),
-            V("ADSI", str, ADSI, is_required=False, info="Type of the computation."),
+            V("ADSI", _AdsiString(), ADSI, is_required=False,
+              write_condition=_adsi_write_condition,
+              info="Filename suffix appended to DATASET with an underscore; empty means no suffix."),
             V(
                 "POTFIL",
                 str,

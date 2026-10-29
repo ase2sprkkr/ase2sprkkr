@@ -1,4 +1,5 @@
 """Phase-shift diagnostics, based on PSHIFT in SPR-KKR 9.7."""
+from ._filenames import dataset_adsi
 from ...common.grammar_types import Integer, SetOf
 from ...common.warnings import DataValidityError, DataValidityWarning
 from ..input_parameters_definitions import InputParametersDefinition as InputParameters
@@ -12,7 +13,7 @@ class PshiftInputParametersDefinition(InputParameters):
 
     def output_files(self, parameters, directory):
         files = list(super().output_files(parameters, directory))
-        dataset = parameters.CONTROL.DATASET()
+        dataset = dataset_adsi(parameters)
         files.append(resolve_file(directory, f"{dataset}_pshift_*.agr"))
         if parameters.MODE.MODE() is None:
             files.append(resolve_file(directory, f"{dataset}_logdrv_*.agr"))

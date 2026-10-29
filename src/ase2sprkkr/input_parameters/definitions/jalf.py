@@ -36,5 +36,5 @@ def input_parameters_definition():
                     "The final CURDNS call is skipped by the native MPI postprocessing guard. "
                     "Only the fully relativistic serial workflow is exposed. Numerical output is unverified."
     )
-    schema._task_definition = TaskDefinition("JALF", experimental=True, executable="kkrgen", mpi=False, output_files=("{dataset}_JALF.dat", "curdns1", "curdns2", "curdns3"))
+    schema._task_definition = TaskDefinition("JALF", experimental=True, executable="kkrgen", mpi=False, output_files=("{DATASET}_JALF.dat", "curdns1", "curdns2", "curdns3"))
     return schema

@@ -68,6 +68,6 @@ def input_parameters_definition():
     schema.task_selectors = ("CLPES",)
     schema._task_definition = TaskDefinition("CLPES", experimental=True, executable="kkrspec", mpi=False, output_reader="ARPES",
         input_files=SPEC_INPUT_FILES,
-        output_files=(*SPEC_OUTPUT_FILES, "{dataset}_corewf")
+        output_files=(*SPEC_OUTPUT_FILES, "{DATASET_ADSI}_corewf")
     )
     return schema

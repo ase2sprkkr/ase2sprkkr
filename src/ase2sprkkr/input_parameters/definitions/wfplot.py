@@ -5,6 +5,7 @@ The implementation in wfplot.f rejects full-potential calculations. BAND uses
 only ETAB(1, 1), not a spectrum over the supplied energy mesh.
 """
 
+from ._filenames import dataset_adsi
 from ...common.grammar_types import Integer, Keyword, SetOf
 from ...common.warnings import DataValidityError, DataValidityWarning
 from ..input_parameters_definitions import InputParametersDefinition as InputParameters, InputValueDefinition as V
@@ -18,7 +19,7 @@ class WfplotInputParametersDefinition(InputParameters):
 
     def output_files(self, parameters, directory):
         files = list(super().output_files(parameters, directory))
-        dataset = parameters.CONTROL.DATASET()
+        dataset = dataset_adsi(parameters)
         task = parameters.TASK
 
         if task.STATE() == "CORE":

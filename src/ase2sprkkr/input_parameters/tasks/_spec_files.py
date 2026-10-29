@@ -26,21 +26,21 @@ def _single_polarization(parameters):
 def data_spc(parameters):
     if parameters.TASK.TASK() == "SPLEED":
         # Native SPLEED always opens the SPC (sometimes header-only).
-        return "{dataset}_data.spc"
-    return "{dataset}_data.spc" if _single_polarization(parameters) else None
+        return "{DATASET_ADSI}_data.spc"
+    return "{DATASET_ADSI}_data.spc" if _single_polarization(parameters) else None
 
 
 def data_pol1_spc(parameters):
-    return None if _single_polarization(parameters) else "{dataset}_{CONTROL.ADSI}_pol1.spc"
+    return None if _single_polarization(parameters) else "{DATASET_ADSI}_data_pol1.spc"
 
 
 def data_pol2_spc(parameters):
-    return None if _single_polarization(parameters) else "{dataset}_{CONTROL.ADSI}_pol2.spc"
+    return None if _single_polarization(parameters) else "{DATASET_ADSI}_data_pol2.spc"
 
 
 SPEC_INPUT_FILES = (input_inp, struc_inp)
 SPEC_OUTPUT_FILES = (
-    "{dataset}_{CONTROL.ADSI}_SPEC.out",
+    "{DATASET_ADSI}_SPEC.out",
     data_spc,
     data_pol1_spc,
     data_pol2_spc,

@@ -1,5 +1,6 @@
 """JXC task definition."""
 
+from ._filenames import dataset_adsi
 from ._file_manifests import resolve_file
 from ._sections import CONTROL, TAU, ENERGY, SITES, STRCONST, MODE
 from ..input_parameters_definitions import (
@@ -23,7 +24,7 @@ class JxcInputParametersDefinition(InputParametersDefinition):
 
     def output_files(self, parameters, directory):
         files = list(super().output_files(parameters, directory))
-        dataset = parameters.CONTROL.DATASET()
+        dataset = dataset_adsi(parameters)
         if parameters.TASK.JXC():
             if parameters.MODE.MODE() == "SP-SREL":
                 files.extend((

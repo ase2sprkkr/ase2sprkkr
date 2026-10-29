@@ -1,6 +1,7 @@
 """Angle-integrated valence photoemission in KKRGEN (SPR-KKR 9.7)."""
 import math
 import numpy as np
+from ._filenames import dataset_adsi
 from ...common.grammar_types import Integer, Keyword, SetOf
 from ...common.warnings import DataValidityError, DataValidityWarning
 from ..input_parameters_definitions import InputValueDefinition as V
@@ -35,14 +36,14 @@ class VbpesInputParametersDefinition(RequiredTauInputParametersDefinition):
         files = list(super().cache_files(parameters, directory))
         if self._uses_final_state_tau(parameters):
             label = _final_state_photon_label(parameters)
-            files.append(resolve_file(directory, f"{parameters.CONTROL.DATASET()}.tau.dir.F_{label}"))
+            files.append(resolve_file(directory, f"{dataset_adsi(parameters)}.tau.dir.F_{label}"))
         return tuple(files)
 
     def output_files(self, parameters, directory):
         files = list(super().output_files(parameters, directory))
         if self._uses_final_state_tau(parameters):
             label = _final_state_photon_label(parameters)
-            files.append(resolve_file(directory, f"{parameters.CONTROL.DATASET()}.dos.F_{label}"))
+            files.append(resolve_file(directory, f"{dataset_adsi(parameters)}.dos.F_{label}"))
         return tuple(files)
 
 

@@ -43,8 +43,8 @@ def input_parameters_definition():
                     "numerical results and FULLPOT have not been verified."
     )
     schema._task_definition = TaskDefinition("STONER", experimental=True, executable="kkrgen", mpi=False, output_files=(
-            "{dataset}_*_g-spin.dat",
-            "{dataset}_*_g-orb.dat",
-            "{dataset}_*_VWN_A-xc.dat",
+            "{DATASET_ADSI}_*_g-spin.dat",
+            "{DATASET_ADSI}_*_g-orb.dat",
+            "{DATASET_ADSI}_*_VWN_A-xc.dat",
         ))
     return schema

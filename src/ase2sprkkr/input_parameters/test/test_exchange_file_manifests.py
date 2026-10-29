@@ -9,6 +9,7 @@ DATASET = "manifest_test"
 def _names(task, tmp_path):
     parameters = InputParameters.create(task)
     parameters.CONTROL.DATASET = DATASET
+    parameters.CONTROL.ADSI = ""
     return parameters, {
         os.path.basename(os.fspath(path))
         for path in parameters.output_files(tmp_path)

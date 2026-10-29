@@ -47,10 +47,10 @@ def input_parameters_definition():
                     "Converge energy and k meshes; this definition does not expose restart, AF signs or manual NEF arrays."
     )
     schema._task_definition = TaskDefinition("CHI", experimental=True, executable="kkrchi", mpi=False, output_files=(
-            "{dataset}*_dens.agr",
-            "{dataset}*_chifmag.agr",
-            "{dataset}_*_GAMMA-OP.dat",
-            "{dataset}_*_CHI-r.dat",
-            "{dataset}_*_*_I-spin.dat",
-        ), cache_files=("{dataset}.tau", "TKTK_tables"))
+            "{DATASET_ADSI}*_dens.agr",
+            "{DATASET_ADSI}*_chifmag.agr",
+            "{DATASET_ADSI}_*_GAMMA-OP.dat",
+            "{DATASET_ADSI}_*_CHI-r.dat",
+            "{DATASET_ADSI}_*_*_I-spin.dat",
+        ), cache_files=("{DATASET_ADSI}.tau", "TKTK_tables"))
     return schema

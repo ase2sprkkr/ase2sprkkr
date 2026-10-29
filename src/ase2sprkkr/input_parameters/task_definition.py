@@ -7,6 +7,7 @@ import os
 import string
 from typing import Callable, Iterable, Optional, Tuple, Union
 
+from .definition._filenames import dataset_adsi
 from ..common.doc import process_input_parameters_definition
 from ..common.module_registry import (
     ModuleRegistry,
@@ -40,6 +41,9 @@ def _validate_executable(value: str) -> str:
 class TaskFile(os.PathLike):
     """One task file declaration, or its resolved path with retained metadata.
 
+    Templates use {DATASET} for native DATSET0 (the input CONTROL.DATASET)
+    and {DATASET_ADSI} for native DATSET (DATASET plus a nonempty _ADSI).
+    The lowercase {dataset} is a compatibility alias for {DATASET}.
     A pathname may be a template or callback; a callback returning None means
     the file is not declared for that parameter set.  An optional declared
     file may be absent even after successful execution.
@@ -105,8 +109,10 @@ class _TaskFileFormatter(string.Formatter):
         self.parameters = parameters
 
     def get_field(self, field_name, args, kwargs):
-        if field_name == "dataset":
+        if field_name in ("DATASET", "dataset"):
             value = self.parameters.CONTROL.DATASET()
+        elif field_name == "DATASET_ADSI":
+            value = dataset_adsi(self.parameters)
         else:
             value = self.parameters
             for key in field_name.split("."):

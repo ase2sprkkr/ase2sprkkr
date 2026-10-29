@@ -6,9 +6,9 @@ from ..input_parameters_definitions import InputParametersDefinition, InputSecti
 
 
 _OUTPUTS = {
-    "PLOTPOT": ("{dataset}_V_*.agr", "{dataset}_VNS_*.agr"),
-    "PLOTRHO": ("{dataset}_RHO_*.agr", "{dataset}_RNS_*.agr"),
-    "PLOTSFN": ("{dataset}_SFN_M*.agr",),
+    "PLOTPOT": ("{DATASET}_V_*.agr", "{DATASET}_VNS_*.agr"),
+    "PLOTRHO": ("{DATASET}_RHO_*.agr", "{DATASET}_RNS_*.agr"),
+    "PLOTSFN": ("{DATASET}_SFN_M*.agr",),
 }
 
 

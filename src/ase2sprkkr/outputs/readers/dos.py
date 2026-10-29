@@ -5,6 +5,7 @@ import os
 from ..task_result import TaskResult, KkrOutputReader
 from .default import DefaultOutputParser
 from ...common.decorators import cached_property
+from ...input_parameters.definitions._filenames import dataset_adsi
 
 
 class DosResult(TaskResult):
@@ -14,7 +15,7 @@ class DosResult(TaskResult):
     @cached_property
     def dos_filename(self):
         """Density of states file name"""
-        fname = self.input_parameters.CONTROL.DATASET() + "_DOS.dos"
+        fname = dataset_adsi(self.input_parameters) + ".dos"
         if self.directory:
             fname = os.path.join(self.directory, fname)
         return fname

@@ -8,5 +8,5 @@ def task_definition():
         executable="kkrgen",
         mpi=True,
         output_reader="BSF",
-        output_files=("{dataset}_BLOCHSF.bsf", TaskFile("{dataset}_BLOCHSF_spol.bsf", optional=True)),
+        output_files=("{DATASET_ADSI}.bsf", TaskFile("{DATASET_ADSI}_spol.bsf", optional=True)),
     )

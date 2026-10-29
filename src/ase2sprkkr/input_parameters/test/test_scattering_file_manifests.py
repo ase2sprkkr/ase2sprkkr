@@ -6,6 +6,7 @@ from ase2sprkkr.input_parameters.input_parameters import InputParameters
 def _names(task, tmp_path):
     parameters = InputParameters.create(task)
     parameters.CONTROL.DATASET = "manifest_test"
+    parameters.CONTROL.ADSI = ""
     return {
         os.path.basename(os.fspath(path))
         for path in parameters.output_files(tmp_path)

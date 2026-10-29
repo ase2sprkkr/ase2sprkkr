@@ -1,5 +1,6 @@
 """Field-induced XAS dichroism with externally supplied susceptibilities."""
 import numpy as np
+from ._filenames import dataset_adsi
 from ...common.grammar_types import Integer, SetOf, real
 from ...common.warnings import DataValidityError
 from ._file_manifests import resolve_file, xray_shell_label
@@ -13,7 +14,7 @@ class ChixasInputParametersDefinition(InputParameters):
 
     def output_files(self, parameters, directory):
         files = list(super().output_files(parameters, directory))
-        dataset = parameters.CONTROL.DATASET()
+        dataset = dataset_adsi(parameters)
         shell = xray_shell_label(parameters.TASK.CL())
         prefix = f"{dataset}_*"
         spectrum = f"{prefix}_{shell}"

@@ -1,8 +1,10 @@
 """Single-contour positron annihilation momentum densities."""
 import numpy as np
+from ._filenames import dataset_adsi
 from ...common.grammar_types import Integer, SetOf
 from ...common.warnings import DataValidityError, DataValidityWarning
 from ._sections import TASK, CONTROL, TAU, ENERGY, SITES, STRCONST, MODE, CPA
+from ._sections import _map_filename, _map_tau_filename, _tau_directory_default
 from ._file_manifests import RequiredTauInputParametersDefinition, resolve_file
 from ..input_parameters_definitions import InputValueDefinition as V
 from ..task_definition import TaskDefinition
@@ -13,7 +15,7 @@ class PosaniInputParametersDefinition(RequiredTauInputParametersDefinition):
 
     def output_files(self, parameters, directory):
         files = list(super().output_files(parameters, directory))
-        dataset = parameters.CONTROL.DATASET()
+        dataset = dataset_adsi(parameters)
         task = parameters.TASK
         if task.MD2D() or task.EMD2D():
             files.extend(resolve_file(directory, f"{dataset}_{part}_pan2d.dat")
@@ -86,8 +88,11 @@ def input_parameters_definition():
     energy.copy_member("SPLITSS", default_value=False)
     tau = TAU.copy(
         add=[
-            V("TAUDIR", str, is_optional=True, info="Existing DATASET.tau.dir directory by default."),
-            V("TAUPATH", str, is_optional=True, info="Parent of TAUDIR; native default is current directory."),
+            V("TAUDIR", str, is_optional=True, value_mapping=_map_tau_filename,
+              default_value_from_container=_tau_directory_default,
+              info="Existing DATASET.tau.dir directory by default."),
+            V("TAUPATH", str, is_optional=True, value_mapping=_map_filename,
+              info="Parent of TAUDIR; native default is current directory."),
             TAU["BZINT"].copy(default_value="POINTS"),
         ],
     )
@@ -114,5 +119,5 @@ def input_parameters_definition():
                            "ONLY_CORE and USE_ZJOVZZ workflows are not audited. NONMAG is allowed. "
                            "Native code forces the ZJ wavefunction convention even for FULLPOT."
     )
-    schema._task_definition = TaskDefinition("POSANI", experimental=True, executable="kkrgen", mpi=True, input_files=("{dataset}_pos_dat.pan",))
+    schema._task_definition = TaskDefinition("POSANI", experimental=True, executable="kkrgen", mpi=True, input_files=("{DATASET_ADSI}_pos_dat.pan",))
     return schema

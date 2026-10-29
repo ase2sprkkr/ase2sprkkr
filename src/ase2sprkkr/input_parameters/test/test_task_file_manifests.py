@@ -5,7 +5,7 @@ def test_dos_output_is_namespaced_by_dataset(tmp_path):
     parameters = InputParameters.create("DOS")
     parameters.CONTROL.DATASET = "Fe"
 
-    assert tuple(map(str, parameters.output_files(str(tmp_path)))) == (str(tmp_path / "Fe.dos"),)
+    assert tuple(map(str, parameters.output_files(str(tmp_path)))) == (str(tmp_path / "Fe_DOS.dos"),)
     assert parameters.output_files(str(tmp_path))[0].type == "DOS"
 
 
@@ -30,14 +30,14 @@ def test_xas_reuses_dataset_tau_directory_as_optional_cache(tmp_path):
     parameters = InputParameters.create("XAS")
     parameters.CONTROL.DATASET = "Fe"
 
-    assert parameters.cache_files(str(tmp_path)) == (str(tmp_path / "Fe.tau.dir"),)
+    assert parameters.cache_files(str(tmp_path)) == (str(tmp_path / "Fe_XAS.tau.dir"),)
 
 
 def test_bsfek_reuses_dataset_tau_directory_as_optional_cache(tmp_path):
     parameters = InputParameters.create("BSFEK")
     parameters.CONTROL.DATASET = "Fe"
 
-    assert parameters.cache_files(str(tmp_path)) == (str(tmp_path / "Fe.tau.dir"),)
+    assert parameters.cache_files(str(tmp_path)) == (str(tmp_path / "Fe_BLOCHSF.tau.dir"),)
 
 
 def test_gilbert_fluctuation_file_is_required_for_m_t(tmp_path):
@@ -67,10 +67,10 @@ def test_jxc_frel_declares_tensor_and_plot_outputs(tmp_path):
     parameters.MODE.MODE = "FREL"
 
     assert parameters.output_files(str(tmp_path)) == (
-        str(tmp_path / "Fe_XCPLTEN_Jij.dat"),
-        str(tmp_path / "Fe_XCPLTEN_Jij_*.agr"),
-        str(tmp_path / "Fe_XCPLTEN_Dij.dat"),
-        str(tmp_path / "Fe_XCPLTEN_Dij_[xyz]_*.agr"),
+        str(tmp_path / "Fe_JXC_XCPLTEN_Jij.dat"),
+        str(tmp_path / "Fe_JXC_XCPLTEN_Jij_*.agr"),
+        str(tmp_path / "Fe_JXC_XCPLTEN_Dij.dat"),
+        str(tmp_path / "Fe_JXC_XCPLTEN_Dij_[xyz]_*.agr"),
     )
 
 
@@ -80,8 +80,8 @@ def test_jxc_sp_srel_declares_scalar_and_plot_outputs(tmp_path):
     parameters.MODE.MODE = "SP-SREL"
 
     assert parameters.output_files(str(tmp_path)) == (
-        str(tmp_path / "Fe_J_ij.dat"),
-        str(tmp_path / "Fe_Jij_*.agr"),
+        str(tmp_path / "Fe_JXC_J_ij.dat"),
+        str(tmp_path / "Fe_JXC_Jij_*.agr"),
     )
 
 
@@ -106,10 +106,10 @@ def test_spec_outputs_follow_polarization_and_task(tmp_path):
         parameters.CONTROL.DATASET = "Fe"
         outputs = (
             str(tmp_path / f"Fe_{task}_SPEC.out"),
-            str(tmp_path / "Fe_data.spc"),
+            str(tmp_path / f"Fe_{task}_data.spc"),
         )
         if task == "CLPES":
-            outputs += (str(tmp_path / "Fe_corewf"),)
+            outputs += (str(tmp_path / "Fe_CLPES_corewf"),)
         assert parameters.output_files(str(tmp_path)) == outputs
 
         # Selecting S polarization does not itself enable two output channels.
@@ -122,15 +122,15 @@ def test_spec_outputs_follow_polarization_and_task(tmp_path):
                 output_files = parameters.output_files(str(tmp_path))
                 expected = (
                     str(tmp_path / f"Fe_{task}_SPEC.out"),
-                    str(tmp_path / f"Fe_{task}_pol1.spc"),
-                    str(tmp_path / f"Fe_{task}_pol2.spc"),
+                    str(tmp_path / f"Fe_{task}_data_pol1.spc"),
+                    str(tmp_path / f"Fe_{task}_data_pol2.spc"),
                 )
                 assert output_files == expected
 
     parameters = InputParameters.create("BAND")
     parameters.CONTROL.DATASET = "Fe"
     assert parameters.output_files(str(tmp_path)) == (
-        str(tmp_path / "Fe_BAND_SPEC.out"), str(tmp_path / "Fe_data.spc"),
+        str(tmp_path / "Fe_BAND_SPEC.out"), str(tmp_path / "Fe_BAND_data.spc"),
     )
 
     parameters = InputParameters.create("SPLEED")
@@ -139,7 +139,7 @@ def test_spec_outputs_follow_polarization_and_task(tmp_path):
         parameters.SPEC_EL.TYP = diagram
         declared = parameters.output_files(str(tmp_path))
         assert tuple(map(str, declared)) == (
-            str(tmp_path / "Fe_SPLEED_SPEC.out"), str(tmp_path / "Fe_data.spc"),
+            str(tmp_path / "Fe_SPLEED_SPEC.out"), str(tmp_path / "Fe_SPLEED_data.spc"),
         )
         assert all(not f.optional for f in declared)
 
@@ -195,7 +195,7 @@ def test_bsf_output_file_declarations(tmp_path):
 def test_clpes_core_wavefunction_is_a_declared_output(tmp_path):
     parameters = InputParameters.create("CLPES")
     parameters.CONTROL.DATASET = "Fe"
-    assert str(tmp_path / "Fe_corewf") in parameters.output_files(str(tmp_path))
+    assert str(tmp_path / "Fe_CLPES_corewf") in parameters.output_files(str(tmp_path))
 
 
 def test_manifest_rejects_duplicate_output_declarations(tmp_path):

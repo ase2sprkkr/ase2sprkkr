@@ -6,6 +6,7 @@ from ase2sprkkr.input_parameters.input_parameters import InputParameters
 def test_chi_standard_outputs(tmp_path):
     parameters = InputParameters.create("CHI")
     parameters.CONTROL.DATASET = "manifest_test"
+    parameters.CONTROL.ADSI = ""
     names = {
         os.path.basename(os.fspath(path))
         for path in parameters.output_files(tmp_path)

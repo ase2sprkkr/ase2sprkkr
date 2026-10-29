@@ -33,5 +33,5 @@ def input_parameters_definition():
                     "The final ORBCURDNS call is skipped by the native MPI postprocessing guard. "
                     "Only the fully relativistic serial workflow is exposed. Numerical output is unverified."
     )
-    schema._task_definition = TaskDefinition("JORB", experimental=True, executable="kkrgen", mpi=False, output_files=("{dataset}_JORB.dat", "{dataset}_JORB_UP.dat", "{dataset}_JORB_DN.dat"))
+    schema._task_definition = TaskDefinition("JORB", experimental=True, executable="kkrgen", mpi=False, output_files=("{DATASET}_JORB.dat", "{DATASET}_JORB_UP.dat", "{DATASET}_JORB_DN.dat"))
     return schema

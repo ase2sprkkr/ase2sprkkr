@@ -55,5 +55,5 @@ def input_parameters_definition():
                     "ENERGY.NE supplies allocation capacity; actual energies come from DOS. "
                     "FULLPOT, DMFT and LDA+U are unsupported. Numerical output is unverified."
     )
-    schema._task_definition = TaskDefinition("APS", experimental=True, executable="kkrgen", mpi=False, input_files=("{dataset}.dos",))
+    schema._task_definition = TaskDefinition("APS", experimental=True, executable="kkrgen", mpi=False, input_files=("{DATASET_ADSI}.dos",))
     return schema

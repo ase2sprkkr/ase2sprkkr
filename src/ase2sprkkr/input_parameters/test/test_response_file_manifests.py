@@ -13,6 +13,7 @@ def _names(parameters, tmp_path, kind="output"):
 def test_gilbert_tau_cache_and_output_families(tmp_path):
     parameters = InputParameters.create("GILBERT")
     parameters.CONTROL.DATASET = "manifest_test"
+    parameters.CONTROL.ADSI = ""
     assert "manifest_test.tau.dir" in _names(parameters, tmp_path, "cache")
     assert {
         "manifest_testalfa_x.dat",
@@ -24,6 +25,7 @@ def test_gilbert_tau_cache_and_output_families(tmp_path):
 def test_stoner_diagnostic_output_families(tmp_path):
     parameters = InputParameters.create("STONER")
     parameters.CONTROL.DATASET = "manifest_test"
+    parameters.CONTROL.ADSI = ""
     assert {
         "manifest_test_*_g-spin.dat",
         "manifest_test_*_g-orb.dat",

@@ -5,6 +5,7 @@ at one initial electron energy. CORE scans final electron energies. The source
 fixes m_j=1/2 and polarization q=0; neither is an input parameter.
 """
 
+from ._filenames import dataset_adsi
 from ...common.grammar_types import Integer, Keyword, SetOf
 from ...common.warnings import DataValidityError, DataValidityWarning
 from ..input_parameters_definitions import InputParametersDefinition as InputParameters, InputValueDefinition as V
@@ -18,7 +19,7 @@ class MeplotInputParametersDefinition(InputParameters):
 
     def output_files(self, parameters, directory):
         files = list(super().output_files(parameters, directory))
-        dataset = parameters.CONTROL.DATASET()
+        dataset = dataset_adsi(parameters)
         task = parameters.TASK
 
         if task.INITIALSTATE() == "CORE":

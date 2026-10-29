@@ -39,10 +39,10 @@ def input_parameters_definition():
                     "are not registered by this definition; standalone PLOTRHO has a native allocation bug."
     )
     schema._task_definition = TaskDefinition("PLOTPRS", experimental=True, executable="kkrgen", mpi=False, output_files=(
-            "{dataset}_V_*.agr",
-            "{dataset}_VNS_*.agr",
-            "{dataset}_RHO_*.agr",
-            "{dataset}_RNS_*.agr",
-            "{dataset}_SFN_M*.agr",
+            "{DATASET}_V_*.agr",
+            "{DATASET}_VNS_*.agr",
+            "{DATASET}_RHO_*.agr",
+            "{DATASET}_RNS_*.agr",
+            "{DATASET}_SFN_M*.agr",
         ))
     return schema

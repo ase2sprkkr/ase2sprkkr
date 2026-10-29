@@ -51,10 +51,10 @@ def input_parameters_definition():
                     "the task does not read isotope or nuclear-moment input parameters."
     )
     schema._task_definition = TaskDefinition("NUCSSCPL", experimental=True, executable="kkrgen", mpi=False, output_files=(
-            "{dataset}_A_ij.dat",
+            "{DATASET_ADSI}_A_ij.dat",
             "RK.dat",
             "tab_aij.dat",
-            "{dataset}_Aij_*.agr",
-            "{dataset}_Rij_*.agr",
+            "{DATASET_ADSI}_Aij_*.agr",
+            "{DATASET_ADSI}_Rij_*.agr",
         ))
     return schema

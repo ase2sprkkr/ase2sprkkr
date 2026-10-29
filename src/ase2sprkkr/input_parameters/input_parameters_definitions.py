@@ -299,6 +299,15 @@ class InputParametersDefinition(ConfigurationFileDefinition):
             report_invalid=report_invalid,
         )
 
+    def parse_return(self, val, return_value_only=True):
+        values = super().parse_return(val, return_value_only)
+        # Task defaults are useful for newly created input, but an omitted
+        # ADSI in a native input means an empty suffix, not the task name.
+        if ("CONTROL" in values and "CONTROL" in self
+                and "ADSI" in self["CONTROL"]):
+            values["CONTROL"].setdefault("ADSI", "")
+        return values
+
     def read_from_file(self, file, allow_dangerous=False, *, filename=None,
                        allow_incomplete=False, report_invalid=None, **kwargs):
         out = super().read_from_file(file, allow_dangerous,
