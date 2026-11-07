@@ -77,7 +77,7 @@ that prohibits those operations cannot exercise supervisor/reconnection behavior
 The repaired build was produced with an isolated PEP 517 backend using local
 build dependency wheels, and its wheel was installed with the test extra into
 a fresh venv. The core imported without ASE, ASE2SPRKKR or PSI/J. The complete
-suite from the unpacked sdist passed: **707 passed, 3 optional Docker cases
+suite from the unpacked sdist passed: **711 passed, 3 optional Docker cases
 skipped**. This also verifies that conftest, the test package and Docker fixtures
 are present in the source distribution. The outside-checkout smoke test passed
 raw execution, persistent processing after reconnect and the real remote console

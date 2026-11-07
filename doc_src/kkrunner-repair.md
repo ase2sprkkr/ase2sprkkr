@@ -40,7 +40,7 @@ nadále obnovitelný; aplikační historický výsledek načte příslušný ada
 ## Ověření
 
 - Úplná sada rozbaleného sdist proti instalovanému wheelu v čistém prostředí:
-  **707 passed, 3 skipped**; samostatné Docker SSH/Slurm případy: **3 passed**.
+  **711 passed, 3 skipped**; samostatné Docker SSH/Slurm případy: **3 passed**.
 - Čisté prostředí bez ASE/ASE2SPRKKR/PSI-J: import všech modulů, raw běh,
   persistentní obnova s dodatečným procesorem, oba console entry pointy a skutečný
   remote executable prošly bez zdrojového PYTHONPATH. `pip check` prošel.
