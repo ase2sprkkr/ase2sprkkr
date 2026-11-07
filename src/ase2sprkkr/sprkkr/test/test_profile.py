@@ -85,7 +85,7 @@ def test_runtime_profile_splits_endpoint_from_launch_parameters():
         executor="ssh",
         host="cluster.example",
         ssh_options=("-p", "2222"),
-        remote_command=("python", "-m", "ase2sprkkr.tools.ase2sprkkr", "remote"),
+        remote_command=("python", "-m", "kkrunner", "remote"),
         psij_backend="slurm",
         psij_url="ssh://scheduler",
         executable_dir="/opt/sprkkr",
@@ -101,7 +101,7 @@ def test_runtime_profile_splits_endpoint_from_launch_parameters():
         executor="ssh",
         host="cluster.example",
         ssh_options=("-p", "2222"),
-        remote_command=("python", "-m", "ase2sprkkr.tools.ase2sprkkr", "remote"),
+        remote_command=("python", "-m", "kkrunner", "remote"),
         psij_backend="slurm",
         psij_url="ssh://scheduler",
     )

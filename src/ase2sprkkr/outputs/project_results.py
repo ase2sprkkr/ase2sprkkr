@@ -3,8 +3,7 @@
 from __future__ import annotations
 
 from ..common.module_registry import RegistryEntryNotFound
-from ..execution import FailurePhase, FileState, RunState
-from ..execution.manager import HistoricalFileMismatchError
+from kkrunner import FailurePhase, FileState, RunState, HistoricalFileMismatchError
 from ..input_parameters.input_parameters import InputParameters
 from ..input_parameters.task_definition import TaskMismatchError
 from .reader_registry import reader_registry
@@ -26,30 +25,41 @@ def _record(manager, run):
     return manager.store.get(run) if isinstance(run, str) else manager.store.get(run.id)
 
 
+def application_metadata(record):
+    """Validate and read the immutable SPR-KKR namespace of a generic record."""
+    metadata = record.metadata.get("ase2sprkkr")
+    if not isinstance(metadata, dict) or not isinstance(metadata.get("task"), str):
+        raise UnrecoverableProjectResultError(record, "missing SPR-KKR task metadata")
+    return metadata
+
+
 def _task_definition_for_record(record):
     try:
-        return InputParameters.task_registry[record.task]
+        return InputParameters.task_registry[application_metadata(record)["task"]]
     except RegistryEntryNotFound:
         raise UnrecoverableProjectResultError(
-            record, f"unknown persisted task {record.task!r}"
+            record, f"unknown persisted task {application_metadata(record)['task']!r}"
         ) from None
 
 
 def _input_parameters_for_record(manager, record, task_definition):
     result_files = record.files
     input_file = None if result_files is None else result_files.input_file
-    if input_file is None or not manager.input_file_is_current(record):
+    current_input = (manager.input_file_is_current(record) if manager is not None
+                     else any(str(v.path) == input_file and v.is_current()
+                              for v in result_files.input_versions))
+    if input_file is None or not current_input:
         return None
-    if record.input_definition is None:
+    if application_metadata(record).get("input_definition") is None:
         return None
 
     input_registry = InputParameters.input_parameters_registry
     try:
-        definition = input_registry[record.input_definition]
+        definition = input_registry[application_metadata(record).get("input_definition")]
     except RegistryEntryNotFound:
         raise UnrecoverableProjectResultError(
             record,
-            f"unknown persisted input definition {record.input_definition!r}",
+            f"unknown persisted input definition {application_metadata(record).get('input_definition')!r}",
         ) from None
 
     try:
@@ -62,7 +72,7 @@ def _input_parameters_for_record(manager, record, task_definition):
         raise UnrecoverableProjectResultError(
             record,
             "persisted task does not match historical input "
-            f"({record.task!r} != {exc.task_name!r})",
+            f"({application_metadata(record)['task']!r} != {exc.task_name!r})",
         ) from exc
 
 
@@ -75,7 +85,7 @@ def _reader_for_record(manager, record):
         parameters,
         None,
         record.execution.directory.local,
-        task_name=record.task,
+        task_name=application_metadata(record)["task"],
     )
 
 
@@ -137,11 +147,18 @@ def attach_project_run(
         # historically failed transfer into an orphan active run.
         record = manager.resume_download(record)
 
+    def completed(result):
+        from .task_result import TaskResult
+        if isinstance(result, TaskResult):
+            result.run_record = manager.store.get(record.id)
+        if callback is not None:
+            callback(result)
+
     return manager.attach(
         record,
         process_result=process_result,
         executor=executor,
-        callback=callback,
+        callback=completed,
         output_listener=output_listener,
     )
 

@@ -5,7 +5,7 @@ from pathlib import Path
 from ase.build import bulk
 import pytest
 
-from ...execution.base import RunState
+from kkrunner.base import RunState
 from ...input_parameters.input_parameters import InputParameters
 from ...input_parameters.task_definition import TaskDefinition
 from ...potentials.potentials import Potential
@@ -309,3 +309,28 @@ def test_reader_file_not_found_is_not_relabelled_as_missing_executable(
 
     assert prepared.closed
     assert prepared.input_file.closed
+
+
+def test_tracked_run_rejects_directory_deleted_on_client_exit(tmp_path, fe_bulk):
+    from kkrunner import ExecutionManager, ProjectRepository
+    projects = ProjectRepository(tmp_path / 'projects')
+    manager = ExecutionManager(project_repository=projects, project=projects.create('Persistent'))
+    calculator = SPRKKR(atoms=fe_bulk.copy(), mpi=False, empty_spheres=False)
+    prepared = calculator.prepare(directory=False)
+    directory = Path(prepared.directory)
+    with pytest.raises(ValueError, match='persistent calculation directory'):
+        prepared.create_run(profile=SPRKKRProfile(mpi=False), executor=_Executor(), project=manager)
+    assert prepared.closed
+    assert not directory.exists()
+
+
+def test_tracked_run_rejects_temporary_stderr(tmp_path, fe_bulk):
+    from kkrunner import ExecutionManager, ProjectRepository
+    projects = ProjectRepository(tmp_path / 'projects')
+    manager = ExecutionManager(project_repository=projects, project=projects.create('Persistent'))
+    calculator = SPRKKR(atoms=fe_bulk.copy(), mpi=False, empty_spheres=False)
+    prepared = calculator.prepare(directory=tmp_path)
+    with pytest.raises(ValueError, match='persistent stderr'):
+        prepared.create_run(profile=SPRKKRProfile(mpi=False), executor=_Executor(),
+                            project=manager, error_file=False)
+    assert prepared.closed

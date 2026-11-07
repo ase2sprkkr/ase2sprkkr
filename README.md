@@ -194,3 +194,20 @@ fork for building the documentation.
 
 Please feel free to make a pull-request or post an issue at:
 <https://github.com/ase2sprkkr/ase2sprkkr>
+
+### Execution infrastructure in source checkouts
+
+Execution is provided by the separate `kkrunner` distribution. Keep its checkout
+next to `ase2sprkkr` and install it before installing ASE2SPRKKR:
+
+```sh
+python -m pip install -e ../kkrunner
+python -m pip install -e .
+```
+
+The remote execution host needs only KKRunner and the calculation executable.
+Its protocol CLI is `kkrunner remote` (also available as `kkrunner-remote`).
+`ase2sprkkr remote status|follow|cancel` exposes the end-user subset on the same
+host. See the [architecture](doc_src/kkrunner-architecture.md) and
+[validation report](doc_src/kkrunner-validation.md) for the new boundary,
+intentional API changes and regression results.

@@ -13,9 +13,9 @@ from dataclasses import dataclass
 
 from ..common.file_utils import Directory
 from ..common.output_printing import output_listeners
-from ..execution.base import ExecutionResources, ResourceOwnedRunner
-from ..execution.persistence import resolve_project_manager
-from ..execution.postprocessing import PostprocessingRunner
+from kkrunner.base import ExecutionResources, ResourceOwnedRunner
+from kkrunner.persistence import resolve_project_manager
+from kkrunner.postprocessing import PostprocessingRunner
 from ..input_parameters.input_parameters import InputParameters
 from . import _preparation as preparation
 from ._preparation import FilenameTemplator as FilenameTemplator
@@ -47,6 +47,7 @@ class PreparedCalculation:
     _file_resources: ExitStack | None
     _directory_resources: ExitStack | None
     _temporary_potential: bool = False
+    _temporary_directory: bool = False
     _closed: bool = False
 
     def __post_init__(self):
@@ -189,6 +190,7 @@ class PreparedCalculation:
                 _file_resources=file_resources,
                 _directory_resources=directory_resources,
                 _temporary_potential=temporary_potential,
+                _temporary_directory=directory_context.dir is False,
             )
         except BaseException:
             try:
@@ -226,6 +228,8 @@ class PreparedCalculation:
         ``error_file=None`` stores stderr as ``<output_file>.err``. ``True``
         explicitly merges stderr into ``output_file``; ``False`` requests a
         managed temporary stderr file; a path or file object is used directly.
+        Tracked runs require persistent working-directory and stderr paths so
+        they can be recovered after the client exits.
         """
         return _create_sprkkr_run(
             self,
@@ -381,6 +385,11 @@ def _create_sprkkr_run(
         if executor is None:
             executor = executor_from_profile(profile)
         manager = resolve_project_manager(project)
+        if manager is not None:
+            if getattr(prepared, "_temporary_directory", False):
+                raise ValueError("Tracked runs require a persistent calculation directory; pass directory=path")
+            if error_file is False:
+                raise ValueError("Tracked runs require persistent stderr; use error_file=None or a pathname")
 
         execution_profile = profile
         if task.mpi:
@@ -441,8 +450,11 @@ def _create_sprkkr_run(
             )
 
         def finalized(out):
+            if manager is not None and out is not None:
+                out.run_record = manager.store.get(runner.id)
             flush_listeners()
-            resources.close(suppress_errors=True)
+            if runner.state.is_terminal:
+                resources.close(suppress_errors=True)
             if callback:
                 callback(out)
 
@@ -458,9 +470,11 @@ def _create_sprkkr_run(
                 executor,
                 spec,
                 process_result=process_result,
-                task=task.name,
-                input_definition=input_parameters.definition_name,
-                dataset=input_parameters.CONTROL.DATASET.result,
+                metadata={"ase2sprkkr": {
+                    "task": task.name,
+                    "input_definition": input_parameters.definition_name,
+                    "dataset": input_parameters.CONTROL.DATASET.result,
+                }},
                 callback=finalized,
             )
         for listener in listeners:

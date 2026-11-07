@@ -37,67 +37,7 @@ def _validate_executable(value: str) -> str:
     return value
 
 
-@dataclass(frozen=True, eq=False)
-class TaskFile(os.PathLike):
-    """One task file declaration, or its resolved path with retained metadata.
-
-    Templates use {DATASET} for native DATSET0 (the input CONTROL.DATASET)
-    and {DATASET_ADSI} for native DATSET (DATASET plus a nonempty _ADSI).
-    The lowercase {dataset} is a compatibility alias for {DATASET}.
-    A pathname may be a template or callback; a callback returning None means
-    the file is not declared for that parameter set.  An optional declared
-    file may be absent even after successful execution.
-    """
-
-    pathname: _FileTemplate
-    type: Optional[str] = None
-    info: Optional[str] = None
-    optional: bool = False
-
-    def __post_init__(self):
-        path = self.pathname
-        if not callable(path):
-            path = os.fspath(path)
-            if not isinstance(path, str):
-                raise TypeError("TaskFile pathname must be a string")
-            if not path:
-                raise ValueError("TaskFile pathname must not be empty")
-            object.__setattr__(self, "pathname", path)
-        if self.type is not None:
-            object.__setattr__(self, "type", _normalize_identifier(self.type, "type"))
-        if self.info is not None and not isinstance(self.info, str):
-            raise TypeError("TaskFile info must be a string or None")
-        if type(self.optional) is not bool:
-            raise TypeError("TaskFile optional must be a bool")
-
-    def __fspath__(self):
-        if callable(self.pathname):
-            raise TypeError("Resolve the TaskFile callback before using its path")
-        return self.pathname
-
-    def __str__(self):
-        return str(self.pathname)
-
-    def __eq__(self, other):
-        if isinstance(other, TaskFile):
-            return (self.pathname, self.type, self.info, self.optional) == (
-                other.pathname, other.type, other.info, other.optional
-            )
-        if isinstance(other, str):
-            return (not self.optional and self.type is None and self.info is None
-                    and self.pathname == other)
-        return NotImplemented
-
-    def __hash__(self):
-        if not self.optional and self.type is None and self.info is None:
-            return hash(self.pathname)
-        return hash((self.pathname, self.type, self.info, self.optional))
-
-    @property
-    def effective_info(self):
-        """Use the explicitly supplied info, or fall back to the result format."""
-        from ..result_files.definition_registry import result_file_definition_registry
-        return result_file_definition_registry.info_for_task_file(self)
+from kkrunner import TaskFile
 
 
 class _MissingTaskFileValue(ValueError):

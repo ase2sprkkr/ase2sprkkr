@@ -234,10 +234,11 @@ class TaskResult:
         manager retrieves missing files and checks their saved fingerprints.
         """
         if manager is None:
-            from ..execution.project_manager import ExecutionManager
+            from kkrunner.project_manager import ExecutionManager
 
             manager = ExecutionManager()
-        return manager.load_result(run)
+        from .project_results import load_project_result
+        return load_project_result(manager, run)
 
     @classmethod
     def from_run_record(
@@ -248,8 +249,6 @@ class TaskResult:
         File retrieval and fingerprint verification are handled by
         :meth:`from_run` through ExecutionManager, not by this method.
         """
-        from .reader_registry import reader_registry
-
         files = record.files
         if files is None:
             raise FileNotFoundError(f"Run {record.id} has no recorded output files")
@@ -257,30 +256,10 @@ class TaskResult:
         if output is None:
             raise FileNotFoundError(f"Run {record.id} has no recorded output file")
 
-        input_file = files.input_file
-        available_input = (
-            input_file if input_file is not None and os.path.isfile(input_file) else None
-        )
-        parameters = None
-        if available_input is not None:
-            if record.input_definition is None:
-                parameters = input_parameters.InputParameters.from_file(available_input)
-            else:
-                definition = input_parameters.InputParameters.definition(
-                    record.input_definition
-                )
-                parameters = definition.read_from_file(available_input)
+        from .project_results import _reader_for_record
+        reader = _reader_for_record(None, record)
+        available_input = files.input_file if getattr(reader, "input_parameters", None) is not None else None
 
-            effective_task = parameters.task_name
-            if effective_task is not None and effective_task.upper() != record.task.upper():
-                raise ValueError(
-                    f"Run {record.id} records task {record.task!r}, but its "
-                    f"input file selects {effective_task!r}"
-                )
-
-        reader = reader_registry.class_for_task_name(record.task)(
-            parameters, None, record.execution.directory.local, task_name=record.task
-        )
         result = reader.read_from_file(
             output,
             error_file,
@@ -296,7 +275,7 @@ class TaskResult:
 class KkrOutputReader:
     """Parse SPR-KKR output streams into a TaskResult.
 
-    Execution is handled by :mod:`ase2sprkkr.execution`; this class owns only
+    Execution is handled by :mod:`kkrunner`; this class owns only
     task-specific parsing and result construction.
     """
 

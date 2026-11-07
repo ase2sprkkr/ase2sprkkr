@@ -3,7 +3,7 @@
 from tempfile import TemporaryDirectory
 
 from ase.build import bulk
-from ase2sprkkr.execution import PsijExecutor, RunState
+from kkrunner import PsijExecutor, RunState
 from ase2sprkkr.sprkkr.calculator import SPRKKR
 
 

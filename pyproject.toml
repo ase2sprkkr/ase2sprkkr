@@ -24,6 +24,7 @@ description = "Wrapper/calculator for SPR-KKR to be used within ASE (Atomic Simu
 license-files = ["LICENCE"]
 
 dependencies = [
+    "kkrunner>=0.1.0.dev0,<0.2",
     "ase>=3.22.0",
 		"colorama",
     "spglib",
@@ -63,7 +64,7 @@ plotting = [
     "scikit-image",
 ]
 psij = [
-    "psij-python>=0.9.11",
+    "kkrunner[psij]>=0.1.0.dev0,<0.2",
 ]
 
 [project.urls]
@@ -154,3 +155,6 @@ skip-magic-trailing-comma=true
 
 [tool.ruff.lint]
 ignore = ["E402", "E741"]
+
+[tool.uv.sources]
+kkrunner = { path = "../kkrunner", editable = true }

@@ -40,6 +40,9 @@ RUN python3 -m venv "$VIRTUAL_ENV" \
         unyt \
         "numpy>=2.1"
 
+COPY kkrunner /opt/kkrunner/kkrunner
+ENV PYTHONPATH=/opt/kkrunner
+
 COPY slurm.conf /etc/slurm/slurm.conf
 COPY cgroup.conf /etc/slurm/cgroup.conf
 COPY kkrscf /opt/sprkkr/kkrscf

@@ -7,7 +7,7 @@ from types import SimpleNamespace
 
 import pytest
 
-from ...execution import (
+from kkrunner import (
     ExecutionSpec,
     LaunchSpec,
     LocalExecutor,
@@ -139,7 +139,7 @@ def test_local_runner_submit_then_wait():
 
 
 def test_local_runner_cancel_is_thread_safe(monkeypatch):
-    from ...execution import local
+    from kkrunner import local
 
     runner = _local_run("import time; time.sleep(30)")
     caller_thread = threading.get_ident()

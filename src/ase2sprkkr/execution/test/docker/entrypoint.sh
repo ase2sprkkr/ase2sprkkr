@@ -53,6 +53,13 @@ exec /opt/venv/bin/python -m ase2sprkkr.tools.ase2sprkkr "$@"
 SH
 chmod 0755 /usr/local/bin/ase2sprkkr
 
+cat > /usr/local/bin/kkrunner <<'SH'
+#!/bin/sh
+export PYTHONPATH=/opt/kkrunner${PYTHONPATH:+:$PYTHONPATH}
+exec /opt/venv/bin/python -m kkrunner "$@"
+SH
+chmod 0755 /usr/local/bin/kkrunner
+
 if has_service slurm; then
     mkdir -p /run/munge /var/lib/munge /var/log/munge \
              /var/spool/slurmctld /var/spool/slurmd /var/log/slurm

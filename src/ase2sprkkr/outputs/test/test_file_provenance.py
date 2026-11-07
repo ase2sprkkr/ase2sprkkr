@@ -1,6 +1,6 @@
 from types import SimpleNamespace
 
-from ase2sprkkr.common.file_versions import FileState
+from kkrunner.file_versions import FileState
 from ase2sprkkr.outputs import capture_result_file_versions
 
 

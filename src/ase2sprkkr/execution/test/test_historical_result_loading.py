@@ -1,33 +1,18 @@
 from types import SimpleNamespace
-
 import pytest
-
-from ase2sprkkr.execution import (
-    ArtifactAvailabilityState,
-    ExecutionSpec,
-    Executor,
-    ExecutorPool,
-    FileState,
-    FileManifest,
-    RunState,
-    RunStore,
-)
-from ase2sprkkr.execution.endpoint import endpoint_for_executor
-from ase2sprkkr.execution.manager import ExecutionManager, HistoricalFileMismatchError
+from kkrunner import ArtifactAvailabilityState, ExecutionSpec, Executor, ExecutorPool, FileState, FileManifest, RunState, RunStore
+from kkrunner.endpoint import endpoint_for_executor
+from kkrunner.manager import ExecutionManager, HistoricalFileMismatchError
 from ase2sprkkr.outputs import project_results
-from ase2sprkkr.outputs.project_results import (
-    ProjectResultUnavailableError,
-    load_project_result,
-)
-
+from ase2sprkkr.outputs.project_results import ProjectResultUnavailableError, load_project_result
 
 class _HistoryExecutor(Executor):
-    name = "history"
+    name = 'history'
 
     def __init__(self):
         self.fetch_calls = []
         self.output_file = None
-        self.restored_output = "original output"
+        self.restored_output = 'original output'
 
     def fetch_result_files(self, run, files, *, destinations=None):
         files = tuple(files)
@@ -35,207 +20,122 @@ class _HistoryExecutor(Executor):
         if self.output_file is None or self.output_file not in files:
             return
         target = self.output_file if destinations is None else destinations[self.output_file]
-        with open(target, "w") as output:
+        with open(target, 'w') as output:
             output.write(self.restored_output)
 
-
 def _spec(tmp_path):
-    input_file = tmp_path / "run.inp"
-    output_file = tmp_path / "run.out"
-    input_file.write_text("input")
-    return ExecutionSpec(
-        argv=(),
-        directory=str(tmp_path),
-        input_file=str(input_file),
-        output_file=str(output_file),
-        input_files=(str(input_file),),
-        output_files=(str(output_file),),
-    )
-
+    input_file = tmp_path / 'run.inp'
+    output_file = tmp_path / 'run.out'
+    input_file.write_text('input')
+    return ExecutionSpec(argv=(), directory=str(tmp_path), input_file=str(input_file), output_file=str(output_file), input_files=(str(input_file),), output_files=(str(output_file),))
 
 def _manager(store):
     return ExecutionManager(store, executor_pool=ExecutorPool())
 
-
-def _terminal_run(tmp_path, *, state=RunState.FINISHED, return_code=0, task="DOS"):
-    store = RunStore(tmp_path / "runs")
+def _terminal_run(tmp_path, *, state=RunState.FINISHED, return_code=0, task='DOS'):
+    store = RunStore(tmp_path / 'runs')
     manager = _manager(store)
     executor = _HistoryExecutor()
     spec = _spec(tmp_path)
-    output_file = tmp_path / "run.out"
-    output_file.write_text("original output")
+    output_file = tmp_path / 'run.out'
+    output_file.write_text('original output')
     executor.output_file = str(output_file)
-
     endpoint = endpoint_for_executor(executor)
     manager.register_executor(executor, endpoint)
-    record = manager.new_record(
-        task=task,
-        directory=tmp_path,
-        endpoint=endpoint,
-        files=FileManifest.from_spec(spec),
-    )
+    record = manager.new_record(directory=tmp_path, endpoint=endpoint, files=FileManifest.from_spec(spec), metadata={'ase2sprkkr': {'task': str(task).upper()}}, processing_required=True)
     record = manager.store.save(record)
-    record = manager.complete(
-        record,
-        state=state,
-        execution=record.execution.submitted("job-1"),
-        return_code=return_code,
-        artifacts_available=True,
-    )
-    return manager, executor, record
-
+    record = manager.complete(record, state=state, execution=record.execution.submitted('job-1'), return_code=return_code, artifacts_available=True)
+    return (manager, executor, record)
 
 def _patch_reader(monkeypatch, parsed):
+
     class Reader:
         input_parameters = object()
 
         def read_from_file(self, output, **kwargs):
             parsed.append((output, kwargs))
-            return SimpleNamespace(return_code=kwargs["return_code"])
+            return SimpleNamespace(return_code=kwargs['return_code'])
+    monkeypatch.setattr(project_results, '_reader_for_record', lambda manager, record: Reader())
 
-    monkeypatch.setattr(
-        project_results,
-        "_reader_for_record",
-        lambda manager, record: Reader(),
-    )
-
-
-def test_history_listing_is_lazy_but_loading_restores_missing_output(
-    tmp_path, monkeypatch,
-):
+def test_history_listing_is_lazy_but_loading_restores_missing_output(tmp_path, monkeypatch):
     manager, executor, record = _terminal_run(tmp_path)
-    output_path = tmp_path / "run.out"
+    output_path = tmp_path / 'run.out'
     output_path.unlink()
-
-    # Merely enumerating stored history must not retrieve artifacts.
     records = manager.store.runs()
     assert records[0].id == record.id
     assert executor.fetch_calls == []
     assert not output_path.exists()
-
-    # Loading that very same record must retrieve and parse the exact output.
     parsed = []
     _patch_reader(monkeypatch, parsed)
     result = load_project_result(manager, record.id)
-
-    assert executor.fetch_calls == [
-        (record.id, (str(output_path),))
-    ]
-    assert output_path.read_text() == "original output"
+    assert executor.fetch_calls == [(record.id, (str(output_path),))]
+    assert output_path.read_text() == 'original output'
     assert parsed[0][0] == str(output_path)
     assert result.return_code == 0
     assert result.run_record.state == RunState.FINISHED
     assert result.run_record.files.state == FileState.CURRENT
-    assert (
-        result.run_record.files.availability_state
-        == ArtifactAvailabilityState.AVAILABLE
-    )
+    assert result.run_record.files.availability_state == ArtifactAvailabilityState.AVAILABLE
 
-
-@pytest.mark.parametrize(
-    "entrypoint, expected_error",
-    [
-        pytest.param("load", ProjectResultUnavailableError, id="load-project-result"),
-        pytest.param("retrieve", HistoricalFileMismatchError, id="retrieve-files"),
-    ],
-)
-def test_restored_changed_content_is_rejected_as_overwritten(
-    tmp_path, monkeypatch, entrypoint, expected_error,
-):
+@pytest.mark.parametrize('entrypoint, expected_error', [pytest.param('load', ProjectResultUnavailableError, id='load-project-result'), pytest.param('retrieve', HistoricalFileMismatchError, id='retrieve-files')])
+def test_restored_changed_content_is_rejected_as_overwritten(tmp_path, monkeypatch, entrypoint, expected_error):
     manager, executor, record = _terminal_run(tmp_path)
-    path = tmp_path / "run.out"
+    path = tmp_path / 'run.out'
     path.unlink()
-    executor.restored_output = "changed output with different contents"
+    executor.restored_output = 'changed output with different contents'
+    if entrypoint == 'load':
 
-    if entrypoint == "load":
         class Reader:
             input_parameters = object()
 
             def read_from_file(self, *args, **kwargs):
-                raise AssertionError("overwritten historical output must not be parsed")
-
-        monkeypatch.setattr(
-            project_results, "_reader_for_record",
-            lambda manager, record: Reader(),
-        )
-
-    with pytest.raises(expected_error, match="overwritten") as error:
-        if entrypoint == "load":
+                raise AssertionError('overwritten historical output must not be parsed')
+        monkeypatch.setattr(project_results, '_reader_for_record', lambda manager, record: Reader())
+    with pytest.raises(expected_error, match='overwritten') as error:
+        if entrypoint == 'load':
             load_project_result(manager, record.id)
         else:
             manager.retrieve_result_files(record.id)
-
     stored = manager.store.get(record.id)
     assert stored.state == RunState.FINISHED
     assert not path.exists()
-    assert not list(tmp_path.glob(".run.out.*.tmp"))
-    if entrypoint == "load":
+    assert not list(tmp_path.glob('.run.out.*.tmp'))
+    if entrypoint == 'load':
         assert error.value.record.files.availability_state == ArtifactAvailabilityState.FAILED
         assert stored.files.state == FileState.MISSING
         assert stored.files.availability_state == ArtifactAvailabilityState.FAILED
 
-
 def test_retrieval_programming_error_is_not_persisted_as_artifact_failure(tmp_path):
     manager, executor, record = _terminal_run(tmp_path)
-    (tmp_path / "run.out").unlink()
+    (tmp_path / 'run.out').unlink()
 
     def broken_fetch(reference, files, *, destinations=None):
-        raise KeyError("programming error")
-
+        raise KeyError('programming error')
     executor.fetch_result_files = broken_fetch
-
-    with pytest.raises(KeyError, match="programming error"):
+    with pytest.raises(KeyError, match='programming error'):
         manager.retrieve_result_files(record.id)
-
     stored = manager.store.get(record.id)
-    assert (
-        stored.files.availability_state
-        == ArtifactAvailabilityState.AVAILABLE
-    )
-
+    assert stored.files.availability_state == ArtifactAvailabilityState.AVAILABLE
 
 def test_finished_history_without_available_output_is_not_synthesized(tmp_path):
-    store = RunStore(tmp_path / "runs")
+    store = RunStore(tmp_path / 'runs')
     manager = _manager(store)
     spec = _spec(tmp_path)
-    record = manager.new_record(
-        task="DOS",
-        directory=tmp_path,
-        files=FileManifest.from_spec(spec),
-    )
+    record = manager.new_record(directory=tmp_path, files=FileManifest.from_spec(spec), metadata={'ase2sprkkr': {'task': str('DOS').upper()}}, processing_required=True)
     record = manager.store.save(record)
-    record = manager.complete(
-        record,
-        state=RunState.FINISHED,
-        return_code=0,
-        artifacts_available=False,
-    )
-
-    with pytest.raises(ProjectResultUnavailableError, match="unavailable"):
+    record = manager.complete(record, state=RunState.FINISHED, return_code=0, artifacts_available=False)
+    with pytest.raises(ProjectResultUnavailableError, match='unavailable'):
         load_project_result(manager, record.id)
 
-
-def test_failed_history_without_return_code_is_not_parsed_as_success(
-    tmp_path, monkeypatch
-):
-    manager, _, record = _terminal_run(
-        tmp_path,
-        state=RunState.FAILED,
-        return_code=None,
-    )
+def test_failed_history_without_return_code_is_not_parsed_as_success(tmp_path, monkeypatch):
+    manager, _, record = _terminal_run(tmp_path, state=RunState.FAILED, return_code=None)
     parsed = []
     _patch_reader(monkeypatch, parsed)
-
     result = load_project_result(manager, record.id)
-
-    assert parsed[0][1]["return_code"] != 0
+    assert parsed[0][1]['return_code'] != 0
     assert result.return_code != 0
     assert result.run_record.state == RunState.FAILED
 
-
-def test_history_load_uses_retrieval_record_without_extra_store_lookup(
-    tmp_path, monkeypatch,
-):
+def test_history_load_uses_retrieval_record_without_extra_store_lookup(tmp_path, monkeypatch):
     manager, _, record = _terminal_run(tmp_path)
     parsed = []
     _patch_reader(monkeypatch, parsed)
@@ -245,12 +145,8 @@ def test_history_load_uses_retrieval_record_without_extra_store_lookup(
     def get(run_id):
         retrieved.append(run_id)
         return original_get(run_id)
-
-    monkeypatch.setattr(manager.store, "get", get)
+    monkeypatch.setattr(manager.store, 'get', get)
     loaded = load_project_result(manager, record.id)
-
     assert loaded.run_record.state is RunState.FINISHED
     assert len(parsed) == 1
-    # Read initial record, perform retrieval, verify output, verify input.
-    # The removed check_result_files() used to load the same record again.
     assert retrieved == [record.id] * 4
