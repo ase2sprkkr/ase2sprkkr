@@ -14,7 +14,7 @@ from dataclasses import dataclass
 from ..common.file_utils import Directory
 from ..common.output_printing import output_listeners
 from kkrunner.base import ExecutionResources, ResourceOwnedRunner
-from kkrunner.persistence import resolve_project_manager
+from .projects import resolve_project_manager
 from kkrunner.postprocessing import PostprocessingRunner
 from ..input_parameters.input_parameters import InputParameters
 from . import _preparation as preparation

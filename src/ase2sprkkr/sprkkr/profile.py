@@ -60,6 +60,7 @@ class SPRKKRProfile:
     psij_url: Any = None
     mpi_warning: bool = True
     ssh_zstd: bool = False
+    filesystem_id: str | None = None
 
     @property
     def endpoint(self):
@@ -71,6 +72,7 @@ class SPRKKRProfile:
             remote_command=self.remote_command,
             psij_backend=self.psij_backend,
             psij_url=self.psij_url,
+            filesystem_id=self.filesystem_id,
         )
 
     @property
@@ -267,6 +269,7 @@ def _configured_profile(profile, configuration):
         output_sync=_profile_value(profile, "output_sync") or "changed",
         psij_backend=_profile_value(profile, "psij_backend"),
         psij_url=_profile_value(profile, "psij_url"),
+        filesystem_id=_profile_value(profile, "filesystem_id"),
         mpi_warning=mpi_warning,
     )
 

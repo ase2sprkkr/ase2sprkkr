@@ -71,3 +71,28 @@ QT_QPA_PLATFORM=offscreen DO_NOT_RUN_SPRKKR=1 python -m pytest -q tests
 
 Execution integration tests require subprocesses and Unix sockets. An environment
 that prohibits those operations cannot exercise supervisor/reconnection behavior.
+
+## Review fixes validation (7 November 2026)
+
+The repaired build was produced with an isolated PEP 517 backend using local
+build dependency wheels, and its wheel was installed with the test extra into
+a fresh venv. The core imported without ASE, ASE2SPRKKR or PSI/J. The complete
+suite from the unpacked sdist passed: **707 passed, 3 optional Docker cases
+skipped**. This also verifies that conftest, the test package and Docker fixtures
+are present in the source distribution. The outside-checkout smoke test passed
+raw execution, persistent processing after reconnect and the real remote console
+executable without source PYTHONPATH. pip check passed. The license-table
+build deprecation is resolved by SPDX metadata and setuptools>=77.
+
+The ASE2SPRKKR execution/sprkkr integration groups passed **366 tests, 4 skipped**.
+A real SPR-KKR 9.7 Al SCF run (2 iterations, NKTAB=5, NE=5) and a subsequent
+DOS run completed and were reconstructed from their persistent records.
+Guy4ASE passed **793 tests**, with **24 failures and 19 skips**. All remaining
+failure IDs match the pre-repair baseline; four new history/retry UI tests pass.
+
+Python 3.14.4 was used locally; the CI workflow additionally declares 3.9 and
+3.12, whose full matrices have not been run locally. A workflow definition is
+not evidence of a completed hosted CI run. Runtime integration requires Linux
+supervisor socket support. The separate rebuilt SSH/Slurm image passed all **3** integration cases
+without a source PYTHONPATH. A real failed-download/reconnect test also passed;
+recoverable download failures retain backend receipts until successful retry.

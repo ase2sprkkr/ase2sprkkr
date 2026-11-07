@@ -289,6 +289,12 @@ definition = ConfigFileDefinition(
                     info="Additional arguments passed to ssh, such as ['-p', '2222'].",
                 ),
                 V(
+                    "filesystem_id",
+                    AlwaysQString.I,
+                    is_optional=True,
+                    info="Shared target filesystem identity for SSH aliases or shared mounts.",
+                ),
+                V(
                     "ssh_zstd",
                     False,
                     info="Use tar --zstd for batch SSH file transfers (requires zstd on both ends).",
@@ -297,7 +303,7 @@ definition = ConfigFileDefinition(
                     "remote_command",
                     Array(AlwaysQString.I),
                     is_optional=True,
-                    info="Command prefix used to invoke the ASE2SPRKKR remote helper.",
+                    info="Command prefix used to invoke the KKRunner remote service.",
                 ),
                 V(
                     "input_sync",
