@@ -9,8 +9,10 @@ import copy
 from contextlib import contextmanager
 
 from . import sprkkr_atoms
-from ..bindings.spglib import spglib_dataset
+from ..bindings.spglib import symmetry_dataset, symmetry_site_permutations
+from .site_equivalence import site_equivalence_tags, refine_partial_site_tags
 from .sites import Site, SiteType
+from ..common.unique_values import UniqueValuesMapping
 
 
 def site_type_copier(atoms):
@@ -72,48 +74,17 @@ class BaseSpacegroupInfo:
         """
 
         atoms = self.for_atoms
-        frac = atoms.get_scaled_positions(wrap=True)  # (nat, 3), fractional
-        types = np.empty(len(atoms), dtype=object)  # species
-        if not self.dataset or self.dataset.rotations is None:
+        dataset = self.dataset
+        if not dataset or dataset.rotations is None:
             return None
-        rotations = self.dataset.rotations
-        translations = self.dataset.translations
-        sites = atoms.sites
-        for i in range(len(types)):
-            types[i] = atoms.sites[i].site_type
-        B = atoms.cell.array  # 3x3 (row-vectors); frac @ B → Cartesian
 
-        table = -np.ones((len(rotations), len(sites)), dtype=int)
-
-        # group atoms by species to avoid cross-species matches
-        byType = {}
-        for i, typ in enumerate(types):
-            byType.setdefault(typ, []).append(i)
-        byType = {typ: np.array(idxs, int) for typ, idxs in byType.items()}
-        pos_byType = {typ: frac[idxs] for typ, idxs in byType.items()}
-
-        for g in range(len(rotations)):
-            rot = rotations[g]
-            trn = translations[g]
-            # Apply op in fractional coordinates (row-vectors → use rot.T)
-            Xp = (frac @ rot.T + trn) % 1.0
-
-            for i in range(len(atoms)):
-                typ = types[i]
-                idxs = byType[typ]
-                cand = pos_byType[typ]  # candidate positions (the same species)
-                d = Xp[i] - cand
-                d -= np.rint(d)  # wrap to nearest lattice image in frac
-                d_cart = d @ B  # compare in Cartesian space
-                jloc = np.argmin(np.linalg.norm(d_cart, axis=1))
-                if np.linalg.norm(d_cart[jloc]) <= symprec + 1e-12:
-                    table[g, i] = idxs[jloc]
-                else:
-                    raise RuntimeError(
-                        f"No match for op {g} atom {i} within tolerance; "
-                        "consider increasing symprec or standardizing the cell."
-                    )
-        return table
+        tags = UniqueValuesMapping.from_values(
+            [site.site_type for site in atoms.sites]
+        ).mapping
+        return symmetry_site_permutations(
+            atoms.get_cell(), atoms.get_scaled_positions(), tags,
+            dataset.rotations, dataset.translations, symprec=symprec,
+        )
 
 
 class RegionSpacegroupInfo(BaseSpacegroupInfo):
@@ -265,7 +236,7 @@ class SpacegroupInfo(BaseSpacegroupInfo):
             return
 
         atoms = self.atoms
-        if init or not atoms.are_sites_inited:
+        if init or not atoms.are_sites_inited():
             init = True
         else:
             old_sites = atoms.sites
@@ -282,40 +253,99 @@ class SpacegroupInfo(BaseSpacegroupInfo):
         sites = np.zeros(len(atoms), dtype=object)
         indexes = np.arange(len(atoms))
 
-        def set_site(sites, i, stype):
-            if sites[i]:
-                sites[i].unregister()
-            sites[i] = Site(stype)
+        # Region membership is part of the site identity. Two sites from
+        # different regions must never be merged by the global symmetry pass.
+        memberships = [[] for _ in range(len(atoms))]
+        for region_name, region in atoms.regions.items():
+            for index in region.ids:
+                memberships[int(index)].append(region_name)
+
+        def set_site(target, i, stype, original=None):
+            previous = target[i]
+            site = original.copy(site_type=stype) if original else Site(stype)
+            if previous:
+                previous.unregister()
+            target[i] = site
 
         def solve_region(region, slice):
             ssites = sites[slice]
             if sum(region.pbc) == 3 and self.symmetry or region is atoms:
                 kinds = None if atomic_kinds is None else atomic_kinds[slice]
-                dataset = spglib_dataset(
+                tags = site_equivalence_tags(
                     region,
-                    kinds,
-                    consider_old=consider_old,
-                    precision=precision,
-                    angular_precision=angular_precision,
-                    add=ssites if atoms.regions else None,
+                    equivalence="site-types" if consider_old else "occupation",
+                    atomic_kinds=kinds,
+                    assigned_sites=ssites if atoms.regions else None,
+                    region_memberships=(
+                        memberships if region is atoms and atoms.regions else None
+                    ),
                 )
+
+                def get_dataset(species):
+                    try:
+                        return symmetry_dataset(
+                            region.get_cell(), region.get_scaled_positions(), species,
+                            symprec=precision, angle_tolerance=angular_precision,
+                        )
+                    except ValueError:
+                        return False
+
+                dataset = get_dataset(tags)
+                existing = (
+                    region.arrays["sprkkr_sites_data"]
+                    if "sprkkr_sites_data" in region.arrays else None
+                )
+                if (dataset is not False and consider_old and
+                    existing is not None and any(not site for site in existing)):
+                    refined = refine_partial_site_tags(tags, dataset, existing)
+                    if not np.array_equal(tags, refined):
+                        dataset = get_dataset(refined)
             else:
                 dataset = False
 
             to_global = indexes[slice]
+
+            def previous_site(local_index):
+                if not init:
+                    old = old_sites[to_global[local_index]]
+                    if old:
+                        return old
+                current = ssites[local_index]
+                return current if current else None
+
+            def site_type_for(local_index):
+                current = ssites[local_index]
+                if region is atoms and atoms.regions and current:
+                    # Preserve SiteTypes already established by a region.
+                    return current.site_type
+                return create(to_global[local_index])
+
             if self.symmetry and dataset:
-                uniq, index, umap = np.unique(dataset.equivalent_atoms, return_index=True, return_inverse=True)
-                stypes = np.empty(len(uniq), dtype=object)
-                for i, site in enumerate(index):
-                    stypes[i] = create(to_global[site])
-                for i in range(len(umap)):
-                    stype = stypes[umap[i]]
-                    set_site(ssites, i, stype)
+                _, index, umap = np.unique(
+                    dataset.equivalent_atoms, return_index=True, return_inverse=True
+                )
+                stypes = np.empty(len(index), dtype=object)
+                representatives = [None] * len(index)
+                for group, first in enumerate(index):
+                    # Prefer a populated Site as the source of the shared
+                    # SiteType, even when the first atom has no site yet.
+                    source_index = first
+                    if not init:
+                        present = [
+                            j for j in np.flatnonzero(umap == group)
+                            if old_sites[to_global[j]]
+                        ]
+                        if present:
+                            source_index = present[0]
+                    representatives[group] = previous_site(source_index)
+                    stypes[group] = site_type_for(source_index)
+                for i, group in enumerate(umap):
+                    original = previous_site(i) or representatives[group]
+                    set_site(ssites, i, stypes[group], original)
 
             else:
                 for i in range(len(region)):
-                    stype = create(to_global[i])
-                    set_site(ssites, i, stype)
+                    set_site(ssites, i, site_type_for(i), previous_site(i))
             return dataset
 
         for r in atoms.regions.values():
@@ -324,6 +354,13 @@ class SpacegroupInfo(BaseSpacegroupInfo):
         dataset = solve_region(atoms, slice(None))
         self._dataset = dataset
         atoms.set_sites(sites, True, update=update_info)
+        if not init:
+            # Rebuilt sites are copies, never the previous Site instances.
+            # Unregister obsolete sites so a reused SiteType does not retain
+            # phantom members and incorrectly report has_symmetry=True.
+            for previous in old_sites:
+                if previous:
+                    previous.unregister()
         return self
 
     @contextmanager

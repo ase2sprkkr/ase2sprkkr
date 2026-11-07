@@ -8,6 +8,7 @@ ASE2SPRKKR software package
    :caption: Contents
 
    How to use the package <usage.rst>
+   Crystal symmetry and cell transformations <symmetry.rst>
    More about the package installation <how-to-install.rst>
    Philosophy of the package (for developers) <philosophy.rst>
    Changelog <changelog.rst>
