@@ -1,6 +1,7 @@
 """Project-only persistence and per-run execution selection contracts."""
 import pytest
-from kkrunner import ProjectExecutionManager, ProjectRepository, RunStore
+from kkrunner.projects import ProjectExecutionManager, ProjectRepository
+from kkrunner import RunStore
 from kkrunner.projects.resolution import resolve_project_manager
 from ase2sprkkr.sprkkr.calculator import SPRKKR
 from ase2sprkkr.sprkkr.profile import SPRKKRProfile

@@ -1,6 +1,6 @@
 """Existing project definitions and new runner records have independent storage."""
 
-from kkrunner import ProjectRepository
+from kkrunner.projects import ProjectRepository
 from ase2sprkkr.sprkkr.projects import default_project_repository, project_execution_manager, resolve_project_manager
 
 

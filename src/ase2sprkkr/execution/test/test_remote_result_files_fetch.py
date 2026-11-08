@@ -1,15 +1,9 @@
 import pytest
 from ase2sprkkr.common.file_versions import FileState, FileVersion
-from kkrunner import (
-    LocalTransport,
-    RemoteEndpointExecutor,
-    RunRecord,
-    RunState,
-    Execution,
-    WorkingDirectory,
-    FileManifest,
-    FileEntry,
-)
+from kkrunner.remote import LocalTransport, RemoteEndpointExecutor
+from kkrunner.runs import RunRecord, Execution, WorkingDirectory
+from kkrunner import RunState
+from kkrunner.files import FileManifest, FileEntry
 from kkrunner.files.manifest import FileMapping
 from kkrunner.backends.endpoint import endpoint_for_executor
 

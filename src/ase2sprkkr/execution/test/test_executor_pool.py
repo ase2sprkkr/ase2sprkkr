@@ -1,9 +1,10 @@
 import pytest
-from kkrunner import ExecutorPool, FileManifest, FileEntry
+from kkrunner.backends import ExecutorPool
+from kkrunner.files import FileManifest, FileEntry
 from ase2sprkkr.sprkkr.profile import SPRKKRProfile, executor_from_profile
 
 def test_unused_local_profile_fields_share_backend_and_collision_namespace(tmp_path):
-    from kkrunner import ExecutorEndpoint
+    from kkrunner.backends import ExecutorEndpoint
     from kkrunner.runs.manager import RunManager
     from kkrunner.runs.records import RunStore
     from kkrunner.runs.conflicts import submission_conflicts
@@ -18,7 +19,7 @@ def test_unused_local_profile_fields_share_backend_and_collision_namespace(tmp_p
     assert submission_conflicts(first, second)
 
 def test_endpoint_normalizes_known_defaults_without_resolving_hostnames():
-    from kkrunner import ExecutorEndpoint
+    from kkrunner.backends import ExecutorEndpoint
     assert ExecutorEndpoint(executor='psij') == ExecutorEndpoint(executor='psij', psij_backend='slurm', host='unused')
     assert ExecutorEndpoint(executor='ssh', host='cluster') == ExecutorEndpoint(executor='ssh', host='cluster', remote_command=('kkrunner', 'remote'))
     assert ExecutorEndpoint(executor='ssh', host='cluster') != ExecutorEndpoint(executor='ssh', host='cluster.example.org')

@@ -1,6 +1,6 @@
 from types import SimpleNamespace
 
-from kkrunner import LaunchSpec, MpiSpec
+from kkrunner.runs import LaunchSpec, MpiSpec
 from ase2sprkkr.sprkkr.profile import SPRKKRProfile
 
 

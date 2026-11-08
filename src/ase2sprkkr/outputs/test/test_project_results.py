@@ -2,7 +2,10 @@ from functools import cache
 from types import SimpleNamespace
 import pytest
 from ase2sprkkr.common.module_registry import RegistryEntryNotFound
-from kkrunner import FileManifest, FileEntry, Execution, WorkingDirectory, ExecutorEndpoint, RunRecord, RunState
+from kkrunner.files import FileManifest, FileEntry
+from kkrunner.runs import Execution, WorkingDirectory, RunRecord
+from kkrunner.backends import ExecutorEndpoint
+from kkrunner import RunState
 from ase2sprkkr.input_parameters.input_parameters import InputParameters
 from ase2sprkkr.outputs.project_results import ProjectResultUnavailableError, attach_project_run, _reader_for_record
 from ase2sprkkr.outputs.readers.bsf import BsfOutputReader

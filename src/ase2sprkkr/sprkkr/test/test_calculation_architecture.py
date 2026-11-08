@@ -312,7 +312,7 @@ def test_reader_file_not_found_is_not_relabelled_as_missing_executable(
 
 
 def test_tracked_run_rejects_directory_deleted_on_client_exit(tmp_path, fe_bulk):
-    from kkrunner import ProjectExecutionManager, ProjectRepository
+    from kkrunner.projects import ProjectExecutionManager, ProjectRepository
     projects = ProjectRepository(tmp_path / 'projects')
     manager = ProjectExecutionManager(project_repository=projects, project=projects.create('Persistent'))
     calculator = SPRKKR(atoms=fe_bulk.copy(), mpi=False, empty_spheres=False)
@@ -325,7 +325,7 @@ def test_tracked_run_rejects_directory_deleted_on_client_exit(tmp_path, fe_bulk)
 
 
 def test_tracked_run_rejects_temporary_stderr(tmp_path, fe_bulk):
-    from kkrunner import ProjectExecutionManager, ProjectRepository
+    from kkrunner.projects import ProjectExecutionManager, ProjectRepository
     projects = ProjectRepository(tmp_path / 'projects')
     manager = ProjectExecutionManager(project_repository=projects, project=projects.create('Persistent'))
     calculator = SPRKKR(atoms=fe_bulk.copy(), mpi=False, empty_spheres=False)

@@ -1,13 +1,7 @@
 from threading import Event
-from kkrunner import (
-    ExecutorEndpoint,
-    ExecutorPool,
-    LocalExecutor,
-    RemoteEndpointExecutor,
-    RunState,
-    RunStore,
-    SshTransport,
-)
+from kkrunner.backends import ExecutorEndpoint, ExecutorPool, LocalExecutor
+from kkrunner.remote import RemoteEndpointExecutor, SshTransport
+from kkrunner import RunState, RunStore
 from kkrunner.runs.manager import RunManager
 from kkrunner.backends.endpoint import endpoint_for_executor
 from ase2sprkkr.sprkkr.profile import SPRKKRProfile

@@ -13,7 +13,9 @@ from dataclasses import dataclass, replace
 from typing import Any
 
 from ..configuration import config
-from kkrunner import ExecutionSpec, ExecutorEndpoint, LaunchSpec
+from kkrunner import ExecutionSpec
+from kkrunner.backends import ExecutorEndpoint
+from kkrunner.runs import LaunchSpec
 from kkrunner.backends.endpoint import create_executor_from_endpoint
 from ..profiles import ase_command_profile_values
 

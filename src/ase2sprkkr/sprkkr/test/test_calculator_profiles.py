@@ -1,7 +1,8 @@
 from types import SimpleNamespace
 
 from ase2sprkkr.configuration import definition
-from kkrunner import ExecutorPool, RemoteEndpointExecutor
+from kkrunner.backends import ExecutorPool
+from kkrunner.remote import RemoteEndpointExecutor
 from ase2sprkkr.profiles import ProfilesConfigurationContainer
 from ase2sprkkr.sprkkr import profile as profile_module
 from ase2sprkkr.sprkkr.calculator import SPRKKR

@@ -4,7 +4,8 @@ from pathlib import Path
 
 from platformdirs import user_state_dir
 
-from kkrunner import Project, ProjectRepository, ProjectExecutionManager, RunStore
+from kkrunner.projects import Project, ProjectRepository, ProjectExecutionManager
+from kkrunner import RunStore
 from kkrunner.projects.resolution import resolve_project_manager as _resolve_project_manager
 
 

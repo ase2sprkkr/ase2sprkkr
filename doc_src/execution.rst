@@ -39,7 +39,7 @@ omitting ``project`` does not silently enable global tracking.
 .. code-block:: python
 
    from pathlib import Path
-   from kkrunner import ProjectRepository
+   from kkrunner.projects import ProjectRepository
    from ase2sprkkr.sprkkr.projects import project_execution_manager
 
    projects = ProjectRepository(Path("calculation-state/projects").absolute())

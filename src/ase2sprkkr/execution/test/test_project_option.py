@@ -1,5 +1,7 @@
 from types import SimpleNamespace
-from kkrunner import ProjectExecutionManager, Executor, ExecutionOutcome, ProjectRepository, RunState
+from kkrunner.projects import ProjectExecutionManager, ProjectRepository
+from kkrunner.runs import Executor
+from kkrunner import ExecutionOutcome, RunState
 from ase2sprkkr.input_parameters.input_parameters import InputParameters
 from ase2sprkkr.input_parameters.task_definition import TaskDefinition
 from ase2sprkkr.sprkkr import calculation as calculation_module

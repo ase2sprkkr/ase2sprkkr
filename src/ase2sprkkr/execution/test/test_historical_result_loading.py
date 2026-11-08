@@ -1,15 +1,9 @@
 from types import SimpleNamespace
 import pytest
-from kkrunner import (
-    ArtifactAvailabilityState,
-    ExecutionSpec,
-    Executor,
-    ExecutorPool,
-    FileState,
-    FileManifest,
-    RunState,
-    RunStore,
-)
+from kkrunner.files import ArtifactAvailabilityState, FileState, FileManifest
+from kkrunner import ExecutionSpec, RunState, RunStore
+from kkrunner.runs import Executor
+from kkrunner.backends import ExecutorPool
 from kkrunner.backends.endpoint import endpoint_for_executor
 from kkrunner.runs.manager import RunManager, HistoricalFileMismatchError
 from ase2sprkkr.outputs import project_results

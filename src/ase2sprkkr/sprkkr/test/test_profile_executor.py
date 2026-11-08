@@ -3,7 +3,9 @@ from types import SimpleNamespace
 import pytest
 
 from ase2sprkkr.configuration import definition
-from kkrunner import ExecutorPool, LocalExecutor, RunState, SshTransport
+from kkrunner.backends import ExecutorPool, LocalExecutor
+from kkrunner import RunState
+from kkrunner.remote import SshTransport
 from kkrunner.remote.executor import RemoteEndpointExecutor
 from ase2sprkkr.input_parameters.input_parameters import InputParameters
 from ase2sprkkr.input_parameters.task_definition import TaskDefinition

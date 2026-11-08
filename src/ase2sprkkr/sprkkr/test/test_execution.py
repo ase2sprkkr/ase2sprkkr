@@ -7,7 +7,10 @@ from types import SimpleNamespace
 
 import pytest
 
-from kkrunner import ExecutionSpec, LaunchSpec, LocalExecutor, LocalRunner, MpiSpec, RunState
+from kkrunner import ExecutionSpec, RunState
+from kkrunner.runs import LaunchSpec, MpiSpec
+from kkrunner.backends import LocalExecutor
+from kkrunner.backends.local import LocalRunner
 from ..profile import SPRKKRProfile
 
 

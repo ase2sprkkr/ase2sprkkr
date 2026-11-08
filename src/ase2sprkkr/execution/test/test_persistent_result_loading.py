@@ -3,7 +3,8 @@
 from types import SimpleNamespace
 
 import pytest
-from kkrunner import ExecutionOutcome, FileEntry, FileManifest, RunState, RunStore
+from kkrunner import ExecutionOutcome, RunState, RunStore
+from kkrunner.files import FileEntry, FileManifest
 from kkrunner.runs.manager import RunManager
 from ase2sprkkr.outputs import project_results
 from ase2sprkkr.outputs.task_result import TaskResult

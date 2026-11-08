@@ -3,7 +3,9 @@
 from __future__ import annotations
 
 from ..common.module_registry import RegistryEntryNotFound
-from kkrunner import FailurePhase, FileState, RunState, HistoricalFileMismatchError
+from kkrunner.runs import FailurePhase, HistoricalFileMismatchError
+from kkrunner.files import FileState
+from kkrunner import RunState
 from ..input_parameters.input_parameters import InputParameters
 from ..input_parameters.task_definition import TaskMismatchError
 from .reader_registry import reader_registry

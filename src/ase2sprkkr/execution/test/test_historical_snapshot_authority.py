@@ -1,6 +1,7 @@
 from types import SimpleNamespace
 import pytest
-from kkrunner import RunState, RunStore, FileManifest
+from kkrunner import RunState, RunStore
+from kkrunner.files import FileManifest
 from kkrunner.runs.manager import RunManager
 from ase2sprkkr.outputs.project_results import ProjectResultUnavailableError, load_project_result
 

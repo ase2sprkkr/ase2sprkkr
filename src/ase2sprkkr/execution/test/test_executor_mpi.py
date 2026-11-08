@@ -2,15 +2,10 @@ import asyncio
 import warnings
 from types import SimpleNamespace
 import pytest
-from kkrunner import (
-    ExecutionSpec,
-    LaunchSpec,
-    LocalExecutor,
-    MpiNotFoundWarning,
-    MpiSpec,
-    RemoteEndpointExecutor,
-    RunState,
-)
+from kkrunner import ExecutionSpec, RunState
+from kkrunner.runs import LaunchSpec, MpiNotFoundWarning, MpiSpec
+from kkrunner.backends import LocalExecutor
+from kkrunner.remote import RemoteEndpointExecutor
 from kkrunner.backends.local import materialize_local_spec
 from ase2sprkkr.input_parameters.input_parameters import InputParameters
 from ase2sprkkr.input_parameters.task_definition import TaskDefinition
