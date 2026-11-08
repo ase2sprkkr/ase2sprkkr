@@ -8,14 +8,18 @@ import tempfile
 import time
 from pathlib import Path
 from uuid import uuid4
+
 import pytest
+
 pytestmark = pytest.mark.skipif(os.environ.get('ASE2SPRKKR_RUN_DOCKER_TESTS') != '1', reason='set ASE2SPRKKR_RUN_DOCKER_TESTS=1 to run Docker integration tests')
 _TEST_SSH_SEED = bytes(range(1, 33))
 _TEST_SSH_PUBLIC = bytes.fromhex('79b5562e8fe654f94078b112e8a98ba7901f853ae695bed7e0e3910bad049664')
 _TEST_SSH_PUBLIC_LINE = 'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHm1Vi6P5lT5QHixEuipi6eQH4U65pW+1+DjkQutBJZk ase2sprkkr test-only key\n'
 
+
 def _ssh_string(value):
     return struct.pack('>I', len(value)) + value
+
 
 def _write_test_ssh_key(directory):
     """Serialize the packaged static test key into OpenSSH files."""
@@ -35,6 +39,7 @@ def _write_test_ssh_key(directory):
     Path(str(key) + '.pub').write_text(_TEST_SSH_PUBLIC_LINE, encoding='ascii')
     return key
 
+
 def _wait_for_ssh(ssh, attempts=80):
     for _ in range(attempts):
         if subprocess.run(ssh + ['true'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).returncode == 0:
@@ -42,14 +47,17 @@ def _wait_for_ssh(ssh, attempts=80):
         time.sleep(0.1)
     pytest.fail('SSH server did not become ready')
 
+
 def _remote_error(exc):
     stderr = exc.stderr
     if isinstance(stderr, bytes):
         stderr = stderr.decode('utf8', errors='replace')
     pytest.fail(f"{exc}\n\nRemote stderr:\n{stderr or '<empty>'}")
 
+
 def _ssh_capture(ssh, *command):
     return subprocess.run(ssh + list(command), text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
 
 def _diagnostic_command(ssh, title, *command):
     result = _ssh_capture(ssh, *command)
@@ -61,6 +69,7 @@ def _diagnostic_command(ssh, title, *command):
     if len(parts) == 1:
         parts.append('<empty>')
     return '\n'.join(parts)
+
 
 def _remote_run_diagnostics(ssh, runner):
     """Return diagnostics available through the stateless target service."""
@@ -78,8 +87,10 @@ def _remote_run_diagnostics(ssh, runner):
     sections.append(_diagnostic_command(ssh, 'Slurm queue', 'squeue', '-a', '-o', '%i %T %j'))
     return '\n\n'.join(sections)
 
+
 def test_remote_executor_runs_psij_slurm_over_ssh(docker_execution_image):
     from ase.build import bulk
+
     from ase2sprkkr.sprkkr.calculator import SPRKKR
     from ase2sprkkr.sprkkr.profile import SPRKKRProfile
     docker = docker_execution_image.docker

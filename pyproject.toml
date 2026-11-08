@@ -109,8 +109,7 @@ sdist.include = [
 
 	"src/ase2sprkkr/sprkkr/test/*.cif",
 	"src/ase2sprkkr/bindings/xband/tests/*.pot",
-	"src/ase2sprkkr/execution/test/docker/*",
-	"src/ase2sprkkr/execution/test/slurm/*",
+	"src/ase2sprkkr/sprkkr/test/execution/docker/*",
 
 	"src/ase2sprkkr/**/*.py",
 	"src/ase2sprkkr/**/*.pyx",

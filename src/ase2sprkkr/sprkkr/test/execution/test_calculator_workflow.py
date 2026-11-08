@@ -1,7 +1,10 @@
 from types import SimpleNamespace
+
 import pytest
 from ase.build import bulk
+
 from ase2sprkkr.sprkkr.calculator import SPRKKR
+
 
 class _Runner:
 
@@ -12,6 +15,7 @@ class _Runner:
     def run(self):
         self.ran = True
         return self.result
+
 
 @pytest.mark.parametrize('case', ('standard', 'explicit-file-names', 'project'))
 def test_create_run_only_prepares_runner(tmp_path, monkeypatch, case):
@@ -47,6 +51,7 @@ def test_create_run_only_prepares_runner(tmp_path, monkeypatch, case):
             assert seen['prepare'][name] == value
     assert seen['run']['result_context'] is calculator
 
+
 def test_calculate_runs_and_updates_state(monkeypatch):
     calculator = SPRKKR(atoms=bulk('Al'), mpi=False, empty_spheres=False)
     new_potential = SimpleNamespace(atoms=None)
@@ -60,6 +65,7 @@ def test_calculate_runs_and_updates_state(monkeypatch):
     assert calculator.results['energy'] == 1.25
     assert calculator._potential is new_potential
     assert callback_state == [(result, 1.25, new_potential)]
+
 
 def test_calculate_does_not_adopt_potential_when_explicit_atoms_are_used(monkeypatch):
     calculator = SPRKKR(atoms=bulk('Al'), mpi=False, empty_spheres=False)

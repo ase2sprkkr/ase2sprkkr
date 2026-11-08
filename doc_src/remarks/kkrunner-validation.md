@@ -65,9 +65,9 @@ KKRUNNER_RUN_DOCKER_TESTS=1 python -m pytest -q tests/test_ssh_standalone.py tes
 # from ASE2SPRKKR after installing the sibling runner
 DO_NOT_RUN_SPRKKR=1 python -m pytest -q src/ase2sprkkr/input_parameters/test
 DO_NOT_RUN_SPRKKR=1 python -m pytest -q src/ase2sprkkr/outputs/test
-DO_NOT_RUN_SPRKKR=1 python -m pytest -q src/ase2sprkkr/execution/test src/ase2sprkkr/sprkkr/test \
-  --ignore=src/ase2sprkkr/execution/test/test_remote_ssh.py \
-  --ignore=src/ase2sprkkr/execution/test/test_remote_psij_slurm.py
+DO_NOT_RUN_SPRKKR=1 python -m pytest -q src/ase2sprkkr/sprkkr/test \
+  --ignore=src/ase2sprkkr/sprkkr/test/execution/test_remote_ssh.py \
+  --ignore=src/ase2sprkkr/sprkkr/test/execution/test_remote_psij_slurm.py
 
 # from Guy4ASE
 QT_QPA_PLATFORM=offscreen DO_NOT_RUN_SPRKKR=1 python -m pytest -q tests

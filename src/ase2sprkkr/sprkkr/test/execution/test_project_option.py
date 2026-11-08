@@ -1,13 +1,16 @@
 from types import SimpleNamespace
+
+from kkrunner import ExecutionOutcome, RunState
 from kkrunner.projects import ProjectExecutionManager, ProjectRepository
 from kkrunner.runs import Executor
-from kkrunner import ExecutionOutcome, RunState
+
 from ase2sprkkr.input_parameters.input_parameters import InputParameters
 from ase2sprkkr.input_parameters.task_definition import TaskDefinition
 from ase2sprkkr.sprkkr import calculation as calculation_module
 from ase2sprkkr.sprkkr.calculation import PreparedCalculation
 from ase2sprkkr.sprkkr.calculator import SPRKKR
 from ase2sprkkr.sprkkr.profile import SPRKKRProfile
+
 
 class _Runner:
 
@@ -38,6 +41,7 @@ class _Runner:
     def add_output_listener(self, callback):
         pass
 
+
 class _Executor(Executor):
     name = 'fake'
 
@@ -51,6 +55,7 @@ class _Executor(Executor):
         runner = _Runner(callback, spec=spec)
         self.runners.append(runner)
         return runner
+
 
 class _Prepared:
     create_run = PreparedCalculation.create_run
@@ -70,6 +75,7 @@ class _Prepared:
         self.input_file.close()
         self.output_file.close()
 
+
 def _parameters(monkeypatch, task='DOS'):
     parameters = InputParameters.create(task)
     parameters.CONTROL.DATASET = 'sample'
@@ -80,10 +86,12 @@ def _parameters(monkeypatch, task='DOS'):
     monkeypatch.setattr(InputParameters, 'cache_files', lambda self, directory: ())
     return parameters
 
+
 def _manager(tmp_path):
     projects = ProjectRepository(tmp_path / 'projects')
     project = projects.create('Calculation project')
     return ProjectExecutionManager(project_repository=projects).for_project(project)
+
 
 def _runner(parameters, tmp_path, manager, executor=None):
     executor = executor or _Executor()
@@ -92,12 +100,14 @@ def _runner(parameters, tmp_path, manager, executor=None):
     prepared = _Prepared(parameters, input_file, output_file, tmp_path)
     return prepared.create_run(result_context=SimpleNamespace(directory=str(tmp_path)), profile=SPRKKRProfile(), executor=executor, project=manager)
 
+
 def _project_record(parameters, tmp_path):
     manager = _manager(tmp_path)
     runner = _runner(parameters, tmp_path, manager)
     assert runner.id
     runner.run()
     return manager.store.get(runner.id)
+
 
 def test_explicit_manager_persists_task_and_dataset(tmp_path, monkeypatch):
     parameters = _parameters(monkeypatch)
@@ -108,6 +118,7 @@ def test_explicit_manager_persists_task_and_dataset(tmp_path, monkeypatch):
     assert record.metadata['ase2sprkkr']['dataset'] == 'sample'
     assert record.state == RunState.FINISHED
 
+
 def test_persistence_uses_task_selected_by_shared_schema_values(tmp_path, monkeypatch):
     parameters = _parameters(monkeypatch, 'ARPES')
     parameters.change_task('SPLEED')
@@ -117,6 +128,7 @@ def test_persistence_uses_task_selected_by_shared_schema_values(tmp_path, monkey
     assert record.metadata['ase2sprkkr']['input_definition'] == parameters.definition_name.upper()
     assert not hasattr(record, 'requested_task')
 
+
 def test_persistence_keeps_ase2sprkkr_task_distinct_from_sprkkr_task_value(tmp_path, monkeypatch):
     parameters = _parameters(monkeypatch, 'BSFEK')
     record = _project_record(parameters, tmp_path)
@@ -124,6 +136,7 @@ def test_persistence_keeps_ase2sprkkr_task_distinct_from_sprkkr_task_value(tmp_p
     assert parameters.task_name == 'BSFEK'
     assert record.metadata['ase2sprkkr']['task'] == 'BSFEK'
     assert record.metadata['ase2sprkkr']['input_definition'] == 'BSF'
+
 
 def test_project_bound_manager_is_preserved_by_execution_adapter(tmp_path, monkeypatch):
     parameters = _parameters(monkeypatch)
@@ -133,6 +146,7 @@ def test_project_bound_manager_is_preserved_by_execution_adapter(tmp_path, monke
     runner.submit()
     assert manager.store.get(runner.id).id == runner.id
     runner.cancel()
+
 
 def test_persistence_defaults_to_calculator_setting(tmp_path, monkeypatch):
     executor = _Executor()
@@ -150,6 +164,7 @@ def test_persistence_defaults_to_calculator_setting(tmp_path, monkeypatch):
     calculator.create_run()
     assert captured['project'] is manager
     assert captured['executor'] is executor
+
 
 def test_run_level_profile_selects_executor_instead_of_calculator_executor(tmp_path, monkeypatch):
     parameters = _parameters(monkeypatch)

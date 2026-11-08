@@ -1,9 +1,12 @@
 from types import SimpleNamespace
+
 import pytest
 from kkrunner import RunState, RunStore
 from kkrunner.files import FileManifest
 from kkrunner.runs.manager import RunManager
+
 from ase2sprkkr.outputs.project_results import ProjectResultUnavailableError, load_project_result
+
 
 def test_later_primary_output_is_not_mistaken_for_uncaptured_history(tmp_path):
     store = RunStore(tmp_path / 'runs')

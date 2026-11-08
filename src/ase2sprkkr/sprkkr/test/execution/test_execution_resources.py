@@ -1,9 +1,12 @@
 import io
 from types import SimpleNamespace
+
 import pytest
-from kkrunner.runs.base import ExecutionResources, ExecutionOutcome, ResourceOwnedRunner, RunState, SubmissionNotStarted
+from kkrunner.runs.base import ExecutionOutcome, ResourceOwnedRunner, RunState, SubmissionNotStarted
+
 from ase2sprkkr.sprkkr.calculation import PreparedCalculation
 from ase2sprkkr.sprkkr.profile import SPRKKRProfile
+
 
 class _Task:
     name = 'SCF'
@@ -12,6 +15,7 @@ class _Task:
 
     def output_reader(self, **kwargs):
         return SimpleNamespace(read_from_file=lambda *args, **options: SimpleNamespace(return_code=options.get('return_code')))
+
 
 class _Parameters:
     CONTROL = SimpleNamespace(POTFIL=SimpleNamespace(result=None), DATASET=SimpleNamespace(result=None))
@@ -27,6 +31,7 @@ class _Parameters:
 
     def cache_files(self, directory):
         return ()
+
 
 class _Prepared:
     create_run = PreparedCalculation.create_run
@@ -45,6 +50,7 @@ class _Prepared:
         self.closed = True
         self.input_file.close()
         self.output_file.close()
+
 
 class _Runner:
     exception = None
@@ -78,6 +84,7 @@ class _Runner:
     def add_output_error_listener(self, callback):
         pass
 
+
 class _Executor:
 
     def __init__(self, *, factory_error=None, submit_error=None):
@@ -89,9 +96,11 @@ class _Executor:
             raise self.factory_error
         return _Runner(callback, submit_error=self.submit_error, spec=spec)
 
+
 def _create_run(executor, input_file, output_file):
     prepared = _Prepared(input_file, output_file)
     return prepared.create_run(result_context=None, profile=SPRKKRProfile(mpi=False), executor=executor)
+
 
 def test_files_are_closed_when_runner_creation_fails():
     input_file = io.BytesIO(b'input')
@@ -100,6 +109,7 @@ def test_files_are_closed_when_runner_creation_fails():
         _create_run(_Executor(factory_error=RuntimeError('factory failed')), input_file, output_file)
     assert input_file.closed
     assert output_file.closed
+
 
 def test_files_are_closed_when_submission_fails_before_start():
     input_file = io.BytesIO(b'input')
@@ -113,6 +123,7 @@ def test_files_are_closed_when_submission_fails_before_start():
     assert input_file.closed
     assert output_file.closed
 
+
 def test_completion_releases_files_without_wait():
     input_file = io.BytesIO(b'input')
     output_file = io.BytesIO()
@@ -123,6 +134,7 @@ def test_completion_releases_files_without_wait():
     assert input_file.closed
     assert output_file.closed
 
+
 def test_unstarted_runner_can_release_owned_files_explicitly():
     input_file = io.BytesIO(b'input')
     output_file = io.BytesIO()
@@ -131,23 +143,3 @@ def test_unstarted_runner_can_release_owned_files_explicitly():
     runner.close()
     assert input_file.closed
     assert output_file.closed
-
-def test_cancel_started_run_does_not_close_resources_before_monitor_finishes():
-    input_file = io.BytesIO(b'input')
-    underlying = _Runner()
-    underlying._state = RunState.RUNNING
-    resources = ExecutionResources(input_file)
-    runner = ResourceOwnedRunner(underlying, resources)
-    runner.cancel()
-    assert runner.state == RunState.CANCELLED
-    assert not resources.closed
-    assert not input_file.closed
-
-def test_cancel_unstarted_run_releases_resources():
-    input_file = io.BytesIO(b'input')
-    resources = ExecutionResources(input_file)
-    runner = ResourceOwnedRunner(_Runner(), resources)
-    runner.cancel()
-    assert runner.state == RunState.CANCELLED
-    assert resources.closed
-    assert input_file.closed

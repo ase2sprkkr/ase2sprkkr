@@ -1,13 +1,12 @@
 """Shared fixtures for execution integration tests."""
 
-from dataclasses import dataclass
-from pathlib import Path
 import shutil
 import subprocess
 import tempfile
+from dataclasses import dataclass
+from pathlib import Path
 
 import pytest
-
 from kkrunner.backends import pool as execution_pool
 
 
@@ -22,7 +21,9 @@ class DockerExecutionImage:
 
 def _package_mount_root() -> Path:
     """Return a host path importable inside both source and wheel test layouts."""
-    package_dir = Path(__file__).resolve().parents[2]
+    import ase2sprkkr
+
+    package_dir = Path(ase2sprkkr.__file__).resolve().parent
     package_parent = package_dir.parent
     if package_parent.name == "src":
         return package_parent.parent

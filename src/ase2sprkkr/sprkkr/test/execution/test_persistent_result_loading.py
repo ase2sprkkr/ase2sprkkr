@@ -6,6 +6,7 @@ import pytest
 from kkrunner import ExecutionOutcome, RunState, RunStore
 from kkrunner.files import FileEntry, FileManifest
 from kkrunner.runs.manager import RunManager
+
 from ase2sprkkr.outputs import project_results
 from ase2sprkkr.outputs.task_result import TaskResult
 
@@ -22,12 +23,6 @@ def stored_run(tmp_path, state=RunState.FINISHED):
     )
     record = manager.complete(record, state=state, return_code=0, artifacts_available=True)
     return manager, record, output
-
-
-def test_generic_manager_has_no_application_methods(tmp_path):
-    manager, _, _ = stored_run(tmp_path)
-    assert not hasattr(manager, "load_result")
-    assert not hasattr(manager, "attach_sprkkr")
 
 
 def test_live_record_and_history_use_same_reader_factory(monkeypatch, tmp_path):

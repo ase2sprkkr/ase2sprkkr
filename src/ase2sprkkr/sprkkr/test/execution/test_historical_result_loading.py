@@ -1,13 +1,16 @@
 from types import SimpleNamespace
+
 import pytest
-from kkrunner.files import ArtifactAvailabilityState, FileState, FileManifest
 from kkrunner import ExecutionSpec, RunState, RunStore
-from kkrunner.runs import Executor
 from kkrunner.backends import ExecutorPool
 from kkrunner.backends.endpoint import endpoint_for_executor
-from kkrunner.runs.manager import RunManager, HistoricalFileMismatchError
+from kkrunner.files import ArtifactAvailabilityState, FileManifest, FileState
+from kkrunner.runs import Executor
+from kkrunner.runs.manager import HistoricalFileMismatchError, RunManager
+
 from ase2sprkkr.outputs import project_results
 from ase2sprkkr.outputs.project_results import ProjectResultUnavailableError, load_project_result
+
 
 class _HistoryExecutor(Executor):
     name = 'history'
@@ -26,14 +29,17 @@ class _HistoryExecutor(Executor):
         with open(target, 'w') as output:
             output.write(self.restored_output)
 
+
 def _spec(tmp_path):
     input_file = tmp_path / 'run.inp'
     output_file = tmp_path / 'run.out'
     input_file.write_text('input')
     return ExecutionSpec(argv=(), directory=str(tmp_path), input_file=str(input_file), output_file=str(output_file), input_files=(str(input_file),), output_files=(str(output_file),))
 
+
 def _manager(store):
     return RunManager(store, executor_pool=ExecutorPool())
+
 
 def _terminal_run(tmp_path, *, state=RunState.FINISHED, return_code=0, task='DOS'):
     store = RunStore(tmp_path / 'runs')
@@ -50,6 +56,7 @@ def _terminal_run(tmp_path, *, state=RunState.FINISHED, return_code=0, task='DOS
     record = manager.complete(record, state=state, execution=record.execution.submitted('job-1'), return_code=return_code, artifacts_available=True)
     return (manager, executor, record)
 
+
 def _patch_reader(monkeypatch, parsed):
 
     class Reader:
@@ -59,6 +66,7 @@ def _patch_reader(monkeypatch, parsed):
             parsed.append((output, kwargs))
             return SimpleNamespace(return_code=kwargs['return_code'])
     monkeypatch.setattr(project_results, '_reader_for_record', lambda manager, record: Reader())
+
 
 def test_history_listing_is_lazy_but_loading_restores_missing_output(tmp_path, monkeypatch):
     manager, executor, record = _terminal_run(tmp_path)
@@ -78,6 +86,7 @@ def test_history_listing_is_lazy_but_loading_restores_missing_output(tmp_path, m
     assert result.run_record.state == RunState.FINISHED
     assert result.run_record.files.state == FileState.CURRENT
     assert result.run_record.files.availability_state == ArtifactAvailabilityState.AVAILABLE
+
 
 @pytest.mark.parametrize('entrypoint, expected_error', [pytest.param('load', ProjectResultUnavailableError, id='load-project-result'), pytest.param('retrieve', HistoricalFileMismatchError, id='retrieve-files')])
 def test_restored_changed_content_is_rejected_as_overwritten(tmp_path, monkeypatch, entrypoint, expected_error):
@@ -107,6 +116,7 @@ def test_restored_changed_content_is_rejected_as_overwritten(tmp_path, monkeypat
         assert stored.files.state == FileState.MISSING
         assert stored.files.availability_state == ArtifactAvailabilityState.FAILED
 
+
 def test_retrieval_programming_error_is_not_persisted_as_artifact_failure(tmp_path):
     manager, executor, record = _terminal_run(tmp_path)
     (tmp_path / 'run.out').unlink()
@@ -119,6 +129,7 @@ def test_retrieval_programming_error_is_not_persisted_as_artifact_failure(tmp_pa
     stored = manager.store.get(record.id)
     assert stored.files.availability_state == ArtifactAvailabilityState.AVAILABLE
 
+
 def test_finished_history_without_available_output_is_not_synthesized(tmp_path):
     store = RunStore(tmp_path / 'runs')
     manager = _manager(store)
@@ -129,6 +140,7 @@ def test_finished_history_without_available_output_is_not_synthesized(tmp_path):
     with pytest.raises(ProjectResultUnavailableError, match='unavailable'):
         load_project_result(manager, record.id)
 
+
 def test_failed_history_without_return_code_is_not_parsed_as_success(tmp_path, monkeypatch):
     manager, _, record = _terminal_run(tmp_path, state=RunState.FAILED, return_code=None)
     parsed = []
@@ -137,6 +149,7 @@ def test_failed_history_without_return_code_is_not_parsed_as_success(tmp_path, m
     assert parsed[0][1]['return_code'] != 0
     assert result.return_code != 0
     assert result.run_record.state == RunState.FAILED
+
 
 def test_history_load_uses_retrieval_record_without_extra_store_lookup(tmp_path, monkeypatch):
     manager, _, record = _terminal_run(tmp_path)

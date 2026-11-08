@@ -8,8 +8,11 @@ import time
 from pathlib import Path
 from threading import Event
 from uuid import uuid4
+
 import pytest
+
 pytestmark = pytest.mark.skipif(os.environ.get('ASE2SPRKKR_RUN_DOCKER_TESTS') != '1', reason='set ASE2SPRKKR_RUN_DOCKER_TESTS=1 to run Docker integration tests')
+
 
 def _wait_for_ssh(ssh, attempts=50):
     for _ in range(attempts):
@@ -18,11 +21,13 @@ def _wait_for_ssh(ssh, attempts=50):
         time.sleep(0.1)
     pytest.fail('SSH server did not become ready')
 
+
 def _remote_error(exc):
     stderr = exc.stderr
     if isinstance(stderr, bytes):
         stderr = stderr.decode('utf8', errors='replace')
     pytest.fail(f"{exc}\n\nRemote stderr:\n{stderr or '<empty>'}")
+
 
 def _wait_for_live_output(runner, output_seen, output, timeout=30):
     deadline = time.monotonic() + timeout
@@ -38,11 +43,13 @@ def _wait_for_live_output(runner, output_seen, output, timeout=30):
             pytest.fail(f'remote run ended before live output: state={state.value}, return_code={result.return_code}, output={output!r}')
     pytest.fail(f'no live SPR-KKR output arrived over SSH; state={runner.state.value}, output={output!r}')
 
+
 def test_remote_executor_over_ssh(docker_execution_image):
     from ase.build import bulk
-    from kkrunner.projects import ProjectExecutionManager, ProjectRepository
     from kkrunner.backends import ExecutorPool
+    from kkrunner.projects import ProjectExecutionManager, ProjectRepository
     from kkrunner.remote import RemoteEndpointExecutor, SshTransport
+
     from ase2sprkkr.outputs.project_results import load_project_result
     from ase2sprkkr.sprkkr.calculator import SPRKKR
     from ase2sprkkr.sprkkr.profile import SPRKKRProfile

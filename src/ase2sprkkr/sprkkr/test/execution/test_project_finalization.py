@@ -1,92 +1,12 @@
-from kkrunner.runs.processing import ProcessingPending
-from threading import Event
 from types import SimpleNamespace
+
 import pytest
-import ase2sprkkr.outputs.project_results as project_output
-from kkrunner import ExecutionOutcome, RunState, RunStore
-from kkrunner.runs import Executor, FailurePhase
+from kkrunner import RunState, RunStore
+from kkrunner.runs import FailurePhase
 from kkrunner.runs.manager import RunManager
+
+import ase2sprkkr.outputs.project_results as project_output
 from ase2sprkkr.outputs.project_results import UnrecoverableProjectResultError, attach_project_run
-
-
-class _RawRunner:
-    def __init__(self):
-        self.state = RunState.NEW
-        self.backend_id = None
-        self.result = ExecutionOutcome(return_code=0)
-        self.exception = None
-        self.failure_phase = None
-        self.failure_message = None
-
-    @property
-    def return_code(self):
-        return self.result.return_code
-
-    def submit(self):
-        self.backend_id = "job-1"
-        self.state = RunState.FINISHED
-
-    def wait(self):
-        return self.result
-
-    def cancel(self):
-        self.state = RunState.CANCELLED
-
-    def add_output_listener(self, callback):
-        pass
-
-    def add_output_error_listener(self, callback):
-        pass
-
-
-class _Executor(Executor):
-    name = "test"
-
-    def create_managed_run(self, spec, *, run_id, callback=None):
-        self.runner = _RawRunner()
-        return self.runner
-
-
-def test_finished_run_is_persisted_before_callback_without_wait(tmp_path):
-    store = RunStore(tmp_path / "runs")
-    manager = RunManager(store)
-    finished = Event()
-    run = manager.create_run(
-        _Executor(),
-        SimpleNamespace(directory=str(tmp_path)),
-        process_result=lambda outcome: outcome,
-        callback=lambda result: finished.set(),
-        metadata={"ase2sprkkr": {"task": str("DOS").upper()}},
-    )
-    run.submit()
-    assert finished.wait(timeout=5), "completion callback was not called"
-    record = store.get(run.id)
-    assert record.state == RunState.FINISHED
-    assert record.finished_at is not None
-
-
-def test_result_processor_failure_is_postprocessing_failure(tmp_path):
-    store = RunStore(tmp_path / "runs")
-    manager = RunManager(store)
-    executor = _Executor()
-
-    def fail(_outcome):
-        raise ValueError("result parsing failed")
-
-    run = manager.create_run(
-        executor,
-        SimpleNamespace(directory=str(tmp_path)),
-        process_result=fail,
-        metadata={"ase2sprkkr": {"task": str("DOS").upper()}},
-    )
-    run.submit()
-    with pytest.raises(ValueError, match="result parsing failed"):
-        run.wait()
-    record = store.get(run.id)
-    assert record.state == RunState.FAILED
-    assert record.failure_phase == FailurePhase.POSTPROCESSING
-    assert record.message == "result parsing failed"
-    assert record.finished_at is not None
 
 
 def test_unrecoverable_processor_reconstruction_fails_postprocessing(tmp_path):
@@ -153,6 +73,7 @@ def test_transient_attach_failure_keeps_postprocessing_active(tmp_path, monkeypa
 def test_attaching_failed_download_reopens_transfer_without_resubmitting(tmp_path, monkeypatch):
     manager = RunManager(RunStore(tmp_path / "runs"))
     from kkrunner.files import FileEntry, FileManifest
+
     from ase2sprkkr.outputs.project_results import attach_project_run
 
     output = tmp_path / "run.out"
@@ -339,6 +260,7 @@ def test_postprocessing_retry_refuses_modified_or_uncaptured_artifacts(tmp_path)
 
 def test_postprocessing_retry_reader_constructor_error_does_not_reopen(tmp_path, monkeypatch):
     from kkrunner.files import FileEntry, FileManifest
+
     from ase2sprkkr.outputs import retry_project_postprocessing
 
     manager = RunManager(RunStore(tmp_path / "runs"))
@@ -372,6 +294,7 @@ def test_postprocessing_retry_reader_constructor_error_does_not_reopen(tmp_path,
 
 def test_project_retry_attaches_run_provenance(tmp_path, monkeypatch):
     from kkrunner.files import FileEntry, FileManifest
+
     from ase2sprkkr.outputs import retry_project_postprocessing
 
     manager = RunManager(RunStore(tmp_path / "runs"))
@@ -406,89 +329,10 @@ def test_project_retry_attaches_run_provenance(tmp_path, monkeypatch):
     assert result.run_record.state == RunState.FINISHED
 
 
-def test_postprocessing_retry_only_one_caller_can_claim_run(tmp_path):
-    from threading import Thread
-    from kkrunner.files import FileEntry, FileManifest
-
-    manager = RunManager(RunStore(tmp_path / "runs"))
-    output = tmp_path / "run.out"
-    output.write_text("saved data")
-    record = manager.new_record(
-        directory=tmp_path,
-        files=FileManifest(stdout=FileEntry(local_path=str(output))),
-        metadata={"ase2sprkkr": {"task": str("DOS").upper()}},
-        processing_required=True,
-    )
-    record = manager.transition(
-        record, state=RunState.POSTPROCESSING, execution=record.execution.submitted("job-existing")
-    )
-    failed = manager.complete(
-        record,
-        state=RunState.FAILED,
-        return_code=0,
-        failure_phase=FailurePhase.POSTPROCESSING,
-        artifacts_available=True,
-    )
-    processing = Event()
-    release = Event()
-    errors = []
-
-    def parse(outcome):
-        processing.set()
-        if not release.wait(5):
-            raise TimeoutError("test retry parser was not released")
-        return outcome
-
-    def first_attempt():
-        try:
-            manager.retry_postprocessing(failed.id, parse)
-        except BaseException as exc:
-            errors.append(exc)
-
-    worker = Thread(target=first_attempt)
-    worker.start()
-    try:
-        assert processing.wait(5), "first retry did not acquire the run"
-        with pytest.raises(ProcessingPending):
-            manager.retry_postprocessing(failed.id, lambda outcome: outcome)
-        assert manager.store.get(failed.id).state == RunState.POSTPROCESSING
-    finally:
-        release.set()
-        worker.join(5)
-    assert not worker.is_alive()
-    assert not errors
-    assert manager.store.get(failed.id).state == RunState.FINISHED
-
-
-def test_retry_accepts_plain_processing_result(tmp_path):
-    from kkrunner.files import FileEntry, FileManifest
-
-    manager = RunManager(RunStore(tmp_path / "runs"))
-    output = tmp_path / "run.out"
-    output.write_text("contents")
-    record = manager.new_record(
-        directory=tmp_path,
-        files=FileManifest(stdout=FileEntry(local_path=str(output))),
-        metadata={"ase2sprkkr": {"task": str("DOS").upper()}},
-        processing_required=True,
-    )
-    record = manager.transition(
-        record, state=RunState.POSTPROCESSING, execution=record.execution.submitted("job-existing")
-    )
-    failed = manager.complete(
-        record,
-        state=RunState.FAILED,
-        return_code=0,
-        failure_phase=FailurePhase.POSTPROCESSING,
-        artifacts_available=True,
-    )
-    assert manager.retry_postprocessing(failed.id, lambda _: 42) == 42
-    assert manager.store.get(failed.id).state == RunState.FINISHED
-
-
 @pytest.mark.parametrize("parsed", [42, ("immutable", "tuple")])
 def test_project_retry_accepts_immutable_results(tmp_path, monkeypatch, parsed):
     from kkrunner.files import FileEntry, FileManifest
+
     from ase2sprkkr.outputs import retry_project_postprocessing
 
     manager = RunManager(RunStore(tmp_path / "runs"))
@@ -513,140 +357,3 @@ def test_project_retry_accepts_immutable_results(tmp_path, monkeypatch, parsed):
     monkeypatch.setattr(project_output, "_result_processor_for_record", lambda *_: lambda outcome: parsed)
     assert retry_project_postprocessing(manager, failed.id) == parsed
     assert manager.store.get(failed.id).state == RunState.FINISHED
-
-
-@pytest.mark.parametrize("during_retry", ["finished", "failed", "refreshed"])
-def test_retry_does_not_overwrite_concurrent_record_update(tmp_path, during_retry):
-    from kkrunner.files import FileEntry, FileManifest
-
-    manager = RunManager(RunStore(tmp_path / "runs"))
-    output = tmp_path / "run.out"
-    output.write_text("saved data")
-    record = manager.new_record(
-        directory=tmp_path,
-        files=FileManifest(stdout=FileEntry(local_path=str(output))),
-        metadata={"ase2sprkkr": {"task": str("DOS").upper()}},
-        processing_required=True,
-    )
-    record = manager.transition(
-        record, state=RunState.POSTPROCESSING, execution=record.execution.submitted("existing-backend")
-    )
-    failed = manager.complete(
-        record,
-        state=RunState.FAILED,
-        return_code=0,
-        failure_phase=FailurePhase.POSTPROCESSING,
-        artifacts_available=True,
-    )
-
-    def concurrent_change(outcome):
-        current = manager.store.get(failed.id)
-        if during_retry == "refreshed":
-            manager.transition(current, state=RunState.POSTPROCESSING, message="external refresh")
-        else:
-            manager.complete(
-                current,
-                state=RunState.FINISHED if during_retry == "finished" else RunState.FAILED,
-                return_code=0,
-                message="external terminal update",
-                failure_phase=None if during_retry == "finished" else FailurePhase.POSTPROCESSING,
-            )
-        return outcome
-
-    if during_retry == "refreshed":
-        manager.retry_postprocessing(failed.id, concurrent_change)
-    else:
-        with pytest.raises(ProcessingPending, match="no longer owns completion"):
-            manager.retry_postprocessing(failed.id, concurrent_change)
-    latest = manager.store.get(failed.id)
-    if during_retry == "refreshed":
-        assert latest.state == RunState.FINISHED
-        assert latest.message == "external refresh"
-    else:
-        assert latest.state == (RunState.FINISHED if during_retry == "finished" else RunState.FAILED)
-        assert latest.message == "external terminal update"
-
-
-def test_retry_exception_does_not_overwrite_concurrent_completion(tmp_path):
-    from kkrunner.files import FileEntry, FileManifest
-
-    manager = RunManager(RunStore(tmp_path / "runs"))
-    output = tmp_path / "run.out"
-    output.write_text("saved data")
-    record = manager.new_record(
-        directory=tmp_path,
-        files=FileManifest(stdout=FileEntry(local_path=str(output))),
-        metadata={"ase2sprkkr": {"task": str("DOS").upper()}},
-        processing_required=True,
-    )
-    record = manager.transition(
-        record, state=RunState.POSTPROCESSING, execution=record.execution.submitted("existing-backend")
-    )
-    failed = manager.complete(
-        record,
-        state=RunState.FAILED,
-        return_code=0,
-        failure_phase=FailurePhase.POSTPROCESSING,
-        artifacts_available=True,
-    )
-
-    def interrupted(outcome):
-        manager.complete(
-            manager.store.get(failed.id), state=RunState.FINISHED, return_code=0, message="external success"
-        )
-        raise ValueError("parser error")
-
-    with pytest.raises(ProcessingPending, match="no longer owns completion"):
-        manager.retry_postprocessing(failed.id, interrupted)
-    current = manager.store.get(failed.id)
-    assert current.state == RunState.FINISHED
-    assert current.message == "external success"
-
-
-@pytest.mark.parametrize("input_change", ("overwritten", "missing"))
-def test_postprocessing_retry_accepts_unchanged_output_with_stale_input(tmp_path, input_change):
-    """Captured output remains retryable when the original input is stale."""
-    from kkrunner.files import FileEntry, FileManifest, FileState
-
-    manager = RunManager(RunStore(tmp_path / "runs"))
-    output = tmp_path / "result.out"
-    source = tmp_path / "original.inp"
-    output.write_bytes(b"captured result")
-    source.write_bytes(b"original input")
-    record = manager.new_record(
-        directory=tmp_path,
-        files=FileManifest(inputs=(FileEntry(local_path=str(source)),), stdout=FileEntry(local_path=str(output))),
-        metadata={"ase2sprkkr": {"task": str("DOS").upper()}},
-        processing_required=True,
-    )
-    prepared = manager.transition(
-        record, state=RunState.POSTPROCESSING, execution=record.execution.submitted("existing-backend")
-    )
-    failed = manager.complete(
-        prepared,
-        state=RunState.FAILED,
-        return_code=0,
-        failure_phase=FailurePhase.POSTPROCESSING,
-        artifacts_available=True,
-    )
-    assert failed.files.output_versions
-    assert failed.files.input_versions
-    if input_change == "missing":
-        source.unlink()
-    else:
-        source.write_bytes(b"changed input")
-    assert all((item.state() is FileState.CURRENT for item in failed.files.output_versions))
-    assert any((item.state() is not FileState.CURRENT for item in failed.files.input_versions))
-    seen = []
-
-    def parse(outcome):
-        seen.append(outcome)
-        return output.read_bytes()
-
-    assert manager.retry_postprocessing(failed.id, parse) == b"captured result"
-    assert len(seen) == 1
-    assert seen[0].input_file is None
-    assert seen[0].output_file == str(output)
-    current = manager.store.get(failed.id)
-    assert current.state is RunState.FINISHED
-    assert current.files == failed.files

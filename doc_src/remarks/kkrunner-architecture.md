@@ -133,3 +133,13 @@ ASE2SPRKKR retains project definitions in its original application state
 namespace, while new-format run records use KKRunner's state namespace. Explicit
 project repositories retain their colocated run store. Old development records
 are not migrated, silently ignored within a store, or rewritten.
+
+## Test ownership
+
+Generic runner contracts are tested in the standalone KKRunner repository.
+ASE2SPRKKR's calculator, profile, prepared-calculation, project-result and remote
+execution integration tests live in `src/ase2sprkkr/sprkkr/test/execution/`,
+following the package's existing `test/` convention. The suite is included in
+installed-package self-tests. Its Docker assets remain beside the integration
+tests and are included in source distributions. There is no application
+`ase2sprkkr.execution` package.
