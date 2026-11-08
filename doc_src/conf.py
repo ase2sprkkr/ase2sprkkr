@@ -106,7 +106,7 @@ def setup(app):
     app.connect('autodoc-skip-member', skip_member)
 
 
-exclude_patterns = ['*/test/*', '*/test']
+exclude_patterns = ['*/test/*', '*/test', 'remarks/**']
 
 inheritance_graph_attrs = dict(size='"10.0, 10.0"',
     fontsize=14, ranksep=0.3 )

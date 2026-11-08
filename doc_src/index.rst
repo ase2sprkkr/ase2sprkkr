@@ -8,6 +8,7 @@ ASE2SPRKKR software package
    :caption: Contents
 
    How to use the package <usage.rst>
+   Execution, persistence and remote runs <execution.rst>
    More about the package installation <how-to-install.rst>
    Philosophy of the package (for developers) <philosophy.rst>
    Changelog <changelog.rst>

@@ -1,3 +1,7 @@
+> Historical AI development note. This snapshot may be outdated and is not
+> the official API or user guide. See [the current execution guide](../execution.rst)
+> and [KKRunner documentation](https://ase2sprkkr.github.io/kkrunner/).
+
 # Execution boundary and public contract
 
 KKRunner owns ExecutionSpec/ExecutionOutcome, TaskFile, ExecutorEndpoint,

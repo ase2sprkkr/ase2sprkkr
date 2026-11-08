@@ -1,3 +1,7 @@
+> Historical AI development note. This snapshot may be outdated and is not
+> the official API or user guide. See [the current execution guide](../execution.rst)
+> and [KKRunner documentation](https://ase2sprkkr.github.io/kkrunner/).
+
 # Extraction validation
 
 Source baselines: ASE2SPRKKR `b711659b794e911a2356fca8d53d7c5a27775891`,

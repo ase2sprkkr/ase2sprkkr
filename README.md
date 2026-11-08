@@ -195,19 +195,24 @@ fork for building the documentation.
 Please feel free to make a pull-request or post an issue at:
 <https://github.com/ase2sprkkr/ase2sprkkr>
 
-### Execution infrastructure in source checkouts
+## Execution and persistent runs
 
-Execution is provided by the separate `kkrunner` distribution. Keep its checkout
-next to `ase2sprkkr` and install it before installing ASE2SPRKKR:
+Execution is provided by the separate [KKRunner library](https://ase2sprkkr.github.io/kkrunner/).
+ASE2SPRKKR prepares SPR-KKR inputs and constructs scientific results; KKRunner
+owns processes, SSH/scheduler execution, manifests, transfers and durable history.
+See [the application execution guide](https://ase2sprkkr.github.io/ase2sprkkr/execution.html)
+for project runs, reconnect, profiles and historical result loading.
+
+For source development, install KKRunner first. Run the following from the
+ASE2SPRKKR checkout:
 
 ```sh
-python -m pip install -e ../kkrunner
+python -m pip install -e "<path-to-kkrunner>"
 python -m pip install -e .
 ```
 
-The remote execution host needs only KKRunner and the calculation executable.
+Replace `<path-to-kkrunner>` with the location of your KKRunner checkout.
+A remote target needs KKRunner and SPR-KKR (plus PSI/J for scheduler execution),
+without requiring ASE2SPRKKR merely to execute the calculation.
 Its protocol CLI is `kkrunner remote` (also available as `kkrunner-remote`).
-`ase2sprkkr remote status|follow|cancel` exposes the end-user subset on the same
-host. See the [architecture](doc_src/kkrunner-architecture.md) and
-[validation report](doc_src/kkrunner-validation.md) for the new boundary,
-intentional API changes and regression results.
+`ase2sprkkr remote status|follow|cancel` exposes the end-user subset on that host.

@@ -31,6 +31,25 @@ you can install the packages from github:
 
 
 
+KKRunner dependency
+--------------------
+
+Pip installs KKRunner as a separate runtime dependency. For source development,
+install it before ASE2SPRKKR. Run the following from the ASE2SPRKKR checkout:
+
+.. code-block:: console
+
+   python -m pip install -e "<path-to-kkrunner>"
+   python -m pip install -e .
+
+Replace ``<path-to-kkrunner>`` with the location of your KKRunner checkout.
+
+For scheduler support install ``ase2sprkkr[psij]``. On an SSH target, install
+``kkrunner`` (or ``kkrunner[psij]`` for a scheduler), SPR-KKR and its required MPI
+runtime. The target does not need ASE2SPRKKR just to run its executables.
+See the `KKRunner documentation <https://ase2sprkkr.github.io/kkrunner/>`_
+for backend requirements and installation details.
+
 Further notes
 --------------
 

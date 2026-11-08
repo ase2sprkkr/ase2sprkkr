@@ -56,6 +56,11 @@ the topic :ref:`More about the package installation<Installation>`
 Usage
 -----
 
+For asynchronous submission, persistent project runs, reconnect and remote
+profiles, see :doc:`execution`. The generic execution engine is KKRunner;
+ASE2SPRKKR continues to prepare inputs and return scientific ``TaskResult``
+objects.
+
 The package allows us to define the problem to be computed using Python
 and ASE. The current version of the package is aimed primarily at
 defining the problem. The capabilities of obtaining the results and

@@ -1,3 +1,7 @@
+> Historical AI development note. This snapshot may be outdated and is not
+> the official API or user guide. See [the current execution guide](../execution.rst)
+> and [KKRunner documentation](https://ase2sprkkr.github.io/kkrunner/).
+
 # Opravy obou review KKRunneru
 
 Práce je ve větvi `kkrunner` všech tří repozitářů. Tento dokument nahrazuje
