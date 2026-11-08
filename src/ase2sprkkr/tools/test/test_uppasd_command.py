@@ -3,7 +3,7 @@ from types import SimpleNamespace
 
 from ase import Atoms
 
-from ..commands import uppasd
+from ase2sprkkr_cli.commands import uppasd
 from ...bindings import uppasd as uppasd_bindings
 from ...result_files import ResultFile
 from ...result_files.definitions.jxc import Selector

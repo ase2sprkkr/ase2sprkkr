@@ -5,7 +5,7 @@ from types import SimpleNamespace
 import pytest
 
 from ase2sprkkr.configuration import definition
-from ase2sprkkr.tools.commands import config as config_command
+from ase2sprkkr_cli.commands import config as config_command
 
 
 @cache

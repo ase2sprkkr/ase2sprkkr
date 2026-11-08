@@ -3,15 +3,9 @@
 
 from pathlib import Path
 from collections.abc import Mapping
-import sys
 
-if not __package__:
-    __package__ = "ase2sprkkr.tools.commands"
 
-root_path = str(Path(__file__).resolve().parents[3])
-sys.path.append(root_path)
 
-from ...common.tools import main  # NOQA
 
 help = "Show or edit the current user configuration."
 description = "The user configuration is stored in ~/.config/ase2sprkkr/config.yaml on typical Unix/Linux systems."
@@ -171,8 +165,8 @@ def _requested_cleanup(args):
 
 
 def _migrate(args, legacy_file, file):
-    from ...configuration import definition
-    from ...configuration_migration import (
+    from ase2sprkkr.configuration import definition
+    from ase2sprkkr.configuration_migration import (
         clean_legacy_configuration,
         migrate_legacy_configuration,
     )
@@ -263,7 +257,7 @@ def _print_profiles(config):
 def run(args, global_args):
     import os
     import pyparsing
-    from ...configuration import (
+    from ase2sprkkr.configuration import (
         config,
         legacy_user_preferences_file,
         user_preferences_file,
@@ -304,7 +298,7 @@ def run(args, global_args):
         print(config._definition.description(verbose="all"))
         run = False
     if args.set:
-        from ...common.warnings import DataValidityError
+        from ase2sprkkr.common.warnings import DataValidityError
 
         try:
             value = _parse_set_value(args.set[1])
@@ -325,7 +319,7 @@ def run(args, global_args):
         run = False
     unset = getattr(args, "unset", None)
     if unset:
-        from ...common.warnings import DataValidityError
+        from ase2sprkkr.common.warnings import DataValidityError
 
         try:
             _unset_configuration_value(config, unset)
@@ -377,6 +371,3 @@ def run(args, global_args):
         else:
             print("# No custom user configuration found")
 
-
-if __name__ == "__main__":
-    main(globals())

@@ -3,13 +3,8 @@
 Show known structured result files, description of InputParameters and so on.
 """
 
-from pathlib import Path
-import sys
 import argparse
 
-if not __package__:
-    __package__ = "ase2sprkkr.tools.commands"
-sys.path.append(str(Path(__file__).resolve().parents[3]))
 
 
 help = "Show capabilities of ase2sprkkr (known tasks, result file formats etc.)."
@@ -55,9 +50,8 @@ def parser(parser):
 
 
 def run(args, global_args):
-    from ... import InputParameters, ResultFile
-    from ...sprkkr.executables import executables  # NOQA
-    from ...common.tools import main  # NOQA
+    from ase2sprkkr import InputParameters, ResultFile
+    from ase2sprkkr.sprkkr.executables import executables  # NOQA
 
 
     print("ASE2SPRKKR\n==========\nA tool to run SPRKKR calculations\n\n")

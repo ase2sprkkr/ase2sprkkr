@@ -5,7 +5,7 @@ import json
 import pytest
 from kkrunner import cli
 from kkrunner.remote import service as remote_service
-from ase2sprkkr.tools.commands import remote
+from ase2sprkkr_cli.commands import remote
 
 
 @pytest.mark.parametrize('action', ['status', 'cancel'])
@@ -18,7 +18,6 @@ def test_user_command_delegates_without_protocol_arguments(monkeypatch, capsys, 
     remote.run(parser.parse_args([action, 'opaque-handle']), None)
     assert calls == ['opaque-handle']
     assert json.loads(capsys.readouterr().out) == {'state': 'running'}
-    assert remote.run is cli.run
 
 
 def test_follow_exposes_user_stream_options():

@@ -2,12 +2,7 @@
 """Convert SPRKKR output to UppASD input files and Jij plots."""
 
 import sys
-from pathlib import Path
-from ...common.tools import main  # NOQA
 
-if not __package__:
-    __package__ = "ase2sprkkr.tools.commands"
-sys.path.append(str(Path(__file__).resolve().parents[3]))
 
 help = "Convert SPRKKR output to UppASD input files and plots the computed Jij (experimental)"
 description = "Given .pot, .jxc and .dmi file, plot the Jij values."
@@ -67,12 +62,13 @@ def parser(parser):
 
 
 def run(args, global_args):
+    from pathlib import Path
     import glob
 
-    from ...bindings.uppasd import Coordinates, write_mom_file, write_pos_file, write_inpsd_file  # NOQA
-    from ...result_files import ResultFile  # NOQA
-    from ...result_files.definitions.jxc import JXCResultFile  # NOQA
-    from ...potentials.potentials import Potential  # NOQA
+    from ase2sprkkr.bindings.uppasd import Coordinates, write_mom_file, write_pos_file, write_inpsd_file  # NOQA
+    from ase2sprkkr.result_files import ResultFile  # NOQA
+    from ase2sprkkr.result_files.definitions.jxc import JXCResultFile  # NOQA
+    from ase2sprkkr.potentials.potentials import Potential  # NOQA
 
     if args.quiet:
 
@@ -244,6 +240,3 @@ def run(args, global_args):
         print(f"Unexpected error: {exc}")
         sys.exit(1)
 
-
-if __name__ == "__main__":
-    main(globals())

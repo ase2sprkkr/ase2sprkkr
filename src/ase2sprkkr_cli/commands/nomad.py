@@ -3,16 +3,9 @@
 This is a script to upload to NOMAD repository.
 """
 
-from pathlib import Path
-import sys
 import argparse
 
-if not __package__:
-    __package__ = "ase2sprkkr.tools.commands"
-sys.path.append(str(Path(__file__).resolve().parents[3]))
 
-from ...common.tools import main  # NOQA
-from ...bindings.nomad.nomad_api import NomadApi  # NOQA
 
 
 help = "Upload given datas to NOMAD"
@@ -23,7 +16,7 @@ Or you can authenticate once using -a switch, then the token will be stored. """
 def parser(parser):
 
     nomad = argparse.ArgumentParser(add_help=False)
-    nomad.add_argument("--nomad-url", "-N", help="Nomad URL.", type=str, default=NomadApi.default_api_url)
+    nomad.add_argument("--nomad-url", "-N", help="Nomad URL.", type=str, default=None)
     nomad.add_argument(
         "--password",
         "-P",
@@ -131,7 +124,7 @@ def token(args):
 
 
 def gather_files(output_files, name=None):
-    from ...bindings.nomad.nomad import NomadArchive
+    from ase2sprkkr.bindings.nomad.nomad import NomadArchive
 
     arch = NomadArchive(name)
     for i in output_files:
@@ -154,6 +147,7 @@ def run(args, global_args):
     global api
 
     if args.api:
+        from ase2sprkkr.bindings.nomad.nomad_api import NomadApi
         api = NomadApi(args.nomad_url)
         if args.token:
             api.token = get_token(args)

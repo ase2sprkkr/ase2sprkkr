@@ -3,22 +3,17 @@
 Opening the ASE2SPRKKR result files and/or scripts in the shell or Jupyter notebook
 """
 
-from pathlib import Path
-import sys
-
-if not __package__:
-    __package__ = "ase2sprkkr.tools.commands"
-sys.path.append(str(Path(__file__).resolve().parents[3]))
-
-from ...common.tools import main  # NOQA
-from ...common.lazy_string import LazyString  # NOQA
 
 
-@LazyString
-def description():
-    from ...result_files import ResultFile
 
-    out = "The type of the file is guessed from the content of the file and from the extension. The currently supported structured result files are: \n"
+
+description = "Open SPR-KKR result files or scripts in an interactive shell or Jupyter notebook."
+
+
+def extra_help():
+    from ase2sprkkr.result_files import ResultFile
+
+    out = "Supported structured result file formats:\n"
     defs = ResultFile.definitions.items()
     out += "\n".join(map(lambda x: f"    {x[0].upper()}: {x[1].info()}", defs))
     return out
@@ -50,9 +45,10 @@ def parser(parser):
 
 
 def run(args, global_args):
-    from ...gui.shell import Python, JupyterLab, JupyterDependencyError, Pdb
+    from pathlib import Path
+    from ase2sprkkr.gui.shell import Python, JupyterLab, JupyterDependencyError, Pdb
     import os
-    from ...common.file_utils import Directory
+    from ase2sprkkr.common.file_utils import Directory
 
     try:
         if args.jupyter:
@@ -95,6 +91,3 @@ def run(args, global_args):
 
         shell.open()
 
-
-if __name__ == "__main__":
-    main(globals())

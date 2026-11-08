@@ -3,16 +3,8 @@
 This command just run the tests
 """
 
-from pathlib import Path
 import sys
 
-if not __package__:
-    __package__ = "ase2sprkkr.tools.commands"
-
-root_path = str(Path(__file__).resolve().parents[3])
-sys.path.append(root_path)
-
-from ...common.tools import main  # NOQA
 
 help = "Run the tests of ASE2SPRKKR."
 description = "If something goes wrong, please send the output of this commands to developers to ase2sprkkr@ntc.zcu.cz"
@@ -35,6 +27,8 @@ def parser(parser):
 
 
 def run(args, global_args):
+    from pathlib import Path
+    root_path = str(Path(__file__).resolve().parents[2])
     import os
     import subprocess
     from pyparsing import ParserElement
@@ -59,6 +53,3 @@ def run(args, global_args):
     out = subprocess.run(pytest_args)
     exit(out.returncode)
 
-
-if __name__ == "__main__":
-    main(globals())

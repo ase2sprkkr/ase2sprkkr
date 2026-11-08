@@ -3,23 +3,19 @@
 Plotting values from structured SPR-KKR result files.
 """
 
-from pathlib import Path
-import sys
 import argparse
 
-if not __package__:
-    __package__ = "ase2sprkkr.tools.commands"
-sys.path.append(str(Path(__file__).resolve().parents[3]))
 
-from ...common.tools import parse_tuple_function, parse_named_option, append_id_to_filename, parse_inches, main  # NOQA
-from ...common.lazy_string import LazyString  # NOQA
+from ase2sprkkr_cli.errors import CLIUsageError
 
 
-@LazyString
-def description():
-    from ...result_files import ResultFile
+description = "Plot structured SPR-KKR result files. File formats are detected automatically."
 
-    out = "The type of the file is guessed from the content of the file and from the extension. The currently supported structured result files are: \n"
+
+def extra_help():
+    from ase2sprkkr.result_files import ResultFile
+
+    out = "Supported structured result file formats:\n"
     defs = ResultFile.definitions.items()
     out += "\n".join(map(lambda x: f"    {x[0].upper()}: {x[1].info()}", defs))
     return out
@@ -39,13 +35,6 @@ SFN_PLOT_MODE_HELP = {
 
 
 def parser(parser):
-    def parse_layer(value):
-        out = parse_tuple_function(int, 1, 2)(value)
-        if len(out) == 1:
-            return out[0] - 1
-        else:
-            return slice(out[0] - 1, out[1])
-
     parser.add_argument("output", help="SPR-KKR result file name (see the supported files above).", nargs="+")
     parser.add_argument(
         "-o",
@@ -80,7 +69,7 @@ def parser(parser):
         "--plot_size",
         dest="figsize",
         default=argparse.SUPPRESS,
-        type=parse_tuple_function(parse_inches, 2),
+        type=str,
         help='The plot size. Example: "5cm,5cm", "6,4". The default units are inches.',
         required=False,
     )
@@ -118,7 +107,7 @@ def parser(parser):
         "-S",
         "--set",
         dest="args",
-        type=lambda x: parse_named_option(x, True),
+        type=str,
         help="Given a value of the format name=value, pass the value to the plotting function. You can so override various options that matplotlib plotting functions accept (e.g. vmin or vmax for pcolormesh), or the values that can be set using set_<something> functions (e.g. title or (x|y)label). This option can be repeated.",
         action="append",
         default=[],
@@ -136,7 +125,7 @@ def parser(parser):
     group.add_argument(
         "--sites",
         help="Select a site to plot (for BSF). Either number or two comma delimited numbers from,to. Numbering starts from 1. ",
-        type=parse_layer,
+        type=str,
         default=argparse.SUPPRESS,
         required=False,
     )
@@ -164,17 +153,28 @@ def parser(parser):
 
 
 def run(args, global_args):
-    from ...result_files import ResultFile
-    from ...result_files.definitions.sfn import SFNResultFile
-    from pathlib import Path
-    from ...gui.plot import Multiplot
+    from ase2sprkkr.common.tools import parse_named_option, parse_inches, parse_tuple_function
+    import pyparsing
+    from unyt.exceptions import UnytError
 
     kwargs = vars(args).copy()
 
     outputs = kwargs.pop("output")
     value = kwargs.pop("value")
     filename = kwargs.pop("filename")
-    generic_options = dict(kwargs.pop("args"))
+    try:
+        if "figsize" in kwargs:
+            kwargs["figsize"] = parse_tuple_function(parse_inches, 2)(kwargs["figsize"])
+        if "sites" in kwargs:
+            selected_sites = parse_tuple_function(int, 1, 2)(kwargs["sites"])
+            kwargs["sites"] = (
+                selected_sites[0] - 1
+                if len(selected_sites) == 1
+                else slice(selected_sites[0] - 1, selected_sites[1])
+            )
+        generic_options = dict(parse_named_option(value, True) for value in kwargs.pop("args"))
+    except (ValueError, pyparsing.ParseBaseException, UnytError) as exc:
+        raise CLIUsageError(f"Invalid plotting option: {exc}") from None
     if "what" in generic_options:
         raise ValueError(
             "SFN plot mode cannot be set using '-S what=...'; use one of: "
@@ -183,6 +183,11 @@ def run(args, global_args):
     kwargs.update(generic_options)
     show_values = kwargs.pop("show_values")
     kwargs = {k: v for k, v in kwargs.items() if v is not None}
+
+    from pathlib import Path
+    from ase2sprkkr.result_files import ResultFile
+    from ase2sprkkr.result_files.definitions.sfn import SFNResultFile
+    from ase2sprkkr.gui.plot import Multiplot
 
     for output in outputs:
 
@@ -261,6 +266,3 @@ def run(args, global_args):
             if not hasattr(of, "plot"):
                 raise ValueError(f"File '{of}' does not know, how it should be plotted.")
             plot(lambda: of.plot(filename=fn, **kwargs), output)
-
-if __name__ == "__main__":
-    main(globals())

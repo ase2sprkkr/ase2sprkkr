@@ -3,7 +3,7 @@ from functools import cache
 
 import pytest
 
-from ..commands import plot
+from ase2sprkkr_cli.commands import plot
 from ...result_files.definitions.sfn import SFNResultFile
 from ...result_files import ResultFile
 
@@ -57,7 +57,14 @@ def test_sfn_mode_cannot_be_set_through_generic_option():
         plot.run(args, {"debug": False})
 
 
-def test_sfn_mode_flag_is_passed_as_what(monkeypatch):
+@pytest.mark.parametrize(
+    "sites, expected",
+    [
+        ("2", 1),
+        ("2,4", slice(1, 4)),
+    ],
+)
+def test_sfn_mode_flag_and_deferred_sites_are_passed_to_plot(monkeypatch, sites, expected):
     class FakeSFN(SFNResultFile):
         def __init__(self):
             object.__setattr__(self, "plot_kwargs", None)
@@ -71,7 +78,9 @@ def test_sfn_mode_flag_is_passed_as_what(monkeypatch):
         "from_file",
         staticmethod(lambda *args, **kwargs: output),
     )
-    _, args = parse_args("file.sfn", "--shape")
+    _, args = parse_args("file.sfn", "--shape", "--sites", sites)
 
+    assert args.sites == sites  # The parser preserves text for deferred conversion.
     assert plot.run(args, {"debug": True}) is None
     assert output.plot_kwargs["what"] == "shape"
+    assert output.plot_kwargs["sites"] == expected

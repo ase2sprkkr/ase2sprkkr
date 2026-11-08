@@ -1,7 +1,7 @@
 from types import SimpleNamespace
 
 from ase2sprkkr.profiles import ProfilesConfigurationContainer
-from ase2sprkkr.tools.commands import config as config_command
+from ase2sprkkr_cli.commands import config as config_command
 
 
 def test_migrate_cleans_migrated_assignments_but_keeps_python_hook(

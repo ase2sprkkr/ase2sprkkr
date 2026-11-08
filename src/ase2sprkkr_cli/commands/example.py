@@ -3,16 +3,9 @@
 This command just show the path to the examples
 """
 
-from pathlib import Path
-import sys
 
-if not __package__:
-    __package__ = "ase2sprkkr.tools.commands"
 
-root_path = str(Path(__file__).resolve().parents[3])
-sys.path.append(root_path)
 
-from ...common.tools import main  # NOQA
 
 help = "Show path to the examples, or example itself, or copy a given example."
 description = "See also the 'shell -e' subcommand for running examples interactivelly"
@@ -75,6 +68,3 @@ def run(args, global_args):
     if show:
         print(example.source())
 
-
-if __name__ == "__main__":
-    main(globals())

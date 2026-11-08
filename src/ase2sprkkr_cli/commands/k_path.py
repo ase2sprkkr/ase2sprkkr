@@ -3,14 +3,8 @@
 GUI for specifiing BSF k-points PATH
 """
 
-from pathlib import Path
-import sys
 
-if not __package__:
-    __package__ = "ase2sprkkr.tools.commands"
-sys.path.append(str(Path(__file__).resolve().parents[3]))
 
-from ...common.tools import main  # NOQA
 
 help = "GUI for specifiing BSF k-points PATH (for E-K mode)"
 

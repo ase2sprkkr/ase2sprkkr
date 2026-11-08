@@ -7,7 +7,7 @@ requires = [
 ]
 
 [project.scripts]
-ase2sprkkr = "ase2sprkkr.tools.ase2sprkkr:run"
+ase2sprkkr = "ase2sprkkr_cli.main:run"
 
 [project]
 name = "ase2sprkkr"
@@ -82,7 +82,7 @@ SPRKKR = "ase2sprkkr.ase.register"
 [tool.scikit-build]
 ninja.make-fallback = false
 cmake.version = ">=3.15"
-wheel.packages = ["src/ase2sprkkr"]
+wheel.packages = ["src/ase2sprkkr", "src/ase2sprkkr_cli"]
 sdist.exclude = [
 	"**/*",
 	"**/*.sw?",
@@ -112,6 +112,8 @@ sdist.include = [
 	"src/ase2sprkkr/sprkkr/test/execution/docker/*",
 
 	"src/ase2sprkkr/**/*.py",
+	"src/ase2sprkkr_cli/*.py",
+	"src/ase2sprkkr_cli/**/*.py",
 	"src/ase2sprkkr/**/*.pyx",
 	"src/ase2sprkkr/**/*.f",
 	"src/ase2sprkkr/**/*.f90",

@@ -35,4 +35,4 @@ for module, required_function in (
         )
 PY
 
-python3 -m ase2sprkkr.tools.ase2sprkkr test -c "$PYTEST_CONFIG" "$@"
+python3 -m ase2sprkkr_cli test -c "$PYTEST_CONFIG" "$@"

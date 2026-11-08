@@ -1,7 +1,7 @@
 import argparse
 from functools import cache
 
-from ase2sprkkr.tools.commands import info as info_command
+from ase2sprkkr_cli.commands import info as info_command
 
 
 @cache

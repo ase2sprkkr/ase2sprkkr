@@ -1,6 +1,6 @@
 import argparse
 
-from ase2sprkkr.tools.commands import test as test_command
+from ase2sprkkr_cli.commands import test as test_command
 
 
 def test_pytest_arguments_preserve_unknown_option_order():

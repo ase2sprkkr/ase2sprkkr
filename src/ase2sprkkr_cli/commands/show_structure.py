@@ -4,13 +4,8 @@ Display or export atomic structures from an SPR-KKR potential and an optional
 in_struct.inp file.
 """
 
-from pathlib import Path
 
-if not __package__:
-    __package__ = "ase2sprkkr.tools.commands"
-import sys
 
-sys.path.append(str(Path(__file__).resolve().parents[3]))
 
 help = "Visualise potential (and optionally in_struct.inp) files."
 description = (
@@ -73,9 +68,10 @@ def parser(parser):
 
 def run(args, global_args=None):
     """Build the requested structures, export selected files and/or open ASE."""
-    from ...potentials.potentials import Potential
-    from ...sprkkr.structure import structure_file_to_atoms
-    from ...ase.visualise import view
+    from pathlib import Path
+    from ase2sprkkr.potentials.potentials import Potential
+    from ase2sprkkr.sprkkr.structure import structure_file_to_atoms
+    from ase2sprkkr.ase.visualise import view
 
     potential_output = args.potential_output
     if potential_output is True:
@@ -121,8 +117,3 @@ def run(args, global_args=None):
     if show_primary and (args.input or not args.visualise_potential):
         view(atoms, **viewer_options)
 
-
-if __name__ == "__main__":
-    from ...common.tools import main
-
-    main(globals())
