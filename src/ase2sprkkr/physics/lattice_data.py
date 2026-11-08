@@ -7,7 +7,8 @@ from collections import namedtuple
 
 from ..common.decorators import cached_property
 import numpy as np
-from ase2sprkkr.bindings.spglib import spglib_dataset
+from ..bindings.spglib import symmetry_dataset
+from ..sprkkr.site_equivalence import site_equivalence_tags
 from ase.units import Bohr
 from scipy.optimize import linear_sum_assignment
 from typing import Union
@@ -908,7 +909,8 @@ class LatticeData:
     def __init__(self, atoms):
         cell = atoms.get_cell()
         bl = cell.get_bravais_lattice()
-        sg = spglib_dataset(atoms)
+        tags = site_equivalence_tags(atoms)
+        sg = symmetry_dataset(cell, atoms.get_scaled_positions(), tags)
         ps = bl.pearson_symbol
         self.pearson = Pearson.from_symbol(ps)
 

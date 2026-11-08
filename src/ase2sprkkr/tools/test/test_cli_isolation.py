@@ -18,6 +18,7 @@ from ase2sprkkr_cli.commands import run as run_command
         ["config", "--help"],
         ["nomad", "--help"],
         ["info", "--help"],
+        ["symmetry", "--help"],
         ["--version"],
     ],
 )
