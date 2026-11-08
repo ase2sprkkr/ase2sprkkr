@@ -10,6 +10,51 @@ optionally construct a primitive or standardized cell using spglib.
 Input/output structures use ASE formats (including registered SPR-KKR POT)."""
 
 
+# The tags are taken from the selected CIF data block, not inferred from ASE
+# coordinates or normalized to the conventional spglib setting.
+_CIF_SYMMETRY_TAGS = {
+    "number": (
+        "_space_group.it_number", "_space_group_it_number",
+        "_symmetry_int_tables_number",
+    ),
+    "hermann_mauguin": (
+        "_space_group.name_h-m_alt", "_space_group_name_h-m_alt",
+        "_symmetry_space_group_name_h-m", "_space_group.name_h-m_ref",
+        "_space_group.name_h-m_full",
+    ),
+    "hall": (
+        "_space_group.name_hall", "_space_group_name_hall",
+        "_symmetry_space_group_name_hall",
+    ),
+    "crystal_system": (
+        "_space_group.crystal_system", "_space_group_crystal_system",
+        "_symmetry_cell_setting",
+    ),
+    "operations": (
+        "_space_group_symop.operation_xyz", "_space_group_symop_operation_xyz",
+        "_symmetry_equiv_pos_as_xyz",
+    ),
+}
+
+
+def _declared_cif_symmetry(info):
+    """Extract CIF-declared symmetry, preserving its values and not inferring P1."""
+    tags = {key.lower(): value for key, value in info.items() if isinstance(key, str)}
+    declared = {}
+    for field, candidates in _CIF_SYMMETRY_TAGS.items():
+        for name in candidates:
+            value = tags.get(name)
+            if value is None or (isinstance(value, str) and value.strip() in ("?", ".")):
+                continue
+            if field == "operations":
+                value = [value] if isinstance(value, str) else list(value)
+                if not value:
+                    continue
+            declared[field] = value
+            break
+    return declared or None
+
+
 def parser(parser):
     parser.add_argument("input", help="Structure file readable by ASE")
     mode = parser.add_mutually_exclusive_group()
@@ -71,6 +116,7 @@ def _report(analysis, *, sites=False, operations=False):
 
 def run(args, global_args=None):
     from ase.io import read, write
+    from ase.io.formats import filetype
     from ase2sprkkr.sprkkr.symmetry import analyze_symmetry
 
     if args.output and not (args.primitive or args.standardize or args.idealize):
@@ -80,7 +126,9 @@ def run(args, global_args=None):
     if args.output and Path(args.output).resolve() == Path(args.input).resolve():
         raise ValueError("Input file cannot be overwritten")
 
-    atoms = read(args.input)
+    is_cif = filetype(args.input) == "cif"
+    atoms = read(args.input, **({"store_tags": True} if is_cif else {}))
+    declared = _declared_cif_symmetry(atoms.info) if is_cif else None
     analysis = analyze_symmetry(
         atoms,
         equivalence=args.equivalence,
@@ -104,9 +152,35 @@ def run(args, global_args=None):
     if result is not None:
         output["transformed_sites"] = len(result)
         output["source_sites"] = len(atoms)
+    if declared:
+        output["cif_declared_symmetry"] = declared
 
-    print(f"Space group: {data.international} (No. {data.number})")
+        symbol = declared.get("hermann_mauguin")
+        number = declared.get("number")
+        description = str(symbol) if symbol is not None else "not named"
+        if number is not None:
+            description += f" (No. {number})"
+        print(f"CIF-declared space group: {description}")
+        if "hall" in declared:
+            print(f"CIF-declared Hall: {declared['hall']}")
+        if "crystal_system" in declared:
+            print(f"CIF-declared crystal system: {declared['crystal_system']}")
+        if "operations" in declared:
+            print(f"CIF-declared symmetry operations: {len(declared['operations'])}")
+
+    print(
+        f"Space group{' (calculated)' if declared else ''}: "
+        f"{data.international} (No. {data.number})"
+    )
     print(f"Hall: {data.hall}; Point group: {data.pointgroup}")
+    if declared and "number" in declared:
+        try:
+            declared_number = int(declared["number"])
+        except (TypeError, ValueError):
+            pass  # Retain and print the original CIF value as-is.
+        else:
+            if declared_number != int(data.number):
+                print("Note: CIF-declared and calculated space-group numbers differ.")
     print(f"Sites: {len(atoms)}; primitive sites: {output['number_of_primitive_sites']}")
     print(f"Symmetry operations: {len(data.rotations)}; equivalence: {args.equivalence}")
     if result is not None:
@@ -120,6 +194,9 @@ def run(args, global_args=None):
                 f"{site['wyckoff']:>7}  {site['site_symmetry']}"
             )
     if args.operations or args.verbose:
+        if declared and "operations" in declared:
+            for index, operation in enumerate(declared["operations"], 1):
+                print(f"CIF operation {index}: {operation}")
         for index, op in enumerate(output["operations"], 1):
             print(f"Operation {index}: rotation={op['rotation']}, translation={op['translation']}")
 

@@ -414,3 +414,80 @@ def test_site_classification_change_invalidates_cached_analysis():
     atoms.set_initial_magnetic_moments([1.0, -1.0])
     with pytest.raises(SymmetryError, match="Site classification changed"):
         analysis.find_primitive(atoms)
+
+
+def test_declared_cif_symmetry_handles_legacy_and_modern_tags():
+    info = {
+        "_Space_Group.IT_number": 225,
+        "_space_group.name_H-M_alt": "F m -3 m",
+        "_space_group.name_Hall": "-F 4 2 3",
+        "_space_group_symop.operation_xyz": ["x,y,z", "-x,-y,-z"],
+    }
+    assert symmetry_command._declared_cif_symmetry(info) == {
+        "number": 225,
+        "hermann_mauguin": "F m -3 m",
+        "hall": "-F 4 2 3",
+        "operations": ["x,y,z", "-x,-y,-z"],
+    }
+    legacy = {
+        "_symmetry_Int_Tables_number": 229,
+        "_symmetry_space_group_name_H-M": "I m -3 m",
+        "_symmetry_equiv_pos_as_xyz": "x,y,z",
+    }
+    assert symmetry_command._declared_cif_symmetry(legacy) == {
+        "number": 229,
+        "hermann_mauguin": "I m -3 m",
+        "operations": ["x,y,z"],
+    }
+    assert symmetry_command._declared_cif_symmetry(
+        {"_space_group_IT_number": "?", "_cell_length_a": 3.5}
+    ) is None
+
+
+def test_cli_preserves_cif_declared_symmetry_and_reports_difference(tmp_path, capsys):
+    import json
+
+    cif_path = tmp_path / "bcc.cif"
+    report_path = tmp_path / "symmetry.json"
+    # ASE's CIF writer deliberately declares P1 even for a symmetric cell.
+    # spglib must independently discover Im-3m (No. 229).
+    write(cif_path, bulk("Fe", "bcc", a=2.87, cubic=True))
+
+    parser = argparse.ArgumentParser()
+    symmetry_command.parser(parser)
+    symmetry_command.run(
+        parser.parse_args([
+            str(cif_path), "--operations", "--report", str(report_path),
+        ])
+    )
+    printed = capsys.readouterr().out
+    result = json.loads(report_path.read_text(encoding="utf-8"))
+
+    assert result["spacegroup_number"] == 229
+    assert result["cif_declared_symmetry"]["number"] == 1
+    assert result["cif_declared_symmetry"]["hermann_mauguin"] == "P 1"
+    assert "CIF-declared space group: P 1 (No. 1)" in printed
+    assert "Space group (calculated):" in printed
+    assert "numbers differ" in printed
+    assert "CIF operation 1:" in printed
+
+
+def test_cli_does_not_invent_cif_symmetry_for_other_formats(tmp_path, capsys):
+    import json
+
+    structure_path = tmp_path / "bcc.traj"
+    report_path = tmp_path / "report.json"
+    write(structure_path, bulk("Fe", "bcc", a=2.87, cubic=True))
+
+    parser = argparse.ArgumentParser()
+    symmetry_command.parser(parser)
+    symmetry_command.run(
+        parser.parse_args([
+            str(structure_path), "--report", str(report_path),
+        ])
+    )
+    result = json.loads(report_path.read_text(encoding="utf-8"))
+    printed = capsys.readouterr().out
+    assert result["spacegroup_number"] == 229
+    assert "cif_declared_symmetry" not in result
+    assert "CIF-declared" not in printed

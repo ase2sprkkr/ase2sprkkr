@@ -21,6 +21,25 @@ Examples
    ase2sprkkr symmetry input.cif --idealize -o idealized.cif
    ase2sprkkr symmetry input.cif --primitive --idealize -o primitive_ideal.cif
 
+
+CIF-declared symmetry
+---------------------
+
+When the input is a CIF file, the command reports both the space group
+declared by the CIF tags (if present) and the symmetry computed from the
+structure by spglib. This distinction matters because the two can differ.
+The original CIF Hermann–Mauguin symbol, International Tables number,
+Hall symbol, and number of declared symmetry operations are shown when
+available. With ``--operations``, the listed CIF operations are also shown
+verbatim alongside those calculated by spglib.
+
+The ``--report report.json`` option includes the original CIF values under
+``cif_declared_symmetry`` without inventing a declaration for absent tags.
+Differences are flagged when the CIF supplies a space-group number and that
+number differs from the calculated one; symbolic spellings are not compared
+because different settings can have distinct Hermann–Mauguin symbols.
+Non-CIF inputs continue to report calculated symmetry only.
+
 Python API (analysis retains no reference to the input Atoms):
 
 .. code-block:: python
