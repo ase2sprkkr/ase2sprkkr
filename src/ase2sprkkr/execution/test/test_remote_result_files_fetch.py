@@ -1,8 +1,17 @@
 import pytest
 from ase2sprkkr.common.file_versions import FileState, FileVersion
-from kkrunner import LocalTransport, RemoteExecutor, RunRecord, RunState, Execution, WorkingDirectory, FileManifest, FileEntry
-from kkrunner.run_model import FileMapping
-from kkrunner.endpoint import endpoint_for_executor
+from kkrunner import (
+    LocalTransport,
+    RemoteEndpointExecutor,
+    RunRecord,
+    RunState,
+    Execution,
+    WorkingDirectory,
+    FileManifest,
+    FileEntry,
+)
+from kkrunner.files.manifest import FileMapping
+from kkrunner.backends.endpoint import endpoint_for_executor
 
 def test_remote_executor_fetches_only_requested_historical_files(tmp_path):
     local_root = tmp_path / 'local'
@@ -25,7 +34,7 @@ def test_remote_executor_fetches_only_requested_historical_files(tmp_path):
     remote_later.write_text('not part of the historical snapshot')
     local_first = local_directory / 'result-1.dat'
     local_first.write_text('keep-local')
-    executor = RemoteExecutor(LocalTransport())
+    executor = RemoteEndpointExecutor(LocalTransport())
     run = RunRecord(id='historical', state=RunState.FINISHED, created_at='2026-10-13T08:00:00+00:00', updated_at='2026-10-13T08:00:00+00:00', execution=Execution(endpoint_for_executor(executor), WorkingDirectory(str(local_directory), str(remote_directory)), 'opaque-historical-handle'), files=FileManifest(mapping=FileMapping(str(local_root), str(remote_root))), metadata={'ase2sprkkr': {'task': str('DOS').upper()}}, processing_required=True)
     local_input = local_directory / 'run.inp'
     local_potential = local_directory / 'start.pot'
@@ -71,7 +80,7 @@ def test_remote_fetch_uses_transport_expansion_for_exact_and_wildcard(tmp_path):
     existing = local_root / 'calc' / 'part-a.dat'
     existing.write_text('keep')
     transport = SpyTransport()
-    executor = RemoteExecutor(transport)
+    executor = RemoteEndpointExecutor(transport)
     run = RunRecord(id='wildcard-fetch', state=RunState.FINISHED, created_at='2026-10-13T08:00:00+00:00', updated_at='2026-10-13T08:00:00+00:00', execution=Execution(endpoint_for_executor(executor), WorkingDirectory(str(local_root / 'calc'), str(remote_dir)), 'opaque-handle'), files=FileManifest(mapping=FileMapping(str(local_root), str(remote_root))), metadata={'ase2sprkkr': {'task': str('DOS').upper()}}, processing_required=True)
     executor.fetch_result_files(run, (local_root / 'calc' / 'exact.dat', local_root / 'calc' / 'part-*.dat'))
     assert transport.expanded == [str(remote_dir / 'exact.dat'), str(remote_dir / 'part-*.dat')]
@@ -93,7 +102,7 @@ def test_remote_staged_result_keeps_canonical_file_absent(tmp_path):
     captured = FileVersion.capture(local, require_digest=True)
     local.unlink()
     (remote_dir / 'run.out').write_bytes(b'original result')
-    executor = RemoteExecutor(LocalTransport())
+    executor = RemoteEndpointExecutor(LocalTransport())
     run = RunRecord(id='staged-result', state=RunState.FINISHED, created_at='2026-10-13T08:00:00+00:00', updated_at='2026-10-13T08:00:00+00:00', execution=Execution(endpoint_for_executor(executor), WorkingDirectory(str(local_dir), str(remote_dir)), 'backend-id'), files=FileManifest(mapping=FileMapping(str(local_root), str(remote_root)), output_versions=(captured,), captured_at='2026-10-13T08:00:00+00:00'), metadata={'ase2sprkkr': {'task': str('DOS').upper()}}, processing_required=True)
     staged = local_dir / '.staged-run.out'
     executor.fetch_result_files(run, (local,), destinations={str(local): str(staged)})
@@ -118,7 +127,7 @@ def test_fetch_rejects_local_symlink_escape(tmp_path, wildcard):
     name = '*.dat' if wildcard else 'result.dat'
     local_path = local_root / 'alias' / name
     remote_path = remote_dir / name
-    executor = RemoteExecutor(LocalTransport())
+    executor = RemoteEndpointExecutor(LocalTransport())
     run = RunRecord(id='escaped-result', state=RunState.FINISHED, created_at='2026-10-13T08:00:00+00:00', updated_at='2026-10-13T08:00:00+00:00', execution=Execution(endpoint_for_executor(executor), WorkingDirectory(str(local_root), str(remote_root)), 'backend-id'), files=FileManifest(outputs=(FileEntry(str(local_path), str(remote_path)),), mapping=FileMapping(str(local_root), str(remote_root))), metadata={'ase2sprkkr': {'task': str('DOS').upper()}}, processing_required=True)
     with pytest.raises(ValueError, match='outside mapped root'):
         executor.fetch_result_files(run, (local_path,))
@@ -138,7 +147,7 @@ def test_fetch_validates_canonical_path_before_explicit_staging(tmp_path):
     (remote / 'bad' / 'output.dat').write_bytes(b'remote')
     canonical = local / 'bad' / 'output.dat'
     staged = local / 'staged-output.dat'
-    executor = RemoteExecutor(LocalTransport())
+    executor = RemoteEndpointExecutor(LocalTransport())
     run = RunRecord(id='escaped-staged', state=RunState.FINISHED, created_at='2026-10-13T08:00:00+00:00', updated_at='2026-10-13T08:00:00+00:00', execution=Execution(endpoint_for_executor(executor), WorkingDirectory(str(local), str(remote)), 'backend-id'), files=FileManifest(outputs=(FileEntry(str(canonical), str(remote / 'bad' / 'output.dat')),), mapping=FileMapping(str(local), str(remote))), metadata={'ase2sprkkr': {'task': str('DOS').upper()}}, processing_required=True)
     with pytest.raises(ValueError, match='outside mapped root'):
         executor.fetch_result_files(run, (canonical,), destinations={str(canonical): str(staged)})

@@ -5,7 +5,7 @@ import itertools
 import inspect
 import heapq
 import warnings
-from kkrunner.decorators import class_property
+from kkrunner.support.decorators import class_property
 from . import backward_compatibility  # NOQA
 from functools import cache  # NOQA
 

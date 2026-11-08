@@ -1,3 +1,3 @@
 """Compatibility import; implementation is owned by KKRunner."""
 
-from kkrunner.file_fingerprints import *  # noqa: F403
+from kkrunner.files.fingerprints import *  # noqa: F403

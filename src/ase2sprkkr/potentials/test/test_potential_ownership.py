@@ -7,7 +7,7 @@ from unittest.mock import Mock
 import pytest
 from ase import Atoms
 
-from kkrunner.file_fingerprints import file_fingerprint
+from kkrunner.files.fingerprints import file_fingerprint
 from ase2sprkkr.potentials import potentials as potentials_module
 from ase2sprkkr.potentials.potentials import Potential, PotentialFileChanged
 from ase2sprkkr.sprkkr.configuration import ConfigurationFile

@@ -1,8 +1,17 @@
 from types import SimpleNamespace
 import pytest
-from kkrunner import ArtifactAvailabilityState, ExecutionSpec, Executor, ExecutorPool, FileState, FileManifest, RunState, RunStore
-from kkrunner.endpoint import endpoint_for_executor
-from kkrunner.manager import ExecutionManager, HistoricalFileMismatchError
+from kkrunner import (
+    ArtifactAvailabilityState,
+    ExecutionSpec,
+    Executor,
+    ExecutorPool,
+    FileState,
+    FileManifest,
+    RunState,
+    RunStore,
+)
+from kkrunner.backends.endpoint import endpoint_for_executor
+from kkrunner.runs.manager import RunManager, HistoricalFileMismatchError
 from ase2sprkkr.outputs import project_results
 from ase2sprkkr.outputs.project_results import ProjectResultUnavailableError, load_project_result
 
@@ -30,7 +39,7 @@ def _spec(tmp_path):
     return ExecutionSpec(argv=(), directory=str(tmp_path), input_file=str(input_file), output_file=str(output_file), input_files=(str(input_file),), output_files=(str(output_file),))
 
 def _manager(store):
-    return ExecutionManager(store, executor_pool=ExecutorPool())
+    return RunManager(store, executor_pool=ExecutorPool())
 
 def _terminal_run(tmp_path, *, state=RunState.FINISHED, return_code=0, task='DOS'):
     store = RunStore(tmp_path / 'runs')

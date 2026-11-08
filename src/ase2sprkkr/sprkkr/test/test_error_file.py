@@ -7,7 +7,7 @@ from ase.build import bulk
 from ...input_parameters.input_parameters import InputParameters
 from ...potentials.potentials import Potential
 
-from kkrunner.base import RunState
+from kkrunner.runs.base import RunState
 from ..calculator import SPRKKR
 from ..profile import SPRKKRProfile
 

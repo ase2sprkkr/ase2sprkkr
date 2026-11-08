@@ -4,13 +4,15 @@ from ase2sprkkr.sprkkr.profile import SPRKKRProfile, executor_from_profile
 
 def test_unused_local_profile_fields_share_backend_and_collision_namespace(tmp_path):
     from kkrunner import ExecutorEndpoint
-    from kkrunner.manager import ExecutionManager, RunStore, submission_conflicts
+    from kkrunner.runs.manager import RunManager
+    from kkrunner.runs.records import RunStore
+    from kkrunner.runs.conflicts import submission_conflicts
     pool = ExecutorPool()
     plain = SPRKKRProfile()
     unused = SPRKKRProfile(host='unused', ssh_options=('-p', '2222'), ssh_zstd=True, remote_command=('unused',), psij_backend='unused', psij_url='unused')
     assert plain.endpoint == unused.endpoint == ExecutorEndpoint()
     assert pool.for_profile(plain) is pool.for_profile(unused)
-    manager = ExecutionManager(RunStore(tmp_path / 'runs'))
+    manager = RunManager(RunStore(tmp_path / 'runs'))
     first = manager.new_record(directory=tmp_path, files=FileManifest(stdout=FileEntry(local_path=str(tmp_path / "shared.out"))), endpoint=plain.endpoint, metadata={'ase2sprkkr': {'task': str('SCF').upper()}}, processing_required=True)
     second = manager.new_record(directory=tmp_path, files=FileManifest(stdout=FileEntry(local_path=str(tmp_path / "shared.out"))), endpoint=unused.endpoint, metadata={'ase2sprkkr': {'task': str('SCF').upper()}}, processing_required=True)
     assert submission_conflicts(first, second)

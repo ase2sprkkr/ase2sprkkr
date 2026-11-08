@@ -5,7 +5,7 @@ from pathlib import Path
 from platformdirs import user_state_dir
 
 from kkrunner import Project, ProjectRepository, ProjectExecutionManager, RunStore
-from kkrunner.persistence import resolve_project_manager as _resolve_project_manager
+from kkrunner.projects.resolution import resolve_project_manager as _resolve_project_manager
 
 
 def default_project_repository():

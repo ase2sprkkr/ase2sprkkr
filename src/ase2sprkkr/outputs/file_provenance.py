@@ -6,7 +6,7 @@ from collections.abc import Mapping
 from types import MappingProxyType
 from typing import Any
 
-from kkrunner.file_versions import FileVersion
+from kkrunner.files.versions import FileVersion
 
 
 def capture_result_file_versions(result: Any) -> Mapping[str, FileVersion]:

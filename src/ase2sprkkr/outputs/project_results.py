@@ -170,7 +170,7 @@ def retry_project_postprocessing(manager, run):
     # missing definitions must leave the original failure record unchanged.
     processor = _result_processor_for_record(manager, record)
     result = manager.retry_postprocessing(record, processor)
-    # TaskResult provenance belongs to the outputs layer, not ExecutionManager.
+    # TaskResult provenance belongs to the outputs layer, not ProjectExecutionManager.
     # Generic processors may return immutable or scalar values.  Only task
     # results carry the optional project provenance attribute.
     from .task_result import TaskResult

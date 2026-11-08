@@ -200,8 +200,8 @@ def test_clpes_core_wavefunction_is_a_declared_output(tmp_path):
 
 def test_manifest_rejects_duplicate_output_declarations(tmp_path):
     import pytest
-    from kkrunner.base import ExecutionSpec
-    from kkrunner.run_model import FileManifest
+    from kkrunner.runs.base import ExecutionSpec
+    from kkrunner.files.manifest import FileManifest
     from ase2sprkkr.input_parameters.task_definition import TaskFile
 
     result = tmp_path / "result.dat"

@@ -4,13 +4,13 @@ from types import SimpleNamespace
 
 import pytest
 from kkrunner import ExecutionOutcome, FileEntry, FileManifest, RunState, RunStore
-from kkrunner.manager import ExecutionManager
+from kkrunner.runs.manager import RunManager
 from ase2sprkkr.outputs import project_results
 from ase2sprkkr.outputs.task_result import TaskResult
 
 
 def stored_run(tmp_path, state=RunState.FINISHED):
-    manager = ExecutionManager(RunStore(tmp_path / "runs"))
+    manager = RunManager(RunStore(tmp_path / "runs"))
     output = tmp_path / "saved.out"
     output.write_text("saved output")
     record = manager.new_record(

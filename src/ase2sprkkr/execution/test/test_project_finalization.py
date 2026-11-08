@@ -1,10 +1,10 @@
-from kkrunner.postprocessing import ProcessingPending
+from kkrunner.runs.processing import ProcessingPending
 from threading import Event
 from types import SimpleNamespace
 import pytest
 import ase2sprkkr.outputs.project_results as project_output
 from kkrunner import ExecutionOutcome, Executor, FailurePhase, RunState, RunStore
-from kkrunner.manager import ExecutionManager
+from kkrunner.runs.manager import RunManager
 from ase2sprkkr.outputs.project_results import UnrecoverableProjectResultError, attach_project_run
 
 
@@ -41,14 +41,14 @@ class _RawRunner:
 class _Executor(Executor):
     name = "test"
 
-    def create_project_run(self, spec, *, run_id, callback=None):
+    def create_managed_run(self, spec, *, run_id, callback=None):
         self.runner = _RawRunner()
         return self.runner
 
 
 def test_finished_run_is_persisted_before_callback_without_wait(tmp_path):
     store = RunStore(tmp_path / "runs")
-    manager = ExecutionManager(store)
+    manager = RunManager(store)
     finished = Event()
     run = manager.create_run(
         _Executor(),
@@ -66,7 +66,7 @@ def test_finished_run_is_persisted_before_callback_without_wait(tmp_path):
 
 def test_result_processor_failure_is_postprocessing_failure(tmp_path):
     store = RunStore(tmp_path / "runs")
-    manager = ExecutionManager(store)
+    manager = RunManager(store)
     executor = _Executor()
 
     def fail(_outcome):
@@ -90,7 +90,7 @@ def test_result_processor_failure_is_postprocessing_failure(tmp_path):
 
 def test_unrecoverable_processor_reconstruction_fails_postprocessing(tmp_path):
     store = RunStore(tmp_path / "runs")
-    manager = ExecutionManager(store)
+    manager = RunManager(store)
     record = manager.new_record(
         directory=tmp_path, metadata={"ase2sprkkr": {"task": str("NO_SUCH_TASK").upper()}}, processing_required=True
     )
@@ -106,7 +106,7 @@ def test_unrecoverable_processor_reconstruction_fails_postprocessing(tmp_path):
 
 def test_reader_constructor_programming_error_is_not_reclassified(tmp_path, monkeypatch):
     store = RunStore(tmp_path / "runs")
-    manager = ExecutionManager(store)
+    manager = RunManager(store)
     record = manager.new_record(
         directory=tmp_path, metadata={"ase2sprkkr": {"task": str("DOS").upper()}}, processing_required=True
     )
@@ -129,7 +129,7 @@ def test_reader_constructor_programming_error_is_not_reclassified(tmp_path, monk
 
 def test_transient_attach_failure_keeps_postprocessing_active(tmp_path, monkeypatch):
     store = RunStore(tmp_path / "runs")
-    manager = ExecutionManager(store)
+    manager = RunManager(store)
     record = manager.new_record(
         directory=tmp_path, metadata={"ase2sprkkr": {"task": str("DOS").upper()}}, processing_required=True
     )
@@ -150,7 +150,7 @@ def test_transient_attach_failure_keeps_postprocessing_active(tmp_path, monkeypa
 
 
 def test_attaching_failed_download_reopens_transfer_without_resubmitting(tmp_path, monkeypatch):
-    manager = ExecutionManager(RunStore(tmp_path / "runs"))
+    manager = RunManager(RunStore(tmp_path / "runs"))
     from kkrunner import FileEntry, FileManifest
     from ase2sprkkr.outputs.project_results import attach_project_run
 
@@ -198,7 +198,7 @@ def test_attaching_failed_download_reopens_transfer_without_resubmitting(tmp_pat
 def test_failed_download_reader_construction_does_not_reopen_run(tmp_path, monkeypatch):
     from kkrunner import FileEntry, FileManifest
 
-    manager = ExecutionManager(RunStore(tmp_path / "runs"))
+    manager = RunManager(RunStore(tmp_path / "runs"))
     record = manager.new_record(
         directory=tmp_path,
         files=FileManifest(
@@ -233,7 +233,7 @@ def test_failed_download_reader_construction_does_not_reopen_run(tmp_path, monke
 def test_postprocessing_retry_uses_saved_files_without_backend(tmp_path):
     from kkrunner import FileEntry, FileManifest
 
-    manager = ExecutionManager(RunStore(tmp_path / "runs"))
+    manager = RunManager(RunStore(tmp_path / "runs"))
     output = tmp_path / "run.out"
     output.write_text("original result")
     record = manager.new_record(
@@ -275,7 +275,7 @@ def test_postprocessing_retry_uses_saved_files_without_backend(tmp_path):
 def test_postprocessing_retry_failure_is_retryable_and_does_not_resubmit(tmp_path):
     from kkrunner import FileEntry, FileManifest
 
-    manager = ExecutionManager(RunStore(tmp_path / "runs"))
+    manager = RunManager(RunStore(tmp_path / "runs"))
     output = tmp_path / "run.out"
     output.write_text("original")
     record = manager.new_record(
@@ -311,7 +311,7 @@ def test_postprocessing_retry_failure_is_retryable_and_does_not_resubmit(tmp_pat
 def test_postprocessing_retry_refuses_modified_or_uncaptured_artifacts(tmp_path):
     from kkrunner import FileEntry, FileManifest
 
-    manager = ExecutionManager(RunStore(tmp_path / "runs"))
+    manager = RunManager(RunStore(tmp_path / "runs"))
     output = tmp_path / "run.out"
     output.write_text("original")
     record = manager.new_record(
@@ -340,7 +340,7 @@ def test_postprocessing_retry_reader_constructor_error_does_not_reopen(tmp_path,
     from kkrunner import FileEntry, FileManifest
     from ase2sprkkr.outputs import retry_project_postprocessing
 
-    manager = ExecutionManager(RunStore(tmp_path / "runs"))
+    manager = RunManager(RunStore(tmp_path / "runs"))
     output = tmp_path / "run.out"
     output.write_text("original")
     record = manager.new_record(
@@ -373,7 +373,7 @@ def test_project_retry_attaches_run_provenance(tmp_path, monkeypatch):
     from kkrunner import FileEntry, FileManifest
     from ase2sprkkr.outputs import retry_project_postprocessing
 
-    manager = ExecutionManager(RunStore(tmp_path / "runs"))
+    manager = RunManager(RunStore(tmp_path / "runs"))
     output = tmp_path / "run.out"
     output.write_text("saved data")
     record = manager.new_record(
@@ -409,7 +409,7 @@ def test_postprocessing_retry_only_one_caller_can_claim_run(tmp_path):
     from threading import Thread
     from kkrunner import FileEntry, FileManifest
 
-    manager = ExecutionManager(RunStore(tmp_path / "runs"))
+    manager = RunManager(RunStore(tmp_path / "runs"))
     output = tmp_path / "run.out"
     output.write_text("saved data")
     record = manager.new_record(
@@ -462,7 +462,7 @@ def test_postprocessing_retry_only_one_caller_can_claim_run(tmp_path):
 def test_retry_accepts_plain_processing_result(tmp_path):
     from kkrunner import FileEntry, FileManifest
 
-    manager = ExecutionManager(RunStore(tmp_path / "runs"))
+    manager = RunManager(RunStore(tmp_path / "runs"))
     output = tmp_path / "run.out"
     output.write_text("contents")
     record = manager.new_record(
@@ -490,7 +490,7 @@ def test_project_retry_accepts_immutable_results(tmp_path, monkeypatch, parsed):
     from kkrunner import FileEntry, FileManifest
     from ase2sprkkr.outputs import retry_project_postprocessing
 
-    manager = ExecutionManager(RunStore(tmp_path / "runs"))
+    manager = RunManager(RunStore(tmp_path / "runs"))
     output = tmp_path / "run.out"
     output.write_text("saved data")
     record = manager.new_record(
@@ -518,7 +518,7 @@ def test_project_retry_accepts_immutable_results(tmp_path, monkeypatch, parsed):
 def test_retry_does_not_overwrite_concurrent_record_update(tmp_path, during_retry):
     from kkrunner import FileEntry, FileManifest
 
-    manager = ExecutionManager(RunStore(tmp_path / "runs"))
+    manager = RunManager(RunStore(tmp_path / "runs"))
     output = tmp_path / "run.out"
     output.write_text("saved data")
     record = manager.new_record(
@@ -569,7 +569,7 @@ def test_retry_does_not_overwrite_concurrent_record_update(tmp_path, during_retr
 def test_retry_exception_does_not_overwrite_concurrent_completion(tmp_path):
     from kkrunner import FileEntry, FileManifest
 
-    manager = ExecutionManager(RunStore(tmp_path / "runs"))
+    manager = RunManager(RunStore(tmp_path / "runs"))
     output = tmp_path / "run.out"
     output.write_text("saved data")
     record = manager.new_record(
@@ -607,7 +607,7 @@ def test_postprocessing_retry_accepts_unchanged_output_with_stale_input(tmp_path
     """Captured output remains retryable when the original input is stale."""
     from kkrunner import FileEntry, FileManifest, FileState
 
-    manager = ExecutionManager(RunStore(tmp_path / "runs"))
+    manager = RunManager(RunStore(tmp_path / "runs"))
     output = tmp_path / "result.out"
     source = tmp_path / "original.inp"
     output.write_bytes(b"captured result")

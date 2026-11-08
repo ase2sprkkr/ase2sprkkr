@@ -3,7 +3,8 @@ import argparse
 import json
 
 import pytest
-from kkrunner import cli, remote_service
+from kkrunner import cli
+from kkrunner.remote import service as remote_service
 from ase2sprkkr.tools.commands import remote
 
 

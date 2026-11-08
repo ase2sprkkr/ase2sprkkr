@@ -1,12 +1,12 @@
 """Project-only persistence and per-run execution selection contracts."""
 import pytest
-from kkrunner import ExecutionManager, ProjectRepository, RunStore
-from kkrunner.persistence import resolve_project_manager
+from kkrunner import ProjectExecutionManager, ProjectRepository, RunStore
+from kkrunner.projects.resolution import resolve_project_manager
 from ase2sprkkr.sprkkr.calculator import SPRKKR
 from ase2sprkkr.sprkkr.profile import SPRKKRProfile
 
 def _manager(tmp_path):
-    return ExecutionManager(RunStore(tmp_path / 'runs'), project_repository=ProjectRepository(tmp_path / 'projects'))
+    return ProjectExecutionManager(RunStore(tmp_path / 'runs'), project_repository=ProjectRepository(tmp_path / 'projects'))
 
 def test_persistence_requires_an_existing_project(tmp_path):
     manager = _manager(tmp_path)

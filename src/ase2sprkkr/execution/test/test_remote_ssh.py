@@ -1,4 +1,4 @@
-"""Explicit Docker/SSH integration test for RemoteExecutor."""
+"""Explicit Docker/SSH integration test for RemoteEndpointExecutor."""
 import os
 import posixpath
 import shutil
@@ -40,7 +40,7 @@ def _wait_for_live_output(runner, output_seen, output, timeout=30):
 
 def test_remote_executor_over_ssh(docker_execution_image):
     from ase.build import bulk
-    from kkrunner import ExecutionManager, ExecutorPool, RemoteExecutor, ProjectRepository, SshTransport
+    from kkrunner import ProjectExecutionManager, ExecutorPool, RemoteEndpointExecutor, ProjectRepository, SshTransport
     from ase2sprkkr.outputs.project_results import load_project_result
     from ase2sprkkr.sprkkr.calculator import SPRKKR
     from ase2sprkkr.sprkkr.profile import SPRKKRProfile
@@ -61,11 +61,11 @@ def test_remote_executor_over_ssh(docker_execution_image):
             options = ('-i', str(key), '-p', port, '-o', 'StrictHostKeyChecking=no', '-o', 'UserKnownHostsFile=/dev/null')
             ssh = ['ssh', *options, 'tester@127.0.0.1']
             _wait_for_ssh(ssh)
-            executor = RemoteExecutor(SshTransport('tester@127.0.0.1', options=options))
+            executor = RemoteEndpointExecutor(SshTransport('tester@127.0.0.1', options=options))
             profile = SPRKKRProfile(executable_dir='/opt/sprkkr', executable_suffix='', mpi=False, local_root=tmp, remote_root='/home/tester/ase2sprkkr-runs')
             projects = ProjectRepository(tmp / 'projects')
             project = projects.create('SSH integration')
-            manager = ExecutionManager(executor_pool=ExecutorPool(), project_repository=projects).for_project(project)
+            manager = ProjectExecutionManager(executor_pool=ExecutorPool(), project_repository=projects).for_project(project)
             output_seen = Event()
             output = []
             first_output_at = []
@@ -101,7 +101,7 @@ def test_remote_executor_over_ssh(docker_execution_image):
             subprocess.run(ssh + ['test', '-s', remote_pot_new], check=True)
             subprocess.run(ssh + ['cmp', '--', remote_potential, remote_pot_new], check=True)
             run_id = runner.id
-            restarted = ExecutionManager(executor_pool=ExecutorPool(), project_repository=projects).for_project(project)
+            restarted = ProjectExecutionManager(executor_pool=ExecutorPool(), project_repository=projects).for_project(project)
             record = restarted.store.get(run_id)
             restarted_executor = restarted.executor_for(record)
             replayed = load_project_result(restarted, run_id)

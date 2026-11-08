@@ -2,8 +2,16 @@ import asyncio
 import warnings
 from types import SimpleNamespace
 import pytest
-from kkrunner import ExecutionSpec, LaunchSpec, LocalExecutor, MpiNotFoundWarning, MpiSpec, RemoteEndpointExecutor, RunState
-from kkrunner.local import materialize_local_spec
+from kkrunner import (
+    ExecutionSpec,
+    LaunchSpec,
+    LocalExecutor,
+    MpiNotFoundWarning,
+    MpiSpec,
+    RemoteEndpointExecutor,
+    RunState,
+)
+from kkrunner.backends.local import materialize_local_spec
 from ase2sprkkr.input_parameters.input_parameters import InputParameters
 from ase2sprkkr.input_parameters.task_definition import TaskDefinition
 from ase2sprkkr.sprkkr import calculation as calculation_module
@@ -61,7 +69,7 @@ def test_mpi_process_count_is_portable_launch_intent():
     assert LocalExecutor().resolve_mpi(16) == LaunchSpec(mpi=MpiSpec(required=True, autodetect=True, process_count=16))
 
 def test_local_executor_materializes_mpi_on_execution_host(monkeypatch, tmp_path):
-    monkeypatch.setattr('kkrunner.mpi.find_default_mpi_launcher', lambda: ('srun',))
+    monkeypatch.setattr('kkrunner.backends.mpi.find_default_mpi_launcher', lambda: ('srun',))
     input_file = (tmp_path / 'run.inp').open('w+')
     spec = ExecutionSpec(argv=('kkrscf',), mpi_argv=('kkrscfMPI', input_file.name), launch=LaunchSpec.from_mpi(16), input_file=input_file, output_file=None, directory=str(tmp_path), stdin=input_file)
     resolved = materialize_local_spec(spec)
@@ -70,7 +78,7 @@ def test_local_executor_materializes_mpi_on_execution_host(monkeypatch, tmp_path
     input_file.close()
 
 def test_required_local_mpi_without_launcher_fails(monkeypatch, tmp_path):
-    monkeypatch.setattr('kkrunner.mpi.find_default_mpi_launcher', lambda: None)
+    monkeypatch.setattr('kkrunner.backends.mpi.find_default_mpi_launcher', lambda: None)
     input_file = (tmp_path / 'run.inp').open('w+')
     spec = ExecutionSpec(argv=('kkrscf',), mpi_argv=('kkrscfMPI', input_file.name), launch=LaunchSpec.from_mpi(True), input_file=input_file, output_file=None, directory=str(tmp_path), stdin=input_file)
     with pytest.raises(FileNotFoundError, match='no MPI launcher'):
@@ -79,7 +87,7 @@ def test_required_local_mpi_without_launcher_fails(monkeypatch, tmp_path):
 
 @pytest.mark.parametrize('warn', (True, False), ids=('warn', 'silent'))
 def test_local_auto_mpi_fallback_respects_warning_option(monkeypatch, tmp_path, warn):
-    monkeypatch.setattr('kkrunner.local_process.resolve_mpi_command', lambda mpi: None)
+    monkeypatch.setattr('kkrunner.backends.local_process.resolve_mpi_command', lambda mpi: None)
     input_file = (tmp_path / 'run.inp').open('w+')
     spec = ExecutionSpec(argv=('kkrscf',), mpi_argv=('kkrscfMPI', input_file.name), launch=LaunchSpec(mpi=MpiSpec(autodetect=True, warning=warn)), input_file=input_file, output_file=None, directory=str(tmp_path), stdin=input_file)
     try:
@@ -150,7 +158,7 @@ def test_explicit_local_executor_overrides_remote_profile(tmp_path, monkeypatch)
         created.close()
 
 def test_mpi_stdin_is_explicit_and_serial_fallback_is_unchanged(monkeypatch, tmp_path):
-    monkeypatch.setattr('kkrunner.local_process.resolve_mpi_command', lambda mpi: ('mpirun',))
+    monkeypatch.setattr('kkrunner.backends.local_process.resolve_mpi_command', lambda mpi: ('mpirun',))
     spec = ExecutionSpec(argv=('serial',), mpi_argv=('parallel',), launch=LaunchSpec.from_mpi(True), input_file=None, output_file=None, directory=str(tmp_path), stdin=str(tmp_path / 'separate-stdin.dat'))
     assert materialize_local_spec(spec).stdin == spec.stdin
     disabled = materialize_local_spec(__import__('dataclasses').replace(spec, mpi_uses_stdin=False))

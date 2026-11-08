@@ -8,7 +8,7 @@ from typing import Union
 from ..sprkkr.configuration import ConfigurationFile
 from ..sprkkr.io_data import ReadIoData, WriteIoData
 from ..common.decorators import class_property, cache
-from kkrunner.file_fingerprints import file_fingerprint
+from kkrunner.files.fingerprints import file_fingerprint
 from ..common.temporary import temporary_option_value
 from ..sprkkr.sprkkr_atoms import SPRKKRAtoms
 

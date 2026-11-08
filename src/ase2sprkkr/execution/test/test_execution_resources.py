@@ -1,7 +1,7 @@
 import io
 from types import SimpleNamespace
 import pytest
-from kkrunner.base import ExecutionResources, ExecutionOutcome, ResourceOwnedRunner, RunState, SubmissionNotStarted
+from kkrunner.runs.base import ExecutionResources, ExecutionOutcome, ResourceOwnedRunner, RunState, SubmissionNotStarted
 from ase2sprkkr.sprkkr.calculation import PreparedCalculation
 from ase2sprkkr.sprkkr.profile import SPRKKRProfile
 

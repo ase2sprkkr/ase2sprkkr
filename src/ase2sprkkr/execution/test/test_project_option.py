@@ -1,5 +1,5 @@
 from types import SimpleNamespace
-from kkrunner import ExecutionManager, Executor, ExecutionOutcome, ProjectRepository, RunState
+from kkrunner import ProjectExecutionManager, Executor, ExecutionOutcome, ProjectRepository, RunState
 from ase2sprkkr.input_parameters.input_parameters import InputParameters
 from ase2sprkkr.input_parameters.task_definition import TaskDefinition
 from ase2sprkkr.sprkkr import calculation as calculation_module
@@ -81,7 +81,7 @@ def _parameters(monkeypatch, task='DOS'):
 def _manager(tmp_path):
     projects = ProjectRepository(tmp_path / 'projects')
     project = projects.create('Calculation project')
-    return ExecutionManager(project_repository=projects).for_project(project)
+    return ProjectExecutionManager(project_repository=projects).for_project(project)
 
 def _runner(parameters, tmp_path, manager, executor=None):
     executor = executor or _Executor()

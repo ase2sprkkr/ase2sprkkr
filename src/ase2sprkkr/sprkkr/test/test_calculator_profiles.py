@@ -1,7 +1,7 @@
 from types import SimpleNamespace
 
 from ase2sprkkr.configuration import definition
-from kkrunner import ExecutorPool, RemoteExecutor
+from kkrunner import ExecutorPool, RemoteEndpointExecutor
 from ase2sprkkr.profiles import ProfilesConfigurationContainer
 from ase2sprkkr.sprkkr import profile as profile_module
 from ase2sprkkr.sprkkr.calculator import SPRKKR
@@ -132,7 +132,7 @@ def test_ssh_profile_uses_direct_remote_execution_by_default():
         SPRKKRProfile(executor="ssh", host="user@cluster")
     )
 
-    assert isinstance(executor, RemoteExecutor)
+    assert isinstance(executor, RemoteEndpointExecutor)
     assert executor.backend == "local"
     assert executor.backend_options == {}
 
@@ -147,7 +147,7 @@ def test_ssh_profile_can_use_psij_on_target():
         )
     )
 
-    assert isinstance(executor, RemoteExecutor)
+    assert isinstance(executor, RemoteEndpointExecutor)
     assert executor.backend == "psij"
     assert executor.backend_options == {
         "backend": "slurm",
@@ -162,9 +162,9 @@ def test_direct_psij_profile_still_defaults_to_slurm(monkeypatch):
         def __init__(self, backend, *, url=None):
             captured.update(backend=backend, url=url)
 
-    monkeypatch.setattr("kkrunner.psij.PsijExecutor", FakePsijExecutor)
+    monkeypatch.setattr("kkrunner.backends.psij.PsijExecutor", FakePsijExecutor)
     monkeypatch.setattr(
-        "kkrunner.pool.default_executor_pool",
+        "kkrunner.backends.pool.default_executor_pool",
         lambda: ExecutorPool(),
     )
 

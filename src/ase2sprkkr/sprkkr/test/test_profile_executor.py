@@ -4,7 +4,7 @@ import pytest
 
 from ase2sprkkr.configuration import definition
 from kkrunner import ExecutorPool, LocalExecutor, RunState, SshTransport
-from kkrunner.remote_endpoint import RemoteEndpointExecutor
+from kkrunner.remote.executor import RemoteEndpointExecutor
 from ase2sprkkr.input_parameters.input_parameters import InputParameters
 from ase2sprkkr.input_parameters.task_definition import TaskDefinition
 from ase2sprkkr.profiles import ProfilesConfigurationContainer
@@ -117,9 +117,9 @@ def test_psij_profile_creates_configured_executor(monkeypatch):
             self.url = url
             created.append((backend, url))
 
-    monkeypatch.setattr("kkrunner.psij.PsijExecutor", FakePsijExecutor)
+    monkeypatch.setattr("kkrunner.backends.psij.PsijExecutor", FakePsijExecutor)
     monkeypatch.setattr(
-        "kkrunner.pool.default_executor_pool",
+        "kkrunner.backends.pool.default_executor_pool",
         lambda: ExecutorPool(),
     )
 

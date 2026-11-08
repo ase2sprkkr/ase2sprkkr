@@ -13,9 +13,9 @@ from dataclasses import dataclass
 
 from ..common.file_utils import Directory
 from ..common.output_printing import output_listeners
-from kkrunner.base import ExecutionResources, ResourceOwnedRunner
+from kkrunner.runs.base import ExecutionResources, ResourceOwnedRunner
 from .projects import resolve_project_manager
-from kkrunner.postprocessing import PostprocessingRunner
+from kkrunner.runs.processing import PostprocessingRunner
 from ..input_parameters.input_parameters import InputParameters
 from . import _preparation as preparation
 from ._preparation import FilenameTemplator as FilenameTemplator

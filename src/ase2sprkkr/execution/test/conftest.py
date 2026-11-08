@@ -8,7 +8,7 @@ import tempfile
 
 import pytest
 
-from kkrunner import pool as execution_pool
+from kkrunner.backends import pool as execution_pool
 
 
 @dataclass(frozen=True)

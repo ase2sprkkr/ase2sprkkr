@@ -13,12 +13,8 @@ from dataclasses import dataclass, replace
 from typing import Any
 
 from ..configuration import config
-from kkrunner import (
-    ExecutionSpec,
-    ExecutorEndpoint,
-    LaunchSpec,
-)
-from kkrunner.endpoint import create_executor_from_endpoint
+from kkrunner import ExecutionSpec, ExecutorEndpoint, LaunchSpec
+from kkrunner.backends.endpoint import create_executor_from_endpoint
 from ..profiles import ase_command_profile_values
 
 
@@ -280,7 +276,7 @@ def create_executor_from_profile(profile: SPRKKRProfile):
 
 
 def executor_from_profile(profile: SPRKKRProfile):
-    from kkrunner.pool import default_executor_pool
+    from kkrunner.backends.pool import default_executor_pool
 
     return default_executor_pool().for_profile(profile)
 

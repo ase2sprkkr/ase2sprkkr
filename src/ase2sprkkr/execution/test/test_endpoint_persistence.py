@@ -1,7 +1,15 @@
 from threading import Event
-from kkrunner import ExecutorEndpoint, ExecutorPool, LocalExecutor, RemoteEndpointExecutor, RunState, RunStore, SshTransport
-from kkrunner.manager import ExecutionManager
-from kkrunner.endpoint import endpoint_for_executor
+from kkrunner import (
+    ExecutorEndpoint,
+    ExecutorPool,
+    LocalExecutor,
+    RemoteEndpointExecutor,
+    RunState,
+    RunStore,
+    SshTransport,
+)
+from kkrunner.runs.manager import RunManager
+from kkrunner.backends.endpoint import endpoint_for_executor
 from ase2sprkkr.sprkkr.profile import SPRKKRProfile
 
 def test_profile_uses_execution_endpoint_value():
@@ -10,7 +18,7 @@ def test_profile_uses_execution_endpoint_value():
 
 def test_run_store_roundtrips_endpoint(tmp_path):
     store = RunStore(tmp_path / 'runs')
-    manager = ExecutionManager(store, executor_pool=ExecutorPool())
+    manager = RunManager(store, executor_pool=ExecutorPool())
     endpoint = ExecutorEndpoint(executor='ssh', host='cluster', ssh_options=('-v',), ssh_zstd=True)
     record = manager.new_record(directory=tmp_path, endpoint=endpoint, metadata={'ase2sprkkr': {'task': str('DOS').upper(), 'dataset': 'case'}}, processing_required=True)
     stored = store.save(record)
@@ -21,10 +29,10 @@ def test_run_store_roundtrips_endpoint(tmp_path):
 def test_manager_reconstructs_local_executor_after_restart(tmp_path):
     store = RunStore(tmp_path / 'runs')
     endpoint = ExecutorEndpoint()
-    first = ExecutionManager(store, executor_pool=ExecutorPool())
+    first = RunManager(store, executor_pool=ExecutorPool())
     record = first.new_record(directory=tmp_path, endpoint=endpoint, metadata={'ase2sprkkr': {'task': str('DOS').upper()}}, processing_required=True)
     store.save(record)
-    restarted = ExecutionManager(store, executor_pool=ExecutorPool())
+    restarted = RunManager(store, executor_pool=ExecutorPool())
     executor = restarted.executor_for(store.get(record.id))
     assert isinstance(executor, LocalExecutor)
 
@@ -80,13 +88,13 @@ def test_attach_reconstructs_persisted_endpoint_without_task_reader(tmp_path):
             return self.executor
     store = RunStore(tmp_path / 'runs')
     endpoint = ExecutorEndpoint(executor='ssh', host='cluster')
-    first = ExecutionManager(store, executor_pool=ExecutorPool())
+    first = RunManager(store, executor_pool=ExecutorPool())
     record = first.new_record(directory=tmp_path, endpoint=endpoint, metadata={'ase2sprkkr': {'task': str('DOS').upper()}}, processing_required=True)
     store.save(record)
     record = first.transition(record, state=RunState.RUNNING, execution=record.execution.submitted('42'))
     executor = ReconstructedExecutor()
     pool = RecordingPool(executor)
-    restarted = ExecutionManager(store, executor_pool=pool)
+    restarted = RunManager(store, executor_pool=pool)
     attached = restarted.attach(record.id, process_result=lambda outcome: outcome)
     assert pool.endpoints == [endpoint]
     assert attached.executor is executor
