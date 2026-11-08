@@ -135,7 +135,8 @@ available to noninteractive SSH commands. The target needs SPR-KKR and its MPI
 runtime when requested; it does not need ASE2SPRKKR merely to execute its command.
 For remote scheduler execution, set ``psij_backend="slurm"`` and install
 ``kkrunner[psij]`` on the target. ``remote_command`` can explicitly select an
-absolute ``kkrunner-remote`` executable. It must not select the end-user
+absolute command such as ``["/opt/kkrunner/bin/kkrunner", "remote"]``. It must
+not select the end-user
 ``ase2sprkkr remote`` subset as the execution protocol.
 
 Use a consistent ``filesystem_id`` in profiles that address the same filesystem
@@ -184,7 +185,7 @@ Remote commands for users
 
 These commands act on the host where they run. They delegate to KKRunner and
 supply its protocol version. Internal submit/recovery/acknowledgement and MPI
-commands belong to ``kkrunner remote`` or ``kkrunner-remote``. See the
+commands belong to ``kkrunner remote``. See the
 `KKRunner command-line guide <https://ase2sprkkr.github.io/kkrunner/command-line.html>`_
 and `recovery guide <https://ase2sprkkr.github.io/kkrunner/persistent-runs.html>`_
 for the generic protocol and lifecycle contract.
