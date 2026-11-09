@@ -1,6 +1,6 @@
-import os
 import shlex
 import subprocess
+import sys
 from pathlib import Path
 
 import pytest
@@ -8,7 +8,6 @@ import pytest
 
 TOOLS_DIR = Path(__file__).parent.parent
 RUN_SCRIPTS = sorted((TOOLS_DIR / "examples").glob("*/run.sh"))
-
 
 @pytest.mark.parametrize(
     "script",
@@ -20,11 +19,10 @@ def test_tool_example(script):
     assert len(lines) >= 2, f"{script} does not contain a command"
 
     command = shlex.split(lines[1])
-    if command[1:2] in (["show-structure"], ["view"]) and os.environ.get("DISPLAY"):
-        command.extend(["--close_after", "0.1"])
-    else:
-        # Headless test workers cannot create Tk windows.
-        command.append("--no-view")
+    assert command[0] == "ase2sprkkr"
+    # Use the tested interpreter and exercise the examples without requiring
+    # a console script on PATH or an accessible graphical display.
+    command = [sys.executable, "-m", "ase2sprkkr_cli", *command[1:], "--no-view"]
     result = subprocess.run(
         command,
         cwd=script.parent,

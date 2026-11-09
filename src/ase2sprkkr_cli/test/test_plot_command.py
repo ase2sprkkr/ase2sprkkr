@@ -4,8 +4,8 @@ from functools import cache
 import pytest
 
 from ase2sprkkr_cli.commands import plot
-from ...result_files.definitions.sfn import SFNResultFile
-from ...result_files import ResultFile
+from ase2sprkkr.result_files import ResultFile
+from ase2sprkkr.result_files.definitions.sfn import SFNResultFile
 
 
 @cache

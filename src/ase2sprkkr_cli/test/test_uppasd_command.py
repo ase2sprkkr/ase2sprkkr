@@ -4,10 +4,10 @@ from types import SimpleNamespace
 from ase import Atoms
 
 from ase2sprkkr_cli.commands import uppasd
-from ...bindings import uppasd as uppasd_bindings
-from ...result_files import ResultFile
-from ...result_files.definitions.jxc import Selector
-from ...potentials.potentials import Potential
+from ase2sprkkr.bindings import uppasd as uppasd_bindings
+from ase2sprkkr.result_files import ResultFile
+from ase2sprkkr.result_files.definitions.jxc import Selector
+from ase2sprkkr.potentials.potentials import Potential
 
 
 def make_atoms():

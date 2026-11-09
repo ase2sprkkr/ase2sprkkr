@@ -5,9 +5,9 @@ import argparse
 import pytest
 
 from ase2sprkkr_cli.commands import show_structure
-from ...ase import visualise
-from ...potentials.potentials import Potential
-from ...sprkkr import structure
+from ase2sprkkr.ase import visualise
+from ase2sprkkr.potentials.potentials import Potential
+from ase2sprkkr.sprkkr import structure
 
 
 @pytest.fixture

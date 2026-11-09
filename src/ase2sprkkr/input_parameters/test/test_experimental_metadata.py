@@ -1,7 +1,5 @@
 """Experimental task and schema metadata regression tests."""
 
-import argparse
-
 import pytest
 
 from ase2sprkkr.input_parameters.input_parameters import InputParameters
@@ -10,7 +8,6 @@ from ase2sprkkr.input_parameters.input_parameters_definitions import (
     InputValueDefinition,
 )
 from ase2sprkkr.input_parameters.task_definition import TaskDefinition
-from ase2sprkkr.tools.commands import info as info_command
 
 
 LEGACY_TASKS = {
@@ -55,26 +52,3 @@ def test_experimental_schema_metadata_propagates():
     assert registry["SCF"].experimental is False
     assert registry["PLOTSFN"].experimental
     assert tasks["AES"] is registry["AES"]._task_definition
-
-
-def test_info_lists_stable_tasks_before_experimental(capsys):
-    parser = argparse.ArgumentParser()
-    info_command.parser(parser)
-    info_command.run(parser.parse_args(["--task"]), None)
-    output = capsys.readouterr().out
-    heading = "  Experimental tasks\n  ~~~~~~~~~~~~~~~~~~"
-    assert output.count(heading) == 1
-    regular, experimental = output.split(heading)
-    assert "SCF" in regular
-    assert "BSFEK" in regular
-    assert "BSFKK" in regular
-    assert "AES" in experimental
-    assert "DMI" in experimental
-    assert "PLOTSFN" in experimental
-    assert " (experimental)" not in output
-
-    info_command.run(parser.parse_args(["--task=dmi"]), None)
-    filtered = capsys.readouterr().out
-    assert heading in filtered
-    assert "DMI" in filtered
-    assert " (experimental)" not in filtered

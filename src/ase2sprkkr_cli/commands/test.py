@@ -28,16 +28,19 @@ def parser(parser):
 
 def run(args, global_args):
     from pathlib import Path
-    root_path = str(Path(__file__).resolve().parents[2])
     import os
     import subprocess
     from pyparsing import ParserElement
+
+    import ase2sprkkr, ase2sprkkr_cli
 
     if args.pp:
         ParserElement.verbose_stacktrace = True
     if not args.no_kkr:
         os.environ["DO_NOT_RUN_SPRKKR"] = "1"
-    a2s_path = os.path.join(root_path, "ase2sprkkr")
+
+    root_path = Path(ase2sprkkr.__file__).parent.parent
+    packages = [ ase2sprkkr, ase2sprkkr_cli ]
     pytest_args = [
         sys.executable,
         "-m",
@@ -45,7 +48,7 @@ def run(args, global_args):
         "--doctest-modules",
         "--rootdir",
         root_path,
-        a2s_path,
+        *( Path(i.__file__).parent for i in packages )
     ]
     if args.fast:
         pytest_args += ["-m", "not slow"]
