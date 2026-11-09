@@ -102,8 +102,14 @@ def _snapshot_progress(manager, record):
 
     from ase2sprkkr.outputs.readers.scf import ScfProgressParser
 
-    if record.state.is_terminal and os.path.isfile(output):
-        return ScfProgressParser.latest_from_file(output)
+    if record.state.is_terminal:
+        # Never interpret an arbitrary replacement of a completed run's
+        # historical output as that run's SCF progress.
+        if not manager.output_file_is_current(record):
+            return None
+        if os.path.isfile(output):
+            return ScfProgressParser.latest_from_file(output)
+        return None
 
     with tempfile.TemporaryDirectory(prefix="ase2sprkkr-scf-progress-") as directory:
         filename = Path(directory) / "progress.out"
