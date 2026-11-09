@@ -358,10 +358,13 @@ class SpacegroupInfo(BaseSpacegroupInfo):
         atoms.set_sites(sites, True, update=update_info)
         if not init:
             # Rebuilt sites are copies, never the previous Site instances.
-            # Unregister obsolete sites so a reused SiteType does not retain
-            # phantom members and incorrectly report has_symmetry=True.
+            # Unregister obsolete sites owned by these atoms. ASE slicing and
+            # extending can temporarily borrow Sites from another Atoms object;
+            # those must remain registered with their original owner. Repeated
+            # arrays can also contain the same previous Site more than once.
             for previous in old_sites:
-                if previous:
+                if (previous and previous.site_type is not None
+                        and previous.site_type.atoms is atoms):
                     previous.unregister()
         return self
 

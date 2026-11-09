@@ -254,3 +254,25 @@ class TestSpacegroupInfo:
             assert site in site.site_type.sites
             expected = {s for s in atoms.sites if s.site_type is site.site_type}
             assert site.site_type.sites == expected
+
+    @pytest.mark.parametrize("operation", ["slice", "repeat", "extend"])
+    def test_derived_atoms_do_not_unregister_source_sites(self, operation):
+        atoms = SPRKKRAtoms(bulk("Fe", "bcc", a=2.87, cubic=True))
+        original = atoms.sites.copy()
+        site_types = [site.site_type for site in original]
+
+        if operation == "slice":
+            derived = atoms[:1]
+        elif operation == "repeat":
+            derived = atoms.repeat((2, 1, 1))
+        else:
+            derived = atoms.copy()
+            derived.extend(atoms)
+
+        derived.spacegroup_info.recompute()
+        for site, site_type in zip(original, site_types):
+            assert site.site_type is site_type
+            assert site in site_type.sites
+        for site in derived.sites:
+            assert site.site_type.atoms is derived
+            assert site in site.site_type.sites
