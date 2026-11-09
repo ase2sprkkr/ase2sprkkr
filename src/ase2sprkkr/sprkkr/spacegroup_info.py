@@ -239,7 +239,9 @@ class SpacegroupInfo(BaseSpacegroupInfo):
         if init or not atoms.are_sites_inited():
             init = True
         else:
-            old_sites = atoms.sites
+            # ASE set_array() overwrites an existing array in place. Keep the
+            # previous Site instances for copying and unregistering below.
+            old_sites = atoms.sites.copy()
         creator = SiteType.creator(atoms)
         if not init:
             stype_copier = site_type_copier(atoms) if copy else used_site_type_copier(atoms)

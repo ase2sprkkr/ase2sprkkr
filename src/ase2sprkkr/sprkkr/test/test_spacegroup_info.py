@@ -145,7 +145,7 @@ class TestSpacegroupInfo:
         atoms = SPRKKRAtoms(
             bulk("Fe", "bcc", a=2.87, cubic=True), symmetry=True,
         )
-        old = atoms.sites
+        old = atoms.sites.copy()
         assert old[0].site_type is old[1].site_type
         original_type = old[1].site_type
         old[1].magnetisation[:] = [0.42, -0.19]
@@ -197,7 +197,7 @@ class TestSpacegroupInfo:
         atoms = SPRKKRAtoms(
             bulk("Fe", "bcc", a=2.87, cubic=True), symmetry=True,
         )
-        old_sites = atoms.sites
+        old_sites = atoms.sites.copy()
         assert old_sites[0].site_type is old_sites[1].site_type
         old_sites[0].magnetisation[:] = [0.6, 0.1]
         old_sites[1].magnetisation[:] = [-0.2, 0.8]
@@ -238,16 +238,19 @@ class TestSpacegroupInfo:
         assert atoms.sites[0].site_type is atoms.sites[1].site_type
 
 
-    def test_recompute_unregisters_replaced_sites(self):
+    @pytest.mark.parametrize("copy", [False, True])
+    @pytest.mark.parametrize("symmetry", [False, True])
+    def test_recompute_unregisters_replaced_sites(self, copy, symmetry):
         atoms = SPRKKRAtoms(
-            bulk("Fe", "bcc", a=2.87, cubic=True), symmetry=False,
+            bulk("Fe", "bcc", a=2.87, cubic=True), symmetry=symmetry,
         )
         original = atoms.sites.copy()
         original_types = [site.site_type for site in original]
-        atoms.spacegroup_info.recompute(consider_old=True, copy=False)
+        atoms.spacegroup_info.recompute(consider_old=True, copy=copy)
         assert all(new is not old for new, old in zip(atoms.sites, original))
         for site, site_type in zip(original, original_types):
             assert site not in site_type.sites
         for site in atoms.sites:
             assert site in site.site_type.sites
-            assert len(site.site_type.sites) == 1
+            expected = {s for s in atoms.sites if s.site_type is site.site_type}
+            assert site.site_type.sites == expected

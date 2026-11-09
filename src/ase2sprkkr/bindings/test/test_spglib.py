@@ -79,7 +79,7 @@ def test_idealization_preserves_existing_metric_and_origin():
     cell = np.array([[2.0, 0.3, 0], [0.2, 3.0, 0], [0.1, 0.2, 4.0]])
     positions = np.array([[0.37, 0.28, 0.19]])
     transformed, changed = idealize_cell(cell, positions, [1], dataset)
-    np.testing.assert_allclose(transformed.cell, cell)
+    np.testing.assert_array_equal(transformed.cell, cell)
     np.testing.assert_allclose(transformed.scaled_positions, positions)
     assert not changed
 
@@ -123,7 +123,7 @@ def test_primitive_site_groups_distinguish_same_species():
     ) == [[2, 3], [0, 1]]
 
 
-def test_primitive_mapping_respects_origin_shift():
+def test_primitive_mapping_retains_input_origin_without_idealization():
     cell = np.diag([2., 2., 2.])
     positions = np.array([[0., 0., 0.], [.25, .25, .25]])
     dataset = SimpleNamespace(
@@ -133,7 +133,7 @@ def test_primitive_mapping_respects_origin_shift():
         origin_shift=np.array([.25, 0., 0.]),
     )
     transformed = TransformedCell(
-        cell, np.array([[.5, .25, .25], [.25, 0., 0.]]),
+        cell, positions[::-1].copy(),
         np.array([1, 1]),
     )
     assert primitive_site_groups(
@@ -152,6 +152,20 @@ def test_explicit_kinds_override_automatic_species_partition():
     ).equivalent_atoms[0] == 0
 
 
+@pytest.mark.parametrize("equivalence", ["site-types", "occupation"])
+def test_ase_kinds_resolve_composition_without_splitting_equal_sites(equivalence):
+    atoms = bulk("Fe", "bcc", a=2.87, cubic=True)
+    atoms.set_array("spacegroup_kinds", np.array([0, 1]))
+    atoms.info["occupancy"] = {"0": {"Fe": 1.0}, "1": {"Fe": 1.0}}
+    tags = site_equivalence_tags(atoms, equivalence=equivalence)
+    assert tags[0] == tags[1]
+    assert symmetry_dataset(atoms.cell, atoms.get_scaled_positions(), tags).number == 229
+
+    atoms.info["occupancy"]["1"] = {"Fe": 0.5, "Ni": 0.5}
+    tags = site_equivalence_tags(atoms, equivalence=equivalence)
+    assert tags[0] != tags[1]
+
+
 def test_previously_assigned_region_sites_refine_explicit_kinds():
     atoms = SPRKKRAtoms(
         bulk("Fe", "bcc", a=2.87, cubic=True), symmetry=False,
@@ -164,7 +178,8 @@ def test_previously_assigned_region_sites_refine_explicit_kinds():
 
 
 def test_primitive_correspondence_with_nontrivial_basis_change():
-    # Swap the first two primitive basis vectors and move the origin.
+    # Swap the first two primitive basis vectors. No-idealization output
+    # retains the Cartesian origin despite the dataset's origin_shift.
     cell = np.diag([2., 3., 4.])
     positions = np.array([[.13, .21, .27], [.43, .51, .17]])
     P = np.array([[0., 1., 0.], [1., 0., 0.], [0., 0., 1.]])
@@ -172,7 +187,7 @@ def test_primitive_correspondence_with_nontrivial_basis_change():
     standard_cell = np.linalg.solve(P.T, cell)
     transformed = TransformedCell(
         standard_cell,
-        (positions[::-1] @ P.T + origin) % 1.,
+        (positions[::-1] @ P.T) % 1.,
         np.array([1, 1]),
     )
     dataset = SimpleNamespace(

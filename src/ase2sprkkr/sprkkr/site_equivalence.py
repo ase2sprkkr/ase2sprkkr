@@ -21,6 +21,7 @@ def site_equivalence_tags(
 
     Uninitialized sites use ASE occupations. Initialized sites in strict mode
     retain their SiteType identities and independent per-site magnetisations.
+    ASE/CIF spacegroup_kinds index occupancy metadata, not independent SiteTypes.
     Explicit atomic_kinds override the species classification.
     assigned_sites preserves SiteType sharing established by earlier region
     calculations. region_memberships distinguishes atoms in different regions
@@ -31,7 +32,6 @@ def site_equivalence_tags(
 
     arrays = atoms.arrays
     sites = arrays["sprkkr_sites_data"] if "sprkkr_sites_data" in arrays else None
-    kinds = arrays["spacegroup_kinds"] if "spacegroup_kinds" in arrays else None
     initial_magmoms = (
         arrays["initial_magmoms"] if "initial_magmoms" in arrays else None
     )
@@ -56,12 +56,10 @@ def site_equivalence_tags(
             occ = site.occupation if site is not None else Occupation.for_atom_from_ase_atoms(atoms, i)
             key = ("occupation", occupation_key(occ))
 
-        if atomic_kinds is None and equivalence == "site-types":
-            if kinds is not None:
-                key = (key, int(kinds[i]))
-            if initial_magmoms is not None:
-                moment = np.asarray(initial_magmoms[i]).reshape(-1)
-                key = (key, tuple(float(component) for component in moment))
+        if (atomic_kinds is None and equivalence == "site-types"
+                and initial_magmoms is not None):
+            moment = np.asarray(initial_magmoms[i]).reshape(-1)
+            key = (key, tuple(float(component) for component in moment))
         if assigned_sites is not None:
             # Group by the shared SiteType, not by each distinct Site object.
             site = assigned_sites[i]

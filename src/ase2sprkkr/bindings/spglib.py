@@ -89,9 +89,10 @@ def primitive_site_groups(cell, scaled_positions, tags, dataset, transformed, *,
     """Relate each output atom to its input primitive translation class.
 
     mapping_to_primitive distinguishes inequivalent primitive sites, unlike
-    the chemical-species tags. We align input and standardized output frames
-    using spglib's P and origin shift, without assuming that numeric primitive
-    IDs of independently generated cells have identical meaning.
+    the chemical-species tags. Match in Cartesian coordinates modulo the
+    primitive lattice, without assuming that numeric primitive IDs of
+    independently generated cells have identical meaning. The
+    no_idealize=True output retains the input Cartesian origin and orientation.
     """
     # Only normalize caller-provided inputs; dataset fields are ndarrays.
     cell = np.asarray(cell, dtype=float)
@@ -104,10 +105,7 @@ def primitive_site_groups(cell, scaled_positions, tags, dataset, transformed, *,
     for i, primitive_id in enumerate(primitive_ids):
         classes.setdefault(int(primitive_id), []).append(i)
 
-    matrix = dataset.transformation_matrix
-    standard_cell = np.linalg.solve(matrix.T, cell)
-    cartesian_shift = dataset.origin_shift @ standard_cell
-    input_cart = positions @ cell + cartesian_shift
+    input_cart = positions @ cell
     output_cart = transformed.scaled_positions @ transformed.cell
     primitive_cell = dataset.primitive_lattice
 
@@ -199,7 +197,15 @@ def idealize_cell(cell, scaled_positions, tags, dataset, *, symprec=1e-5):
         powers = eigenvalues ** (-0.5 if inverse else 0.5)
         return (eigenvectors * powers) @ eigenvectors.T
 
-    new_cell = symmetric_root(sym_metric) @ symmetric_root(metric, inverse=True) @ cell
+    metric_change = not np.allclose(
+        metric, sym_metric, rtol=1e-10, atol=1e-10
+    )
+    # Preserve an already symmetric lattice exactly, avoiding round-off from
+    # reconstructing it through two eigendecompositions.
+    new_cell = (
+        symmetric_root(sym_metric) @ symmetric_root(metric, inverse=True) @ cell
+        if metric_change else cell.copy()
+    )
     inverse_cell = np.linalg.inv(cell)
 
     delta_sum = np.zeros_like(positions)
@@ -216,9 +222,6 @@ def idealize_cell(cell, scaled_positions, tags, dataset, *, symprec=1e-5):
             delta_sum[i] += correction @ inverse_cell
 
     ideal_positions = (positions + delta_sum / len(rotations)) % 1.0
-    metric_change = not np.allclose(
-        metric, sym_metric, rtol=1e-10, atol=1e-10
-    )
     # Compare displacement, not modulo-wrapped coordinates.
     displacement = np.linalg.norm((delta_sum / len(rotations)) @ cell, axis=1)
     geometry_changed = metric_change or bool(np.any(displacement > 1e-8))
