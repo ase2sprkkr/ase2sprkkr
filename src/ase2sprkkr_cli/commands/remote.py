@@ -1,192 +1,288 @@
-"""Human-facing remote execution commands.
+"""Human-facing run observation, deliberately independent of KKRunner's CLI.
 
-The execution protocol belongs to kkrunner. This module only renders its
-output for humans, and deliberately does not import a runner on top-level help.
+KKRunner owns execution identity, persistence, and byte transport. This CLI
+owns argparse, run selection, SCF interpretation, and text filtering.
 """
 
+import argparse
 import json
 import os
 import re
 import sys
+import tempfile
 from pathlib import Path
 
-help = "Inspect, follow or cancel an execution handle on this host."
-description = "Human-readable execution status and output, with raw protocol access."
+help = "Inspect, follow, or cancel persisted runs or explicit backend handles."
+description = "Show run status and live output, with SPR-KKR-specific progress reporting."
 lazy_parser = True
 
 
-def _runner_cli():
-    try:
-        from kkrunner_cli import main
-    except ImportError:
-        from kkrunner import cli as main
-    return main
-
-
 def parser(argument_parser):
-    commands = _runner_cli().user_parser(argument_parser)
-    status = commands["status"] if isinstance(commands, dict) else None
-    follow = commands["follow"] if isinstance(commands, dict) else None
-    if status is None or follow is None:
-        # Older kkrunner.cli.user_parser returns None. argparse subparsers
-        # expose the actual parsers without rebuilding their definitions.
-        group = next(action for action in argument_parser._actions
-                     if hasattr(action, "choices") and "status" in action.choices)
-        status, follow = group.choices["status"], group.choices["follow"]
-    status.add_argument("--status-only", action="store_true",
-                        help="Only report backend state, without SCF iteration progress")
-    status.add_argument("--stdout-path",
-                        help="Explicit output path for handles without stream metadata")
-    follow.add_argument("--raw", action="store_true",
-                        help="Write binary framed stream protocol (including terminal frame)")
-    follow.add_argument("--info", action="store_true",
-                        help="Print parsed SCF iteration summaries")
-    follow.add_argument("--regex", action="append", metavar="PATTERN",
-                        help="Print matching output lines; may be repeated")
-    follow.add_argument("--from-start", action="store_true",
-                        help="Replay saved output from the beginning (otherwise follow live bytes)")
-    return commands
+    actions = argument_parser.add_subparsers(dest="remote_action", required=True)
+
+    def identity(action):
+        action.add_argument("run_id", nargs="?", help="persistent run ID (default)")
+        action.add_argument(
+            "--remote-id", metavar="HANDLE",
+            help="use a low-level backend handle instead (no persisted file metadata)",
+        )
+
+    status = actions.add_parser("status", help="show run state and latest SCF progress")
+    identity(status)
+    status.add_argument(
+        "--status-only", action="store_true",
+        help="omit SCF progress and show backend state only",
+    )
+
+    follow = actions.add_parser("follow", help="observe an existing run's output")
+    identity(follow)
+    follow.add_argument(
+        "--raw", action="store_true",
+        help="send original binary stream frames rather than decoded text",
+    )
+    follow.add_argument("--info", action="store_true", help="show SCF iteration summaries")
+    follow.add_argument(
+        "--regex", action="append", metavar="PATTERN",
+        help="print matching lines; may be repeated and combined with --info",
+    )
+    follow.add_argument(
+        "--from-start", action="store_true",
+        help="replay output from the beginning (default: observe new data only)",
+    )
+    # Explicit file locations are useful only with legacy/direct handles. A
+    # persisted run obtains them from its authoritative FileManifest.
+    follow.add_argument("--stdout-path", help=argparse.SUPPRESS)
+    follow.add_argument("--stderr-path", help=argparse.SUPPRESS)
+
+    cancel = actions.add_parser("cancel", help="cancel an execution")
+    identity(cancel)
 
 
-def _stream_paths(remote_id, stdout_path=None, stderr_path=None):
-    from kkrunner.remote import service
-    hint = getattr(service, "remote_stream_paths", None)
-    try:
-        locations = hint(remote_id) if hint else {}
-    except ValueError:
-        # An invalid handle will still be rejected by the actual status/follow
-        # operation; missing optional metadata must not mask that error.
-        locations = {}
-    return (stdout_path or locations.get("output_file"),
-            stderr_path or locations.get("error_file"))
+def _identity(args):
+    if bool(args.run_id) == bool(args.remote_id):
+        raise ValueError("Supply a run_id, or --remote-id HANDLE, but not both")
+    return args.remote_id if args.remote_id else args.run_id
 
 
-def _is_scf_output(path):
-    if path is None:
-        return False
-    try:
-        with open(path, "rb") as stream:
-            header = stream.read(65536)
-    except (OSError, ValueError):
-        return False
-    return bool(re.search(rb"(?m)^\s*TASK\s*=\s*SCF\s*$", header))
+def _manager_and_record(run_id):
+    from ase2sprkkr.sprkkr.projects import project_execution_manager
+
+    manager = project_execution_manager()
+    return manager, manager.store.get(run_id)
 
 
-def _scf_progress(path):
-    if not _is_scf_output(path):
+def _task_is_scf(record):
+    task = record.metadata.get("ase2sprkkr")
+    return isinstance(task, dict) and str(task.get("task", "")).upper() == "SCF"
+
+
+def _scf_summary(progress):
+    return {
+        "iteration": progress["iteration"],
+        "error": progress["error"],
+        "b_error": progress["b_error"],
+        "fermi_energy": progress["energy"]["EF"],
+        "spin_moment": progress["moment"]["spin"],
+        "orbital_moment": progress["moment"]["orbital"],
+        "converged": progress["converged"],
+    }
+
+
+def _snapshot_progress(manager, record):
+    """Read SCF progress from this run's declared stdout, including remote jobs.
+
+    A snapshot is observational and does not update the canonical local output
+    or the run record. Copying to a temporary destination bounds local memory.
+    """
+    if not _task_is_scf(record):
         return None
+    output = record.files.output_file
+    if output is None:
+        return None
+
     from ase2sprkkr.outputs.readers.scf import ScfProgressParser
-    try:
-        return ScfProgressParser.latest_from_file(path)
-    except (OSError, ValueError):
-        return None
+
+    if record.state.is_terminal and os.path.isfile(output):
+        return ScfProgressParser.latest_from_file(output)
+
+    with tempfile.TemporaryDirectory(prefix="ase2sprkkr-scf-progress-") as directory:
+        filename = Path(directory) / "progress.out"
+        try:
+            manager.snapshot_file(record.id, output, destination=filename)
+        except FileNotFoundError:
+            return None
+        return ScfProgressParser.latest_from_file(filename)
+
+
+def _persisted_status(manager, record):
+    """Query backend facts without mutating the client-owned lifecycle record."""
+    facts = {
+        "run_id": record.id,
+        "state": record.state.value,
+        "return_code": record.return_code,
+        "error": record.message,
+        "failure_phase": (
+            None if record.failure_phase is None else record.failure_phase.value
+        ),
+    }
+    if record.state.is_terminal or record.execution.backend_id is None:
+        return facts
+
+    status, = manager.executor_for(record).status(record)
+    facts.update(
+        state=status.state.value,
+        return_code=status.return_code,
+        error=status.message,
+        failure_phase=(
+            None if status.failure_phase is None else status.failure_phase.value
+        ),
+    )
+    return facts
 
 
 def _status(args):
-    from kkrunner.remote.service import status_remote
-    facts = status_remote(args.remote_id)
-    if not getattr(args, "status_only", False):
-        path, _ = _stream_paths(args.remote_id, getattr(args, "stdout_path", None))
-        if path is not None:
-            last = _scf_progress(path)
-            if last is not None:
-                facts = dict(facts, scf={
-                    "iteration": last["iteration"],
-                    "error": last["error"],
-                    "b_error": last["b_error"],
-                    "fermi_energy": last["energy"]["EF"],
-                    "spin_moment": last["moment"]["spin"],
-                    "orbital_moment": last["moment"]["orbital"],
-                    "converged": last["converged"],
-                })
+    identifier = _identity(args)
+    if args.remote_id:
+        from kkrunner.remote.service import status_remote
+        facts = status_remote(identifier)
+    else:
+        manager, record = _manager_and_record(identifier)
+        facts = _persisted_status(manager, record)
+        if not args.status_only:
+            progress = _snapshot_progress(manager, record)
+            if progress is not None:
+                facts["scf"] = _scf_summary(progress)
     print(json.dumps(facts), flush=True)
 
 
 class _TextSink:
-    """Decode stream boundaries safely and apply human-facing output listeners."""
+    """Decode independent UTF-8 chunks without confusing flush with EOF."""
 
-    def __init__(self, listener, kind):
+    def __init__(self, callback, kind):
         import codecs
-        self._decode = codecs.getincrementaldecoder("utf8")(errors="replace")
-        self.listener = listener
-        self.kind = kind
+
+        self._decoder = codecs.getincrementaldecoder("utf8")(errors="replace")
+        self._callback = callback
+        self._kind = kind
 
     def write(self, data):
-        decoded = self._decode.decode(data)
-        if decoded:
-            self.listener(decoded, self.kind)
+        text = self._decoder.decode(data)
+        if text:
+            self._callback(text, self._kind)
 
     def flush(self):
-        # KKRunner invokes flush after each chunk. Do not finalize a decoder
-        # while a multibyte character may still be arriving.
+        # Transport flush is called on every chunk; not an end-of-stream.
         pass
 
     def finish(self):
-        remaining = self._decode.decode(b"", final=True)
-        if remaining:
-            self.listener(remaining, self.kind)
+        text = self._decoder.decode(b"", final=True)
+        if text:
+            self._callback(text, self._kind)
 
 
-def _follow(args, global_args):
+class _FramedSink:
+    """Preserve the runner's binary stream protocol without parsing it."""
+
+    def __init__(self, kind, destination):
+        self.kind = kind
+        self.destination = destination
+
+    def write(self, data):
+        from kkrunner.remote.stream import encode_stream_frame
+
+        self.destination.write(encode_stream_frame(self.kind, data))
+
+    def flush(self):
+        self.destination.flush()
+
+
+def _observe(args, observer):
+    if args.raw and (args.info or args.regex):
+        raise ValueError("--raw cannot be combined with --info or --regex")
+
     if args.raw:
-        if args.info or args.regex:
-            raise ValueError("--raw cannot be combined with --info or --regex")
-        # Delegate binary framing to the protocol owner; no decoding or filtering.
-        args.framed = True
-        args.live = not args.from_start
-        args.stdout_path, args.stderr_path = _stream_paths(
-            args.remote_id, args.stdout_path, args.stderr_path
-        )
-        return _runner_cli().run(args, global_args)
+        from kkrunner.remote.stream import STREAM_MAGIC, encode_terminal_frame
+
+        destination = sys.stdout.buffer
+        destination.write(STREAM_MAGIC)
+        destination.flush()
+        stdout, stderr = _FramedSink("out", destination), _FramedSink("err", destination)
+        outcome = observer(stdout, stderr)
+        destination.write(encode_terminal_frame(outcome))
+        destination.flush()
+        return outcome
 
     from ase2sprkkr.common.output_printing import output_listeners
-    from kkrunner.remote.service import follow_remote
-    out_path, err_path = _stream_paths(args.remote_id, args.stdout_path, args.stderr_path)
-    regexes = tuple(args.regex or ())
+
+    listeners, _ = output_listeners(tuple(args.regex or ()) or (False if args.info else True))
+    progress = None
     if args.info:
         from ase2sprkkr.outputs.readers.scf import ScfProgressParser
-        info = ScfProgressParser()
-    else:
-        info = None
 
-    if args.info or regexes:
-        listeners, _ = output_listeners(regexes if regexes else False)
-    else:
-        listeners, _ = output_listeners(True)
-
-    if info is not None:
-        info.on_info = lambda message: sys.stdout.write(message)
+        progress = ScfProgressParser(on_info=lambda message: sys.stdout.write(message))
 
     def emit(text, kind):
-        if info is not None and kind == "out":
-            info.feed(text)
+        if kind == "out" and progress is not None:
+            progress.feed(text)
         for listener in listeners:
             listener(text, kind)
 
-    stdout = _TextSink(emit, "out")
-    stderr = _TextSink(emit, "err")
-    live = not args.from_start
+    stdout, stderr = _TextSink(emit, "out"), _TextSink(emit, "err")
     try:
-        return follow_remote(
-            args.remote_id, stdout, stderr,
-            stdout_offset=None if live or getattr(args, "live_stdout", False)
-                          else getattr(args, "stdout_offset", 0),
-            stderr_offset=None if live or getattr(args, "live_stderr", False)
-                          else getattr(args, "stderr_offset", 0),
-            stdout_path=out_path, stderr_path=err_path,
-        )
+        return observer(stdout, stderr)
     finally:
         stdout.finish()
         stderr.finish()
-        if info is not None:
-            info.finish()
+        if progress is not None:
+            progress.finish()
         for listener in listeners:
             listener.flush()
+
+
+def _follow(args):
+    identifier = _identity(args)
+    if args.remote_id:
+        from kkrunner.remote.service import follow_remote
+
+        def observe(stdout, stderr):
+            # In direct mode no manifest is available; caller may explicitly
+            # provide paths for scheduler output files.
+            offset = 0 if args.from_start else None
+            return follow_remote(
+                identifier, stdout, stderr,
+                stdout_offset=offset, stderr_offset=offset,
+                stdout_path=args.stdout_path, stderr_path=args.stderr_path,
+            )
+    else:
+        if args.stdout_path or args.stderr_path:
+            raise ValueError("Persisted runs use their FileManifest, not explicit stream paths")
+        manager, _ = _manager_and_record(identifier)
+
+        def observe(stdout, stderr):
+            return manager.follow_output(
+                identifier, stdout, stderr, from_start=args.from_start,
+            )
+
+    return _observe(args, observe)
+
+
+def _cancel(args):
+    identifier = _identity(args)
+    if args.remote_id:
+        from kkrunner.remote.service import cancel_remote
+
+        facts = cancel_remote(identifier)
+    else:
+        manager, _ = _manager_and_record(identifier)
+        facts = manager.cancel_run(identifier)
+    print(json.dumps(facts), flush=True)
 
 
 def run(args, global_args):
     if args.remote_action == "status":
         return _status(args)
     if args.remote_action == "follow":
-        return _follow(args, global_args)
-    return _runner_cli().run(args, global_args)
+        return _follow(args)
+    if args.remote_action == "cancel":
+        return _cancel(args)
+    raise ValueError(f"Unknown remote action: {args.remote_action}")

@@ -1,118 +1,161 @@
-"""The end-user CLI delegates to the runner's single remote implementation."""
+"""ASE2SPRKKR owns its CLI grammar and resolves persistent run metadata itself."""
+
 import argparse
+import io
 import json
+from types import SimpleNamespace
 
 import pytest
-from kkrunner_cli import main as cli
-from kkrunner.remote import service as remote_service
+
 from ase2sprkkr_cli.commands import remote
 
 
-@pytest.mark.parametrize('action', ['status', 'cancel'])
-def test_user_command_delegates_without_protocol_arguments(monkeypatch, capsys, action):
-    calls = []
-    monkeypatch.setattr(remote_service, action + '_remote',
-                        lambda handle: calls.append(handle) or {'state': 'running'})
+def _parse(*args):
     parser = argparse.ArgumentParser()
     remote.parser(parser)
-    if action == 'status':
-        monkeypatch.setattr(remote, '_output_path', lambda args: None)
-    remote.run(parser.parse_args([action, 'opaque-handle']), None)
-    assert calls == ['opaque-handle']
-    assert json.loads(capsys.readouterr().out) == {'state': 'running'}
+    return parser.parse_args(args)
 
 
-def test_follow_exposes_user_stream_options():
-    parser = argparse.ArgumentParser()
-    remote.parser(parser)
-    args = parser.parse_args(['follow', 'opaque', '--live'])
-    assert args.live
-    assert args.remote_id == 'opaque'
+def test_command_grammar_is_separate_from_kkrunner():
+    args = _parse("status", "run-123")
+    assert args.run_id == "run-123"
+    assert args.remote_id is None
+    direct = _parse("status", "--remote-id", "opaque")
+    assert direct.run_id is None
+    assert direct.remote_id == "opaque"
+    assert _parse("follow", "run-123", "--info", "--from-start").info
+    assert _parse("follow", "run-123", "--regex", "WARN", "--regex", "ERR").regex == ["WARN", "ERR"]
+    assert _parse("cancel", "--remote-id", "opaque").remote_id == "opaque"
+    for action in ("submit", "recover", "ack", "ack-submit", "resolve-mpi"):
+        with pytest.raises(SystemExit):
+            _parse(action)
 
 
-@pytest.mark.parametrize('action', ['submit', 'recover', 'ack', 'ack-submit', 'resolve-mpi'])
-def test_internal_protocol_commands_belong_to_runner(action):
-    parser = argparse.ArgumentParser()
-    remote.parser(parser)
-    with pytest.raises(SystemExit):
-        parser.parse_args([action])
+def test_requires_exactly_one_identity():
+    with pytest.raises(ValueError, match="Supply a run_id"):
+        remote.run(_parse("status"), None)
+    with pytest.raises(ValueError, match="Supply a run_id"):
+        remote.run(_parse("status", "run-123", "--remote-id", "opaque"), None)
 
 
-def test_status_includes_last_completed_scf_iteration(monkeypatch, tmp_path, capsys):
-    from ase2sprkkr.outputs.readers.scf import ScfProgressParser
-    output = tmp_path / "scf.out"
-    output.write_text(
-        "TASK = SCF\n"
-        "  8 ERR 0.123E-04 0.456E-06 EF 0.6 0.01 D 12 M 1.2 0.3\n"
-        " ETOT -42.5 SCF - cycle not converged - continue\n"
-        "  9 ERR 0.100E-05 0.000E+00 EF 0.6 0.0 D 12 M 1.2 0.3\n"
+def _record(*, state="running", filename=None, task="SCF"):
+    return SimpleNamespace(
+        id="run-123",
+        state=SimpleNamespace(value=state, is_terminal=(state == "finished")),
+        return_code=None, message=None, failure_phase=None,
+        metadata={"ase2sprkkr": {"task": task}},
+        files=SimpleNamespace(output_file=filename),
+        execution=SimpleNamespace(backend_id="opaque"),
     )
-    monkeypatch.setattr(remote_service, "status_remote", lambda _: {"state": "running"})
-    monkeypatch.setattr(remote_service, "remote_stream_paths",
-                        lambda _: {"output_file": str(output), "error_file": None})
-    parser = argparse.ArgumentParser()
-    remote.parser(parser)
-    remote.run(parser.parse_args(["status", "handle"]), None)
-    status = json.loads(capsys.readouterr().out)
-    assert status["state"] == "running"
-    assert status["scf"]["iteration"] == 8
-    assert status["scf"]["error"] == pytest.approx(0.123e-4)
-    assert status["scf"]["converged"] is False
 
-    remote.run(parser.parse_args(["status", "handle", "--status-only"]), None)
+
+def test_status_uses_persistent_run_and_adds_scf_progress(monkeypatch, capsys):
+    record = _record(filename="scf.out")
+    status = SimpleNamespace(
+        state=SimpleNamespace(value="running"), return_code=None,
+        message=None, failure_phase=None,
+    )
+    manager = SimpleNamespace(
+        store=SimpleNamespace(get=lambda run: record),
+        executor_for=lambda run: SimpleNamespace(status=lambda *records: (status,)),
+    )
+    monkeypatch.setattr(remote, "_manager_and_record", lambda run: (manager, record))
+    monkeypatch.setattr(remote, "_snapshot_progress", lambda m, r: {
+        "iteration": 8, "error": 1e-4, "b_error": 0,
+        "energy": {"EF": 0.6},
+        "moment": {"spin": 1.2, "orbital": 0.3},
+        "converged": False,
+    })
+    remote.run(_parse("status", "run-123"), None)
+    facts = json.loads(capsys.readouterr().out)
+    assert facts["run_id"] == "run-123"
+    assert facts["state"] == "running"
+    assert facts["scf"]["iteration"] == 8
+
+
+def test_status_only_does_not_snapshot(monkeypatch, capsys):
+    record = _record(state="finished")
+    monkeypatch.setattr(remote, "_manager_and_record", lambda run: (None, record))
+    monkeypatch.setattr(remote, "_snapshot_progress", lambda *args: pytest.fail("unexpected snapshot"))
+    remote.run(_parse("status", "run-123", "--status-only"), None)
+    assert "scf" not in json.loads(capsys.readouterr().out)
+
+
+def test_direct_status_avoids_persistence(monkeypatch, capsys):
+    from kkrunner.remote import service
+    monkeypatch.setattr(remote, "_manager_and_record", lambda _: pytest.fail("unexpected store"))
+    monkeypatch.setattr(service, "status_remote", lambda _: {"state": "running"})
+    remote.run(_parse("status", "--remote-id", "opaque"), None)
     assert json.loads(capsys.readouterr().out) == {"state": "running"}
 
 
-def test_follow_live_default_and_from_start(monkeypatch, capsys):
-    calls = []
-    monkeypatch.setattr(remote_service, "remote_stream_paths",
-                        lambda _: {"output_file": None, "error_file": None})
-    def following(remote_id, stdout, stderr, **kwargs):
-        calls.append(kwargs)
-        stdout.write(b"output\n")
-        stderr.write(b"warning\n")
+def test_follow_uses_manager_observation_and_filters(monkeypatch, capsys):
+    seen = []
+
+    def following(run_id, out, err, *, from_start):
+        seen.append((run_id, from_start))
+        out.write(b"ignore\nWA")
+        out.flush()
+        out.write(b"RN here\n")
+        err.write(b"ERR here\n")
         return {"state": "finished"}
-    monkeypatch.setattr(remote_service, "follow_remote", following)
-    parser = argparse.ArgumentParser()
-    remote.parser(parser)
-    remote.run(parser.parse_args(["follow", "handle"]), None)
-    out = capsys.readouterr()
-    assert out.out == "output\n"
-    assert out.err == "warning\n"
-    assert calls[-1]["stdout_offset"] is None
-    remote.run(parser.parse_args(["follow", "handle", "--from-start"]), None)
-    assert calls[-1]["stdout_offset"] == 0
+
+    manager = SimpleNamespace(follow_output=following)
+    monkeypatch.setattr(remote, "_manager_and_record", lambda run: (manager, _record()))
+    remote.run(_parse("follow", "run-123", "--regex", "WARN", "--from-start"), None)
+    captured = capsys.readouterr()
+    assert seen == [("run-123", True)]
+    assert captured.out == "WARN here\n"
+    assert captured.err == ""
 
 
-def test_follow_info_and_regex_are_additive(monkeypatch, capsys):
-    monkeypatch.setattr(remote_service, "remote_stream_paths",
-                        lambda _: {"output_file": None, "error_file": None})
-    def following(_, stdout, stderr, **kwargs):
-        stdout.write(
+def test_follow_info_is_additive_with_regex(monkeypatch, capsys):
+    def following(_, out, err, *, from_start):
+        out.write(
             b"  8 ERR 0.123E-04 0.456E-06 EF 0.6 0.01 D 12 M 1.2 0.3\n"
             b" ETOT -42.5 SCF - cycle not converged - continue\n"
             b"ERROR: supplemental\n"
         )
         return {"state": "finished"}
-    monkeypatch.setattr(remote_service, "follow_remote", following)
-    parser = argparse.ArgumentParser()
-    remote.parser(parser)
-    remote.run(parser.parse_args(["follow", "handle", "--info", "--regex", "ERROR"]), None)
-    out = capsys.readouterr().out
-    assert "Iteration     8 error" in out
-    assert "ERROR: supplemental" in out
-    assert "ETOT" not in out
+
+    monkeypatch.setattr(remote, "_manager_and_record", lambda run: (
+        SimpleNamespace(follow_output=following), _record(),
+    ))
+    remote.run(_parse("follow", "run-123", "--info", "--regex", "ERROR"), None)
+    output = capsys.readouterr().out
+    assert "Iteration     8 error" in output
+    assert "ERROR: supplemental" in output
+    assert "ETOT" not in output
 
 
-def test_follow_raw_preserves_binary_framing(monkeypatch):
-    calls = []
-    from kkrunner_cli import main as runner_cli
-    monkeypatch.setattr(runner_cli, "run", lambda args, global_args: calls.append(args))
-    parser = argparse.ArgumentParser()
-    remote.parser(parser)
-    remote.run(parser.parse_args(["follow", "handle", "--raw"]), None)
-    assert calls[0].framed is True
-    assert calls[0].live is True
+def test_follow_raw_has_framing(monkeypatch):
+    from kkrunner.remote.stream import STREAM_MAGIC
+    capture = io.BytesIO()
+    proxy = SimpleNamespace(buffer=capture, write=lambda *args: None, flush=lambda: None)
+    monkeypatch.setattr(remote.sys, "stdout", proxy)
+
+    def following(_, out, err, *, from_start):
+        out.write(b"raw")
+        err.write(b"error")
+        return {"state": "finished"}
+
+    monkeypatch.setattr(remote, "_manager_and_record", lambda run: (
+        SimpleNamespace(follow_output=following), _record(),
+    ))
+    remote.run(_parse("follow", "run-123", "--raw"), None)
+    assert capture.getvalue().startswith(STREAM_MAGIC)
+
+
+def test_cancel_persisted_and_direct(monkeypatch, capsys):
+    from kkrunner.remote import service
+    monkeypatch.setattr(remote, "_manager_and_record", lambda run: (
+        SimpleNamespace(cancel_run=lambda rid: {"state": "running"}), _record(),
+    ))
+    monkeypatch.setattr(service, "cancel_remote", lambda _: {"state": "cancelled"})
+    remote.run(_parse("cancel", "run-123"), None)
+    assert json.loads(capsys.readouterr().out)["state"] == "running"
+    remote.run(_parse("cancel", "--remote-id", "opaque"), None)
+    assert json.loads(capsys.readouterr().out)["state"] == "cancelled"
 
 
 def test_parser_loads_without_calculation_or_execution_library():
