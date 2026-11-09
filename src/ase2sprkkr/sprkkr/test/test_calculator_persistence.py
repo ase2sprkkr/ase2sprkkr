@@ -1,6 +1,7 @@
 """Calculator forwards explicit project scope into prepared execution."""
 
 from types import SimpleNamespace
+from kkrunner.runs import RunState
 from ..calculator import SPRKKR
 
 
@@ -10,6 +11,8 @@ def test_calculate_forwards_project(monkeypatch):
     captured = {}
     result = SimpleNamespace(task_name="DOS")
     class Runner:
+        state = RunState.FINISHED
+
         def run(self):
             return result
     monkeypatch.setattr(calculator, "create_run",

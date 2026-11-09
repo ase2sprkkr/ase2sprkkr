@@ -3,6 +3,7 @@ from types import SimpleNamespace
 from ase2sprkkr.configuration import definition
 from kkrunner.backends import ExecutorPool
 from kkrunner.remote import RemoteEndpointExecutor
+from kkrunner.runs import RunState
 from ase2sprkkr.profiles import ProfilesConfigurationContainer
 from ase2sprkkr.sprkkr import profile as profile_module
 from ase2sprkkr.sprkkr.calculator import SPRKKR
@@ -102,6 +103,8 @@ def test_calculate_temporary_override_preserves_calculator_profile(monkeypatch):
     captured = []
 
     class Runner:
+        state = RunState.FINISHED
+
         def run(self):
             return SimpleNamespace(task_name="DOS")
 

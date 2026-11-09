@@ -2,6 +2,7 @@ import numpy as np
 from ase import Atoms
 from ase.build import bulk
 import pytest
+from kkrunner.runs import RunState
 
 from ...potentials.definitions.sections.sites import SitesSection
 from ...potentials.potentials import Potential
@@ -23,6 +24,8 @@ class _Result:
 
 
 class _Runner:
+    state = RunState.FINISHED
+
     def __init__(self, result):
         self.result = result
 

@@ -2,6 +2,8 @@ from types import SimpleNamespace
 
 import pytest
 from ase.build import bulk
+from ase.calculators.calculator import CalculationFailed, PropertyNotImplementedError
+from kkrunner.runs import RunState
 
 from ase2sprkkr.sprkkr.calculator import SPRKKR
 
@@ -11,6 +13,7 @@ class _Runner:
     def __init__(self, result=None):
         self.result = result
         self.ran = False
+        self.state = RunState.FINISHED
 
     def run(self):
         self.ran = True
@@ -76,3 +79,34 @@ def test_calculate_does_not_adopt_potential_when_explicit_atoms_are_used(monkeyp
     monkeypatch.setattr(calculator, 'create_run', lambda **kwargs: runner)
     calculator.calculate(atoms=bulk('Al'))
     assert calculator._potential is old_potential
+
+
+def test_calculate_reports_failed_process_without_updating_state(tmp_path):
+    executable = tmp_path / 'kkrscf'
+    executable.write_text('#!/bin/sh\nprintf "deliberate failure\\n" >&2\nexit 7\n')
+    executable.chmod(0o755)
+    calculator = SPRKKR(
+        atoms=bulk('Al'), directory=tmp_path, mpi=False,
+        empty_spheres=False, executable_dir=tmp_path, executable_suffix='',
+    )
+    calculator.results['energy'] = 1.25
+    potential = calculator.potential
+    callbacks = []
+
+    with pytest.raises(CalculationFailed, match=r'failed.*return code 7'):
+        calculator.calculate(callback=callbacks.append)
+
+    assert calculator.results['energy'] == 1.25
+    assert calculator._potential is potential
+    assert callbacks == []
+    assert 'deliberate failure' in next(tmp_path.glob('*.err')).read_text()
+
+
+@pytest.mark.parametrize('name', ['forces', 'energy'])
+def test_missing_property_raises_ase_error(monkeypatch, name):
+    calculator = SPRKKR()
+    monkeypatch.setattr(
+        calculator, 'calculate', lambda **kwargs: SimpleNamespace(task_name='DOS'),
+    )
+    with pytest.raises(PropertyNotImplementedError, match=name):
+        calculator.get_property(name)

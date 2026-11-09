@@ -2,6 +2,7 @@ from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
+from kkrunner.runs import RunState
 
 from ...potentials.potentials import Potential
 from ..calculation import PreparedCalculation
@@ -71,6 +72,7 @@ def test_calculate_serializes_status_before_mocked_execution(tmp_path, monkeypat
 
     class Runner:
         ran = False
+        state = RunState.FINISHED
 
         def run(self):
             self.ran = True

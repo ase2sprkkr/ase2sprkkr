@@ -12,7 +12,10 @@ import os
 import subprocess
 from pathlib import Path
 from typing import Any, Dict, Optional, Union
-from ase.calculators.calculator import BaseCalculator, all_changes
+from ase.calculators.calculator import (
+    BaseCalculator, CalculationFailed, PropertyNotImplementedError, all_changes,
+)
+from kkrunner.runs import RunState
 import numpy as np
 
 from ..common.file_utils import Directory
@@ -477,7 +480,8 @@ class SPRKKR(BaseCalculator):
         The callback of this synchronous convenience method is intentionally a
         success callback: it runs only after the result has updated calculator
         state. This differs from the lower-level terminal callback accepted by
-        :meth:`create_run`.
+        :meth:`create_run`. An unsuccessful execution raises ASE's
+        :class:`CalculationFailed` before updating calculator state.
         """
         if executor is None and profile is None:
             executor = self.executor
@@ -510,6 +514,11 @@ class SPRKKR(BaseCalculator):
             error_file=error_file,
         )
         result = runner.run()
+        if runner.state != RunState.FINISHED:
+            raise CalculationFailed(
+                f"SPR-KKR calculation {runner.state.value} "
+                f"(return code {runner.return_code}): {runner.failure_message}"
+            )
         self._update_from_result(
             result,
             adopt_potential=(
