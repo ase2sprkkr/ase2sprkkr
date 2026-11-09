@@ -55,8 +55,7 @@ chmod 0755 /usr/local/bin/ase2sprkkr
 
 cat > /usr/local/bin/kkrunner <<'SH'
 #!/bin/sh
-export PYTHONPATH=/opt/kkrunner${PYTHONPATH:+:$PYTHONPATH}
-exec /opt/venv/bin/python -m kkrunner "$@"
+exec /opt/venv/bin/kkrunner "$@"
 SH
 chmod 0755 /usr/local/bin/kkrunner
 

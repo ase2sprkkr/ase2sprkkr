@@ -10,6 +10,7 @@ from threading import Event
 from uuid import uuid4
 
 import pytest
+from kkrunner.runs import SubmissionNotStarted
 
 pytestmark = pytest.mark.skipif(os.environ.get('ASE2SPRKKR_RUN_DOCKER_TESTS') != '1', reason='set ASE2SPRKKR_RUN_DOCKER_TESTS=1 to run Docker integration tests')
 
@@ -91,8 +92,10 @@ def test_remote_executor_over_ssh(docker_execution_image):
             runner = calculator.create_run(options={'NITER': 2, 'NKTAB': 5, 'NE': 5}, read_callback=read_output)
             try:
                 runner.submit()
-            except subprocess.CalledProcessError as exc:
-                _remote_error(exc)
+            except SubmissionNotStarted as exc:
+                if isinstance(exc.__cause__, subprocess.CalledProcessError):
+                    _remote_error(exc.__cause__)
+                raise
             assert runner.backend_id is not None
             assert runner.execution.endpoint.host == 'tester@127.0.0.1'
             assert runner.execution.directory.remote == '/home/tester/ase2sprkkr-runs/calculation'

@@ -4,6 +4,7 @@ import shutil
 import subprocess
 import tempfile
 from dataclasses import dataclass
+from importlib.metadata import version
 from pathlib import Path
 
 import pytest
@@ -52,12 +53,13 @@ def docker_execution_image():
     repository = _package_mount_root()
     source_context = Path(__file__).with_name("docker")
     image = "ase2sprkkr-execution-test"
-    import kkrunner
+    kkrunner_version = version("kkrunner")
     with tempfile.TemporaryDirectory(prefix="ase2sprkkr-docker-") as temporary:
         context = Path(temporary)
         shutil.copytree(source_context, context, dirs_exist_ok=True,
                         ignore=shutil.ignore_patterns("__pycache__"))
-        shutil.copytree(Path(kkrunner.__file__).parent, context / "kkrunner",
-                        ignore=shutil.ignore_patterns("__pycache__"))
-        subprocess.run([docker, "build", "-t", image, str(context)], check=True)
+        subprocess.run(
+            [docker, "build", "--build-arg", f"KKRUNNER_VERSION={kkrunner_version}", "-t", image, str(context)],
+            check=True,
+        )
     return DockerExecutionImage(docker=docker, repository=repository, image=image)

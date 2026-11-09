@@ -21,9 +21,13 @@ RUN apt-get update \
         util-linux \
     && rm -rf /var/lib/apt/lists/*
 
-RUN python3 -m venv "$VIRTUAL_ENV" \
+ARG KKRUNNER_VERSION
+
+RUN test -n "$KKRUNNER_VERSION" \
+    && python3 -m venv "$VIRTUAL_ENV" \
     && pip install --upgrade pip \
     && pip install \
+        "kkrunner==${KKRUNNER_VERSION}" \
         "psij-python==0.9.11" \
         "ase>=3.22.0" \
         colorama \
@@ -40,8 +44,8 @@ RUN python3 -m venv "$VIRTUAL_ENV" \
         unyt \
         "numpy>=2.1"
 
-COPY kkrunner /opt/kkrunner/kkrunner
-ENV PYTHONPATH=/opt/kkrunner
+# Exercise the installed distribution's CLI and metadata during image build.
+RUN printf '%s\n' '{"paths": []}' | kkrunner remote --protocol-version 1 query-files
 
 COPY slurm.conf /etc/slurm/slurm.conf
 COPY cgroup.conf /etc/slurm/cgroup.conf
