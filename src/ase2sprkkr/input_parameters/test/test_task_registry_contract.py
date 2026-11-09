@@ -1,3 +1,5 @@
+import pytest
+
 from ..input_parameters import InputParameters
 
 
@@ -18,3 +20,14 @@ def test_task_registry_unifies_colocated_and_shared_task_declarations():
     assert arpes.input_parameters_definition_name == arpes_schema.name.upper()
     assert spleed.input_parameters_definition_name == "SPLEED"
     assert input_registry.definition_for_task(spleed)._task_definition is spleed
+
+
+@pytest.mark.parametrize("name", ["ARPES", "AIPES", "BAND", "SPLEED", "CLPES"])
+def test_spec_tasks_are_visible_in_task_and_schema_discovery(name):
+    tasks = InputParameters.task_registry
+    schemas = InputParameters.input_parameters_registry
+    assert name in tasks.names()
+    assert name in {schema.name.upper() for schema in schemas.iter_canonical_values()}
+    parameters = InputParameters.for_task(name)
+    assert parameters.task_name == name
+    assert parameters._definition.display_name == name

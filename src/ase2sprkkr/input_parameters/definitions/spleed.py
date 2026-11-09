@@ -54,9 +54,8 @@ def input_parameters_definition():
     out["SPEC_EL"].copy_member("NP", type=Integer(min=1))
     out["SPEC_STR"].copy_member("N_LAYER", default_value=1)
     out["SPEC_STR"].copy_member("NLAT_G_VEC", default_value=30)
-    task = out["TASK"].copy(remove=["CRYS_VEC"], add=[
+    task = out["TASK"].copy(add=[
         out["TASK"]["TASK"].copy(default_value="SPLEED"),
-        V("CRYS_VECS", False, info="Native key: disables primitive crystal vectors for Miller indices when present."),
     ])
     schema = out.copy(
         new_schema=True,

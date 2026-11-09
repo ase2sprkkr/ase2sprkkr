@@ -18,7 +18,7 @@ import numpy as np
 # Values in this map are not inferred effective values.
 _INPUT_OPTIONS = {
     "TASK": ("TASK", "INPVER", "STRVER", "IQ_AT_SURF",
-             "MILLER_HKL", "CRYS_VEC"),
+             "MILLER_HKL", "CRYS_VECS"),
     "ENERGY": ("EMIN", "EMAX", "NE", "EWORK_EV", "IMV_INI_EV", "IMV_FIN_EV"),
     "SPEC_PH": ("EPHOT", "THETA", "PHI", "POL_P", "NPOL", "ICIRC",
                 "IDREH", "ALQ", "DELQ", "IFSP", "THETA_FIX"),

@@ -43,9 +43,8 @@ def _validate_clpes(p, _container, why):
 
 def input_parameters_definition():
     out = arpes_parameters()
-    task = out["TASK"].copy(remove=["CRYS_VEC"], add=[
+    task = out["TASK"].copy(add=[
         out["TASK"]["TASK"].copy(type=Keyword("CLPES"), default_value="CLPES"),
-        V("CRYS_VECS", False),
     ])
     energy = out["ENERGY"]
     energy.copy_member("NE", type=SetOf(Integer(min=1), min_length=1, max_length=2))
@@ -59,6 +58,7 @@ def input_parameters_definition():
         V("IE_ICST", Integer(min=1), 1, info="Core state index, used only for NE=1."),
     ])
     schema = out.copy(
+        new_schema=True,
         name="clpes",
         validators=_validate_clpes,
         info="Core-level photoemission and photoelectron diffraction",

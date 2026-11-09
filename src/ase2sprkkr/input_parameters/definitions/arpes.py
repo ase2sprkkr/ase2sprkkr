@@ -90,7 +90,7 @@ def input_parameters_definition():
                 emin=(None, "Minimum of the energy window in Ry (absolute energy)", -8.0),
                 emax=(None, "Maximum of the energy window in Ry (absolute energy)", 5.0),
                 add=[
-                    V("EWORK_EV", 4.2, info="Inner potential of the bulk crystal in eV"),
+                    V("EWORK_EV", 4.2, info="Work function in eV."),
                     V(
                         "IMV_INI_EV", 0.05, info="Imaginary part of the potential in eV (initial state)"
                     ),
@@ -122,7 +122,7 @@ def input_parameters_definition():
                     ),
                     V("IQ_AT_SURF", Site.I, 1),
                     V("MILLER_HKL", SetOf(int, length=3), [0, 0, 1]),
-                    V("CRYS_VEC", True, info="Miller indices with respect to crystalographic primitive vectors"),
+                    V("CRYS_VECS", False, info="Presence disables primitive crystal vectors for Miller indices in the 3D surface construction."),
                     V(
                         "STRVER",
                         Integer(min=0, max=1),

@@ -95,7 +95,7 @@ def test_explicit_input_precedence_and_original_options(tmp_path,monkeypatch):
     class Parameters:
         SPEC_PH=Sect(EPHOT=25.,POL_P="P",ALQ=45.)
         SPEC_EL=Sect(KA=[.2,.3],K1=[1,0],K2=[0,1],NK1=3,NK2=2)
-        TASK=Sect(INPVER=1,STRVER=1,MILLER_HKL=[0,0,1])
+        TASK=Sect(INPVER=1,STRVER=1,MILLER_HKL=[0,0,1],CRYS_VECS=True)
         def to_string(self,*,validate): return "WRONG OBJECT"
     def read(cls,p):
         assert Path(p)==source
@@ -110,6 +110,8 @@ def test_explicit_input_precedence_and_original_options(tmp_path,monkeypatch):
         original=f["entry/calculation/original_input"]
         np.testing.assert_array_equal(original["SPEC_EL/NK1"],3)
         np.testing.assert_array_equal(original["SPEC_EL/K1"],[1,0])
+        assert original["TASK/CRYS_VECS"][()]
+        assert "CRYS_VEC" not in original["TASK"]
         assert "k_basis" not in f["entry/data"]
 
 

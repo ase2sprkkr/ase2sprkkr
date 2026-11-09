@@ -38,9 +38,9 @@ def _validate_plot2d(p, _container, why):
 
 def plot2d_parameters(task):
     t = TASK(task, add=[
-        V("AVEC", SetOf(float, length=3), [2., 0., 0.], info="Plot window vector in atomic units."),
-        V("BVEC", SetOf(float, length=3), [0., 2., 0.], info="Window vector; native orthogonalizes it against AVEC, preserving length."),
-        V("DVEC", SetOf(float, length=3), [0., 0., 0.], info="Plot window displacement in atomic units."),
+        V("AVEC", SetOf(float, length=3), [2., 0., 0.], info="Cartesian plot window vector in units of ALAT."),
+        V("BVEC", SetOf(float, length=3), [0., 2., 0.], info="Cartesian window vector in units of ALAT; native orthogonalizes it against AVEC, preserving length."),
+        V("DVEC", SetOf(float, length=3), [0., 0., 0.], info="Cartesian plot window displacement in units of ALAT."),
         V("NA", Integer(min=1), 50, info="Subdivisions along AVEC."),
         V("NB", Integer(min=1), 50, info="Subdivisions along BVEC; explicitly written rather than native aspect-ratio fallback."),
     ])

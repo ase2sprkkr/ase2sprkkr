@@ -7,7 +7,6 @@ from ..tasks._spec_files import SPEC_INPUT_FILES, SPEC_OUTPUT_FILES
 from .arpes import input_parameters_definition as arpes_parameters
 from ._sections import CONTROL
 from ._energy import energy_relative_default
-from ..input_parameters_definitions import InputValueDefinition as V
 
 
 def _validate_aipes(p, _values, why):
@@ -39,9 +38,8 @@ def _validate_aipes(p, _values, why):
 
 def input_parameters_definition():
     out = arpes_parameters()
-    task = out["TASK"].copy(remove=["CRYS_VEC"], add=[
+    task = out["TASK"].copy(add=[
         out["TASK"]["TASK"].copy(default_value="AIPES"),
-        V("CRYS_VECS", False, info="Native presence disables primitive crystal vectors for Miller indices."),
     ])
     energy = out["ENERGY"]
     energy.copy_member("NE", type=SetOf(Integer(min=1), min_length=1, max_length=2))

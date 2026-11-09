@@ -37,9 +37,8 @@ def _validate_band(p, _values, why):
 
 def input_parameters_definition():
     out = arpes_parameters()
-    task = out["TASK"].copy(remove=["CRYS_VEC"], add=[
+    task = out["TASK"].copy(add=[
         out["TASK"]["TASK"].copy(default_value="BAND"),
-        V("CRYS_VECS", False, info="Presence disables primitive crystal vectors for Miller indices."),
     ])
     energy = out["ENERGY"]
     energy.copy_member("NE", type=SetOf(Integer(min=1), min_length=1, max_length=2))

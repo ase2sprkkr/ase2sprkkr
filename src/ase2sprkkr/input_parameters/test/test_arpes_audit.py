@@ -30,6 +30,23 @@ def test_single_k_point_roundtrip():
     assert q.SPEC_EL.NK1() == 1
 
 
+@pytest.mark.parametrize("task", ["ARPES", "AIPES", "BAND", "SPLEED", "CLPES"])
+def test_crystal_vector_flag_matches_native_presence_semantics(task):
+    p = InputParameters.for_task(task)
+    p.CONTROL.POTFIL = "Fe.pot"
+    assert p.TASK.CRYS_VECS() is False
+    assert "CRYS_VEC" not in p.TASK
+    assert "CRYS_VECS" not in p.to_string(validate=True)
+
+    p.TASK.CRYS_VECS = True
+    text = p.to_string(validate=True)
+    assert "CRYS_VECS" in text
+    q = InputParameters.for_task(task)
+    q.read_from_file(io.StringIO(text))
+    assert q.TASK.CRYS_VECS() is True
+    assert q.task_name == task
+
+
 def test_missing_k_count():
     p = parameters()
     p.SPEC_EL.K1.set([1., 0.])
