@@ -3,7 +3,7 @@ import argparse
 import json
 
 import pytest
-from kkrunner import cli
+from kkrunner_cli import main as cli
 from kkrunner.remote import service as remote_service
 from ase2sprkkr_cli.commands import remote
 
@@ -34,3 +34,21 @@ def test_internal_protocol_commands_belong_to_runner(action):
     remote.parser(parser)
     with pytest.raises(SystemExit):
         parser.parse_args([action])
+
+
+def test_parser_loads_without_calculation_or_execution_library():
+    import subprocess
+    import sys
+
+    code = """\
+import sys
+import argparse
+from ase2sprkkr_cli.commands import remote
+p = argparse.ArgumentParser()
+remote.parser(p)
+p.parse_args(["status", "opaque"])
+assert "ase2sprkkr" not in sys.modules
+assert "kkrunner.remote.service" not in sys.modules
+assert "kkrunner.runs.manager" not in sys.modules
+"""
+    subprocess.run([sys.executable, "-c", code], capture_output=True, text=True, check=True)

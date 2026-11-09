@@ -183,9 +183,10 @@ Remote commands for users
    ase2sprkkr remote follow HANDLE
    ase2sprkkr remote cancel HANDLE
 
-These commands act on the host where they run. They delegate to KKRunner and
-supply its protocol version. Internal submit/recovery/acknowledgement and MPI
-commands belong to ``kkrunner remote``. See the
+These commands act on the host where they run and delegate to KKRunner.
+They currently accept a target-side execution handle, not a project run ID.
+Internal submit/recovery/acknowledgement and MPI commands belong to
+``kkrunner``. See the
 `KKRunner command-line guide <https://ase2sprkkr.github.io/kkrunner/command-line.html>`_
 and `recovery guide <https://ase2sprkkr.github.io/kkrunner/persistent-runs.html>`_
 for the generic protocol and lifecycle contract.

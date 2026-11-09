@@ -214,5 +214,5 @@ python -m pip install -e .
 Replace `<path-to-kkrunner>` with the location of your KKRunner checkout.
 A remote target needs KKRunner and SPR-KKR (plus PSI/J for scheduler execution),
 without requiring ASE2SPRKKR merely to execute the calculation.
-Its protocol CLI is `kkrunner remote` (also available as `kkrunner-remote`).
-`ase2sprkkr remote status|follow|cancel` exposes the end-user subset on that host.
+Its protocol CLI is `kkrunner` (for example, `kkrunner status HANDLE`).
+`ase2sprkkr remote status|follow|cancel` exposes the same user commands on that host.

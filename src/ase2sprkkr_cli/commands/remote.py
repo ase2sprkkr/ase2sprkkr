@@ -8,10 +8,10 @@ lazy_parser = True
 
 
 def parser(argument_parser):
-    from kkrunner.cli import user_parser
+    from kkrunner_cli.main import user_parser
     return user_parser(argument_parser)
 
 
 def run(args, global_args):
-    from kkrunner.cli import run as runner_run
+    from kkrunner_cli.main import run as runner_run
     return runner_run(args, global_args)

@@ -74,7 +74,7 @@ def _diagnostic_command(ssh, title, *command):
 
 def _remote_run_diagnostics(ssh, runner):
     """Return diagnostics available through the stateless target service."""
-    status = _ssh_capture(ssh, 'ase2sprkkr', 'remote', 'status', runner.backend_id)
+    status = _ssh_capture(ssh, 'kkrunner', 'status', runner.backend_id)
     if status.returncode:
         return f"Remote status command failed with exit {status.returncode}.\nstdout:\n{status.stdout or '<empty>'}\nstderr:\n{status.stderr or '<empty>'}"
     try:
@@ -132,7 +132,7 @@ def test_remote_executor_runs_psij_slurm_over_ssh(docker_execution_image):
             assert runner.state.value == 'finished'
             assert result.return_code == 0
             assert len(result.iterations) == 2
-            remote_state = json.loads(subprocess.check_output(ssh + ['ase2sprkkr', 'remote', 'status', runner.backend_id], text=True))
+            remote_state = json.loads(subprocess.check_output(ssh + ['kkrunner', 'status', runner.backend_id], text=True))
             assert remote_state['state'] == 'finished'
             assert remote_state['return_code'] == 0
         finally:
