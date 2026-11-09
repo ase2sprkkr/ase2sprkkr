@@ -655,9 +655,9 @@ def test_cli_and_input_autodetection_with_broken_user_schema(tmp_path):
     examples = os.path.join(os.path.dirname(__file__), "..", "examples", "scf.in")
 
     commands = (
-        ([sys.executable, "-m", "ase2sprkkr.tools.ase2sprkkr", "--help"], False),
-        ([sys.executable, "-m", "ase2sprkkr.tools.ase2sprkkr", "run", "--help"], False),
-        ([sys.executable, "-m", "ase2sprkkr.tools.ase2sprkkr", "info", "--task=scf"], False),
+        ([sys.executable, "-m", "ase2sprkkr_cli", "--help"], False),
+        ([sys.executable, "-m", "ase2sprkkr_cli", "run", "--help"], False),
+        ([sys.executable, "-m", "ase2sprkkr_cli", "info", "--task=scf"], False),
         ([sys.executable, "-c", (
             "from ase2sprkkr.input_parameters.input_parameters import InputParameters; "
             "assert 'SCF' in InputParameters.task_registry.names(); "
