@@ -35,6 +35,8 @@ def parser(argument_parser):
         status, follow = group.choices["status"], group.choices["follow"]
     status.add_argument("--status-only", action="store_true",
                         help="Only report backend state, without SCF iteration progress")
+    status.add_argument("--stdout-path",
+                        help="Explicit output path for handles without stream metadata")
     follow.add_argument("--raw", action="store_true",
                         help="Write binary framed stream protocol (including terminal frame)")
     follow.add_argument("--info", action="store_true",
@@ -84,7 +86,7 @@ def _status(args):
     from kkrunner.remote.service import status_remote
     facts = status_remote(args.remote_id)
     if not getattr(args, "status_only", False):
-        path, _ = _stream_paths(args.remote_id)
+        path, _ = _stream_paths(args.remote_id, getattr(args, "stdout_path", None))
         if path is not None:
             last = _scf_progress(path)
             if last is not None:
