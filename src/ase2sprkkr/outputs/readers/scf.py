@@ -318,6 +318,35 @@ class ScfOutputParser(SprKkrOutputParser):
     This class reads and parses the output of the SCF task of the SPR-KKR.
     """
 
+    @staticmethod
+    def iteration_header(line):
+        """Extract numerical values shared by full and incremental SCF parsing."""
+        items = line.split()
+        return {
+            "iteration": int(items[0]),
+            "error": float(items[2]),
+            "b_error": float(items[3]),
+            "energy": {"EF": float(items[5])},
+            "moment": {"spin": float(items[10]), "orbital": float(items[11])},
+        }
+
+    @staticmethod
+    def iteration_footer(line):
+        """Extract total energy and convergence from the ETOT/SCF line."""
+        items = line.split()
+        return float((float(items[1]) * unyt.Ry).to(unyt.eV)), items[5] == "converged"
+
+    @staticmethod
+    def iteration_info(out):
+        """The compact summary produced by the complete SCF parser."""
+        error = fortran_format(out["error"], ":>12e")
+        return (
+            f"Iteration {out['iteration']:>5} error {error} "
+            f"spin moment: {out['moment']['spin']:>13.6e} "
+            f"orbital moment: {out['moment']['orbital']:>13.6e} "
+        )
+
+
     _iteration_event_line = re.compile(
         rb"EMIN   = |^\s*from file:|shape function file not available:|"
         rb"SPRKKR-run for:"
@@ -390,27 +419,17 @@ class ScfOutputParser(SprKkrOutputParser):
                             pass
                     else:
                         break
-                items = line.split()
-                out["iteration"] = int(items[0])
-                out["error"] = float(items[2])
-                out["b_error"] = float(items[3])
-                out["energy"]["EF"] = float(items[5])
-                out["moment"] = {"spin": float(items[10]), "orbital": float(items[11])}
+                summary = self.iteration_header(line)
+                out.update({key: value for key, value in summary.items() if key != "energy"})
+                out["energy"].update(summary["energy"])
                 if duration is not None:
                     out["duration"] = duration
-                line = (await readline(stdout)).split()
-                out["energy"]["ETOT"] = float((float(line[1]) * unyt.Ry).to(unyt.eV))
-                out["converged"] = line[5] == "converged"
+                out["energy"]["ETOT"], out["converged"] = self.iteration_footer(await readline(stdout))
                 section = iterations.add()
                 section.set(out)
 
                 if self.print_info:
-                    error = fortran_format(out["error"], ":>12e")
-                    print(
-                        f"Iteration {out['iteration']:>5} error {error} "
-                        f"spin moment: {out['moment']['spin']:>13.6e} "
-                        f"orbital moment: {out['moment']['orbital']:>13.6e} "
-                    )
+                    print(self.iteration_info(out))
 
             if self.print_info:
                 if not iterations:
@@ -426,6 +445,77 @@ class ScfOutputParser(SprKkrOutputParser):
 
         except EOFError:
             raise Exception("The output ends unexpectedly")
+
+
+class ScfProgressParser(ScfOutputParser):
+    """Incrementally read *completed* iterations from a growing SCF output.
+
+    This lightweight descendant uses the complete parser's numerical extraction
+    and formatting without requiring atomic tables or a final EOF marker.
+    """
+
+    _iteration_summary = re.compile(r"^\s*\d+\s+ERR\s+")
+
+    def __init__(self, on_info=None):
+        super().__init__(print_info=False)
+        self.on_info = on_info
+        self.last_iteration = None
+        self._pending = None
+        self._line_buffer = ""
+
+    def feed(self, text):
+        self._line_buffer += text
+        *lines, self._line_buffer = self._line_buffer.split("\n")
+        for line in lines:
+            self._consume(line)
+
+    def finish(self):
+        """Consume an unterminated final line when the source reaches EOF."""
+        if self._line_buffer:
+            self._consume(self._line_buffer)
+            self._line_buffer = ""
+
+    def _consume(self, line):
+        if self._iteration_summary.match(line):
+            try:
+                self._pending = self.iteration_header(line)
+            except (ValueError, IndexError):
+                self._pending = None
+        elif self._pending is not None and re.match(r"^\s*ETOT\s+", line):
+            try:
+                energy, converged = self.iteration_footer(line)
+            except (ValueError, IndexError):
+                return
+            self._pending["energy"]["ETOT"] = energy
+            self._pending["converged"] = converged
+            self.last_iteration = self._pending
+            self._pending = None
+            if self.on_info is not None:
+                self.on_info(self.iteration_info(self.last_iteration) + "\n")
+
+    @classmethod
+    def latest_from_file(cls, path):
+        """Find the last complete cycle in a possibly growing output file.
+
+        Read backwards in chunks, stopping once a completed cycle is found.
+        A partial current iteration is never mistaken for a completed cycle.
+        """
+        with open(path, "rb") as source:
+            source.seek(0, os.SEEK_END)
+            offset = source.tell()
+            collected = b""
+            while offset:
+                count = min(offset, 65536)
+                offset -= count
+                source.seek(offset)
+                collected = source.read(count) + collected
+                parser = cls()
+                parser.feed(collected.decode("utf8", errors="replace"))
+                if offset == 0:
+                    parser.finish()
+                if parser.last_iteration is not None:
+                    return parser.last_iteration
+        return None
 
 
 class ScfOutputReader(KkrOutputReader):
