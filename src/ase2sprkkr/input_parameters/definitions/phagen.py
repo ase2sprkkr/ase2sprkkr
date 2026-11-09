@@ -16,7 +16,7 @@ class PhagenInputParametersDefinition(InputParametersDefinition):
             files.extend(
                 (
                     resolve_file(directory, f"{potfil}_ex_sprkkr"),
-                    resolve_file(directory, f"{potfil}.only_coulomb"),
+                    resolve_file(directory, f"{potfil}.only_coulomb_new"),
                 )
             )
         return tuple(files)
@@ -46,7 +46,8 @@ def input_parameters_definition():
         info="Export radial potential, charge density and Coulomb potential for PHAGEN/MsSpec.",
         description="Requires an existing non-spin-polarized ASA VWN potential with NT=1, no CPA/NLCPA "
                     "and no thermal fluctuations. Native export runs one Hartree SCF step with NITER=1 "
-                    "and MIX=1 regardless of the input values, writing POTFIL_ex_sprkkr and Coulomb files. "
+                    "and MIX=1 regardless of the input values, writing POTFIL_ex_sprkkr and "
+                    "POTFIL.only_coulomb_new. "
                     "PHAGEN_CALCTYPE is hardcoded EXP; no phase-shift solver is invoked.",
         validators=_validate_phagen,
     )

@@ -57,7 +57,7 @@ def test_phagen_outputs_follow_explicit_potential_name(tmp_path):
 
     assert parameters.output_files(str(tmp_path)) == (
         str(tmp_path / "Fe.pot_ex_sprkkr"),
-        str(tmp_path / "Fe.pot.only_coulomb"),
+        str(tmp_path / "Fe.pot.only_coulomb_new"),
     )
 
 

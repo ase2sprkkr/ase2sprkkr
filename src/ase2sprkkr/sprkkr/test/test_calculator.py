@@ -214,7 +214,7 @@ class TestCalculator:
         assert len(reread.iterations) == 1
 
     @pytest.mark.slow
-    def test_phagen(self, calc_args):
+    def test_phagen(self, calc_args, tmp_path):
         if not _sprkkr_enabled():
             pytest.skip("SPR-KKR execution disabled by DO_NOT_RUN_SPRKKR")
 
@@ -236,9 +236,20 @@ class TestCalculator:
         assert str(atoms.symbols) == str(output.atoms.symbols)
         assert len(output.iterations) == 1
 
+        # PHAGEN's Coulomb export requires a converged potential. The
+        # single-iteration SCF runs above deliberately do not converge.
+        reference = Path(__file__).parents[2] / "potentials" / "examples" / "Au_single_type.pot"
+        converged = tmp_path / "Au_converged.pot"
+        converged.write_bytes(reference.read_bytes())
+        assert Potential.from_file(converged).SCF_INFO.SCFSTATUS() == "CONVERGED"
         calculator.calculate(
             input_parameters="PHAGEN",
-            potential=output.potential_filename,
+            potential=str(converged),
             options={"NKTAB": 30},
         )
-        output.calculator.calculate(input_parameters="PHAGEN", options={"NKTAB": 10})
+        output.calculator.calculate(
+            input_parameters="PHAGEN", potential=str(converged),
+            options={"NKTAB": 10},
+        )
+        assert Path(f"{converged}_ex_sprkkr").is_file()
+        assert Path(f"{converged}.only_coulomb_new").is_file()
