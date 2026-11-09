@@ -17,12 +17,28 @@ description = "Show run status and live output, with SPR-KKR-specific progress r
 lazy_parser = True
 
 
+class _FollowSourceAction(argparse.Action):
+    """Reject persisted IDs with direct stream paths in either argument order."""
+
+    def __call__(self, parser, namespace, values, option_string=None):
+        setattr(namespace, self.dest, values)
+        if namespace.run_id is not None and (
+            namespace.stdout_path is not None or namespace.stderr_path is not None
+        ):
+            raise argparse.ArgumentError(
+                self, "--stdout-path and --stderr-path require --remote-id instead of run_id"
+            )
+
+
 def parser(argument_parser):
     actions = argument_parser.add_subparsers(dest="remote_action", required=True)
 
-    def identity(action):
-        action.add_argument("run_id", nargs="?", help="persistent run ID (default)")
-        action.add_argument(
+    def identity(action, *, run_id_action="store"):
+        source = action.add_mutually_exclusive_group(required=True)
+        source.add_argument(
+            "run_id", nargs="?", action=run_id_action, help="persistent run ID (default)"
+        )
+        source.add_argument(
             "--remote-id", metavar="HANDLE",
             help="use a low-level backend handle instead (no persisted file metadata)",
         )
@@ -35,7 +51,7 @@ def parser(argument_parser):
     )
 
     follow = actions.add_parser("follow", help="observe an existing run's output")
-    identity(follow)
+    identity(follow, run_id_action=_FollowSourceAction)
     follow.add_argument(
         "--raw", action="store_true",
         help="send original binary stream frames rather than decoded text",
@@ -49,18 +65,22 @@ def parser(argument_parser):
         "--from-start", action="store_true",
         help="replay output from the beginning (default: observe new data only)",
     )
-    # Explicit file locations are useful only with legacy/direct handles. A
-    # persisted run obtains them from its authoritative FileManifest.
-    follow.add_argument("--stdout-path", help=argparse.SUPPRESS)
-    follow.add_argument("--stderr-path", help=argparse.SUPPRESS)
+    paths = follow.add_argument_group(
+        "Direct backend stream paths",
+        "Only with --remote-id; persisted runs use their recorded file locations. Both paths may be supplied.",
+    )
+    paths.add_argument(
+        "--stdout-path", action=_FollowSourceAction, help="backend standard-output file"
+    )
+    paths.add_argument(
+        "--stderr-path", action=_FollowSourceAction, help="backend standard-error file"
+    )
 
     cancel = actions.add_parser("cancel", help="cancel an execution")
     identity(cancel)
 
 
 def _identity(args):
-    if bool(args.run_id) == bool(args.remote_id):
-        raise ValueError("Supply a run_id, or --remote-id HANDLE, but not both")
     return args.remote_id if args.remote_id else args.run_id
 
 
@@ -260,8 +280,6 @@ def _follow(args):
                 stdout_path=args.stdout_path, stderr_path=args.stderr_path,
             )
     else:
-        if args.stdout_path or args.stderr_path:
-            raise ValueError("Persisted runs use their FileManifest, not explicit stream paths")
         manager, _ = _manager_and_record(identifier)
 
         def observe(stdout, stderr):

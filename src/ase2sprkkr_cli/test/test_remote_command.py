@@ -31,11 +31,48 @@ def test_command_grammar_is_separate_from_kkrunner():
             _parse(action)
 
 
-def test_requires_exactly_one_identity():
-    with pytest.raises(ValueError, match="Supply a run_id"):
-        remote.run(_parse("status"), None)
-    with pytest.raises(ValueError, match="Supply a run_id"):
-        remote.run(_parse("status", "run-123", "--remote-id", "opaque"), None)
+@pytest.mark.parametrize("action", ["status", "follow", "cancel"])
+@pytest.mark.parametrize("identity", [(), ("run-123", "--remote-id", "opaque")])
+def test_parser_requires_exactly_one_identity(action, identity):
+    with pytest.raises(SystemExit) as error:
+        _parse(action, *identity)
+    assert error.value.code == 2
+
+
+@pytest.mark.parametrize("paths", [
+    ("--stdout-path", "stdout.out"),
+    ("--stderr-path", "stderr.out"),
+    ("--stdout-path", "stdout.out", "--stderr-path", "stderr.out"),
+])
+@pytest.mark.parametrize("paths_first", [False, True])
+def test_stream_paths_require_direct_identity_in_either_argument_order(paths, paths_first):
+    arguments = (*paths, "run-123") if paths_first else ("run-123", *paths)
+    with pytest.raises(SystemExit) as error:
+        _parse("follow", *arguments)
+    assert error.value.code == 2
+
+
+@pytest.mark.parametrize("paths_first", [False, True])
+def test_direct_follow_accepts_both_stream_paths(monkeypatch, paths_first):
+    from kkrunner.remote import service
+
+    calls = []
+    monkeypatch.setattr(service, "follow_remote", lambda *args, **kwargs: calls.append(kwargs))
+    paths = ("--stdout-path", "stdout.out", "--stderr-path", "stderr.out")
+    identity = ("--remote-id", "opaque")
+    arguments = (*paths, *identity) if paths_first else (*identity, *paths)
+    remote.run(_parse("follow", *arguments), None)
+    assert calls[0]["stdout_path"] == "stdout.out"
+    assert calls[0]["stderr_path"] == "stderr.out"
+
+
+def test_invalid_stream_source_is_a_cli_usage_error(capsys):
+    from ase2sprkkr_cli.main import run
+
+    with pytest.raises(SystemExit) as error:
+        run(["remote", "follow", "run-123", "--stdout-path", "stdout.out"])
+    assert error.value.code == -2
+    assert "require --remote-id instead of run_id" in capsys.readouterr().out
 
 
 def _record(*, state="running", filename=None, task="SCF"):
