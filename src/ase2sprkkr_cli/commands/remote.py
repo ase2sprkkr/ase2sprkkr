@@ -115,6 +115,11 @@ class _TextSink:
             self.listener(decoded, self.kind)
 
     def flush(self):
+        # KKRunner invokes flush after each chunk. Do not finalize a decoder
+        # while a multibyte character may still be arriving.
+        pass
+
+    def finish(self):
         remaining = self._decode.decode(b"", final=True)
         if remaining:
             self.listener(remaining, self.kind)
@@ -169,8 +174,10 @@ def _follow(args, global_args):
             stdout_path=out_path, stderr_path=err_path,
         )
     finally:
-        stdout.flush()
-        stderr.flush()
+        stdout.finish()
+        stderr.finish()
+        if info is not None:
+            info.finish()
         for listener in listeners:
             listener.flush()
 
