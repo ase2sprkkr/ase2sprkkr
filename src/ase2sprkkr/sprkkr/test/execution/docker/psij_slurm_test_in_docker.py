@@ -3,13 +3,13 @@
 from tempfile import TemporaryDirectory
 
 from ase.build import bulk
-from kkrunner.client import RunClient
+from kkrunner.client import EndpointClient
 from kkrunner import RunState
 from ase2sprkkr.sprkkr.calculator import SPRKKR
 
 
 def main():
-    executor = RunClient("psij", backend_options={"executor_name": "slurm"})
+    executor = EndpointClient("psij", backend_options={"executor_name": "slurm"})
 
     with TemporaryDirectory(prefix="ase2sprkkr-psij-") as directory:
         calculator = SPRKKR(

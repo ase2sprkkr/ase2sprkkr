@@ -67,12 +67,24 @@ def test_extra_help_only_evaluated_when_formatted():
     assert calls == ["called"]
 
 
-def test_run_arguments_remain_unresolved_until_execution():
+def test_run_arguments_remain_unresolved_until_execution(monkeypatch):
+    # argparse.parse_args() differs across Python versions when a trailing
+    # positional follows an option. Test the actual CLI dispatch contract,
+    # which merges remaining raw options before the command is executed.
     parser = argparse.ArgumentParser()
     run_command.parser(parser)
-    args = parser.parse_args(["potential.pot", "--task", "SCF", "NKTAB=7"])
+    args, remainder = parser.parse_known_args(["potential.pot", "--task", "SCF", "NKTAB=7"])
     assert args.task == "SCF"
-    assert args.options == ["NKTAB=7"]
+    assert args.options + remainder == ["NKTAB=7"]
+
+    from ase2sprkkr_cli.main import run
+
+    received = []
+    monkeypatch.setattr(run_command, "run", lambda args, globals: received.append(args))
+    run(["run", "potential.pot", "--task", "SCF", "NKTAB=7"])
+    assert len(received) == 1
+    assert received[0].task == "SCF"
+    assert received[0].options == ["NKTAB=7"]
 
 
 def test_real_subparser_appends_dynamic_help(monkeypatch, capsys):

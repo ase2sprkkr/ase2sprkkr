@@ -4,7 +4,7 @@ from dataclasses import replace
 
 import pytest
 
-from kkrunner.client import RunClient
+from kkrunner.client import EndpointClient
 from kkrunner.client.pool import ClientPool
 from kkrunner.client.transports import LocalTransport, SshTransport
 from kkrunner.execution import MpiSpec
@@ -19,7 +19,7 @@ from ase2sprkkr.sprkkr.profile import (
 def test_local_profile_uses_direct_backend_and_reuses_client():
     profile = SPRKKRProfile(mpi="auto")
     client = client_from_profile(profile)
-    assert isinstance(client, RunClient)
+    assert isinstance(client, EndpointClient)
     assert client.transport == LocalTransport()
     assert client.backend.name == "direct"
     assert client_from_profile(replace(profile, mpi=8)) is client

@@ -1,4 +1,4 @@
-"""Project-scoped SPR-KKR runs using the KKRunner RunClient/Run lifecycle."""
+"""Project-scoped SPR-KKR runs using the KKRunner EndpointClient/Run lifecycle."""
 
 from dataclasses import replace
 from types import SimpleNamespace

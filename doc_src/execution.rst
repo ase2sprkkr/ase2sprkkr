@@ -132,7 +132,7 @@ the calculator's default profile backend.
 
 Install a compatible released KKRunner on the target, including its Python
 interpreter (by default ``python3``) for SSH remote procedure calls. Execution
-uses ``RunClient`` with ``SshTransport``, not the old ``kkrunner remote``
+uses ``EndpointClient`` with ``SshTransport``, not the old ``kkrunner remote``
 service command. The target needs SPR-KKR and MPI when requested, but not
 ASE2SPRKKR.
 
@@ -219,7 +219,7 @@ for those responsibilities and the
 KKRunner version compatibility
 ------------------------------
 
-Install a released KKRunner distribution that provides the ``RunClient``,
+Install a released KKRunner distribution that provides the ``EndpointClient``,
 transport, backend configuration and project run management interfaces used
 above. The required version range is declared in ``pyproject.toml``.
 The standard CI installation uses that package dependency.

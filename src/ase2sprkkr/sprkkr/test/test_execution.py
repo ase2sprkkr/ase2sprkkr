@@ -6,7 +6,7 @@ from pathlib import Path
 from types import SimpleNamespace
 
 from kkrunner import ExecutionSpec, RunState
-from kkrunner.client import RunClient
+from kkrunner.client import EndpointClient
 from kkrunner.execution import MpiSpec
 from kkrunner.runs import Run
 
@@ -67,7 +67,7 @@ def _local_run(code):
         error_file=str(Path(directory.name) / "run.err"),
         directory=directory.name,
     )
-    runner = Run.create(RunClient(), spec, persistent=False)
+    runner = Run.create(EndpointClient(), spec, persistent=False)
     runner._test_directory = directory
     return runner
 
