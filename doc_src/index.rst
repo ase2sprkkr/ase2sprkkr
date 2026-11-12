@@ -8,6 +8,7 @@ ASE2SPRKKR software package
    :caption: Contents
 
    How to use the package <usage.rst>
+   Extending the CLI with plugins <cli-plugins.rst>
    Crystal symmetry and cell transformations <symmetry.rst>
    Execution, persistence and remote runs <execution.rst>
    More about the package installation <how-to-install.rst>

@@ -33,6 +33,39 @@ class Parser(argparse.ArgumentParser):
         return result
 
 
+def _plugin_warning(message):
+    import sys
+
+    print(f"ase2sprkkr: CLI plugin {message}", file=sys.stderr)
+
+
+def _plugin_packages():
+    """Load packages exposed by installed 'ase2sprkkr:cli' entry points."""
+    from importlib.metadata import entry_points
+
+    try:
+        entries = entry_points()
+        if hasattr(entries, "select"):
+            selected = entries.select(group="ase2sprkkr", name="cli")
+        else:  # Python 3.9's mapping-style entry_points() result
+            selected = (entry for entry in entries.get("ase2sprkkr", ()) if entry.name == "cli")
+    except Exception as exc:
+        _plugin_warning(f"discovery failed: {exc}")
+        return
+
+    # A deterministic order makes conflicts between independently installed
+    # plugins predictable; native commands are always registered first.
+    for entry in sorted(selected, key=lambda entry: entry.value):
+        try:
+            package = entry.load()
+            if not hasattr(package, "__path__") or not hasattr(package, "__name__"):
+                raise TypeError("entry point must expose a Python package")
+        except Exception as exc:
+            _plugin_warning(f"{entry.value!r} could not be loaded: {exc}")
+            continue
+        yield package
+
+
 def run(argv=None):
     parser = Parser(
         description="ASE2SPRKKR tool — command-line interface for ASE2SPRKKR functionalities",
@@ -56,26 +89,76 @@ def run(argv=None):
     aliases = {}
     parsers = {}
     unknowns = {}
-    for discovered in pkgutil.iter_modules(commands.__path__):
-        command = importlib.import_module(f"{commands.__name__}.{discovered.name}")
+    claimed_names = set()
+
+    def register_command(name, command, *, plugin=False, source=None):
         if not hasattr(command, "parser"):
-            continue
-        name = discovered.name.replace("_", "-")
-        modules[name] = command
-        command_aliases = getattr(command, "aliases", None) or []
+            return
+        try:
+            command_aliases = getattr(command, "aliases", None) or []
+            if not isinstance(command_aliases, (list, tuple)):
+                raise TypeError("aliases must be a list or tuple")
+            names = (name, *command_aliases)
+            if any(not isinstance(value, str) or not value or value.startswith("-") for value in names):
+                raise ValueError("command names and aliases must be nonempty strings without a leading '-'")
+            if len(set(names)) != len(names):
+                raise ValueError("command name and aliases must be distinct")
+            conflicts = claimed_names.intersection(names)
+            if conflicts:
+                raise ValueError(f"command name/alias conflicts with an existing command: {', '.join(sorted(conflicts))}")
+            help_text, description = command.help, command.description
+            if not isinstance(help_text, str) or not isinstance(description, str):
+                raise TypeError("help and description must be strings")
+            if not callable(command.parser) or not callable(command.run):
+                raise TypeError("parser and run must be callable")
+        except (AttributeError, TypeError, ValueError) as exc:
+            if not plugin:
+                raise
+            _plugin_warning(f"{source}.{name} skipped: {exc}")
+            return
+
         sub = subs.add_parser(
-            name, help=command.help, aliases=command_aliases,
+            name, help=help_text, aliases=command_aliases,
             formatter_class=argparse.RawDescriptionHelpFormatter,
-            description=command.help + "\n" + command.description,
+            description=help_text + "\n" + description,
         )
         sub.extra_help = getattr(command, "extra_help", None)
-        if not getattr(command, "lazy_parser", False) or name in requested_args:
+        # Native commands retain their existing lazy_parser setting. Third-party
+        # parsers are configured only when requested, keeping unrelated plugin
+        # dependencies out of ordinary CLI invocations and root --help.
+        if (not plugin and not getattr(command, "lazy_parser", False)) or any(
+            value in requested_args for value in names
+        ):
             command.parser(sub)
+        modules[name] = command
         parsers[name] = sub
+        claimed_names.update(names)
         for alias in command_aliases:
             aliases[alias] = name
         if hasattr(command, "unknowns"):
             unknowns[name] = command.unknowns
+
+    for discovered in pkgutil.iter_modules(commands.__path__):
+        command = importlib.import_module(f"{commands.__name__}.{discovered.name}")
+        register_command(discovered.name.replace("_", "-"), command)
+
+    for package in _plugin_packages():
+        try:
+            discovered_modules = list(pkgutil.iter_modules(package.__path__))
+        except Exception as exc:
+            _plugin_warning(f"{package.__name__!r} could not be inspected: {exc}")
+            continue
+        for discovered in discovered_modules:
+            module_name = f"{package.__name__}.{discovered.name}"
+            try:
+                command = importlib.import_module(module_name)
+            except Exception as exc:
+                _plugin_warning(f"{module_name!r} could not be imported: {exc}")
+                continue
+            register_command(
+                discovered.name.replace("_", "-"), command,
+                plugin=True, source=package.__name__,
+            )
 
     if os.environ.get("_ARGCOMPLETE"):
         import argcomplete
