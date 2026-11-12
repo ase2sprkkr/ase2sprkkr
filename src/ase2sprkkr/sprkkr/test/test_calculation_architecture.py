@@ -5,7 +5,7 @@ from pathlib import Path
 from ase.build import bulk
 import pytest
 
-from kkrunner.runs.base import RunState
+from kkrunner.client import EndpointClient
 from ...input_parameters.input_parameters import InputParameters
 from ...input_parameters.task_definition import TaskDefinition
 from ...potentials.potentials import Potential
@@ -19,39 +19,6 @@ from ..profile import SPRKKRProfile
 def fe_bulk():
     # Construct the same lattice once; each calculator receives its own copy.
     return bulk("Fe")
-
-
-class _UnstartedRunner:
-    def __init__(self, spec):
-        self.spec = spec
-        self.state = RunState.NEW
-        self.result = None
-        self.reference = None
-        self.exception = None
-
-    def add_output_listener(self, callback):
-        pass
-
-
-@pytest.fixture(autouse=True)
-def _test_fake_client_compatibility(monkeypatch):
-    """The preparation tests inspect a fake unstarted run, not a real backend."""
-    original = calculation.Run.create
-
-    def create(client, spec, **kwargs):
-        if isinstance(client, _Executor):
-            return client.create_run(spec, callback=kwargs.get("callback"))
-        return original(client, spec, **kwargs)
-
-    monkeypatch.setattr(calculation.Run, "create", staticmethod(create))
-
-
-class _Executor:
-    def resolve_mpi(self, mpi):
-        return mpi
-
-    def create_run(self, spec, callback=None):
-        return _UnstartedRunner(spec)
 
 
 def test_input_parameters_do_not_own_execution():
@@ -93,7 +60,7 @@ def test_unstarted_run_owns_temporary_calculation_directory(fe_bulk):
 
     runner = calculator.create_run(
         directory=False,
-        executor=_Executor(),
+        executor=EndpointClient(),
         empty_spheres=False,
     )
     directory = runner.spec.directory
@@ -118,7 +85,7 @@ def test_temporary_input_and_potential_are_path_backed_until_runner_close(tmp_pa
         input_file=False,
         potential_file=False,
         output_file=False,
-        executor=_Executor(),
+        executor=EndpointClient(),
     )
 
     input_name = runner.spec.input_file.name
@@ -219,7 +186,7 @@ def test_prepared_calculation_constructs_its_runner(tmp_path, fe_bulk):
     runner = prepared.create_run(
         result_context=calculator,
         profile=calculator.profile,
-        executor=_Executor(),
+        executor=EndpointClient(),
     )
 
     assert runner.spec.directory == str(tmp_path)
@@ -317,7 +284,7 @@ def test_reader_file_not_found_is_not_relabelled_as_missing_executable(
         prepared.create_run(
             result_context=calculator,
             profile=calculator.profile,
-            executor=_Executor(),
+            executor=EndpointClient(),
         )
 
     assert prepared.closed
@@ -332,7 +299,7 @@ def test_tracked_run_rejects_directory_deleted_on_client_exit(tmp_path, fe_bulk)
     prepared = calculator.prepare(directory=False)
     directory = Path(prepared.directory)
     with pytest.raises(ValueError, match='persistent calculation directory'):
-        prepared.create_run(profile=SPRKKRProfile(mpi=False), executor=_Executor(), project=manager)
+        prepared.create_run(profile=SPRKKRProfile(mpi=False), executor=EndpointClient(), project=manager)
     assert prepared.closed
     assert not directory.exists()
 
@@ -344,6 +311,6 @@ def test_tracked_run_rejects_temporary_stderr(tmp_path, fe_bulk):
     calculator = SPRKKR(atoms=fe_bulk.copy(), mpi=False, empty_spheres=False)
     prepared = calculator.prepare(directory=tmp_path)
     with pytest.raises(ValueError, match='persistent stderr'):
-        prepared.create_run(profile=SPRKKRProfile(mpi=False), executor=_Executor(),
+        prepared.create_run(profile=SPRKKRProfile(mpi=False), executor=EndpointClient(),
                             project=manager, error_file=False)
     assert prepared.closed
