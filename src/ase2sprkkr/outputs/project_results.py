@@ -129,20 +129,9 @@ def attach_project_run(
             record, f"run is already terminal ({record.state.value})"
         )
 
-    try:
-        process_result = _result_processor_for_record(manager, record)
-    except UnrecoverableProjectResultError as exc:
-        # If execution is already waiting for result reconstruction, failure to
-        # construct the task-owned processor is itself a postprocessing failure.
-        if record.state == RunState.POSTPROCESSING:
-            manager.complete(
-                record,
-                state=RunState.FAILED,
-                message=str(exc),
-                failure_phase=FailurePhase.POSTPROCESSING,
-                artifacts_available=True,
-            )
-        raise
+    # An attach attempt does not own a running processor's lock, so reader
+    # reconstruction failures must not finalize its processing state.
+    process_result = _result_processor_for_record(manager, record)
 
     if retry_download:
         # Resolve the reader first: a construction error must not turn a
@@ -159,7 +148,7 @@ def attach_project_run(
     return manager.attach(
         record,
         process_result=process_result,
-        executor=executor,
+        client=executor,
         callback=completed,
         output_listener=output_listener,
     )
@@ -172,7 +161,7 @@ def retry_project_postprocessing(manager, run):
     # missing definitions must leave the original failure record unchanged.
     processor = _result_processor_for_record(manager, record)
     result = manager.retry_postprocessing(record, processor)
-    # TaskResult provenance belongs to the outputs layer, not ProjectExecutionManager.
+    # TaskResult provenance belongs to the outputs layer, not the generic project manager.
     # Generic processors may return immutable or scalar values.  Only task
     # results carry the optional project provenance attribute.
     from .task_result import TaskResult

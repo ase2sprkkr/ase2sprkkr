@@ -10,7 +10,7 @@ from pathlib import Path
 from uuid import uuid4
 
 import pytest
-from kkrunner.runs import SubmissionNotStarted
+from kkrunner.backends.contracts import SubmissionNotStarted
 
 pytestmark = pytest.mark.skipif(os.environ.get('ASE2SPRKKR_RUN_DOCKER_TESTS') != '1', reason='set ASE2SPRKKR_RUN_DOCKER_TESTS=1 to run Docker integration tests')
 _TEST_SSH_SEED = bytes(range(1, 33))
@@ -74,7 +74,7 @@ def _diagnostic_command(ssh, title, *command):
 
 def _remote_run_diagnostics(ssh, runner):
     """Return diagnostics available through the stateless target service."""
-    status = _ssh_capture(ssh, 'kkrunner', 'status', runner.backend_id)
+    status = _ssh_capture(ssh, '/opt/venv/bin/kkrunner', 'status', '--remote-id', runner.backend_id)
     if status.returncode:
         return f"Remote status command failed with exit {status.returncode}.\nstdout:\n{status.stdout or '<empty>'}\nstderr:\n{status.stderr or '<empty>'}"
     try:
@@ -109,11 +109,11 @@ def test_remote_executor_runs_psij_slurm_over_ssh(docker_execution_image):
             _wait_for_ssh(ssh)
             workdir = tmp / 'calculation'
             workdir.mkdir()
-            profile = SPRKKRProfile(executable_dir='/opt/sprkkr', executable_suffix='', mpi=False, executor='ssh', host='tester@127.0.0.1', local_root=str(tmp), remote_root='/home/tester/ase2sprkkr-runs', ssh_options=ssh_options, psij_backend='slurm')
+            profile = SPRKKRProfile(executable_dir='/opt/sprkkr', executable_suffix='', mpi=False, executor='ssh', host='tester@127.0.0.1', local_root=str(tmp), remote_root='/home/tester/ase2sprkkr-runs', ssh_options=ssh_options, remote_python=('/opt/venv/bin/python3',), backend='psij', psij_backend='slurm')
             calculator = SPRKKR(atoms=bulk('Al'), directory=workdir, profile=profile, empty_spheres=False, print_output=False)
             runner = calculator.create_run(options={'NITER': 2, 'NKTAB': 5, 'NE': 5})
-            assert runner.executor.backend == 'psij'
-            assert runner.executor.backend_options == {'backend': 'slurm', 'url': None}
+            assert runner.client.backend.name == 'psij'
+            assert runner.client.backend.options == {'executor_name': 'slurm', 'url': None}
             try:
                 runner.submit()
             except SubmissionNotStarted as exc:
@@ -121,9 +121,9 @@ def test_remote_executor_runs_psij_slurm_over_ssh(docker_execution_image):
                     _remote_error(exc.__cause__)
                 raise
             assert runner.backend_id is not None
-            assert runner.execution.endpoint.psij_backend == 'slurm'
-            assert runner.execution.endpoint.host == 'tester@127.0.0.1'
-            assert runner.execution.directory.remote == '/home/tester/ase2sprkkr-runs/calculation'
+            assert dict(runner.execution.backend.options)['executor_name'] == 'slurm'
+            assert runner.execution.transport.host == 'tester@127.0.0.1'
+            assert runner.execution.directory.target == '/home/tester/ase2sprkkr-runs/calculation'
             try:
                 result = runner.wait()
             except Exception as exc:
@@ -132,7 +132,7 @@ def test_remote_executor_runs_psij_slurm_over_ssh(docker_execution_image):
             assert runner.state.value == 'finished'
             assert result.return_code == 0
             assert len(result.iterations) == 2
-            remote_state = json.loads(subprocess.check_output(ssh + ['kkrunner', 'status', runner.backend_id], text=True))
+            remote_state = json.loads(subprocess.check_output(ssh + ['/opt/venv/bin/kkrunner', 'status', '--remote-id', runner.backend_id], text=True))
             assert remote_state['state'] == 'finished'
             assert remote_state['return_code'] == 0
         finally:

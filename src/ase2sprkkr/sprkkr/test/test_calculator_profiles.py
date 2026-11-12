@@ -1,8 +1,8 @@
 from types import SimpleNamespace
 
 from ase2sprkkr.configuration import definition
-from kkrunner.backends import ExecutorPool
-from kkrunner.remote import RemoteEndpointExecutor
+from kkrunner.client import RunClient
+from kkrunner.client.transports import SshTransport
 from kkrunner.runs import RunState
 from ase2sprkkr.profiles import ProfilesConfigurationContainer
 from ase2sprkkr.sprkkr import profile as profile_module
@@ -131,48 +131,31 @@ def test_calculate_temporary_override_preserves_calculator_profile(monkeypatch):
     assert calculator.profile == SPRKKRProfile("/calculator", ".calc", 1)
 
 
-def test_ssh_profile_uses_direct_remote_execution_by_default():
-    executor = executor_from_profile(
+def test_ssh_profile_uses_managed_remote_execution_by_default():
+    client = executor_from_profile(
         SPRKKRProfile(executor="ssh", host="user@cluster")
     )
-
-    assert isinstance(executor, RemoteEndpointExecutor)
-    assert executor.backend == "local"
-    assert executor.backend_options == {}
+    assert isinstance(client, RunClient)
+    assert isinstance(client.transport, SshTransport)
+    assert client.backend.name == "process"
 
 
 def test_ssh_profile_can_use_psij_on_target():
-    executor = executor_from_profile(
+    client = executor_from_profile(
         SPRKKRProfile(
-            executor="ssh",
-            host="user@cluster",
-            psij_backend="slurm",
-            psij_url="local://scheduler",
+            executor="ssh", host="user@cluster", backend="psij",
+            psij_backend="slurm", psij_url="local://scheduler",
         )
     )
-
-    assert isinstance(executor, RemoteEndpointExecutor)
-    assert executor.backend == "psij"
-    assert executor.backend_options == {
-        "backend": "slurm",
-        "url": "local://scheduler",
+    assert isinstance(client, RunClient)
+    assert client.backend.name == "psij"
+    assert client.backend.options == {
+        "executor_name": "slurm", "url": "local://scheduler",
     }
 
 
-def test_direct_psij_profile_still_defaults_to_slurm(monkeypatch):
-    captured = {}
-
-    class FakePsijExecutor:
-        def __init__(self, backend, *, url=None):
-            captured.update(backend=backend, url=url)
-
-    monkeypatch.setattr("kkrunner.backends.psij.PsijExecutor", FakePsijExecutor)
-    monkeypatch.setattr(
-        "kkrunner.backends.pool.default_executor_pool",
-        lambda: ExecutorPool(),
-    )
-
-    executor = executor_from_profile(SPRKKRProfile(executor="psij"))
-
-    assert executor is not None
-    assert captured == {"backend": "slurm", "url": None}
+def test_direct_psij_profile_defaults_to_slurm():
+    client = executor_from_profile(SPRKKRProfile(executor="psij"))
+    assert isinstance(client, RunClient)
+    assert client.backend.name == "psij"
+    assert client.backend.options == {"executor_name": "slurm", "url": None}

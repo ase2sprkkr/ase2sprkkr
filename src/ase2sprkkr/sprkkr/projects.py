@@ -4,7 +4,7 @@ from pathlib import Path
 
 from platformdirs import user_state_dir
 
-from kkrunner.projects import Project, ProjectRepository, ProjectExecutionManager
+from kkrunner.projects import Project, ProjectRepository, ProjectRunManager
 from kkrunner import RunStore
 from kkrunner.projects.resolution import resolve_project_manager as _resolve_project_manager
 
@@ -24,7 +24,7 @@ def project_execution_manager(project_repository=None, *, project=None):
     projects = project_repository if project_repository is not None else default_project_repository()
     legacy = Path(user_state_dir("ase2sprkkr")) / "projects"
     parent = Path(user_state_dir("kkrunner")) if projects.directory == legacy else projects.directory.parent
-    return ProjectExecutionManager(
+    return ProjectRunManager(
         project_repository=projects, project=project, store=RunStore(parent / "projects_runs")
     )
 

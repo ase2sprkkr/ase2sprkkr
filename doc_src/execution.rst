@@ -50,7 +50,7 @@ omitting ``project`` does not silently enable global tracking.
    run_id = run.id
    result = run.wait()
 
-The application helper constructs KKRunner's ``ProjectExecutionManager`` using
+The application helper constructs KKRunner's ``ProjectRunManager`` using
 ASE2SPRKKR's storage policy. ``RunManager`` is the distinct project-free KKRunner
 API for clients that supply an explicit ``RunStore``. Use those actual class
 names when extending the application.
@@ -130,14 +130,23 @@ the calculator's default profile backend.
    )
    run = calculator.create_run(profile=profile, project=manager)
 
-Install the same KKRunner release on the target and make ``kkrunner remote``
-available to noninteractive SSH commands. The target needs SPR-KKR and its MPI
-runtime when requested; it does not need ASE2SPRKKR merely to execute its command.
-For remote scheduler execution, set ``psij_backend="slurm"`` and install
-``kkrunner[psij]`` on the target. ``remote_command`` can explicitly select an
-absolute command such as ``["/opt/kkrunner/bin/kkrunner", "remote"]``. It must
-not select the end-user
-``ase2sprkkr remote`` subset as the execution protocol.
+Install a compatible released KKRunner on the target, including its Python
+interpreter (by default ``python3``) for SSH remote procedure calls. Execution
+uses ``RunClient`` with ``SshTransport``, not the old ``kkrunner remote``
+service command. The target needs SPR-KKR and MPI when requested, but not
+ASE2SPRKKR.
+
+The profile field ``executor`` selects the location (``local`` or ``ssh``),
+while ``backend`` independently selects ``direct``, ``process``
+(supervised), or ``psij``. Unspecified backends default to ``direct``
+locally and ``process`` over SSH. Legacy ``executor="psij"`` remains
+a local PSI/J shorthand. For SSH+Slurm, select ``executor="ssh"``,
+``backend="psij"``, ``psij_backend="slurm"`` and install
+``kkrunner[psij]`` on the target.
+
+``remote_python`` supplies the target Python argv (for example
+``["/opt/kkrunner/bin/python3"]``). The old custom ``remote_command``
+must be migrated explicitly to ``remote_python``.
 
 Use a consistent ``filesystem_id`` in profiles that address the same filesystem
 through different host aliases or shared mounts. KKRunner cannot infer that
@@ -206,3 +215,11 @@ implementation-level imports use their defining subpackage modules. See the
 `KKRunner architecture <https://ase2sprkkr.github.io/kkrunner/architecture.html>`_
 for those responsibilities and the
 `API reference <https://ase2sprkkr.github.io/kkrunner/api.html>`_ for current names.
+
+KKRunner version compatibility
+------------------------------
+
+Install a released KKRunner distribution that provides the ``RunClient``,
+transport, backend configuration and project run management interfaces used
+above. The required version range is declared in ``pyproject.toml``.
+The standard CI installation uses that package dependency.

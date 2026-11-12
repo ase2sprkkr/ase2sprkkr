@@ -2,18 +2,19 @@ from types import SimpleNamespace
 
 import pytest
 from kkrunner import ExecutionSpec, RunState, RunStore
-from kkrunner.backends import ExecutorPool
-from kkrunner.backends.endpoint import endpoint_for_executor
 from kkrunner.files import ArtifactAvailabilityState, FileManifest, FileState
-from kkrunner.runs import Executor
-from kkrunner.runs.manager import HistoricalFileMismatchError, RunManager
+from kkrunner.runs.manager import RunManager
+from kkrunner.runs.file_history import HistoricalFileMismatchError
 
 from ase2sprkkr.outputs import project_results
 from ase2sprkkr.outputs.project_results import ProjectResultUnavailableError, load_project_result
 
 
-class _HistoryExecutor(Executor):
-    name = 'history'
+class _HistoryExecutor:
+    supports_result_file_retrieval = True
+
+    def acknowledge(self, run):
+        return None
 
     def __init__(self):
         self.fetch_calls = []
@@ -38,7 +39,7 @@ def _spec(tmp_path):
 
 
 def _manager(store):
-    return RunManager(store, executor_pool=ExecutorPool())
+    return RunManager(store)
 
 
 def _terminal_run(tmp_path, *, state=RunState.FINISHED, return_code=0, task='DOS'):
@@ -49,9 +50,8 @@ def _terminal_run(tmp_path, *, state=RunState.FINISHED, return_code=0, task='DOS
     output_file = tmp_path / 'run.out'
     output_file.write_text('original output')
     executor.output_file = str(output_file)
-    endpoint = endpoint_for_executor(executor)
-    manager.register_executor(executor, endpoint)
-    record = manager.new_record(directory=tmp_path, endpoint=endpoint, files=FileManifest.from_spec(spec), metadata={'ase2sprkkr': {'task': str(task).upper()}}, processing_required=True)
+    manager.client_for = lambda record: executor
+    record = manager.new_record(directory=tmp_path, files=FileManifest.from_spec(spec), metadata={'ase2sprkkr': {'task': str(task).upper()}}, processing_required=True)
     record = manager.store.save(record)
     record = manager.complete(record, state=state, execution=record.execution.submitted('job-1'), return_code=return_code, artifacts_available=True)
     return (manager, executor, record)

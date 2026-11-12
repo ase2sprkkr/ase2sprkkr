@@ -234,9 +234,9 @@ class TaskResult:
         manager retrieves missing files and checks their saved fingerprints.
         """
         if manager is None:
-            from kkrunner.projects.manager import ProjectExecutionManager
+            from ase2sprkkr.sprkkr.projects import project_execution_manager
 
-            manager = ProjectExecutionManager()
+            manager = project_execution_manager()
         from .project_results import load_project_result
         return load_project_result(manager, run)
 
@@ -247,7 +247,7 @@ class TaskResult:
         """Parse a locally available run using its persisted task metadata.
 
         File retrieval and fingerprint verification are handled by
-        :meth:`from_run` through ProjectExecutionManager, not by this method.
+        :meth:`from_run` through the project run manager, not by this method.
         """
         files = record.files
         if files is None:

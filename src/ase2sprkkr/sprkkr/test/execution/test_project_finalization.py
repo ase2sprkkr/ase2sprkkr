@@ -1,3 +1,4 @@
+from dataclasses import replace
 from types import SimpleNamespace
 
 import pytest
@@ -7,6 +8,17 @@ from kkrunner.runs.manager import RunManager
 
 import ase2sprkkr.outputs.project_results as project_output
 from ase2sprkkr.outputs.project_results import UnrecoverableProjectResultError, attach_project_run
+
+
+def _complete_owned_processing(manager, record, **kwargs):
+    """Simulate the ownership claim made by KKRunner's processing lifecycle."""
+    claimed = manager.store.update(
+        record,
+        lambda current: replace(current, processing_attempt="test-processing-attempt"),
+    )
+    return manager.complete(
+        claimed, expected_processing_attempt=claimed.processing_attempt, **kwargs,
+    )
 
 
 def test_unrecoverable_processor_reconstruction_fails_postprocessing(tmp_path):
@@ -19,10 +31,11 @@ def test_unrecoverable_processor_reconstruction_fails_postprocessing(tmp_path):
     with pytest.raises(UnrecoverableProjectResultError):
         attach_project_run(manager, record)
     failed = store.get(record.id)
-    assert failed.state == RunState.FAILED
-    assert failed.failure_phase == FailurePhase.POSTPROCESSING
-    assert failed.finished_at is not None
-    assert "unknown persisted task" in failed.message
+    # Attach never owns the processing lock, so must not change a live
+    # processing attempt into a failed terminal result.
+    assert failed.state == RunState.POSTPROCESSING
+    assert failed.failure_phase is None
+    assert failed.finished_at is None
 
 
 def test_reader_constructor_programming_error_is_not_reclassified(tmp_path, monkeypatch):
@@ -167,8 +180,8 @@ def test_postprocessing_retry_uses_saved_files_without_backend(tmp_path):
     record = manager.transition(
         record, state=RunState.POSTPROCESSING, execution=record.execution.submitted("existing-backend")
     )
-    failed = manager.complete(
-        record,
+    failed = _complete_owned_processing(
+        manager, record,
         state=RunState.FAILED,
         return_code=0,
         failure_phase=FailurePhase.POSTPROCESSING,
@@ -209,8 +222,8 @@ def test_postprocessing_retry_failure_is_retryable_and_does_not_resubmit(tmp_pat
     record = manager.transition(
         record, state=RunState.POSTPROCESSING, execution=record.execution.submitted("existing-backend")
     )
-    failed = manager.complete(
-        record,
+    failed = _complete_owned_processing(
+        manager, record,
         state=RunState.FAILED,
         return_code=0,
         failure_phase=FailurePhase.POSTPROCESSING,
@@ -245,8 +258,8 @@ def test_postprocessing_retry_refuses_modified_or_uncaptured_artifacts(tmp_path)
     record = manager.transition(
         record, state=RunState.POSTPROCESSING, execution=record.execution.submitted("existing-backend")
     )
-    failed = manager.complete(
-        record,
+    failed = _complete_owned_processing(
+        manager, record,
         state=RunState.FAILED,
         return_code=0,
         failure_phase=FailurePhase.POSTPROCESSING,
@@ -275,8 +288,8 @@ def test_postprocessing_retry_reader_constructor_error_does_not_reopen(tmp_path,
     record = manager.transition(
         record, state=RunState.POSTPROCESSING, execution=record.execution.submitted("existing-backend")
     )
-    failed = manager.complete(
-        record,
+    failed = _complete_owned_processing(
+        manager, record,
         state=RunState.FAILED,
         return_code=0,
         failure_phase=FailurePhase.POSTPROCESSING,
@@ -309,8 +322,8 @@ def test_project_retry_attaches_run_provenance(tmp_path, monkeypatch):
     record = manager.transition(
         record, state=RunState.POSTPROCESSING, execution=record.execution.submitted("job-existing")
     )
-    failed = manager.complete(
-        record,
+    failed = _complete_owned_processing(
+        manager, record,
         state=RunState.FAILED,
         return_code=0,
         failure_phase=FailurePhase.POSTPROCESSING,
@@ -347,8 +360,8 @@ def test_project_retry_accepts_immutable_results(tmp_path, monkeypatch, parsed):
     record = manager.transition(
         record, state=RunState.POSTPROCESSING, execution=record.execution.submitted("existing-backend")
     )
-    failed = manager.complete(
-        record,
+    failed = _complete_owned_processing(
+        manager, record,
         state=RunState.FAILED,
         return_code=0,
         failure_phase=FailurePhase.POSTPROCESSING,

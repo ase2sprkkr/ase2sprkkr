@@ -1,108 +1,85 @@
+"""Named profiles compose KKRunner transport, backend, and per-run staging."""
+
+from dataclasses import replace
 from types import SimpleNamespace
 
 import pytest
 
 from ase2sprkkr.configuration import definition
-from kkrunner.backends import ExecutorPool, LocalExecutor
-from kkrunner import RunState
-from kkrunner.remote import SshTransport
-from kkrunner.remote.executor import RemoteEndpointExecutor
-from ase2sprkkr.input_parameters.input_parameters import InputParameters
-from ase2sprkkr.input_parameters.task_definition import TaskDefinition
 from ase2sprkkr.profiles import ProfilesConfigurationContainer
-from ase2sprkkr.sprkkr import calculation as calculation_module
-from ase2sprkkr.sprkkr.calculation import PreparedCalculation
 from ase2sprkkr.sprkkr.profile import (
-    SPRKKRProfile,
-    executor_from_profile,
-    resolve_sprkkr_profile,
+    SPRKKRProfile, executor_from_profile, resolve_sprkkr_profile,
 )
+from kkrunner.client import RunClient
+from kkrunner.client.transports import LocalTransport, SshTransport
 
 
 def fresh_config(monkeypatch):
     monkeypatch.setattr(
-        ProfilesConfigurationContainer,
-        "_ase_config",
-        staticmethod(lambda: None),
+        ProfilesConfigurationContainer, "_ase_config", staticmethod(lambda: None),
     )
     return definition.create_object()
 
 
-def test_named_ssh_profile_resolves_executor_settings(monkeypatch):
+def test_named_ssh_profile_resolves_client_and_staging(monkeypatch):
     configuration = fresh_config(monkeypatch)
-    configuration.profiles.set(
-        {
-            "cluster": {
-                "executor": "ssh",
-                "host": "user@cluster",
-                "local_root": "/home/user/work",
-                "remote_root": "/scratch/user/work",
-                "ssh_options": ["-p", "2222"],
-                "ssh_zstd": True,
-                "remote_command": ["/opt/ase2sprkkr/bin/ase2sprkkr", "remote"],
-                "input_sync": "missing",
-                "output_sync": "always",
-                "mpi": 16,
-            }
-        }
-    )
-
+    configuration.profiles.set({
+        "cluster": {
+            "executor": "ssh", "host": "user@cluster",
+            "backend": "psij", "psij_backend": "slurm",
+            "local_root": "/home/user/work",
+            "remote_root": "/scratch/user/work",
+            "ssh_options": ["-p", "2222"], "ssh_zstd": True,
+            "remote_python": ["python3"],
+            "input_sync": "missing", "output_sync": "always", "mpi": 16,
+        },
+    })
     profile = resolve_sprkkr_profile("cluster", configuration=configuration)
-
     assert profile.executor == "ssh"
     assert profile.host == "user@cluster"
+    assert profile.backend == "psij"
     assert profile.local_root == "/home/user/work"
     assert profile.remote_root == "/scratch/user/work"
     assert profile.ssh_options == ("-p", "2222")
     assert profile.ssh_zstd is True
-    assert profile.remote_command == (
-        "/opt/ase2sprkkr/bin/ase2sprkkr",
-        "remote",
-    )
+    assert profile.remote_python == ("python3",)
     assert profile.input_sync == "missing"
     assert profile.output_sync == "always"
     assert profile.mpi == 16
 
+    client = executor_from_profile(profile)
+    assert isinstance(client, RunClient)
+    assert isinstance(client.transport, SshTransport)
+    assert client.backend.name == "psij"
 
-def test_local_profile_creates_local_executor():
-    executor = executor_from_profile(SPRKKRProfile())
 
-    assert isinstance(executor, LocalExecutor)
+def test_local_profile_uses_direct_client():
+    client = executor_from_profile(SPRKKRProfile())
+    assert isinstance(client, RunClient)
+    assert isinstance(client.transport, LocalTransport)
+    assert client.backend.name == "direct"
 
 
-def test_ssh_profile_creates_endpoint_only_executor():
+def test_ssh_profile_does_not_embed_staging_into_transport(tmp_path):
     profile = SPRKKRProfile(
-        executor="ssh",
-        host="user@cluster",
-        local_root="/home/user/work",
-        remote_root="/scratch/user/work",
-        ssh_options=("-p", "2222"),
-        ssh_zstd=True,
-        remote_command=("custom-ase2sprkkr", "remote"),
-        input_sync="missing",
-        output_sync="always",
+        executor="ssh", host="user@cluster",
+        local_root="/home/user/work", remote_root="/scratch/user/work",
+        ssh_options=("-p", "2222"), ssh_zstd=True,
+        input_sync="missing", output_sync="always",
     )
-
-    executor = executor_from_profile(profile)
-
-    assert isinstance(executor, RemoteEndpointExecutor)
-    assert isinstance(executor.transport, SshTransport)
-    assert executor.transport.host == "user@cluster"
-    assert executor.transport.options == ("-p", "2222")
-    assert executor.transport.zstd is True
-    assert executor.command == ("custom-ase2sprkkr", "remote")
+    client = executor_from_profile(profile)
+    assert client.transport == SshTransport(
+        "user@cluster", options=("-p", "2222"), zstd=True
+    )
     input_file = SimpleNamespace(name="/home/user/work/test.inp")
     spec = profile.create_execution(
-        "kkrscf",
-        input_file,
-        object(),
-        "/home/user/work",
-        mpi_supported=True,
+        "kkrscf", input_file, "/home/user/work/out",
+        "/home/user/work", mpi_supported=True,
     )
-    assert spec.launch.local_root == "/home/user/work"
-    assert spec.launch.remote_root == "/scratch/user/work"
-    assert spec.launch.input_sync == "missing"
-    assert spec.launch.output_sync == "always"
+    assert spec.staging.local_root == "/home/user/work"
+    assert spec.staging.remote_root == "/scratch/user/work"
+    assert spec.staging.input_sync == "missing"
+    assert spec.staging.output_sync == "always"
 
 
 def test_ssh_profile_requires_host():
@@ -110,105 +87,31 @@ def test_ssh_profile_requires_host():
         executor_from_profile(SPRKKRProfile(executor="ssh"))
 
 
-def test_psij_profile_creates_configured_executor(monkeypatch):
-    created = []
-
-    class FakePsijExecutor:
-        def __init__(self, backend, *, url=None):
-            self.backend = backend
-            self.url = url
-            created.append((backend, url))
-
-    monkeypatch.setattr("kkrunner.backends.psij.PsijExecutor", FakePsijExecutor)
-    monkeypatch.setattr(
-        "kkrunner.backends.pool.default_executor_pool",
-        lambda: ExecutorPool(),
-    )
-
-    executor = executor_from_profile(
-        SPRKKRProfile(
-            executor="psij",
-            psij_backend="slurm",
-            psij_url="local://scheduler",
-        )
-    )
-
-    assert isinstance(executor, FakePsijExecutor)
-    assert created == [("slurm", "local://scheduler")]
+def test_psij_profile_creates_configured_backend():
+    client = executor_from_profile(SPRKKRProfile(
+        executor="psij", psij_backend="slurm", psij_url="local://scheduler",
+    ))
+    assert isinstance(client.transport, LocalTransport)
+    assert client.backend.name == "psij"
+    assert client.backend.options == {
+        "executor_name": "slurm", "url": "local://scheduler",
+    }
 
 
 def test_unknown_runtime_executor_is_rejected():
-    with pytest.raises(ValueError, match="unsupported execution endpoint"):
+    with pytest.raises(ValueError, match="Unknown execution location"):
         executor_from_profile(SPRKKRProfile(executor="custom"))
 
 
-def test_profile_executor_is_selected_before_mpi_resolution(monkeypatch, tmp_path):
-    parameters = InputParameters.create("DOS")
-    parameters.CONTROL.DATASET = "test"
-    parameters.CONTROL.POTFIL = "test.pot"
-    backend_runner = SimpleNamespace(
-        state=RunState.NEW,
-        result=object(),
-        reference=None,
-        exception=None,
-        add_output_listener=lambda callback: None,
+def test_mpi_intent_does_not_change_pooled_client(tmp_path):
+    profile = SPRKKRProfile(mpi=8)
+    one = executor_from_profile(profile)
+    other = executor_from_profile(replace(profile, mpi=16))
+    assert one is other
+    path = tmp_path / "run.inp"
+    path.write_text("input")
+    spec = profile.create_execution(
+        "kkrscf", path, tmp_path / "run.out", tmp_path, mpi_supported=True,
     )
-    calls = []
-
-    class FakeExecutor:
-        def resolve_mpi(self, value):
-            calls.append(("resolve_mpi", value))
-            return False
-
-        def create_run(self, spec, callback=None):
-            calls.append(("create_run", spec.argv))
-            return backend_runner
-
-    fake_executor = FakeExecutor()
-    monkeypatch.setattr(
-        calculation_module,
-        "executor_from_profile",
-        lambda profile: calls.append(("factory", profile.executor)) or fake_executor,
-    )
-    monkeypatch.setattr(
-        TaskDefinition,
-        "output_reader",
-        lambda self, **kwargs: SimpleNamespace(print_output=False),
-    )
-
-    profile = SPRKKRProfile(executor="ssh", host="cluster", mpi=8)
-    # Neither stream is read or written: the mocked executor only inspects
-    # the execution specification. Avoid filesystem I/O for this ordering test.
-    closed = []
-    input_file = SimpleNamespace(
-        name=str(tmp_path / "test.inp"), close=lambda: closed.append("input"),
-    )
-    output_file = SimpleNamespace(
-        name=str(tmp_path / "test.out"), close=lambda: closed.append("output"),
-    )
-    prepared = SimpleNamespace(
-        input_parameters=parameters,
-        input_file=input_file,
-        potential_file=None,
-        output_file=output_file,
-        directory=str(tmp_path),
-        close=lambda: (input_file.close(), output_file.close()),
-    )
-
-    result = PreparedCalculation.create_run(
-        prepared,
-        result_context=SimpleNamespace(directory=str(tmp_path)),
-        profile=profile,
-        error_file=True,  # Stderr policy is tested separately; avoid opening it.
-    )
-    try:
-        assert result.result is None  # Postprocessing starts only after submit
-        assert calls[0] == ("factory", "ssh")
-        assert calls[1] == ("resolve_mpi", 8)
-        assert calls[2][0] == "create_run"
-    finally:
-        result.close()
-
-    assert closed == ["input", "output"]
-    assert not (tmp_path / "test.inp").exists()
-    assert not (tmp_path / "test.out").exists()
+    assert spec.mpi.required
+    assert spec.mpi.process_count == 8

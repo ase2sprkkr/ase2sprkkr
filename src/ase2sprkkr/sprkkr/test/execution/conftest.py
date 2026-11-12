@@ -4,11 +4,10 @@ import shutil
 import subprocess
 import tempfile
 from dataclasses import dataclass
-from importlib.metadata import version
 from pathlib import Path
 
 import pytest
-from kkrunner.backends import pool as execution_pool
+from kkrunner.client import pool as execution_pool
 
 
 @dataclass(frozen=True)
@@ -32,15 +31,15 @@ def _package_mount_root() -> Path:
 
 
 @pytest.fixture(autouse=True)
-def isolated_default_executor_pool():
+def isolated_default_client_pool():
     """Keep the process-wide executor pool from leaking between test cases."""
-    previous = execution_pool._DEFAULT_EXECUTOR_POOL
-    execution_pool._DEFAULT_EXECUTOR_POOL = execution_pool.ExecutorPool()
+    previous = execution_pool._DEFAULT_CLIENT_POOL
+    execution_pool._DEFAULT_CLIENT_POOL = execution_pool.ClientPool()
     try:
         yield
     finally:
-        execution_pool._DEFAULT_EXECUTOR_POOL.close()
-        execution_pool._DEFAULT_EXECUTOR_POOL = previous
+        execution_pool._DEFAULT_CLIENT_POOL.close()
+        execution_pool._DEFAULT_CLIENT_POOL = previous
 
 
 @pytest.fixture(scope="session")
@@ -53,13 +52,12 @@ def docker_execution_image():
     repository = _package_mount_root()
     source_context = Path(__file__).with_name("docker")
     image = "ase2sprkkr-execution-test"
-    kkrunner_version = version("kkrunner")
     with tempfile.TemporaryDirectory(prefix="ase2sprkkr-docker-") as temporary:
         context = Path(temporary)
         shutil.copytree(source_context, context, dirs_exist_ok=True,
                         ignore=shutil.ignore_patterns("__pycache__"))
         subprocess.run(
-            [docker, "build", "--build-arg", f"KKRUNNER_VERSION={kkrunner_version}", "-t", image, str(context)],
+            [docker, "build", "-t", image, str(context)],
             check=True,
         )
     return DockerExecutionImage(docker=docker, repository=repository, image=image)

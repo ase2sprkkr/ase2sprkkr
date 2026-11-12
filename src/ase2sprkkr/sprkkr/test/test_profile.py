@@ -9,7 +9,6 @@ from ase2sprkkr.configuration_yaml import (
     save_configuration_yaml,
 )
 from ase2sprkkr.sprkkr.profile import (
-    ExecutorEndpoint,
     LaunchParameters,
     SPRKKRProfile,
     profile_from_ase_command,
@@ -85,7 +84,8 @@ def test_runtime_profile_splits_endpoint_from_launch_parameters():
         executor="ssh",
         host="cluster.example",
         ssh_options=("-p", "2222"),
-        remote_command=("python", "-m", "kkrunner", "remote"),
+        remote_python=("python3",),
+        backend="psij",
         psij_backend="slurm",
         psij_url="ssh://scheduler",
         executable_dir="/opt/sprkkr",
@@ -97,13 +97,14 @@ def test_runtime_profile_splits_endpoint_from_launch_parameters():
         output_sync="always",
     )
 
-    assert profile.endpoint == ExecutorEndpoint(
-        executor="ssh",
-        host="cluster.example",
-        ssh_options=("-p", "2222"),
-        remote_command=("python", "-m", "kkrunner", "remote"),
-        psij_backend="slurm",
-        psij_url="ssh://scheduler",
+    from kkrunner.client.transports import SshTransport
+    from kkrunner.backends.config import BackendConfig
+    assert profile.transport == SshTransport(
+        host="cluster.example", options=("-p", "2222"),
+        python_command=("python3",),
+    )
+    assert profile.backend_config == BackendConfig(
+        "psij", {"executor_name": "slurm", "url": "ssh://scheduler"},
     )
     assert profile.launch_parameters == LaunchParameters(
         executable_dir="/opt/sprkkr",
@@ -133,7 +134,8 @@ def test_profiles_with_same_backend_share_endpoint_identity():
         input_sync="never",
     )
 
-    assert first.endpoint == second.endpoint
+    assert first.transport == second.transport
+    assert first.backend_config == second.backend_config
     assert first.launch_parameters != second.launch_parameters
 
 

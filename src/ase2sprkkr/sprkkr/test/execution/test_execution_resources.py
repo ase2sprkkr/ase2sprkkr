@@ -4,6 +4,7 @@ from types import SimpleNamespace
 import pytest
 from kkrunner.runs.base import ExecutionOutcome, ResourceOwnedRunner, RunState, SubmissionNotStarted
 
+from ase2sprkkr.sprkkr import calculation as calculation_module
 from ase2sprkkr.sprkkr.calculation import PreparedCalculation
 from ase2sprkkr.sprkkr.profile import SPRKKRProfile
 
@@ -97,24 +98,31 @@ class _Executor:
         return _Runner(callback, submit_error=self.submit_error, spec=spec)
 
 
-def _create_run(executor, input_file, output_file):
+def _create_run(monkeypatch, executor, input_file, output_file):
+    # Focus this test on the adapter's resource ownership; the real lifecycle
+    # and backend integration are covered by the project execution tests.
+    monkeypatch.setattr(
+        calculation_module.Run, "create",
+        lambda client, spec, *, process_result, callback, **kwargs:
+            executor.create_run(spec, callback=callback),
+    )
     prepared = _Prepared(input_file, output_file)
     return prepared.create_run(result_context=None, profile=SPRKKRProfile(mpi=False), executor=executor)
 
 
-def test_files_are_closed_when_runner_creation_fails():
+def test_files_are_closed_when_runner_creation_fails(monkeypatch):
     input_file = io.BytesIO(b'input')
     output_file = io.BytesIO()
     with pytest.raises(RuntimeError, match='factory failed'):
-        _create_run(_Executor(factory_error=RuntimeError('factory failed')), input_file, output_file)
+        _create_run(monkeypatch, _Executor(factory_error=RuntimeError('factory failed')), input_file, output_file)
     assert input_file.closed
     assert output_file.closed
 
 
-def test_files_are_closed_when_submission_fails_before_start():
+def test_files_are_closed_when_submission_fails_before_start(monkeypatch):
     input_file = io.BytesIO(b'input')
     output_file = io.BytesIO()
-    runner = _create_run(_Executor(submit_error=SubmissionNotStarted('staging failed')), input_file, output_file)
+    runner = _create_run(monkeypatch, _Executor(submit_error=SubmissionNotStarted('staging failed')), input_file, output_file)
     assert isinstance(runner, ResourceOwnedRunner)
     assert not input_file.closed
     assert not output_file.closed
@@ -124,21 +132,20 @@ def test_files_are_closed_when_submission_fails_before_start():
     assert output_file.closed
 
 
-def test_completion_releases_files_without_wait():
+def test_completion_releases_files_without_wait(monkeypatch):
     input_file = io.BytesIO(b'input')
     output_file = io.BytesIO()
-    runner = _create_run(_Executor(), input_file, output_file)
+    runner = _create_run(monkeypatch, _Executor(), input_file, output_file)
     runner.submit()
-    assert runner._runner._done.wait(3)
     assert runner.state == RunState.FINISHED
     assert input_file.closed
     assert output_file.closed
 
 
-def test_unstarted_runner_can_release_owned_files_explicitly():
+def test_unstarted_runner_can_release_owned_files_explicitly(monkeypatch):
     input_file = io.BytesIO(b'input')
     output_file = io.BytesIO()
-    runner = _create_run(_Executor(), input_file, output_file)
+    runner = _create_run(monkeypatch, _Executor(), input_file, output_file)
     runner.close()
     runner.close()
     assert input_file.closed
