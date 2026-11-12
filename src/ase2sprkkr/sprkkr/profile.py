@@ -15,7 +15,7 @@ from typing import Any
 from ..configuration import config
 from kkrunner import ExecutionSpec
 from kkrunner.backends.config import BackendConfig
-from kkrunner.client import RunClient
+from kkrunner.client import EndpointClient
 from kkrunner.client.pool import default_client_pool
 from kkrunner.client.staging import StagingSpec
 from kkrunner.client.transports import LocalTransport, SshTransport
@@ -311,7 +311,7 @@ def _configured_profile(profile, configuration):
 
 def create_client_from_profile(profile: SPRKKRProfile):
     """Create a client combining independent transport and backend configuration."""
-    return RunClient.from_config(profile.transport, profile.backend_config)
+    return EndpointClient.from_config(profile.transport, profile.backend_config)
 
 
 def client_from_profile(profile: SPRKKRProfile):
@@ -320,7 +320,7 @@ def client_from_profile(profile: SPRKKRProfile):
 
 
 # Retain the calculator's existing executor= argument and import paths while
-# treating its value as a KKRunner RunClient from now on.
+# treating its value as a KKRunner EndpointClient from now on.
 create_executor_from_profile = create_client_from_profile
 executor_from_profile = client_from_profile
 
