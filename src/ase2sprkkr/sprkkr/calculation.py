@@ -13,7 +13,7 @@ from dataclasses import dataclass
 
 from ..common.file_utils import Directory
 from ..common.output_printing import output_listeners
-from kkrunner.runs.base import ExecutionResources, ResourceOwnedRunner
+from kkrunner.runs.base import ExecutionResources
 from .projects import resolve_project_manager
 from kkrunner.runs import Run
 from ..input_parameters.input_parameters import InputParameters
@@ -447,8 +447,7 @@ def _create_sprkkr_run(
             if manager is not None and out is not None:
                 out.run_record = manager.store.get(runner.id)
             flush_listeners()
-            if runner.state.is_terminal:
-                resources.close(suppress_errors=True)
+            # Run owns and releases ExecutionResources after completion.
             if callback:
                 callback(out)
 
@@ -464,15 +463,19 @@ def _create_sprkkr_run(
             persistent=manager if manager is not None else False,
             process_result=process_result,
             callback=finalized,
+            owned_resources=resources,
             **record_options,
         )
-        for listener in listeners:
-            runner.add_output_listener(listener)
-        if read_callback:
-            runner.add_output_listener(read_callback)
-
-        runner = ResourceOwnedRunner(runner, resources)
         handed_off = True
+        try:
+            for listener in listeners:
+                runner.add_output_listener(listener)
+            if read_callback:
+                runner.add_output_listener(read_callback)
+        except BaseException:
+            # An unstarted Run can release resources it already owns.
+            runner.close()
+            raise
         return runner
     finally:
         if not handed_off:

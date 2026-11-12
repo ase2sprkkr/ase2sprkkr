@@ -4,7 +4,8 @@ import pytest
 from kkrunner import ExecutionSpec, RunState, RunStore
 from kkrunner.files import ArtifactAvailabilityState, FileManifest, FileState
 from kkrunner.runs.manager import RunManager
-from kkrunner.runs.file_history import HistoricalFileMismatchError
+from kkrunner.runs import HistoricalFileMismatchError
+from kkrunner.client.pool import ClientPool
 
 from ase2sprkkr.outputs import project_results
 from ase2sprkkr.outputs.project_results import ProjectResultUnavailableError, load_project_result
@@ -38,20 +39,21 @@ def _spec(tmp_path):
     return ExecutionSpec(argv=(), directory=str(tmp_path), input_file=str(input_file), output_file=str(output_file), input_files=(str(input_file),), output_files=(str(output_file),))
 
 
-def _manager(store):
-    return RunManager(store)
+def _manager(store, *, client_pool=None):
+    return RunManager(store, client_pool=client_pool)
 
 
 def _terminal_run(tmp_path, *, state=RunState.FINISHED, return_code=0, task='DOS'):
     store = RunStore(tmp_path / 'runs')
-    manager = _manager(store)
+    client_pool = ClientPool()
+    manager = _manager(store, client_pool=client_pool)
     executor = _HistoryExecutor()
     spec = _spec(tmp_path)
     output_file = tmp_path / 'run.out'
     output_file.write_text('original output')
     executor.output_file = str(output_file)
-    manager.client_for = lambda record: executor
     record = manager.new_record(directory=tmp_path, files=FileManifest.from_spec(spec), metadata={'ase2sprkkr': {'task': str(task).upper()}}, processing_required=True)
+    client_pool.get((record.execution.transport, record.execution.backend), lambda: executor)
     record = manager.store.save(record)
     record = manager.complete(record, state=state, execution=record.execution.submitted('job-1'), return_code=return_code, artifacts_available=True)
     return (manager, executor, record)

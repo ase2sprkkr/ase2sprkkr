@@ -1,25 +1,40 @@
-import io
+"""Prepared SPR-KKR resources belong to the generic Run lifecycle."""
+
+import sys
+from threading import Event
 from types import SimpleNamespace
 
 import pytest
-from kkrunner.runs.base import ExecutionOutcome, ResourceOwnedRunner, RunState, SubmissionNotStarted
 
-from ase2sprkkr.sprkkr import calculation as calculation_module
+from kkrunner import RunState
+from kkrunner.backends.contracts import SubmissionNotStarted
+from kkrunner.client import EndpointClient
+from kkrunner.runs import Run
+
 from ase2sprkkr.sprkkr.calculation import PreparedCalculation
 from ase2sprkkr.sprkkr.profile import SPRKKRProfile
 
 
 class _Task:
-    name = 'SCF'
-    executable = 'sprkkr'
+    name = "SCF"
+    # Python reads the prepared input file from stdin, so this exercises the
+    # real direct runner without requiring an installed SPR-KKR executable.
+    executable = sys.executable
     mpi = False
 
     def output_reader(self, **kwargs):
-        return SimpleNamespace(read_from_file=lambda *args, **options: SimpleNamespace(return_code=options.get('return_code')))
+        return SimpleNamespace(
+            read_from_file=lambda *args, **options: SimpleNamespace(
+                return_code=options.get("return_code"),
+            ),
+        )
 
 
 class _Parameters:
-    CONTROL = SimpleNamespace(POTFIL=SimpleNamespace(result=None), DATASET=SimpleNamespace(result=None))
+    CONTROL = SimpleNamespace(
+        POTFIL=SimpleNamespace(result=None),
+        DATASET=SimpleNamespace(result=None),
+    )
 
     def task_definition_required(self):
         return _Task()
@@ -37,116 +52,88 @@ class _Parameters:
 class _Prepared:
     create_run = PreparedCalculation.create_run
 
-    def __init__(self, input_file, output_file):
+    def __init__(self, input_file, output_file, directory):
         self.input_parameters = _Parameters()
         self.input_file = input_file
         self.potential_file = None
         self.output_file = output_file
-        self.directory = '.'
+        self.directory = str(directory)
         self.closed = False
 
     def close(self):
-        if self.closed:
-            return
-        self.closed = True
-        self.input_file.close()
-        self.output_file.close()
+        if not self.closed:
+            self.closed = True
+            self.input_file.close()
+            self.output_file.close()
 
 
-class _Runner:
-    exception = None
-
-    def __init__(self, callback=None, *, submit_error=None, spec=None):
-        self.callback = callback
-        self.submit_error = submit_error
-        self._state = RunState.NEW
-        self.result = ExecutionOutcome(input_file=None if spec is None else spec.input_file, output_file=None if spec is None else spec.output_file, error_file=None if spec is None else spec.error_file, return_code=0)
-
-    @property
-    def state(self):
-        return self._state
-
-    def submit(self):
-        if self.submit_error is not None:
-            raise self.submit_error
-        self._state = RunState.FINISHED
-        if self.callback:
-            self.callback(self.result)
-
-    def wait(self):
-        return self.result
-
-    def cancel(self):
-        self._state = RunState.CANCELLED
-
-    def add_output_listener(self, callback):
-        pass
-
-    def add_output_error_listener(self, callback):
-        pass
+def _prepared(tmp_path):
+    input_path = tmp_path / "run.inp"
+    input_path.write_text("print('ok')\n")
+    input_file = input_path.open("rb")
+    output_file = (tmp_path / "run.out").open("w+b")
+    return _Prepared(input_file, output_file, tmp_path)
 
 
-class _Executor:
-
-    def __init__(self, *, factory_error=None, submit_error=None):
-        self.factory_error = factory_error
-        self.submit_error = submit_error
-
-    def create_run(self, spec, callback=None):
-        if self.factory_error is not None:
-            raise self.factory_error
-        return _Runner(callback, submit_error=self.submit_error, spec=spec)
-
-
-def _create_run(monkeypatch, executor, input_file, output_file):
-    # Focus this test on the adapter's resource ownership; the real lifecycle
-    # and backend integration are covered by the project execution tests.
-    monkeypatch.setattr(
-        calculation_module.Run, "create",
-        lambda client, spec, *, process_result, callback, **kwargs:
-            executor.create_run(spec, callback=callback),
+def _create_run(prepared, *, executor=None, callback=None):
+    return prepared.create_run(
+        result_context=None,
+        profile=SPRKKRProfile(mpi=False),
+        executor=executor or EndpointClient(),
+        callback=callback,
     )
-    prepared = _Prepared(input_file, output_file)
-    return prepared.create_run(result_context=None, profile=SPRKKRProfile(mpi=False), executor=executor)
 
 
-def test_files_are_closed_when_runner_creation_fails(monkeypatch):
-    input_file = io.BytesIO(b'input')
-    output_file = io.BytesIO()
-    with pytest.raises(RuntimeError, match='factory failed'):
-        _create_run(monkeypatch, _Executor(factory_error=RuntimeError('factory failed')), input_file, output_file)
-    assert input_file.closed
-    assert output_file.closed
+def test_files_are_closed_when_runner_creation_fails(tmp_path, monkeypatch):
+    prepared = _prepared(tmp_path)
+    executor = EndpointClient()
+
+    def fail_factory(*args, **kwargs):
+        raise RuntimeError("factory failed")
+
+    monkeypatch.setattr(executor, "create_run_parts", fail_factory)
+    with pytest.raises(RuntimeError, match="factory failed"):
+        _create_run(prepared, executor=executor)
+    assert prepared.closed
+    assert prepared.input_file.closed
+    assert prepared.output_file.closed
 
 
-def test_files_are_closed_when_submission_fails_before_start(monkeypatch):
-    input_file = io.BytesIO(b'input')
-    output_file = io.BytesIO()
-    runner = _create_run(monkeypatch, _Executor(submit_error=SubmissionNotStarted('staging failed')), input_file, output_file)
-    assert isinstance(runner, ResourceOwnedRunner)
-    assert not input_file.closed
-    assert not output_file.closed
-    with pytest.raises(SubmissionNotStarted, match='staging failed'):
+def test_files_are_closed_when_submission_fails_before_start(tmp_path, monkeypatch):
+    prepared = _prepared(tmp_path)
+    runner = _create_run(prepared)
+    assert isinstance(runner, Run)
+    assert not prepared.closed
+
+    def fail_submission():
+        raise SubmissionNotStarted("staging failed")
+
+    monkeypatch.setattr(runner._job, "submit", fail_submission)
+    with pytest.raises(SubmissionNotStarted, match="staging failed"):
         runner.submit()
-    assert input_file.closed
-    assert output_file.closed
+    assert runner.state is RunState.FAILED
+    assert prepared.closed
+    assert prepared.input_file.closed
+    assert prepared.output_file.closed
 
 
-def test_completion_releases_files_without_wait(monkeypatch):
-    input_file = io.BytesIO(b'input')
-    output_file = io.BytesIO()
-    runner = _create_run(monkeypatch, _Executor(), input_file, output_file)
+def test_completion_releases_files_without_wait(tmp_path):
+    prepared = _prepared(tmp_path)
+    completed = Event()
+    runner = _create_run(prepared, callback=lambda result: completed.set())
     runner.submit()
-    assert runner.state == RunState.FINISHED
-    assert input_file.closed
-    assert output_file.closed
+    assert completed.wait(10), "completion callback was not called"
+    assert runner.state is RunState.FINISHED
+    assert prepared.closed
+    assert prepared.input_file.closed
+    assert prepared.output_file.closed
 
 
-def test_unstarted_runner_can_release_owned_files_explicitly(monkeypatch):
-    input_file = io.BytesIO(b'input')
-    output_file = io.BytesIO()
-    runner = _create_run(monkeypatch, _Executor(), input_file, output_file)
+def test_unstarted_runner_can_release_owned_files_explicitly(tmp_path):
+    prepared = _prepared(tmp_path)
+    runner = _create_run(prepared)
     runner.close()
     runner.close()
-    assert input_file.closed
-    assert output_file.closed
+    assert prepared.closed
+    assert prepared.input_file.closed
+    assert prepared.output_file.closed
