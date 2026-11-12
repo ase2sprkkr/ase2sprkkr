@@ -1,13 +1,13 @@
 """Project-only persistence and per-run execution selection contracts."""
 from kkrunner import RunStore
-from kkrunner.projects import ProjectExecutionManager, ProjectRepository
+from kkrunner.projects import ProjectRunManager, ProjectRepository
 
 from ase2sprkkr.sprkkr.calculator import SPRKKR
 from ase2sprkkr.sprkkr.profile import SPRKKRProfile
 
 
 def _manager(tmp_path):
-    return ProjectExecutionManager(RunStore(tmp_path / 'runs'), project_repository=ProjectRepository(tmp_path / 'projects'))
+    return ProjectRunManager(RunStore(tmp_path / 'runs'), project_repository=ProjectRepository(tmp_path / 'projects'))
 
 
 def test_calculator_forwards_default_project_and_executor(tmp_path, monkeypatch):

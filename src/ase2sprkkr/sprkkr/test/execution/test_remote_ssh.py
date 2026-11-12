@@ -1,4 +1,4 @@
-"""Explicit Docker/SSH integration test for RemoteEndpointExecutor."""
+"""Explicit Docker/SSH integration test for RunClient."""
 import os
 import posixpath
 import shutil
@@ -10,7 +10,7 @@ from threading import Event
 from uuid import uuid4
 
 import pytest
-from kkrunner.runs import SubmissionNotStarted
+from kkrunner.backends.contracts import SubmissionNotStarted
 
 pytestmark = pytest.mark.skipif(os.environ.get('ASE2SPRKKR_RUN_DOCKER_TESTS') != '1', reason='set ASE2SPRKKR_RUN_DOCKER_TESTS=1 to run Docker integration tests')
 
@@ -47,9 +47,10 @@ def _wait_for_live_output(runner, output_seen, output, timeout=30):
 
 def test_remote_executor_over_ssh(docker_execution_image):
     from ase.build import bulk
-    from kkrunner.backends import ExecutorPool
-    from kkrunner.projects import ProjectExecutionManager, ProjectRepository
-    from kkrunner.remote import RemoteEndpointExecutor, SshTransport
+    from kkrunner.client import RunClient
+    from kkrunner.client.pool import ClientPool
+    from kkrunner.client.transports import SshTransport
+    from kkrunner.projects import ProjectRunManager, ProjectRepository
 
     from ase2sprkkr.outputs.project_results import load_project_result
     from ase2sprkkr.sprkkr.calculator import SPRKKR
@@ -71,11 +72,11 @@ def test_remote_executor_over_ssh(docker_execution_image):
             options = ('-i', str(key), '-p', port, '-o', 'StrictHostKeyChecking=no', '-o', 'UserKnownHostsFile=/dev/null')
             ssh = ['ssh', *options, 'tester@127.0.0.1']
             _wait_for_ssh(ssh)
-            executor = RemoteEndpointExecutor(SshTransport('tester@127.0.0.1', options=options))
+            executor = RunClient('process', transport=SshTransport('tester@127.0.0.1', options=options, python_command=('/opt/venv/bin/python3',)))
             profile = SPRKKRProfile(executable_dir='/opt/sprkkr', executable_suffix='', mpi=False, local_root=tmp, remote_root='/home/tester/ase2sprkkr-runs')
             projects = ProjectRepository(tmp / 'projects')
             project = projects.create('SSH integration')
-            manager = ProjectExecutionManager(executor_pool=ExecutorPool(), project_repository=projects).for_project(project)
+            manager = ProjectRunManager(client_pool=ClientPool(), project_repository=projects).for_project(project)
             output_seen = Event()
             output = []
             first_output_at = []
@@ -97,8 +98,8 @@ def test_remote_executor_over_ssh(docker_execution_image):
                     _remote_error(exc.__cause__)
                 raise
             assert runner.backend_id is not None
-            assert runner.execution.endpoint.host == 'tester@127.0.0.1'
-            assert runner.execution.directory.remote == '/home/tester/ase2sprkkr-runs/calculation'
+            assert runner.execution.transport.host == 'tester@127.0.0.1'
+            assert runner.execution.directory.target == '/home/tester/ase2sprkkr-runs/calculation'
             _wait_for_live_output(runner, output_seen, output)
             result = runner.wait()
             finished_at = time.monotonic()
@@ -108,14 +109,14 @@ def test_remote_executor_over_ssh(docker_execution_image):
             assert first_output_at
             assert finished_at - first_output_at[0] >= 0.5
             potfil = result.input_parameters.CONTROL.POTFIL()
-            remote_potential = potfil if posixpath.isabs(potfil) else posixpath.join(runner.execution.directory.remote, potfil)
+            remote_potential = potfil if posixpath.isabs(potfil) else posixpath.join(runner.execution.directory.target, potfil)
             remote_pot_new = remote_potential + '_new'
             subprocess.run(ssh + ['test', '-s', remote_pot_new], check=True)
             subprocess.run(ssh + ['cmp', '--', remote_potential, remote_pot_new], check=True)
             run_id = runner.id
-            restarted = ProjectExecutionManager(executor_pool=ExecutorPool(), project_repository=projects).for_project(project)
+            restarted = ProjectRunManager(client_pool=ClientPool(), project_repository=projects).for_project(project)
             record = restarted.store.get(run_id)
-            restarted_executor = restarted.executor_for(record)
+            restarted_executor = restarted.client_for(record)
             replayed = load_project_result(restarted, run_id)
             assert restarted_executor is not executor
             assert restarted_executor.transport.host == 'tester@127.0.0.1'

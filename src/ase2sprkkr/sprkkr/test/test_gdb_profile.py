@@ -1,6 +1,6 @@
 from types import SimpleNamespace
 
-from kkrunner.runs import LaunchSpec, MpiSpec
+from kkrunner.execution import MpiSpec
 from ase2sprkkr.sprkkr.profile import SPRKKRProfile
 
 
@@ -23,11 +23,9 @@ def test_serial_gdb_execution(tmp_path):
 
     assert spec.argv == ("gdb", "kkrscf")
     assert spec.mpi_argv is None
-    assert spec.launch == LaunchSpec(
-        mpi=MpiSpec(warning=False),
-        input_sync="changed",
-        output_sync="changed",
-    )
+    assert spec.mpi == MpiSpec(warning=False)
+    assert spec.staging.input_sync == "changed"
+    assert spec.staging.output_sync == "changed"
     assert spec.stdin is None
 
 
@@ -43,16 +41,11 @@ def test_mpi_gdb_execution_uses_xterm_per_rank(tmp_path):
         "kkrscfMPI",
         str(tmp_path / "run.inp"),
     )
-    assert spec.launch == LaunchSpec(
-        mpi=MpiSpec(
-            required=True,
-            autodetect=True,
-            process_count=4,
-            warning=False,
-        ),
-        input_sync="changed",
-        output_sync="changed",
+    assert spec.mpi == MpiSpec(
+        required=True, autodetect=True, process_count=4, warning=False
     )
+    assert spec.staging.input_sync == "changed"
+    assert spec.staging.output_sync == "changed"
     assert spec.stdin is None
 
 
@@ -68,5 +61,5 @@ def test_auto_gdb_keeps_serial_fallback_command(tmp_path):
         "kkrscfMPI",
         str(tmp_path / "run.inp"),
     )
-    assert spec.launch.mpi == MpiSpec(autodetect=True, warning=False)
+    assert spec.mpi == MpiSpec(autodetect=True, warning=False)
     assert spec.stdin is None

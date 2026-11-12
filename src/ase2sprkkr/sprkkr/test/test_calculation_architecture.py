@@ -33,6 +33,19 @@ class _UnstartedRunner:
         pass
 
 
+@pytest.fixture(autouse=True)
+def _test_fake_client_compatibility(monkeypatch):
+    """The preparation tests inspect a fake unstarted run, not a real backend."""
+    original = calculation.Run.create
+
+    def create(client, spec, **kwargs):
+        if isinstance(client, _Executor):
+            return client.create_run(spec, callback=kwargs.get("callback"))
+        return original(client, spec, **kwargs)
+
+    monkeypatch.setattr(calculation.Run, "create", staticmethod(create))
+
+
 class _Executor:
     def resolve_mpi(self, mpi):
         return mpi
@@ -312,9 +325,9 @@ def test_reader_file_not_found_is_not_relabelled_as_missing_executable(
 
 
 def test_tracked_run_rejects_directory_deleted_on_client_exit(tmp_path, fe_bulk):
-    from kkrunner.projects import ProjectExecutionManager, ProjectRepository
+    from kkrunner.projects import ProjectRunManager, ProjectRepository
     projects = ProjectRepository(tmp_path / 'projects')
-    manager = ProjectExecutionManager(project_repository=projects, project=projects.create('Persistent'))
+    manager = ProjectRunManager(project_repository=projects, project=projects.create('Persistent'))
     calculator = SPRKKR(atoms=fe_bulk.copy(), mpi=False, empty_spheres=False)
     prepared = calculator.prepare(directory=False)
     directory = Path(prepared.directory)
@@ -325,9 +338,9 @@ def test_tracked_run_rejects_directory_deleted_on_client_exit(tmp_path, fe_bulk)
 
 
 def test_tracked_run_rejects_temporary_stderr(tmp_path, fe_bulk):
-    from kkrunner.projects import ProjectExecutionManager, ProjectRepository
+    from kkrunner.projects import ProjectRunManager, ProjectRepository
     projects = ProjectRepository(tmp_path / 'projects')
-    manager = ProjectExecutionManager(project_repository=projects, project=projects.create('Persistent'))
+    manager = ProjectRunManager(project_repository=projects, project=projects.create('Persistent'))
     calculator = SPRKKR(atoms=fe_bulk.copy(), mpi=False, empty_spheres=False)
     prepared = calculator.prepare(directory=tmp_path)
     with pytest.raises(ValueError, match='persistent stderr'):

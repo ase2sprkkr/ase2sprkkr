@@ -7,6 +7,10 @@ import sys
 import time
 from pathlib import Path
 
+# This test executable runs under the container's venv, while ASE2SPRKKR is
+# mounted from the host (a source checkout or an installed-wheel layout).
+# Keep this path adjustment local to the test executable.
+sys.path[:0] = ["/workspace/ase2sprkkr/src", "/workspace/ase2sprkkr"]
 import ase2sprkkr
 
 

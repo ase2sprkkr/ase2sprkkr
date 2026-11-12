@@ -92,9 +92,14 @@ def test_status_uses_persistent_run_and_adds_scf_progress(monkeypatch, capsys):
         state=SimpleNamespace(value="running"), return_code=None,
         message=None, failure_phase=None,
     )
+    from kkrunner.backends.contracts import BackendCapability
+    client = SimpleNamespace(
+        backend=SimpleNamespace(supports=frozenset({BackendCapability.STATUS})),
+        status=lambda *records: (status,),
+    )
     manager = SimpleNamespace(
         store=SimpleNamespace(get=lambda run: record),
-        executor_for=lambda run: SimpleNamespace(status=lambda *records: (status,)),
+        client_for=lambda run: client,
     )
     monkeypatch.setattr(remote, "_manager_and_record", lambda run: (manager, record))
     monkeypatch.setattr(remote, "_snapshot_progress", lambda m, r: {

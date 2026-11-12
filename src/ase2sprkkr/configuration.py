@@ -215,8 +215,8 @@ SYNC_POLICY = Keyword(
 EXECUTOR = Keyword(
     {
         "local": "Run directly on this machine.",
-        "ssh": "Run through ASE2SPRKKR on a machine reached by SSH.",
-        "psij": "Submit through a PSI/J scheduler backend.",
+        "ssh": "Run on a machine reached by SSH.",
+        "psij": "Submit through local PSI/J (legacy location shorthand).",
     },
     transform='lower',
 )
@@ -262,7 +262,17 @@ definition = ConfigFileDefinition(
                     "executor",
                     EXECUTOR,
                     is_optional=True,
-                    info="Execution backend for this profile. If unset, local execution is used.",
+                    info="Execution location: local, ssh or legacy psij. Use backend to choose direct, process or psij.",
+                ),
+                V(
+                    "backend",
+                    Keyword({
+                        "direct": "Attached process on the selected transport.",
+                        "process": "Supervised, recoverable process.",
+                        "psij": "PSI/J scheduler.",
+                    }, transform='lower'),
+                    is_optional=True,
+                    info="KKRunner backend, independent of local/SSH transport.",
                 ),
                 V(
                     "host",
@@ -303,7 +313,13 @@ definition = ConfigFileDefinition(
                     "remote_command",
                     Array(AlwaysQString.I),
                     is_optional=True,
-                    info="Command prefix used to invoke the KKRunner remote service.",
+                    info="Deprecated remote service command. Use remote_python for the Python RPC transport.",
+                ),
+                V(
+                    "remote_python",
+                    Array(AlwaysQString.I),
+                    is_optional=True,
+                    info="Python command on the SSH host, e.g. ['python3'].",
                 ),
                 V(
                     "input_sync",

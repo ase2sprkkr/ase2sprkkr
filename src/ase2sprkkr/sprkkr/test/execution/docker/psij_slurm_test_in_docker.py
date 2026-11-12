@@ -3,13 +3,13 @@
 from tempfile import TemporaryDirectory
 
 from ase.build import bulk
-from kkrunner.backends import PsijExecutor
+from kkrunner.client import RunClient
 from kkrunner import RunState
 from ase2sprkkr.sprkkr.calculator import SPRKKR
 
 
 def main():
-    executor = PsijExecutor("slurm")
+    executor = RunClient("psij", backend_options={"executor_name": "slurm"})
 
     with TemporaryDirectory(prefix="ase2sprkkr-psij-") as directory:
         calculator = SPRKKR(
@@ -25,7 +25,7 @@ def main():
         runner = calculator.create_run(
             options={"NITER": 2, "NKTAB": 5, "NE": 5},
         )
-        assert runner.executor is executor
+        assert runner.client is executor
         assert runner.state == RunState.NEW
 
         runner.submit()

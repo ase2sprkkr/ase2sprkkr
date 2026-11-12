@@ -52,6 +52,15 @@ def lightweight_input_writes(monkeypatch):
 
     monkeypatch.setattr(Potential, "save_to_file", write_marker)
     monkeypatch.setattr(InputParameters, "save_to_file", write_marker)
+    from .. import calculation as calculation_module
+    original_create = calculation_module.Run.create
+
+    def create(client, spec, **kwargs):
+        if isinstance(client, _Executor):
+            return client.create_run(spec, callback=kwargs.get("callback"))
+        return original_create(client, spec, **kwargs)
+
+    monkeypatch.setattr(calculation_module.Run, "create", staticmethod(create))
 
 
 def test_default_error_file_is_output_file_plus_err(tmp_path, lightweight_input_writes):

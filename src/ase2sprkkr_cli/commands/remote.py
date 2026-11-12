@@ -154,7 +154,13 @@ def _persisted_status(manager, record):
     if record.state.is_terminal or record.execution.backend_id is None:
         return facts
 
-    status, = manager.executor_for(record).status(record)
+    from kkrunner.backends.contracts import BackendCapability
+    from kkrunner.client import JobAttachment
+
+    client = manager.client_for(record)
+    if BackendCapability.STATUS not in client.backend.supports:
+        return facts
+    status, = client.status(JobAttachment(record.execution, record.files))
     facts.update(
         state=status.state.value,
         return_code=status.return_code,

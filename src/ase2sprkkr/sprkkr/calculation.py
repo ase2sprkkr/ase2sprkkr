@@ -15,7 +15,7 @@ from ..common.file_utils import Directory
 from ..common.output_printing import output_listeners
 from kkrunner.runs.base import ExecutionResources, ResourceOwnedRunner
 from .projects import resolve_project_manager
-from kkrunner.runs.processing import PostprocessingRunner
+from kkrunner.runs import Run
 from ..input_parameters.input_parameters import InputParameters
 from . import _preparation as preparation
 from ._preparation import FilenameTemplator as FilenameTemplator
@@ -391,12 +391,6 @@ def _create_sprkkr_run(
             if error_file is False:
                 raise ValueError("Tracked runs require persistent stderr; use error_file=None or a pathname")
 
-        execution_profile = profile
-        if task.mpi:
-            execution_profile = profile.with_overrides(
-                mpi=executor.resolve_mpi(profile.mpi)
-            )
-
         input_files = tuple(
             file
             for file in (
@@ -421,7 +415,7 @@ def _create_sprkkr_run(
             if file is not None
         )
 
-        spec = execution_profile.create_execution(
+        spec = profile.create_execution(
             task.executable,
             prepared.input_file,
             prepared.output_file,
@@ -458,25 +452,20 @@ def _create_sprkkr_run(
             if callback:
                 callback(out)
 
-        if manager is None:
-            raw_runner = executor.create_run(spec)
-            runner = PostprocessingRunner(
-                raw_runner,
-                process_result,
-                callback=finalized,
-            )
-        else:
-            runner = manager.create_run(
-                executor,
-                spec,
-                process_result=process_result,
-                metadata={"ase2sprkkr": {
-                    "task": task.name,
-                    "input_definition": input_parameters.definition_name,
-                    "dataset": input_parameters.CONTROL.DATASET.result,
-                }},
-                callback=finalized,
-            )
+        record_options = {}
+        if manager is not None:
+            record_options["metadata"] = {"ase2sprkkr": {
+                "task": task.name,
+                "input_definition": input_parameters.definition_name,
+                "dataset": input_parameters.CONTROL.DATASET.result,
+            }}
+        runner = Run.create(
+            executor, spec,
+            persistent=manager if manager is not None else False,
+            process_result=process_result,
+            callback=finalized,
+            **record_options,
+        )
         for listener in listeners:
             runner.add_output_listener(listener)
         if read_callback:

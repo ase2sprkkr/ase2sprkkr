@@ -14,9 +14,12 @@ from typing import Any
 
 from ..configuration import config
 from kkrunner import ExecutionSpec
-from kkrunner.backends import ExecutorEndpoint
-from kkrunner.runs import LaunchSpec
-from kkrunner.backends.endpoint import create_executor_from_endpoint
+from kkrunner.backends.config import BackendConfig
+from kkrunner.client import RunClient
+from kkrunner.client.pool import default_client_pool
+from kkrunner.client.staging import StagingSpec
+from kkrunner.client.transports import LocalTransport, SshTransport
+from kkrunner.execution import MpiSpec
 from ..profiles import ase_command_profile_values
 
 
@@ -39,19 +42,21 @@ class SPRKKRProfile:
     """Describe how and where SPR-KKR executables are invoked.
 
     The public/runtime profile stays flat for configuration ergonomics. Code
-    that creates execution objects splits it into :attr:`endpoint` and
-    :attr:`launch_parameters` internally.
+    that creates execution objects splits it into :attr:`transport`, :attr:`backend_config`, and
+    per-run staging and MPI options internally.
     """
 
     executable_dir: Any = False
     executable_suffix: Any = ""
     mpi: Any = "auto"
     executor: str = "local"
+    backend: str | None = None
     host: Any = None
     local_root: Any = None
     remote_root: Any = None
     ssh_options: Any = ()
     remote_command: Any = ()
+    remote_python: Any = ("python3",)
     input_sync: str = "changed"
     output_sync: str = "changed"
     psij_backend: Any = None
@@ -61,17 +66,42 @@ class SPRKKRProfile:
     filesystem_id: str | None = None
 
     @property
-    def endpoint(self):
-        return ExecutorEndpoint(
-            executor=self.executor,
-            host=self.host,
-            ssh_options=self.ssh_options,
-            ssh_zstd=self.ssh_zstd,
-            remote_command=self.remote_command,
-            psij_backend=self.psij_backend,
-            psij_url=self.psij_url,
-            filesystem_id=self.filesystem_id,
+    def transport(self):
+        """Client connection, independent of the selected execution backend."""
+        if self.executor == "ssh" or (self.executor == "psij" and self.host):
+            if not self.host:
+                raise ValueError("SSH execution profile requires 'host'")
+            python_command = self.remote_python
+            # The old kkrunner remote CLI was replaced by Python RPC in wip2.
+            if self.remote_command and self.remote_command != ("kkrunner", "remote"):
+                raise ValueError(
+                    "remote_command is no longer supported by KKRunner; "
+                    "configure remote_python with the remote Python interpreter instead"
+                )
+            return SshTransport(
+                host=self.host,
+                options=self.ssh_options,
+                zstd=self.ssh_zstd,
+                python_command=python_command,
+            )
+        if self.executor in ("local", "psij"):
+            return LocalTransport()
+        raise ValueError(f"Unknown execution location {self.executor!r}")
+
+    @property
+    def backend_config(self):
+        """Backend identity is separate from the client transport and staging."""
+        name = self.backend or (
+            "psij" if self.executor == "psij" else
+            "process" if self.executor == "ssh" else "direct"
         )
+        if name not in ("direct", "process", "psij"):
+            raise ValueError(f"Unknown KKRunner backend {name!r}")
+        options = (
+            {"executor_name": self.psij_backend or "slurm", "url": self.psij_url}
+            if name == "psij" else {}
+        )
+        return BackendConfig(name, options)
 
     @property
     def launch_parameters(self):
@@ -121,20 +151,21 @@ class SPRKKRProfile:
         if self.executable_dir:
             executable = os.path.join(self.executable_dir, executable)
 
-        mpi_launch = LaunchSpec.from_mpi(self.mpi) if mpi_supported else LaunchSpec()
-        launch = replace(
-            mpi_launch,
-            mpi=replace(mpi_launch.mpi, warning=self.mpi_warning),
+        mpi = MpiSpec.from_value(self.mpi) if mpi_supported else MpiSpec()
+        if mpi_supported:
+            mpi = replace(mpi, warning=self.mpi_warning)
+        staging = StagingSpec(
             local_root=self.local_root,
             remote_root=self.remote_root,
             input_sync=self.input_sync,
             output_sync=self.output_sync,
+            filesystem_id=self.filesystem_id,
         )
         argv = [executable]
         mpi_argv = None
         stdin = input_file
 
-        if launch:
+        if mpi.requested:
             input_name = input_file.name
             if len(input_name) > 80:
                 input_name = os.path.relpath(input_name, directory)
@@ -162,7 +193,8 @@ class SPRKKRProfile:
             output_files=tuple(output_files),
             cache_files=tuple(cache_files),
             mpi_argv=None if mpi_argv is None else tuple(mpi_argv),
-            launch=launch,
+            mpi=mpi,
+            staging=staging,
             mpi_uses_stdin=False if mpi_argv is not None else True,
         )
 
@@ -184,7 +216,7 @@ def _shell_argv(value):
 
 
 def _normalize_mpi(value):
-    if isinstance(value, LaunchSpec):
+    if isinstance(value, MpiSpec):
         return value
     if isinstance(value, str):
         return value if value == "auto" else _shell_argv(value)
@@ -222,6 +254,9 @@ def _configured_profile(profile, configuration):
             changes["mpi_warning"] = True
         if not profile.executor:
             changes["executor"] = "local"
+        remote_python = _shell_argv(profile.remote_python) or ("python3",)
+        if remote_python != profile.remote_python:
+            changes["remote_python"] = remote_python
         ssh_options = _shell_argv(profile.ssh_options)
         if type(ssh_options) is not type(profile.ssh_options) or ssh_options != profile.ssh_options:
             changes["ssh_options"] = ssh_options
@@ -257,12 +292,14 @@ def _configured_profile(profile, configuration):
         executable_suffix=suffix,
         mpi=mpi,
         executor=_profile_value(profile, "executor") or "local",
+        backend=_profile_value(profile, "backend"),
         host=_profile_value(profile, "host"),
         local_root=_profile_value(profile, "local_root"),
         remote_root=_profile_value(profile, "remote_root"),
         ssh_options=_shell_argv(_profile_value(profile, "ssh_options")),
         ssh_zstd=bool(_profile_value(profile, "ssh_zstd")),
         remote_command=_shell_argv(_profile_value(profile, "remote_command")),
+        remote_python=_shell_argv(_profile_value(profile, "remote_python")) or ("python3",),
         input_sync=_profile_value(profile, "input_sync") or "changed",
         output_sync=_profile_value(profile, "output_sync") or "changed",
         psij_backend=_profile_value(profile, "psij_backend"),
@@ -272,15 +309,20 @@ def _configured_profile(profile, configuration):
     )
 
 
-def create_executor_from_profile(profile: SPRKKRProfile):
-    """Construct a new execution backend from endpoint identity only."""
-    return create_executor_from_endpoint(profile.endpoint)
+def create_client_from_profile(profile: SPRKKRProfile):
+    """Create a client combining independent transport and backend configuration."""
+    return RunClient.from_config(profile.transport, profile.backend_config)
 
 
-def executor_from_profile(profile: SPRKKRProfile):
-    from kkrunner.backends.pool import default_executor_pool
+def client_from_profile(profile: SPRKKRProfile):
+    """Reuse a client based on its backend and connection, not staging or MPI."""
+    return default_client_pool().for_config(profile.transport, profile.backend_config)
 
-    return default_executor_pool().for_profile(profile)
+
+# Retain the calculator's existing executor= argument and import paths while
+# treating its value as a KKRunner RunClient from now on.
+create_executor_from_profile = create_client_from_profile
+executor_from_profile = client_from_profile
 
 
 def resolve_sprkkr_profile(profile=None, *, configuration=None):

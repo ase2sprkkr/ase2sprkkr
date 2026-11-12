@@ -21,13 +21,10 @@ RUN apt-get update \
         util-linux \
     && rm -rf /var/lib/apt/lists/*
 
-ARG KKRUNNER_VERSION
-
-RUN test -n "$KKRUNNER_VERSION" \
-    && python3 -m venv "$VIRTUAL_ENV" \
+RUN python3 -m venv "$VIRTUAL_ENV" \
     && pip install --upgrade pip \
     && pip install \
-        "kkrunner==${KKRUNNER_VERSION}" \
+        "kkrunner[psij]>=0.1.0b2,<0.2" \
         "psij-python==0.9.11" \
         "ase>=3.22.0" \
         colorama \
@@ -45,7 +42,7 @@ RUN test -n "$KKRUNNER_VERSION" \
         "numpy>=2.1"
 
 # Exercise the installed distribution's CLI and metadata during image build.
-RUN printf '%s\n' '{"paths": []}' | kkrunner remote --protocol-version 1 query-files
+RUN python3 -c "from kkrunner.client import RunClient; from kkrunner.backends import backend_class; assert RunClient().backend.name == 'direct'; assert backend_class('psij') is not None"
 
 COPY slurm.conf /etc/slurm/slurm.conf
 COPY cgroup.conf /etc/slurm/cgroup.conf
