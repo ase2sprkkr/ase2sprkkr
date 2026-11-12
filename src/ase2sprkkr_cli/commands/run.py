@@ -11,7 +11,8 @@ from ase2sprkkr_cli.errors import CLIUsageError
 
 
 help = "Run SPRKKR calculation."
-description = "You can pass the input parameters using the command line. However, due to limitation of argparse, pass them directly after the potential file."
+description = "Run a calculation with optional NAME=VALUE input parameters."
+unknowns = "options"  # Allow positional overrides after CLI flags across Python versions.
 
 
 def parser(parser):

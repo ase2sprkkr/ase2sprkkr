@@ -1,4 +1,4 @@
-"""Explicit Docker/SSH integration test for RunClient."""
+"""Explicit Docker/SSH integration test for EndpointClient."""
 import os
 import posixpath
 import shutil
@@ -47,7 +47,7 @@ def _wait_for_live_output(runner, output_seen, output, timeout=30):
 
 def test_remote_executor_over_ssh(docker_execution_image):
     from ase.build import bulk
-    from kkrunner.client import RunClient
+    from kkrunner.client import EndpointClient
     from kkrunner.client.pool import ClientPool
     from kkrunner.client.transports import SshTransport
     from kkrunner.projects import ProjectRunManager, ProjectRepository
@@ -72,7 +72,7 @@ def test_remote_executor_over_ssh(docker_execution_image):
             options = ('-i', str(key), '-p', port, '-o', 'StrictHostKeyChecking=no', '-o', 'UserKnownHostsFile=/dev/null')
             ssh = ['ssh', *options, 'tester@127.0.0.1']
             _wait_for_ssh(ssh)
-            executor = RunClient('process', transport=SshTransport('tester@127.0.0.1', options=options, python_command=('/opt/venv/bin/python3',)))
+            executor = EndpointClient('process', transport=SshTransport('tester@127.0.0.1', options=options, python_command=('/opt/venv/bin/python3',)))
             profile = SPRKKRProfile(executable_dir='/opt/sprkkr', executable_suffix='', mpi=False, local_root=tmp, remote_root='/home/tester/ase2sprkkr-runs')
             projects = ProjectRepository(tmp / 'projects')
             project = projects.create('SSH integration')
@@ -109,7 +109,9 @@ def test_remote_executor_over_ssh(docker_execution_image):
             assert first_output_at
             assert finished_at - first_output_at[0] >= 0.5
             potfil = result.input_parameters.CONTROL.POTFIL()
-            remote_potential = potfil if posixpath.isabs(potfil) else posixpath.join(runner.execution.directory.target, potfil)
+            # POTFIL may retain the local absolute path from the input parameters;
+            # verify the file at the target-side mapping instead.
+            remote_potential = posixpath.join(runner.execution.directory.target, Path(potfil).name)
             remote_pot_new = remote_potential + '_new'
             subprocess.run(ssh + ['test', '-s', remote_pot_new], check=True)
             subprocess.run(ssh + ['cmp', '--', remote_potential, remote_pot_new], check=True)

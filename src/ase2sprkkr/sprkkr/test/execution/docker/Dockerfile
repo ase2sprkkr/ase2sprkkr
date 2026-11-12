@@ -42,7 +42,7 @@ RUN python3 -m venv "$VIRTUAL_ENV" \
         "numpy>=2.1"
 
 # Exercise the installed distribution's CLI and metadata during image build.
-RUN python3 -c "from kkrunner.client import RunClient; from kkrunner.backends import backend_class; assert RunClient().backend.name == 'direct'; assert backend_class('psij') is not None"
+RUN python3 -c "from kkrunner.client import EndpointClient; from kkrunner.backends import backend_class; assert EndpointClient().backend.name == 'direct'; assert backend_class('psij') is not None"
 
 COPY slurm.conf /etc/slurm/slurm.conf
 COPY cgroup.conf /etc/slurm/cgroup.conf

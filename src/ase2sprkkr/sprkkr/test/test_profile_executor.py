@@ -10,7 +10,7 @@ from ase2sprkkr.profiles import ProfilesConfigurationContainer
 from ase2sprkkr.sprkkr.profile import (
     SPRKKRProfile, executor_from_profile, resolve_sprkkr_profile,
 )
-from kkrunner.client import RunClient
+from kkrunner.client import EndpointClient
 from kkrunner.client.transports import LocalTransport, SshTransport
 
 
@@ -48,14 +48,14 @@ def test_named_ssh_profile_resolves_client_and_staging(monkeypatch):
     assert profile.mpi == 16
 
     client = executor_from_profile(profile)
-    assert isinstance(client, RunClient)
+    assert isinstance(client, EndpointClient)
     assert isinstance(client.transport, SshTransport)
     assert client.backend.name == "psij"
 
 
 def test_local_profile_uses_direct_client():
     client = executor_from_profile(SPRKKRProfile())
-    assert isinstance(client, RunClient)
+    assert isinstance(client, EndpointClient)
     assert isinstance(client.transport, LocalTransport)
     assert client.backend.name == "direct"
 
