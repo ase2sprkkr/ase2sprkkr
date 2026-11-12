@@ -323,7 +323,7 @@ class NumpyViewDefinition(BaseGeneratedValueDefinition):
         else:
             out = data[self.selector]
         if self.shape:
-            out.shape = self.determine_shape(container)
+            out = out.reshape(self.determine_shape(container))
         if self.reorder:
             out = np.transpose(out, axes=self.reorder if self.reorder is not True else None)
         return out
